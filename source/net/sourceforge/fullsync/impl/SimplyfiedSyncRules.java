@@ -144,9 +144,9 @@ public class SimplyfiedSyncRules implements RuleSet {
 			return new State(State.FileChange, Location.None);
 		}
 
-		if (Math.round(src.getLastModified()/1000.0) > Math.round(dst.getLastModified()/1000.0)) {
+		if (Math.floor(src.getLastModified()/1000.0) > Math.floor(dst.getLastModified()/1000.0)) {
 			return new State(State.FileChange, Location.Source);
-		} else if (src.getLastModified() < dst.getLastModified()){
+		} else if (Math.floor(src.getLastModified()/1000.0) < Math.floor(dst.getLastModified()/1000.0)){
 		    return new State(State.FileChange, Location.Destination);
 		}
 
