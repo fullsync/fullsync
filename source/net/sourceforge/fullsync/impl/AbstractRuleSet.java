@@ -150,7 +150,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 	protected long evalRealValue( FileAttributes f, String exp ) throws DataParseException
 	{
 		if( exp.equalsIgnoreCase( "length" ) ) return f.getLength();
-		else if( exp.equalsIgnoreCase( "date" ) ) return Math.round(f.getLastModified()/1000.0);
+		else if( exp.equalsIgnoreCase( "date" ) ) return (int)Math.floor(f.getLastModified()/1000.0);
 		else throw new DataParseException( "Error while parsing SyncRule: '"+exp+"' is unknown", 0 );
 	}
 
@@ -165,11 +165,12 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 
 	public State compareFiles( FileAttributes src, FileAttributes dst ) throws DataParseException
 	{
+	    // TODO verify functionality of this method
+		boolean isEqual = true;
+		int val = 0, totalVal = 0;
 		for( Enumeration e = syncRules.elements(); e.hasMoreElements(); )
 		{
 			String rule = (String)e.nextElement();
-			boolean isEqual = true;
-			int val = 0, totalVal = 0;
 			
 			StringTokenizer t = new StringTokenizer( rule, " " );
 			String srcValue = t.nextToken();
@@ -199,18 +200,18 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 				    isEqual = false;
 				}
 			}
-			
-			if( totalVal == 0 && isEqual )
-			    return new State( State.NodeInSync, Location.Both );
-			else if( totalVal > 0 ) {
-			    return new State( State.FileChange, Location.Destination );
-			} else if( totalVal < 0 ) {
-				return new State( State.FileChange, Location.Source );
-			} else {
-				return new State( State.FileChange, Location.None );
-			}
 		}
-		return new State( State.NodeInSync, Location.Both );
+		totalVal = val;
+		if( totalVal == 0 && isEqual )
+		    return new State( State.NodeInSync, Location.Both );
+		else if( totalVal > 0 ) {
+		    return new State( State.FileChange, Location.Destination );
+		} else if( totalVal < 0 ) {
+			return new State( State.FileChange, Location.Source );
+		} else {
+			return new State( State.FileChange, Location.None );
+		}
+		//return new State( State.NodeInSync, Location.Both );
 	}
 	
 	public RuleSet createChild( File src, File dst )

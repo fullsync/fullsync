@@ -71,4 +71,11 @@ public class Action
     {
         return "["+toString(type)+"("+Location.toString(location)+") - "+explanation+"]";
     }
+    public boolean equalsExceptExplanation( Action action )
+    {
+        return (getType() == action.getType() 
+                && getLocation() == action.getLocation()
+                && getBufferUpdate() == action.getBufferUpdate()
+                && isBeforeRecursion() == action.isBeforeRecursion() );        
+    }
 }

@@ -1,3 +1,5 @@
+* fixed not correct file comparison and last modified update
+  changes seem to generate a lot of new updates !?
 * added systemtray showing activity
 * fixed renaming of profiles and description in profile details dialog
 * changed feedback of task generation phase to poll instead of push

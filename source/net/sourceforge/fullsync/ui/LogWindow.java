@@ -187,10 +187,8 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
                     FormData labelImageLData = new FormData();
                     labelImageLData.width = 64;
                     labelImageLData.height = 64;
-                    labelImageLData.left =  new FormAttachment(883, 1000, 0);
                     labelImageLData.right =  new FormAttachment(1000, 1000, 0);
-                    labelImageLData.top =  new FormAttachment(7, 1000, 0);
-                    labelImageLData.bottom =  new FormAttachment(1007, 1000, 0);
+                    labelImageLData.top =  new FormAttachment(0, 1000, 0);
                     labelImage.setLayoutData(labelImageLData);
                 }
             }
@@ -343,6 +341,13 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 					mb.open();
 
 					event.doit = false;
+		    	} else {
+		    	    try {
+		    	        taskTree.getSource().close();
+		    	        taskTree.getDestination().close();
+		    	    } catch( IOException ioe ) {
+		    	        ioe.printStackTrace();
+		    	    }
 		    	}
 		    }
 
@@ -670,7 +675,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
         MenuItem mi;
 
         // load initial actions of first task
-        Action[] possibleActions = taskList[0].getActions();
+        Action[] possibleActions = (Action[])taskList[0].getActions().clone();
         
         for( int iTask = 1; iTask < taskList.length; iTask++ )
         {

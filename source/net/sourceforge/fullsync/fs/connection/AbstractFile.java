@@ -95,7 +95,7 @@ public class AbstractFile implements File
     public void setFileAttributes( FileAttributes att )
     {
         this.attributes = att;
-        // TODO write file attributes to disk
+        getConnection().setFileAttributes( this, att );
     }
     public FileAttributes getFileAttributes()
     {

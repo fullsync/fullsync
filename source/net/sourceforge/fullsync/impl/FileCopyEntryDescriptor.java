@@ -49,12 +49,12 @@ public class FileCopyEntryDescriptor implements EntryDescriptor
     }
     public void finishWrite()
     {
-        dst.setFileAttributes( src.getFileAttributes() );
-        dst.refresh();
         try {
 	        if( outputStream != null )
 	            outputStream.close();
         } catch( IOException ex ) {}
+        dst.setFileAttributes( src.getFileAttributes() );
+        dst.refresh();
     }
     public void finishStore()
     {
