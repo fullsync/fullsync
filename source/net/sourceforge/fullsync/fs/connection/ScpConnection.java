@@ -69,6 +69,11 @@ public class ScpConnection implements FileSystemConnection
         }
         this.root = new AbstractFile( this, ".", ".", null, true, true );
     }
+    
+    public boolean isAvailable()
+    {
+        return true;
+    }
 
     public File getRoot()
     {

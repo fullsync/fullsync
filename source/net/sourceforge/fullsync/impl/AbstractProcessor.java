@@ -104,8 +104,13 @@ public abstract class AbstractProcessor implements Processor
     public TaskTree execute( Site source, Site destination, ActionDecider actionDecider, RuleSet rules )
 		throws DataParseException, FileSystemException, IOException
 	{
-        this.actionDecider = actionDecider;  
+        if( !source.isAvailable() )
+            throw new FileSystemException( "source is unavailable" );
+        if( !destination.isAvailable() )
+            throw new FileSystemException( "destination is unavailable" );
 
+        this.actionDecider = actionDecider;  
+        
         TaskTree tree = new TaskTree( source, destination );
         Task root = new Task( null, null, new State( State.NodeInSync, Location.None ), new Action[] { new Action( Action.Nothing, Location.None, BufferUpdate.None, "Root" ) } );
         tree.setRoot( root );
@@ -117,6 +122,9 @@ public abstract class AbstractProcessor implements Processor
         // TODO use syncnodes here [?]
         // TODO get traversal type and start correct traversal action
         synchronizeDirectories( source.getRoot(), destination.getRoot(), rules, root );
+        
+        // TODO this would be better, but we need the rules to sync Nodes :-/
+        //synchronizeNodes( source.getRoot(), destination.getRoot(), rules, root );
 
         for( int i = 0; i < taskGenerationListeners.size(); i++ )
             ((TaskGenerationListener)taskGenerationListeners.get(i))

@@ -65,10 +65,10 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	}
 	
 	public Profile[] getProfiles() throws RemoteException {
-		Enumeration enum = profileManager.getProfiles();
+		Enumeration e = profileManager.getProfiles();
 		Vector profilesVector = new Vector();
-		while (enum.hasMoreElements()) {
-			profilesVector.add(enum.nextElement());
+		while (e.hasMoreElements()) {
+			profilesVector.add(e.nextElement());
 		}
 		
 		return (Profile[]) profilesVector.toArray(new Profile[] {});
@@ -182,9 +182,9 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	
 	public void save(Profile[] profiles) throws RemoteException {
 		// Check for deleted profiles
-		Enumeration enum = profileManager.getProfiles();
-		while (enum.hasMoreElements()) {
-			Profile p = (Profile) enum.nextElement();
+		Enumeration e = profileManager.getProfiles();
+		while (e.hasMoreElements()) {
+			Profile p = (Profile) e.nextElement();
 			boolean found = false;
 			for (int i = 0; i < profiles.length; i++) {
 				if (profiles[i].getName().equals(p.getName())) {

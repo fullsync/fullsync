@@ -1,3 +1,6 @@
+* added availability for Sites / FileSystemConnections
+* fixed #1096602 Out of memory
+* fixed #1094795 Exact copy syncs even unchanged files
 * added support for languages other than english (i18n)
 * fixed sftp not recognizing port correctly
 

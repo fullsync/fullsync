@@ -23,5 +23,7 @@ public interface Site extends Serializable
     
     public boolean isCaseSensitive();
     
+    public boolean isAvailable();  // reachable, correct auth,...
+    
     //public File getFile( String path );
 }

@@ -155,6 +155,10 @@ public class FtpConnection extends InstableConnection
     {
         
     }
+    public boolean isAvailable()
+    {
+        return true;
+    }
     
     public String getUri()
     {

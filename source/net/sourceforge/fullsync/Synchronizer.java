@@ -49,6 +49,14 @@ public class Synchronizer
     	}
     	return null;
     }
+    public synchronized TaskTree executeProfile( Profile profile, TaskGenerationListener taskGenerationListener )
+    {
+        processor.addTaskGenerationListener( taskGenerationListener );
+        TaskTree tree = executeProfile( profile );
+        processor.removeTaskGenerationListener( taskGenerationListener );
+        
+        return tree;
+    }
     
     /**
      * @return Returns the ErrorLevel

@@ -126,7 +126,10 @@ public class SyncFileBufferedConnection implements BufferedConnection
         this.monitoringFileSystem = false;
         loadFromBuffer();
     }
-
+    public boolean isAvailable()
+    {
+        return fs.isAvailable();
+    }
     public File createChild( File dir, String name, boolean directory ) throws IOException
     {
         dirty = true;

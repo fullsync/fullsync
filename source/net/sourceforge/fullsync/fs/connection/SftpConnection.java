@@ -85,6 +85,10 @@ public class SftpConnection extends InstableConnection
         sftpClient.close();
         sshClient.disconnect();
     }
+    public boolean isAvailable()
+    {
+        return true;
+    }
     public void flush() throws IOException
     {
         

@@ -25,12 +25,17 @@ public class LocalConnection implements FileSystemConnection
     public LocalConnection( java.io.File base )
     {
         this.base = base;
-        this.root = new AbstractFile( this, ".", ".", null, true, true ); 
+        this.root = new AbstractFile( this, ".", ".", null, true, base.exists() ); 
     }
-
+    
     public File getRoot()
     {
         return root;
+    }
+    
+    public boolean isAvailable()
+    {
+        return base.exists() || base.mkdirs();
     }
 
     public File createChild( File parent, String name, boolean directory )
