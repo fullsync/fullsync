@@ -347,6 +347,50 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 			}
 		);
 		
+		MenuItem menuItemRemoteConnection = new MenuItem(menuBarMainWindow, SWT.CASCADE);
+		menuItemRemoteConnection.setText("&Remote Connection");
+		
+		Menu menuRemoteConnection = new Menu(menuItemRemoteConnection);
+		menuItemRemoteConnection.setMenu(menuRemoteConnection);
+		
+		final MenuItem connectItem = new MenuItem(menuRemoteConnection, SWT.PUSH);
+		connectItem.setText("&Connect to a remote server...\tCtrl+Shift+C");
+		connectItem.setAccelerator(SWT.CTRL|SWT.SHIFT+'C');
+		connectItem.setEnabled(true);
+
+		final MenuItem disconnectItem = new MenuItem(menuRemoteConnection, SWT.PUSH);
+		disconnectItem.setText("&Disconnect\tCtrl+Shift+D");
+		disconnectItem.setAccelerator(SWT.CTRL|SWT.SHIFT+'D');
+		disconnectItem.setEnabled(false);
+
+		connectItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					WizardDialog dialog = new WizardDialog( getShell(), SWT.APPLICATION_MODAL );
+					ConnectionPage page = new ConnectionPage(dialog);
+					dialog.show();
+					if (GuiController.getInstance().getProfileManager().isConnected()) {
+						connectItem.setEnabled(false);
+						disconnectItem.setEnabled(true);
+					}
+				}
+			}
+		);
+		
+		disconnectItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					MessageBox mb = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+					mb.setText("Confirmation");
+					mb.setMessage("Do you really want to Disconnect the Remote Server? \n");
+
+					if (mb.open() == SWT.YES) {
+		            	GuiController.getInstance().getProfileManager().disconnectRemote();
+						connectItem.setEnabled(true);
+						disconnectItem.setEnabled(false);
+					}
+				}
+			}
+		);
+
 		MenuItem menuItemHelp = new MenuItem(menuBarMainWindow, SWT.CASCADE);
 		menuItemHelp.setText("&Help");
 		

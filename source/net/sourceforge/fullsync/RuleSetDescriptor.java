@@ -35,6 +35,9 @@ public abstract class RuleSetDescriptor implements Serializable {
 	protected abstract void unserializeDescriptor(Element element);
 	
 	public static final RuleSetDescriptor unserialize(Element element) {
+		if (element == null) {
+			return null;
+		}
     	String ruleSetType = element.getAttribute("type");
     	Class ruleSetDesctiptorClass = (Class) descriptorRegister.get(ruleSetType);
     	

@@ -55,7 +55,6 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	private Label label14;
 	private Text textIgnorePatter;
 	private Label label13;
-	private Button deleteOnDestinationButton;
 	private Button syncSubsButton;
 	private Group simplyfiedOptionsGroup;
 	private Button rbAdvancedRuleSet;
@@ -326,18 +325,6 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                         syncSubsButton.setLayoutData(syncSubsButtonLData);
                     }
                     {
-                        deleteOnDestinationButton = new Button(simplyfiedOptionsGroup, SWT.CHECK | SWT.LEFT);
-                        deleteOnDestinationButton
-                            .setText("Delete on Destination");
-                        GridData deleteOnDestinationButtonLData = new GridData();
-                        deleteOnDestinationButton
-                            .setToolTipText("Delete files missing on the source folder?");
-                        deleteOnDestinationButtonLData.widthHint = 124;
-                        deleteOnDestinationButtonLData.heightHint = 16;
-                        deleteOnDestinationButtonLData.horizontalSpan = 2;
-                        deleteOnDestinationButton.setLayoutData(deleteOnDestinationButtonLData);
-                    }
-                    {
                         label13 = new Label(simplyfiedOptionsGroup, SWT.NONE);
                         label13.setText("Ignore pattern");
                     }
@@ -409,6 +396,8 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	{
 	    textSourcePassword.setEchoChar( '*' );
 	    textDestinationPassword.setEchoChar( '*' );
+	    
+	    comboType.select(0);
 	}
 
 	public void setProfileManager( ProfileManager manager )
@@ -454,7 +443,6 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
         	rbAdvancedRuleSet.setSelection(false);
         	SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor)ruleSetDescriptor;
         	syncSubsButton.setSelection(simpleDesc.isSyncSubDirs());
-        	deleteOnDestinationButton.setSelection(simpleDesc.isDeleteOnDestination());
         	textIgnorePatter.setText(simpleDesc.getIgnorePattern());
         	textAcceptPattern.setText(simpleDesc.getTakePattern());
         } else {
@@ -533,7 +521,6 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 		RuleSetDescriptor ruleSetDescriptor = null;
     	if (rbSimplyfiedRuleSet.getSelection()) {
 			ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), 
-					deleteOnDestinationButton.getSelection(),
 					textIgnorePatter.getText(),
 					textAcceptPattern.getText());
     	}
@@ -592,7 +579,6 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			label4.setEnabled(false);
 			textRuleSet.setEnabled(false);
 			simplyfiedOptionsGroup.setEnabled(true);
-			deleteOnDestinationButton.setEnabled(true);
 			syncSubsButton.setEnabled(true);
 			label13.setEnabled(true);
 			label14.setEnabled(true);
@@ -604,7 +590,6 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			label4.setEnabled(true);
 			textRuleSet.setEnabled(true);
 			simplyfiedOptionsGroup.setEnabled(false);
-			deleteOnDestinationButton.setEnabled(false);
 			syncSubsButton.setEnabled(false);
 			label13.setEnabled(false);
 			label14.setEnabled(false);

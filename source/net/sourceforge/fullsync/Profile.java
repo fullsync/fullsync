@@ -131,6 +131,7 @@ public class Profile implements Serializable
 	        ((ProfileChangeListener)i.next()).profileChanged( this );
 	    }
 	}
+	
 	private void writeObject(java.io.ObjectOutputStream out)
 		throws IOException
 	{
@@ -155,6 +156,8 @@ public class Profile implements Serializable
 		ruleSet = (RuleSetDescriptor) in.readObject();
 		lastUpdate = (Date) in.readObject();
 		schedule = (Schedule) in.readObject();
+		
+        this.listeners = new ArrayList();
 	}
 	
 }

@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -18,7 +21,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
-import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
+import net.sourceforge.fullsync.remoteinterface.RemoteProfileManager;
 import net.sourceforge.fullsync.schedule.CrontabSchedule;
 import net.sourceforge.fullsync.schedule.IntervalSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
@@ -63,11 +66,13 @@ public class ProfileManager implements ProfileChangeListener
 	
 	
     private String configFile;
-    private Vector profiles;
+    protected Vector profiles;
     private Vector changeListeners;
     private Vector scheduleListeners;
     private Timer timer;
     private boolean timerActive;
+        
+    private RemoteProfileManager remoteManager;
     
     protected ProfileManager() {
         this.changeListeners = new Vector();
@@ -128,6 +133,64 @@ public class ProfileManager implements ProfileChangeListener
         }
         */
     }
+    
+    public void setRemoteConnection(String hostname, int port) 
+    	throws MalformedURLException, RemoteException, NotBoundException
+	{
+    	remoteManager = new RemoteProfileManager(hostname, port);	
+		
+    	this.profiles = new Vector();
+		Profile[] remoteprofiles = remoteManager.getProfiles();
+		for (int i = 0; i < remoteprofiles.length; i++) {
+			this.profiles.add(remoteprofiles[i]);
+			remoteprofiles[i].addProfileChangeListener(this);
+		}
+		fireProfilesChangeEvent();
+    }
+    
+    public void disconnectRemote() {
+    	remoteManager = null;
+    	
+        this.profiles = new Vector();
+        
+        File file = new File( configFile );
+        if( file.exists() )
+        {
+	        Document doc = null;
+			try {
+				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				doc = builder.parse( file );
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FactoryConfigurationError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        
+	        NodeList list = doc.getDocumentElement().getChildNodes();
+	        for( int i = 0; i < list.getLength(); i++ )
+	        {
+	            Node n = list.item( i );
+	            if( n.getNodeType() == Node.ELEMENT_NODE ) 
+	            {
+	            	Profile p = unserializeProfile( (Element)n );
+	                addProfile( p );
+	            }
+	        }
+        }
+    }
+    
+    public boolean isConnected() {
+    	return (remoteManager != null);
+    }
+    
     public void addProfile( Profile profile )
     {
         profiles.add( profile );
@@ -292,10 +355,6 @@ public class ProfileManager implements ProfileChangeListener
     }
     
     protected RuleSetDescriptor unserializeRuleSetDescriptor(Element element) {
-    	if (element == null) {
-    		// REVISIT backward compatibility for profiles with an empty RuleSet.
-    		return new AdvancedRuleSetDescriptor("");
-    	}
     	RuleSetDescriptor descriptor = RuleSetDescriptor.unserialize(element);
     	return descriptor;
     }
@@ -306,16 +365,7 @@ public class ProfileManager implements ProfileChangeListener
         p.setName( element.getAttribute( "name" ) );
         p.setDescription( element.getAttribute( "description" ) );
         p.setSynchronizationType( element.getAttribute( "type" ) );
-        // REVISIT this is used only for backward compatibility with old profiles.
-        String ruleSetNameOldVersion = element.getAttribute( "ruleSet" );
-        if ((ruleSetNameOldVersion != null) && (!ruleSetNameOldVersion.equals(""))) {
-        	RuleSetDescriptor ruleSetDescriptor = new AdvancedRuleSetDescriptor(ruleSetNameOldVersion);
-        	p.setRuleSet(ruleSetDescriptor);
-        }
-        else {
-        	// new profile version with a tag for the rule set descriptor.
-        	p.setRuleSet(unserializeRuleSetDescriptor((Element)element.getElementsByTagName("RuleSetDescriptor").item(0)));
-        }
+        p.setRuleSet(unserializeRuleSetDescriptor((Element)element.getElementsByTagName("RuleSetDescriptor").item(0)));
         
         try {
             p.setLastUpdate( DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT ).parse( element.getAttribute( "lastUpdate" ) ) );
@@ -379,29 +429,34 @@ public class ProfileManager implements ProfileChangeListener
     }
     public void save()// throws ParserConfigurationException, FactoryConfigurationError, IOException
     {
-        try {
-	        DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-	        Document doc = docBuilder.newDocument();
+    	if (remoteManager != null) {
+    		remoteManager.save((Profile[]) profiles.toArray(new Profile[0]));
+    	}
+    	else {
+    		try {
+    			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    			Document doc = docBuilder.newDocument();
 	
-	        Element e = doc.createElement( "Profiles" );
-	        Enumeration en = profiles.elements();
-	        while( en.hasMoreElements() )
-	        {
-	            e.appendChild( serialize( (Profile)en.nextElement(), doc ) );
-	        }
-	        doc.appendChild( e );
+    			Element e = doc.createElement( "Profiles" );
+    			Enumeration en = profiles.elements();
+    			while( en.hasMoreElements() )
+    			{
+    				e.appendChild( serialize( (Profile)en.nextElement(), doc ) );
+    			}
+    			doc.appendChild( e );
+    			
+    			OutputStream out = new FileOutputStream( configFile );
+    			
+    			OutputFormat format = new OutputFormat( doc, "UTF-8", true );
+    			XMLSerializer serializer = new XMLSerializer ( out, format);
+    			serializer.asDOMSerializer();
+    			serializer.serialize(doc);
 	        
-	        OutputStream out = new FileOutputStream( configFile );
-	        
-	        OutputFormat format = new OutputFormat( doc, "UTF-8", true );
-	        XMLSerializer serializer = new XMLSerializer ( out, format);
-	        serializer.asDOMSerializer();
-	        serializer.serialize(doc);
-	        
-	        out.close();
-        } catch( Exception e ) {
-            // TODO messagebox ?
-            e.printStackTrace();
-        }
+    			out.close();
+    		} catch( Exception e ) {
+    			// TODO messagebox ?
+    			e.printStackTrace();
+    		}
+    	}
     }
 }

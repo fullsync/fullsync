@@ -19,4 +19,6 @@ public interface RemoteInterface extends Remote {
 	
 	Profile[] getProfiles() throws RemoteException;
 
+	void save(Profile[] profiles) throws RemoteException;
+
 }

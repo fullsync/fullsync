@@ -85,5 +85,4 @@ public class ConnectionDescription implements Serializable
     {
         return uri;
     }
-    
 }

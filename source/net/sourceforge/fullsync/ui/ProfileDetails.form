@@ -39,7 +39,7 @@
 		<Properties>
 			<Property name="layout"/>
 			<Property name="size" type="Dimension">
-				<Dimension value="[470, 329]"/>
+				<Dimension value="[514, 363]"/>
 			</Property>
 		</Properties>
 		<SubComponents>
@@ -48,8 +48,6 @@
 					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
 					</LayoutConstraint>
 				</Constraints>
-				<Events>
-				</Events>
 				<Properties>
 					<Property name="text" type="String" value="Name:"/>
 					<Property name="layoutData"/>
@@ -65,6 +63,26 @@
 				<Properties>
 					<Property name="layoutData"/>
 					<Property name="toolTipText" type="String" value="Name for the profile"/>
+				</Properties>
+			</Component>
+			<Component class="org.eclipse.swt.widgets.Label" name="label15" style="0">
+				<Constraints>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+					</LayoutConstraint>
+				</Constraints>
+				<Properties>
+					<Property name="text" type="String" value="Description:"/>
+				</Properties>
+			</Component>
+			<Component class="org.eclipse.swt.widgets.Text" name="textDescription" style="2048">
+				<Constraints>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+						<Property name="horizontalAlignment" type="int" value="4"/>
+						<Property name="horizontalSpan" type="int" value="6"/>
+					</LayoutConstraint>
+				</Constraints>
+				<Properties>
+					<Property name="layoutData"/>
 				</Properties>
 			</Component>
 			<Component class="org.eclipse.swt.widgets.Label" name="label2" style="0">
@@ -257,13 +275,46 @@
 				<Properties>
 				</Properties>
 			</Component>
+			<Component class="org.eclipse.swt.widgets.Label" name="label16" style="0">
+				<Constraints>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+					</LayoutConstraint>
+				</Constraints>
+				<Properties>
+					<Property name="text" type="String" value="Type:"/>
+				</Properties>
+			</Component>
+			<Component class="org.eclipse.swt.widgets.Combo" name="comboType" style="12">
+				<Constraints>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+					</LayoutConstraint>
+				</Constraints>
+				<Events>
+					<EventHandler event="modifyText" listener="org.eclipse.swt.events.ModifyListener" handler="comboTypeModifyText"/>
+				</Events>
+				<Properties>
+				</Properties>
+			</Component>
+			<Component class="org.eclipse.swt.widgets.Label" name="labelTypeDescription" style="0">
+				<Constraints>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+						<Property name="horizontalAlignment" type="int" value="4"/>
+						<Property name="horizontalSpan" type="int" value="5"/>
+					</LayoutConstraint>
+				</Constraints>
+				<Properties>
+					<Property name="text" type="String" value="Description"/>
+					<Property name="layoutData"/>
+				</Properties>
+			</Component>
 			<Component class="org.eclipse.swt.widgets.Group" name="ruleSetGroup" style="0">
 				<Constraints>
 					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
-						<Property name="widthHint" type="int" value="443"/>
+						<Property name="horizontalAlignment" type="int" value="4"/>
 						<Property name="heightHint" type="int" value="143"/>
 						<Property name="horizontalIndent" type="int" value="5"/>
 						<Property name="horizontalSpan" type="int" value="7"/>
+						<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
 					</LayoutConstraint>
 				</Constraints>
 				<Layout class="Grid">
@@ -271,7 +322,7 @@
 					<Property name="marginHeight" type="int" value="5"/>
 					<Property name="numColumns" type="int" value="2"/>
 					<Property name="makeColumnsEqualWidth" type="boolean" value="true"/>
-					<Property name="horizontalSpacing" type="int" value="5"/>
+					<Property name="horizontalSpacing" type="int" value="20"/>
 					<Property name="verticalSpacing" type="int" value="5"/>
 				</Layout>
 				<Properties>
@@ -283,6 +334,8 @@
 					<Component class="org.eclipse.swt.widgets.Button" name="rbSimplyfiedRuleSet" style="16400">
 						<Constraints>
 							<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+								<Property name="horizontalAlignment" type="int" value="4"/>
+								<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
 							</LayoutConstraint>
 						</Constraints>
 						<Events>
@@ -291,13 +344,15 @@
 						<Properties>
 							<Property name="text" type="String" value="Simple Rule Set"/>
 							<Property name="selection" type="boolean" value="true"/>
+							<Property name="layoutData"/>
 						</Properties>
 					</Component>
 					<Component class="org.eclipse.swt.widgets.Button" name="rbAdvancedRuleSet" style="16400">
 						<Constraints>
 							<LayoutConstraint class="org.eclipse.swt.layout.GridData">
-								<Property name="widthHint" type="int" value="112"/>
+								<Property name="horizontalAlignment" type="int" value="4"/>
 								<Property name="heightHint" type="int" value="16"/>
+								<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
 							</LayoutConstraint>
 						</Constraints>
 						<Events>
@@ -312,8 +367,9 @@
 						<Constraints>
 							<LayoutConstraint class="org.eclipse.swt.layout.GridData">
 								<Property name="verticalAlignment" type="int" value="1"/>
-								<Property name="widthHint" type="int" value="187"/>
+								<Property name="horizontalAlignment" type="int" value="4"/>
 								<Property name="heightHint" type="int" value="98"/>
+								<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
 							</LayoutConstraint>
 						</Constraints>
 						<Layout class="Grid">
@@ -344,27 +400,11 @@
 									<Property name="toolTipText" type="String" value="Recurre into subdirectories?"/>
 								</Properties>
 							</Component>
-							<Component class="org.eclipse.swt.widgets.Button" name="deleteOnDestinationButton" style="16416">
-								<Constraints>
-									<LayoutConstraint class="org.eclipse.swt.layout.GridData">
-										<Property name="widthHint" type="int" value="124"/>
-										<Property name="heightHint" type="int" value="16"/>
-										<Property name="horizontalSpan" type="int" value="2"/>
-									</LayoutConstraint>
-								</Constraints>
-								<Properties>
-									<Property name="text" type="String" value="Delete on Destination"/>
-									<Property name="layoutData"/>
-									<Property name="toolTipText" type="String" value="Delete files missing on the source folder?"/>
-								</Properties>
-							</Component>
 							<Component class="org.eclipse.swt.widgets.Label" name="label13" style="0">
 								<Constraints>
 									<LayoutConstraint class="org.eclipse.swt.layout.GridData">
 									</LayoutConstraint>
 								</Constraints>
-								<Events>
-								</Events>
 								<Properties>
 									<Property name="text" type="String" value="Ignore pattern"/>
 								</Properties>
@@ -377,8 +417,6 @@
 										<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
 									</LayoutConstraint>
 								</Constraints>
-								<Events>
-								</Events>
 								<Properties>
 									<Property name="layoutData"/>
 									<Property name="toolTipText" type="String" value="Ignore RegExp"/>
@@ -389,8 +427,6 @@
 									<LayoutConstraint class="org.eclipse.swt.layout.GridData">
 									</LayoutConstraint>
 								</Constraints>
-								<Events>
-								</Events>
 								<Properties>
 									<Property name="text" type="String" value="Accept pattern"/>
 								</Properties>
@@ -403,8 +439,6 @@
 										<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
 									</LayoutConstraint>
 								</Constraints>
-								<Events>
-								</Events>
 								<Properties>
 									<Property name="layoutData"/>
 								</Properties>
@@ -415,8 +449,9 @@
 						<Constraints>
 							<LayoutConstraint class="org.eclipse.swt.layout.GridData">
 								<Property name="verticalAlignment" type="int" value="1"/>
-								<Property name="widthHint" type="int" value="172"/>
+								<Property name="horizontalAlignment" type="int" value="4"/>
 								<Property name="heightHint" type="int" value="31"/>
+								<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
 							</LayoutConstraint>
 						</Constraints>
 						<Layout class="Grid">
@@ -460,34 +495,6 @@
 						</SubComponents>
 					</Component>
 				</SubComponents>
-			</Component>
-			<Component class="org.eclipse.swt.widgets.Button" name="buttonOk" style="16777224">
-				<Constraints>
-					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
-						<Property name="horizontalAlignment" type="int" value="3"/>
-						<Property name="horizontalSpan" type="int" value="6"/>
-					</LayoutConstraint>
-				</Constraints>
-				<Events>
-					<EventHandler event="widgetSelected" listener="org.eclipse.swt.events.SelectionListener" handler="buttonOkWidgetSelected"/>
-				</Events>
-				<Properties>
-					<Property name="text" type="String" value="Ok"/>
-					<Property name="layoutData"/>
-				</Properties>
-			</Component>
-			<Component class="org.eclipse.swt.widgets.Button" name="buttonCancel" style="16777224">
-				<Constraints>
-					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
-					</LayoutConstraint>
-				</Constraints>
-				<Events>
-					<EventHandler event="widgetSelected" listener="org.eclipse.swt.events.SelectionListener" handler="buttonCancelWidgetSelected"/>
-				</Events>
-				<Properties>
-					<Property name="text" type="String" value="Cancel"/>
-					<Property name="layoutData"/>
-				</Properties>
 			</Component>
 		</SubComponents>
 	</Component>

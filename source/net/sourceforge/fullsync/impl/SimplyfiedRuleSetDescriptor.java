@@ -7,7 +7,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 
@@ -17,7 +16,6 @@ import net.sourceforge.fullsync.RuleSetDescriptor;
 public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 
 	private boolean syncSubDirs = false;
-	private boolean deleteOnDestination = false;
 	private String ignorePattern;
 	private String takePattern;
 	
@@ -25,11 +23,9 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		
 	}
 	
-	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, boolean deleteOnDestination, 
-			String ignorePatter, String acceptPatter) 
+	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, String ignorePatter, String acceptPatter) 
 	{
 		this.syncSubDirs = syncSubDirs;
-		this.deleteOnDestination = deleteOnDestination;
 		this.ignorePattern = ignorePatter;
 		this.takePattern = acceptPatter;
 	}
@@ -48,7 +44,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		Element simpleRuleSetElement = document.createElement("SimpleRuleSet");
 
 		simpleRuleSetElement.setAttribute("syncSubs", String.valueOf(isSyncSubDirs()));
-		simpleRuleSetElement.setAttribute("deleteOnDestination", String.valueOf(isDeleteOnDestination()));
 		simpleRuleSetElement.setAttribute("ignorePattern", getIgnorePattern());
 		simpleRuleSetElement.setAttribute("takePattern", getTakePattern());
 
@@ -63,33 +58,17 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		
 		if (ruleSetConfigNodeList.getLength() == 0) {
 			syncSubDirs = true;
-			deleteOnDestination = false;
 			ignorePattern = "";
 			takePattern = "";
 		}
 		else {
 			Element simpleRuleSetConfigElement = (Element)ruleSetConfigNodeList.item(0);
 			syncSubDirs = Boolean.valueOf(simpleRuleSetConfigElement.getAttribute("syncSubs")).booleanValue();
-			deleteOnDestination = Boolean.valueOf(simpleRuleSetConfigElement.getAttribute("deleteOnDestination")).booleanValue();
 			ignorePattern = simpleRuleSetConfigElement.getAttribute("ignorePattern");
 			takePattern = simpleRuleSetConfigElement.getAttribute("takePattern");
 		}
 	}
-	
-	/**
-	 * @return Returns the deleteOnDestination.
-	 */
-	public boolean isDeleteOnDestination() {
-		return deleteOnDestination;
-	}
-	
-	/**
-	 * @param deleteOnDestination The deleteOnDestination to set.
-	 */
-	public void setDeleteOnDestination(boolean deleteOnDestination) {
-		this.deleteOnDestination = deleteOnDestination;
-	}
-	
+		
 	/**
 	 * @return Returns the syncSubDirs.
 	 */
@@ -138,12 +117,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	public RuleSet createRuleSet() {
 		SimplyfiedSyncRules ruleSet = new SimplyfiedSyncRules();
 		ruleSet.setUsingRecursion(syncSubDirs);
-		if (deleteOnDestination) {
-			ruleSet.setApplyingDeletion(Location.Destination);
-		}
-		else {
-			ruleSet.setApplyingDeletion(Location.None);
-		}
 		
 		ruleSet.setIgnorePattern(ignorePattern);
 		ruleSet.setTakePattern(takePattern);

@@ -8,7 +8,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -49,7 +48,7 @@ public class GuiController implements Runnable
 			mainShell.setLayout(new org.eclipse.swt.layout.FillLayout());
 			Rectangle shellBounds = mainShell.computeTrim(0,0,mainWindow.getSize().x,mainWindow.getSize().y);
 			mainShell.setSize(shellBounds.width, shellBounds.height);
-			mainShell.setText( "FullSync 0.7.1" );
+			mainShell.setText( "FullSync 0.8.0" );
 			mainShell.setImage( new Image( null, "images/FullSync.gif" ) );
 			mainShell.setVisible( true );
 		} catch (Exception e) {

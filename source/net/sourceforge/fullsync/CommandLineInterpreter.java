@@ -8,7 +8,6 @@ import java.util.Date;
 
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.remoteinterface.RemoteInterfaceServer;
-import net.sourceforge.fullsync.remoteinterface.RemoteProfileManager;
 import net.sourceforge.fullsync.ui.GuiController;
 
 import org.apache.commons.cli.CommandLine;
@@ -59,31 +58,29 @@ public class CommandLineInterpreter
 		    catch (ParseException pe) {
 		    	System.err.println(pe.getMessage());
 		        HelpFormatter formatter = new HelpFormatter();
-		        formatter.printHelp( "fullsync", options );
+		        formatter.printHelp( "fullsync [-cvhrpsi]", options );
 		        return;		    	
 		    }
 		    
 		    if( line.hasOption( "h" ) )
 		    {
 		        HelpFormatter formatter = new HelpFormatter();
-		        formatter.printHelp( "fullsync [-cvhrp]", options );
+		        formatter.printHelp( "fullsync [-cvhrpsi]", options );
 		        return;
 		    }
 
 		    DOMConfigurator.configure( "logging.xml" );
 		    Preferences preferences = new ConfigurationPreferences("preferences.properties");
-		    ProfileManager profileManager = null;
+		    ProfileManager profileManager = new ProfileManager( "profiles.xml" );
 		    if( line.hasOption( "i" ) ) {
-		    	String remotePortStr = line.getOptionValue("s");
+		    	String remotePortStr = line.getOptionValue("i");
 		    	int remotePort = 10000;
 		    	try {
 		    		remotePort = Integer.parseInt(remotePortStr);
 				} catch (NumberFormatException e) {
 				}
-			    profileManager = new RemoteProfileManager( remotePort );
-		    }
-		    else {
-			    profileManager = new ProfileManager( "profiles.xml" );		    	
+				// TODO [Michele] add the host on the command line
+			    profileManager.setRemoteConnection("localhost", remotePort);
 		    }
 
 		    Synchronizer sync = new Synchronizer();
