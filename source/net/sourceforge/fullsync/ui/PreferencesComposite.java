@@ -95,6 +95,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                     cbMinimizeMinimizesToSystemTrayLData.horizontalSpan = 2;
                     cbMinimizeMinimizesToSystemTray.setLayoutData(cbMinimizeMinimizesToSystemTrayLData);
                 }
+                /*
                 {
                     cbEnableSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
                     cbEnableSystemTray.setText("Enable System Tray Icon");
@@ -104,6 +105,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                     cbEnableSystemTrayLData.horizontalSpan = 2;
                     cbEnableSystemTray.setLayoutData(cbEnableSystemTrayLData);
                 }
+                */
                 {
                     label1 = new Label(groupInterface, SWT.NONE);
                     label1.setText("profile list style: ");

@@ -71,7 +71,10 @@ public class ProfileManager implements ProfileChangeListener
     private Vector scheduleListeners;
     private Timer timer;
     private boolean timerActive;
-        
+
+    // FIXME omg, a profilemanager having a remoteprofilemanager?
+    //       please make a dao of me, with save/load and that's it
+    //       don't forget calling profilesChangeEvent if dao is changed
     private RemoteProfileManager remoteManager;
     
     protected ProfileManager() {
