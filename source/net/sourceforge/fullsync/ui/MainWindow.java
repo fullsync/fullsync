@@ -244,26 +244,26 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	public void postInitGUI()
 	{
 		Image i;
-		i = LogWindow.loadImage( "Button_New.gif" );
+		i = TaskDecisionList.loadImage( "Button_New.gif" );
 		toolItemNew.setImage( i );
 		toolItemNew.setToolTipText("New Profile");
 		images.add( i );
-		i = LogWindow.loadImage( "Button_Edit.gif" );
+		i = TaskDecisionList.loadImage( "Button_Edit.gif" );
 		toolItemEdit.setImage( i );
 		toolItemEdit.setToolTipText("Edit Profile");
 		images.add( i );
-		i = LogWindow.loadImage( "Button_Delete.gif" );
+		i = TaskDecisionList.loadImage( "Button_Delete.gif" );
 		toolItemDelete.setImage( i );
 		toolItemDelete.setToolTipText("Delete Profile");
 		images.add( i );
-		Image buttonRun = LogWindow.loadImage( "Button_Run.gif" );
+		Image buttonRun = TaskDecisionList.loadImage( "Button_Run.gif" );
 		toolItemRun.setImage( buttonRun );
 		toolItemRun.setToolTipText("Run Profile");
 		images.add( buttonRun );
-		i = LogWindow.loadImage( "Timer_Running.gif" );
+		i = TaskDecisionList.loadImage( "Timer_Running.gif" );
 		imageTimerRunning = i;
 		images.add( i );
-		i = LogWindow.loadImage( "Timer_Stopped.gif" );
+		i = TaskDecisionList.loadImage( "Timer_Stopped.gif" );
 		imageTimerStopped = i;
 		images.add( i );
 		//toolBar1.layout();
@@ -340,7 +340,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		preferencesItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					// show the Preferences Dialog.
-					WizardDialog dialog = new WizardDialog( getShell() );
+					WizardDialog dialog = new WizardDialog( getShell(), SWT.APPLICATION_MODAL );
 					WizardPage page = new PreferencesPage( dialog, guiController.getPreferences() );
 					dialog.show();
 				}
@@ -481,7 +481,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 					} finally {
 	                	guiController.showBusyCursor( false );
 					}
-                    LogWindow.show( guiController, t );
+                    TaskDecisionList.show( guiController, t );
                     
                     // HACK this really doesn't belong here, because the user
                     //      can abort the real execution, but logwindow does not

@@ -42,13 +42,15 @@ public class WizardDialog {
 	private Composite compositeContent;
 	
 	private Shell parent;
+	private int style;
 	private Font captionFont;
 	
 	private WizardPage wizardPage;
 
-	public WizardDialog( Shell parent ) 
+	public WizardDialog( Shell parent, int style ) 
 	{
 	    this.parent = parent;
+	    this.style = SWT.DIALOG_TRIM | style;
 	}
 	
 	public void setPage( WizardPage page )
@@ -58,7 +60,7 @@ public class WizardDialog {
 
 	public void show() {
 		try {
-			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+			dialogShell = new Shell(parent, style );
 			Display display = dialogShell.getDisplay();
 
 			Color white = display.getSystemColor( SWT.COLOR_WHITE );
@@ -79,18 +81,6 @@ public class WizardDialog {
                 compositeTop.setLayoutData(compositeTopLData);
                 compositeTop.setLayout(compositeTopLayout);
                 {
-                    labelCaption = new Label(compositeTop, SWT.NONE);
-                    labelCaption.setBackground(white);
-                    captionFont = new Font( display, "Tohama", 9, SWT.BOLD );
-                    labelCaption.setFont( captionFont );
-                    FormData labelCaptionLData = new FormData();
-                    labelCaptionLData.width = 330;
-                    labelCaptionLData.height = 13;
-                    labelCaptionLData.left =  new FormAttachment(0, 1000, 10);
-                    labelCaptionLData.top =  new FormAttachment(0, 1000, 10);
-                    labelCaption.setLayoutData(labelCaptionLData);
-                }
-                {
                     labelImage = new Label(compositeTop, SWT.NONE);
                     labelImage.setBackground(white);
                     FormData labelImageLData = new FormData();
@@ -102,13 +92,27 @@ public class WizardDialog {
                     labelImage.setLayoutData(labelImageLData);
                 }
                 {
-                    labelDescription = new Label(compositeTop, SWT.NONE);
+                    labelCaption = new Label(compositeTop, SWT.NONE);
+                    labelCaption.setBackground(white);
+                    captionFont = new Font( display, "Tohama", 9, SWT.BOLD );
+                    labelCaption.setFont( captionFont );
+                    FormData labelCaptionLData = new FormData();
+                    labelCaptionLData.width = 330;
+                    labelCaptionLData.height = 13;
+                    labelCaptionLData.left =  new FormAttachment(0, 1000, 10);
+                    labelCaptionLData.top =  new FormAttachment(0, 1000, 10);
+                    labelCaptionLData.right = new FormAttachment( labelImage, 20 );
+                    labelCaption.setLayoutData(labelCaptionLData);
+                }
+                {
+                    labelDescription = new Label(compositeTop, SWT.NULL);
                     labelDescription.setBackground(white);
                     FormData labelDescriptionLData = new FormData();
                     labelDescriptionLData.width = 330;
                     labelDescriptionLData.height = 26;
                     labelDescriptionLData.left =  new FormAttachment(0, 1000, 20);
                     labelDescriptionLData.top =  new FormAttachment(0, 1000, 30);
+                    labelDescriptionLData.right = new FormAttachment( labelImage, 20 );
                     labelDescription.setLayoutData(labelDescriptionLData);
                 }
             }
@@ -172,10 +176,16 @@ public class WizardDialog {
 	{
 	    dialogShell.dispose();
 	    captionFont.dispose();
+	    
+	    // TODO dispose images ?
 	}
 	public Display getDisplay()
 	{
 	    return parent.getDisplay();
+	}
+	public Shell getShell()
+	{
+	    return dialogShell;
 	}
 	/*
 	protected void setDialogTitle( String title )

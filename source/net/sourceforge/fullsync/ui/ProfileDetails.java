@@ -480,7 +480,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			shell.setSize( shell.computeSize( inst.getSize().x, inst.getSize().y ) );
 			shell.open();
 			*/
-		    WizardDialog dialog = new WizardDialog( parent );
+		    WizardDialog dialog = new WizardDialog( parent, SWT.APPLICATION_MODAL );
 		    ProfileDetailsPage page = new ProfileDetailsPage( dialog, manager, name );
 		    dialog.show();
 		} catch (Exception e) {

@@ -136,7 +136,7 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 
 		MenuItem runItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
 		runItem.setText("Run Profile...");
-		runItem.setImage( LogWindow.loadImage( "Button_Run.gif" ) );
+		runItem.setImage( TaskDecisionList.loadImage( "Button_Run.gif" ) );
 		runItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					handler.runProfile( getSelectedProfile() );

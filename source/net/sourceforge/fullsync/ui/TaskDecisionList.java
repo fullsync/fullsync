@@ -2,55 +2,33 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.Action;
-import net.sourceforge.fullsync.ActionQueue;
-import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskFinishedEvent;
-import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.buffer.BlockBuffer;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.impl.FillBufferActionQueue;
 
-import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -69,19 +47,8 @@ import org.eclipse.swt.widgets.TableItem;
 * for any corporate or commercial purpose.
 * *************************************
 */
-public class LogWindow extends org.eclipse.swt.widgets.Composite 
+public class TaskDecisionList extends org.eclipse.swt.widgets.Composite 
 {
-	private Label labelProgress;
-	private Combo comboFilter;
-	private Label labelDestination;
-	private Label labelImage;
-	private Label labelCaption;
-	private Composite compositeBottom;
-	private Label labelSeparatorBottom;
-	private Label labelSeparatorTop;
-	private Composite compositeTop;
-	private Label labelSource;
-	private Button buttonGo;
 	private TableColumn tableColumn1;
 	private TableColumn tableColumnExplanation;
 	private TableColumn tableColumnFilename;
@@ -100,24 +67,21 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 	private Image nodeDirectory;
 	private Image nodeUndefined;
 	
-	private GuiController guiController;
+	//private GuiController guiController;
 	private TaskTree taskTree;
 	
 	private boolean onlyChanges;
-	private boolean processing;
-	private int tasksFinished;
-	private int tasksTotal;
+	private boolean changeAllowed;
 	private Object mutex = new Object();
 	
 	
-	public LogWindow(Composite parent, int style) 
+	public TaskDecisionList(Composite parent, int style) 
 	{
 		super(parent, style);
 		initGUI();
 		initializeImages();
 		onlyChanges = true;
-		processing = false;
-		guiController = null;
+		changeAllowed = true;
 	}
 
 	/**
@@ -126,85 +90,11 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 	*/
 	public void initGUI(){
 		try {
-			preInitGUI();
-	
 			Color white = getDisplay().getSystemColor( SWT.COLOR_WHITE );
-            {
-                compositeTop = new Composite(this, SWT.NONE);
-                compositeTop.setBackground( white );
-                FormLayout compositeTopLayout = new FormLayout();
-                GridData compositeTopLData = new GridData();
-                compositeTopLData.grabExcessHorizontalSpace = true;
-                compositeTopLData.horizontalSpan = 3;
-                compositeTopLData.horizontalAlignment = GridData.FILL;
-                compositeTopLData.heightHint = 64;
-                compositeTop.setLayoutData(compositeTopLData);
-                compositeTop.setLayout(compositeTopLayout);
-                {
-                    labelCaption = new Label(compositeTop, SWT.NONE);
-                    labelCaption.setBackground(white);
-                    labelCaption.setText("Choose the actions that should be performed.");
-                    labelCaption.setFont( new Font( getDisplay(), "Tohama", 9, SWT.BOLD ) );
-                    FormData labelCaptionLData = new FormData();
-                    labelCaptionLData.width = 330;
-                    labelCaptionLData.height = 16;
-                    labelCaptionLData.left =  new FormAttachment(0, 1000, 12);
-                    labelCaptionLData.right =  new FormAttachment(627, 1000, 0);
-                    labelCaptionLData.top =  new FormAttachment(164, 1000, 0);
-                    labelCaptionLData.bottom =  new FormAttachment(414, 1000, 0);
-                    labelCaption.setLayoutData(labelCaptionLData);
-                    // TODO dispose font !!
-                }
-                {
-                    labelSource = new Label(compositeTop, SWT.NONE);
-                    labelSource.setBackground(white);
-                    FormData labelSourceLData = new FormData();
-                    labelSource.setText("Source: ");
-                    labelSourceLData.width = 289;
-                    labelSourceLData.height = 14;
-                    labelSourceLData.left =  new FormAttachment(65, 1000, 0);
-                    labelSourceLData.right =  new FormAttachment(594, 1000, 0);
-                    labelSourceLData.top =  new FormAttachment(429, 1000, 0);
-                    labelSourceLData.bottom =  new FormAttachment(648, 1000, 0);
-                    labelSource.setLayoutData(labelSourceLData);
-                }
-                {
-                    labelDestination = new Label(compositeTop, SWT.NONE);
-                    labelDestination.setBackground(white);
-                    FormData labelDestinationLData = new FormData();
-                    labelDestination.setText("Destination:");
-                    labelDestinationLData.width = 381;
-                    labelDestinationLData.height = 17;
-                    labelDestinationLData.left =  new FormAttachment(65, 1000, 0);
-                    labelDestinationLData.right =  new FormAttachment(762, 1000, 0);
-                    labelDestinationLData.top =  new FormAttachment(695, 1000, 0);
-                    labelDestinationLData.bottom =  new FormAttachment(960, 1000, 0);
-                    labelDestination.setLayoutData(labelDestinationLData);
-                }
-                {
-                    labelImage = new Label(compositeTop, SWT.NONE);
-                    labelImage.setImage( new Image( getDisplay(), "images/Tasklist_Wizard.png") );
-                    FormData labelImageLData = new FormData();
-                    labelImageLData.width = 64;
-                    labelImageLData.height = 64;
-                    labelImageLData.right =  new FormAttachment(1000, 1000, 0);
-                    labelImageLData.top =  new FormAttachment(0, 1000, 0);
-                    labelImage.setLayoutData(labelImageLData);
-                }
-            }
-            {
-                labelSeparatorTop = new Label(this, SWT.SEPARATOR
-                    | SWT.HORIZONTAL);
-                GridData labelSeparatorTopLData = new GridData();
-                labelSeparatorTopLData.grabExcessHorizontalSpace = true;
-                labelSeparatorTopLData.horizontalSpan = 3;
-                labelSeparatorTopLData.horizontalAlignment = GridData.FILL;
-                labelSeparatorTop.setLayoutData(labelSeparatorTopLData);
-            }
-			tableLogLines = new Table(this,SWT.FULL_SELECTION | SWT.MULTI);
 
 			this.setSize(546, 395);
-	
+
+			tableLogLines = new Table(this,SWT.FULL_SELECTION | SWT.MULTI | SWT.BORDER);
 			GridData tableLogLinesLData = new GridData();
 			tableLogLinesLData.verticalAlignment = GridData.FILL;
 			tableLogLinesLData.horizontalAlignment = GridData.FILL;
@@ -219,14 +109,6 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 			tableLogLines.setHeaderVisible(true);
 			tableLogLines.setLinesVisible(true);
 			tableLogLines.setSize(new org.eclipse.swt.graphics.Point(690,179));
-            {
-                labelSeparatorBottom = new Label(this, SWT.SEPARATOR
-                    | SWT.HORIZONTAL);
-                GridData labelSeparatorBottomLData = new GridData();
-                labelSeparatorBottomLData.grabExcessHorizontalSpace = true;
-                labelSeparatorBottomLData.horizontalAlignment = GridData.FILL;
-                labelSeparatorBottom.setLayoutData(labelSeparatorBottomLData);
-            }
             {
                 tableColumn1 = new TableColumn(tableLogLines, SWT.NONE);
                 tableColumn1.setResizable(false);
@@ -261,54 +143,6 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 				}
 			});
 
-            {
-                compositeBottom = new Composite(this, SWT.NONE);
-                GridLayout compositeBottomLayout = new GridLayout();
-                GridData compositeBottomLData = new GridData();
-                compositeBottomLData.grabExcessHorizontalSpace = true;
-                compositeBottomLData.horizontalAlignment = GridData.FILL;
-                compositeBottom.setLayoutData(compositeBottomLData);
-                compositeBottomLayout.numColumns = 3;
-                compositeBottom.setLayout(compositeBottomLayout);
-                {
-                    comboFilter = new Combo(compositeBottom, SWT.DROP_DOWN
-                        | SWT.READ_ONLY);
-                    GridData comboFilterLData = new GridData();
-                    comboFilterLData.widthHint = 68;
-                    comboFilterLData.heightHint = 21;
-                    comboFilter.setLayoutData(comboFilterLData);
-                    comboFilter.addModifyListener(new ModifyListener() {
-                        public void modifyText(ModifyEvent evt) {
-                            comboFilterModifyText(evt);
-                        }
-                    });
-                }
-                {
-                    labelProgress = new Label(compositeBottom, SWT.NONE);
-                    GridData labelProgressLData = new GridData();
-                    labelProgressLData.horizontalAlignment = GridData.FILL;
-                    labelProgressLData.heightHint = 13;
-                    labelProgressLData.horizontalIndent = 5;
-                    labelProgressLData.grabExcessHorizontalSpace = true;
-                    labelProgress.setLayoutData(labelProgressLData);
-                    labelProgress.setSize(new org.eclipse.swt.graphics.Point( 42, 13));
-                }
-                {
-                    buttonGo = new Button(compositeBottom, SWT.PUSH
-                        | SWT.CENTER);
-                    GridData buttonGoLData = new GridData();
-                    buttonGoLData.horizontalAlignment = GridData.END;
-                    buttonGoLData.widthHint = 25;
-                    buttonGoLData.heightHint = 23;
-                    buttonGo.setLayoutData(buttonGoLData);
-                    buttonGo.setText("Go");
-                    buttonGo.addSelectionListener(new SelectionAdapter() {
-                        public void widgetSelected(SelectionEvent evt) {
-                            buttonGoWidgetSelected(evt);
-                        }
-                    });
-                }
-            }
 			GridLayout thisLayout = new GridLayout();
 			this.setLayout(thisLayout);
 			thisLayout.marginWidth = 0;
@@ -316,45 +150,10 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 			thisLayout.horizontalSpacing = 0;
 			thisLayout.verticalSpacing = 0;
 			this.layout();
-	
-			postInitGUI();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	/** Add your pre-init code in here 	*/
-	public void preInitGUI(){
-	}
-
-	/** Add your post-init code in here 	*/
-	public void postInitGUI(){
-	    comboFilter.add( "Everything" );
-	    comboFilter.add( "Changes only" );
-	    comboFilter.select(1);
-	    
-		getShell().addShellListener(new ShellAdapter() {
-		    public void shellClosed(ShellEvent event) {
-		    	if (processing) {
-					MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
-					mb.setText("Error");
-					mb.setMessage("The Synchronization Window can't be closed during Synchronization.");
-					mb.open();
-
-					event.doit = false;
-		    	} else {
-		    	    try {
-		    	        taskTree.getSource().close();
-		    	        taskTree.getDestination().close();
-		    	    } catch( IOException ioe ) {
-		    	        ioe.printStackTrace();
-		    	    }
-		    	}
-		    }
-
-		} );
-
-	}
-
 	public static void show( final GuiController guiController, final TaskTree task )
 	{
 		final Display display = Display.getDefault();
@@ -362,9 +161,8 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 		    public void run()
             {
 		        try {
-					Shell shell = new Shell(display);
-					LogWindow inst = new LogWindow(shell, SWT.NULL);
-					inst.setGuiController( guiController );
+					/*Shell shell = new Shell(display);
+					TaskDecisionList inst = new TaskDecisionList(shell, SWT.NULL);
 					inst.setTaskTree( task );
 					inst.rebuildActionList();
 					shell.setLayout(new org.eclipse.swt.layout.FillLayout());
@@ -372,29 +170,19 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 					shell.setSize(shellBounds.width, shellBounds.height);
 					shell.setText( "Synchronization Actions" );
 					shell.setImage( new Image( null, "images/Tasklist_Icon.gif" ) );
-					shell.open();
+					shell.open();*/
+		            WizardDialog dialog = new WizardDialog( guiController.getMainShell(), SWT.RESIZE );
+				    TaskDecisionPage page = new TaskDecisionPage( dialog, guiController, task );
+				    dialog.show();
 		        } catch( Exception ex ) {
 		            ex.printStackTrace();
 		        }
             }
 		});
 	}
-	public void setGuiController( GuiController guiController )
-	{
-	    this.guiController = guiController;
-	}
-	public GuiController getGuiController()
-    {
-        return guiController;
-    }
 	public void setTaskTree( TaskTree task )
 	{
 	    this.taskTree = task;
-	    
-	    labelSource.setText( "Source: "+task.getSource().getUri() );
-	    labelSource.pack();
-	    labelDestination.setText( "Destination: "+task.getDestination().getUri() );
-	    labelDestination.pack();
 	}
 	public static Image loadImage( String filename )
 	{
@@ -731,114 +519,30 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
         m.setLocation( tableLogLines.toDisplay( x, y ) );
         m.setVisible( true );
     }
-    protected void performActions()
+    
+    public void setOnlyChanges( boolean onlyChanges )
     {
-        Thread worker = new Thread( new Runnable() {
-			public void run() {
-	            guiController.showBusyCursor( true );
-				try {
-				    final Display display = getDisplay(); 
-		            processing = true;
-		            
-					// Logger logger = Logger.getRootLogger();
-		            // logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
-		            Logger logger = Logger.getLogger( "FullSync" );
-			        logger.info( "Synchronization started" );
-			        logger.info( "  source:      "+taskTree.getSource().getUri().toString() );
-			        logger.info( "  destination: "+taskTree.getDestination().getUri().toString() );
-			        
-			        // TODO we should use the Synchronizer here ! maybe (TaskTree, ActionFinishedListener) ?
-			        BlockBuffer buffer = new BlockBuffer( logger );
-			        ActionQueue queue = new FillBufferActionQueue(buffer);
-			        final Color colorFinishedSuccessful = new Color( null, 150, 255, 150 );
-			        final Color colorFinishedUnsuccessful = new Color( null, 255, 150, 150 );
-
-			        IoStatistics stats = queue.createStatistics( taskTree );
-		            tasksTotal = stats.getCountActions();
-				    tasksFinished = 0;
-
-			        queue.addTaskFinishedListener( new TaskFinishedListener() {
-			        	public void taskFinished( final TaskFinishedEvent event ) 
-			        	{
-				            display.asyncExec( new Runnable() {
-				            	public void run() {
-						            tasksFinished++;
-						            labelProgress.setText( tasksFinished+" of "+tasksTotal+" tasks finished" );
-						            Object taskData = event.getTask().getData();
-						            if ((taskData != null) && (taskData instanceof TableItem)) {
-						            	TableItem item = (TableItem) taskData;
-						            	if( event.isSuccessful() )
-						            	     item.setBackground(colorFinishedSuccessful);
-						            	else item.setBackground(colorFinishedUnsuccessful);
-						            	tableLogLines.showItem(item);
-						            }
-								}
-				            } );
-			        	} 
-			        } );
-
-			        buffer.load();
-			        queue.enqueue( taskTree );
-			        queue.flush();
-			        buffer.unload();
-			        
-			        taskTree.getSource().flush();
-			        taskTree.getDestination().flush();
-			        taskTree.getSource().close();
-			        taskTree.getDestination().close();
-			        logger.info( "finished synchronization" );
-			        
-			        getDisplay().asyncExec( new Runnable() {
-						public void run() {
-			            	// Notification Window before disposal.
-							MessageBox mb = new MessageBox( getShell(), SWT.ICON_INFORMATION | SWT.OK );
-							mb.setText( "Finished" );
-						    mb.setMessage( "Profile execution finished");
-						    mb.open();
-						    
-						    getShell().dispose();
-						}
-			        } );
-					
-			        processing = false;
-			    } catch( IOException e ) {
-			        e.printStackTrace();
-			    } catch( Exception e ) {
-			        e.printStackTrace();
-			    } finally {
-			        guiController.showBusyCursor( false );
-			    }
-			}
-        }, "Action Performer" );
-        worker.start();
+        this.onlyChanges = onlyChanges;
+    }
+    public boolean isChangeAllowed()
+    {
+        return changeAllowed;
+    }
+    public void setChangeAllowed( boolean changeAllowed )
+    {
+        this.changeAllowed = changeAllowed;
+    }
+    public void showItem( TableItem item )
+    {
+        tableLogLines.showItem( item );
     }
     
 	/** Auto-generated event handler method */
 	protected void tableLogLinesMouseUp(MouseEvent evt)
 	{
-		if( !processing && evt.button == 3 )
+		if( changeAllowed && evt.button == 3 )
 		{
 		    showPopup( evt.x, evt.y );
 		}
-	}
-
-	/** Auto-generated event handler method */
-	protected void buttonGoWidgetSelected(SelectionEvent evt)
-	{
-	    if( !processing )
-	    {
-			performActions();
-		}
-	}
-
-	/** Auto-generated event handler method */
-	protected void comboFilterModifyText(ModifyEvent evt)
-	{
-	    if( !processing )
-	    {
-	        onlyChanges = comboFilter.getSelectionIndex() == 1;
-	        if( taskTree != null )
-	            rebuildActionList();
-	    }
 	}
 }
