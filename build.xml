@@ -24,10 +24,12 @@
 		<include name="jakarta-oro-2.0.7.jar"/>		
 		<include name="commons-betwixt-1.0-alpha-1.jar"/>
 		<include name="commons-cli-1.0.jar"/>
+		<include name="commons-configuration-1.0.jar"/>
+		<include name="commons-lang-2.0.jar"/>
 		<include name="commons-logging.jar"/>
 		<include name="commons-io.jar"/>
 		<include name="commons-beanutils.jar"/>
-		<include name="commons-collections.jar"/>
+		<include name="commons-collections-3.1.jar"/>
 		<include name="commons-net-1.2.2.jar"/>
 		<include name="commons-digester-1.5.jar"/>
 		<include name="xercesImpl.jar"/>
@@ -92,8 +94,8 @@
 	</target>
 	
 	<target name="win32-exe" description="Create Exe-Stub for Win32 distro" depends="jar">
-		<exec executable="resources/launch4j.exe" failonerror="true">
-			<arg line="resources/Launch4J.cfg"/>
+		<exec executable="resources/jsmoothcmd.exe" failonerror="true">
+			<arg line="resources/fullsync.jsmooth"/>
 		</exec>
 	</target>
 		

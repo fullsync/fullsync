@@ -18,6 +18,10 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class ProcessorImpl extends AbstractProcessor
 {
+    // TODO this should be execution local so the class
+    //      itself is multithreadable
+    //      so maybe just put them all into a inmutable
+    //		state container
     private IgnoreDecider takeIgnoreDecider;
     private StateDecider stateDecider;
     private BufferStateDecider bufferStateDecider;

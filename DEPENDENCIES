@@ -1,0 +1,117 @@
+
+commons-beanutils.jar
+	Dependencies:
+		commons-logging.jar
+
+	Used by:
+		commons-digester-1.5.jar
+
+commons-betwixt-1.0-alpha-1.jar
+
+commons-collections-3.1.jar
+	Dependencies:
+		none
+
+	Used by:
+		commons-configuration-1.0.jar
+		commons-digester-1.5.jar
+
+commons-configuration-1.0.jar
+	Dependencies:
+		*Core: Java 1.3, commons-collections, commons-lang
+		 ConfigurationFactory: commons-logging, commons-digester, JDK 1.4 or xml-apis
+		 DatabaseConfiguration: commons-logging, JDBC 3.0 (Java 1.4 or jdbc2_0-stdext.jar)
+		*XMLConfiguration, HierarchicalXMLConfiguration: Java 1.4 or (xml-apis + xerces)
+		 JNDIConfiguration: commons-logging
+		 ConfigurationDynaBean: commons-beanutils, commons-logging
+
+	Uses:
+		loading properties from file
+
+commons-cli-1.0.jar
+	Dependencies:
+		none
+
+	Uses:
+		initial startup of application
+
+commons-digester-1.5.jar
+	Dependencies:
+		commons-beanutils.jar (1.x)
+		commons-collections-3.1.jar
+		commons-logging.jar (1.0.x)
+	
+	Uses:
+		none
+
+commons-io.jar
+	Dependencies:
+		none
+
+	Uses:
+		none
+
+commons-lang-2.0.jar
+	Dependencies:
+		none
+
+	Used by:
+		commons-configuration-1.0.jar
+
+	Uses:
+		none
+
+commons-logging.jar
+	Dependencies:
+		log4j-1.2.8.jar
+
+	Used by:
+		commons-configuration-1.0.jar
+		commons-digester-1.5.jar
+
+	Uses:
+		none
+
+commons-net-1.2.2.jar
+	Dependencies:
+		jakarta-oro-2.0.7.jar (actually 2.0.8)
+
+	Uses:
+		net.sourceforge.fullsync.fs.connection.FtpConnection
+
+j2ssh-core.jar
+	Dependencies:
+		none ?
+
+	Uses:
+		net.sourceforge.fullsync.fs.connection.SftpConnection
+
+jakarta-oro-2.0.7.jar
+	Regular expressions
+
+	Dependencies:
+		none
+
+	Used by:
+		commons-net-1.2.2.jar
+
+log4j-1.2.8.jar
+	Dependencies:
+		none ?
+
+	Used by:
+		commons-logging.jar
+
+swt.jar
+	Dependencies:
+		none
+
+	Uses:
+		whole Gui
+	
+
+xercesImpl.jar + xml-apis.jar
+
+	Uses:
+		direct xml reading/writing (Profiles, XmlProperties)
+

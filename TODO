@@ -136,6 +136,37 @@ Logwindow
 	[X] show progress of performing actions
 	[X] show size of files
 
+Feedback:
+	[X]	progress indication for performing actions
+	[X] progress indication (or at least what am i doing atm) for check phase
+
+Interface:
+	[X] we should consider one gui item as gui controller who gets "general" gui 
+		stuff lile closeApplication and show busy cursor. generally "FullSync" should
+		not be controlling too many gui items, it's much more the heart of the 
+		sync processes. so mainwin should get a fullsync instance... or maybe we
+		rename this 'sync-controller' somehow ?
+
+Sheduler:
+	[X]	copy sheduler from backup - we use Timer and ProfileManager directly
+		(so changes to intervals and stuff are propagated much easier)
+	[X] add button to toolbar enable/disable scheduling
+
+Release-critical:
+	[ ] implement working versioning system
+	[ ] include license stuff correctly
+	
+
+---===[ to 0.9 Tasks ]====-------------------------------------------------
+
+Gui:
+	[ ] realize the gui concept (2004-11-07)
+
+
+---===[ to 0.10 Tasks ]====------------------------------------------------
+
+---===[ to 1.0 Tasks ]====-------------------------------------------------
+
 Logwindow
 	[ ] Show size of copied data
 	
@@ -159,17 +190,9 @@ Feedback:
 	[ ] cancel in execution phase
 		actually this is not just a Gui thingy, we need to nicely stop the
 		ActionQueue/ExecutionBuffer and flush the sync buffer
-	[X]	progress indication for performing actions
-	[X] progress indication (or at least what am i doing atm) for check phase
 	[?] some encapsulement for src and dst files ? [Task?]
-	
-Interface:
-	[X] we should consider one gui item as gui controller who gets "general" gui 
-		stuff lile closeApplication and show busy cursor. generally "FullSync" should
-		not be controlling too many gui items, it's much more the heart of the 
-		sync processes. so mainwin should get a fullsync instance... or maybe we
-		rename this 'sync-controller' somehow ?
 		
+Interface:
 	[ ] investigate why the busy cursor is not shown when above the scrollbar
 		or table headers
 		
@@ -194,9 +217,6 @@ Realtime-Reporting:
 	[?] Implement events for certain actions
 
 Sheduler:
-	[X]	copy sheduler from backup - we use Timer and ProfileManager directly
-		(so changes to intervals and stuff are propagated much easier)
-	[X] add button to toolbar enable/disable scheduling
 	[ ] add column next update
 	[ ] update lastUpdate / nextUpdate correctly
 	[ ] add some simple stuff to the profile (interval, enabled and errorflag 
@@ -257,8 +277,6 @@ Connections:
 	[ ] Sftp seems to pretty instable, it starts throwing exceptions
 		named "Failure", when trying to retrieve response headers,
 		after a few minutes
-
----===[ to 1.0 Tasks ]====-----------------------------------------------------
 
 Backup:
 	[ ] copy to temp, then rename
