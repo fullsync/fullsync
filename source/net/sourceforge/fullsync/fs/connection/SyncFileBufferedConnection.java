@@ -114,11 +114,13 @@ public class SyncFileBufferedConnection implements BufferedConnection
     private Site fs;
     private BufferedFile root; 
     private boolean dirty;
+    private boolean monitoringFileSystem; 
     
     public SyncFileBufferedConnection( Site fs )
     {
         this.fs = fs;
         this.dirty = false;
+        this.monitoringFileSystem = false;
         loadFromBuffer();
     }
 
@@ -171,6 +173,23 @@ public class SyncFileBufferedConnection implements BufferedConnection
     {
         return false;
     }
+    protected void updateFromFileSystem( BufferedFile buffered )
+    {
+    	// load fs entries if wanted
+        Collection fsChildren = buffered.getUnbuffered().getChildren();
+        for( Iterator i = fsChildren.iterator(); i.hasNext(); )
+        {
+            File uf = (File)i.next();
+            BufferedFile bf = (BufferedFile)buffered.getChild( uf.getName() );
+            if( bf == null )
+            {
+            	bf = new AbstractBufferedFile( this, uf, root, uf.isDirectory(), false );
+				buffered.addChild( bf );
+            }
+            if( bf.isDirectory() )
+            	updateFromFileSystem( bf );
+        }
+    }
     protected void loadFromBuffer()
     {
         File fsRoot = fs.getRoot();
@@ -179,14 +198,8 @@ public class SyncFileBufferedConnection implements BufferedConnection
         root = new AbstractBufferedFile(this, fsRoot, null, true, true );
         if( f == null || !f.exists() || f.isDirectory() )
         {
-            /* Source Buffer needs to load fs files after buffer info /
-            Collection fsChildren = root.getUnbuffered().getChildren();
-            for( Iterator i = fsChildren.iterator(); i.hasNext(); )
-            {
-                File uf = (File)i.next();
-                root.addChild( new AbstractBufferedFile( this, uf, root, uf.isDirectory(), false ) );
-            }
-            /* */
+        	if( isMonitoringFileSystem() )
+        		updateFromFileSystem( root );
             return;
         }
         ByteArrayOutputStream out;
@@ -232,6 +245,9 @@ public class SyncFileBufferedConnection implements BufferedConnection
                 e1.printStackTrace();
             }
         }
+        
+        if( isMonitoringFileSystem() )
+        	updateFromFileSystem( root );
     }
     protected Element serializeFile( BufferedFile file, Document doc )
     {
@@ -291,6 +307,14 @@ public class SyncFileBufferedConnection implements BufferedConnection
         }
     }
     
+    public boolean isMonitoringFileSystem() 
+	{
+		return monitoringFileSystem;
+	}
+	public void setMonitoringFileSystem(boolean monitor) 
+	{
+		this.monitoringFileSystem = monitor;
+	}
     public void flush() throws IOException
     {
         saveToBuffer();
@@ -305,5 +329,10 @@ public class SyncFileBufferedConnection implements BufferedConnection
     {
         return fs.getUri();
     }
+
+    public boolean isCaseSensitive()
+	{
+		return fs.isCaseSensitive();
+	}
 
 }

@@ -128,25 +128,40 @@ Logging:
 Connection:
 	[X] disconnect properly 
 
----===[ 0.8 to 0.9 Tasks ]====-----------------------------------------------------
-
 syncfiles
 	[X] gzip them
 
 Logwindow
-	[ ] show progress of performing actions
-	[ ] show size of files
+	[X] show progress of performing actions
+	[X] show size of files
+
+Sheduler:
+	[X]	copy sheduler from backup - we use Timer and ProfileManager directly
+		(so changes to intervals and stuff are propagated much easier)
+	[ ] add button to toolbar enable/disable scheduling
+	[ ] add column next update
+	[ ] update lastUpdate / nextUpdate correctly
+	[ ] add some simple stuff to the profile (interval, enabled and errorflag 
+		with different levels like minor, major, blocker (could not connect))
+	[ ] access to logfiles
+	[ ] show that a profile is currently processed
 
 SB:
-	[ ] we need to build buffer info from fs as well, so fs orphans are
+	[?] we need to build buffer info from fs as well, so fs orphans are
 		detected without having the same file on the other side
 		maybe make different buffers / different behaviors as
 		destination buffer does not want to know about new files in fs
 		(it would delete them ?)
+	[ ] added monitor fs, but its still not working correctly (buff src
+		does not have a length when adding to buffer, maybe use fs ones)
+		furthermore, how should this all work at all, to-ftp will always
+		have differences to destination.
 
 Files:
 	[ ] we need to differenciate between case sensitivity. 
 		store names toLower in hashtables and search for toLower
+		ftp: try checking x permission on . to find out if its a win system
+		local: check properties ?
 	[ ] ascii/bin
 
 TakeIgnore -> Filter:
@@ -162,7 +177,7 @@ TakeIgnore -> Filter:
 		   Node.isIgnored ?
 		   
 NoBufferFound Handling:
-	[ ] let him choose between:   [destination buffer]
+	[ ] let him choose between:   [destination buffer only]
 		  - There is nothing at the destination.
 			(don't overwrite, build buffer while copying)
 		  - There is something at the destination
@@ -178,6 +193,12 @@ Threading
 Connection:
 	[ ] reconnect
 	
+Execution:
+	[ ] make some controlling unit which will handle profile execution
+	[ ] we should make sure profiles are locked while executed and 
+		we should show some neat symbol then.
+	[ ] make fullsync#performActions more feedback-friendly
+	[ ]	make logwindow use fullsync#performActions 
 
 ---===[ to 1.0 Tasks ]====-----------------------------------------------------
 
@@ -197,15 +218,13 @@ Buffer:
 	[ ] create multithreaded direct-read delayed-write buffer-access
 	[ ] create multithreaded delayed-read delayed-write buffer-access
 	[ ] create cyclic buffer-storage
+	[ ] create bufferedfile tree on the fly instead of ahead of sync process
 	
 Rules:
 	[ ] use xml for rulefiles
 	[ ] create generic rulesfile w/ dirrules
 	[ ] copy rule abstraction from backup
 	[ ] Merge rules or impl good "Set" mechanizm like syncrules in xml
-
-Sheduler:
-	[ ]	copy sheduler from backup
 
 Optimization:
 	[ ]	how to optimize and secure FS-access

@@ -10,12 +10,17 @@ import java.util.Date;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
+
+import net.sourceforge.fullsync.schedule.IntervalSchedule;
+import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
@@ -30,15 +35,41 @@ import org.xml.sax.SAXException;
  */
 public class ProfileManager
 {
+	class ProfileManagerTimerTask extends TimerTask
+	{
+		private Profile profile;
+		public ProfileManagerTimerTask( Profile p ) 
+		{
+			this.profile = p;
+		}
+		public void run() 
+		{
+			System.out.println( "Running profile: "+profile.getName());
+			Thread worker = new Thread( new Runnable() {
+		        public void run()
+	            {
+		        	FullSync.getInstance().executeProfile( profile, false );
+	            }
+			} );
+			worker.start();
+			profile.getSchedule().update();
+			updateTimer();
+		}
+	}
+	
+	
     private String configFile;
     private Hashtable profiles;
     private Vector listeners;
+    private Timer timer;
+    private boolean timerActive;
     
     public ProfileManager( String configFile ) throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError
     {
         this.configFile = configFile;
         this.profiles = new Hashtable();
         this.listeners = new Vector();
+        this.timer = new Timer();
         
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document doc = builder.parse( new File( configFile ) );
@@ -48,7 +79,10 @@ public class ProfileManager
         {
             Node n = list.item( i );
             if( n.getNodeType() == Node.ELEMENT_NODE ) 
-                addProfile( unserializeProfile( (Element)n ) );
+            {
+            	Profile p = unserializeProfile( (Element)n );
+                addProfile( p );
+            }
         }
         
         /*
@@ -108,6 +142,44 @@ public class ProfileManager
     {
         return (Profile)profiles.get( name );
     }
+    public void startTimer()
+    {
+    	timerActive = true;
+    	updateTimer();
+    }
+    void updateTimer()
+    {
+    	long nextTime = Long.MAX_VALUE;
+    	Profile nextProfile = null;
+    	
+    	Enumeration e = profiles.elements();
+    	while( e.hasMoreElements() )
+    	{
+    		Profile p = (Profile)e.nextElement();
+    		Schedule s = p.getSchedule();
+    		if( s != null )
+    		{
+    			long o = s.getNextOccurrence();
+    			if( nextTime > o )
+    			{
+    				nextTime = o;
+    				nextProfile = p;
+    			}
+    		}
+    	}
+    	
+    	if( nextProfile != null )
+    	{
+    		timer.schedule( 
+    				new ProfileManagerTimerTask( nextProfile ),
+					new Date( nextTime ) );
+    	}
+    }
+    public void stopTimer()
+    {
+    	timerActive = false;
+    	timer.cancel();
+    }
     public void addChangeListener( ProfilesChangeListener list )
     {
         listeners.add( list );
@@ -149,6 +221,20 @@ public class ProfileManager
         
         return desc;
     }
+    protected Schedule unserializeSchedule( Element element )
+    {
+    	if( element == null )
+    		return null;
+    	Schedule schedule = null;
+    	String type = element.getAttribute( "type" );
+    	if( type.equals( "interval" ) )
+    	{
+    		long firstSpan = element.hasAttribute( "firstspan" )?Long.parseLong( element.getAttribute("firstspan") ):0;
+    		long span = Long.parseLong( element.getAttribute( "span" ) );
+    		schedule = new IntervalSchedule( firstSpan, span );
+    	}
+    	return schedule;
+    }
     protected Profile unserializeProfile( Element element )
     {
         Profile p = new Profile();
@@ -159,7 +245,7 @@ public class ProfileManager
         } catch( ParseException e ) {
             p.setLastUpdate( new Date() );
         }
-        
+        p.setSchedule( unserializeSchedule( (Element)element.getElementsByTagName( "Schedule" ).item(0) ) );
         p.setSource( unserializeConnectionDescription( (Element)element.getElementsByTagName( "Source" ).item(0) ) );
         p.setDestination( unserializeConnectionDescription( (Element)element.getElementsByTagName( "Destination" ).item(0) ) );
         return p;

@@ -18,4 +18,7 @@ public interface Site
     public void close() throws IOException;
     
     public String getUri();
+    
+    public boolean isCaseSensitive();
+    
 }

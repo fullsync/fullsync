@@ -84,7 +84,8 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
     {
         children.remove( name );
     }
-    
+        
+	
     public void refresh()
     {
         // FIXME a dir refresh must be performed on the underlaying layer pretty carefully 

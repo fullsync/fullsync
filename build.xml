@@ -6,7 +6,7 @@
 	<!-- Project Properties -->
 	<property name="name" 				value="FullSync"/>
 	<property name="project"			value="FullSync"/>
-	<property name="version"			value="0.7.0"/>
+	<property name="version"			value="0.7.1"/>
 	<property name="final.name"			value="${project}-${version}"/>
 	<property name="final-src.name"		value="${project}-${version}-src"/>
 
@@ -68,6 +68,12 @@
 			</fileset>
 		</jar>
 	</target>
+	
+	<target name="copy-libs">
+		<copy todir="${build.dir}/lib">
+			<fileset refid="dependentJars"></fileset>
+		</copy>
+	</target>
 
 	<target name="installer" description="Create Windows installer" depends="jar">
 		<echo message="Builds a Windows installer based on Nullsoft Installer"/>
@@ -86,7 +92,7 @@
 		<!--<move file="${tomcat.dist}/fullsync-installer.exe" tofile="${tomcat.release}/v${version}/bin/${final.name}.exe"/>-->
 	</target>
 
-	<target name="build" depends="detect, jar, javadoc">
+	<target name="build" depends="detect, copy-libs, jar, javadoc">
 	</target>
 	
 	<target name="run" depends="compile">

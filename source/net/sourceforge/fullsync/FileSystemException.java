@@ -1,6 +1,5 @@
 package net.sourceforge.fullsync;
 
-
 /**
  * Thrown when an error occured while accessing a file system.
  * 

@@ -6,9 +6,14 @@ import java.net.URISyntaxException;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.sourceforge.fullsync.buffer.BlockBuffer;
+import net.sourceforge.fullsync.impl.FillBufferActionQueue;
 import net.sourceforge.fullsync.impl.ProcessorImpl;
+import net.sourceforge.fullsync.ui.LogWindow;
 import net.sourceforge.fullsync.ui.MainWindow;
+import net.sourceforge.fullsync.ui.SystemTrayItem;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -25,66 +30,144 @@ public class FullSync
 {
     private static FullSync singleton;
     
+    private ProfileManager profileManager;
+    private Processor processor;
+    
     private boolean guiEnabled;
-    private ProfileManager pm;
-    private Shell mainShell;
+    private Display display;
+    private MainWindow mainWindow;
+    private SystemTrayItem trayItem;
     
     public FullSync( boolean guiEnabled )
     	throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError
     {
+        this.guiEnabled = guiEnabled;
         DOMConfigurator.configure( "logging.xml" );
         
+        profileManager = new ProfileManager( "profiles.xml" );
+        processor = new ProcessorImpl();
+
         singleton = this;
-        this.guiEnabled = guiEnabled;
-        
-        pm = new ProfileManager( "profiles.xml" );
     }
     
     public void start()
     {
+    	//profileManager.startTimer();
         if( guiEnabled )
         {
             startGui();
+        	trayItem = new SystemTrayItem( mainWindow );
         }
+        run();
+    }
+    public void run()
+    {
+    	while (!trayItem.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+        stop();
+    }
+    public void stop()
+    {
+    	profileManager.stopTimer();
+    	trayItem.dispose();
+    	// stop gui
+    }
+    
+    public Processor getProcessor() 
+    {
+		return processor;
+	}
+    public ProfileManager getProfileManager()
+    {
+    	return profileManager;
+    }
+    
+    public void executeProfile( Profile profile, boolean interactive )
+    {
+		TaskTree t;
+        try {
+            t = getProcessor().execute( profile );
+            if( interactive ) {
+            	LogWindow.show( t );
+            } else {
+            	performActions( t );
+            }
+        } catch( Exception e ) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * TODO if we add some listener/feedback receiver here we could
+     * easily use this for visual action performing as well.
+     */
+    public void performActions( TaskTree taskTree )
+    {
+        try {
+            //tasksTotal = taskTree.getTaskCount();
+		    //tasksFinished = 0;
+		    
+			// Logger logger = Logger.getRootLogger();
+            // logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
+            Logger logger = Logger.getLogger( "FullSync" );
+	        logger.info( "Synchronizing "+taskTree.getSource().getUri().toString()+" and "+taskTree.getDestination().getUri().toString() );
+	        
+	        BlockBuffer buffer = new BlockBuffer( logger );
+	        ActionQueue queue = new FillBufferActionQueue(buffer);
+	        // TODO add some visualisation of finished tasks 
+	        // final Color colorFinished = new Color( null, 150, 255, 150 );
+	        // item.setBackground()
+	        //   -- this should still be possible if logwindow is using this method
+	        
+	        buffer.load();
+	        queue.enqueue( taskTree );
+	        queue.flush();
+	        buffer.unload();
+	        
+	        taskTree.getSource().flush();
+	        taskTree.getDestination().flush();
+	        taskTree.getSource().close();
+	        taskTree.getDestination().close();
+	        logger.info( "finished synchronization" );
+	    } catch( IOException e ) {
+	        e.printStackTrace();
+	    }
     }
     
     public boolean isGuiEnabled()
     {
         return guiEnabled;
     }
-    public Shell getMainShell()
+    public MainWindow getMainWindow()
     {
-        return mainShell;
+        return mainWindow;
     }
     
     protected void startGui()
     {
 		try {
-			Display display = Display.getDefault();
-			mainShell = new Shell(display);
-			MainWindow inst = new MainWindow(mainShell, SWT.NULL);
-			inst.setProfileManager( pm );
-			inst.setProcessor( new ProcessorImpl() );
+			display = Display.getDefault();
+			Shell mainShell = new Shell(display);
+			mainWindow = new MainWindow(mainShell, SWT.NULL);
+			mainWindow.setProfileManager( profileManager );
+			mainWindow.setProcessor( processor );
 			mainShell.setLayout(new org.eclipse.swt.layout.FillLayout());
 			Rectangle shellBounds = mainShell.computeTrim(0,0,635,223);
 			mainShell.setSize(shellBounds.width, shellBounds.height);
-			mainShell.setText( "FullSync 0.7 Preview" );
-			mainShell.setImage( new Image( null, "images/Location_Both.gif" ) );
-			mainShell.open();
-	        while (!mainShell.isDisposed()) {
-				if (!display.readAndDispatch())
-					display.sleep();
-			}
+			mainShell.setText( "FullSync 0.7.1" );
+			mainShell.setImage( new Image( null, "images/FullSync.gif" ) );
+			mainShell.setVisible( false );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-    
+
     public static FullSync getInstance()
     {
         return singleton;
     }
-    
+
     public static void main( String[] args )
     	throws DataParseException, FileSystemException, IOException, URISyntaxException, Exception
     {
@@ -100,10 +183,15 @@ public class FullSync
         System.out.println( Security.getAlgorithms("KeyAgreement") );//, "DH" ) );
         KeyPairGenerator dhKeyPairGen = KeyPairGenerator.getInstance("DH");
         KeyAgreement dhKeyAgreement = KeyAgreement.getInstance("DH");
-        /* */
+        /* /
         
         FullSync fs = new FullSync( true );
         fs.start();
+        
+        /* */
+    	
+    	FullSync fs = new FullSync(true);
+    	fs.start();
         
         /* /
         FileSystemManager fsm = new FileSystemManager();

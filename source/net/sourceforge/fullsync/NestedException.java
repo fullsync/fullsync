@@ -2,6 +2,9 @@ package net.sourceforge.fullsync;
 
 import java.io.*;
 
+/**
+ * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
+ */
 public class NestedException extends Exception
 {
     private Throwable ex;

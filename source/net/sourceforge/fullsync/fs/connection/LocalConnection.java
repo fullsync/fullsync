@@ -116,5 +116,9 @@ public class LocalConnection implements FileSystemConnection
         return base.toURI().toString();
     }
 
-
+    public boolean isCaseSensitive()
+    {
+    	// TODO find out whether current fs is case sensitive
+    	return false;
+    }
 }

@@ -43,7 +43,7 @@ public class ScpConnection implements FileSystemConnection
         prop.setHost( uri.getHost() );
         
         // REVISIT not really fine
-        sshClient.connect( prop, new DialogKnownHostsKeyVerification( FullSync.getInstance().getMainShell() ) );
+        sshClient.connect( prop, new DialogKnownHostsKeyVerification( FullSync.getInstance().getMainWindow().getShell() ) );
         
         PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
         pwd.setUsername( desc.getUsername() );
@@ -187,5 +187,10 @@ public class ScpConnection implements FileSystemConnection
     {
         return desc.getUri();
     }
-    
+    public boolean isCaseSensitive()
+    {
+    	// TODO find out whether current fs is case sensitive
+    	return false;
+    }
+
 }

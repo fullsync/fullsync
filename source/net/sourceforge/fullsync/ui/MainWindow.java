@@ -13,6 +13,8 @@ import net.sourceforge.fullsync.TaskTree;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -29,13 +31,19 @@ import org.eclipse.swt.widgets.ToolItem;
 /**
 * This code was generated using CloudGarden's Jigloo
 * SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a
-* for-profit company or business) then you should purchase
-* a license - please visit www.cloudgarden.com for details.
+* use. If Jigloo is being used commercially (ie, by a corporation,
+* company or business for any purpose whatever) then you
+* should purchase a license for each developer using Jigloo.
+* Please visit www.cloudgarden.com for details.
+* Use of Jigloo implies acceptance of these licensing terms.
+* *************************************
+* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
+* for this machine, so Jigloo or this code cannot be used legally
+* for any corporate or commercial purpose.
+* *************************************
 */
 public class MainWindow extends org.eclipse.swt.widgets.Composite implements ProfilesChangeListener 
 {
-    
 	private ToolItem toolItemDelete;
 	private ToolItem toolItemEdit;
 	private ToolItem toolItemNew;
@@ -52,10 +60,19 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	private Table tableProfiles;
     private ArrayList images;
     
-	public MainWindow(Composite parent, int style) {
+	public MainWindow(Composite parent, int style) 
+	{
 		super(parent, style);
 		images = new ArrayList();
 		initGUI();
+		
+		getShell().addShellListener(new ShellAdapter() {
+		    public void shellClosed(ShellEvent event) {
+		        // TODO add some config stuff, so we can change this behavior to dispose
+		        event.doit = false;
+		        minimizeToTray();
+		    }
+		} );
 	}
 
 	/**
@@ -238,11 +255,18 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	    
 	}
 
+	protected void minimizeToTray() 
+	{
+	    // on OSX use this: 
+	    //    mainWindow.setMinimized(true);
+	    getShell().setVisible(false);
+
+	    // TODO make sure Tray is visible here
+	}
 
     public void profilesChanged()
     {
         populateProfileList();
-
     }
 	protected void toolItemRunWidgetSelected(SelectionEvent evt)
 	{

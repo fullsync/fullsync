@@ -40,7 +40,8 @@ public class PublishSBActionDecider implements ActionDecider
                      actions.add( new Action( Action.Delete, Location.Destination, BufferUpdate.Source, "Deletion", false ) );
                 else {
                     // we have to update buffer
-                    Task t = getTask( src.getUnbuffered(), dst, sd, bsd );
+                	src.refreshBuffer();
+                    Task t = getTask( src, dst, sd, bsd );
                     return t;
                 }
             }
@@ -71,7 +72,8 @@ public class PublishSBActionDecider implements ActionDecider
                 actions.add( new Action( Action.Nothing, Location.None, BufferUpdate.None, "In Sync" ) );
             } else {
                 // Update buffer and check
-                Task t = getTask( src.getUnbuffered(), dst, sd, bsd );
+            	src.refreshBuffer();
+                Task t = getTask( src, dst, sd, bsd );
                 return t;
             }
         	break;

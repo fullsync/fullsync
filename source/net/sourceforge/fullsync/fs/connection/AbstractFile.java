@@ -34,6 +34,7 @@ public class AbstractFile implements File
         this.exists = exists;
         this.filtered = false;
         this.directory = directory;
+        this.children = null;
     }
     
     public FileSystemConnection getConnection()

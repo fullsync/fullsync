@@ -2,8 +2,10 @@ package net.sourceforge.fullsync;
 
 import java.util.Date;
 
+import net.sourceforge.fullsync.schedule.Schedule;
+
 /**
- * @author codewright
+ * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class Profile
 {
@@ -12,6 +14,7 @@ public class Profile
     private ConnectionDescription destination;
     private String ruleSet;
     private Date lastUpdate;
+    private Schedule schedule;
     
     public Profile()
     {
@@ -69,4 +72,12 @@ public class Profile
     {
         this.source = source;
     }
+    public Schedule getSchedule() 
+	{
+		return schedule;
+	}
+	public void setSchedule(Schedule schedule) 
+	{
+		this.schedule = schedule;
+	}
 }

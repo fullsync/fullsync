@@ -238,7 +238,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 					Rectangle shellBounds = shell.computeTrim(0,0,663,225);
 					shell.setSize(shellBounds.width, shellBounds.height);
 					shell.setText( "Synchronization Actions" );
-					shell.setImage( new Image( null, "images/Location_Both.gif" ) );
+					shell.setImage( new Image( null, "images/FullSync.gif" ) );
 					shell.open();
 		        } catch( Exception ex ) {
 		            ex.printStackTrace();

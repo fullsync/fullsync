@@ -6,4 +6,6 @@ package net.sourceforge.fullsync.fs.connection;
 public interface BufferedConnection extends FileSystemConnection
 {
     public void flushDirty();
+    public boolean isMonitoringFileSystem();
+	public void setMonitoringFileSystem(boolean monitor); 
 }

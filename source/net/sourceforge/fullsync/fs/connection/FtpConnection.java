@@ -107,6 +107,8 @@ public class FtpConnection implements FileSystemConnection
     private String basePath;
     private File root;
     
+    private boolean caseSensitive;
+    
     public FtpConnection( ConnectionDescription desc )
     	throws FileSystemException, URISyntaxException
     {
@@ -118,6 +120,10 @@ public class FtpConnection implements FileSystemConnection
 	        client.login( desc.getUsername(), desc.getPassword() );
 	        client.setFileType( FTP.BINARY_FILE_TYPE );
 	        basePath = client.printWorkingDirectory()+uri.getPath();
+	        
+	        // TODO find out whether remote server is case sensitive or not (win or unix)
+	        //      maybe check whether . has x permission
+	        caseSensitive = false;
 	        
 	        if( !client.changeWorkingDirectory( basePath ) )
 	        {
@@ -220,5 +226,8 @@ public class FtpConnection implements FileSystemConnection
         return desc.getUri();
     }
 
-    
+    public boolean isCaseSensitive()
+    {
+    	return caseSensitive;
+    }
 }
