@@ -23,6 +23,10 @@ public interface RemoteInterface extends Remote {
 	
 	Profile[] getProfiles() throws RemoteException;
 
+	void addProfileListChangeListener(RemoteProfileListChangeListenerInterface listener) throws RemoteException;
+	
+	void removeProfileListChangeListener (RemoteProfileListChangeListenerInterface listener) throws RemoteException;
+	
 	void runProfile(String name) throws RemoteException;
 
 	void startTimer() throws RemoteException;

@@ -75,6 +75,7 @@ public class ProfileManager implements ProfileChangeListener
     //       please make a dao of me, with save/load and that's it
     //       don't forget calling profilesChangeEvent if dao is changed
     private RemoteManager remoteManager;
+    private ProfileListChangeListener remoteListener;
     private Timer updateTimer;
     
     protected ProfileManager() {
@@ -125,6 +126,18 @@ public class ProfileManager implements ProfileChangeListener
     	throws MalformedURLException, RemoteException, NotBoundException
 	{
     	this.remoteManager = remoteManager;
+    	
+    	remoteListener = new ProfileListChangeListener() {
+			public void profileListChanged() {
+				updateRemoteProfiles();
+			}
+
+			public void profileChanged(Profile p) {
+//				ProfileManager.this.profileChanged(p);
+				updateRemoteProfiles();
+			}
+    	};
+    	remoteManager.addProfileListChangeListener(remoteListener);
     	updateRemoteProfiles();
     	
 //    	updateTimer = new Timer(true);
@@ -144,13 +157,16 @@ public class ProfileManager implements ProfileChangeListener
 			remoteprofiles[i].addProfileChangeListener(this);
 		}
 
-		// TODO [Michele] this refresh of remote profiles makes the application flashes a little.
-		// Find a way to call update only when needed.
-		// Plus this deselects the selected profile. This is very ugly.
 		fireProfilesChangeEvent();    	
-    }
+    }	
     
     public void disconnectRemote() {
+    	try {
+			remoteManager.removeProfileListChangeListener(remoteListener);
+		} catch (RemoteException e) {
+			ExceptionHandler.reportException( e );
+		}
+    	
     	remoteManager = null;
     	
     	if (updateTimer != null) {
@@ -490,7 +506,13 @@ public class ProfileManager implements ProfileChangeListener
     public void save()// throws ParserConfigurationException, FactoryConfigurationError, IOException
     {
     	if (remoteManager != null) {
-    		remoteManager.save((Profile[]) profiles.toArray(new Profile[0]));
+    		try {
+        		remoteManager.removeProfileListChangeListener(remoteListener);
+        		remoteManager.save((Profile[]) profiles.toArray(new Profile[0]));
+        		remoteManager.addProfileListChangeListener(remoteListener);
+    		} catch (RemoteException e) {
+    			ExceptionHandler.reportException( e );
+    		}
     	}
     	else {
     		try {

@@ -7,10 +7,12 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 
@@ -20,6 +22,7 @@ import net.sourceforge.fullsync.TaskTree;
 public class RemoteManager {
 
 	private RemoteInterface remoteInterface;
+	private HashMap listenersMap = new HashMap();
 	private boolean useRemoteListener = false;
 
 	public RemoteManager(String host, int port, String password) 
@@ -51,6 +54,21 @@ public class RemoteManager {
 		return null;
 	}
 
+	public void addProfileListChangeListener(ProfileListChangeListener listener)
+		throws RemoteException
+	{
+		RemoteProfileListChangeListener remoteListener = new RemoteProfileListChangeListener(listener);
+		remoteInterface.addProfileListChangeListener(remoteListener);
+		listenersMap.put(listener, remoteListener);
+	}
+	
+	public void removeProfileListChangeListener (ProfileListChangeListener listener)
+		throws RemoteException
+	{
+		RemoteProfileListChangeListener remoteListener = (RemoteProfileListChangeListener) listenersMap.remove(listener);
+		remoteInterface.removeProfileListChangeListener(remoteListener);
+	}
+	
 	public void runProfile(String name) throws RemoteException {
 		remoteInterface.runProfile(name);
 	}
@@ -59,7 +77,6 @@ public class RemoteManager {
 		try {
 			remoteInterface.startTimer();
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			ExceptionHandler.reportException( e );
 		}
 	}
@@ -68,7 +85,6 @@ public class RemoteManager {
 		try {
 			remoteInterface.stopTimer();
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			ExceptionHandler.reportException( e );
 		}
 	}
@@ -97,12 +113,8 @@ public class RemoteManager {
 		return this.useRemoteListener;
 	}
 
-	public void save(Profile[] profiles) {
-		try {
-			remoteInterface.save(profiles);
-		} catch (RemoteException e) {
-			ExceptionHandler.reportException( e );
-		}
+	public void save(Profile[] profiles) throws RemoteException {
+		remoteInterface.save(profiles);
 	}
 
 }

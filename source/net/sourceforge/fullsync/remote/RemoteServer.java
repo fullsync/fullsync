@@ -7,11 +7,13 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskFinishedEvent;
@@ -30,6 +32,8 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	private ProfileManager profileManager;
 	private Synchronizer synchronizer;
 	private String password;
+	
+	private HashMap listenersMap = new HashMap();
 		
 	public RemoteServer(ProfileManager profileManager, Synchronizer synchronizer) throws RemoteException {
 		this.profileManager = profileManager;
@@ -58,6 +62,38 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 		return (Profile[]) profilesVector.toArray(new Profile[] {});
 	}
 
+	public void addProfileListChangeListener(final RemoteProfileListChangeListenerInterface remotelistener)
+		throws RemoteException 
+	{
+		ProfileListChangeListener listener = new ProfileListChangeListener() {
+			public void profileChanged(Profile profile) {
+				try {
+					remotelistener.profileChanged(profile);
+				} catch (RemoteException e) {
+//					ExceptionHandler.reportException(e);
+				}
+			}
+			
+			public void profileListChanged() {
+				try {
+					remotelistener.profileListChanged();
+				} catch (RemoteException e) {
+//					ExceptionHandler.reportException(e);
+				}
+			}
+		};
+		profileManager.addProfilesChangeListener(listener);
+		listenersMap.put(remotelistener, listener);
+	}
+	
+	public void removeProfileListChangeListener (RemoteProfileListChangeListenerInterface remoteListener) 
+		throws RemoteException
+	{
+		ProfileListChangeListener listener = (ProfileListChangeListener) listenersMap.remove(remoteListener);
+		profileManager.removeProfilesChangeListener(listener);
+	}
+
+	
 	public void runProfile(String name) throws RemoteException {
 		Profile p = profileManager.getProfile(name);
 		TaskTree tree = synchronizer.executeProfile(p);

@@ -155,9 +155,10 @@ public class CommandLineInterpreter
 		    }
 	    	if (activateRemote) {
 	    		try {
-			    	System.out.println("Starting remote interface...");
+			        Logger logger = Logger.getLogger( "FullSync" );
+
 			    	RemoteController.getInstance().startServer(port, password, profileManager, sync);
-					System.out.println("Remote Interface available on port: "+port);
+					logger.info("Remote Interface available on port: "+port);
 				} catch (RemoteException e) {
 					ExceptionHandler.reportException( e );
 					listenerStarupException = e;
