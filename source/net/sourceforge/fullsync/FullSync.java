@@ -2,6 +2,7 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Date;
 
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
@@ -52,13 +53,13 @@ public class FullSync
     
     public void start()
     {
-    	//profileManager.startTimer();
+    	profileManager.startTimer();
         if( guiEnabled )
         {
             startGui();
         	trayItem = new SystemTrayItem( mainWindow );
+        	run();
         }
-        run();
     }
     public void run()
     {
@@ -94,6 +95,8 @@ public class FullSync
             } else {
             	performActions( t );
             }
+            profile.setLastUpdate( new Date() );
+            profileManager.fireChange();
         } catch( Exception e ) {
             e.printStackTrace();
         }
@@ -157,7 +160,7 @@ public class FullSync
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText( "FullSync 0.7.1" );
 			mainShell.setImage( new Image( null, "images/FullSync.gif" ) );
-			mainShell.setVisible( false );
+			mainShell.setVisible( true );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -183,11 +186,6 @@ public class FullSync
         System.out.println( Security.getAlgorithms("KeyAgreement") );//, "DH" ) );
         KeyPairGenerator dhKeyPairGen = KeyPairGenerator.getInstance("DH");
         KeyAgreement dhKeyAgreement = KeyAgreement.getInstance("DH");
-        /* /
-        
-        FullSync fs = new FullSync( true );
-        fs.start();
-        
         /* */
     	
     	FullSync fs = new FullSync(true);

@@ -69,7 +69,7 @@ public class ProfileManager
         this.configFile = configFile;
         this.profiles = new Hashtable();
         this.listeners = new Vector();
-        this.timer = new Timer();
+        this.timerActive = false;
         
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document doc = builder.parse( new File( configFile ) );
@@ -145,6 +145,7 @@ public class ProfileManager
     public void startTimer()
     {
     	timerActive = true;
+    	timer = new Timer();
     	updateTimer();
     }
     void updateTimer()
@@ -175,10 +176,17 @@ public class ProfileManager
 					new Date( nextTime ) );
     	}
     }
+    public boolean isTimerEnabled()
+    {
+        return timerActive;
+    }
     public void stopTimer()
     {
-    	timerActive = false;
-    	timer.cancel();
+        if( timerActive )
+        {
+            timerActive = false;
+            timer.cancel();
+        }
     }
     public void addChangeListener( ProfilesChangeListener list )
     {

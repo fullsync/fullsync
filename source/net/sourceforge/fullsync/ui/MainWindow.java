@@ -28,6 +28,9 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormLayout;
 /**
 * This code was generated using CloudGarden's Jigloo
 * SWT/Swing GUI Builder, which is free for non-commercial
@@ -44,21 +47,26 @@ import org.eclipse.swt.widgets.ToolItem;
 */
 public class MainWindow extends org.eclipse.swt.widgets.Composite implements ProfilesChangeListener 
 {
-	private ToolItem toolItemDelete;
-	private ToolItem toolItemEdit;
-	private ToolItem toolItemNew;
-	private ToolItem toolItemRun;
-	private ToolBar toolBar1;
-	private CoolItem coolItem1;
-	private CoolBar coolBar;
     private ProfileManager profileManager;
+    private ToolItem toolItemNew;
+    private TableColumn tableColumnName;
+    private ToolBar toolBar2;
+    private CoolItem coolItem2;
+    private TableColumn tableColumnDestination;
+    private TableColumn tableColumnSource;
+    private TableColumn tableColumnLastUpdate;
+    private Table tableProfiles;
+    private ToolItem toolItemSchedule;
+    private ToolItem toolItemRun;
+    private ToolItem toolItemDelete;
+    private ToolItem toolItemEdit;
+    private ToolBar toolBar1;
+    private CoolItem coolItem1;
+    private CoolBar coolBar;
     private Processor processor;
-	private TableColumn tableColumnDestination;
-	private TableColumn tableColumnSource;
-	private TableColumn tableColumnLastUpdate;
-	private TableColumn tableColumnName;
-	private Table tableProfiles;
     private ArrayList images;
+    private Image imageTimerRunning;
+    private Image imageTimerStopped;
     
 	public MainWindow(Composite parent, int style) 
 	{
@@ -82,96 +90,137 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	public void initGUI(){
 		try {
 			preInitGUI();
-	
-			coolBar = new CoolBar(this,SWT.NULL);
-			coolItem1 = new CoolItem(coolBar,SWT.NULL);
-			toolBar1 = new ToolBar(coolBar,SWT.FLAT);
-			toolItemNew = new ToolItem(toolBar1,SWT.NULL);
-			toolItemEdit = new ToolItem(toolBar1,SWT.NULL);
-			toolItemDelete = new ToolItem(toolBar1,SWT.NULL);
-			toolItemRun = new ToolItem(toolBar1,SWT.NULL);
-			tableProfiles = new Table(this,SWT.FULL_SELECTION| SWT.BORDER);
-			tableColumnName = new TableColumn(tableProfiles,SWT.NULL);
-			tableColumnLastUpdate = new TableColumn(tableProfiles,SWT.NULL);
-			tableColumnSource = new TableColumn(tableProfiles,SWT.NULL);
-			tableColumnDestination = new TableColumn(tableProfiles,SWT.NULL);
-	
-			this.setSize(new org.eclipse.swt.graphics.Point(635,223));
-	
-			GridData coolBarLData = new GridData();
-			coolBarLData.verticalAlignment = GridData.CENTER;
-			coolBarLData.horizontalAlignment = GridData.FILL;
-			coolBarLData.widthHint = -1;
-			coolBarLData.heightHint = -1;
-			coolBarLData.horizontalIndent = 0;
-			coolBarLData.horizontalSpan = 1;
-			coolBarLData.verticalSpan = 1;
-			coolBarLData.grabExcessHorizontalSpace = true;
-			coolBarLData.grabExcessVerticalSpace = false;
-			coolBar.setLayoutData(coolBarLData);
-	
-			coolItem1.setControl(toolBar1);
-			coolItem1.setMinimumSize(new org.eclipse.swt.graphics.Point(31,21));
-			coolItem1.setPreferredSize(new org.eclipse.swt.graphics.Point(31,21));
-	
-	
-			toolItemNew.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent evt) {
-					toolItemNewWidgetSelected(evt);
-				}
-			});
-	
-			toolItemEdit.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent evt) {
-					toolItemEditWidgetSelected(evt);
-				}
-			});
-	
-			toolItemDelete.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent evt) {
-					toolItemDeleteWidgetSelected(evt);
-				}
-			});
-	
-			toolItemRun.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent evt) {
-					toolItemRunWidgetSelected(evt);
-				}
-			});
-	
-			GridData tableProfilesLData = new GridData();
-			tableProfilesLData.verticalAlignment = GridData.FILL;
-			tableProfilesLData.horizontalAlignment = GridData.FILL;
-			tableProfilesLData.widthHint = -1;
-			tableProfilesLData.heightHint = -1;
-			tableProfilesLData.horizontalIndent = 0;
-			tableProfilesLData.horizontalSpan = 1;
-			tableProfilesLData.verticalSpan = 1;
-			tableProfilesLData.grabExcessHorizontalSpace = true;
-			tableProfilesLData.grabExcessVerticalSpace = true;
-			tableProfiles.setLayoutData(tableProfilesLData);
-			tableProfiles.setHeaderVisible(true);
-			tableProfiles.setLinesVisible(false);
-	
-			tableColumnName.setText("Name");
-			tableColumnName.setWidth(100);
-	
-			tableColumnLastUpdate.setText("Last Update");
-			tableColumnLastUpdate.setWidth(100);
-	
-			tableColumnSource.setText("Source");
-			tableColumnSource.setWidth(200);
-	
-			tableColumnDestination.setText("Destination");
-			tableColumnDestination.setWidth(200);
-			GridLayout thisLayout = new GridLayout(1, true);
-			this.setLayout(thisLayout);
-			thisLayout.marginWidth = 0;
-			thisLayout.marginHeight = 0;
-			thisLayout.numColumns = 1;
-			thisLayout.makeColumnsEqualWidth = false;
+
+			this.setSize(629, 199);
+
+			GridLayout thisLayout = new GridLayout();
 			thisLayout.horizontalSpacing = 0;
+			thisLayout.marginHeight = 0;
+			thisLayout.marginWidth = 0;
 			thisLayout.verticalSpacing = 0;
+			this.setLayout(thisLayout);
+            {
+                coolBar = new CoolBar(this, SWT.NONE);
+                coolBar.setLocked(false);
+                {
+                    coolItem1 = new CoolItem(coolBar, SWT.NONE);
+                    {
+                        toolBar1 = new ToolBar(coolBar, SWT.FLAT);
+                        {
+                            toolItemNew = new ToolItem(toolBar1, SWT.PUSH);
+                            toolItemNew
+                                .addSelectionListener(new SelectionAdapter() {
+                                    public void widgetSelected(
+                                        SelectionEvent evt) {
+                                        toolItemNewWidgetSelected(evt);
+                                    }
+                                });
+                        }
+                        {
+                            toolItemEdit = new ToolItem(toolBar1, SWT.PUSH);
+                            toolItemEdit
+                                .addSelectionListener(new SelectionAdapter() {
+                                    public void widgetSelected(
+                                        SelectionEvent evt) {
+                                        toolItemEditWidgetSelected(evt);
+                                    }
+                                });
+                        }
+                        {
+                            toolItemDelete = new ToolItem(toolBar1, SWT.PUSH);
+                            toolItemDelete
+                                .addSelectionListener(new SelectionAdapter() {
+                                    public void widgetSelected(
+                                        SelectionEvent evt) {
+                                        toolItemDeleteWidgetSelected(evt);
+                                    }
+                                });
+                        }
+                        {
+                            toolItemRun = new ToolItem(toolBar1, SWT.PUSH);
+                            toolItemRun
+                                .addSelectionListener(new SelectionAdapter() {
+                                    public void widgetSelected(
+                                        SelectionEvent evt) {
+                                        toolItemRunWidgetSelected(evt);
+                                    }
+                                });
+                        }
+                        toolBar1.pack();
+                    }
+                    coolItem1.setControl(toolBar1);
+                    //coolItem1.setMinimumSize(new org.eclipse.swt.graphics.Point(128, 22));
+                    coolItem1.setPreferredSize(new org.eclipse.swt.graphics.Point(128, 22));
+                }
+                {
+                    coolItem2 = new CoolItem(coolBar, SWT.NONE);
+                    coolItem2.setSize(494, 22);
+                    coolItem2
+                        .setMinimumSize(new org.eclipse.swt.graphics.Point(
+                            24,
+                            22));
+                    coolItem2
+                        .setPreferredSize(new org.eclipse.swt.graphics.Point(
+                            24,
+                            22));
+                    coolItem2.setText("coolItem2");
+                    {
+                        toolBar2 = new ToolBar(coolBar, SWT.FLAT);
+                        coolItem2.setControl(toolBar2);
+                        {
+                            toolItemSchedule = new ToolItem(toolBar2, SWT.PUSH);
+                            toolItemSchedule
+                                .addSelectionListener(new SelectionAdapter() {
+                                    public void widgetSelected(
+                                        SelectionEvent evt) {
+                                        toolItemScheduleWidgedSelected(evt);
+                                    }
+                                });
+                        }
+                    }
+                }
+                GridData coolBarLData = new GridData();
+                coolBarLData.grabExcessHorizontalSpace = true;
+                coolBarLData.horizontalAlignment = GridData.FILL;
+                coolBarLData.verticalAlignment = GridData.FILL;
+                coolBar.setLayoutData(coolBarLData);
+            }
+            {
+                tableProfiles = new Table(this, SWT.FULL_SELECTION | SWT.BORDER);
+                {
+                    tableColumnName = new TableColumn(tableProfiles, SWT.NONE);
+                    tableColumnName.setText("Name");
+                    tableColumnName.setWidth(100);
+                }
+                {
+                    tableColumnLastUpdate = new TableColumn(
+                        tableProfiles,
+                        SWT.NONE);
+                    tableColumnLastUpdate.setText("Last Update");
+                    tableColumnLastUpdate.setWidth(100);
+                }
+                {
+                    tableColumnSource = new TableColumn(tableProfiles, SWT.NONE);
+                    tableColumnSource.setText("Source");
+                    tableColumnSource.setWidth(200);
+                }
+                {
+                    tableColumnDestination = new TableColumn(
+                        tableProfiles,
+                        SWT.NONE);
+                    tableColumnDestination.setText("Destination");
+                    tableColumnDestination.setWidth(200);
+                }
+                tableProfiles.setHeaderVisible(true);
+                tableProfiles.setLinesVisible(false);
+
+                GridData tableProfilesLData = new GridData();
+                tableProfilesLData.grabExcessHorizontalSpace = true;
+                tableProfilesLData.grabExcessVerticalSpace = true;
+                tableProfilesLData.horizontalAlignment = GridData.FILL;
+                tableProfilesLData.verticalAlignment = GridData.FILL;
+                tableProfiles.setLayoutData(tableProfilesLData);
+            }
 			this.layout();
 	
 			postInitGUI();
@@ -199,6 +248,13 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		i = LogWindow.loadImage( "Button_Run.gif" );
 		toolItemRun.setImage( i );
 		images.add( i );
+		i = LogWindow.loadImage( "Timer_Running.gif" );
+		imageTimerRunning = i;
+		images.add( i );
+		i = LogWindow.loadImage( "Timer_Stopped.gif" );
+		imageTimerStopped = i;
+		images.add( i );
+		//toolBar1.layout();
 	}
 	public void dispose()
     {
@@ -224,6 +280,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	    this.profileManager = profileManager;
 	    this.profileManager.addChangeListener( this );
 	    populateProfileList();
+	    updateTimerEnabled();
 	}
 	public ProfileManager getProfileManager()
 	{
@@ -263,10 +320,32 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 
 	    // TODO make sure Tray is visible here
 	}
+	
+	// TODO this should be an event caught from ProfileManager
+	protected void updateTimerEnabled()
+	{
+	    ProfileManager pm = getProfileManager();
+	    if( pm == null ) 
+	        return;
+	    
+	    if( pm.isTimerEnabled() )
+	    {
+	        toolItemSchedule.setImage( imageTimerRunning );
+	        toolItemSchedule.setToolTipText( "Suspend Timer" );
+	    } else {
+	        toolItemSchedule.setImage( imageTimerStopped );
+	        toolItemSchedule.setToolTipText( "Start Timer" );
+	    }
+	}
 
     public void profilesChanged()
     {
-        populateProfileList();
+        getDisplay().asyncExec( new Runnable() {
+            public void run()
+            {
+                populateProfileList();
+            }
+        } );
     }
 	protected void toolItemRunWidgetSelected(SelectionEvent evt)
 	{
@@ -334,4 +413,14 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	        profileManager.save();
 	    }
 	}
+    protected void toolItemScheduleWidgedSelected(SelectionEvent evt)
+    {
+        if( getProfileManager().isTimerEnabled() )
+        {
+            getProfileManager().stopTimer();
+        } else {
+            getProfileManager().startTimer();
+        }
+        updateTimerEnabled();
+    }
 }
