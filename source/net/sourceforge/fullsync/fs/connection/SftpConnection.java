@@ -45,7 +45,7 @@ public class SftpConnection implements FileSystemConnection
         prop.setHost( uri.getHost() );
         
         // REVISIT not really fine
-        sshClient.connect( prop, new DialogKnownHostsKeyVerification( GuiController.getInstance().getMainWindow().getShell() ) );
+        sshClient.connect( prop, new DialogKnownHostsKeyVerification( GuiController.getInstance().getMainShell() ) );
         
         PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
         pwd.setUsername( desc.getUsername() );

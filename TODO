@@ -182,7 +182,7 @@ Processor:
 Naming:
 	[ ] call Processor TaskGenerator ? (or is the ActionDecider the generator?)
 	[ ] call ActionQueue TaskExecutor ? (as we don't care about the buffer at all)
-	[ ] call FullSync Synchronizer ? (encapsuling main sync actions / objects)
+	[X] call FullSync Synchronizer ? (encapsuling main sync actions / objects)
 
 Architecture:
 	[ ] give ActionQueue or Buffer some kind of input stream ?
@@ -201,6 +201,7 @@ Sheduler:
 	[ ] update lastUpdate / nextUpdate correctly
 	[ ] add some simple stuff to the profile (interval, enabled and errorflag 
 		with different levels like minor, major, blocker (could not connect))
+	[ ] add groups to profiles (so we can cli fullsync saying schedule group a)
 	[ ] access to logfiles
 	[ ] show that a profile is currently processed
 
@@ -252,6 +253,11 @@ Execution:
 	[ ] make fullsync#performActions more feedback-friendly
 	[ ]	make logwindow use fullsync#performActions 
 
+Connections:
+	[ ] Sftp seems to pretty instable, it starts throwing exceptions
+		named "Failure", when trying to retrieve response headers,
+		after a few minutes
+
 ---===[ to 1.0 Tasks ]====-----------------------------------------------------
 
 Backup:
@@ -270,7 +276,7 @@ Dispose:
 	[ ] dispose tableitems
 
 Images:
-	[ ] cache images for different states/actions
+	[X] cache images for different states/actions
 
 Logging:
 	[ ] verify logging quality

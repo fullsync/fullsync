@@ -76,12 +76,17 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 	private TableColumn tableColumnDestination;
 	private TableColumn tableColumnSourceSize;
 	private Table tableLogLines;
+	private int tableLogLinesFillIndex;
+	private int tableLogLinesFillCount;
+	
 	private Hashtable actionImages;
+	private Hashtable taskImages;
 	private Image locationSource;
 	private Image locationDestination;
 	private Image locationBoth;
 	private Image nodeFile;
 	private Image nodeDirectory;
+	private Image nodeUndefined;
 	
 	private GuiController guiController;
 	private TaskTree taskTree;
@@ -111,7 +116,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 		try {
 			preInitGUI();
 	
-			tableLogLines = new Table(this,SWT.FULL_SELECTION);
+			tableLogLines = new Table(this,SWT.FULL_SELECTION | SWT.MULTI);
 			tableColumn1 = new TableColumn(tableLogLines,SWT.NULL);
 			tableColumnExplanation = new TableColumn(tableLogLines,SWT.NULL);
 			tableColumnSource = new TableColumn(tableLogLines,SWT.NULL);
@@ -300,6 +305,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 	{
 	    nodeFile = loadImage( "Node_File.gif" );
 	    nodeDirectory = loadImage( "Node_Directory.gif" );
+	    nodeUndefined = loadImage( "Node_Undefined.gif" );
 	    locationSource = loadImage( "Location_Source.gif" );
 	    locationDestination = loadImage( "Location_Destination.gif" );
 	    locationBoth = loadImage( "Location_Both.gif" );
@@ -313,14 +319,49 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 	    {
 	        actionImages.put( new Integer( i+10 ), loadImage( "Action_"+Action.errorNames[i]+".gif" ) );
 	    }
+	    
+	    taskImages = new Hashtable();
+	}
+	public void dispose()
+	{
+	    nodeFile.dispose();
+	    nodeDirectory.dispose();
+	    nodeUndefined.dispose();
+	    locationSource.dispose();
+	    locationDestination.dispose();
+	    locationBoth.dispose();
+	    
+	    Enumeration e;
+	    e = actionImages.elements();
+	    while( e.hasMoreElements() )
+	    {
+	        ((Image)e.nextElement()).dispose();
+	    }
+	    e = taskImages.elements();
+	    while( e.hasMoreElements() )
+	    {
+	        ((Image)e.nextElement()).dispose();
+	    }
+	    
+	    super.dispose();
 	}
 	protected void drawSide( GC g, Task t, Action a, int location )
 	{
-	    File n = location==Location.Source?t.getSource():t.getDestination();
+	    File n;
+	    if( t == null ) {
+	        n = null;
+	    } else if( location==Location.Source ) { 
+	        n = t.getSource();
+	    } else { 
+	        n = t.getDestination();
+	    }
+	    
 	    int  x = location==Location.Source?2:2*16+2;
 
-	    if( n.exists() )
+	    if( n == null )
 	    {
+	        g.drawImage( nodeUndefined, x, 0 );
+	    } else if( n.exists() ) {
 	        if( n.isDirectory() )
 	             g.drawImage( nodeDirectory, x, 0 );
 	        else g.drawImage( nodeFile, x, 0 );
@@ -352,6 +393,37 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 	    	break;
 	    }
 	}
+	protected Object calcTaskImageHash( Task t, Action a )
+	{
+	    int hash = 0;
+	    
+	    // using 5 bits for files
+	    if( t == null )
+	    {
+	        hash |= 1;
+	    } else {
+	        File src = t.getSource();
+	        File dst = t.getDestination();
+	        if( src.exists() )
+	        {
+	            hash |= 2;
+	            if( src.isDirectory() )
+	                hash |= 4;
+	        }
+	        if( dst.exists() )
+	        {
+	            hash |= 8;
+	            if( dst.isDirectory() )
+	                hash |= 16;
+	        }
+	    }
+	    
+	    // using 2+ bits for action
+	    hash |= (a.getLocation() << 6);
+	    hash |= (a.getType() << 8);
+	    
+	    return new Integer( hash );
+	}
 	protected Image buildTaskImage( Task t, Action a )
 	{
 	    ImageData data = new ImageData( 16*3+2, 16, 8, new PaletteData( 0, 0, 0 ) );
@@ -365,9 +437,27 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
         g.dispose();
         return image;
 	}
-	protected Image buildTaskImage( Task t )
+	protected Image getTaskImage( Task t, Action a )
 	{
-	    return buildTaskImage( t, t.getCurrentAction() );
+	    Image image;
+	    Object key = calcTaskImageHash( t, a );
+	    Object value = taskImages.get( key );
+	    if( value == null )
+	    {
+	        image = buildTaskImage( t, a );
+	        taskImages.put( key, image );
+	    } else {
+	        image = (Image)value;
+	    }
+	    return image;
+	}
+	protected Image getTaskImage( Action a )
+	{
+	    return getTaskImage( null, a );
+	}
+	protected Image getTaskImage( Task t )
+	{
+	    return getTaskImage( t, t.getCurrentAction() );
 	}
 	protected void addTaskChildren( Task t )
 	{
@@ -376,14 +466,19 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 	}
     protected void addTask( Task t )
     {
-        if( !t.getCurrentAction().isBeforeRecursion() )
-            addTaskChildren( t );
-        
         if( !onlyChanges || t.getCurrentAction().getType() != Action.Nothing )
         {
-	        Image image = buildTaskImage( t );
+	        Image image = getTaskImage( t );
 	        
-	        TableItem item = new TableItem( tableLogLines, SWT.NULL );
+	        TableItem item;
+	        if( tableLogLinesFillIndex < tableLogLinesFillCount ) {
+	            item = tableLogLines.getItem( tableLogLinesFillIndex );
+	            tableLogLinesFillIndex++;
+	        } else {
+	            item = new TableItem( tableLogLines, SWT.NULL );
+	            tableLogLinesFillIndex++;
+	            tableLogLinesFillCount++;
+	        }
 	        item.setImage( 3, image );
 	        item.setText( new String[] {
 	            "",
@@ -398,40 +493,70 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 	        // putting the tableitem in the data slot of the task.
 	        t.setData(item);
         }
-
-        if( t.getCurrentAction().isBeforeRecursion() )
-            addTaskChildren( t );
+        addTaskChildren( t );
+    }
+    protected void updateTask( TableItem item )
+    {
+        Task t = (Task)item.getData();
+        Image image = getTaskImage( t );
+        item.setImage( 3, image );
+        item.setText( 1, t.getCurrentAction().getExplanation() ); 
     }
     public void rebuildActionList()
     {
-        tableLogLines.clearAll();
-        tableLogLines.setItemCount(0);
+        //tableLogLines.clearAll();
+        //tableLogLines.setItemCount(0);
+        
+        tableLogLinesFillIndex = 0;
+        tableLogLinesFillCount = tableLogLines.getItemCount();
         addTaskChildren( taskTree.getRoot() );
-        //tableLogLines.redraw();
+        
+        // index is always pointing at the next free slot
+        if( tableLogLinesFillIndex < tableLogLinesFillCount )
+        {
+            tableLogLines.setItemCount( tableLogLinesFillIndex );
+            tableLogLinesFillCount = tableLogLines.getItemCount();
+        }
     }
 
     protected void showPopup( int x, int y )
     {
-        //System.out.println( "Contextmenu at: "+x+", "+y );
+        // TODO investigate whether there is a way to change the list selection
+        //      while the context menu is open
+        //      -> it would allow strange action changes
+        
+        // TODO impl some kind of ActionList supporting "containsAction"
+        //		and "indexOfAction" using own comparison rules
         
         SelectionListener selListener = new SelectionAdapter() {
             public void widgetSelected( SelectionEvent e )
             {
-                Integer i = (Integer)e.widget.getData();
+                TableItem[] tableItemList = tableLogLines.getSelection();
+                if( tableItemList.length == 0 )
+                    return;
                 
-                TableItem item = tableLogLines.getSelection()[0];
-                ((Task)item.getData()).setCurrentAction( i.intValue() );
+                Action targetAction = (Action)e.widget.getData();
                 
-                /*
-                item.setImage( 3, image );
-                item.setText( 1, action.getExplanation() );
-                item.setData( action );
-                
-                tableLogLines.redraw();
-                */
-                int top = tableLogLines.getTopIndex();
-                rebuildActionList();
-                tableLogLines.setTopIndex( top );
+                for( int iTask = 0; iTask < tableItemList.length; iTask++ )
+                {
+                    TableItem item = tableItemList[iTask];
+                    Task task = (Task)item.getData();
+                    Action[] actions = task.getActions();
+
+    	            for( int iAction = 0; iAction < actions.length; iAction++ )
+    	            {
+    	                Action a = actions[iAction];
+    	                if( a.getType() == targetAction.getType() 
+    	                        && a.getLocation() == targetAction.getLocation()
+    	                        && a.getExplanation().equals( targetAction.getExplanation() ) )
+    	                {
+    	                    task.setCurrentAction( iAction );
+    	                    break;
+    	                }
+    	            }
+
+                    updateTask( item );
+                }
             }
         };
         
@@ -439,36 +564,67 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
         if( items.length == 0 )
             return;
         
-        Task t = (Task)items[0].getData();
+        Task[] taskList = new Task[items.length];
+        for( int i = 0; i < items.length; i++ )
+            taskList[i] = (Task)items[i].getData();
         
         Menu m = new Menu( this );
         MenuItem mi;
+
+        // load initial actions of first task
+        Action[] possibleActions = taskList[0].getActions();
         
-        int curr = t.getCurrentActionIndex();
-        Action[] actions = t.getActions();
-        for( int i = 0; i < actions.length; i++ )
+        for( int iTask = 1; iTask < taskList.length; iTask++ )
         {
-            if( i == curr )
+            // invalidate all possible actions we dont find in this actionlist
+	        Action[] actions = taskList[iTask].getActions();
+	        
+	        for( int iPosAction = 0; iPosAction < possibleActions.length; iPosAction++ )
+	        {
+	            Action action = possibleActions[iPosAction];
+	            boolean found = false;
+	            
+	            if( action == null )
+	                continue;
+	            
+	            // check whether action is also supported by this task
+	            for( int iAction = 0; iAction < actions.length; iAction++ )
+	            {
+	                Action a = actions[iAction];
+	                if( a.getType() == action.getType() 
+	                        && a.getLocation() == action.getLocation()
+	                        && a.getExplanation().equals( action.getExplanation() ) )
+	                {
+	                    // the action exists
+	                    found = true;
+	                    break;
+	                }
+	            }
+	            
+	            if( !found )
+	            {
+	                // invalidate action that is not supported by all selected tasks
+	                possibleActions[iPosAction] = null;
+	            }
+	        }
+        }
+        
+        Task referenceTask = taskList.length==1?taskList[0]:null;
+        for( int i = 0; i < possibleActions.length; i++ )
+        {
+            Action action = possibleActions[i];
+            
+            if( action == null )
                 continue;
             
-            Action al = actions[i];
-            Image image = buildTaskImage( t, al );
-            
-            mi = new MenuItem( m, SWT.NULL );
-            mi.setImage( image );
-            mi.setText( Action.toString( al.getType() )+" - "+al.getExplanation() );
-            mi.setData( new Integer( i ) );
-            mi.addSelectionListener( selListener );
+		    Image image = getTaskImage( referenceTask, action );
+	        mi = new MenuItem( m, SWT.NULL );
+	        mi.setImage( image );
+	        mi.setText( Action.toString( action.getType() )+" - "+action.getExplanation() );
+	        mi.setData( action );
+	        mi.addSelectionListener( selListener );
         }
-        /*
-        Action al = new Action( Action.Nothing, Location.None, "Ignore" );
-        Image image = buildTaskImage( t, al );
-        mi = new MenuItem( m, SWT.NULL );
-        mi.setImage( image );
-        mi.setText( "Ignore" );
-        mi.setData( al );
-        mi.addSelectionListener( selListener );
-        */
+
         m.setLocation( toDisplay( x, y ) );
         m.setVisible( true );
     }

@@ -1,4 +1,7 @@
-
+* LogWindow:
+    - now caching and disposing images
+    - tableitems are reused, action change does not rebuilt table
+    - multi select and multi action change possible
 * added RuleSetDescriptor and divided into simple rulesets and advanced (the old ones) (patch by michele)
 * added changing background color of finished actions in logwindow (patch by michele)
 * added busy indicator for sync and execution phases (patch by michele)
