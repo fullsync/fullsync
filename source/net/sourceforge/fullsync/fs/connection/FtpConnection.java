@@ -145,11 +145,13 @@ public class FtpConnection extends InstableConnection
     }
     public void reconnect() throws IOException
     {
+        client.quit();
         client.disconnect();
         connect();
     }
     public void close() throws IOException
     {
+        client.quit();
         client.disconnect();
     }
     public void flush() throws IOException

@@ -2,6 +2,7 @@ package net.sourceforge.wrabbitftp;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
@@ -50,8 +51,8 @@ public class FTPServer extends Thread {
 	*/
 	private void initialize() {
 		try {
-			server = new ServerSocket(port);
-			server.setSoTimeout(100000);			
+			server = new ServerSocket(port, 5);
+			server.setSoTimeout(100);			
 		} catch (Exception e) {
 			System.out.println("[S] startup> Server creation failed.");
 			System.out.println("    java error> " + e);
@@ -90,14 +91,14 @@ public class FTPServer extends Thread {
 		{
 			try {
                 incoming = server.accept();
+                newConnection = new FTPConnection(this, incoming, rootObject, rootObject);
+                newConnection.start();
+                activeConnections.add(newConnection);
+            } catch( InterruptedIOException e1 ) {
+                yield();
             } catch( IOException e1 ) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
-
-			newConnection = new FTPConnection(this, incoming, rootObject, rootObject);
-			newConnection.start();
-			activeConnections.add(newConnection);
 		}
 		try {
 			server.close();
@@ -105,7 +106,7 @@ public class FTPServer extends Thread {
 			System.out.println("IOException while closiong FTP server : "+e);
 		}
 		System.out.println("[S] FTP Server ended on port :"+server.getLocalPort());
-		try {sleep(5000); } catch (InterruptedException e) {}
+		//try {sleep(5000); } catch (InterruptedException e) {}
 	}
 
 	/**
