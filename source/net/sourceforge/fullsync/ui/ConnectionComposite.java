@@ -31,6 +31,8 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 	private Label label1;
 	private Label label2;
 	private Text textFieldPort;
+	private Text textPassword;
+	private Label label3;
 	private Text textFieldHostname;
 
 	/**
@@ -72,6 +74,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 	public ConnectionComposite(org.eclipse.swt.widgets.Composite parent, int style) {
 		super(parent, style);
 		initGUI();
+		postInitGUI();
 	}
 
 	private void initGUI() {
@@ -82,7 +85,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			this.setSize(215, 101);
 			{
 				label1 = new Label(this, SWT.NONE);
-				label1.setText("Hostname");
+				label1.setText("Hostname:");
 			}
 			{
 				textFieldHostname = new Text(this, SWT.BORDER);
@@ -90,11 +93,12 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 				GridData textFieldHostnameLData = new GridData();
 				textFieldHostnameLData.widthHint = 95;
 				textFieldHostnameLData.heightHint = 13;
+				textFieldHostnameLData.grabExcessHorizontalSpace = true;
 				textFieldHostname.setLayoutData(textFieldHostnameLData);
 			}
 			{
 				label2 = new Label(this, SWT.NONE);
-				label2.setText("Port");
+				label2.setText("Port:");
 			}
 			{
 				textFieldPort = new Text(this, SWT.BORDER);
@@ -104,12 +108,28 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 				textFieldPortLData.heightHint = 13;
 				textFieldPort.setLayoutData(textFieldPortLData);
 			}
+			{
+				label3 = new Label(this, SWT.NONE);
+				label3.setText("Password:");
+			}
+			{
+				textPassword = new Text(this, SWT.BORDER);
+				GridData textPasswordLData = new GridData();
+				textPasswordLData.widthHint = 95;
+				textPasswordLData.heightHint = 13;
+				textPasswordLData.grabExcessHorizontalSpace = true;
+				textPassword.setLayoutData(textPasswordLData);
+			}
 			this.layout();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	private void postInitGUI() {
+		textPassword.setEchoChar('*');
+	}
+	
 	public void apply() {
 		String hostname = textFieldHostname.getText();
 		int port = 0;
@@ -118,13 +138,14 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 		} catch (NumberFormatException e) {
 		}
 		
+		String password = textPassword.getText();
 		try {
-			GuiController.getInstance().getProfileManager().setRemoteConnection(hostname, port);
+			GuiController.getInstance().getProfileManager().setRemoteConnection(hostname, port, password);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
 			mb.setText("Connection Error");
-			mb.setMessage("Unable to connect to the remote server\n(Host: "+hostname+" Port: "+port+").");
+			mb.setMessage("Unable to connect to the remote server.\n("+e1.getMessage()+")");
 			mb.open();
 		}
 	}

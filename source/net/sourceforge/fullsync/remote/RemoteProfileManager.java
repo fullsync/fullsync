@@ -18,8 +18,13 @@ public class RemoteProfileManager {
 
 	private RemoteInterface remoteInterface;
 
-	public RemoteProfileManager(String host, int port) throws MalformedURLException, RemoteException, NotBoundException {
+	public RemoteProfileManager(String host, int port, String password) 
+		throws MalformedURLException, RemoteException, NotBoundException 
+	{
 		remoteInterface = (RemoteInterface) Naming.lookup("rmi://"+host+":"+port+"/FullSync");
+		if (!remoteInterface.checkPassword(password)) {
+			throw new RemoteException("Wrong password");
+		}
 	}
 	
 	public Profile getProfile(String name) {

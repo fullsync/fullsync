@@ -16,6 +16,8 @@ import net.sourceforge.fullsync.TaskTree;
  */
 public interface RemoteInterface extends Remote {
 
+	boolean checkPassword(String passwd) throws RemoteException;
+	
 	Profile getProfile(String name) throws RemoteException;
 	
 	Profile[] getProfiles() throws RemoteException;

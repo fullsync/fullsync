@@ -23,18 +23,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class XmlPreferences implements Preferences
-{
-	/**
-	 * <FullSyncPreferences>
-	 *   <General>
-	 * 	   <CloseMinimizesToSystemTray>true</CloseMinimizesToSystemTray>
-	 * 	   <MinimizeMinimizesToSystemTray>false</CloseMinimizesToSystemTray>
-	 * 	   <ConfirmExit>true</ConfirmExit>
-	 *     <EnableSystemTray>true</EnableSystemTray>
-	 *   </General>
-	 * </FullSyncPreferences>
-	 */
-	
+{	
     private String configFile;
     
     private boolean confirmExit = true;
@@ -161,4 +150,28 @@ public class XmlPreferences implements Preferences
         // TODO Auto-generated method stub
 
     }
+	public boolean listeningForRemoteConnections() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public void setListeningForRemoteConnections(boolean bool) {
+		// TODO Auto-generated method stub
+
+	}
+	public int getRemoteConnectionsPort() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public void setRemoteConnectionsPort(int port) {
+		// TODO Auto-generated method stub
+
+	}
+	public String getRemoteConnectionsPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void setRemoteConnectionsPassword(String password) {
+		// TODO Auto-generated method stub
+
+	}
 }

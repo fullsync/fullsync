@@ -169,7 +169,7 @@
 				<Events>
 				</Events>
 				<Properties>
-					<Property name="text" type="String" value="Hostname"/>
+					<Property name="text" type="String" value="Hostname:"/>
 				</Properties>
 			</Component>
 			<Component class="org.eclipse.swt.widgets.Text" name="textFieldHostname" style="2048">
@@ -177,6 +177,7 @@
 					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
 						<Property name="widthHint" type="int" value="95"/>
 						<Property name="heightHint" type="int" value="13"/>
+						<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
 					</LayoutConstraint>
 				</Constraints>
 				<Events>
@@ -194,7 +195,7 @@
 				<Events>
 				</Events>
 				<Properties>
-					<Property name="text" type="String" value="Port"/>
+					<Property name="text" type="String" value="Port:"/>
 				</Properties>
 			</Component>
 			<Component class="org.eclipse.swt.widgets.Text" name="textFieldPort" style="2048">
@@ -204,10 +205,33 @@
 						<Property name="heightHint" type="int" value="13"/>
 					</LayoutConstraint>
 				</Constraints>
+				<Properties>
+					<Property name="text" type="String" value="10000"/>
+					<Property name="layoutData"/>
+				</Properties>
+			</Component>
+			<Component class="org.eclipse.swt.widgets.Label" name="label3" style="0">
+				<Constraints>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+					</LayoutConstraint>
+				</Constraints>
 				<Events>
 				</Events>
 				<Properties>
-					<Property name="text" type="String" value="10000"/>
+					<Property name="text" type="String" value="Password:"/>
+				</Properties>
+			</Component>
+			<Component class="org.eclipse.swt.widgets.Text" name="textPassword" style="2048">
+				<Constraints>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+						<Property name="widthHint" type="int" value="95"/>
+						<Property name="heightHint" type="int" value="13"/>
+						<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
+					</LayoutConstraint>
+				</Constraints>
+				<Events>
+				</Events>
+				<Properties>
 					<Property name="layoutData"/>
 				</Properties>
 			</Component>

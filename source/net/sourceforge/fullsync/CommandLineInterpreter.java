@@ -1,13 +1,11 @@
 package net.sourceforge.fullsync;
 
-import java.rmi.Naming;
-import java.rmi.registry.LocateRegistry;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Date;
 
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
-import net.sourceforge.fullsync.remote.RemoteServer;
+import net.sourceforge.fullsync.remote.RemoteController;
 import net.sourceforge.fullsync.ui.GuiController;
 
 import org.apache.commons.cli.CommandLine;
@@ -92,9 +90,7 @@ public class CommandLineInterpreter
 				    return;
 		    }
 
-		    RemoteServer remoteServer = null;
 	    	int port = 10000;
-	    	String serverURL = null;
 	    	
 		    if (line.hasOption("p")) {
 		    	System.out.println("Starting remote interface...");
@@ -103,13 +99,20 @@ public class CommandLineInterpreter
 					port = Integer.parseInt(portStr);
 				} catch (NumberFormatException e) {
 				}
-				serverURL = "rmi://localhost:"+port+"/FullSync";
-		    	
-		    	remoteServer = new RemoteServer(profileManager, sync);
 
-		    	LocateRegistry.createRegistry(port);	
-		    	Naming.rebind(serverURL, remoteServer);
-				System.out.println("Remote Interface available on URL: "+serverURL);
+				// FIXME [Michele] password.
+		    	RemoteController.getInstance().startRemoteServer(port, "admin", profileManager, sync);
+				System.out.println("Remote Interface available on port: "+port);
+		    }
+		    else {
+		    	boolean activateRemote = preferences.listeningForRemoteConnections();
+		    	port = preferences.getRemoteConnectionsPort();
+		    	String password = preferences.getRemoteConnectionsPassword();
+		    	if (activateRemote) {
+			    	System.out.println("Starting remote interface...");
+			    	RemoteController.getInstance().startRemoteServer(port, password, profileManager, sync);
+					System.out.println("Remote Interface available on port: "+port);
+		    	}
 		    }
 
 		    if (line.hasOption("d")) {
@@ -146,11 +149,9 @@ public class CommandLineInterpreter
 		    		profileManager.save();
 		    	}
 
-		    	if (remoteServer != null) {
-	        		Naming.unbind(serverURL);
-	            	// FIXME [Michele] For some reasons there is some thread still alive if you run the remote interface
-	            	System.exit(-1);
-	        	}
+		    	// FIXME [Michele] For some reasons there is some thread still alive if you run the remote interface
+	            RemoteController.getInstance().stopRemoteServer();
+	            System.exit(-1);
 		    }
 		    
         } catch( Exception exp ) {

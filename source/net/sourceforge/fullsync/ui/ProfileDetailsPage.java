@@ -80,5 +80,7 @@ public class ProfileDetailsPage implements WizardPage
             }
         } );
         cancelButton.setLayoutData( new GridData( GridData.END, GridData.CENTER, false, true ) );
+        
+        bottom.getShell().setDefaultButton(okButton);
     }
 }

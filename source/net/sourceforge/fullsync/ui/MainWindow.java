@@ -373,6 +373,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 					if (GuiController.getInstance().getProfileManager().isConnected()) {
 						connectItem.setEnabled(false);
 						disconnectItem.setEnabled(true);
+						GuiController.getInstance().getMainShell().setImage(new Image( null, "images/Remote_Connect.gif" ));
 					}
 				}
 			}
@@ -388,6 +389,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		            	GuiController.getInstance().getProfileManager().disconnectRemote();
 						connectItem.setEnabled(true);
 						disconnectItem.setEnabled(false);
+						GuiController.getInstance().getMainShell().setImage(new Image( null, "images/FullSync.gif" ));					
 					}
 				}
 			}

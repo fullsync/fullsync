@@ -25,10 +25,19 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 		
 	private ProfileManager profileManager;
 	private Synchronizer synchronizer;
+	private String password;
 		
 	public RemoteServer(ProfileManager profileManager, Synchronizer synchronizer) throws RemoteException {
 		this.profileManager = profileManager;
 		this.synchronizer = synchronizer;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public boolean checkPassword(String passwd) throws RemoteException {
+		return this.password.equals(passwd);
 	}
 	
 	public Profile getProfile(String name) throws RemoteException {

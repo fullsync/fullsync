@@ -1,6 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
 import net.sourceforge.fullsync.Preferences;
+import net.sourceforge.fullsync.remote.RemoteController;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -13,6 +14,9 @@ import org.eclipse.swt.widgets.Label;
 
 
 
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 /**
 * This code was generated using CloudGarden's Jigloo
 * SWT/Swing GUI Builder, which is free for non-commercial
@@ -33,6 +37,12 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 	private Button cbConfirmExit;
 	private Button cbCloseMinimizesToSystemTray;
 	private Button cbMinimizeMinimizesToSystemTray;
+	private Text textPassword;
+	private Label label3;
+	private Group groupRemoteConnection;
+	private Text textListeningPort;
+	private Label label2;
+	private Button cbListenForIncomming;
 	private Label label1;
 	private Combo comboProfileList;
 	//private Button cbEnableSystemTray;
@@ -108,7 +118,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                 */
                 {
                     label1 = new Label(groupInterface, SWT.NONE);
-                    label1.setText("profile list style: ");
+                    label1.setText("Profile list style: ");
                     GridData label1LData = new GridData();
                     label1LData.heightHint = 15;
                     label1.setLayoutData(label1LData);
@@ -122,6 +132,78 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                     comboProfileList.add( "Table" );
                     comboProfileList.add( "NiceListView" );
                 }
+				{
+					groupRemoteConnection = new Group(groupInterface, SWT.NONE);
+					GridLayout groupRemoteConnectionLayout = new GridLayout();
+					GridData groupRemoteConnectionLData = new GridData();
+					groupRemoteConnectionLData.horizontalSpan = 2;
+					groupRemoteConnectionLData.widthHint = 327;
+					groupRemoteConnectionLData.heightHint = 75;
+					groupRemoteConnection.setLayoutData(groupRemoteConnectionLData);
+					groupRemoteConnectionLayout.makeColumnsEqualWidth = true;
+					groupRemoteConnectionLayout.numColumns = 2;
+					groupRemoteConnection.setLayout(groupRemoteConnectionLayout);
+					groupRemoteConnection.setText("Remote Connection");
+					{
+						cbListenForIncomming = new Button(
+							groupRemoteConnection,
+							SWT.CHECK | SWT.LEFT);
+						cbListenForIncomming
+							.setText("Listen for incomming connections");
+						GridData cbListenForIncommingLData = new GridData();
+						cbListenForIncomming
+							.addSelectionListener(new SelectionAdapter() {
+								public void widgetSelected(SelectionEvent evt) {
+									updateRemoteConnectionGroup();
+//									if (cbListenForIncomming.getSelection()) {
+//										label2.setEnabled(true);
+//										textListeningPort.setEnabled(true);
+//										label3.setEnabled(true);
+//										textPassword.setEnabled(true);
+//										
+//									} else {
+//										label2.setEnabled(false);
+//										textListeningPort.setEnabled(false);
+//										label3.setEnabled(false);
+//										textPassword.setEnabled(false);
+//									}
+								}
+							});
+						cbListenForIncommingLData.horizontalSpan = 2;
+						cbListenForIncomming
+							.setLayoutData(cbListenForIncommingLData);
+					}
+					{
+						label2 = new Label(groupRemoteConnection, SWT.NONE);
+						label2.setText("Incomming connections port:");
+						label2.setEnabled(false);
+					}
+					{
+						textListeningPort = new Text(
+							groupRemoteConnection,
+							SWT.BORDER);
+						textListeningPort.setText("10000");
+						GridData textListeningPortLData = new GridData();
+						textListeningPort.setEnabled(false);
+						textListeningPortLData.widthHint = 39;
+						textListeningPortLData.heightHint = 12;
+						textListeningPort.setLayoutData(textListeningPortLData);
+					}
+					{
+						label3 = new Label(groupRemoteConnection, SWT.NONE);
+						label3.setText("Incoming connections password:");
+						label3.setEnabled(false);
+					}
+					{
+						textPassword = new Text(groupRemoteConnection, SWT.BORDER);
+						GridData textPasswordLData = new GridData();
+						textPassword.setEnabled(false);
+						textPasswordLData.widthHint = 118;
+						textPasswordLData.heightHint = 13;
+						textPasswordLData.grabExcessHorizontalSpace = true;
+						textPassword.setLayoutData(textPasswordLData);
+					}
+				}
 			}
 			
 			updateComponent();
@@ -133,12 +215,35 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 	
 	public void updateComponent() 
 	{
+		textPassword.setEchoChar('*');
+		
 		cbConfirmExit.setSelection(preferences.confirmExit());
 		cbCloseMinimizesToSystemTray.setSelection(preferences.closeMinimizesToSystemTray());
 		cbMinimizeMinimizesToSystemTray.setSelection(preferences.minimizeMinimizesToSystemTray());
 		//cbEnableSystemTray.setSelection(preferences.systemTrayEnabled());
 		comboProfileList.setText( preferences.getProfileListStyle() );
+		cbListenForIncomming.setSelection(preferences.listeningForRemoteConnections());
+		textListeningPort.setText(String.valueOf(preferences.getRemoteConnectionsPort()));
+		textPassword.setText(preferences.getRemoteConnectionsPassword());
+		updateRemoteConnectionGroup();
 	}
+	
+	private void updateRemoteConnectionGroup() {
+		if (cbListenForIncomming.getSelection()) {
+			label2.setEnabled(true);
+			textListeningPort.setEnabled(true);
+			label3.setEnabled(true);
+			textPassword.setEnabled(true);
+		}
+		else {			
+			label2.setEnabled(false);
+			textListeningPort.setEnabled(false);
+			label3.setEnabled(false);
+			textPassword.setEnabled(false);
+		}
+
+	}
+	
 	public void apply()
 	{
 		preferences.setConfirmExit(cbConfirmExit.getSelection());
@@ -147,9 +252,44 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		//preferences.setSystemTrayEnabled(cbEnableSystemTray.getSelection());
 		boolean profileListStyleChanged = (!preferences.getProfileListStyle().equals(comboProfileList.getText()));
 		preferences.setProfileListStyle(comboProfileList.getText());
-		preferences.save();
+
 		if (profileListStyleChanged) {
 			GuiController.getInstance().getMainWindow().updateProfileList();
 		}
+		
+		// TODO [Michele] Write Remote Connection preferences in the preferences file
+		// On startup the remote connection must startup if asked to.
+		boolean listenForIncoming = cbListenForIncomming.getSelection();
+		preferences.setListeningForRemoteConnections(listenForIncoming);
+		int port = -1;
+		String password = null;
+		if (listenForIncoming) {
+			try {
+				port = Integer.parseInt(textListeningPort.getText());
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		
+			preferences.setRemoteConnectionsPort(port);
+			
+			password = textPassword.getText();
+			preferences.setRemoteConnectionsPassword(password);
+		}
+		
+		boolean isActive = RemoteController.getInstance().isActive();
+		
+		// TODO [Michele] what if the port or password is changed?
+		if ((isActive) && (!listenForIncoming)) {
+			RemoteController.getInstance().stopRemoteServer();
+		}
+		if ((!isActive) && (listenForIncoming)) {
+			if (port > 0) {
+				RemoteController.getInstance().startRemoteServer(port, password, 
+						GuiController.getInstance().getProfileManager(),
+						GuiController.getInstance().getSynchronizer());				
+			}
+		}
+		
+		preferences.save();
 	}
 }

@@ -52,14 +52,29 @@ public interface Preferences
      }
 
      }
-     */public boolean confirmExit();
+     */
+    
+    public boolean confirmExit();
     public void setConfirmExit( boolean bool );
+    
     public boolean closeMinimizesToSystemTray();
     public void setCloseMinimizesToSystemTray( boolean bool );
+    
     public boolean minimizeMinimizesToSystemTray();
     public void setMinimizeMinimizesToSystemTray( boolean bool );
+    
     public boolean systemTrayEnabled();
     public void setSystemTrayEnabled( boolean bool );
+    
     public String getProfileListStyle();
     public void setProfileListStyle( String profileListStyle );
+    
+    public boolean listeningForRemoteConnections();
+    public void setListeningForRemoteConnections(boolean bool);
+    
+    public int getRemoteConnectionsPort();
+    public void setRemoteConnectionsPort(int port);
+    
+    public String getRemoteConnectionsPassword();
+    public void setRemoteConnectionsPassword(String password);
 }

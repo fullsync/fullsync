@@ -138,10 +138,10 @@ public class ProfileManager implements ProfileChangeListener
         */
     }
     
-    public void setRemoteConnection(String hostname, int port) 
+    public void setRemoteConnection(String hostname, int port, String password) 
     	throws MalformedURLException, RemoteException, NotBoundException
 	{
-    	remoteManager = new RemoteProfileManager(hostname, port);	
+    	remoteManager = new RemoteProfileManager(hostname, port, password);
     	updateRemoteProfiles();
     	
 //    	updateTimer = new Timer(true);
@@ -163,6 +163,7 @@ public class ProfileManager implements ProfileChangeListener
 
 		// TODO [Michele] this refresh of remote profiles makes the application flashes a little.
 		// Find a way to call update only when needed.
+		// Plus this deselects the selected profile. This is very ugly.
 		fireProfilesChangeEvent();    	
     }
     

@@ -5,6 +5,7 @@ import java.io.File;
 
 import javax.xml.parsers.FactoryConfigurationError;
 
+import net.sourceforge.fullsync.Crypt;
 import net.sourceforge.fullsync.Preferences;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -92,4 +93,26 @@ public class ConfigurationPreferences implements Preferences
     {
 	    config.setProperty("Interface.ProfileList.Style", profileListStyle);
     }
+	
+	public boolean listeningForRemoteConnections() {
+		return config.getBoolean("RemoteConnection.active", false);
+	}
+	public void setListeningForRemoteConnections(boolean bool) {
+		config.setProperty("RemoteConnection.active", new Boolean(bool));
+	}
+	public int getRemoteConnectionsPort() {
+		return config.getInt("RemoteConnection.port", 10000);
+	}
+	public void setRemoteConnectionsPort(int port) {
+		config.setProperty("RemoteConnection.port", new Integer(port));
+	}	
+	public String getRemoteConnectionsPassword() {
+		String passwd = config.getString("RemoteConnection.password", "admin");
+		String decryptedPassword = Crypt.decrypt(passwd);
+		return decryptedPassword;
+	}
+	public void setRemoteConnectionsPassword(String password) {
+		String encryptedPasswd = Crypt.encrypt(password);
+		config.setProperty("RemoteConnection.password", encryptedPasswd);
+	}
 }
