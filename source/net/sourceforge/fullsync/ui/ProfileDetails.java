@@ -96,7 +96,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	public void initGUI(){
 		try {
 			preInitGUI();
-			this.setSize(470, 324);
+			this.setSize(514, 363);
 
 			GridLayout thisLayout = new GridLayout(7, true);
 			thisLayout.marginWidth = 5;
@@ -252,24 +252,34 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             {
                 labelTypeDescription = new Label(this, SWT.NONE);
                 labelTypeDescription.setText("Description");
+                GridData labelTypeDescriptionLData = new GridData();
+                labelTypeDescriptionLData.horizontalSpan = 5;
+                labelTypeDescriptionLData.horizontalAlignment = GridData.FILL;
+                labelTypeDescription.setLayoutData(labelTypeDescriptionLData);
             }
             {
                 ruleSetGroup = new Group(this, SWT.NONE);
                 GridLayout ruleSetGroupLayout = new GridLayout();
                 GridData ruleSetGroupLData = new GridData();
                 ruleSetGroupLData.horizontalSpan = 7;
-                ruleSetGroupLData.widthHint = 443;
                 ruleSetGroupLData.heightHint = 143;
                 ruleSetGroupLData.horizontalIndent = 5;
+                ruleSetGroupLData.grabExcessHorizontalSpace = true;
+                ruleSetGroupLData.horizontalAlignment = GridData.FILL;
                 ruleSetGroup.setLayoutData(ruleSetGroupLData);
-                ruleSetGroupLayout.makeColumnsEqualWidth = true;
                 ruleSetGroupLayout.numColumns = 2;
+                ruleSetGroupLayout.makeColumnsEqualWidth = true;
+                ruleSetGroupLayout.horizontalSpacing = 20;
                 ruleSetGroup.setLayout(ruleSetGroupLayout);
                 ruleSetGroup.setText("RuleSet");
                 {
                     rbSimplyfiedRuleSet = new Button(ruleSetGroup, SWT.RADIO | SWT.LEFT);
                     rbSimplyfiedRuleSet.setText("Simple Rule Set");
                     rbSimplyfiedRuleSet.setSelection(true);
+                    GridData rbSimplyfiedRuleSetLData = new GridData();
+                    rbSimplyfiedRuleSetLData.grabExcessHorizontalSpace = true;
+                    rbSimplyfiedRuleSetLData.horizontalAlignment = GridData.FILL;
+                    rbSimplyfiedRuleSet.setLayoutData(rbSimplyfiedRuleSetLData);
                     rbSimplyfiedRuleSet
                         .addSelectionListener(new SelectionAdapter() {
                             public void widgetSelected(SelectionEvent evt) {
@@ -281,8 +291,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     rbAdvancedRuleSet = new Button(ruleSetGroup, SWT.RADIO | SWT.LEFT);
                     rbAdvancedRuleSet.setText("Advanced Rule Set");
                     GridData rbAdvancedRuleSetLData = new GridData();
-                    rbAdvancedRuleSetLData.widthHint = 112;
                     rbAdvancedRuleSetLData.heightHint = 16;
+                    rbAdvancedRuleSetLData.grabExcessHorizontalSpace = true;
+                    rbAdvancedRuleSetLData.horizontalAlignment = GridData.FILL;
                     rbAdvancedRuleSet.setLayoutData(rbAdvancedRuleSetLData);
                     rbAdvancedRuleSet
                         .addSelectionListener(new SelectionAdapter() {
@@ -295,9 +306,10 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     simplyfiedOptionsGroup = new Group(ruleSetGroup, SWT.NONE);
                     GridLayout simplyfiedOptionsGroupLayout = new GridLayout();
                     GridData simplyfiedOptionsGroupLData = new GridData();
-                    simplyfiedOptionsGroupLData.widthHint = 187;
                     simplyfiedOptionsGroupLData.heightHint = 98;
                     simplyfiedOptionsGroupLData.verticalAlignment = GridData.BEGINNING;
+                    simplyfiedOptionsGroupLData.grabExcessHorizontalSpace = true;
+                    simplyfiedOptionsGroupLData.horizontalAlignment = GridData.FILL;
                     simplyfiedOptionsGroup.setLayoutData(simplyfiedOptionsGroupLData);
                     simplyfiedOptionsGroupLayout.numColumns = 2;
                     simplyfiedOptionsGroup.setLayout(simplyfiedOptionsGroupLayout);
@@ -356,9 +368,10 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     GridLayout advancedRuleOptionsGroupLayout = new GridLayout();
                     GridData advancedRuleOptionsGroupLData = new GridData();
                     advancedRuleOptionsGroup.setEnabled(false);
-                    advancedRuleOptionsGroupLData.widthHint = 172;
                     advancedRuleOptionsGroupLData.heightHint = 31;
                     advancedRuleOptionsGroupLData.verticalAlignment = GridData.BEGINNING;
+                    advancedRuleOptionsGroupLData.grabExcessHorizontalSpace = true;
+                    advancedRuleOptionsGroupLData.horizontalAlignment = GridData.FILL;
                     advancedRuleOptionsGroup.setLayoutData(advancedRuleOptionsGroupLData);
                     advancedRuleOptionsGroupLayout.numColumns = 2;
                     advancedRuleOptionsGroup.setLayout(advancedRuleOptionsGroupLayout);

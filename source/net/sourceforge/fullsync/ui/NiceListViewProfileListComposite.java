@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync.ui;
 
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 
@@ -97,10 +98,11 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
         }
         public void updateComponent()
         {
+            long now = new Date().getTime();
 			labelSource.setText( "Source: "+profile.getSource() );
 			labelDestination.setText( "Destination: "+profile.getDestination() );
 			labelLastUpdate.setText( "Last Update: "+profile.getLastUpdate() );
-			labelNextUpdate.setText( "Next Update: not scheduled" );
+			labelNextUpdate.setText( "Next Update: "+(profile.getSchedule()==null?"not scheduled":new Date( profile.getSchedule().getNextOccurrence(now) ).toString()) );
         }
         public void setProfile( Profile profile )
         {

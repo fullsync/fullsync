@@ -8,7 +8,7 @@ import net.sourceforge.fullsync.DataParseException;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class CrontabSchedule implements Schedule
+public class CrontabSchedule3 implements Schedule
 {
     private String origPattern;
     
@@ -16,7 +16,7 @@ public class CrontabSchedule implements Schedule
     private boolean[] bHours = new boolean[24];
     private boolean[] bDaysOfMonth = new boolean[1+31];
     private boolean[] bMonths = new boolean[1+12];
-    private boolean[] bDaysOfWeek = new boolean[9];
+    private boolean[] bDaysOfWeek = new boolean[7];
     
     private boolean allMinutes;
     private boolean allHours;
@@ -25,7 +25,7 @@ public class CrontabSchedule implements Schedule
     private boolean allDaysOfWeek;
     
     
-    public CrontabSchedule( String pattern )
+    public CrontabSchedule3( String pattern )
     	throws DataParseException
     {
         read( pattern );
@@ -65,13 +65,11 @@ public class CrontabSchedule implements Schedule
         origPattern = pattern;
         
         StringTokenizer tokenizer = new StringTokenizer(pattern);
-        allMinutes = parseToken(tokenizer.nextToken(),bMinutes,false,0);
-        allHours = parseToken(tokenizer.nextToken(),bHours,false, 0);
-        allDaysOfMonth = parseToken(tokenizer.nextToken(),bDaysOfMonth,true, 0);
-        allMonths = parseToken(tokenizer.nextToken(),bMonths,true, -1);
-        allDaysOfWeek = parseToken(tokenizer.nextToken(),bDaysOfWeek,false, +1);
-        if( bDaysOfWeek[8] )
-            bDaysOfWeek[1] = true;
+        allMinutes = parseToken(tokenizer.nextToken(),bMinutes,false);
+        allHours = parseToken(tokenizer.nextToken(),bHours,false);
+        allDaysOfMonth = parseToken(tokenizer.nextToken(),bDaysOfMonth,true);
+        allMonths = parseToken(tokenizer.nextToken(),bMonths,true);
+        allDaysOfWeek = parseToken(tokenizer.nextToken(),bDaysOfWeek,false);
     }
     
     public String toString()
@@ -79,7 +77,7 @@ public class CrontabSchedule implements Schedule
         return origPattern;
     }
         
-    public boolean parseToken(String token, boolean[] arrayBool, boolean bBeginInOne, int offset)
+    public boolean parseToken(String token, boolean[] arrayBool, boolean bBeginInOne)
     	throws DataParseException
     {
         int i;
@@ -101,9 +99,9 @@ public class CrontabSchedule implements Schedule
         	
             if(token.equals("*")) 
             {
-                for( i=bBeginInOne?1:0; i < arrayBool.length-offset; i += each ) 
+                for( i=bBeginInOne?1:0; i < arrayBool.length; i += each ) 
                 {
-                    arrayBool[i+offset] = true;
+                    arrayBool[i] = true;
                 }
                 return each==1;
             }
@@ -112,7 +110,7 @@ public class CrontabSchedule implements Schedule
             if(index > 0) {
                 StringTokenizer tokenizer = new StringTokenizer(token, ",");
                 while (tokenizer.hasMoreElements()) {
-                    parseToken(tokenizer.nextToken(), arrayBool, bBeginInOne,offset);
+                    parseToken(tokenizer.nextToken(), arrayBool, bBeginInOne);
                 }
                 return false;
             }
@@ -122,20 +120,24 @@ public class CrontabSchedule implements Schedule
                 int start = Integer.parseInt(token.substring(0, index));
                 int end = Integer.parseInt(token.substring(index + 1));
 
-                /*if(bBeginInOne) {
+                /*
+                if(bBeginInOne) {
                     start--;
                     end--;
-                }*/
+                }
+                */
                 for(int j=start; j<=end; j+=each)
-                    arrayBool[j+offset] = true;
+                    arrayBool[j] = true;
                 return false;
             }
             
                 int iValue = Integer.parseInt(token);
-                /*if(bBeginInOne) {
+                /*
+                if(bBeginInOne) {
                     iValue--;
-                }*/
-                arrayBool[iValue+offset] = true;
+                }
+                */
+                arrayBool[iValue] = true;
                 return false;
         } catch (Exception e) {
             throw new DataParseException( "Smth was wrong with " + token, e );
@@ -144,39 +146,43 @@ public class CrontabSchedule implements Schedule
     
     public long getNextOccurrence( long now )
     {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis( now );
-
+        Calendar calNow = Calendar.getInstance();
+        calNow.setTimeInMillis( now );
+        Calendar calDest = (Calendar)calNow.clone();
         
-        // TODO if we have a trigger at minute 0, and hours changes, 
-        //      min will go to 1 and cycle at least once
-        gotoNextOrStay( bMonths, cal, Calendar.MONTH );
-        
-        if( allMonths && allDaysOfMonth && !allDaysOfWeek )
-            gotoNextOrStay( bDaysOfWeek, cal, Calendar.DAY_OF_WEEK );
-        //else if( !allDaysOfMonth )
-        //    gotoNextOrStay( bDaysOfMonth, cal, Calendar.DAY_OF_MONTH );
-        else 
-            gotoNextOrStay( bDaysOfMonth, cal, Calendar.DAY_OF_MONTH );
-        // TODO currently we miss out the doublecase 
-        //      !allDaysOfWeek + !allDaysOfMonth
+        while( calDest.get( Calendar.YEAR ) <= calNow.get(Calendar.YEAR)+1 )
+        {
+            if( !allMonths )
+            {
+                if( gotoNext( bMonths, calDest, Calendar.MONTH ) )
+                    continue;
+            }
+            
+            if( !allDaysOfMonth )
+            {
+                if( gotoNext( bDaysOfMonth, calDest, Calendar.DAY_OF_MONTH ) )
+                    continue;
+            }
+            
+            if( !allHours )
+            {
+                if( gotoNext( bHours, calDest, Calendar.HOUR_OF_DAY ) )
+                    continue;
+            }
+            
+            if( !allMinutes )
+            {
+                if( gotoNext( bMinutes, calDest, Calendar.MINUTE ) )
+                    continue;
+            }
 
-        //gotoNextOrStay( bDaysOfWeek, cal, Calendar.DAY_OF_WEEK );
-        gotoNextOrStay( bHours, cal, Calendar.HOUR_OF_DAY ); 
-        gotoNextOrStay( bMinutes, cal, Calendar.MINUTE );
-        if( cal.get( Calendar.SECOND ) != 0 )
-		{
-			cal.set( Calendar.SECOND, 0 );
-			gotoNext( bMinutes, cal, Calendar.MINUTE );
-		}
-        return cal.getTimeInMillis();
+            calDest.set( Calendar.SECOND, 0 );
+            return calDest.getTimeInMillis();
+        }
+        
+        return 0;
     }
-    private void gotoNextOrStay( boolean[] bArray, Calendar cal, int field )
-    {
-        if( !bArray[cal.get(field)] )
-            gotoNext( bArray, cal, field );
-    }
-    private void gotoNext( boolean[] bArray, Calendar cal, int field )
+    private boolean gotoNext( boolean[] bArray, Calendar cal, int field )
     {
         // FIXME we assume that there is a true in the array,
         //       but we should avoid a deadloop anyways.
@@ -185,7 +191,7 @@ public class CrontabSchedule implements Schedule
         //      is ok and ascent to set the correct next month (i.e.)
         
         int orig = cal.get( field );
-        int now = orig+1;
+        int now = orig;
         int max = cal.getActualMaximum( field );
         int min = cal.getActualMinimum( field );
         
@@ -195,34 +201,44 @@ public class CrontabSchedule implements Schedule
             if( now > max )
             {
                 //cal.set( field, now );
-
+                
+                // the next match is in the next cycle,
+                // so goto first possible, goto next cycle and repeat all before
+                now = min;
+                while( !bArray[now] ) 
+                {
+                    now++;
+                    if( now > max )
+                        throw new RuntimeException( "deadloop" );
+                }
+                cal.set( field, now );
+                
+                // rise cycle
                 switch( field )
                 {
-                case Calendar.DAY_OF_MONTH:
-                    gotoNext( bMonths, cal, Calendar.MONTH );
+                case Calendar.MONTH:
+                    cal.add( Calendar.YEAR, 1 );
                     break;
-                case Calendar.DAY_OF_WEEK:
-                    cal.add( Calendar.DAY_OF_MONTH, (now-orig) );
-                    // TODO we ignore a formal gotoNext(month)
-                    //      as dayOfWeek is only available if all
-                    //      months are allowed
-                    orig = now;
+                case Calendar.DAY_OF_MONTH:
+                //case Calendar.DAY_OF_WEEK:
+                    cal.add( Calendar.MONTH, 1 );
                     break;
                 case Calendar.HOUR_OF_DAY:
+                    /*
                     if( allMonths && allDaysOfMonth && !allDaysOfWeek )
                         gotoNext( bDaysOfWeek, cal, Calendar.DAY_OF_WEEK );
                     else if( !allDaysOfMonth )
                         gotoNext( bDaysOfMonth, cal, Calendar.DAY_OF_MONTH );
-                    else 
-                        gotoNext( bDaysOfMonth, cal, Calendar.DAY_OF_MONTH );
+                    */
+                    cal.add( Calendar.DAY_OF_MONTH, 1 );
                     // TODO currently we miss out the doublecase 
-                    //      !allDaysOfWeek + !allDaysOfMonth
+                    //      allDaysOfWeek + allDaysOfMonth
                     break;
                 case Calendar.MINUTE:
-                    gotoNext( bHours, cal, Calendar.HOUR_OF_DAY );
+                    cal.add( Calendar.HOUR_OF_DAY, 1 );
                     break;
                 }
-                now = min;
+                return true;
             }
         }
         
@@ -237,11 +253,10 @@ public class CrontabSchedule implements Schedule
 	            cal.set( Calendar.HOUR_OF_DAY, 0 );
 	        case Calendar.HOUR_OF_DAY:
 	            cal.set( Calendar.MINUTE, 0 );
-			case Calendar.MINUTE:
-        		cal.set( Calendar.SECOND, 0 );
 	        }
         }
         cal.set( field, now );
+        return false;
     }
     
     public void update()

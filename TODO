@@ -136,9 +136,15 @@ Logwindow
 	[X] show progress of performing actions
 	[X] show size of files
 
+Images:
+	[X] cache images for different states/actions
+
 Feedback:
 	[X]	progress indication for performing actions
 	[X] progress indication (or at least what am i doing atm) for check phase
+	[X] After ActionQueue: Action started (this may be multiple ?)
+		show "(Task 2130 of 2430) E:\bla -> ftp:// ..."
+		-> that will make multithreaded task execution extremely hard
 
 Interface:
 	[X] we should consider one gui item as gui controller who gets "general" gui 
@@ -147,13 +153,19 @@ Interface:
 		sync processes. so mainwin should get a fullsync instance... or maybe we
 		rename this 'sync-controller' somehow ?
 
+	[X] investigate why the busy cursor is not shown when above the scrollbar
+		or table headers - because the main thread still answers
+		
+	[X] investigate whether it's possible to give the state image in the logwindow
+		a transparent bg (so the green bg color is seen all over the line)
+		-> the image is transparent atm, we would need to draw a green bg then
+				
 Sheduler:
 	[X]	copy sheduler from backup - we use Timer and ProfileManager directly
 		(so changes to intervals and stuff are propagated much easier)
 	[X] add button to toolbar enable/disable scheduling
 
 Release-critical:
-	[ ] include license stuff correctly
 	[X] LogWindow should have: global source - destination, filename just once,
 		                       explanation on the right side
     [X] backup action decider
@@ -162,6 +174,8 @@ Release-critical:
     [X] "checking <file>" is taking most of the time when comparing local to local
     	we shouldn't push but poll this status string !
    	[ ] scheduler in profile
+   	[ ] we should calculate next update from lastupdate, not now
+   	[ ] verify scheduler functionallity
    	[ ] verify simple rulesets
    	[X] rename of profiles (see hashtable in profilemanager)
 
@@ -172,14 +186,30 @@ Gui:
 	
 Versioning:
 	[ ] implement working versioning system
+	
+License:
+	[ ] include license stuff correctly
+
+Backup:
+	[ ] copy to temp, then rename
+	[ ] scan whole src, then dst - saves hd jumps
+
+Feedback:
+	[ ] cancel in sync phase
+	[ ] cancel in execution phase
+		actually this is not just a Gui thingy, we need to nicely stop the
+		ActionQueue/ExecutionBuffer and flush the sync buffer
+	[?] some encapsulement for src and dst files ? [Task?]
+		
+Naming:
+	[ ] call Processor TaskGenerator ? (or is the ActionDecider the generator?)
+	[ ] call ActionQueue TaskExecutor ? (as we don't care about the buffer at all)
+	[X] call FullSync Synchronizer ? (encapsuling main sync actions / objects)
 
 
 ---===[ to 0.10 Tasks ]====------------------------------------------------
 
 ---===[ to 1.0 Tasks ]====-------------------------------------------------
-
-Images:
-	[X] cache images for different states/actions
 
 Logwindow
 	[ ] Show size of copied data
@@ -195,29 +225,6 @@ Syncprocess encapsulement:
 		  - gui yes/no
 		  - interactive yes/no
 		  - verbose yes/no
-
-Feedback:
-	[X] After ActionQueue: Action started (this may be multiple ?)
-		show "(Task 2130 of 2430) E:\bla -> ftp:// ..."
-		-> that will make multithreaded task execution extremely hard
-	[ ] cancel in sync phase
-	[ ] cancel in execution phase
-		actually this is not just a Gui thingy, we need to nicely stop the
-		ActionQueue/ExecutionBuffer and flush the sync buffer
-	[?] some encapsulement for src and dst files ? [Task?]
-		
-Interface:
-	[ ] investigate why the busy cursor is not shown when above the scrollbar
-		or table headers - because the main thread still answers
-		
-	[X] investigate whether it's possible to give the state image in the logwindow
-		a transparent bg (so the green bg color is seen all over the line)
-		-> the image is transparent atm, we would need to draw a green bg then
-				
-Naming:
-	[ ] call Processor TaskGenerator ? (or is the ActionDecider the generator?)
-	[ ] call ActionQueue TaskExecutor ? (as we don't care about the buffer at all)
-	[X] call FullSync Synchronizer ? (encapsuling main sync actions / objects)
 
 Architecture:
 	[ ] give ActionQueue or Buffer some kind of input stream ?
@@ -297,10 +304,6 @@ Connections:
 	[ ] Sftp seems to pretty instable, it starts throwing exceptions
 		named "Failure", when trying to retrieve response headers,
 		after a few minutes
-
-Backup:
-	[ ] copy to temp, then rename
-	[ ] scan whole src, then dst - saves hd jumps
 
 Threading
 	[ ] better UI / task differenciation

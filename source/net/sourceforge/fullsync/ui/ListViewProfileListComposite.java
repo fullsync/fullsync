@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync.ui;
 
+import java.util.Date;
 import java.util.Enumeration;
 
 import net.sourceforge.fullsync.Profile;
@@ -24,9 +25,10 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 {
     private Table tableProfiles;
     private TableColumn tableColumnName;
+    private TableColumn tableColumnLastUpdate;
+    private TableColumn tableColumnNextUpdate;
     private TableColumn tableColumnSource;
     private TableColumn tableColumnDestination;
-    private TableColumn tableColumnLastUpdate;
     
     private ProfileManager profileManager;
     private ProfileListControlHandler handler;
@@ -53,6 +55,13 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
             tableColumnLastUpdate.setWidth(100);
         }
         {
+            tableColumnNextUpdate = new TableColumn(
+                tableProfiles,
+                SWT.NONE);
+            tableColumnNextUpdate.setText("Next Update");
+            tableColumnNextUpdate.setWidth(100);
+        }
+        {
             tableColumnSource = new TableColumn(tableProfiles, SWT.NONE);
             tableColumnSource.setText("Source");
             tableColumnSource.setWidth(200);
@@ -74,6 +83,7 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
     }
     public void populateProfileList()
 	{
+        long now = new Date().getTime();
 	    if( getProfileManager() != null )
 	    {
 	        tableProfiles.clearAll();
@@ -86,12 +96,14 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 	            item.setText( new String[] { 
 	                    p.getName(),
 	                    p.getLastUpdate().toString(),
+	                    p.getSchedule()==null?"not scheduled":new Date( p.getSchedule().getNextOccurrence(now) ).toString(),
 	                    p.getSource().toString(),
 	                    p.getDestination().toString() } );
 	            item.setData( p );
 	        }
 	        tableColumnName.pack();
 	        tableColumnLastUpdate.pack();
+	        tableColumnNextUpdate.pack();
 	        tableColumnSource.pack();
 	        tableColumnDestination.pack();
 	    }

@@ -20,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
 import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
+import net.sourceforge.fullsync.schedule.CrontabSchedule;
 import net.sourceforge.fullsync.schedule.IntervalSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
 
@@ -275,6 +276,12 @@ public class ProfileManager implements ProfileChangeListener
     		long firstSpan = element.hasAttribute( "firstspan" )?Long.parseLong( element.getAttribute("firstspan") ):0;
     		long span = Long.parseLong( element.getAttribute( "span" ) );
     		schedule = new IntervalSchedule( firstSpan, span );
+    	} else if( type.equals( "crontab" ) ) {
+    	    try {
+    	        schedule = new CrontabSchedule( element.getAttribute("pattern" ) );
+    	    } catch( Exception ex ) {
+    	        ex.printStackTrace();
+    	    }
     	}
     	return schedule;
     }
