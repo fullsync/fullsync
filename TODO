@@ -248,6 +248,7 @@ Linux:
 Remote:
 	[X] make gui mode listening for incoming connections
 	[ ] log remote connections (out and incoming)
+	[ ]	Improved security (crypted password and hidden inferfaces other than login)
 
 == Architecture Revamp ==
 
@@ -299,6 +300,11 @@ Sheduler:
 Exceptions/Errors:
 	[ ] try catching most exceptions at (few) specific points and show 
 		a dialog containing the exception and a link to the sf.net bugtracker.
+
+Sync Rules
+	[ ]	Ignore files older than a given date (Simple Rule).
+	[ ]	Advanced Rules configuration wizard. A wizard to help users creating 
+		the .syncrules file in any directory (os subdirectory) where he needs it.
 	
 ==========================
 
