@@ -233,6 +233,12 @@ Release-critical:
 		-> actually, its working, and the whole program is without warrenty,
 		   so i guess it's in about the same level of unstability as the whole app
 	
+---===[ intermediate release ]====-----------------------------------------
+
+User reports:
+	[X] sftp not recognizing port
+	[ ] two-way sync
+	
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
 
 Small Things:

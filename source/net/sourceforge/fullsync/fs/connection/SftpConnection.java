@@ -49,6 +49,8 @@ public class SftpConnection extends InstableConnection
     {
         SshConnectionProperties prop = new SshConnectionProperties();
         prop.setHost( connectionUri.getHost() );
+        if( connectionUri.getPort()!=-1 )
+            prop.setPort( connectionUri.getPort() );
         
         sshClient = new SshClient();
         // REVISIT not really fine (the static method call)

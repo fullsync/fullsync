@@ -1,3 +1,7 @@
+
+* fixed sftp not recognizing port correctly
+
+
 Version 0.8.0
 (12 December 2004)
 
