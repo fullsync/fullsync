@@ -1,10 +1,7 @@
 package net.sourceforge.fullsync.impl;
 
-import java.beans.IntrospectionException;
-import java.io.IOException;
 import java.io.InputStream;
 
-import org.xml.sax.SAXException;
 
 
 
@@ -18,8 +15,10 @@ public class XmlRuleSet extends AbstractRuleSet
         
     }
 
+    
     public void processRules( InputStream in, String filename ) 
     {
+        /*
         XmlRulesFile file = null;
         try {
             file = XmlRulesFile.getXmlRulesFile( in );
@@ -31,5 +30,6 @@ public class XmlRuleSet extends AbstractRuleSet
             e.printStackTrace();
         }
         XmlRuleSet ruleSet = file.getRuleSet( this.getName() );
+        */
     }
 }

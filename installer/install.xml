@@ -7,8 +7,8 @@
 		<appversion>0.8</appversion>
 		<authors>
 			<author name="Jan Kopcsek" email="codewright@gmx.de"/>
-			<!-- [MICHELE] Hope you don't mind if I added myself to the developers list :-D -->
 			<author name="Michele Aiello" email="aiello@infinito.it"/>
+			<author name="Norbert Kopcsek" email="rayhawk@gmx.de"/>
 		</authors>
 		<url>http://fullsync.sourceforge.net/</url>
 	</info>
@@ -29,7 +29,7 @@
 		<res id="LicencePanel.licence" src="LICENSE"/>
 		<res id="InfoPanel.info" src="RELEASE NOTES" parse="no" type="plain"/>
         <res id="shortcutSpec.xml" src="installer/shortcut.xml"/>
-        <res id="Installer.image" src="installer/logo.png"/>
+        <res id="Installer.image" src="installer/installbox.png"/>
 	</resources>
 
     <native type="izpack" name="ShellLink.dll"/>
@@ -51,16 +51,13 @@
             <fileset dir="build/lib" targetdir="$INSTALL_PATH/lib">
 				<include name="j2ssh-core.jar"/>
 				<include name="jakarta-oro-2.0.7.jar"/>		
-				<include name="commons-betwixt-1.0-alpha-1.jar"/>
 				<include name="commons-cli-1.0.jar"/>
 				<include name="commons-configuration-1.0.jar"/>
 				<include name="commons-lang-2.0.jar"/>
 				<include name="commons-logging.jar"/>
-				<include name="commons-io.jar"/>
 				<include name="commons-beanutils.jar"/>
 				<include name="commons-collections-3.1.jar"/>
 				<include name="commons-net-1.2.2.jar"/>
-				<include name="commons-digester-1.5.jar"/>
 				<include name="xercesImpl.jar"/>
 				<include name="xml-apis.jar"/>
 				<include name="log4j-1.2.8.jar"/>

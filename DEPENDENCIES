@@ -8,6 +8,13 @@ commons-beanutils.jar
 
 commons-betwixt-1.0-alpha-1.jar
 
+commons-cli-1.0.jar
+	Dependencies:
+		none
+
+	Used in:
+		initial startup of application
+
 commons-collections-3.1.jar
 	Dependencies:
 		none
@@ -25,15 +32,8 @@ commons-configuration-1.0.jar
 		 JNDIConfiguration: commons-logging
 		 ConfigurationDynaBean: commons-beanutils, commons-logging
 
-	Uses:
+	Used in:
 		loading properties from file
-
-commons-cli-1.0.jar
-	Dependencies:
-		none
-
-	Uses:
-		initial startup of application
 
 commons-digester-1.5.jar
 	Dependencies:
@@ -41,14 +41,14 @@ commons-digester-1.5.jar
 		commons-collections-3.1.jar
 		commons-logging.jar (1.0.x)
 	
-	Uses:
+	Used in:
 		none
 
 commons-io.jar
 	Dependencies:
 		none
 
-	Uses:
+	Used in:
 		none
 
 commons-lang-2.0.jar
@@ -58,7 +58,7 @@ commons-lang-2.0.jar
 	Used by:
 		commons-configuration-1.0.jar
 
-	Uses:
+	Used in:
 		none
 
 commons-logging.jar
@@ -69,21 +69,21 @@ commons-logging.jar
 		commons-configuration-1.0.jar
 		commons-digester-1.5.jar
 
-	Uses:
+	Used in:
 		none
 
 commons-net-1.2.2.jar
 	Dependencies:
 		jakarta-oro-2.0.7.jar (actually 2.0.8)
 
-	Uses:
+	Used in:
 		net.sourceforge.fullsync.fs.connection.FtpConnection
 
 j2ssh-core.jar
 	Dependencies:
 		none ?
 
-	Uses:
+	Used in:
 		net.sourceforge.fullsync.fs.connection.SftpConnection
 
 jakarta-oro-2.0.7.jar
@@ -106,12 +106,12 @@ swt.jar
 	Dependencies:
 		none
 
-	Uses:
+	Used in:
 		whole Gui
 	
 
 xercesImpl.jar + xml-apis.jar
 
-	Uses:
+	Used in:
 		direct xml reading/writing (Profiles, XmlProperties)
 

@@ -68,7 +68,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 	}
 	/**
 	 * Constructor AbstractRuleSet.
-	 * @param buf
+	 * @param name
 	 */
 	public AbstractRuleSet( String name )
 	{

@@ -1,13 +1,7 @@
 package net.sourceforge.fullsync.impl;
 
-import java.beans.IntrospectionException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
-
-import org.apache.commons.betwixt.io.BeanReader;
-import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -34,7 +28,9 @@ public class XmlRulesFile
         return (XmlRuleSet)ruleSets.get( name );
     }
 
-    public static XmlRulesFile getXmlRulesFile( InputStream in ) throws IntrospectionException, IOException, SAXException
+    /*
+    public static XmlRulesFile getXmlRulesFile( InputStream in ) 
+    	throws IntrospectionException, IOException, SAXException
     {
         BeanReader reader = new BeanReader();
         //reader.getXMLIntrospector().setAttributesForPrimitives( true );
@@ -44,4 +40,5 @@ public class XmlRulesFile
         XmlRulesFile file = (XmlRulesFile)reader.parse( in );
         return file;
     }
+    */
 }
