@@ -125,7 +125,10 @@ public class SchedulerImpl implements Scheduler, Runnable
 			
 		}
 		running = false;
-		enabled = false;
-		fireSchedulerChangedEvent();
+		if( enabled )
+		{
+		    enabled = false;
+		    fireSchedulerChangedEvent();
+		}
 	}
 }
