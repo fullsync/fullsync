@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Text;
 public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 
 	private ProfileManager profileManager;
+	private Button buttonResetError;
 	private Button buttonEnabled;
 	private Button buttonScheduling;
 	private Label label17;
@@ -293,6 +294,10 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             {
                 buttonEnabled = new Button(this, SWT.CHECK | SWT.RIGHT);
                 buttonEnabled.setText("Enabled");
+            }
+            {
+                buttonResetError = new Button(this, SWT.CHECK | SWT.RIGHT);
+                buttonResetError.setText("Reset Errorflag");
             }
             {
                 ruleSetGroup = new Group(this, SWT.NONE);
@@ -579,9 +584,12 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             p.setDescription( textDescription.getText() );
             p.setSchedule( (Schedule)buttonScheduling.getData() );
             p.setEnabled( buttonEnabled.getSelection() );
+            if( buttonResetError.getSelection() )
+                p.setLastError( 0, null );
             profileManager.addProfile( p );
         } else {
             p = profileManager.getProfile( profileName );
+            p.beginUpdate();
             p.setName( textName.getText() );
             p.setDescription( textDescription.getText() );
             p.setSynchronizationType( comboType.getText() );
@@ -591,6 +599,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             p.setEnabled( buttonEnabled.getSelection() );
     		
             p.setRuleSet( ruleSetDescriptor );
+            if( buttonResetError.getSelection() )
+                p.setLastError( 0, null );
+            p.endUpdate();
         }
         profileManager.save();
 	}

@@ -86,7 +86,7 @@ public class ConfigurationPreferences implements Preferences
 	}
 	public String getProfileListStyle()
     {
-	    return config.getString("Interface.ProfileList.Style", "Table");
+	    return config.getString("Interface.ProfileList.Style", "NiceListView");
     }
 	public void setProfileListStyle( String profileListStyle )
     {

@@ -171,7 +171,11 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 
 		tableProfiles.setMenu(profilesPopupMenu);
     }
-
+    public void dispose()
+    {
+        profileManager.removeProfilesChangeListener( this );
+        super.dispose();
+    }
     public Profile getSelectedProfile()
     {
         return (Profile)(tableProfiles.getSelection()[0].getData());

@@ -491,11 +491,11 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
         TaskTree tree = sync.executeProfile( profile );
         if( tree == null )
         {
-            profile.setLastError( 1, "An Error occured while comparing filesystems." );
+            profile.setLastError( 1, "An error occured while comparing filesystems." );
         } else {
             int errorLevel = sync.performActions( tree );
             if( errorLevel > 0 )
-                 profile.setLastError( errorLevel, "An Error occured while copying files." );
+                 profile.setLastError( errorLevel, "An error occured while copying files." );
             else profile.setLastUpdate( new Date() );
         }
     }
@@ -588,16 +588,24 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 			            statusLine.setMessage( statusDelayString );
 			        }
 			    }, 10, 100 );
-				statusLine.setMessage( "Starting profile "+p.getName()+"..." );
+			    statusDelayString = "Starting profile "+p.getName()+"...";
+				statusLine.setMessage( statusDelayString );
 				t = guiController.getSynchronizer().executeProfile( p );
-				statusLine.setMessage( "Finished profile "+p.getName() );
+				if( t == null )
+		        {
+		            p.setLastError( 1, "An error occured while comparing filesystems." );
+		            statusLine.setMessage( "An error occured while processing profile "+p.getName()+". Please see the logs for more information." );
+		        } else {
+		            statusLine.setMessage( "Finished profile "+p.getName() );
+		        }
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
 			    statusDelayTimer.cancel();
             	guiController.showBusyCursor( false );
 			}
-            TaskDecisionList.show( guiController, p, t );
+			if( t != null )
+			    TaskDecisionList.show( guiController, p, t );
             
         } catch( Exception e ) {
             e.printStackTrace();

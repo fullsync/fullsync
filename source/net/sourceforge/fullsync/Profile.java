@@ -27,6 +27,7 @@ public class Profile implements Serializable
     private String lastErrorString;
     //private int status;
 
+    private transient boolean eventsAllowed;
     private transient ArrayList listeners;
     
     public Profile()
@@ -171,6 +172,15 @@ public class Profile implements Serializable
 	    {
 	        ((ProfileChangeListener)i.next()).profileChanged( this );
 	    }
+	}
+	public void beginUpdate()
+	{
+	    this.eventsAllowed = false;
+	}
+	public void endUpdate()
+	{
+	    this.eventsAllowed = true;
+	    notifyProfileChangeListeners();
 	}
 	
 	private void writeObject(java.io.ObjectOutputStream out)

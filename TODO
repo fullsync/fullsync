@@ -170,6 +170,9 @@ Sheduler:
 Connection:
 	[X] reconnect
 
+Gui:
+	[X] realize the gui concept (2004-11-07)
+
 Release-critical:
 	[X] LogWindow should have: global source - destination, filename just once,
 		                       explanation on the right side
@@ -200,44 +203,19 @@ Release-critical:
 Sheduler:
 	[X] add some simple stuff to the profile (interval, enabled and errorflag 
 		with different levels like minor, major, blocker (could not connect))
-   	[ ] add symbol for scheduled tasks
-   	[ ] does daemon mode scheduling work atm ? we don't specify a listerer !
-	[ ] show that a profile is currently processed
+   	[X] add symbol for scheduled tasks
+   	[X] does daemon mode scheduling work atm ? we don't specify a listener !
 	
 Remote:
 	[ ] password for connection
-	[ ] make gui mode listening for incoming connections
-	[ ] log remote connections (out and incoming)
 
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
 
-Exceptions/Errors:
-	[ ] try catching most exceptions at (few) specific points and show 
-		a dialog containing the exception and a link to the sf.net bugtracker.
+Remote:
+	[ ] make gui mode listening for incoming connections
+	[ ] log remote connections (out and incoming)
 
-Gui:
-	[X] realize the gui concept (2004-11-07)
-	
-Versioning:
-	[ ] implement working versioning system
-	
-License:
-	[ ] include license stuff correctly
-
-Scheduler:
-	[ ] the timer thread is restarted every time a change occures
-	    to any profile (including the once that was just run by the timer)
-	    -> we should build our own thread there which only needs to refresh
-	    -> or we could make a specific lookup whether the changed profile
-	       comes earlier than the one currently scheduled
-
-Backup:
-	[ ] copy to temp, then rename
-	[ ] scan whole src, then dst - saves hd jumps
-
-Configuration:
-	[ ] make config files user-local
-	[ ] flush profiles every now and then, maybe use dirty flag
+== Architecture Revamp ==
 
 Feedback:
 	[ ] cancel in sync phase
@@ -253,17 +231,6 @@ Naming:
 	[ ] call ActionQueue TaskExecutor ? (as we don't care about the buffer at all)
 	[X] call FullSync Synchronizer ? (encapsuling main sync actions / objects)
 
-Distro:
-   	[ ] put images into source / jar. 
-   	[ ]	put logging.xml into jar as well
-
----===[ to 0.10 Tasks ]====------------------------------------------------
-
----===[ to 1.0 Tasks ]====-------------------------------------------------
-
-Logwindow
-	[ ] Show size of copied data
-	
 Syncprocess encapsulement:
 	[ ] beside having access to all the neat classes we can use to 
 		do a very custom synchronization process we need to encapsule
@@ -282,13 +249,63 @@ Architecture:
 		nah, it destroys all means of statistics/feedback
 
 Realtime-Reporting:
-	[?] Implement realtime status information updating
-	[?] Implement events for certain actions
+	[ ] Implement realtime status information updating
+	[ ] Implement events for certain actions
 
 Sheduler:
 	[ ] add groups to profiles (so we can cli fullsync saying schedule group a)
 	[ ] access to logfiles
+	[ ] the timer thread is restarted every time a change occures
+	    to any profile (including the once that was just run by the timer)
+	    -> we should build our own thread there which only needs to refresh
+	    -> or we could make a specific lookup whether the changed profile
+	       comes earlier than the one currently scheduled
+	[ ] show that a profile is currently processed
 
+Exceptions/Errors:
+	[ ] try catching most exceptions at (few) specific points and show 
+		a dialog containing the exception and a link to the sf.net bugtracker.
+	
+==========================
+
+Images:
+	[ ]	Add an ImageRepository loading all needed images
+		and being able to create compositions (and cache them)
+	[ ] Dispose all images we draw
+	
+Dispose:
+	[ ] make sure all widgets get properly disposed (tableitems ?)
+
+Processor:
+	[ ] impl new TraveralTypes
+		actually we'll need the possibility to say "src didn't change, so
+		dst doesn't interest me" (in sync without retrieving file data)
+
+Versioning:
+	[ ] implement working versioning system
+	
+License:
+	[ ] include license stuff correctly
+
+Backup:
+	[ ] copy to temp, then rename
+	[ ] scan whole src, then dst - saves hd jumps
+
+Configuration:
+	[ ] make config files user-local
+	[ ] flush profiles every now and then, maybe use dirty flag
+
+Distro:
+   	[ ] put images into source / jar. 
+   	[ ]	put logging.xml into jar as well
+
+---===[ to 0.10 Tasks ]====------------------------------------------------
+
+---===[ to 1.0 Tasks ]====-------------------------------------------------
+
+Logwindow
+	[ ] Show size of copied data
+	
 SB:
 	[?] we need to build buffer info from fs as well, so fs orphans are
 		detected without having the same file on the other side
@@ -300,11 +317,6 @@ SB:
 		furthermore, how should this all work at all, to-ftp will always
 		have differences to destination, so we'll need to ignore
 		src <-> dst state at all.
-
-Processor:
-	[ ] impl new TraveralTypes
-		actually we'll need the possibility to say "src didn't change, so
-		dst doesn't interest me" (in sync without retrieving file data)
 
 Files:
 	[ ] we need to differenciate between case sensitivity. 
@@ -357,10 +369,6 @@ Threading
 	[ ] better UI / task differenciation
 	[ ] console <-> ui 
 	
-Dispose:
-	[ ]	Dispose all images we draw and all other widgets too
-	[ ] dispose tableitems
-
 Logging:
 	[ ] verify logging quality
 			

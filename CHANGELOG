@@ -1,4 +1,6 @@
-* added a simple error reporting for scheduled exections
+* added new profile icons in nicelistview, which is default now
+* added option to reset error flag
+* added a simple error reporting for scheduled executions
 * added enabled property to profiles, enabling scheduled execution for now
 * added crontab scheduler gui
 * verified scheduler and lastUpdate/nextUpdate functionality

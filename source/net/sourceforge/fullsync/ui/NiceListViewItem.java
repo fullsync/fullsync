@@ -162,7 +162,13 @@ public class NiceListViewItem extends Canvas
 	public void setImage( Image image )
 	{
 	    labelIcon.setImage( image );
+	    image.setBackground( labelIcon.getBackground() );
 	}
+	public Image getImage()
+	{
+	    return labelIcon.getImage();
+	}
+	
 	public void setText( String text )
 	{
 	    labelCaption.setText( text );

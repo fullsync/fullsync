@@ -68,7 +68,7 @@ public class CommandLineInterpreter
 		    Preferences preferences = new ConfigurationPreferences("preferences.properties");
 		    ProfileManager profileManager = new ProfileManager( "profiles.xml" );
 
-		    Synchronizer sync = new Synchronizer();
+		    final Synchronizer sync = new Synchronizer();
 		    
 		    if( line.hasOption( "v" ) )
 		    {
@@ -113,14 +113,28 @@ public class CommandLineInterpreter
 		    }
 
 		    if (line.hasOption("d")) {
+		        profileManager.addSchedulerListener( new ProfileSchedulerListener() {
+		            public void profileExecutionScheduled( Profile profile )
+                    {
+                        TaskTree tree = sync.executeProfile( profile );
+                        if( tree == null )
+                        {
+                            profile.setLastError( 1, "An error occured while comparing filesystems." );
+                        } else {
+                            int errorLevel = sync.performActions( tree );
+                            if( errorLevel > 0 )
+                                 profile.setLastError( errorLevel, "An error occured while copying files." );
+                            else profile.setLastUpdate( new Date() );
+                        }
+                    }
+		        } );
 		    	profileManager.startTimer();
 		    	
 		    	Object mutex = new Object();
 		    	synchronized (mutex) {
 		    		mutex.wait();
 		    	}
-		    }
-		    else {
+		    } else {
 		    	try {
 		    		GuiController guiController = new GuiController( preferences, profileManager, sync );
 		    		guiController.startGui();

@@ -123,6 +123,10 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
     private ProfileManager profileManager;
     private ProfileListControlHandler handler;
     
+    private Image imageProfileDefault;
+    private Image imageProfileScheduled;
+    private Image imageProfileError;
+    private Image imageProfileErrorScheduled;
     private Image imageRun;
     private Image imageEdit;
     private Image imageDelete;
@@ -150,9 +154,61 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
     }
     private void loadImages()
     {
+        imageProfileDefault = new Image( getDisplay(), "images/Profile_Default.gif" );
+        imageProfileScheduled = new Image( getDisplay(), "images/Profile_Default_Scheduled.gif" );
+        imageProfileError = new Image( getDisplay(), "images/Profile_Default_Error.gif" );
+        imageProfileErrorScheduled = new Image( getDisplay(), "images/Profile_Default_Error_Scheduled.gif" );
+        
         imageRun = new Image( getDisplay(), "images/Profile_Run.gif" );
         imageEdit = new Image( getDisplay(), "images/Profile_Edit.gif" );
         imageDelete = new Image( getDisplay(), "images/Profile_Delete.gif" );
+    }
+    public void dispose()
+    {
+        imageProfileDefault.dispose();
+        imageProfileScheduled.dispose();
+        imageProfileError.dispose();
+        imageProfileErrorScheduled.dispose();
+        
+        imageRun.dispose();
+        imageEdit.dispose();
+        imageDelete.dispose();
+        
+        profileManager.removeProfilesChangeListener( this );
+        
+        super.dispose();
+    }
+    
+    private void updateItem( NiceListViewItem item, Profile profile )
+    {
+        if( item.getImage() != null )
+            item.getImage().dispose();
+        if( profile.isEnabled() && profile.getSchedule() != null )
+        {
+            // scheduled
+            if( profile.getLastErrorLevel() > 0 )
+                 item.setImage( new Image( getDisplay(), imageProfileErrorScheduled, SWT.IMAGE_COPY ) );
+            else item.setImage( new Image( getDisplay(), imageProfileScheduled, SWT.IMAGE_COPY ) );
+        } else {
+            // not scheduled
+            if( profile.getLastErrorLevel() > 0 )
+                item.setImage( new Image( getDisplay(), imageProfileError, SWT.IMAGE_COPY ) );
+           else item.setImage( new Image( getDisplay(), imageProfileDefault, SWT.IMAGE_COPY ) );
+        }
+        
+		item.setText( profile.getName() );
+
+		if( profile.getLastErrorLevel() > 0 ) {
+            item.setStatusText( profile.getLastErrorString() );
+		} else {
+		    String desc = profile.getDescription();
+		    if( desc != null && !desc.equals( "" ) )
+		        item.setStatusText( desc );
+		    else if( profile.isEnabled() && profile.getSchedule() != null )
+		        item.setStatusText( profile.getNextUpdate() );
+		    else 
+		        item.setStatusText( "" );
+		}
     }
     
     private void populateProfileList()
@@ -170,12 +226,8 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	            NiceListViewItem item = new NiceListViewItem( profileList, SWT.NULL );
 				ContentComposite content = new ContentComposite( item, SWT.NULL );
 				content.setProfile( p );
-	            item.setImage( new Image( getDisplay(), "images/Profile_Default.gif" ) );
-				item.setText( p.getName() );
-				if( content.getProfile().getLastErrorLevel() > 0 )
-                     item.setStatusText( content.getProfile().getLastErrorString() );
-                else item.setStatusText( content.getProfile().getDescription() );
 				item.setContent( content );
+				updateItem( item, p );
 				
 				profilesToItems.put( p, item );
 	        }
@@ -237,10 +289,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
                 } else{
                     NiceListViewItem item = (NiceListViewItem) composite;
                     ContentComposite content = (ContentComposite) item.getContent();
-                    item.setText( content.getProfile().getName() );
-                    if( content.getProfile().getLastErrorLevel() > 0 )
-                         item.setStatusText( content.getProfile().getLastErrorString() );
-                    else item.setStatusText( content.getProfile().getDescription() );
+                    updateItem( item, content.getProfile() );
                     content.updateComponent();
                 }
             }
