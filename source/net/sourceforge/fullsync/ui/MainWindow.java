@@ -429,8 +429,21 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 				}
 			}
 		);
+        
+        MenuItem separatorItem6 = new MenuItem(menuHelp, SWT.SEPARATOR);
 
-		MenuItem separatorItem6 = new MenuItem(menuHelp, SWT.SEPARATOR);
+        MenuItem menuItemSystem = new MenuItem(menuHelp, SWT.PUSH);
+        menuItemSystem.setText("System Information");
+        menuItemSystem.addListener(SWT.Selection, new Listener() {
+                public void handleEvent(Event e) {
+                    WizardDialog dialog = new WizardDialog( getShell(), SWT.NULL );
+                    new SystemStatusPage( dialog );
+                    dialog.show();
+                }
+            }
+        );
+
+		MenuItem separatorItem7 = new MenuItem(menuHelp, SWT.SEPARATOR);
 
 		MenuItem menuItemAbout = new MenuItem(menuHelp, SWT.PUSH);
 		menuItemAbout.setAccelerator(SWT.CTRL+'A');

@@ -6,7 +6,7 @@
 	<!-- Project Properties -->
 	<property name="name" 				value="FullSync"/>
 	<property name="project"			value="FullSync"/>
-	<property name="version"			value="0.9"/>
+	<property name="version"			value="0.9.1"/>
 	<property name="final.name"			value="${project}-${version}"/>
 	<property name="final-src.name"		value="${project}-${version}-src"/>
 
@@ -104,12 +104,14 @@
     </target>
 
 	<target name="javadoc">
+		<!--
 		<mkdir dir="${build.dir}/docs/api"/>
 		<javadoc destdir="${build.dir}/docs/api" classpathref="classpath">
 			<packageset dir="${source.dir}">
 				<include name="**"/>
 			</packageset>
 		</javadoc>
+		-->
 	</target>
 	
 	<target name="copy-libs">

@@ -239,10 +239,30 @@ User reports:
 	[X] sftp not recognizing port
 	[X] two-way sync
 	
+---===[ to 0.9.1 Tasks ]====-----------------------------------------
+	
+	[X] simple active ftp option
+	[X] paths with - and spaces make troubles
+
+---===[ to 0.9.2 Tasks ]====-----------------------------------------
+
+	[ ] sftp login seems to cripple password
+	[ ] smb copies all files always
+	
+---===[ to 0.10 Tasks ]====-------------------------------------------------
+
 Buffering:
 	[ ] write fs buffer file to bla+"_", delete existing and rename it
 	
----===[ to 0.10 Tasks ]====-------------------------------------------------
+ConnectionDescription:
+	[ ] we need a better gui for connections where we can define
+	    different composites with different options for different
+	    connection descriptions
+
+Bugs:
+	[ ] the infinite timeout seems to hang the app if the ftp thing
+		does not get any data (some silent disconnect?)
+	[ ] dirs with -s are not handled correctly on all ftp servers
 
 Small Things:
 	[ ] enable/disable certain menu items if not available
@@ -466,3 +486,10 @@ Optimization:
 
 make isDir info only valid if existant ?
 
+-------------------------------------------------------------------------------
+
+Directories handled as structure instead of file-like:
+	+ if we are checking changes fs<->buffer on one side and want
+	  to copy single changed files to the other side we need to make
+	  sure the dirs are created as well
+	- correct deletion of dirs

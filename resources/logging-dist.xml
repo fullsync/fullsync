@@ -8,6 +8,12 @@
 			<param name="ConversionPattern" value="%d{ISO8601} [%p] %c %x - %m%n"/>
 		</layout>
 	</appender>
+	<appender name="FullSyncInternalAppender" class="org.apache.log4j.FileAppender">
+		<param name="File" value="logs/fullsync.internal.log" />	
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %c %x - %m%n"/>
+		</layout>
+	</appender>
 
 	<appender name="Ssh" class="org.apache.log4j.FileAppender">
         <param name="File" value="logs/ssh.log" />	
@@ -24,17 +30,22 @@
 	</appender>
 
 	<logger name="com.sshtools.j2ssh" additivity="false">
-		<level value ="WARNING"/>
+		<level value="WARN"/>
 		<appender-ref ref="Ssh"/> 
 	</logger>
 	
+	<logger name="net.sourceforge.fullsync" additivity="false">
+		<level value="WARN"/>
+		<appender-ref ref="FullSyncInternalAppender"/> 
+	</logger>
+
 	<logger name="FullSync" additivity="false">
 		<level value ="INFO"/>
 		<appender-ref ref="FullSyncAppender"/> 
 	</logger>
 	
 	<root>
-		<priority value ="WARNING"/>
+		<priority value="WARN"/>
 		<appender-ref ref="error"/>
 	</root>
 	

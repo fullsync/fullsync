@@ -30,7 +30,7 @@ public class LocalFileSystem implements FileSystem
     	throws FileSystemException, IOException
     {
         if( !desc.getUri().startsWith( "file" ) )
-            return null;
+            return null;// TODO throw exception here !
         
         //return new LocalDirectory( new java.io.File( uri ) );
         LocalConnection conn;

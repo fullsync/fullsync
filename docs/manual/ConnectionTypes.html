@@ -24,10 +24,24 @@
 								add the drive letter. No username or password 
 								required/supported.<br><br>
 								</dd>
-								<dt>ftp://<i>host</i>[:<i>port</i>]/<i>relative-path</i></dt>
+								<dt>ftp://<i>host</i>[:<i>port</i>]/<i>relative-path[?[passive=true|false][&compatible=true|false]]</i></dt>
 								<dd>
 								Access a remote server using ftp. Uses username and 
-								password to authenticate.<br><br>
+								password to authenticate.<br/>
+								<b>[0.9.1]</b> As of FullSync 0.9.1 you can add two query options to the url:
+								<dl>
+								  <dt>passive</dt>
+								  <dd>
+								  	defaults to true, if you have connection problems set it false
+								  </dd>
+								  <dt>compatible</dt>
+								  <dd>
+								  defaults to false, if you have problems with directories containing minus or spaces
+								  set it to true.
+								  </dd>
+							    </dl>
+							    Example: ftp://myhost/path/path?compatible=true&amp;passive=false
+								<br><br>
 								</dd>
 								<dt>sftp://<i>host</i>[:<i>port</i>]/<i>relative-path</i></dt>
 								<dd>

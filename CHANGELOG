@@ -1,4 +1,15 @@
+
+Version 0.9.1
+(08 March 2005)
+
+* added compatible and passive url-query options to ftp urls
+  compatible=true should solve the problem with - and spaces in paths (bug #1090385)
+  this really needs gui support !
+* added FullSync internal logging (say loggers per class,...)
+* corrected logging.xml
+* added French localization
 * added Spanish localization
+
 
 Version 0.9
 (31 January 2005)

@@ -6,11 +6,15 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -100,6 +104,12 @@ public class FtpConnection extends InstableConnection
             out.write( b );
         }
     }
+ 
+    private static Log log = LogFactory.getLog(FtpConnection.class); 
+
+    private boolean changeDirBeforeList;
+    private boolean usePassiveMode;
+    private boolean caseSensitive;
     
     private ConnectionDescription desc;
     private URI connectionUri;
@@ -107,7 +117,6 @@ public class FtpConnection extends InstableConnection
     private String basePath;
     private File root;
     
-    private boolean caseSensitive;
     
     public FtpConnection( ConnectionDescription desc )
     	throws IOException, URISyntaxException
@@ -117,6 +126,37 @@ public class FtpConnection extends InstableConnection
         this.client = new FTPClient();
         this.connectionUri = new URI( desc.getUri() );
         
+        usePassiveMode = true;
+        changeDirBeforeList = false;
+
+        String query = connectionUri.getQuery();
+        if( query != null )
+        {
+            Pattern p = Pattern.compile("(\\w+)=(\\w+)");
+            Matcher m = p.matcher(query);
+            while( m.find() )
+            {
+                if( m.group(1).equals( "passive" ) )
+                    usePassiveMode = m.group(2).equals("true");
+                else if( m.group(1).equals( "compatible" ) )
+                    changeDirBeforeList = m.group(2).equals("true");
+            }
+        }
+        
+        if( log.isDebugEnabled() ) {
+            StringBuffer sb = new StringBuffer();
+            sb.append( "Creating FtpConnection to " );
+            sb.append( connectionUri );
+            sb.append( " [" );
+            if( usePassiveMode )
+                 sb.append("passive");
+            else sb.append("active");
+            if( changeDirBeforeList ) 
+                 sb.append(",changeDirBeforeList");
+            sb.append( "]" );
+            log.debug( sb.toString() );
+        }
+
         connect();
     }
     public void connect()
@@ -125,7 +165,8 @@ public class FtpConnection extends InstableConnection
         client.setDefaultTimeout(30000);
         client.connect( connectionUri.getHost(), connectionUri.getPort()==-1?21:connectionUri.getPort() );
         client.login( desc.getUsername(), desc.getPassword() );
-        client.enterLocalPassiveMode(); // FIXME i need to be specified in the ConnectionDescription
+        if( usePassiveMode )
+            client.enterLocalPassiveMode(); // FIXME i need to be specified in the ConnectionDescription
         client.setFileType( FTP.BINARY_FILE_TYPE );
         client.setSoTimeout( 0 );
         basePath = client.printWorkingDirectory()+connectionUri.getPath();
@@ -145,9 +186,15 @@ public class FtpConnection extends InstableConnection
     }
     public void reconnect() throws IOException
     {
-        client.quit();
-        client.disconnect();
-        connect();
+        try {
+            client.quit();
+        } finally {
+            try {
+                client.disconnect();
+            } finally {
+                connect();
+            }
+        }
     }
     public void close() throws IOException
     {
@@ -198,7 +245,14 @@ public class FtpConnection extends InstableConnection
     
     public Hashtable _getChildren( File dir ) throws IOException
     {
-        FTPFile[] files = client.listFiles( "-a "+basePath+"/"+dir.getPath() );
+        FTPFile[] files;
+        if( changeDirBeforeList )
+        {
+            client.changeWorkingDirectory( basePath+"/"+dir.getPath() );
+            files = client.listFiles( "" );
+        } else {
+            files = client.listFiles( ""+basePath+"/"+dir.getPath() );
+        }
         
         Hashtable table = new Hashtable();
         for( int i = 0; i < files.length; i++ )

@@ -1,6 +1,7 @@
 package net.sourceforge.fullsync;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -25,6 +26,7 @@ public class ConnectionDescription implements Serializable
     }
     public ConnectionDescription( String url, String bufferStrategy )
     {
+        // TODO we should throw an exception if the url is bad
         this.uri = url;
         this.bufferStrategy = bufferStrategy;
         this.parameters = new Hashtable();

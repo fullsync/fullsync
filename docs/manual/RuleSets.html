@@ -16,13 +16,25 @@
 							<p>
 							Currently there are two kinds of rule sets supported: simple 
 							rule sets and advanced rule sets.
-							</p>
+							</p><br>
 							
 							<p>
 							For basic operations the <b>simple rule set</b> is enough, it allows 
 							you to define ignore and accept patterns (actually regular 
-							expressions) and will operate in a default way.
-							</p>
+							expressions) and will operate in a default way.<br><br>
+							So a simple regular expression for matching specific file endings looks
+							like this: <code>.+\.txt</code> or <code>.+\.(txt|jpg|tmp)</code> (for
+							matching multiple endings).<br>
+							If you just want to match complete file/directory names use this: 
+							<code>DirectoryName</code> or for multiple names 
+							<code>(DirectoryName1|DirectoryName2|file\.extension)</code>. 
+							To match just the beginning or ending use the following, which is quite
+							much the same as matching endings: <code>prefix.+</code> or 
+							<code>.+suffix</code> (note: + means there must be at least one character.
+							use * instead to make it match no character as well.).<br>
+							Until there is a more userfriendly way available, please use google 
+							to find out more about regular expressions.
+							</p><br>
 							
 							<p>
 							<b>Advanced rule sets</b> allow you to set rules more detailed,

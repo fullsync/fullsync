@@ -6,12 +6,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -135,7 +137,7 @@ public class WizardDialog {
                 compositeContentLData.grabExcessVerticalSpace = true;
                 compositeContent.setLayoutData(compositeContentLData);
                 //compositeContentLayout.makeColumnsEqualWidth = true;
-                //compositeContent.setLayout(compositeContentLayout);
+                compositeContent.setLayout(new FillLayout());
             }
             {
                 labelSeparatorBottom = new Label(dialogShell, SWT.SEPARATOR
@@ -185,10 +187,15 @@ public class WizardDialog {
 	}
 	public void dispose()
 	{
+        Control[] controls = compositeContent.getChildren();
+        for( int i = 0; i < controls.length; i++ )
+            controls[i].dispose();
+        
 	    dialogShell.dispose();
 	    captionFont.dispose();
 	    
 	    // TODO dispose images ?
+        // TODO dispose wizard page stuff
 	}
 	public Display getDisplay()
 	{
