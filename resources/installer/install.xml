@@ -53,10 +53,7 @@
 				<include name="jakarta-oro-2.0.7.jar"/>		
 				<include name="commons-cli-1.0.jar"/>
 				<include name="commons-configuration-1.0.jar"/>
-				<include name="commons-lang-2.0.jar"/>
 				<include name="commons-logging.jar"/>
-				<include name="commons-beanutils.jar"/>
-				<include name="commons-collections-3.1.jar"/>
 				<include name="commons-net-1.2.2.jar"/>
 				<include name="xercesImpl.jar"/>
 				<include name="xml-apis.jar"/>

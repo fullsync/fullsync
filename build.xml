@@ -160,6 +160,9 @@
 		<zip zipfile="${dist.dir}/FullSync-${version}.zip">
 			<fileset dir="${build.dir}">
 				<include name="**/*.*"/>
+				<include name="logs"/>
+				<exclude name="classes/**"/>
+				<exclude name="profiles.xml"/>
 			</fileset>
 		</zip>
 	</target>
