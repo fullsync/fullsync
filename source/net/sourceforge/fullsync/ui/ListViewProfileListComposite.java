@@ -109,7 +109,10 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
     }
     public Profile getSelectedProfile()
     {
-        return (Profile)(tableProfiles.getSelection()[0].getData());
+        TableItem[] sel = tableProfiles.getSelection();
+        if( sel.length == 0 )
+             return null;
+        else return (Profile)(sel[0].getData());
     }
     public void setProfileManager( ProfileManager profileManager )
     {
