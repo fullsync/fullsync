@@ -68,7 +68,11 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	private Label label1;
 	
 	private ProfileManager profileManager;
-	private Button userRecursioneButton;
+	private Text textAcceptPattern;
+	private Text textIgnorePatter;
+	private Label label14;
+	private Label label13;
+	private Button syncSubsButton;
 	private Button deleteOnDestinationButton;
 	private Group advancedRuleOptionsGroup;
 	private Group simplyfiedOptionsGroup;
@@ -98,9 +102,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			label7 = new Label(this,SWT.NULL);
 			buttonSourceBuffered = new Button(this,SWT.CHECK| SWT.LEFT);
 			label5 = new Label(this,SWT.NULL);
-			textSourceUsername = new Text(this,SWT.NULL);
+			textSourceUsername = new Text(this, SWT.BORDER);
 			label6 = new Label(this,SWT.NULL);
-			textSourcePassword = new Text(this,SWT.NULL);
+			textSourcePassword = new Text(this, SWT.BORDER);
 			label8 = new Label(this,SWT.NULL);
 			label3 = new Label(this,SWT.NULL);
 			textDestination = new Text(this,SWT.BORDER);
@@ -108,9 +112,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			label9 = new Label(this,SWT.NULL);
 			buttonDestinationBuffered = new Button(this,SWT.CHECK| SWT.LEFT);
 			label10 = new Label(this,SWT.NULL);
-			textDestinationUsername = new Text(this,SWT.NULL);
+			textDestinationUsername = new Text(this, SWT.BORDER);
 			label11 = new Label(this,SWT.NULL);
-			textDestinationPassword = new Text(this,SWT.NULL);
+			textDestinationPassword = new Text(this, SWT.BORDER);
 			label12 = new Label(this,SWT.NULL);
 			{
 				ruleSetGroup = new Group(this, SWT.NONE);
@@ -118,7 +122,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 				GridData ruleSetGroupLData = new GridData();
 				ruleSetGroupLData.horizontalSpan = 7;
 				ruleSetGroupLData.widthHint = 443;
-				ruleSetGroupLData.heightHint = 97;
+				ruleSetGroupLData.heightHint = 143;
 				ruleSetGroupLData.horizontalIndent = 5;
 				ruleSetGroup.setLayoutData(ruleSetGroupLData);
 				ruleSetGroupLayout.makeColumnsEqualWidth = true;
@@ -156,25 +160,61 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 					simplyfiedOptionsGroup = new Group(ruleSetGroup, SWT.NONE);
 					GridLayout simplyfiedOptionsGroupLayout = new GridLayout();
 					GridData simplyfiedOptionsGroupLData = new GridData();
-					simplyfiedOptionsGroupLData.widthHint = 150;
-					simplyfiedOptionsGroupLData.heightHint = 48;
+					simplyfiedOptionsGroupLData.widthHint = 187;
+					simplyfiedOptionsGroupLData.heightHint = 98;
 					simplyfiedOptionsGroupLData.verticalAlignment = GridData.BEGINNING;
 					simplyfiedOptionsGroup.setLayoutData(simplyfiedOptionsGroupLData);
-					simplyfiedOptionsGroupLayout.makeColumnsEqualWidth = true;
-					simplyfiedOptionsGroup
-						.setLayout(simplyfiedOptionsGroupLayout);
+					simplyfiedOptionsGroupLayout.numColumns = 2;
+					simplyfiedOptionsGroup.setLayout(simplyfiedOptionsGroupLayout);
 					simplyfiedOptionsGroup.setText("Simple Rule Options");
 					{
-						userRecursioneButton = new Button(
+						syncSubsButton = new Button(
 							simplyfiedOptionsGroup,
 							SWT.CHECK | SWT.LEFT);
-						userRecursioneButton.setText("Sync Subdirectories");
+						syncSubsButton.setText("Sync Subdirectories");
+						GridData syncSubsButtonLData = new GridData();
+						syncSubsButton.setToolTipText("Recurre into subdirectories?");
+						syncSubsButtonLData.widthHint = 115;
+						syncSubsButtonLData.heightHint = 16;
+						syncSubsButtonLData.horizontalSpan = 2;
+						syncSubsButton.setLayoutData(syncSubsButtonLData);
 					}
 					{
 						deleteOnDestinationButton = new Button(
 							simplyfiedOptionsGroup,
 							SWT.CHECK | SWT.LEFT);
 						deleteOnDestinationButton.setText("Delete on Destination");
+						GridData deleteOnDestinationButtonLData = new GridData();
+						deleteOnDestinationButton.setToolTipText("Delete files missing on the source folder?");
+						deleteOnDestinationButtonLData.widthHint = 124;
+						deleteOnDestinationButtonLData.heightHint = 16;
+						deleteOnDestinationButtonLData.horizontalSpan = 2;
+						deleteOnDestinationButton.setLayoutData(deleteOnDestinationButtonLData);
+					}
+					{
+						label13 = new Label(simplyfiedOptionsGroup, SWT.NONE);
+						label13.setText("Ignore pattern");
+					}
+					{
+						textIgnorePatter = new Text(simplyfiedOptionsGroup, SWT.BORDER);
+						GridData textIgnorePatterLData = new GridData();
+						textIgnorePatter.setToolTipText("Ignore RegExp");
+						textIgnorePatterLData.heightHint = 13;
+						textIgnorePatterLData.grabExcessHorizontalSpace = true;
+						textIgnorePatterLData.horizontalAlignment = GridData.FILL;
+						textIgnorePatter.setLayoutData(textIgnorePatterLData);
+					}
+					{
+						label14 = new Label(simplyfiedOptionsGroup, SWT.NONE);
+						label14.setText("Accept pattern");
+					}
+					{
+						textAcceptPattern = new Text(simplyfiedOptionsGroup, SWT.BORDER);
+						GridData textAcceptPatternLData = new GridData();
+						textAcceptPatternLData.heightHint = 13;
+						textAcceptPatternLData.grabExcessHorizontalSpace = true;
+						textAcceptPatternLData.horizontalAlignment = GridData.FILL;
+						textAcceptPattern.setLayoutData(textAcceptPatternLData);
 					}
 				}
 				{
@@ -207,7 +247,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 				}
 			}
 
-			this.setSize(470, 277);
+			this.setSize(470, 329);
 	
 			GridData label1LData = new GridData();
 			label1LData.verticalAlignment = GridData.CENTER;
@@ -223,6 +263,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			label1.setText("Name:");
 	
 			GridData textNameLData = new GridData();
+			textName.setToolTipText("Name for the profile");
 			textNameLData.verticalAlignment = GridData.CENTER;
 			textNameLData.horizontalAlignment = GridData.FILL;
 			textNameLData.widthHint = -1;
@@ -248,6 +289,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			label2.setText("Source:");
 	
 			GridData textSourceLData = new GridData();
+			textSource.setToolTipText("Source location");
 			textSourceLData.verticalAlignment = GridData.CENTER;
 			textSourceLData.horizontalAlignment = GridData.FILL;
 			textSourceLData.widthHint = -1;
@@ -301,6 +343,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			label3.setText("Destination:");
 	
 			GridData textDestinationLData = new GridData();
+			textDestination.setToolTipText("Destination location");
 			textDestinationLData.verticalAlignment = GridData.CENTER;
 			textDestinationLData.horizontalAlignment = GridData.FILL;
 			textDestinationLData.widthHint = -1;
@@ -422,6 +465,11 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	        	selectRuleSetButton(rbSimplyfiedRuleSet);
 	        	rbSimplyfiedRuleSet.setSelection(true);
 	        	rbAdvancedRuleSet.setSelection(false);
+	        	SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor)ruleSetDescriptor;
+	        	syncSubsButton.setSelection(simpleDesc.isSyncSubDirs());
+	        	deleteOnDestinationButton.setSelection(simpleDesc.isDeleteOnDestination());
+	        	textIgnorePatter.setText(simpleDesc.getIgnorePattern());
+	        	textAcceptPattern.setText(simpleDesc.getTakePattern());
 	        } else {
 	        	selectRuleSetButton(rbAdvancedRuleSet);
 	        	rbSimplyfiedRuleSet.setSelection(false);
@@ -489,18 +537,23 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	            return;
 	        }
 	    }
+	    
 	    Profile p;
-        if( profileName == null )
+	    
+		RuleSetDescriptor ruleSetDescriptor = null;
+    	if (rbSimplyfiedRuleSet.getSelection()) {
+			ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), 
+					deleteOnDestinationButton.getSelection(),
+					textIgnorePatter.getText(),
+					textAcceptPattern.getText());
+    	}
+    	if (rbAdvancedRuleSet.getSelection()) {
+    		String ruleSetName = textRuleSet.getText();
+    		ruleSetDescriptor = new AdvancedRuleSetDescriptor(ruleSetName);
+    	}
+
+    	if( profileName == null )
         {
-    		RuleSetDescriptor ruleSetDescriptor = null;
-        	if (rbSimplyfiedRuleSet.getSelection()) {
-				ruleSetDescriptor = new SimplyfiedRuleSetDescriptor();
-        	}
-        	if (rbAdvancedRuleSet.getSelection()) {
-        		String ruleSetName = textRuleSet.getText();
-        		ruleSetDescriptor = new AdvancedRuleSetDescriptor(ruleSetName);
-        	}
-        	
             p = new Profile( textName.getText(), src, dst, ruleSetDescriptor );
         } else {
             p = profileManager.getProfile( profileName );
@@ -508,14 +561,6 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             p.setSource( src );
             p.setDestination( dst );
     		
-            RuleSetDescriptor ruleSetDescriptor = null;
-        	if (rbSimplyfiedRuleSet.getSelection()) {
-				ruleSetDescriptor = new SimplyfiedRuleSetDescriptor();
-        	}
-        	if (rbAdvancedRuleSet.getSelection()) {
-        		String ruleSetName = textRuleSet.getText();
-        		ruleSetDescriptor = new AdvancedRuleSetDescriptor(ruleSetName);
-        	}
             p.setRuleSet( ruleSetDescriptor );
             
             profileManager.removeProfile( profileName );
@@ -557,7 +602,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			textRuleSet.setEnabled(false);
 			simplyfiedOptionsGroup.setEnabled(true);
 			deleteOnDestinationButton.setEnabled(true);
-			userRecursioneButton.setEnabled(true);
+			syncSubsButton.setEnabled(true);
 		}
 		else {
 			advancedRuleOptionsGroup.setEnabled(true);
@@ -565,7 +610,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			textRuleSet.setEnabled(true);
 			simplyfiedOptionsGroup.setEnabled(false);
 			deleteOnDestinationButton.setEnabled(false);
-			userRecursioneButton.setEnabled(false);
+			syncSubsButton.setEnabled(false);
 		}
 		
 	}

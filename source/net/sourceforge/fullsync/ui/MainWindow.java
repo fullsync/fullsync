@@ -54,6 +54,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	implements ProfilesChangeListener, ProfileSchedulerListener, TaskGenerationListener
 {
     private ToolItem toolItemNew;
+    private Menu menuBarMainWindow;
     private TableColumn tableColumnName;
     private StatusLine statusLine;
     private ToolBar toolBar2;
@@ -204,6 +205,10 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                 coolBarLData.verticalAlignment = GridData.FILL;
                 coolBar.setLayoutData(coolBarLData);
             }
+			{
+				menuBarMainWindow = new Menu(getShell(), SWT.BAR);
+				getShell().setMenuBar(menuBarMainWindow);
+			}
             {
                 tableProfiles = new Table(this, SWT.FULL_SELECTION | SWT.BORDER);
                 {
@@ -274,10 +279,10 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		toolItemDelete.setImage( i );
 		toolItemDelete.setToolTipText("Delete Profile");
 		images.add( i );
-		i = LogWindow.loadImage( "Button_Run.gif" );
-		toolItemRun.setImage( i );
+		Image buttonRun = LogWindow.loadImage( "Button_Run.gif" );
+		toolItemRun.setImage( buttonRun );
 		toolItemRun.setToolTipText("Run Profile");
-		images.add( i );
+		images.add( buttonRun );
 		i = LogWindow.loadImage( "Timer_Running.gif" );
 		imageTimerRunning = i;
 		images.add( i );
@@ -289,16 +294,16 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		// PopUp Menu for the Profile list.
 		Menu profilesPopupMenu = new Menu(getShell(), SWT.POP_UP);
 		
-		MenuItem runItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		runItem.setText("Run Profile...");
-		runItem.addListener(SWT.Selection, new Listener() {
+		MenuItem addItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		addItem.setText("New Profile...");
+		addItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
-					runCurrentProfile();
+					createNewProfile();
 				}
 			}
 		);
-		
-		MenuItem separatorItem1 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
+
+		MenuItem separatorItem1 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);		
 		
 		MenuItem editItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
 		editItem.setText("Edit Profile...");
@@ -309,6 +314,18 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 			}
 		);
 
+		MenuItem runItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		runItem.setText("Run Profile...");
+		runItem.setImage(buttonRun);
+		runItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					runCurrentProfile();
+				}
+			}
+		);
+
+		MenuItem separatorItem2 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
+
 		MenuItem deleteItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
 		deleteItem.setText("Delete Profile...");
 		deleteItem.addListener(SWT.Selection, new Listener() {
@@ -318,22 +335,77 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 			}
 		);
 
-		MenuItem separatorItem2 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
+		tableProfiles.setMenu(profilesPopupMenu);
 
-		MenuItem addItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		addItem.setText("New Profile...");
-		addItem.addListener(SWT.Selection, new Listener() {
+		// Menu Bar
+		MenuItem menuItemFile = new MenuItem(menuBarMainWindow, SWT.CASCADE);
+		menuItemFile.setText("&File");
+		
+		Menu menuFile = new Menu(menuItemFile);
+		menuItemFile.setMenu(menuFile);
+		
+		MenuItem menuItemNewProfile = new MenuItem(menuFile, SWT.PUSH);
+		menuItemNewProfile.setText("&New Profile...");
+		menuItemNewProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					createNewProfile();
 				}
 			}
 		);
 
-		MenuItem separatorItem3 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
+		MenuItem separatorItem3 = new MenuItem(menuFile, SWT.SEPARATOR);
 
-		// FIXME this menu item is not supposed to be here. It should be in a menu bar.
-		MenuItem preferencesItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		preferencesItem.setText("Preferences...");
+		MenuItem menuItemEditProfile = new MenuItem(menuFile, SWT.PUSH);
+		menuItemEditProfile.setText("&Edit Profile...");
+		menuItemEditProfile.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					editCurrentProfile();
+				}
+			}
+		);
+
+		MenuItem menuItemRunProfile = new MenuItem(menuFile, SWT.PUSH);
+		menuItemRunProfile.setText("&Run Profile...");
+		menuItemRunProfile.setImage(buttonRun);
+		menuItemRunProfile.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					runCurrentProfile();
+				}
+			}
+		);
+		
+		MenuItem separatorItem4 = new MenuItem(menuFile, SWT.SEPARATOR);
+
+		MenuItem menuItemDeleteProfile = new MenuItem(menuFile, SWT.PUSH);
+		menuItemDeleteProfile.setText("&Delete Profile...");
+		menuItemDeleteProfile.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					deleteCurrentProfile();
+				}
+			}
+		);
+
+		MenuItem separatorItem5 = new MenuItem(menuFile, SWT.SEPARATOR);
+
+		MenuItem menuItemExitProfile = new MenuItem(menuFile, SWT.PUSH);
+		menuItemExitProfile.setText("Exit");
+		menuItemExitProfile.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+		    	    guiController.closeGui();
+				}
+			}
+		);
+		
+		
+		MenuItem menuItemEdit = new MenuItem(menuBarMainWindow, SWT.CASCADE);
+		menuItemEdit.setText("&Edit");
+		
+		Menu menuEdit = new Menu(menuItemEdit);
+		menuItemEdit.setMenu(menuEdit);
+
+		MenuItem preferencesItem = new MenuItem(menuEdit, SWT.PUSH);
+		preferencesItem.setText("&Preferences...\tCtrl+Shift+P");
+		preferencesItem.setAccelerator(SWT.CTRL|SWT.SHIFT+'P');
 		preferencesItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					// show the Preferences Dialog.
@@ -344,7 +416,35 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 			}
 		);
 		
-		tableProfiles.setMenu(profilesPopupMenu);
+		MenuItem menuItemHelp = new MenuItem(menuBarMainWindow, SWT.CASCADE);
+		menuItemHelp.setText("&Help");
+		
+		Menu menuHelp = new Menu(menuItemHelp);
+		menuItemHelp.setMenu(menuHelp);
+
+		MenuItem menuItemHelpContent = new MenuItem(menuHelp, SWT.PUSH);
+		menuItemHelpContent.setText("Help\tF1");
+		menuItemHelpContent.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					//TODO help contents
+					//The first version can be an HTML/TXT file to open
+					//with the default browser.
+				}
+			}
+		);
+
+		MenuItem separatorItem6 = new MenuItem(menuHelp, SWT.SEPARATOR);
+
+		MenuItem menuItemAbout = new MenuItem(menuHelp, SWT.PUSH);
+		menuItemAbout.setAccelerator(SWT.CTRL+'A');
+		menuItemAbout.setText("&About FullSync\tCtrl+A");
+		menuItemAbout.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					AboutDialog aboutDialog = new AboutDialog(getShell(), SWT.NULL);
+					aboutDialog.open();
+				}
+			}
+		);
 	}
 	public void dispose()
     {

@@ -10,6 +10,7 @@ import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
+import net.sourceforge.fullsync.rules.PatternRule;
 
 /**
  * @author Michele Aiello
@@ -20,7 +21,13 @@ public class SimplyfiedSyncRules implements RuleSet {
 		
 	private boolean isUsingRecursion = true;
 	
-	private int applyingDeletion = Location.Destination;
+	private int applyingDeletion = Location.None;
+	
+	private String ignorePattern;
+	private PatternRule ignoreRule;
+	
+	private String takePattern;
+	private PatternRule takeRule;
 	
 	/**
 	 * Default Constructor
@@ -57,16 +64,46 @@ public class SimplyfiedSyncRules implements RuleSet {
 		this.isUsingRecursion = usingRecursion;
 	}
 	
+	public void setIgnorePattern(String pattern) {
+		this.ignorePattern = pattern;
+		
+		if ((ignorePattern == null) || (ignorePattern.equals(""))) {
+			this.ignoreRule = null;
+		}
+		else {
+			ignoreRule = new PatternRule(ignorePattern);
+		}
+	}
+	
+	public void setTakePattern(String pattern) {
+		this.takePattern = pattern;
+		
+		if ((takePattern == null) || (takePattern.equals(""))) {
+			this.takeRule = null;
+		}
+		else {
+			takeRule = new PatternRule(takePattern);
+		}		
+	}
+	
+	/**
+	 * @return Returns the ignorePattern.
+	 */
+	public String getIgnorePattern() {
+		return ignorePattern;
+	}
+
+	/**
+	 * @return Returns the takePattern.
+	 */
+	public String getTakePattern() {
+		return takePattern;
+	}
+	
 	/**
 	 * @see net.sourceforge.fullsync.RuleSet#isUsingRecursionOnIgnore()
 	 */
 	public boolean isUsingRecursionOnIgnore() {
-	    // REVISIT this is not a discussion board ! ;)
-		// [Michele] I made this equals to isUsingRecursion for the moment.
-		// I might change it later.
-	    // [Jan] i don't think it's good to default to recurse on ignore
-	    // as it is pretty senseless if overwriting is not allowed
-	    // so i made it return false
 		return false;
 	}
 	
@@ -81,8 +118,21 @@ public class SimplyfiedSyncRules implements RuleSet {
 	 * @see net.sourceforge.fullsync.IgnoreDecider#isNodeIgnored(net.sourceforge.fullsync.fs.File)
 	 */
 	public boolean isNodeIgnored(File node) {
-		// MICHELE I have to add patterns on file name.
-		return false;
+		boolean take = true;
+		
+		if (take) {
+			if (ignoreRule != null) {
+				take = !ignoreRule.accepts(node);
+			}
+		}
+		
+		if (!take) {
+			if (takeRule != null) {
+				take = takeRule.accepts(node);
+			}
+		}
+		
+		return !take;
 	}
 	
 	/**

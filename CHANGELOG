@@ -1,3 +1,4 @@
+* added a main menu bar (patch by michele)
 * LogWindow:
     - now caching and disposing images
     - tableitems are reused, action change does not rebuilt table

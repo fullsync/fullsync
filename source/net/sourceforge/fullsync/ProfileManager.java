@@ -271,7 +271,18 @@ public class ProfileManager
     	RuleSetDescriptor descriptor = null;
     	String ruleSetType = element.getAttribute("type");
     	if (ruleSetType.equals("simple")) {
-    		descriptor = new SimplyfiedRuleSetDescriptor();
+    		NodeList ruleSetConfigNodeList = element.getElementsByTagName("SimpleRuleSet");
+    		if (ruleSetConfigNodeList.getLength() == 0) {
+    			descriptor = new SimplyfiedRuleSetDescriptor(true, false, "", "");
+    		}
+    		else {
+    			Element simpleRuleSetConfigElement = (Element)ruleSetConfigNodeList.item(0);
+    			boolean syncSubs = Boolean.valueOf(simpleRuleSetConfigElement.getAttribute("syncSubs")).booleanValue();
+    			boolean deleteOnDest = Boolean.valueOf(simpleRuleSetConfigElement.getAttribute("deleteOnDestination")).booleanValue();
+    			String ignorePattern = simpleRuleSetConfigElement.getAttribute("ignorePattern");
+    			String takePattern = simpleRuleSetConfigElement.getAttribute("takePattern");
+    			descriptor = new SimplyfiedRuleSetDescriptor(syncSubs, deleteOnDest, ignorePattern, takePattern);
+    		}
     	}
     	else {
     		Element ruleSetNameElement = (Element)element.getElementsByTagName("AdvancedRuleSet").item(0);
@@ -334,7 +345,14 @@ public class ProfileManager
     	Element elem = doc.createElement( name );
     	// TODO [Michele] soon I'll move the serialization for each descriptor type in the descriptor itself.
     	if (desc instanceof SimplyfiedRuleSetDescriptor) {
+    		SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor)desc;
     		elem.setAttribute("type", "simple");
+    		Element simpleRuleSetElement = doc.createElement("SimpleRuleSet");
+    		simpleRuleSetElement.setAttribute("syncSubs", String.valueOf(simpleDesc.isSyncSubDirs()));
+    		simpleRuleSetElement.setAttribute("deleteOnDestination", String.valueOf(simpleDesc.isDeleteOnDestination()));
+    		simpleRuleSetElement.setAttribute("ignorePattern", simpleDesc.getIgnorePattern());
+    		simpleRuleSetElement.setAttribute("takePattern", simpleDesc.getTakePattern());
+    		elem.appendChild(simpleRuleSetElement);
     	}
     	else {
     		AdvancedRuleSetDescriptor advDesc = (AdvancedRuleSetDescriptor) desc;
