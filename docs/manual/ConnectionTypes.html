@@ -1,0 +1,52 @@
+<html>
+	<head>
+		<title>FullSync Manual - Connection Types</title>
+		<link href="style.css" rel="Stylesheet" type="text/css">
+		<style type="text/css">
+			dt {text-weight: bold;}
+		</style>
+	</head>
+	<body>
+		<table width="640">
+			<tr>
+				<td>
+					<br/>
+					<ul>
+						<p style="font-size: 24"><b>FullSync Manual</b> - Connection Types</p><br>
+						<ul>
+							FullSync supports a very flexible way of accessing different file system types
+							as source and destination for synchronization.
+							Currently available are the following types:<br><br>
+							<dl>
+								<dt>file:///[<i>drive</i>:/]<i>absolute-path</i></dt>
+								<dd>
+								Access the local filesystem directly. For windows, 
+								add the drive letter. No username or password 
+								required/supported.<br><br>
+								</dd>
+								<dt>ftp://<i>host</i>[:<i>port</i>]/<i>relative-path</i></dt>
+								<dd>
+								Access a remote server using ftp. Uses username and 
+								password to authenticate.<br><br>
+								</dd>
+								<dt>sftp://<i>host</i>[:<i>port</i>]/<i>relative-path</i></dt>
+								<dd>
+								Access a remote server using sftp. Uses username and 
+								password to authenticate.<br><br>
+								</dd>
+								<dt>smb://<i>host</i>/<i>share</i>/<i>relative-path</i></dt>
+								<dd>
+								Access a computer using smb. Uses username and password 
+								to authenticate. If you need to specify a domain, use 
+								"username@domain" in the username field.<br><br>
+								</dd>
+							</dl>
+							<br/><br/><br/><br/>
+							<a href="index.html">Back to Home</a><br/><br/>
+						</ul>
+					</ul>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

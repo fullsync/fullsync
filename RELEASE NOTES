@@ -1,6 +1,6 @@
 
 
-	FullSync 0.8 [12.10.2004]
+	FullSync 0.9 [01.02.2005]
 
 
 WARRANTY
@@ -9,83 +9,6 @@ WARRANTY
 	use this software on your own risk.
 	
 
-RESTRICTIONS
-	
-	Because it is a lot shorter to mention the things that work
-	then the things that are missing, here are the things you
-	can try and which should work "ok":
-
-	publish and update
-
-	For example you can publish your website that is locally 
-	stored to a remote site and update all local changes 
-	(add/delete/modify) to the remote site. 
-	If a file is remotely changed you will be notified. 
-	Additional files in the destination will be ignored as long as
-	there are no matching files in the source.
-	If files are deleted in the source they will also be deleted
-	in the destination.
-
-	This works only with destination buffering,
-	source buffering will result in no actions.
-
-	You can specify file, ftp and sftp urls.
-
-
 HOW TO SET UP SYNCHRONIZATION
 
-	You need the source directory (best it's local, haven't tested
-	ftp or sftp source locations, yet).
-
-	You need a destination directory. It's best to use an empty
-	one as buffer initialization is not working yet, so fullsync
-	will not accept existing files even if they are the right ones. 
-
-	Now put the sample.syncrules into the source directory and name
-	it ".syncrules". this file will tell fullsync which files to 
-	synchronize and configures some basic rules. The sample file 
-	is good enough for a simple publish/update. It will make fullsync
-	look for more rule files only at the source, recurse through 
-	directories, use ignore and take rules and allows deletion at 
-	destination. normally this ruleset will accept any file, except 
-	it matches to an ignore rule, except it matches to an take rule. 
-	that means "take" is used to specify exceptions that should not 
-	be ignored. in this case all files beginning with a dot will be 
-	ignored, except the	rules files which will be copied to the 
-	destination. You can edit them and add new ones, if you have
-	base knowledge of regular expressions.
-
-	The next and final step is to set up a profile in FullSync.
-	Just click the add profile button and specify the data requested.
-	The profile name is your choice, source and destination are
-	urls which should look like this:
-		file:/E:/some/path
-		file:/home/mypath
-		ftp://yourdomain.com/some/path
-		sftp://yourdomain.com/some/path
-
-	Enable buffering at the destination and type in authentification
-	data where needed. Your password is stored encryped on the drive.
-	If you use the sample rules file you should use UPLOAD in the
-	ruleset field as all the rules in our file apply to the 
-	ruleset "UPLOAD".
-
-	If you now run the profile hopefully a new window appears (this
-	can take up to some minutes) with the actions that might be done. 
-	you can change the actions by right-clicking them and choosing 
-	another one. Be aware that this might result in bad behaviour so 
-	be careful to not change too many things there. For example if you 
-	choose "Ignore" where a directory was created before, the files 
-	within can not be properly written and an exception may occur. 
-	If you can, prefer doing the needed changes yourself and rerun 
-	the profile.
-
-	Keep in mind that it is a preview release, so there might happen
-	some strange things. also there is no need to inform me about
-	bugs yet as i know that there are still a lot in there and i don't
-	have problems finding them, yet :).
-
-	I do not give any warrenties that the program does the right things
-	and it might happen that your data is lost, so you should make some
-	backups anyway. (althought, in the only sync process available the 
-	source files should not be touched at all.)
+	See the included Documentation under "Getting Started"
