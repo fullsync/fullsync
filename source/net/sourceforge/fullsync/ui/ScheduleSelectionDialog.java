@@ -9,6 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -82,8 +83,9 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
 	public void open() 
 	{
 		try {
-		    dialogShell = new Shell( getParent(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.TOOL );
+		    dialogShell = new Shell( getParent(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM );
 		    dialogShell.setText( "Edit Scheduling" );
+		    dialogShell.setImage( new Image( getParent().getDisplay(), "images/Scheduler_Icon.gif" ) );
 			GridLayout thisLayout = new GridLayout();
 			thisLayout.numColumns = 2;
 			dialogShell.setLayout(thisLayout);

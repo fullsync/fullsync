@@ -247,7 +247,7 @@ public class ProfileManager implements ProfileChangeListener
     	{
     		Profile p = (Profile)e.nextElement();
     		Schedule s = p.getSchedule();
-    		if( s != null )
+    		if( p.isEnabled() && s != null )
     		{
     			long o = s.getNextOccurrence( now );
     			if( nextTime > o )
@@ -292,6 +292,12 @@ public class ProfileManager implements ProfileChangeListener
     }
     public void profileChanged( Profile profile )
     {
+        if( isTimerEnabled() )
+        {
+            stopTimer();
+            startTimer();
+        }
+        
         for( int i = 0; i < changeListeners.size(); i++ )
             ((ProfileListChangeListener)changeListeners.get( i )).profileChanged( profile );
     }
@@ -368,6 +374,13 @@ public class ProfileManager implements ProfileChangeListener
         p.setName( element.getAttribute( "name" ) );
         p.setDescription( element.getAttribute( "description" ) );
         p.setSynchronizationType( element.getAttribute( "type" ) );
+        if( element.hasAttribute( "enabled" ) ) 
+            p.setEnabled( Boolean.valueOf( element.getAttribute( "enabled" ) ).booleanValue() );
+        if( element.hasAttribute( "lastErrorLevel" ) )
+            p.setLastError( 
+                    Integer.parseInt( element.getAttribute( "lastErrorLevel" ) ), 
+                    element.getAttribute("lastErrorString") );
+        
         
         try {
             p.setLastUpdate( DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT ).parse( element.getAttribute( "lastUpdate" ) ) );
@@ -440,6 +453,9 @@ public class ProfileManager implements ProfileChangeListener
         elem.setAttribute( "name", p.getName() );
         elem.setAttribute( "description", p.getDescription() );
         elem.setAttribute( "type", p.getSynchronizationType() );
+        elem.setAttribute( "enabled", String.valueOf( p.isEnabled() ) );
+        elem.setAttribute( "lastErrorLevel", String.valueOf( p.getLastErrorLevel() ) );
+        elem.setAttribute( "lastErrorString", p.getLastErrorString() );
         elem.setAttribute( "lastUpdate", DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT ).format( p.getLastUpdate() ) );
         
         elem.appendChild( serialize( p.getRuleSet(), "RuleSetDescriptor", doc) );

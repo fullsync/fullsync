@@ -152,7 +152,7 @@ public class CrontabSchedule implements Schedule
         int max = cal.getActualMaximum( field );
         int min = cal.getActualMinimum( field );
         
-        while( !bArray[now] ) 
+        while( now > max || !bArray[now]  ) 
         {
             now++;
             if( now > max )

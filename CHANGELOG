@@ -1,3 +1,5 @@
+* added a simple error reporting for scheduled exections
+* added enabled property to profiles, enabling scheduled execution for now
 * added crontab scheduler gui
 * verified scheduler and lastUpdate/nextUpdate functionality
 * added scheduling property to profile dialog

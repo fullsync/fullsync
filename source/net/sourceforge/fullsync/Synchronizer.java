@@ -38,9 +38,12 @@ public class Synchronizer
         return null;
     }
     
-    public void performActions( TaskTree taskTree )
+    /**
+     * @return Returns the ErrorLevel
+     */
+    public int performActions( TaskTree taskTree )
     {
-        performActions( taskTree, null );
+        return performActions( taskTree, null );
     }
     /**
      * TODO if we add some listener/feedback receiver here we could
@@ -50,8 +53,9 @@ public class Synchronizer
      * now we still need the action count info before everything is performed
      * and later we'll need to cancel/stop the whole process
      * looks like we really need to single thread the whole class ! 
+	 * @return Returns the ErrorLevel
      */
-    public void performActions( TaskTree taskTree, TaskFinishedListener listener )
+    public int performActions( TaskTree taskTree, TaskFinishedListener listener )
     {
         Logger logger = Logger.getLogger( "FullSync" );
         try {
@@ -76,10 +80,12 @@ public class Synchronizer
 	        taskTree.getDestination().close();
 	        logger.info( "synchronization successful" ); // TODO ...with x errors and y warnings
 	        logger.info( "------------------------------------------------------------" );
+	        return 0;
         } catch( IOException ioe ) {
             logger.error( "An Exception occured while performing actions", ioe );
 	        logger.info( "synchronization failed" );
 	        logger.info( "------------------------------------------------------------" );
+	        return 1;
         }
     }
 }

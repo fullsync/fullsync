@@ -125,15 +125,15 @@ public class WizardDialog {
             }
             {
                 compositeContent = new Composite(dialogShell, SWT.NONE);
-                GridLayout compositeContentLayout = new GridLayout();
+                //GridLayout compositeContentLayout = new GridLayout();
                 GridData compositeContentLData = new GridData();
                 compositeContentLData.grabExcessHorizontalSpace = true;
                 compositeContentLData.horizontalAlignment = GridData.FILL;
                 compositeContentLData.verticalAlignment = GridData.FILL;
                 compositeContentLData.grabExcessVerticalSpace = true;
                 compositeContent.setLayoutData(compositeContentLData);
-                compositeContentLayout.makeColumnsEqualWidth = true;
-                compositeContent.setLayout(compositeContentLayout);
+                //compositeContentLayout.makeColumnsEqualWidth = true;
+                //compositeContent.setLayout(compositeContentLayout);
             }
             {
                 labelSeparatorBottom = new Label(dialogShell, SWT.SEPARATOR
@@ -156,6 +156,7 @@ public class WizardDialog {
             updateTop();
             wizardPage.createContent( compositeContent );
             wizardPage.createBottom( compositeBottom );
+            compositeContent.pack();
             dialogShell.layout();
             Point size = dialogShell.computeSize( SWT.DEFAULT, SWT.DEFAULT );
             if( size.x < 500 )

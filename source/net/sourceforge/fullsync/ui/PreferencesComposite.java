@@ -53,7 +53,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 			thisLayout.horizontalSpacing = 20;
 			thisLayout.makeColumnsEqualWidth = true;
 			this.setLayout(thisLayout);
-			this.setSize(401, 294);
+			this.setSize(500, 300);
 			{
 				groupInterface = new Group(this, SWT.NONE);
 				GridLayout GeneralPreferencesGroupLayout = new GridLayout();

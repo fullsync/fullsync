@@ -76,19 +76,27 @@ public abstract class AbstractProcessor implements Processor
     public TaskTree execute( Profile profile )
     	throws FileSystemException, URISyntaxException, DataParseException, IOException
     {
-        Site d1 = fsm.createConnection( profile.getSource() );
-        Site d2 = fsm.createConnection( profile.getDestination() );
-        
-        RuleSet rules = profile.getRuleSet().createRuleSet();
-        
-        ActionDecider actionDecider;
-        if( profile.getSynchronizationType().equals( "Publish/Update" ) )
-            actionDecider = new PublishActionDecider();
-        else if( profile.getSynchronizationType().equals( "Backup" ) )
-            actionDecider = new BackupActionDecider();
-        else throw new IllegalArgumentException( "Profile has unknown synchronization type." );
-		
-		return execute( d1, d2, actionDecider, rules );
+        Site d1 = null, d2 = null;
+        try {
+	        d1 = fsm.createConnection( profile.getSource() );
+	        d2 = fsm.createConnection( profile.getDestination() );
+	        
+	        RuleSet rules = profile.getRuleSet().createRuleSet();
+	        
+	        ActionDecider actionDecider;
+	        if( profile.getSynchronizationType().equals( "Publish/Update" ) )
+	            actionDecider = new PublishActionDecider();
+	        else if( profile.getSynchronizationType().equals( "Backup" ) )
+	            actionDecider = new BackupActionDecider();
+	        else throw new IllegalArgumentException( "Profile has unknown synchronization type." );
+			
+			return execute( d1, d2, actionDecider, rules );
+        } finally {
+            if( d1 != null )
+                d1.close();
+            if( d2 != null )
+                d2.close();
+        }
     }
     public TaskTree execute( Site source, Site destination, ActionDecider actionDecider, RuleSet rules )
 		throws DataParseException, FileSystemException, IOException

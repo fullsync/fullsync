@@ -22,15 +22,17 @@ public class Profile implements Serializable
     private Date lastUpdate;
     private Schedule schedule;
     
-    //private int lastError;
-    //private String lastErrorString;
-    // TODO we need to communicate transient states like status (running, hadError,...) 
+    private boolean enabled;
+    private int lastErrorLevel;
+    private String lastErrorString;
+    //private int status;
 
     private transient ArrayList listeners;
     
     public Profile()
     {
         this.listeners = new ArrayList();
+        this.enabled = true;
     }
     public Profile( String name, ConnectionDescription source, ConnectionDescription destination, RuleSetDescriptor ruleSet )
     {
@@ -45,6 +47,7 @@ public class Profile implements Serializable
         this.ruleSet = ruleSet;
         this.lastUpdate = lastUpdate;
         this.listeners = new ArrayList();
+        this.enabled = true;
     }
     public String getName()
     {
@@ -104,6 +107,8 @@ public class Profile implements Serializable
     {
         if( schedule == null ) {
             return "not scheduled";
+        } else if( !enabled ) {
+            return "not enabled";
         } else {
             //if( lastUpdate == null )
                  return new Date( schedule.getNextOccurrence(new Date().getTime()) ).toString();
@@ -119,7 +124,15 @@ public class Profile implements Serializable
         this.ruleSet = ruleSet;
         notifyProfileChangeListeners();
     }
-
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+    public void setEnabled( boolean enabled )
+    {
+        this.enabled = enabled;
+		notifyProfileChangeListeners();
+    }
     public Schedule getSchedule() 
 	{
 		return schedule;
@@ -129,6 +142,20 @@ public class Profile implements Serializable
 		this.schedule = schedule;
 		notifyProfileChangeListeners();
 	}
+	public void setLastError( int lastErrorLevel, String lastErrorString )
+    {
+        this.lastErrorLevel = lastErrorLevel;
+        this.lastErrorString = lastErrorString;
+        notifyProfileChangeListeners();
+    }
+	public int getLastErrorLevel()
+    {
+        return lastErrorLevel;
+    }
+	public String getLastErrorString()
+    {
+        return lastErrorString;
+    }
 	public void addProfileChangeListener( ProfileChangeListener listener )
 	{
 	    listeners.add( listener );
@@ -157,6 +184,9 @@ public class Profile implements Serializable
 	    out.writeObject(ruleSet);
 	    out.writeObject(lastUpdate);
 	    out.writeObject(schedule);
+	    out.writeBoolean(enabled);
+	    out.writeInt(lastErrorLevel);
+	    out.writeObject(lastErrorString);
 	}
 
 	private void readObject(java.io.ObjectInputStream in)
@@ -170,6 +200,9 @@ public class Profile implements Serializable
 		ruleSet = (RuleSetDescriptor) in.readObject();
 		lastUpdate = (Date) in.readObject();
 		schedule = (Schedule) in.readObject();
+	    enabled = in.readBoolean();
+	    lastErrorLevel = in.readInt();
+	    lastErrorString = (String) in.readObject();
 		
         this.listeners = new ArrayList();
 	}

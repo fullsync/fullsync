@@ -19,6 +19,7 @@ public class SftpFileSystem implements FileSystem
     {
         if( !desc.getUri().startsWith( "sftp:" ) )
             return null;
+        
         try {
             return new SftpConnection( desc );
         } catch( IOException e ) {

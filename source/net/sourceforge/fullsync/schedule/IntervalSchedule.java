@@ -3,6 +3,8 @@
  */
 package net.sourceforge.fullsync.schedule;
 
+import java.util.Date;
+
 
 
 /**
@@ -29,8 +31,7 @@ public class IntervalSchedule implements Schedule
 	
 	public void update()
 	{
-	    // TODO umpf !?... this might result into many execs at once
-		this.next = next + interval;
+		this.next = new Date().getTime() + interval;
 	}
 	
 	public long getFirstInterval()

@@ -54,21 +54,26 @@ public class SftpConnection extends InstableConnection
         // REVISIT not really fine
         sshClient.connect( prop, new DialogKnownHostsKeyVerification( GuiController.getInstance().getMainShell() ) );
         
-        PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
-        pwd.setUsername( desc.getUsername() );
-        pwd.setPassword( desc.getPassword() );
-        
-        int result = sshClient.authenticate( pwd );
-        if( result == AuthenticationProtocolState.COMPLETE )
-        {
-            sftpClient = sshClient.openSftpChannel();
-            //sftpClient.cd( path );
-            basePath = sftpClient.getDefaultDirectory()+connectionUri.getPath();
-            if( basePath.endsWith("/") )
-                basePath = basePath.substring( 0, basePath.length()-1 );
-            
-        } else {
-            throw new IOException( "Could not connect" );
+        try {
+	        PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
+	        pwd.setUsername( desc.getUsername() );
+	        pwd.setPassword( desc.getPassword() );
+	        
+	        int result = sshClient.authenticate( pwd );
+	        if( result == AuthenticationProtocolState.COMPLETE )
+	        {
+	            sftpClient = sshClient.openSftpChannel();
+	            //sftpClient.cd( path );
+	            basePath = sftpClient.getDefaultDirectory()+connectionUri.getPath();
+	            if( basePath.endsWith("/") )
+	                basePath = basePath.substring( 0, basePath.length()-1 );
+	            
+	        } else {
+	            throw new IOException( "Could not connect" );
+	        }
+        } finally {
+            sshClient.disconnect();
+            sshClient = null;
         }
         this.root = new AbstractFile( this, ".", ".", null, true, true );
     }

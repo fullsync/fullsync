@@ -146,8 +146,8 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 
 			GridLayout thisLayout = new GridLayout();
 			this.setLayout(thisLayout);
-			thisLayout.marginWidth = 0;
-			thisLayout.marginHeight = 0;
+			thisLayout.marginWidth = 5;
+			thisLayout.marginHeight = 5;
 			thisLayout.horizontalSpacing = 0;
 			thisLayout.verticalSpacing = 0;
 			this.layout();

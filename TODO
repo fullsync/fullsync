@@ -191,15 +191,17 @@ Release-critical:
    	[X] rename of profiles (see hashtable in profilemanager)
    	[X] add crontab scheduler to profile
    	[X] finished crontab editor (buttons)
-   	[ ] add symbol for scheduled tasks
-   	[ ] make sure schedules are not executed more than once, just
+   	[X] make sure schedules are not executed more than once, just
    		because they were inactive for some time
-   	[ ] make src/dst buffering set by the type and use text field to explain
+   	[X] make src/dst buffering set by the type and use text field to explain
    		the types a little
+   	[X] if scheduling is changed we need to refresh the timer
 
 Sheduler:
-	[ ] add some simple stuff to the profile (interval, enabled and errorflag 
+	[X] add some simple stuff to the profile (interval, enabled and errorflag 
 		with different levels like minor, major, blocker (could not connect))
+   	[ ] add symbol for scheduled tasks
+   	[ ] does daemon mode scheduling work atm ? we don't specify a listerer !
 	[ ] show that a profile is currently processed
 	
 Remote:
@@ -221,6 +223,13 @@ Versioning:
 	
 License:
 	[ ] include license stuff correctly
+
+Scheduler:
+	[ ] the timer thread is restarted every time a change occures
+	    to any profile (including the once that was just run by the timer)
+	    -> we should build our own thread there which only needs to refresh
+	    -> or we could make a specific lookup whether the changed profile
+	       comes earlier than the one currently scheduled
 
 Backup:
 	[ ] copy to temp, then rename

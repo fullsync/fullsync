@@ -172,7 +172,9 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 				content.setProfile( p );
 	            item.setImage( new Image( getDisplay(), "images/Profile_Default.gif" ) );
 				item.setText( p.getName() );
-				item.setStatusText( p.getDescription() );
+				if( content.getProfile().getLastErrorLevel() > 0 )
+                     item.setStatusText( content.getProfile().getLastErrorString() );
+                else item.setStatusText( content.getProfile().getDescription() );
 				item.setContent( content );
 				
 				profilesToItems.put( p, item );
@@ -236,7 +238,9 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
                     NiceListViewItem item = (NiceListViewItem) composite;
                     ContentComposite content = (ContentComposite) item.getContent();
                     item.setText( content.getProfile().getName() );
-                    item.setStatusText( content.getProfile().getDescription() );
+                    if( content.getProfile().getLastErrorLevel() > 0 )
+                         item.setStatusText( content.getProfile().getLastErrorString() );
+                    else item.setStatusText( content.getProfile().getDescription() );
                     content.updateComponent();
                 }
             }

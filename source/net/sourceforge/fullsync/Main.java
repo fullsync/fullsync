@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync;
 
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
@@ -27,6 +28,28 @@ public class Main
     	/* */
         
         CommandLineInterpreter.parse( args );
+        
+        /* /
+        
+        Profile pr;
+        Profile p = new Profile( 
+                "Test", 
+                new ConnectionDescription("file:/E:/testing/source", ""),
+                new ConnectionDescription("file:/E:/testing/destination", ""),
+                new SimplyfiedRuleSetDescriptor( true, "", "" ) );
+        
+        try {
+	        PipedOutputStream pipeOut = new PipedOutputStream();
+	        PipedInputStream pipeIn = new PipedInputStream( pipeOut );
+	        ObjectOutputStream out = new ObjectOutputStream( pipeOut );
+	        ObjectInputStream in = new ObjectInputStream( pipeIn );
+	        
+	        out.writeObject( p );
+	        pr = (Profile)in.readObject();
+	        
+	        out.close();
+	        in.close();
+        } catch( Exception ex ) { ex.printStackTrace(); }
         
         /* /
         FileSystemManager fsm = new FileSystemManager();

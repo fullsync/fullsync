@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Text;
 public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 
 	private ProfileManager profileManager;
+	private Button buttonEnabled;
 	private Button buttonScheduling;
 	private Label label17;
 	private Label labelTypeDescription;
@@ -84,6 +85,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	private Text textSource;
 	private Label label2;
 	private Text textName;
+	
 	private String profileName;
 	
 	public ProfileDetails(Composite parent, int style) {
@@ -98,11 +100,10 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	public void initGUI(){
 		try {
 			preInitGUI();
-			this.setSize(514, 363);
 
 			GridLayout thisLayout = new GridLayout(7, true);
-			thisLayout.marginWidth = 5;
-			thisLayout.marginHeight = 5;
+			thisLayout.marginWidth = 10;
+			thisLayout.marginHeight = 10;
 			thisLayout.numColumns = 7;
 			thisLayout.makeColumnsEqualWidth = false;
 			thisLayout.horizontalSpacing = 5;
@@ -165,6 +166,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             {
                 buttonSourceBuffered = new Button(this, SWT.CHECK | SWT.LEFT);
                 buttonSourceBuffered.setText("buffered");
+                buttonSourceBuffered.setEnabled( false );
             }
             {
                 label5 = new Label(this, SWT.NONE);
@@ -213,9 +215,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 label9 = new Label(this, SWT.NONE);
             }
             {
-                buttonDestinationBuffered = new Button(this, SWT.CHECK
-                    | SWT.LEFT);
+                buttonDestinationBuffered = new Button(this, SWT.CHECK | SWT.LEFT);
                 buttonDestinationBuffered.setText("buffered");
+                buttonDestinationBuffered.setEnabled( false );
             }
             {
                 label10 = new Label(this, SWT.NONE);
@@ -243,18 +245,30 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 comboType.addModifyListener(new ModifyListener() {
                     public void modifyText(ModifyEvent evt) {
                         if( comboType.getText().equals( "Publish/Update" ) )
-                            labelTypeDescription.setText( "Needs buffer on destination.");
-                        else if( comboType.getText().equals( "Backup" ) )
-                            labelTypeDescription.setText( "Needs no buffering." );
+                        {
+                            labelTypeDescription.setText( 
+                                    "Will apply any changes in source to destination. \n" +
+                                    "New files created in destination will be ignored, \n" +
+                                    "and changes to existing ones will result in a warning." );
+                            buttonSourceBuffered.setSelection( false );
+                            buttonDestinationBuffered.setSelection( true );
+                        } else if( comboType.getText().equals( "Backup" ) ) {
+                            labelTypeDescription.setText( 
+                                     "Will copy any changes to destination but \n" +
+                                     "won't delete anything." );
+	                        buttonSourceBuffered.setSelection( false );
+	                        buttonDestinationBuffered.setSelection( false );
+                        }
                     }
                 });
                 comboType.add( "Publish/Update" );
                 comboType.add( "Backup" );
             }
             {
-                labelTypeDescription = new Label(this, SWT.NONE);
+                labelTypeDescription = new Label(this, SWT.WRAP);
                 labelTypeDescription.setText("Description");
                 GridData labelTypeDescriptionLData = new GridData();
+                labelTypeDescriptionLData.heightHint = 40;
                 labelTypeDescriptionLData.horizontalSpan = 5;
                 labelTypeDescriptionLData.horizontalAlignment = GridData.FILL;
                 labelTypeDescription.setLayoutData(labelTypeDescriptionLData);
@@ -277,11 +291,14 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 });
             }
             {
+                buttonEnabled = new Button(this, SWT.CHECK | SWT.RIGHT);
+                buttonEnabled.setText("Enabled");
+            }
+            {
                 ruleSetGroup = new Group(this, SWT.NONE);
                 GridLayout ruleSetGroupLayout = new GridLayout();
                 GridData ruleSetGroupLData = new GridData();
                 ruleSetGroupLData.horizontalSpan = 7;
-                ruleSetGroupLData.heightHint = 143;
                 ruleSetGroupLData.horizontalIndent = 5;
                 ruleSetGroupLData.grabExcessHorizontalSpace = true;
                 ruleSetGroupLData.horizontalAlignment = GridData.FILL;
@@ -325,7 +342,6 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     simplyfiedOptionsGroup = new Group(ruleSetGroup, SWT.NONE);
                     GridLayout simplyfiedOptionsGroupLayout = new GridLayout();
                     GridData simplyfiedOptionsGroupLData = new GridData();
-                    simplyfiedOptionsGroupLData.heightHint = 98;
                     simplyfiedOptionsGroupLData.verticalAlignment = GridData.BEGINNING;
                     simplyfiedOptionsGroupLData.grabExcessHorizontalSpace = true;
                     simplyfiedOptionsGroupLData.horizontalAlignment = GridData.FILL;
@@ -353,6 +369,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                         GridData textIgnorePatterLData = new GridData();
                         textIgnorePatter.setToolTipText("Ignore RegExp");
                         textIgnorePatterLData.heightHint = 13;
+                        //textIgnorePatterLData.widthHint = 100;
                         textIgnorePatterLData.grabExcessHorizontalSpace = true;
                         textIgnorePatterLData.horizontalAlignment = GridData.FILL;
                         textIgnorePatter.setLayoutData(textIgnorePatterLData);
@@ -365,6 +382,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                         textAcceptPattern = new Text(simplyfiedOptionsGroup, SWT.BORDER);
                         GridData textAcceptPatternLData = new GridData();
                         textAcceptPatternLData.heightHint = 13;
+                        //textAcceptPatternLData.widthHint = 100;
                         textAcceptPatternLData.grabExcessHorizontalSpace = true;
                         textAcceptPatternLData.horizontalAlignment = GridData.FILL;
                         textAcceptPattern.setLayoutData(textAcceptPatternLData);
@@ -401,6 +419,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 }
             }
 			this.layout();
+			this.setSize(500, 400);
 	
 			postInitGUI();
 		} catch (Exception e) {
@@ -455,6 +474,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
         else comboType.select( 0 );
         
         buttonScheduling.setData( p.getSchedule() );
+        buttonEnabled.setSelection( p.isEnabled() );
         
         RuleSetDescriptor ruleSetDescriptor = p.getRuleSet();
         // TODO [Michele] I don't like this extend use of instanceof.
@@ -478,7 +498,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	
 	public static void showProfile( Shell parent, ProfileManager manager, String name ){
 		try {
-		    /*
+		    /* /
 			Display display = Display.getDefault();
 			Shell shell = new Shell(display);
 			shell.setText( "Profile Details" );
@@ -489,10 +509,11 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			shell.setLayout(new org.eclipse.swt.layout.FillLayout());
 			shell.setSize( shell.computeSize( inst.getSize().x, inst.getSize().y ) );
 			shell.open();
-			*/
+			/* */
 		    WizardDialog dialog = new WizardDialog( parent, SWT.APPLICATION_MODAL );
 		    ProfileDetailsPage page = new ProfileDetailsPage( dialog, manager, name );
 		    dialog.show();
+		    /* */
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -557,6 +578,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             p.setSynchronizationType( comboType.getText() );
             p.setDescription( textDescription.getText() );
             p.setSchedule( (Schedule)buttonScheduling.getData() );
+            p.setEnabled( buttonEnabled.getSelection() );
             profileManager.addProfile( p );
         } else {
             p = profileManager.getProfile( profileName );
@@ -566,6 +588,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             p.setSource( src );
             p.setDestination( dst );
             p.setSchedule( (Schedule)buttonScheduling.getData() );
+            p.setEnabled( buttonEnabled.getSelection() );
     		
             p.setRuleSet( ruleSetDescriptor );
         }

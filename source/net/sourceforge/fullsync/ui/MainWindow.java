@@ -486,8 +486,16 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
     public void profileExecutionScheduled( Profile profile )
     {
         Synchronizer sync = guiController.getSynchronizer();
-        sync.performActions( sync.executeProfile( profile ) );
-        profile.setLastUpdate( new Date() );
+        TaskTree tree = sync.executeProfile( profile );
+        if( tree == null )
+        {
+            profile.setLastError( 1, "An Error occured while comparing filesystems." );
+        } else {
+            int errorLevel = sync.performActions( tree );
+            if( errorLevel > 0 )
+                 profile.setLastError( errorLevel, "An Error occured while copying files." );
+            else profile.setLastUpdate( new Date() );
+        }
     }
 
 	
