@@ -62,6 +62,14 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	    profileManager.save();
 	}
 	
+	public void startTimer() throws RemoteException {
+		profileManager.startTimer();
+	}
+	
+	public void stopTimer() throws RemoteException {
+		profileManager.stopTimer();
+	}
+	
 	public TaskTree executeProfile(String name) throws RemoteException {
 		Profile p = profileManager.getProfile(name);
 		TaskTree tree = synchronizer.executeProfile(p);

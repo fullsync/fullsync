@@ -201,10 +201,6 @@ public class ProfileManager implements ProfileChangeListener
     	return (remoteManager != null);
     }
     
-    public RemoteManager getRemoteProfileManager() {
-    	return remoteManager;
-    }
-    
     private void loadProfiles() throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
         File file = new File( configFile );
         if( file.exists() )
@@ -264,9 +260,15 @@ public class ProfileManager implements ProfileChangeListener
     }
     public void startTimer()
     {
-    	timerActive = true;
-    	timer = new Timer( true);
-    	updateTimer();    	
+    	if (remoteManager != null) {
+    		remoteManager.startTimer();
+    		timerActive = true;
+    	}
+    	else {
+    		timerActive = true;
+    		timer = new Timer( true);
+    		updateTimer();
+    	}
     }
     void updateTimer()
     {
@@ -303,11 +305,17 @@ public class ProfileManager implements ProfileChangeListener
     }
     public void stopTimer()
     {
-        if( timerActive )
-        {
-            timerActive = false;
-            timer.cancel();
-        }
+    	if (remoteManager != null) {
+    		remoteManager.stopTimer();
+			timerActive = false;
+    	}
+    	else {
+    		if( timerActive )
+    		{
+    			timerActive = false;
+    			timer.cancel();
+    		}
+    	}
     }
     public void addProfilesChangeListener( ProfileListChangeListener listener )
     {

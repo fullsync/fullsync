@@ -119,10 +119,11 @@ public class CommandLineInterpreter
 		    SplashScreen splash = null;
 		    // FIXME [Michele] I'm using (!line.hasOption("d") to decide if the GUI is enabled or not.
 		    // We really need to decide a better command line style.
+		    long startMillis = System.currentTimeMillis();
 		    if ((!line.hasOption("d")) && (preferences.showSplashScreen())) {
-		    	splash = new SplashScreen("./images/About.png");
-	    		splash.setHideOnClick(false);
-	    		splash.setVisible(true);
+		    	splash = SplashScreen.createSplashScreenSWT("./images/About.png");
+	    		splash.setHideOnClick();
+	    		splash.show();
 		    }
 		    boolean activateRemote = false;
 	    	int port = 10000;
@@ -187,8 +188,14 @@ public class CommandLineInterpreter
 		    		}
 
 		    		if (splash != null) {
-		    			splash.setVisible(false);
-		    			splash.dispose();
+		    			long elapsed = System.currentTimeMillis() - startMillis;
+		    			if (elapsed < 1500) {
+		    				try {
+		    					Thread.sleep(1500 - elapsed);
+		    				} catch (InterruptedException e) {
+		    				}
+		    			}
+		    			splash.hide();
 		    			splash = null;
 		    		}
 		    		

@@ -51,6 +51,24 @@ public class RemoteManager {
 		remoteInterface.runProfile(name);
 	}
 
+	public void startTimer() {
+		try {
+			remoteInterface.startTimer();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void stopTimer() {
+		try {
+			remoteInterface.stopTimer();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public TaskTree executeProfile(String name) throws RemoteException {
 		return remoteInterface.executeProfile(name);
 	}

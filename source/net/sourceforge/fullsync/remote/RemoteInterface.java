@@ -24,6 +24,10 @@ public interface RemoteInterface extends Remote {
 
 	void runProfile(String name) throws RemoteException;
 
+	void startTimer() throws RemoteException;
+	
+	void stopTimer() throws RemoteException;
+	
 	TaskTree executeProfile(String name) throws RemoteException;
 	
 	void performActions(TaskTree tree) throws RemoteException;

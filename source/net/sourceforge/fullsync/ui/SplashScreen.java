@@ -1,66 +1,125 @@
-
+/*
+ * Created on Nov 25, 2004
+ */
 package net.sourceforge.fullsync.ui;
 
-import java.awt.Toolkit;
-import java.awt.event.*;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
-import javax.swing.*;
+/**
+ * @author Michele Aiello
+ */
+public class SplashScreen extends Composite {
 
-public class SplashScreen extends JWindow {
-
-	private JLabel bitmapLabel;
-	private MouseListener onClickListener;
-
-	public static void main(String[] args) {
-		SplashScreen splash = new SplashScreen("./images/About.png");
-		splash.setHideOnClick(true);
-		splash.setVisible(true);
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		splash.setVisible(false);
-		splash.dispose();
-	}
-
-	/**
-	 * Constructs a new splash screen with the bitmap from the given file name.
-	 * 
-	 * @param filename the name of the image file to display
-	 */
-	public SplashScreen(String filename) {
-		this.bitmapLabel = new JLabel();
-
-		ImageIcon imageIcon = new ImageIcon(filename);
-		int height = imageIcon.getIconHeight();
-		int width = imageIcon.getIconWidth();
-		bitmapLabel.setIcon(imageIcon);
-		bitmapLabel.setSize(width, height);
-		bitmapLabel.setLocation(0, 0);
-		this.getContentPane().setLayout(null);
-		this.getContentPane().add(bitmapLabel, null);
-		this.setSize(width, height);
-		
-		int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-		int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		this.setLocation((screenWidth - width) / 2, (screenHeight - height) / 2);
-		
-		onClickListener = new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				hide();
-			}
-		};
-
+	private Label labelPicture;
+	private String imageFileName;
+	
+	public static void main(String args[]) throws InterruptedException {
+		Display display = Display.getDefault();
+		Shell mainShell = new Shell(display, SWT.NONE);
+		SplashScreen splashScreen = new SplashScreen(mainShell, "./images/About.png");
+		splashScreen.show();
+		Thread.sleep(3000);
+		splashScreen.hide();
 	}
 	
-	public void setHideOnClick(boolean bool) {
-		if (bool) {
-			this.addMouseListener(onClickListener);
-		}
-		else {
-			this.removeMouseListener(onClickListener);
+	public static SplashScreen createSplashScreenSWT(String filename) {
+		Display display = Display.getDefault();
+    	Shell mainShell = new Shell(display, SWT.NONE);
+
+    	return new SplashScreen(mainShell, filename);
+	}
+	
+	private SplashScreen(Composite parent, String filename) {
+		super(parent, SWT.NONE);
+		this.imageFileName = filename;
+		initGUI();
+	}
+	
+	private void initGUI() {
+		GridLayout thisLayout = new GridLayout();
+		thisLayout.numColumns = 1;
+		thisLayout.horizontalSpacing = 0;
+		thisLayout.verticalSpacing = 0;
+		thisLayout.marginHeight = 0;
+		thisLayout.marginWidth = 0;
+		
+		this.setLayout(thisLayout);
+		
+		Image image = null;
+		
+        {
+            labelPicture = new Label(this, SWT.NONE);
+            GridData labelPictureLData = new GridData();
+            labelPictureLData.grabExcessHorizontalSpace = true;
+            labelPictureLData.grabExcessVerticalSpace = true;
+            labelPictureLData.horizontalAlignment = GridData.FILL;
+            labelPictureLData.verticalAlignment = GridData.FILL;
+            labelPicture.setLayoutData(labelPictureLData);
+            image = new Image(this.getDisplay(), imageFileName);
+    		labelPicture.setImage( image );
+            labelPicture.setBounds(0, 0, image.getBounds().width, image.getBounds().height);
+        }
+        
+        this.setSize(image.getBounds().width, image.getBounds().height);
+		this.pack();
+        this.layout();
+	}
+	
+	public void setHideOnClick() {
+        final Shell mainShell = this.getShell();
+        MouseAdapter adapter = new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				mainShell.dispose();
+			}
+        };
+        
+        this.addMouseListener(adapter);
+        labelPicture.addMouseListener(adapter);
+	}
+	
+	public void show() {
+		final Shell mainShell = this.getShell();
+		final Display display = mainShell.getDisplay();
+		
+		mainShell.pack();
+		mainShell.layout();
+		
+		int screenWidth = display.getBounds().width;
+		int screenHeight = display.getBounds().height;
+		
+		int shellWidth = mainShell.getBounds().width;
+		int shellHeight = mainShell.getBounds().height;
+		
+		int posX = (screenWidth - shellWidth) / 2;
+		int posY = (screenHeight- shellHeight) / 2;
+		
+		mainShell.setBounds(posX, posY, shellWidth, shellHeight);
+		
+		mainShell.setVisible(true);
+		
+		display.asyncExec(new Runnable() {
+			public void run() {
+				while( !mainShell.isDisposed() ) {
+					if (!display.readAndDispatch())
+						display.sleep();
+				}
+			}
+		});
+	}
+	
+	public void hide() {
+		Shell mainShell = this.getShell();
+		if (!mainShell.isDisposed()) {
+			mainShell.dispose();
 		}
 	}
-
 }
