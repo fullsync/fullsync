@@ -6,12 +6,13 @@
 <JVMSearchPath>jdkpath</JVMSearchPath>
 <JVMSearchPath>exepath</JVMSearchPath>
 <JVMSearchPath>jview</JVMSearchPath>
+<arguments></arguments>
 <currentDirectory>.</currentDirectory>
 <embeddedJar>true</embeddedJar>
-<executableName>..\..\installer\FullSyncInstaller.exe</executableName>
+<executableName>..\..\dist\FullSyncInstaller.exe</executableName>
 <iconLocation>..\FullSync.ico</iconLocation>
 <initialMemoryHeap>-1</initialMemoryHeap>
-<jarLocation>..\..\installer\FullSyncInstaller.jar</jarLocation>
+<jarLocation>..\..\dist\FullSyncInstaller.jar</jarLocation>
 <mainClassName>com.izforge.izpack.installer.Installer</mainClassName>
 <maximumMemoryHeap>-1</maximumMemoryHeap>
 <maximumVersion></maximumVersion>

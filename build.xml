@@ -16,7 +16,6 @@
 	<property name="build.lib.dir"		value="${build.dir}\lib" />
 	<property name="classes.dir"		value="${build.dir}/classes" />
 	<property name="dist.dir"			value="${basedir}/dist" />
-	<property name="installer.dir"		value="${basedir}/installer" />
 
 	<property name="utils.source.dir"	value="${basedir}/utils" />
 	<property name="utils.classes.dir"	value="${basedir}/utils-classes" />
@@ -151,7 +150,6 @@
 	<target name="dist-zip" description="Builds a zipfile distribution" depends="build">
     	<echo message="Building a zip distribution"/>
 
-		<delete dir="${dist.dir}"/>
 		<mkdir dir="${dist.dir}"/>
 		<zip zipfile="${dist.dir}/FullSync-${version}.zip">
 			<fileset dir="${build.dir}">
@@ -162,7 +160,7 @@
 	
     <target name="dist-installer" description="Builds an multiplatform installer distribution" depends="build">
     	<echo message="Building a multi-platform installer distribution"/>
-    	<mkdir dir="${installer.dir}"/>
+    	<mkdir dir="${dist.dir}"/>
         <izpack 
         	input="${basedir}/resources/installer/install.xml"
 			output="${dist.dir}/FullSyncInstaller.jar"

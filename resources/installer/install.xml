@@ -62,6 +62,7 @@
 				<include name="xml-apis.jar"/>
 				<include name="log4j-1.2.8.jar"/>
 				<include name="fullsync.jar"/>
+				<include name="utils.jar"/>
             </fileset>
 
 			<!-- SWT Win32 -->
@@ -71,10 +72,12 @@
 
 			<!-- SWT Linux GTK -->
 			<file src="resources/swt-linux-gtk/swt.jar" targetdir="$INSTALL_PATH/lib" os="unix"/>
+			<file src="resources/swt-linux-gtk/swt-pi.jar" targetdir="$INSTALL_PATH/lib" os="unix"/>
 			<file src="resources/swt-linux-gtk/libswt-atk-gtk-3063.so" targetdir="$INSTALL_PATH/lib" os="unix"/>
 			<file src="resources/swt-linux-gtk/libswt-awt-gtk-3063.so" targetdir="$INSTALL_PATH/lib" os="unix"/>
 			<file src="resources/swt-linux-gtk/libswt-gnome-gtk-3063.so" targetdir="$INSTALL_PATH/lib" os="unix"/>
 			<file src="resources/swt-linux-gtk/libswt-gtk-3063.so" targetdir="$INSTALL_PATH/lib" os="unix"/>
+			<file src="resources/swt-linux-gtk/libswt-pi-gtk-3063.so" targetdir="$INSTALL_PATH/lib" os="unix"/>
 
             <fileset dir="images" targetdir="$INSTALL_PATH/images" override="true">
                 <exclude name="**/CVS"/>
@@ -85,7 +88,8 @@
             <file src="build/FullSync.exe.manifest" targetdir="$INSTALL_PATH/" os="windows"/>
 			
 			<!-- EXE for Linux -->
-            <!-- TODO [Michele] Missing startup script for Unix-based systems -->
+			<file src="resources/bin/fullsync.sh" targetdir="$INSTALL_PATH/bin" os="unix"/>
+            <executable targetfile="$INSTALL_PATH/bin/fullsync.sh" stage="never" type="bin"/>
             
             <file src="build/sample.syncrules" targetdir="$INSTALL_PATH/"/>
             <file src="build/logging.xml" targetdir="$INSTALL_PATH/"/>
