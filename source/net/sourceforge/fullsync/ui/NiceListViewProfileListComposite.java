@@ -17,7 +17,9 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -207,6 +209,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
         if( getProfileManager() != null )
 	    {
             profilesToItems = new HashMap();
+            setItemsMenu( null );
             profileList.clear();
             
 	        Enumeration e = getProfileManager().getProfiles();
@@ -259,6 +262,17 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
     public void setHandler( ProfileListControlHandler handler )
     {
         this.handler = handler;
+    }
+    public void setItemsMenu( Menu menu )
+    {
+        Control[] items = profileList.getChildren();
+        for( int i = 0; i < items.length; i++ )
+            items[i].setMenu( menu );
+    }
+    public void setMenu( Menu menu )
+    {
+        setItemsMenu( menu );
+        super.setMenu( menu );
     }
     public void profileListChanged()
     {

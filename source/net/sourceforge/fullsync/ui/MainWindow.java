@@ -64,6 +64,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
     private CoolBar coolBar;
     
     private Composite profileListContainer;
+    private Menu profilePopupMenu; 
     private ProfileListComposite profileList;
     private GuiController guiController;
     
@@ -415,10 +416,10 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 			}
 		);
 	}
-	protected Menu createPopupMenu()
+	protected void createPopupMenu()
     {
 		// PopUp Menu for the Profile list.
-		Menu profilePopupMenu = new Menu(getShell(), SWT.POP_UP);
+		profilePopupMenu = new Menu(getShell(), SWT.POP_UP);
 		
 		MenuItem runItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		runItem.setText("Run Profile");
@@ -461,17 +462,20 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 				}
 			}
 		);
-		return profilePopupMenu;
     }
     public void createProfileList() 
     {
         if( profileList != null )
+        {
+            // take away our menu so it's not disposed
+            profileList.setMenu( null );
             profileList.dispose();
+        }
 
         if( guiController.getPreferences().getProfileListStyle().equals( "NiceListView" ) )
 	         profileList = new NiceListViewProfileListComposite( profileListContainer, SWT.NULL );
 	    else profileList = new ListViewProfileListComposite( profileListContainer, SWT.NULL );
-        profileList.setMenu( createPopupMenu() );
+        profileList.setMenu( profilePopupMenu );
         profileList.setHandler( this );
     	profileList.setProfileManager( guiController.getProfileManager() );
     	

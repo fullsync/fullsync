@@ -10,6 +10,7 @@ import net.sourceforge.fullsync.ProfileManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -86,8 +87,6 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
         }
         tableProfiles.setHeaderVisible(true);
         tableProfiles.setLinesVisible(false);
-
-        tableProfiles.setMenu( this.getMenu() );
         
         this.setLayout( new FillLayout() );
         this.layout();
@@ -153,6 +152,14 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
     public void setHandler( ProfileListControlHandler handler )
     {
         this.handler = handler;
+    }
+    public void setMenu( Menu menu )
+    {
+        tableProfiles.setMenu( menu );
+    }
+    public Menu getMenu()
+    {
+        return tableProfiles.getMenu();
     }
     public void profileChanged( Profile p )
     {
