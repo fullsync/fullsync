@@ -65,67 +65,75 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 			thisLayout.horizontalSpacing = 20;
 			thisLayout.makeColumnsEqualWidth = true;
 			this.setLayout(thisLayout);
-			this.setSize(500, 300);
-			{
-				groupInterface = new Group(this, SWT.NONE);
-				GridLayout GeneralPreferencesGroupLayout = new GridLayout();
-				GeneralPreferencesGroupLayout.numColumns = 2;
-				GridData GeneralPreferencesGroupLData = new GridData();
-				GeneralPreferencesGroupLData.horizontalSpan = 2;
-				GeneralPreferencesGroupLData.grabExcessHorizontalSpace = true;
-				GeneralPreferencesGroupLData.grabExcessVerticalSpace = true;
-				GeneralPreferencesGroupLData.horizontalAlignment = GridData.FILL;
-				GeneralPreferencesGroupLData.verticalAlignment = GridData.FILL;
-				groupInterface.setLayoutData(GeneralPreferencesGroupLData);
-				groupInterface.setLayout(GeneralPreferencesGroupLayout);
-				groupInterface.setText("Interface");
-				{
-					cbConfirmExit = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
-					cbConfirmExit.setText("Show confirmation dialog on exit");
-					GridData askOnClosingCheckBoxLData = new GridData();
-					askOnClosingCheckBoxLData.widthHint = 246;
-					askOnClosingCheckBoxLData.heightHint = 19;
-					askOnClosingCheckBoxLData.horizontalSpan = 2;
-					cbConfirmExit.setLayoutData(askOnClosingCheckBoxLData);
-				}
-				{
-					cbCloseMinimizesToSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
-					cbCloseMinimizesToSystemTray.setText("Close minimizes to System Tray");
-					GridData closeButtonMinimizesCheckBoxLData = new GridData();
-					closeButtonMinimizesCheckBoxLData.widthHint = 246;
-					closeButtonMinimizesCheckBoxLData.heightHint = 18;
-					closeButtonMinimizesCheckBoxLData.horizontalSpan = 2;
-					cbCloseMinimizesToSystemTray.setLayoutData(closeButtonMinimizesCheckBoxLData);
-				}
+			this.setSize(500, 350);
+            {
+                groupInterface = new Group(this, SWT.NONE);
+                GridLayout GeneralPreferencesGroupLayout = new GridLayout();
+                GeneralPreferencesGroupLayout.numColumns = 2;
+                GridData GeneralPreferencesGroupLData = new GridData();
+                GeneralPreferencesGroupLData.horizontalSpan = 2;
+                GeneralPreferencesGroupLData.grabExcessHorizontalSpace = true;
+                GeneralPreferencesGroupLData.grabExcessVerticalSpace = true;
+                GeneralPreferencesGroupLData.horizontalAlignment = GridData.FILL;
+                GeneralPreferencesGroupLData.verticalAlignment = GridData.FILL;
+                groupInterface.setLayoutData(GeneralPreferencesGroupLData);
+                groupInterface.setLayout(GeneralPreferencesGroupLayout);
+                groupInterface.setText("Interface");
                 {
-                    cbMinimizeMinimizesToSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
+                    cbConfirmExit = new Button(groupInterface, SWT.CHECK
+                        | SWT.LEFT);
+                    cbConfirmExit.setText("Show confirmation dialog on exit");
+                    GridData askOnClosingCheckBoxLData = new GridData();
+                    askOnClosingCheckBoxLData.widthHint = 246;
+                    askOnClosingCheckBoxLData.heightHint = 19;
+                    askOnClosingCheckBoxLData.horizontalSpan = 2;
+                    cbConfirmExit.setLayoutData(askOnClosingCheckBoxLData);
+                }
+                {
+                    cbCloseMinimizesToSystemTray = new Button(
+                        groupInterface,
+                        SWT.CHECK | SWT.LEFT);
+                    cbCloseMinimizesToSystemTray
+                        .setText("Close minimizes to System Tray");
+                    GridData closeButtonMinimizesCheckBoxLData = new GridData();
+                    closeButtonMinimizesCheckBoxLData.widthHint = 246;
+                    closeButtonMinimizesCheckBoxLData.heightHint = 18;
+                    closeButtonMinimizesCheckBoxLData.horizontalSpan = 2;
+                    cbCloseMinimizesToSystemTray
+                        .setLayoutData(closeButtonMinimizesCheckBoxLData);
+                }
+                {
+                    cbMinimizeMinimizesToSystemTray = new Button(
+                        groupInterface,
+                        SWT.CHECK | SWT.LEFT);
                     cbMinimizeMinimizesToSystemTray
                         .setText("Minimize minimizes to System Tray");
                     GridData cbMinimizeMinimizesToSystemTrayLData = new GridData();
                     cbMinimizeMinimizesToSystemTrayLData.widthHint = 246;
                     cbMinimizeMinimizesToSystemTrayLData.heightHint = 18;
                     cbMinimizeMinimizesToSystemTrayLData.horizontalSpan = 2;
-                    cbMinimizeMinimizesToSystemTray.setLayoutData(cbMinimizeMinimizesToSystemTrayLData);
+                    cbMinimizeMinimizesToSystemTray
+                        .setLayoutData(cbMinimizeMinimizesToSystemTrayLData);
                 }
-				{
-					cbShowSplashScreen = new Button(groupInterface, SWT.CHECK
-						| SWT.LEFT);
-					cbShowSplashScreen.setText("Show Splash Screen");
-					GridData cbShowSplashScreenLData = new GridData();
-					cbShowSplashScreenLData.horizontalSpan = 2;
-					cbShowSplashScreen.setLayoutData(cbShowSplashScreenLData);
-				}
-                /*
                 {
-                    cbEnableSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
-                    cbEnableSystemTray.setText("Enable System Tray Icon");
-                    GridData cbEnableSystemTrayLData = new GridData();
-                    cbEnableSystemTrayLData.widthHint = 188;
-                    cbEnableSystemTrayLData.heightHint = 18;
-                    cbEnableSystemTrayLData.horizontalSpan = 2;
-                    cbEnableSystemTray.setLayoutData(cbEnableSystemTrayLData);
+                    cbShowSplashScreen = new Button(groupInterface, SWT.CHECK
+                        | SWT.LEFT);
+                    cbShowSplashScreen.setText("Show Splash Screen");
+                    GridData cbShowSplashScreenLData = new GridData();
+                    cbShowSplashScreenLData.horizontalSpan = 2;
+                    cbShowSplashScreen.setLayoutData(cbShowSplashScreenLData);
                 }
-                */
+                /*
+                 {
+                 cbEnableSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
+                 cbEnableSystemTray.setText("Enable System Tray Icon");
+                 GridData cbEnableSystemTrayLData = new GridData();
+                 cbEnableSystemTrayLData.widthHint = 188;
+                 cbEnableSystemTrayLData.heightHint = 18;
+                 cbEnableSystemTrayLData.horizontalSpan = 2;
+                 cbEnableSystemTray.setLayoutData(cbEnableSystemTrayLData);
+                 }
+                 */
                 {
                     label1 = new Label(groupInterface, SWT.NONE);
                     label1.setText("Profile list style: ");
@@ -134,88 +142,89 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                     label1.setLayoutData(label1LData);
                 }
                 {
-                    comboProfileList = new Combo(groupInterface, SWT.DROP_DOWN | SWT.READ_ONLY);
+                    comboProfileList = new Combo(groupInterface, SWT.DROP_DOWN
+                        | SWT.READ_ONLY);
                     GridData comboProfileListLData = new GridData();
                     comboProfileListLData.widthHint = 105;
                     comboProfileListLData.heightHint = 21;
                     comboProfileList.setLayoutData(comboProfileListLData);
-                    comboProfileList.add( "Table" );
-                    comboProfileList.add( "NiceListView" );
+                    comboProfileList.add("Table");
+                    comboProfileList.add("NiceListView");
                 }
-				{
-					groupRemoteConnection = new Group(groupInterface, SWT.NONE);
-					GridLayout groupRemoteConnectionLayout = new GridLayout();
-					GridData groupRemoteConnectionLData = new GridData();
-					groupRemoteConnectionLData.horizontalSpan = 2;
-					groupRemoteConnectionLData.widthHint = 327;
-					groupRemoteConnectionLData.heightHint = 75;
-					groupRemoteConnection.setLayoutData(groupRemoteConnectionLData);
-					groupRemoteConnectionLayout.makeColumnsEqualWidth = true;
-					groupRemoteConnectionLayout.numColumns = 2;
-					groupRemoteConnection.setLayout(groupRemoteConnectionLayout);
-					groupRemoteConnection.setText("Remote Connection");
-					{
-						cbListenForIncomming = new Button(
-							groupRemoteConnection,
-							SWT.CHECK | SWT.LEFT);
-						cbListenForIncomming
-							.setText("Listen for incomming connections");
-						GridData cbListenForIncommingLData = new GridData();
-						cbListenForIncomming
-							.addSelectionListener(new SelectionAdapter() {
-								public void widgetSelected(SelectionEvent evt) {
-									updateRemoteConnectionGroup();
-//									if (cbListenForIncomming.getSelection()) {
-//										label2.setEnabled(true);
-//										textListeningPort.setEnabled(true);
-//										label3.setEnabled(true);
-//										textPassword.setEnabled(true);
-//										
-//									} else {
-//										label2.setEnabled(false);
-//										textListeningPort.setEnabled(false);
-//										label3.setEnabled(false);
-//										textPassword.setEnabled(false);
-//									}
-								}
-							});
-						cbListenForIncommingLData.horizontalSpan = 2;
-						cbListenForIncomming
-							.setLayoutData(cbListenForIncommingLData);
-					}
-					{
-						label2 = new Label(groupRemoteConnection, SWT.NONE);
-						label2.setText("Incomming connections port:");
-						label2.setEnabled(false);
-					}
-					{
-						textListeningPort = new Text(
-							groupRemoteConnection,
-							SWT.BORDER);
-						textListeningPort.setText("10000");
-						GridData textListeningPortLData = new GridData();
-						textListeningPort.setEnabled(false);
-						textListeningPortLData.widthHint = 39;
-						textListeningPortLData.heightHint = 12;
-						textListeningPort.setLayoutData(textListeningPortLData);
-					}
-					{
-						label3 = new Label(groupRemoteConnection, SWT.NONE);
-						label3.setText("Incoming connections password:");
-						label3.setEnabled(false);
-					}
-					{
-						textPassword = new Text(groupRemoteConnection, SWT.BORDER);
-						GridData textPasswordLData = new GridData();
-						textPassword.setEnabled(false);
-						textPasswordLData.widthHint = 118;
-						textPasswordLData.heightHint = 13;
-						textPasswordLData.grabExcessHorizontalSpace = true;
-						textPassword.setLayoutData(textPasswordLData);
-					}
-				}
-			}
-			
+            }
+            {
+                groupRemoteConnection = new Group(this, SWT.NONE);
+                GridLayout groupRemoteConnectionLayout = new GridLayout();
+                GridData groupRemoteConnectionLData = new GridData();
+                groupRemoteConnectionLData.horizontalSpan = 2;
+                groupRemoteConnectionLData.horizontalAlignment = GridData.FILL;
+                groupRemoteConnectionLData.grabExcessVerticalSpace = true;
+                groupRemoteConnectionLData.verticalAlignment = GridData.FILL;
+                groupRemoteConnection.setLayoutData(groupRemoteConnectionLData);
+                groupRemoteConnectionLayout.numColumns = 2;
+                groupRemoteConnection.setLayout(groupRemoteConnectionLayout);
+                groupRemoteConnection.setText("Remote Connection");
+                {
+                    cbListenForIncomming = new Button(
+                        groupRemoteConnection,
+                        SWT.CHECK | SWT.LEFT);
+                    cbListenForIncomming
+                        .setText("Start listen for incoming connections on startup");
+                    GridData cbListenForIncommingLData = new GridData();
+                    cbListenForIncomming
+                        .addSelectionListener(new SelectionAdapter() {
+                            public void widgetSelected(SelectionEvent evt) {
+                                updateRemoteConnectionGroup();
+                                //									if (cbListenForIncomming.getSelection()) {
+                                //										label2.setEnabled(true);
+                                //										textListeningPort.setEnabled(true);
+                                //										label3.setEnabled(true);
+                                //										textPassword.setEnabled(true);
+                                //										
+                                //									} else {
+                                //										label2.setEnabled(false);
+                                //										textListeningPort.setEnabled(false);
+                                //										label3.setEnabled(false);
+                                //										textPassword.setEnabled(false);
+                                //									}
+                            }
+                        });
+                    cbListenForIncommingLData.horizontalSpan = 2;
+                    cbListenForIncomming
+                        .setLayoutData(cbListenForIncommingLData);
+                }
+                {
+                    label2 = new Label(groupRemoteConnection, SWT.NONE);
+                    label2.setText("Incoming connections port:");
+                    label2.setEnabled(false);
+                }
+                {
+                    textListeningPort = new Text(
+                        groupRemoteConnection,
+                        SWT.BORDER);
+                    textListeningPort.setText("10000");
+                    GridData textListeningPortLData = new GridData();
+                    textListeningPort.setEnabled(false);
+                    textListeningPortLData.widthHint = 39;
+                    textListeningPortLData.heightHint = 12;
+                    textListeningPort.setLayoutData(textListeningPortLData);
+                }
+                {
+                    label3 = new Label(groupRemoteConnection, SWT.NONE);
+                    label3.setText("Incoming connections password:");
+                    label3.setEnabled(false);
+                }
+                {
+                    textPassword = new Text(groupRemoteConnection, SWT.BORDER);
+                    GridData textPasswordLData = new GridData();
+                    textPassword.setEnabled(false);
+                    textPasswordLData.widthHint = 118;
+                    textPasswordLData.heightHint = 13;
+                    textPasswordLData.grabExcessHorizontalSpace = true;
+                    textPassword.setLayoutData(textPasswordLData);
+                }
+            }
+
 			updateComponent();
 			this.layout();
 		} catch (Exception e) {
@@ -266,7 +275,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		preferences.setShowSplashScreen(cbShowSplashScreen.getSelection());
 
 		if (profileListStyleChanged) {
-			GuiController.getInstance().getMainWindow().updateProfileList();
+			GuiController.getInstance().getMainWindow().createProfileList();
 		}
 
 		boolean listenForIncoming = cbListenForIncomming.getSelection();

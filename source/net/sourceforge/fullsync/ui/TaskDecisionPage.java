@@ -74,12 +74,12 @@ public class TaskDecisionPage implements WizardPage
 
     public Image getIcon()
     {
-        return new Image( dialog.getDisplay(), "images/Tasklist_Icon.gif" );
+        return GuiController.getInstance().getImage( "Tasklist_Icon.gif" );
     }
 
     public Image getImage()
     {
-        return new Image( dialog.getDisplay(), "images/Tasklist_Wizard.png" );
+        return GuiController.getInstance().getImage( "Tasklist_Wizard.png" );
     }
 
     public void createContent( Composite content )

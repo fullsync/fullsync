@@ -43,12 +43,11 @@ public class ProfileDetailsPage implements WizardPage
     }
     public Image getIcon()
     {
-    	// TODO [Michele] we should reuse the same image any time (SWTManager?).
-        return new Image( dialog.getDisplay(), "images/Profile_Default.gif" );
+        return GuiController.getInstance().getImage( "Profile_Default.gif" );
     }
     public Image getImage()
     {
-        return new Image( dialog.getDisplay(), "images/Profile_Wizard.png" ); 
+        return GuiController.getInstance().getImage( "Profile_Wizard.png" ); 
     }
     public void createContent( Composite content )
     {

@@ -44,8 +44,9 @@ public class LocalConnection implements FileSystemConnection
         String path = parent.getPath()+"/"+name;
         
         File n = new AbstractFile( this, name, path, parent, file.isDirectory(), true );
-        if( file.isFile() )
-             n.setFileAttributes( new FileAttributes( file.length(), file.lastModified() ) );
+        if( file.isFile() ) {
+            n.setFileAttributes( new FileAttributes( file.length(), file.lastModified() ) );
+        }
         return n;
     }
     
@@ -63,7 +64,9 @@ public class LocalConnection implements FileSystemConnection
 	        if( files != null )
 	        for( int i = 0; i < files.length; i++ )
 	        {
-	            table.put( files[i].getName(), buildNode( dir, files[i] ) );
+	            java.io.File file = files[i]; 
+	            if( file.isFile() || file.isDirectory() )
+	                table.put( file.getName(), buildNode( dir, file ) );
 	        }
 	        return table;
         } else {

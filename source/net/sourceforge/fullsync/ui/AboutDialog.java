@@ -71,8 +71,6 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 			dialogShellLayout.marginWidth = 0;
 			dialogShellLayout.horizontalSpacing = 0;
 			dialogShell.setText("About FullSync");
-			dialogShell.layout();
-			dialogShell.pack();
 			dialogShell.setSize(308, 406);
             {
                 labelPicture = new Label(dialogShell, SWT.NONE);
@@ -82,7 +80,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
                 labelPictureLData.horizontalAlignment = GridData.FILL;
                 labelPictureLData.verticalAlignment = GridData.FILL;
                 labelPicture.setLayoutData(labelPictureLData);
-                imageAbout = new Image( parent.getDisplay(), "images/About.png" );
+                imageAbout = GuiController.getInstance().getImage( "About.png" );
         		labelPicture.setImage( imageAbout );
             }
             {
@@ -133,6 +131,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
                     buttonOk.setLayoutData(buttonOkLData);
                 }
             }
+			dialogShell.layout();
 			dialogShell.open();
 			Display display = dialogShell.getDisplay();
 			while (!dialogShell.isDisposed()) {

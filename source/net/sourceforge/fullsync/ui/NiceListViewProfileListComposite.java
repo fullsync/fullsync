@@ -17,11 +17,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -124,8 +120,6 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
     private NiceListView profileList;
     private HashMap profilesToItems;
     
-    private Menu profilesPopupMenu;
-    
     private ProfileManager profileManager;
     private ProfileListControlHandler handler;
     
@@ -142,7 +136,6 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
         super( parent, style );
         loadImages();
         initGui();
-        initMenu();
     }
     
     private void initGui()
@@ -159,71 +152,19 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		this.setLayout( new FillLayout() );
 		this.layout();
     }
-    private void initMenu()
-    {
-        profilesPopupMenu = new Menu(getShell(), SWT.POP_UP);
-		
-		MenuItem runItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		runItem.setText("Run Profile");
-		runItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					handler.runProfile( getSelectedProfile() );
-				}
-			}
-		);
-
-		MenuItem editItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		editItem.setText("Edit Profile");
-		editItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					handler.editProfile( getSelectedProfile() );
-				}
-			}
-		);
-
-		MenuItem deleteItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		deleteItem.setText("Delete Profile");
-		deleteItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					handler.deleteProfile( getSelectedProfile() );
-				}
-			}
-		);
-		
-		MenuItem separatorItem1 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
-
-		MenuItem addItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		addItem.setText("New Profile");
-		addItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					handler.createNewProfile();
-				}
-			}
-		);
-
-    }
     private void loadImages()
     {
-        imageProfileDefault = new Image( getDisplay(), "images/Profile_Default.gif" );
-        imageProfileScheduled = new Image( getDisplay(), "images/Profile_Default_Scheduled.gif" );
-        imageProfileError = new Image( getDisplay(), "images/Profile_Default_Error.gif" );
-        imageProfileErrorScheduled = new Image( getDisplay(), "images/Profile_Default_Error_Scheduled.gif" );
+        imageProfileDefault = GuiController.getInstance().getImage( "Profile_Default.gif" );
+        imageProfileScheduled = GuiController.getInstance().getImage( "Profile_Default_Scheduled.gif" );
+        imageProfileError = GuiController.getInstance().getImage( "Profile_Default_Error.gif" );
+        imageProfileErrorScheduled = GuiController.getInstance().getImage( "Profile_Default_Error_Scheduled.gif" );
         
-        imageRun = new Image( getDisplay(), "images/Profile_Run.gif" );
-        imageEdit = new Image( getDisplay(), "images/Profile_Edit.gif" );
-        imageDelete = new Image( getDisplay(), "images/Profile_Delete.gif" );
+        imageRun = GuiController.getInstance().getImage( "Profile_Run.gif" );
+        imageEdit = GuiController.getInstance().getImage( "Profile_Edit.gif" );
+        imageDelete = GuiController.getInstance().getImage( "Profile_Delete.gif" );
     }
     public void dispose()
     {
-        imageProfileDefault.dispose();
-        imageProfileScheduled.dispose();
-        imageProfileError.dispose();
-        imageProfileErrorScheduled.dispose();
-        
-        imageRun.dispose();
-        imageEdit.dispose();
-        imageDelete.dispose();
-        
         profileManager.removeProfilesChangeListener( this );
         
         super.dispose();
@@ -277,7 +218,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 				ContentComposite content = new ContentComposite( item, SWT.NULL );
 				content.setProfile( p );
 				item.setContent( content );
-				item.setMenu( profilesPopupMenu );
+				item.setMenu( getMenu() );
 				updateItem( item, p );
 				
 				profilesToItems.put( p, item );

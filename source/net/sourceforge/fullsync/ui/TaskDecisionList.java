@@ -1,7 +1,5 @@
 package net.sourceforge.fullsync.ui;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -163,16 +161,6 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 		    public void run()
             {
 		        try {
-					/*Shell shell = new Shell(display);
-					TaskDecisionList inst = new TaskDecisionList(shell, SWT.NULL);
-					inst.setTaskTree( task );
-					inst.rebuildActionList();
-					shell.setLayout(new org.eclipse.swt.layout.FillLayout());
-					Rectangle shellBounds = shell.computeTrim(0,0,inst.getSize().x,inst.getSize().y);
-					shell.setSize(shellBounds.width, shellBounds.height);
-					shell.setText( "Synchronization Actions" );
-					shell.setImage( new Image( null, "images/Tasklist_Icon.gif" ) );
-					shell.open();*/
 		            WizardDialog dialog = new WizardDialog( guiController.getMainShell(), SWT.RESIZE );
 				    TaskDecisionPage page = new TaskDecisionPage( dialog, guiController, profile, task );
 				    dialog.show();
@@ -186,32 +174,24 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	{
 	    this.taskTree = task;
 	}
-	public static Image loadImage( String filename )
-	{
-	    try {
-	        return new Image( null, new FileInputStream( "images/"+filename) );
-        } catch( FileNotFoundException e ) {
-            ExceptionHandler.reportException( e );
-        }
-        return null;
-	}
 	public void initializeImages()
 	{
-	    nodeFile = loadImage( "Node_File.gif" );
-	    nodeDirectory = loadImage( "Node_Directory.gif" );
-	    nodeUndefined = loadImage( "Node_Undefined.gif" );
-	    locationSource = loadImage( "Location_Source.gif" );
-	    locationDestination = loadImage( "Location_Destination.gif" );
-	    locationBoth = loadImage( "Location_Both.gif" );
+	    GuiController gui = GuiController.getInstance();
+	    nodeFile = gui.getImage( "Node_File.gif" );
+	    nodeDirectory = gui.getImage( "Node_Directory.gif" );
+	    nodeUndefined = gui.getImage( "Node_Undefined.gif" );
+	    locationSource = gui.getImage( "Location_Source.gif" );
+	    locationDestination = gui.getImage( "Location_Destination.gif" );
+	    locationBoth = gui.getImage( "Location_Both.gif" );
 	    	    
 	    actionImages = new Hashtable();
 	    for( int i = 0; i < Action.names.length; i++ )
 	    {
-	        actionImages.put( new Integer( i ), loadImage( "Action_"+Action.names[i]+".gif" ) );
+	        actionImages.put( new Integer( i ), gui.getImage( "Action_"+Action.names[i]+".gif" ) );
 	    }
 	    for( int i = 0; i < Action.errorNames.length; i++ )
 	    {
-	        actionImages.put( new Integer( i+10 ), loadImage( "Action_"+Action.errorNames[i]+".gif" ) );
+	        actionImages.put( new Integer( i+10 ), gui.getImage( "Action_"+Action.errorNames[i]+".gif" ) );
 	    }
 	    
 	    taskImages = new Hashtable();

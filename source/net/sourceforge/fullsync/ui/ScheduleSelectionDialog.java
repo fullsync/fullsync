@@ -7,13 +7,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
@@ -82,7 +82,7 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
 		try {
 		    dialogShell = new Shell( getParent(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM );
 		    dialogShell.setText( "Edit Scheduling" );
-		    dialogShell.setImage( new Image( getParent().getDisplay(), "images/Scheduler_Icon.gif" ) );
+		    dialogShell.setImage( GuiController.getInstance().getImage( "Scheduler_Icon.gif" ) );
 			GridLayout thisLayout = new GridLayout();
 			thisLayout.numColumns = 2;
 			dialogShell.setLayout(thisLayout);
@@ -112,9 +112,14 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
                     cbType.setLayoutData(cbTypeLData);
                     cbType.addListener(SWT.Modify, new Listener() {
                         public void handleEvent(Event arg0) {
-                            ((StackLayout) groupOptions.getLayout()).topControl = groupOptions
-                                .getChildren()[cbType.getSelectionIndex()];
-                            groupOptions.layout();
+                            Control[] children = groupOptions.getChildren();
+                            if( cbType.getSelectionIndex() > -1 
+                             && cbType.getSelectionIndex() < children.length )
+                            {
+		                        Control c = children[cbType.getSelectionIndex()];
+		                        ((StackLayout) groupOptions.getLayout()).topControl = c;
+		                        groupOptions.layout();
+                            }
                         }
                     });
                 }

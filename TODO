@@ -200,7 +200,10 @@ Release-critical:
    		the types a little
    	[X] if scheduling is changed we need to refresh the timer
    	[ ] show correct number of tasks to do in taskDecider window
-	[ ] show icons in profile list popups
+	[X] show icons in profile list popups
+	[ ] set serialVersionIds... otherwise we'll have huge problems releasing 
+		patches even if not a single serializeable object has changed.
+	[ ] get rid of gifs, so we only use one patentfree format ;)
 
 Sheduler:
 	[X] add some simple stuff to the profile (interval, enabled and errorflag 
@@ -214,12 +217,13 @@ Remote:
 
 Linux:
 	[ ] popups of taskdecision dialog are pretty high (about twice the normal height)
+		guess it's as high as it is wide
 	[ ] some fonts are wrong: task decision: choose is smaller than source...
 		the latter one looks like a standard font
 	[ ] filter combo of task dec is too small (width)
 	[ ] nicelistview: all non bold fonts look rather large
-	[ ] about dialog has no picture and no buttons!? but splash works
-	[ ] preferences... layout is pretty bad
+	[X] about dialog has no picture and no buttons!? but splash works
+	[X] preferences... layout is pretty bad
 
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
 

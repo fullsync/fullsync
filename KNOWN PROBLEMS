@@ -13,7 +13,7 @@ WORKAROUND:
 	
 SOLUTION:
 	- add explicit "cancel", which stops performing actions and updates the buffer.
-	- make multiline-action-change possible
+	- make multiline-action-change possible [Done]
 	
 =====================================================================
 

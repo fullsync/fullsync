@@ -154,8 +154,6 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             {
                 buttonBrowseSrc = new Button(this, SWT.PUSH | SWT.CENTER);
                 buttonBrowseSrc.setText("...");
-                GridData buttonBrowseSrcLData = new GridData();
-                buttonBrowseSrc.setLayoutData(buttonBrowseSrcLData);
                 buttonBrowseSrc.addSelectionListener(new SelectionAdapter() {
                     public void widgetSelected(SelectionEvent evt) {
                         buttonBrowseSrcWidgetSelected(evt);
@@ -176,6 +174,10 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 textSourceUsername = new Text(this, SWT.BORDER);
+                GridData textSourceUsernameLData = new GridData();
+                textSourceUsernameLData.horizontalAlignment = GridData.FILL;
+                textSourceUsernameLData.grabExcessHorizontalSpace = true;
+                textSourceUsername.setLayoutData(textSourceUsernameLData);
             }
             {
                 label6 = new Label(this, SWT.NONE);
@@ -183,6 +185,10 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 textSourcePassword = new Text(this, SWT.BORDER);
+                GridData textSourcePasswordLData = new GridData();
+                textSourcePasswordLData.horizontalAlignment = GridData.FILL;
+                textSourcePasswordLData.grabExcessHorizontalSpace = true;
+                textSourcePassword.setLayoutData(textSourcePasswordLData);
             }
             {
                 label8 = new Label(this, SWT.NONE);
@@ -227,6 +233,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 textDestinationUsername = new Text(this, SWT.BORDER);
+                GridData textDestinationUsernameLData = new GridData();
+                textDestinationUsernameLData.horizontalAlignment = GridData.FILL;
+                textDestinationUsername.setLayoutData(textDestinationUsernameLData);
             }
             {
                 label11 = new Label(this, SWT.NONE);
@@ -234,6 +243,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 textDestinationPassword = new Text(this, SWT.BORDER);
+                GridData textDestinationPasswordLData = new GridData();
+                textDestinationPasswordLData.horizontalAlignment = GridData.FILL;
+                textDestinationPassword.setLayoutData(textDestinationPasswordLData);
             }
             {
                 label12 = new Label(this, SWT.NONE);
@@ -303,6 +315,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             {
                 buttonResetError = new Button(this, SWT.CHECK | SWT.RIGHT);
                 buttonResetError.setText("Reset Errorflag");
+                GridData buttonResetErrorLData = new GridData();
+                buttonResetErrorLData.horizontalSpan = 3;
+                buttonResetError.setLayoutData(buttonResetErrorLData);
             }
             {
                 ruleSetGroup = new Group(this, SWT.NONE);
@@ -310,8 +325,8 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 GridData ruleSetGroupLData = new GridData();
                 ruleSetGroupLData.horizontalSpan = 7;
                 ruleSetGroupLData.horizontalIndent = 5;
-                ruleSetGroupLData.grabExcessHorizontalSpace = true;
                 ruleSetGroupLData.horizontalAlignment = GridData.FILL;
+                ruleSetGroupLData.verticalAlignment = GridData.BEGINNING;
                 ruleSetGroup.setLayoutData(ruleSetGroupLData);
                 ruleSetGroupLayout.numColumns = 2;
                 ruleSetGroupLayout.makeColumnsEqualWidth = true;
@@ -432,7 +447,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             comboType.add( "Backup Copy" );
             comboType.add( "Exact Copy" );
 			this.layout();
-			this.setSize(500, 400);
+			this.setSize(500, 409);
 	
 			postInitGUI();
 		} catch (Exception e) {
@@ -511,22 +526,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	
 	public static void showProfile( Shell parent, ProfileManager manager, String name ){
 		try {
-		    /* /
-			Display display = Display.getDefault();
-			Shell shell = new Shell(display);
-			shell.setText( "Profile Details" );
-			ProfileDetails inst = new ProfileDetails(shell, SWT.NULL);
-			inst.setProfileManager( manager );
-			inst.setProfileName( name );
-			shell.setImage( new Image( display, "images/Button_Edit.gif" ) );
-			shell.setLayout(new org.eclipse.swt.layout.FillLayout());
-			shell.setSize( shell.computeSize( inst.getSize().x, inst.getSize().y ) );
-			shell.open();
-			/* */
 		    WizardDialog dialog = new WizardDialog( parent, SWT.APPLICATION_MODAL );
 		    ProfileDetailsPage page = new ProfileDetailsPage( dialog, manager, name );
 		    dialog.show();
-		    /* */
 		} catch (Exception e) {
 			ExceptionHandler.reportException( e );
 		}

@@ -10,10 +10,6 @@ import net.sourceforge.fullsync.ProfileManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -91,7 +87,7 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
         tableProfiles.setHeaderVisible(true);
         tableProfiles.setLinesVisible(false);
 
-        createPopupMenu();
+        tableProfiles.setMenu( this.getMenu() );
         
         this.setLayout( new FillLayout() );
         this.layout();
@@ -123,52 +119,6 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 	        tableColumnDestination.pack();
 	    }
 	}
-    protected void createPopupMenu()
-    {
-		// PopUp Menu for the Profile list.
-		Menu profilesPopupMenu = new Menu(getShell(), SWT.POP_UP);
-		
-		
-		MenuItem runItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		runItem.setText("Run Profile");
-		runItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					handler.runProfile( getSelectedProfile() );
-				}
-			}
-		);
-
-		MenuItem editItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		editItem.setText("Edit Profile");
-		editItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					handler.editProfile( getSelectedProfile() );
-				}
-			}
-		);
-
-		MenuItem deleteItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		deleteItem.setText("Delete Profile");
-		deleteItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					handler.deleteProfile( getSelectedProfile() );
-				}
-			}
-		);
-		
-		MenuItem separatorItem1 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
-
-		MenuItem addItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		addItem.setText("New Profile");
-		addItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					handler.createNewProfile();
-				}
-			}
-		);
-
-		tableProfiles.setMenu(profilesPopupMenu);
-    }
     public void dispose()
     {
         profileManager.removeProfilesChangeListener( this );

@@ -1,6 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.ImageRepository;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
@@ -27,6 +28,7 @@ public class GuiController implements Runnable
     private Synchronizer synchronizer;
     
     private Display display;
+    private ImageRepository imageRepository;
     private Shell mainShell;
     private MainWindow mainWindow;
     private SystemTrayItem systemTrayItem;
@@ -50,7 +52,7 @@ public class GuiController implements Runnable
 			Rectangle shellBounds = mainShell.computeTrim(0,0,mainWindow.getSize().x,mainWindow.getSize().y);
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText( "FullSync 0.8.0" );
-			mainShell.setImage( new Image( null, "images/FullSync.gif" ) );
+			mainShell.setImage( getImage( "FullSync.gif" ) );
 			mainShell.setVisible( true );
 		} catch (Exception e) {
 			ExceptionHandler.reportException( e );
@@ -89,9 +91,18 @@ public class GuiController implements Runnable
     {
         return display;
     }
+    public Image getImage( String imageName )
+    {
+        return imageRepository.getImage( imageName );
+    }
+    public void removeImage( String imageName )
+    {
+        imageRepository.removeImage( imageName );
+    }
     public void startGui()
     {
 		display = Display.getDefault();
+		imageRepository = new ImageRepository( display );
 		createMainShell();
 	    systemTrayItem = new SystemTrayItem( this );
 		ExceptionHandler.registerExceptionHandler( 
@@ -147,6 +158,9 @@ public class GuiController implements Runnable
         }
 		if (systemTrayItem != null) {
 			systemTrayItem.dispose();
+		}
+		if( imageRepository != null ) {
+		    imageRepository.dispose();
 		}
     }
     // TODO the busy cursor should be applied only to the window that is busy
