@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
+import net.sourceforge.fullsync.ExceptionHandler;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -178,7 +180,7 @@ public class WizardDialog {
 					display.sleep();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	public void dispose()

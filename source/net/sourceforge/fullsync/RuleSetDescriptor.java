@@ -52,10 +52,10 @@ public abstract class RuleSetDescriptor implements Serializable {
     		try {
 				desc = (RuleSetDescriptor) ruleSetDesctiptorClass.newInstance();
 			} catch (InstantiationException e) {
-				e.printStackTrace();
+				ExceptionHandler.reportException( e );
 				return null;
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				ExceptionHandler.reportException( e );
 				return null;
 			}
 			

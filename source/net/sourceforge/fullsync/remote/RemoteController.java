@@ -10,6 +10,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
 
@@ -52,7 +53,7 @@ public class RemoteController {
 			Naming.rebind(serverURL, remoteServer);
 			isActive = true;
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	
@@ -67,9 +68,9 @@ public class RemoteController {
 			Naming.unbind(serverURL);
 			isActive = false;
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		} catch (NotBoundException e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	

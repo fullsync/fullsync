@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 
 import org.apache.xml.serialize.OutputFormat;
@@ -48,13 +49,13 @@ public class XmlPreferences implements Preferences
                 savePreferences();
             }
 		} catch (FactoryConfigurationError e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		} catch( ParserConfigurationException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         } catch( SAXException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         } catch( IOException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         }
         
     }
@@ -99,7 +100,7 @@ public class XmlPreferences implements Preferences
 	        out.close();
         } catch( Exception e ) {
             // TODO messagebox ?
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         }
 
 	}

@@ -2,6 +2,7 @@ package net.sourceforge.fullsync.fs.connection;
 
 import java.io.File;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.ui.OptionsDialog;
 
 import org.eclipse.swt.SWT;
@@ -95,7 +96,7 @@ public class DialogKnownHostsKeyVerification extends
 		                }
 		            } catch (InvalidHostFileException e) {
 		                //showExceptionMessage(e);
-		                e.printStackTrace();
+		                ExceptionHandler.reportException( e );
 		            }
                 }
             });
@@ -131,13 +132,13 @@ public class DialogKnownHostsKeyVerification extends
 			                }
 			            } catch (InvalidHostFileException e) {
 			                //showExceptionMessage(e);
-			                e.printStackTrace();
+			                ExceptionHandler.reportException( e );
 			            }
                     }
                 });
 	        }
         } catch( Exception ex ) {
-            ex.printStackTrace();
+            ExceptionHandler.reportException( ex );
         }
 	}
     private String[] getOptions() {

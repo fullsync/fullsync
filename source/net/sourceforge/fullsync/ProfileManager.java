@@ -51,7 +51,6 @@ public class ProfileManager implements ProfileChangeListener
 		}
 		public void run() 
 		{
-			//System.out.println( "Running profile: "+profile.getName());
 			Thread worker = new Thread( new Runnable() {
 		        public void run()
 	            {
@@ -132,7 +131,7 @@ public class ProfileManager implements ProfileChangeListener
         try {
             dig.parse( configFile );
         } catch( IOException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         } catch( SAXException e ) {
             e.getException().printStackTrace();
         }
@@ -182,16 +181,16 @@ public class ProfileManager implements ProfileChangeListener
 			loadProfiles();
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		} catch (FactoryConfigurationError e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 		
         fireProfilesChangeEvent();
@@ -397,7 +396,7 @@ public class ProfileManager implements ProfileChangeListener
     	    try {
     	        schedule = new CrontabSchedule( element.getAttribute("pattern" ) );
     	    } catch( Exception ex ) {
-    	        ex.printStackTrace();
+    	        ExceptionHandler.reportException( ex );
     	    }
     	}
     	return schedule;
@@ -533,7 +532,7 @@ public class ProfileManager implements ProfileChangeListener
     			out.close();
     		} catch( Exception e ) {
     			// TODO messagebox ?
-    			e.printStackTrace();
+    			ExceptionHandler.reportException( e );
     		}
     	}
     }

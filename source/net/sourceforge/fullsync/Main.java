@@ -49,7 +49,7 @@ public class Main
 	        
 	        out.close();
 	        in.close();
-        } catch( Exception ex ) { ex.printStackTrace(); }
+        } catch( Exception ex ) { ExceptionHandler.reportException( ex ); }
         
         /* /
         FileSystemManager fsm = new FileSystemManager();

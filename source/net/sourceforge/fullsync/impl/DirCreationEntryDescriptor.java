@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
@@ -48,7 +49,7 @@ public class DirCreationEntryDescriptor implements EntryDescriptor
             dst.refresh();
             
         } catch( IOException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         }
     }
     public void finishStore()

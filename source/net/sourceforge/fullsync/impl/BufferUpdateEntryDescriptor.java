@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import net.sourceforge.fullsync.BufferUpdate;
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
@@ -55,7 +56,7 @@ public class BufferUpdateEntryDescriptor implements EntryDescriptor
 	        if( (bufferUpdate & BufferUpdate.Destination) > 0 )
 	            dst.refreshBuffer();
         } catch( IOException ioe ) {
-            ioe.printStackTrace();
+            ExceptionHandler.reportException( ioe );
         }
     }
     

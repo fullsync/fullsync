@@ -8,6 +8,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.TaskTree;
 
@@ -32,7 +33,7 @@ public class RemoteManager {
 			Profile remoteprofile = remoteInterface.getProfile(name);
 			return remoteprofile;
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 			return null;
 		}
 	}
@@ -42,7 +43,7 @@ public class RemoteManager {
 			Profile[] remoteprofiles = remoteInterface.getProfiles();
 			return remoteprofiles;
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 		return null;
 	}
@@ -56,7 +57,7 @@ public class RemoteManager {
 			remoteInterface.startTimer();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	
@@ -65,7 +66,7 @@ public class RemoteManager {
 			remoteInterface.stopTimer();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	
@@ -81,7 +82,7 @@ public class RemoteManager {
 		try {
 			remoteInterface.save(profiles);
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 

@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync.ui;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.schedule.IntervalSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
 
@@ -70,7 +71,7 @@ public class IntervalScheduleOptions extends ScheduleOptions
             }
 			this.layout();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	public String getSchedulingName()

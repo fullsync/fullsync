@@ -18,6 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.fs.Site;
@@ -224,27 +225,27 @@ public class SyncFileBufferedConnection implements BufferedConnection
 	        sax.parse( reader, new SyncFileDefaultHandler( this ) );
             
         } catch( IOException ioe ) {
-            ioe.printStackTrace();
+            ExceptionHandler.reportException( ioe );
         } catch( SAXParseException spe ) {
             StringBuffer sb = new StringBuffer( spe.toString() );
             sb.append("\n Line number: " + spe.getLineNumber());
             sb.append("\n Column number: " + spe.getColumnNumber() );
             sb.append("\n Public ID: " + spe.getPublicId() );
             sb.append("\n System ID: " + spe.getSystemId() + "\n");
-            System.out.println( sb.toString() ); 
+            System.err.println( sb.toString() ); 
         } catch( SAXException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         } catch( ParserConfigurationException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         } catch( FactoryConfigurationError e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         } finally {
             try {
                 if( reader != null )
                     reader.close();
             } catch( IOException e1 ) {
                 // TODO Auto-generated catch block
-                e1.printStackTrace();
+                ExceptionHandler.reportException( e1 );
             }
         }
         
@@ -301,11 +302,11 @@ public class SyncFileBufferedConnection implements BufferedConnection
 	        
 	        out.close();
         } catch( IOException ioe ){
-            ioe.printStackTrace();
+            ExceptionHandler.reportException( ioe );
         } catch( ParserConfigurationException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         } catch( FactoryConfigurationError e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         }
     }
     

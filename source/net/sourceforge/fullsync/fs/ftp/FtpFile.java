@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
 
@@ -158,7 +159,7 @@ public class FtpFile implements File
             }
             
         } catch( Exception e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         }
     }
     public long getLength()
@@ -312,7 +313,7 @@ public class FtpFile implements File
 		        else file = a[0];
             }
         } catch( IOException ioe ) {
-            ioe.printStackTrace();
+            ExceptionHandler.reportException( ioe );
         }
     }
     public void refreshBuffer()

@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync.ui;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.remote.RemoteManager;
 
 import org.eclipse.swt.SWT;
@@ -10,7 +11,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -123,7 +123,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			}
 			this.layout();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 
@@ -146,11 +146,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			GuiController.getInstance().getProfileManager().setRemoteConnection(remoteManager);
 			GuiController.getInstance().getSynchronizer().setRemoteConnection(remoteManager);
 		} catch (Exception e1) {
-			e1.printStackTrace();
-			MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
-			mb.setText("Connection Error");
-			mb.setMessage("Unable to connect to the remote server.\n("+e1.getMessage()+")");
-			mb.open();
+			ExceptionHandler.reportException( "Unable to connect to the remote server.", e1 );
 		}
 	}
 }

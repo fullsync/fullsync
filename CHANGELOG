@@ -1,3 +1,4 @@
+* added way better exception reporting
 * added new profile icons in nicelistview, which is default now
 * added option to reset error flag
 * added a simple error reporting for scheduled executions

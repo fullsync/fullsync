@@ -2,10 +2,13 @@ package net.sourceforge.fullsync.ui;
 
 import java.rmi.RemoteException;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -14,12 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
-
-
-
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 /**
 * This code was generated using CloudGarden's Jigloo
 * SWT/Swing GUI Builder, which is free for non-commercial
@@ -221,7 +219,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 			updateComponent();
 			this.layout();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	
@@ -279,7 +277,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 			try {
 				port = Integer.parseInt(textListeningPort.getText());
 			} catch (NumberFormatException e) {
-				e.printStackTrace();
+				ExceptionHandler.reportException( e );
 			}
 		
 			preferences.setRemoteConnectionsPort(port);
@@ -295,7 +293,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 			try {
 				RemoteController.getInstance().stopServer();
 			} catch (RemoteException e) {
-				e.printStackTrace();
+				ExceptionHandler.reportException( e );
 				MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
 				mb.setText("Connection Error");
 				mb.setMessage("Unable to stop incomming connections listener.\n("+e.getMessage()+")");
@@ -309,7 +307,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 							GuiController.getInstance().getProfileManager(),
 							GuiController.getInstance().getSynchronizer());
 				} catch (RemoteException e) {
-					e.printStackTrace();
+					ExceptionHandler.reportException( e );
 					MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
 					mb.setText("Connection Error");
 					mb.setMessage("Unable to start incomming connections listener.\n("+e.getMessage()+")");

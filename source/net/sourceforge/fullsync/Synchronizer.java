@@ -37,14 +37,14 @@ public class Synchronizer
     		try {
     			return remoteManager.executeProfile(profile.getName());
     		} catch( Exception e ) {
-    			e.printStackTrace();
+    			ExceptionHandler.reportException( e );
     		}    		
     	}
     	else {
     		try {
     			return processor.execute( profile );
     		} catch( Exception e ) {
-    			e.printStackTrace();
+    			ExceptionHandler.reportException( e );
     		}
     	}
     	return null;

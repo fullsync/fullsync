@@ -2,6 +2,8 @@ package net.sourceforge.fullsync.ui;
 
 import java.util.Arrays;
 
+import net.sourceforge.fullsync.ExceptionHandler;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.FocusAdapter;
@@ -174,7 +176,7 @@ public class NiceListView extends Composite
 	                else if( e.keyCode == SWT.ARROW_DOWN )
 	                    setSelected( (NiceListViewItem)children[index+1] );
 		        } catch( ClassCastException ex ) {
-		            ex.printStackTrace();
+		            ExceptionHandler.reportException( ex );
 		        }
             }
 		});
@@ -190,7 +192,7 @@ public class NiceListView extends Composite
 			this.setBackground( new Color( getDisplay(), 255, 255, 255 ) );
 			this.layout();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	public Composite getSelectedContent()

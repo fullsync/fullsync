@@ -2,13 +2,12 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
 
-import net.sourceforge.fullsync.IoStatistics;
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 
-import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -104,7 +103,7 @@ public class TaskDecisionPage implements WizardPage
 		    	        taskTree.getSource().close();
 		    	        taskTree.getDestination().close();
 		    	    } catch( IOException ioe ) {
-		    	        ioe.printStackTrace();
+		    	        ExceptionHandler.reportException( ioe );
 		    	    }
 		    	}
 		    }
@@ -274,9 +273,9 @@ public class TaskDecisionPage implements WizardPage
 			        } );
 					
 //			    } catch( IOException e ) {
-//			        e.printStackTrace();
+//			        ExceptionHandler.reportException( e );
 			    } catch( Exception e ) {
-			        e.printStackTrace();
+			        ExceptionHandler.reportException( e );
 			    } finally {
 			        guiController.showBusyCursor( false );
 			        processing = false;

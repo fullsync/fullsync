@@ -1,6 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
 import net.sourceforge.fullsync.DataParseException;
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.schedule.CrontabPart;
 import net.sourceforge.fullsync.schedule.CrontabSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
@@ -89,7 +90,7 @@ public class CrontabScheduleOptions extends ScheduleOptions
     	            try {
     	                table.select( part.createInstance(text.getText()).getIntArray(-part.low) );
     	            } catch( DataParseException dpe ) {
-    	                dpe.printStackTrace();
+    	                ExceptionHandler.reportException( dpe );
     	                // TODO report exception
     	            }
     	            
@@ -169,7 +170,7 @@ public class CrontabScheduleOptions extends ScheduleOptions
 			this.setSize(390, 260);
 			this.layout();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	

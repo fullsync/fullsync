@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
+import net.sourceforge.fullsync.ExceptionHandler;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -136,7 +138,7 @@ public class NiceListViewItem extends Canvas
 			this.setBackground( colorDefault );
 			this.layout();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	

@@ -1,14 +1,16 @@
 package net.sourceforge.fullsync.ui;
 
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
+import net.sourceforge.fullsync.ExceptionHandler;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
 /**
 * This code was generated using CloudGarden's Jigloo
@@ -160,7 +162,7 @@ public class ChooseDstBufferInitWindow extends org.eclipse.swt.widgets.Composite
 	
 			postInitGUI();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	/** Add your pre-init code in here 	*/
@@ -194,7 +196,7 @@ public class ChooseDstBufferInitWindow extends org.eclipse.swt.widgets.Composite
 					display.sleep();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 }

@@ -17,6 +17,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
@@ -147,7 +148,7 @@ public class SyncFilesBufferedNode implements BufferedFile
 	        }
 	        reader.close();
         } catch( IOException ioe ){
-            ioe.printStackTrace();
+            ExceptionHandler.reportException( ioe );
         }
     }
     public void saveToBuffer()
@@ -178,7 +179,7 @@ public class SyncFilesBufferedNode implements BufferedFile
 	        }
 	        writer.close();
         } catch( IOException ioe ){
-            ioe.printStackTrace();
+            ExceptionHandler.reportException( ioe );
         }
     }
     public void flushDirty()

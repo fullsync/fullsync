@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
+import net.sourceforge.fullsync.ExceptionHandler;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -70,7 +72,7 @@ public class StatusLine extends org.eclipse.swt.widgets.Composite
             */
 			this.layout();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	

@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.ui.GuiController;
@@ -110,7 +111,7 @@ public class ScpConnection implements FileSystemConnection
 	        
 	        return table;
         } catch( IOException ioe ) {
-            //ioe.printStackTrace();
+            //ExceptionHandler.reportException( ioe );
             return new Hashtable();
         }
         */
@@ -124,7 +125,7 @@ public class ScpConnection implements FileSystemConnection
             schClient.executeCommand( "mkdir"+basePath+"/"+dir.getPath() );
             return true;
         } catch( IOException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
             return false;
         }
     }
@@ -140,7 +141,7 @@ public class ScpConnection implements FileSystemConnection
         try {
             return new SftpFileInputStream( sftpClient.openFile( basePath+"/"+file.getPath(), SftpSubsystemClient.OPEN_READ ) );
         } catch( IOException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
             return null;
         }
         */
@@ -156,7 +157,7 @@ public class ScpConnection implements FileSystemConnection
             SftpFile f = scpClient.put( basePath+"/"+file.getPath(), SftpSubsystemClient.OPEN_CREATE | SftpSubsystemClient.OPEN_WRITE, attrs );
             return new SftpFileOutputStream( f );
         } catch( IOException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
             return null;
         }
         */
@@ -171,7 +172,7 @@ public class ScpConnection implements FileSystemConnection
 		    else schClient.executeCommand( "rm "+basePath+"/"+node.getPath() );
 		    return true;
         } catch( IOException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
             return false;
         }
     }

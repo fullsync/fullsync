@@ -23,11 +23,11 @@ public class XmlRuleSet extends AbstractRuleSet
         try {
             file = XmlRulesFile.getXmlRulesFile( in );
         } catch( IntrospectionException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         } catch( IOException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         } catch( SAXException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         }
         XmlRuleSet ruleSet = file.getRuleSet( this.getName() );
         */

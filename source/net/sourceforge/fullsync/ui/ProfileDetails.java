@@ -3,6 +3,7 @@ package net.sourceforge.fullsync.ui;
 import java.io.File;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
@@ -428,7 +429,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	
 			postInitGUI();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	/** Add your pre-init code in here 	*/
@@ -520,7 +521,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 		    dialog.show();
 		    /* */
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	public void apply()

@@ -6,6 +6,7 @@ import java.io.File;
 import javax.xml.parsers.FactoryConfigurationError;
 
 import net.sourceforge.fullsync.Crypt;
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -33,9 +34,9 @@ public class ConfigurationPreferences implements Preferences
                 config.load();
             } 
 		} catch (ConfigurationException e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		} catch (FactoryConfigurationError e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
         
     }
@@ -46,7 +47,7 @@ public class ConfigurationPreferences implements Preferences
             config.save();
         } catch( ConfigurationException e ) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         }
     }
 

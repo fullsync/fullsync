@@ -228,14 +228,4 @@ public class CrontabSchedule implements Schedule
     {
         return "Crontab: "+origPattern;
     }
-    
-	
-	public static void main( String[] args ) throws DataParseException
-    {
-        Schedule schedule = new CrontabSchedule( "36,51 5,7,18,19 20 * *" );
-        Calendar cal = Calendar.getInstance();
-        System.out.println( cal.getTime().toString() );
-        cal.setTimeInMillis( schedule.getNextOccurrence( cal.getTimeInMillis() ) );
-        System.out.println( cal.getTime().toString() );
-    }
 }

@@ -148,7 +148,7 @@ public class CommandLineInterpreter
 			    	RemoteController.getInstance().startServer(port, password, profileManager, sync);
 					System.out.println("Remote Interface available on port: "+port);
 				} catch (RemoteException e) {
-					e.printStackTrace();
+					ExceptionHandler.reportException( e );
 					listenerStarupException = e;
 				}
 	    	}
@@ -202,7 +202,7 @@ public class CommandLineInterpreter
 		    		guiController.run();
 		    		guiController.disposeGui();
 		    	} catch( Exception ex ) {
-		    		ex.printStackTrace();
+		    		ExceptionHandler.reportException( ex );
 		    	} finally {
 		    		profileManager.save();
 		    	}
@@ -213,7 +213,7 @@ public class CommandLineInterpreter
 		    }
 		    
         } catch( Exception exp ) {
-		    exp.printStackTrace();
+		    ExceptionHandler.reportException( exp );
         }
     }
 }

@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync.ui;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
@@ -52,7 +53,7 @@ public class GuiController implements Runnable
 			mainShell.setImage( new Image( null, "images/FullSync.gif" ) );
 			mainShell.setVisible( true );
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
     public void setMainShellVisible( boolean visible )
@@ -93,6 +94,7 @@ public class GuiController implements Runnable
 		display = Display.getDefault();
 		createMainShell();
 	    systemTrayItem = new SystemTrayItem( this );
+		ExceptionHandler.registerExceptionHandler( new DialogExceptionHandler( mainShell ) );
 		active = true;
     }
     public void run()
@@ -148,7 +150,7 @@ public class GuiController implements Runnable
 						shells[i].setCursor(cursor);
 					}
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					ExceptionHandler.reportException( ex );
 				}
 			}
 		});

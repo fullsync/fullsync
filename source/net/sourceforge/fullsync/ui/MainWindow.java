@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.ProfileSchedulerListener;
@@ -233,7 +234,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	
 			postInitGUI();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	/** Add your pre-init code in here 	*/
@@ -550,7 +551,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		            statusLine.setMessage( "Finished profile "+p.getName() );
 		        }
 			} catch (Exception e) {
-				e.printStackTrace();
+				ExceptionHandler.reportException( e );
 			} finally {
 			    statusDelayTimer.cancel();
             	guiController.showBusyCursor( false );
@@ -559,7 +560,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 			    TaskDecisionList.show( guiController, p, t );
             
         } catch( Exception e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         }
 	}
 

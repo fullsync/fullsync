@@ -48,7 +48,7 @@ public interface Preferences
      out.close();
      } catch( Exception e ) {
      // TODO messagebox ?
-     e.printStackTrace();
+     ExceptionHandler.reportException( e );
      }
 
      }

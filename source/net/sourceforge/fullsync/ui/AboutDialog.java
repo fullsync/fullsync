@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
+import net.sourceforge.fullsync.ExceptionHandler;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -48,7 +50,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 			AboutDialog inst = new AboutDialog(shell, SWT.NULL);
 			inst.open();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 
@@ -140,7 +142,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 			imageAbout.dispose();
 			imageAbout = null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	

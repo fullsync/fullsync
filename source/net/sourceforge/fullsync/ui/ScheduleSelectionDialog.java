@@ -3,6 +3,7 @@ package net.sourceforge.fullsync.ui;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.eclipse.swt.SWT;
@@ -144,13 +145,7 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
                             schedule = ((ScheduleOptions)((StackLayout)groupOptions.getLayout()).topControl).getSchedule();
                             dialogShell.dispose();
                         } catch( Exception ex ) {
-                            MessageBox mb = new MessageBox( dialogShell, SWT.ICON_ERROR );
-                            mb.setText( "An error occured" );
-                            
-                            StringWriter writer = new StringWriter();
-                            ex.printStackTrace( new PrintWriter( writer ) );
-                            mb.setMessage( "The following error occured: "+writer.getBuffer().toString() );
-                            mb.open();
+                            ExceptionHandler.reportException( ex );
                         }
                     }
                 });
@@ -192,7 +187,7 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
 					display.sleep();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	

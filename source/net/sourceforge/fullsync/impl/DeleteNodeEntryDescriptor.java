@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
@@ -49,7 +50,7 @@ public class DeleteNodeEntryDescriptor implements EntryDescriptor
             node.delete();
             
         } catch( IOException ioe ) {
-            ioe.printStackTrace();
+            ExceptionHandler.reportException( ioe );
         }
     }
     public String getOperationDescription()

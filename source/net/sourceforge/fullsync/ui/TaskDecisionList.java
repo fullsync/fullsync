@@ -6,6 +6,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.Action;
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.Task;
@@ -152,7 +153,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 			thisLayout.verticalSpacing = 0;
 			this.layout();
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandler.reportException( e );
 		}
 	}
 	public static void show( final GuiController guiController, final Profile profile, final TaskTree task )
@@ -176,7 +177,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 				    TaskDecisionPage page = new TaskDecisionPage( dialog, guiController, profile, task );
 				    dialog.show();
 		        } catch( Exception ex ) {
-		            ex.printStackTrace();
+		            ExceptionHandler.reportException( ex );
 		        }
             }
 		});
@@ -190,7 +191,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	    try {
 	        return new Image( null, new FileInputStream( "images/"+filename) );
         } catch( FileNotFoundException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
         }
         return null;
 	}

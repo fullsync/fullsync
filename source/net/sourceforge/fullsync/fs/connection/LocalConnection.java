@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
 
@@ -89,7 +90,7 @@ public class LocalConnection implements FileSystemConnection
             java.io.File f = new java.io.File( base+"/"+file.getPath() );
             return new FileInputStream( f );
         } catch( FileNotFoundException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
             return null;
         }
     }
@@ -100,7 +101,7 @@ public class LocalConnection implements FileSystemConnection
             java.io.File f = new java.io.File( base+"/"+file.getPath() );
             return new FileOutputStream( f );
         } catch( FileNotFoundException e ) {
-            e.printStackTrace();
+            ExceptionHandler.reportException( e );
             return null;
         }
     }

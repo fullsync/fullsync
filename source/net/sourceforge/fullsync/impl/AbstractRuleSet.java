@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.DataParseException;
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
@@ -223,7 +224,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 			    rules.processRules( dst );
 			return rules;
 	    } catch( CloneNotSupportedException cnse ) {
-	        cnse.printStackTrace();
+	        ExceptionHandler.reportException( cnse );
 	        return null;
 	    }
 	}

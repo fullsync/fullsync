@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionQueue;
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
@@ -130,7 +131,7 @@ public class FillBufferActionQueue implements ActionQueue, EntryFinishedListener
 	        if( action.getBufferUpdate() > 0 && !statisticsOnly )
 	            buffer.storeEntry( new BufferUpdateEntryDescriptor( source, destination, action.getBufferUpdate() ) );
         } catch( IOException ioe ) {
-            ioe.printStackTrace();
+            ExceptionHandler.reportException( ioe );
         }
     }
     public void flush()
