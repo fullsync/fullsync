@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -37,10 +38,30 @@ public class FileSystemManager
     public Site createConnection( ConnectionDescription desc )
     	throws FileSystemException, IOException, URISyntaxException
     {
+        FileSystem fs = null;
+        
         URI url = new URI( desc.getUri() );
         String scheme = url.getScheme();
         
-        FileSystem fs = (FileSystem)schemes.get( scheme );
+        if( scheme != null )
+        {
+            fs = (FileSystem)schemes.get( scheme );
+        }
+        if( fs == null )
+        {
+            // TODO maybe we should test and correct this in profile dialog !?
+            // no fs found, test for native path
+            File f = new File( url.toString() ); // ignore query as local won't need query
+            if( f.exists() )
+            {
+                fs = (FileSystem)schemes.get( "file" );
+                url = f.toURI();
+                desc.setUri( url.toString() );
+            } else {
+                throw new URISyntaxException( url.toString(), "Not a valid uri or unknown scheme" );
+            }
+        }
+        
         Site s = fs.createConnection( desc );
         
         if( desc.getBufferStrategy() != null && !desc.getBufferStrategy().equals( "" ) )

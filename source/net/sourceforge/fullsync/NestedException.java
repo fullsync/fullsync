@@ -11,7 +11,7 @@ public class NestedException extends Exception
     private Throwable ex;
 
     public NestedException( String text ) { super( text ); ex = null; }
-    public NestedException( Throwable ex ) { super( "an exception occured: " ); this.ex = ex; }
+    public NestedException( Throwable ex ) { super( "Nested exception: "+ex.getMessage() ); this.ex = ex; }
     public NestedException( String text, Throwable ex ) { super( text ); this.ex = ex; }
 
     public void printStackTrace( PrintStream stream )

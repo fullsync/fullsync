@@ -15,13 +15,18 @@ import net.sourceforge.fullsync.ui.GuiController;
 
 import com.sshtools.j2ssh.SshClient;
 import com.sshtools.j2ssh.authentication.AuthenticationProtocolState;
+import com.sshtools.j2ssh.authentication.HostbasedAuthenticationClient;
 import com.sshtools.j2ssh.authentication.PasswordAuthenticationClient;
+import com.sshtools.j2ssh.authentication.PublicKeyAuthenticationClient;
+import com.sshtools.j2ssh.authentication.SshAuthenticationClient;
 import com.sshtools.j2ssh.configuration.SshConnectionProperties;
 import com.sshtools.j2ssh.sftp.FileAttributes;
 import com.sshtools.j2ssh.sftp.SftpFile;
 import com.sshtools.j2ssh.sftp.SftpFileInputStream;
 import com.sshtools.j2ssh.sftp.SftpFileOutputStream;
 import com.sshtools.j2ssh.sftp.SftpSubsystemClient;
+import com.sshtools.j2ssh.transport.publickey.SshPrivateKey;
+import com.sshtools.j2ssh.transport.publickey.SshPrivateKeyFile;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -30,6 +35,7 @@ public class SftpConnection extends InstableConnection
 {
     private ConnectionDescription desc;
     private URI connectionUri;
+    private SshAuthenticationClient sshAuth; 
     private SshClient sshClient;
     private SftpSubsystemClient sftpClient;
     private String basePath;
@@ -56,11 +62,49 @@ public class SftpConnection extends InstableConnection
         // REVISIT not really fine (the static method call)
         sshClient.connect( prop, new DialogKnownHostsKeyVerification( GuiController.getInstance().getMainShell() ) );
         
-        PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
-        pwd.setUsername( desc.getUsername() );
-        pwd.setPassword( desc.getPassword() );
+        if( sshAuth == null )
+        {
+            // REVISIT not really fine (the static method call)
+            /*
+            KBIAuthenticationClient client = new KBIAuthenticationClient();
+            client.setKBIRequestHandler( new SshAuthenticationDialog( GuiController.getInstance().getMainShell() ) );
+            sshAuth = client;
+            */
+            
+            String user = desc.getUsername();
+            String password = desc.getPassword();
+            String keyfile = null;
+            int idx = user.indexOf('@');
+            if( idx >= 0 )
+            {
+                keyfile = user.substring( idx+1 );
+                user = user.substring( 0, idx );
+                
+                SshPrivateKeyFile file = 
+                    SshPrivateKeyFile.parse( new java.io.File(keyfile) );
+
+                if( password == "" )
+                {
+                    HostbasedAuthenticationClient hb = new HostbasedAuthenticationClient();
+                    hb.setUsername( user );
+                    hb.setKey(file.toPrivateKey(null));
+                    sshAuth = hb;
+                } else {
+                    PublicKeyAuthenticationClient pk = new PublicKeyAuthenticationClient();
+                    pk.setUsername( user );
+                    SshPrivateKey key = file.toPrivateKey(password);
+                    pk.setKey( key );
+                    sshAuth = pk;
+                }
+            } else {
+                PasswordAuthenticationClient pw = new PasswordAuthenticationClient();
+                pw.setUsername( user );
+                pw.setPassword( password );
+                sshAuth = pw;
+            }
+        }
         
-        int result = sshClient.authenticate( pwd );
+        int result = sshClient.authenticate( sshAuth );
         if( result == AuthenticationProtocolState.COMPLETE )
         {
             sftpClient = sshClient.openSftpChannel();
@@ -70,7 +114,8 @@ public class SftpConnection extends InstableConnection
                 basePath = basePath.substring( 0, basePath.length()-1 );
             
         } else {
-            throw new IOException( "Could not connect" );
+            
+            throw new IOException( "Could not connect (AuthProtocolState is "+result+")" );
         }
         this.root = new AbstractFile( this, ".", ".", null, true, true );
     }
