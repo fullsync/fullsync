@@ -494,9 +494,12 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
             profile.setLastError( 1, "An error occured while comparing filesystems." );
         } else {
             int errorLevel = sync.performActions( tree );
-            if( errorLevel > 0 )
-                 profile.setLastError( errorLevel, "An error occured while copying files." );
-            else profile.setLastUpdate( new Date() );
+            if( errorLevel > 0 ) {
+                profile.setLastError( errorLevel, "An error occured while copying files." );
+            } else { 
+                profile.setLastError( 0, null );
+                profile.setLastUpdate( new Date() );
+            }
         }
     }
 

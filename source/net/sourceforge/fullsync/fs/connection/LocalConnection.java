@@ -53,6 +53,9 @@ public class LocalConnection implements FileSystemConnection
 	        java.io.File f = new java.io.File( base+"/"+dir.getPath() );
 	        java.io.File[] files = f.listFiles();
 	        
+	        if( files == null )
+	            return new Hashtable();
+	        
 	        Hashtable table = new Hashtable( files.length );
 	        if( files != null )
 	        for( int i = 0; i < files.length; i++ )

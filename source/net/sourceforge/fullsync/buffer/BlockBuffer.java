@@ -197,6 +197,8 @@ public class BlockBuffer implements Buffer
         Entry entry;
         if( descriptor.getLength() == 0 )
         {
+            if( numberEntries == maxEntries )
+				flush();
             entry = new Entry( numberBytes, 0 );
             entry.descriptor = descriptor;
             entries[numberEntries] = entry;

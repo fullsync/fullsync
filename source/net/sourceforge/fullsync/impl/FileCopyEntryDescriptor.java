@@ -53,6 +53,7 @@ public class FileCopyEntryDescriptor implements EntryDescriptor
 	        if( outputStream != null )
 	            outputStream.close();
 	        dst.setFileAttributes( src.getFileAttributes() );
+	        dst.writeFileAttributes();
 	        dst.refresh();
         } catch( IOException ex ) {
             ex.printStackTrace();

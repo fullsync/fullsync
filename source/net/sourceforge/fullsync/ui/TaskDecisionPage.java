@@ -22,6 +22,7 @@ import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -91,7 +92,7 @@ public class TaskDecisionPage implements WizardPage
         list = new TaskDecisionList( content, SWT.NULL );
         list.setTaskTree( taskTree );
         list.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-         
+        content.setLayout( new FillLayout() );
         
         dialog.getShell().addShellListener(new ShellAdapter() {
 		    public void shellClosed(ShellEvent event) {
