@@ -198,8 +198,17 @@ Sheduler:
 	[ ] add some simple stuff to the profile (interval, enabled and errorflag 
 		with different levels like minor, major, blocker (could not connect))
 	[ ] show that a profile is currently processed
+	
+Remote:
+	[ ] password for connection
+	[ ] make gui mode listening for incoming connections
+	[ ] log remote connections (out and incoming)
 
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
+
+Exceptions/Errors:
+	[ ] try catching most exceptions at (few) specific points and show 
+		a dialog containing the exception and a link to the sf.net bugtracker.
 
 Gui:
 	[X] realize the gui concept (2004-11-07)
