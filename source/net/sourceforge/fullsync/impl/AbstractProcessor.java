@@ -83,8 +83,10 @@ public abstract class AbstractProcessor implements Processor
         ActionDecider actionDecider;
         if( profile.getSynchronizationType().equals( "Publish/Update" ) )
             actionDecider = new PublishActionDecider();
-        else if( profile.getSynchronizationType().equals( "Backup" ) )
+        else if( profile.getSynchronizationType().equals( "Backup Copy" ) )
             actionDecider = new BackupActionDecider();
+        else if( profile.getSynchronizationType().equals( "Exact Copy" ) )
+            actionDecider = new ExactCopyActionDecider();
         else throw new IllegalArgumentException( "Profile has unknown synchronization type." );
 			
         try {

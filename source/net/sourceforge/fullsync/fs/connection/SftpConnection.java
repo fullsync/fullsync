@@ -41,7 +41,6 @@ public class SftpConnection extends InstableConnection
         this.desc = desc;
         this.root = new AbstractFile( this, ".", ".", null, true, true );
         this.connectionUri = new URI( desc.getUri() );
-        this.sshClient = new SshClient();
         
         connect();
     }
@@ -51,35 +50,32 @@ public class SftpConnection extends InstableConnection
         SshConnectionProperties prop = new SshConnectionProperties();
         prop.setHost( connectionUri.getHost() );
         
-        // REVISIT not really fine
+        sshClient = new SshClient();
+        // REVISIT not really fine (the static method call)
         sshClient.connect( prop, new DialogKnownHostsKeyVerification( GuiController.getInstance().getMainShell() ) );
         
-        try {
-	        PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
-	        pwd.setUsername( desc.getUsername() );
-	        pwd.setPassword( desc.getPassword() );
-	        
-	        int result = sshClient.authenticate( pwd );
-	        if( result == AuthenticationProtocolState.COMPLETE )
-	        {
-	            sftpClient = sshClient.openSftpChannel();
-	            //sftpClient.cd( path );
-	            basePath = sftpClient.getDefaultDirectory()+connectionUri.getPath();
-	            if( basePath.endsWith("/") )
-	                basePath = basePath.substring( 0, basePath.length()-1 );
-	            
-	        } else {
-	            throw new IOException( "Could not connect" );
-	        }
-        } finally {
-            sshClient.disconnect();
-            sshClient = null;
+        PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
+        pwd.setUsername( desc.getUsername() );
+        pwd.setPassword( desc.getPassword() );
+        
+        int result = sshClient.authenticate( pwd );
+        if( result == AuthenticationProtocolState.COMPLETE )
+        {
+            sftpClient = sshClient.openSftpChannel();
+            //sftpClient.cd( path );
+            basePath = sftpClient.getDefaultDirectory()+connectionUri.getPath();
+            if( basePath.endsWith("/") )
+                basePath = basePath.substring( 0, basePath.length()-1 );
+            
+        } else {
+            throw new IOException( "Could not connect" );
         }
         this.root = new AbstractFile( this, ".", ".", null, true, true );
     }
     public void reconnect() throws IOException
     {
-        sshClient.disconnect();
+        if( sshClient != null )
+            sshClient.disconnect();
         connect();
     }
     public void close() throws IOException

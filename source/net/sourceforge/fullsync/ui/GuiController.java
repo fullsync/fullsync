@@ -96,12 +96,17 @@ public class GuiController implements Runnable
 	    systemTrayItem = new SystemTrayItem( this );
 		ExceptionHandler.registerExceptionHandler( 
 		        new ExceptionHandler() {
-		            protected void doReportException( String message, Throwable exception )
+		            protected void doReportException( final String message, final Throwable exception )
 		            {
 		                exception.printStackTrace();
 		                
-		                ExceptionDialog ed = new ExceptionDialog( mainShell, message, exception );
-		                ed.open();
+		                display.syncExec( new Runnable() {
+		                    public void run()
+                            {
+				                ExceptionDialog ed = new ExceptionDialog( mainShell, message, exception );
+				                ed.open();
+                            }
+		                } );
 		            }
 		        });
 		active = true;

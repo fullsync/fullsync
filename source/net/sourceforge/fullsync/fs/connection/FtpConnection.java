@@ -122,6 +122,7 @@ public class FtpConnection extends InstableConnection
     public void connect()
     	throws IOException
     {
+        client.setDefaultTimeout(30000);
         client.connect( connectionUri.getHost(), connectionUri.getPort()==-1?21:connectionUri.getPort() );
         client.login( desc.getUsername(), desc.getPassword() );
         client.enterLocalPassiveMode(); // FIXME i need to be specified in the ConnectionDescription

@@ -1,3 +1,4 @@
+* added exact copy action decider
 * added way better exception reporting
 * added new profile icons in nicelistview, which is default now
 * added option to reset error flag

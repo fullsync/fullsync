@@ -199,6 +199,7 @@ Release-critical:
    	[X] make src/dst buffering set by the type and use text field to explain
    		the types a little
    	[X] if scheduling is changed we need to refresh the timer
+   	[ ] show correct number of tasks to do in taskDecider window
 
 Sheduler:
 	[X] add some simple stuff to the profile (interval, enabled and errorflag 

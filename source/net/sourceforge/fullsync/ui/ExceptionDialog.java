@@ -43,7 +43,7 @@ public class ExceptionDialog extends Dialog
 	private Composite compositeExtension;
 	private Composite compositeBase;
 	private Button buttonDetails;
-	private Label labelMesage;
+	private Label labelMessage;
 	
 	private boolean expanded;
 	
@@ -100,15 +100,14 @@ public class ExceptionDialog extends Dialog
                     labelImage.setImage(display.getSystemImage(SWT.ICON_ERROR));
                 }
                 {
-                    labelMesage = new Label(compositeBase, SWT.NONE);
-                    labelMesage.setText( message );
-                    GridData labelMesageLData = new GridData();
-                    labelMesageLData.heightHint = 13;
-                    labelMesageLData.horizontalAlignment = GridData.FILL;
-                    labelMesageLData.horizontalIndent = 20;
-                    labelMesageLData.verticalAlignment = GridData.BEGINNING;
-                    labelMesageLData.horizontalSpan = 2;
-                    labelMesage.setLayoutData(labelMesageLData);
+                    labelMessage = new Label(compositeBase, SWT.NONE);
+                    labelMessage.setText( message );
+                    GridData labelMessageLData = new GridData();
+                    labelMessageLData.horizontalAlignment = GridData.FILL;
+                    labelMessageLData.horizontalIndent = 20;
+                    labelMessageLData.verticalAlignment = GridData.FILL;
+                    labelMessageLData.horizontalSpan = 2;
+                    labelMessage.setLayoutData(labelMessageLData);
                 }
                 {
                     buttonOk = new Button(compositeBase, SWT.PUSH | SWT.CENTER);
@@ -157,7 +156,6 @@ public class ExceptionDialog extends Dialog
                 compositeExtension.setLayout(compositeExtensionLayout);
                 {
                     textLog = new Text(compositeExtension, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-                    textLog.setText("text1");
                     GridData textLogLData = new GridData();
                     textLogLData.grabExcessHorizontalSpace = true;
                     textLogLData.grabExcessVerticalSpace = true;
@@ -198,15 +196,5 @@ public class ExceptionDialog extends Dialog
 	        expanded = true;
 	    }
 	}
-	
-	protected void doReportException( String message, Throwable exception )
-    {
-        // TODO Auto-generated method stub
 
-    }
-	protected void doReportException( Throwable exception )
-    {
-        // TODO Auto-generated method stub
-
-    }
 }

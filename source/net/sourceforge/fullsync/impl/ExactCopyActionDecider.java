@@ -16,10 +16,11 @@ import net.sourceforge.fullsync.TraversalType;
 import net.sourceforge.fullsync.fs.File;
 
 /**
- * An ActionDecider for source to destination backup.
+ * An ActionDecider for source to destination exact copy.
+ * FIXME actually this one is the backup one with one line less :-/
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class BackupActionDecider implements ActionDecider
+public class ExactCopyActionDecider implements ActionDecider
 {
     // TODO param keep orphans/exact copy
     
@@ -50,7 +51,6 @@ public class BackupActionDecider implements ActionDecider
                     actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination" ) );
                 }
             } else if( state.getLocation() == Location.Destination ) {
-                actions.add( new Action( Action.Nothing, Location.None, BufferUpdate.None, "Ignoring orphan in destination" ) );
                 actions.add( new Action( Action.Delete, Location.Destination, BufferUpdate.Destination, "Delete orphan in destination", false ) );
             }
         	break;

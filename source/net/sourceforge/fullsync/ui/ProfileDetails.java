@@ -219,7 +219,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             {
                 buttonDestinationBuffered = new Button(this, SWT.CHECK | SWT.LEFT);
                 buttonDestinationBuffered.setText("buffered");
-                buttonDestinationBuffered.setEnabled( false );
+                //buttonDestinationBuffered.setEnabled( false );
             }
             {
                 label10 = new Label(this, SWT.NONE);
@@ -254,17 +254,24 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                                     "and changes to existing ones will result in a warning." );
                             buttonSourceBuffered.setSelection( false );
                             buttonDestinationBuffered.setSelection( true );
-                        } else if( comboType.getText().equals( "Backup" ) ) {
+                        } else if( comboType.getText().equals( "Backup Copy" ) ) {
                             labelTypeDescription.setText( 
                                      "Will copy any changes to destination but \n" +
                                      "won't delete anything." );
 	                        buttonSourceBuffered.setSelection( false );
 	                        buttonDestinationBuffered.setSelection( false );
+                        } else if( comboType.getText().equals( "Exact Copy" ) ) {
+                            labelTypeDescription.setText( 
+                                     "Will copy any changes to destination so \n" +
+                                     "it stays an exact copy of the source." );
+	                        buttonSourceBuffered.setSelection( false );
+	                        buttonDestinationBuffered.setSelection( false );
                         }
-                    }
+                   }
                 });
                 comboType.add( "Publish/Update" );
-                comboType.add( "Backup" );
+                comboType.add( "Backup Copy" );
+                comboType.add( "Exact Copy" );
             }
             {
                 labelTypeDescription = new Label(this, SWT.WRAP);
@@ -545,10 +552,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	            dst.setPassword( textDestinationPassword.getText() );
 	        }
 	    } catch( Exception e ) {
-	        MessageBox mb = new MessageBox( this.getShell(), SWT.ICON_ERROR );
-	        mb.setText( "Exception" );
-            mb.setMessage( "The following error occured: "+e.toString() );
-            mb.open();
+	        ExceptionHandler.reportException( e );
             return;
 	    }
 

@@ -21,8 +21,6 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.MessageBox;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -181,10 +179,7 @@ public class CommandLineInterpreter
 		    		guiController.startGui();
 		    		
 		    		if (listenerStarupException != null) {
-		    			MessageBox mb = new MessageBox(guiController.getMainShell(), SWT.ICON_ERROR | SWT.OK);
-		    			mb.setText("Connection Error");
-		    			mb.setMessage("Unable to start incomming connections listener.\n("+listenerStarupException.getMessage()+")");
-		    			mb.open();
+		    			ExceptionHandler.reportException( "Unable to start incoming connections listener.", listenerStarupException );
 		    		}
 
 		    		if (splash != null) {

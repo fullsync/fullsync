@@ -23,7 +23,7 @@ public abstract class ExceptionHandler
     public static void reportException( Throwable exception )
     {
         if( singleton != null )
-            singleton.doReportException( "An exception occured !", exception );
+            singleton.doReportException( "An exception occured:\n"+exception.getMessage(), exception );
     }
     public static void reportException( String message, Throwable exception )
     {

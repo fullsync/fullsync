@@ -24,6 +24,7 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
@@ -334,6 +335,17 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		
 		Menu menuEdit = new Menu(menuItemEdit);
 		menuItemEdit.setMenu(menuEdit);
+
+		MenuItem logItem = new MenuItem(menuEdit, SWT.PUSH);
+		logItem .setText("&Show Logs...\tCtrl+Shift+L");
+		logItem .setAccelerator(SWT.CTRL|SWT.SHIFT+'L');
+		logItem .addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					// open main log file
+					Program.launch( new java.io.File( "logs/fullsync.log" ).getAbsolutePath() );
+				}
+			}
+		);
 
 		MenuItem preferencesItem = new MenuItem(menuEdit, SWT.PUSH);
 		preferencesItem.setText("&Preferences...\tCtrl+Shift+P");

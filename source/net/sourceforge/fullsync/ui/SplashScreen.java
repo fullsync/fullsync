@@ -12,6 +12,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -89,12 +90,13 @@ public class SplashScreen extends Composite {
 	public void show() {
 		final Shell mainShell = this.getShell();
 		final Display display = mainShell.getDisplay();
+		final Monitor monitor = mainShell.getMonitor();
 		
 		mainShell.pack();
 		mainShell.layout();
 		
-		int screenWidth = display.getBounds().width;
-		int screenHeight = display.getBounds().height;
+		int screenWidth = monitor.getBounds().width;
+		int screenHeight = monitor.getBounds().height;
 		
 		int shellWidth = mainShell.getBounds().width;
 		int shellHeight = mainShell.getBounds().height;
@@ -121,5 +123,11 @@ public class SplashScreen extends Composite {
 		if (!mainShell.isDisposed()) {
 			mainShell.dispose();
 		}
+	}
+	
+	public void dispose()
+	{
+	    labelPicture.getImage().dispose();
+	    super.dispose();
 	}
 }
