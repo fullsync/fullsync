@@ -9,7 +9,7 @@ package net.sourceforge.fullsync.schedule;
  */
 public interface Schedule 
 {
-	public long getNextOccurrence();
+	public long getNextOccurrence( long now );
 	// TODO instead of update we should use set last occurrence
 	public void update();
 }

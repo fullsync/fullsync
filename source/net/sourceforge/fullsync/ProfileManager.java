@@ -166,6 +166,7 @@ public class ProfileManager implements ProfileChangeListener
     }
     void updateTimer()
     {
+        long now = System.currentTimeMillis();
     	long nextTime = Long.MAX_VALUE;
     	Profile nextProfile = null;
     	
@@ -176,7 +177,7 @@ public class ProfileManager implements ProfileChangeListener
     		Schedule s = p.getSchedule();
     		if( s != null )
     		{
-    			long o = s.getNextOccurrence();
+    			long o = s.getNextOccurrence( now );
     			if( nextTime > o )
     			{
     				nextTime = o;

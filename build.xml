@@ -72,8 +72,17 @@
 	</target>
 
 	<target name="copy-resources">
-		<!-- copy images, init logging.xml and profiles.xml + README and co 
-			 create logs dir-->
+		<echo>copy images, create logs dir, init logging.xml and profiles.xml + README and co</echo>
+		<copy todir="${build.dir}/images">
+			<fileset dir="${basedir}/images">
+				<include name="*.*"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${build.dir}/logs"/>
+		<copy file="${basedir}/resources/profiles-dist.xml" tofile="${build.dir}/profiles.xml"/>
+		<copy file="${basedir}/resources/logging-dist.xml" tofile="${build.dir}/logging.xml"/>		
+		<copy file="${basedir}/resources/sample.syncrules" tofile="${build.dir}/sample.syncrules"/>				
+		<!-- copy readme and so on -->
 	</target>
 
 	<target name="jar" depends="compile, copy-libs">
@@ -94,12 +103,12 @@
 	</target>
 	
 	<target name="win32-exe" description="Create Exe-Stub for Win32 distro" depends="jar">
-		<exec executable="resources/jsmoothcmd.exe" failonerror="true">
+		<exec executable="resources/tools/jsmoothcmd.exe" failonerror="true">
 			<arg line="resources/fullsync.jsmooth"/>
 		</exec>
 	</target>
 		
-	<target name="build" depends="detect, copy-libs, jar, javadoc">
+	<target name="build" depends="detect, copy-libs, copy-resources, jar, javadoc">
 	</target>
 
 	<target name="win32-installer" description="Create Windows installer" depends="build">

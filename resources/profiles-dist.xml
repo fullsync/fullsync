@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles>
+    <Profile description="" lastUpdate="30.10.04 23:17"
+        name="Test Local" type="">
+        <RuleSetDescriptor type="advanced">
+            <AdvancedRuleSet name="UPLOAD"/>
+        </RuleSetDescriptor>
+        <Source uri="file:/E:/testing/source"/>
+        <Destination buffer="syncfiles" uri="file:/E:/testing/destination"/>
+    </Profile>
+</Profiles>

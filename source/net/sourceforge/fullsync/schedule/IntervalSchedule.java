@@ -4,6 +4,7 @@
 package net.sourceforge.fullsync.schedule;
 
 
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
@@ -18,9 +19,9 @@ public class IntervalSchedule implements Schedule
 		this.span = span;
 	}
 		
-	public long getNextOccurrence()
+	public long getNextOccurrence( long now )
 	{
-		return next;
+		return next>now?next:now;
 	}
 	
 	public void update()
