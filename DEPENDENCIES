@@ -1,13 +1,3 @@
-
-commons-beanutils.jar
-	Dependencies:
-		commons-logging.jar
-
-	Used by:
-		commons-digester-1.5.jar
-
-commons-betwixt-1.0-alpha-1.jar
-
 commons-cli-1.0.jar
 	Dependencies:
 		none
@@ -15,13 +5,14 @@ commons-cli-1.0.jar
 	Used in:
 		initial startup of application
 
-commons-collections-3.1.jar
+
+commons-collections-3.1.jar (removed. all needed classes are available in utils.jar)
 	Dependencies:
 		none
 
 	Used by:
 		commons-configuration-1.0.jar
-		commons-digester-1.5.jar
+
 
 commons-configuration-1.0.jar
 	Dependencies:
@@ -35,23 +26,8 @@ commons-configuration-1.0.jar
 	Used in:
 		loading properties from file
 
-commons-digester-1.5.jar
-	Dependencies:
-		commons-beanutils.jar (1.x)
-		commons-collections-3.1.jar
-		commons-logging.jar (1.0.x)
-	
-	Used in:
-		none
 
-commons-io.jar
-	Dependencies:
-		none
-
-	Used in:
-		none
-
-commons-lang-2.0.jar
+commons-lang-2.0.jar (removed. all needed classes are available in utils.jar)
 	Dependencies:
 		none
 
@@ -60,6 +36,7 @@ commons-lang-2.0.jar
 
 	Used in:
 		none
+
 
 commons-logging.jar
 	Dependencies:
@@ -67,17 +44,18 @@ commons-logging.jar
 
 	Used by:
 		commons-configuration-1.0.jar
-		commons-digester-1.5.jar
 
 	Used in:
 		none
 
-commons-net-1.2.2.jar
+
+commons-net-1.2.2.jar (removed. all needed classes are available in utils.jar)
 	Dependencies:
 		jakarta-oro-2.0.7.jar (actually 2.0.8)
 
 	Used in:
 		net.sourceforge.fullsync.fs.connection.FtpConnection
+
 
 j2ssh-core.jar
 	Dependencies:
@@ -85,6 +63,7 @@ j2ssh-core.jar
 
 	Used in:
 		net.sourceforge.fullsync.fs.connection.SftpConnection
+
 
 jakarta-oro-2.0.7.jar
 	Regular expressions
@@ -95,12 +74,17 @@ jakarta-oro-2.0.7.jar
 	Used by:
 		commons-net-1.2.2.jar
 
+
 log4j-1.2.8.jar
 	Dependencies:
-		none ?
+		none
 
 	Used by:
 		commons-logging.jar
+		
+	Used in:
+		whole application
+		
 
 swt.jar
 	Dependencies:
