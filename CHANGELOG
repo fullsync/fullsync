@@ -1,3 +1,7 @@
+* verified scheduler and lastUpdate/nextUpdate functionality
+* added scheduling property to profile dialog
+* added initial update support
+* added an abstract InstableConnection -> now ftp and sftp connections reconnect on demand
 * added a Remote Connection menu to connect the running instance to a remote server
 * changed ftp to use passive mode
 * added FullSync Installer for Windows and Linux systems

@@ -4,7 +4,6 @@
 package net.sourceforge.fullsync.impl;
 
 import net.sourceforge.fullsync.DataParseException;
-import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
@@ -157,8 +156,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	/**
 	 * @see net.sourceforge.fullsync.RuleSet#createChild(net.sourceforge.fullsync.fs.File, net.sourceforge.fullsync.fs.File)
 	 */
-	public RuleSet createChild(File src, File dst) throws FileSystemException,
-			DataParseException 
+	public RuleSet createChild(File src, File dst) 
 	{
 	    // TODO even simple sync rules should allow override rules
 		return this;

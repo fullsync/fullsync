@@ -35,7 +35,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 	private Button cbMinimizeMinimizesToSystemTray;
 	private Label label1;
 	private Combo comboProfileList;
-	private Button cbEnableSystemTray;
+	//private Button cbEnableSystemTray;
 
 	private Preferences preferences;
 
@@ -136,7 +136,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		cbConfirmExit.setSelection(preferences.confirmExit());
 		cbCloseMinimizesToSystemTray.setSelection(preferences.closeMinimizesToSystemTray());
 		cbMinimizeMinimizesToSystemTray.setSelection(preferences.minimizeMinimizesToSystemTray());
-		cbEnableSystemTray.setSelection(preferences.systemTrayEnabled());
+		//cbEnableSystemTray.setSelection(preferences.systemTrayEnabled());
 		comboProfileList.setText( preferences.getProfileListStyle() );
 	}
 	public void apply()
@@ -144,7 +144,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		preferences.setConfirmExit(cbConfirmExit.getSelection());
 		preferences.setCloseMinimizesToSystemTray(cbCloseMinimizesToSystemTray.getSelection());
 		preferences.setMinimizeMinimizesToSystemTray(cbMinimizeMinimizesToSystemTray.getSelection());
-		preferences.setSystemTrayEnabled(cbEnableSystemTray.getSelection());
+		//preferences.setSystemTrayEnabled(cbEnableSystemTray.getSelection());
 		boolean profileListStyleChanged = (!preferences.getProfileListStyle().equals(comboProfileList.getText()));
 		preferences.setProfileListStyle(comboProfileList.getText());
 		preferences.save();

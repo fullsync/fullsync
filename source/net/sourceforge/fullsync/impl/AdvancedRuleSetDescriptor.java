@@ -3,11 +3,11 @@
  */
 package net.sourceforge.fullsync.impl;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.RuleSetDescriptor;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * @author Michele Aiello

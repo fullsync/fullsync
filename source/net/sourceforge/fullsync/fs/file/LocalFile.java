@@ -119,7 +119,10 @@ public class LocalFile implements File
     {
         
     }
-    
+    public void writeFileAttributes() throws IOException
+    {
+
+    }
     public FileAttributes getFileAttributes()
     {
         return new FileAttributes( file.length(), file.lastModified() );

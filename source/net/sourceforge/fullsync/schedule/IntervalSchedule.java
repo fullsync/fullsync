@@ -10,13 +10,16 @@ package net.sourceforge.fullsync.schedule;
  */
 public class IntervalSchedule implements Schedule 
 {
+    long firstInterval;
+    long interval;
 	long next;
-	long span;
 		
-	public IntervalSchedule( long firstSpan, long span )
+	public IntervalSchedule( long firstInterval, long interval )
 	{
-		this.next = System.currentTimeMillis() + firstSpan;
-		this.span = span;
+	    this.firstInterval = firstInterval;
+	    this.interval = interval;
+	    
+		this.next = System.currentTimeMillis() + firstInterval;
 	}
 		
 	public long getNextOccurrence( long now )
@@ -26,6 +29,17 @@ public class IntervalSchedule implements Schedule
 	
 	public void update()
 	{
-		this.next = next+span;
+	    // TODO umpf !?... this might result into many execs at once
+		this.next = next + interval;
+	}
+	
+	public long getFirstInterval()
+	{
+	    return firstInterval;
+	}
+	
+	public long getInterval()
+	{
+	    return interval;
 	}
 }

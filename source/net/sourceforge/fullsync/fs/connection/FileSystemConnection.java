@@ -14,15 +14,15 @@ import net.sourceforge.fullsync.fs.Site;
  */
 public interface FileSystemConnection extends Site
 {
-    public File createChild( File parent, String name, boolean directory );
+    public File createChild( File parent, String name, boolean directory ) throws IOException;
     //public Directory getParent( File node );
-    public Hashtable getChildren( File dir );
+    public Hashtable getChildren( File dir ) throws IOException;
     
     // refresh file, refresh directory ?
     
     public boolean makeDirectory( File dir ) throws IOException;
     
-    public boolean setFileAttributes( File file, FileAttributes att );
+    public boolean writeFileAttributes( File file, FileAttributes att ) throws IOException;
     public InputStream readFile( File file ) throws IOException;
     public OutputStream writeFile( File file ) throws IOException;
 

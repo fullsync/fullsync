@@ -6,12 +6,13 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.ModifyEvent;
 import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
 import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
+import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -42,6 +43,8 @@ import org.eclipse.swt.widgets.Text;
 public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 
 	private ProfileManager profileManager;
+	private Button buttonScheduling;
+	private Label label17;
 	private Label labelTypeDescription;
 	private Combo comboType;
 	private Label label16;
@@ -257,6 +260,23 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 labelTypeDescription.setLayoutData(labelTypeDescriptionLData);
             }
             {
+                label17 = new Label(this, SWT.NONE);
+                label17.setText("Scheduling:");
+            }
+            {
+                buttonScheduling = new Button(this, SWT.PUSH | SWT.CENTER);
+                buttonScheduling.setText("Edit Scheduling");
+                buttonScheduling.addSelectionListener(new SelectionAdapter() {
+                    public void widgetSelected(SelectionEvent evt) {
+                        ScheduleSelectionDialog dialog = new ScheduleSelectionDialog( getShell(), SWT.NULL );
+                        dialog.setSchedule( (Schedule)buttonScheduling.getData() );
+                        dialog.open();
+                        
+                        buttonScheduling.setData( dialog.getSchedule() );
+                    }
+                });
+            }
+            {
                 ruleSetGroup = new Group(this, SWT.NONE);
                 GridLayout ruleSetGroupLayout = new GridLayout();
                 GridData ruleSetGroupLData = new GridData();
@@ -434,6 +454,8 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
              comboType.setText( p.getSynchronizationType() );
         else comboType.select( 0 );
         
+        buttonScheduling.setData( p.getSchedule() );
+        
         RuleSetDescriptor ruleSetDescriptor = p.getRuleSet();
         // TODO [Michele] I don't like this extend use of instanceof.
         // I'll try to find a better way soon.
@@ -534,6 +556,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             p = new Profile( textName.getText(), src, dst, ruleSetDescriptor );
             p.setSynchronizationType( comboType.getText() );
             p.setDescription( textDescription.getText() );
+            p.setSchedule( (Schedule)buttonScheduling.getData() );
             profileManager.addProfile( p );
         } else {
             p = profileManager.getProfile( profileName );
@@ -542,6 +565,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             p.setSynchronizationType( comboType.getText() );
             p.setSource( src );
             p.setDestination( dst );
+            p.setSchedule( (Schedule)buttonScheduling.getData() );
     		
             p.setRuleSet( ruleSetDescriptor );
         }

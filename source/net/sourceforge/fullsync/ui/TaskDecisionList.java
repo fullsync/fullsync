@@ -7,6 +7,7 @@ import java.util.Hashtable;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.Location;
+import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.fs.File;
@@ -154,7 +155,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 			e.printStackTrace();
 		}
 	}
-	public static void show( final GuiController guiController, final TaskTree task )
+	public static void show( final GuiController guiController, final Profile profile, final TaskTree task )
 	{
 		final Display display = Display.getDefault();
 		display.syncExec( new Runnable() {
@@ -172,7 +173,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 					shell.setImage( new Image( null, "images/Tasklist_Icon.gif" ) );
 					shell.open();*/
 		            WizardDialog dialog = new WizardDialog( guiController.getMainShell(), SWT.RESIZE );
-				    TaskDecisionPage page = new TaskDecisionPage( dialog, guiController, task );
+				    TaskDecisionPage page = new TaskDecisionPage( dialog, guiController, profile, task );
 				    dialog.show();
 		        } catch( Exception ex ) {
 		            ex.printStackTrace();

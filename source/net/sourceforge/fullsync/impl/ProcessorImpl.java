@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -32,7 +33,7 @@ public class ProcessorImpl extends AbstractProcessor
     }
     
     protected RuleSet updateRules( File src, File dst, RuleSet rules )
-    	throws DataParseException, FileSystemException
+    	throws DataParseException, IOException
     {
         rules = rules.createChild( src, dst );
 		
@@ -45,7 +46,7 @@ public class ProcessorImpl extends AbstractProcessor
 		return rules;
     }
     protected void recurse( File src, File dst, RuleSet rules, Task parent )
-    	throws DataParseException, FileSystemException
+    	throws DataParseException, IOException
     {
         if( src.isDirectory() && dst.isDirectory() ) 
 		{
@@ -65,7 +66,7 @@ public class ProcessorImpl extends AbstractProcessor
      * @throws FileSystemException
      */
     public void synchronizeNodes( File src, File dst, RuleSet rules, Task parent )
-    	throws DataParseException, FileSystemException
+    	throws DataParseException, IOException
     {
         if( !takeIgnoreDecider.isNodeIgnored( src ) )
 		{
@@ -95,7 +96,7 @@ public class ProcessorImpl extends AbstractProcessor
      * to the given src and dst if they are directories
      */
     public void synchronizeDirectories( File src, File dst, RuleSet oldrules, Task parent )
-    	throws DataParseException, FileSystemException
+    	throws DataParseException, IOException
     {
         // update rules to current directory
         RuleSet rules = updateRules( src, dst, oldrules );

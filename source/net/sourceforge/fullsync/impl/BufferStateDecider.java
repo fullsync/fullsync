@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync.impl;
 
+import java.io.IOException;
+
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileComparer;
 import net.sourceforge.fullsync.Location;
@@ -17,7 +19,7 @@ public class BufferStateDecider extends StateDecider implements net.sourceforge.
         super( comparer );
     }
     public State getState( File buffered )
-    	throws DataParseException
+    	throws DataParseException, IOException
     {
         if( !buffered.isBuffered() )
             return new State( State.NodeInSync, buffered.exists()?Location.Both:Location.None );

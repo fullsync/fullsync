@@ -215,6 +215,10 @@ public class FtpFile implements File
     public void setFileAttributes( FileAttributes att )
     {
     }
+	public void writeFileAttributes() throws IOException
+	{
+
+	}
     public boolean isFile()
     {
         return !directory;

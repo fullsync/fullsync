@@ -3,6 +3,9 @@
  */
 package net.sourceforge.fullsync.fs.buffering;
 
+import java.io.IOException;
+
+import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.Site;
 
 
@@ -12,5 +15,5 @@ import net.sourceforge.fullsync.fs.Site;
  */
 public interface BufferingProvider
 {
-    public Site createBufferedSite( Site site );
+    public Site createBufferedSite( Site site ) throws FileSystemException, IOException;
 }

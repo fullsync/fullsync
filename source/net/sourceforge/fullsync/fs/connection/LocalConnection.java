@@ -71,7 +71,7 @@ public class LocalConnection implements FileSystemConnection
         return f.mkdirs();
     }
 
-    public boolean setFileAttributes( File file, FileAttributes att )
+    public boolean writeFileAttributes( File file, FileAttributes att )
     {
         java.io.File f = new java.io.File( base+"/"+file.getPath() );
         f.setLastModified( att.getLastModified() );

@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync;
 
+import java.io.IOException;
+
 import net.sourceforge.fullsync.fs.File;
 
 /**
@@ -17,7 +19,7 @@ public interface RuleSet extends IgnoreDecider, FileComparer
     public boolean isCheckingBufferAlways( int location );
     public boolean isCheckingBufferOnReplace( int location );
     
-    public RuleSet createChild( File src, File dst ) throws FileSystemException, DataParseException;
+    public RuleSet createChild( File src, File dst ) throws IOException, DataParseException;
     
     // public boolean isUsingRulesFile( int location ); 
     // public boolean isBuffering( int where );

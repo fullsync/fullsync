@@ -158,6 +158,10 @@ public class DebugNode implements File
     public void setFileAttributes( FileAttributes att )
     {
     }
+    public void writeFileAttributes() throws IOException
+    {
+
+    }
     public void setDirectory( boolean directory )
     {
         this.directory = directory;

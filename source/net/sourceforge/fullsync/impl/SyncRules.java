@@ -1,10 +1,10 @@
 package net.sourceforge.fullsync.impl;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import net.sourceforge.fullsync.DataParseException;
-import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.rules.PatternRule;
 
 /**
@@ -95,7 +95,7 @@ public class SyncRules extends AbstractRuleSet
 		else throw new DataParseException( "Unknown Command \""+cmd+"\" in \""+t.getSourceName()+"\" in line "+t.lineno() );
 	}
 
-	protected void processSyncRules( SyncTokenizer t ) throws FileSystemException, DataParseException
+	protected void processSyncRules( SyncTokenizer t ) throws IOException, DataParseException
 	{
 		t.eolIsSignificant(false);
 		String cmd;
@@ -128,7 +128,7 @@ public class SyncRules extends AbstractRuleSet
 	}
 
     public void processRules( InputStream in, String filename ) 
-    	throws FileSystemException, DataParseException
+    	throws IOException, DataParseException
     {
         processSyncRules( new SyncTokenizer( new InputStreamReader( in ), filename ) );
     }

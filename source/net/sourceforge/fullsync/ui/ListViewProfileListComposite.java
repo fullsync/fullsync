@@ -96,7 +96,7 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 	            item.setText( new String[] { 
 	                    p.getName(),
 	                    p.getLastUpdate().toString(),
-	                    p.getSchedule()==null?"not scheduled":new Date( p.getSchedule().getNextOccurrence(now) ).toString(),
+	                    p.getNextUpdate(),
 	                    p.getSource().toString(),
 	                    p.getDestination().toString() } );
 	            item.setData( p );
@@ -107,7 +107,6 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 	        tableColumnSource.pack();
 	        tableColumnDestination.pack();
 	    }
-	    
 	}
     protected void createPopupMenu()
     {

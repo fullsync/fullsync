@@ -90,14 +90,13 @@
 	</target>
 
 	<target name="copy-resources">
-		<echo>copy images, create logs dir, init logging.xml and profiles.xml + README and co</echo>
+		<echo>copy images, create logs dir and init logging.xml + README and co</echo>
 		<copy todir="${build.dir}/images">
 			<fileset dir="${basedir}/images">
 				<include name="*.*"/>
 			</fileset>
 		</copy>
 		<mkdir dir="${build.dir}/logs"/>
-		<copy file="${basedir}/resources/profiles-dist.xml" tofile="${build.dir}/profiles.xml"/>
 		<copy file="${basedir}/resources/logging-dist.xml" tofile="${build.dir}/logging.xml"/>		
 		<copy file="${basedir}/resources/sample.syncrules" tofile="${build.dir}/sample.syncrules"/>				
 		<copy todir="${build.dir}">

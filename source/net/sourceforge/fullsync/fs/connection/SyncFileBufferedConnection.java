@@ -116,7 +116,7 @@ public class SyncFileBufferedConnection implements BufferedConnection
     private boolean dirty;
     private boolean monitoringFileSystem; 
     
-    public SyncFileBufferedConnection( Site fs )
+    public SyncFileBufferedConnection( Site fs ) throws IOException
     {
         this.fs = fs;
         this.dirty = false;
@@ -124,7 +124,7 @@ public class SyncFileBufferedConnection implements BufferedConnection
         loadFromBuffer();
     }
 
-    public File createChild( File dir, String name, boolean directory )
+    public File createChild( File dir, String name, boolean directory ) throws IOException
     {
         dirty = true;
         File n = dir.getUnbuffered().getChild( name );
@@ -163,17 +163,17 @@ public class SyncFileBufferedConnection implements BufferedConnection
     {
         return null;
     }
-    public void flushDirty()
+    public void flushDirty() throws IOException
     {
         //if( dirty )
             saveToBuffer();
     }
     
-    public boolean setFileAttributes( File file, FileAttributes att )
+    public boolean writeFileAttributes( File file, FileAttributes att )
     {
         return false;
     }
-    protected void updateFromFileSystem( BufferedFile buffered )
+    protected void updateFromFileSystem( BufferedFile buffered ) throws IOException
     {
     	// load fs entries if wanted
         Collection fsChildren = buffered.getUnbuffered().getChildren();
@@ -190,7 +190,7 @@ public class SyncFileBufferedConnection implements BufferedConnection
             	updateFromFileSystem( bf );
         }
     }
-    protected void loadFromBuffer()
+    protected void loadFromBuffer() throws IOException
     {
         File fsRoot = fs.getRoot();
         File f = fsRoot.getChild( ".syncfiles" );
@@ -249,7 +249,7 @@ public class SyncFileBufferedConnection implements BufferedConnection
         if( isMonitoringFileSystem() )
         	updateFromFileSystem( root );
     }
-    protected Element serializeFile( BufferedFile file, Document doc )
+    protected Element serializeFile( BufferedFile file, Document doc ) throws IOException
     {
         Element elem = doc.createElement( file.isDirectory()?"Directory":"File" );
         elem.setAttribute( "Name", file.getName() );
@@ -272,7 +272,7 @@ public class SyncFileBufferedConnection implements BufferedConnection
         }
         return elem;
     }
-    public void saveToBuffer()
+    public void saveToBuffer() throws IOException
     {
         File fsRoot = fs.getRoot();
         File node = fsRoot.getChild( ".syncfiles" );

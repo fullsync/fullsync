@@ -49,11 +49,14 @@ public class BufferUpdateEntryDescriptor implements EntryDescriptor
 
     public void finishWrite()
     {
-        if( (bufferUpdate & BufferUpdate.Source) > 0 )
-            src.refreshBuffer();
-        if( (bufferUpdate & BufferUpdate.Destination) > 0 )
-            dst.refreshBuffer();
-        
+        try {
+	        if( (bufferUpdate & BufferUpdate.Source) > 0 )
+	            src.refreshBuffer();
+	        if( (bufferUpdate & BufferUpdate.Destination) > 0 )
+	            dst.refreshBuffer();
+        } catch( IOException ioe ) {
+            ioe.printStackTrace();
+        }
     }
     
     public String getOperationDescription()

@@ -13,5 +13,6 @@ import net.sourceforge.fullsync.FileSystemException;
  */
 public interface FileSystem
 {
-    public Site createConnection( ConnectionDescription desc ) throws FileSystemException, IOException;
+    public Site createConnection( ConnectionDescription desc ) 
+    	throws FileSystemException, IOException;
 }

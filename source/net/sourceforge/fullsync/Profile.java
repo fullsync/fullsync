@@ -96,6 +96,16 @@ public class Profile implements Serializable
         this.lastUpdate = lastUpdate;
         notifyProfileChangeListeners();
     }
+    public String getNextUpdate()
+    {
+        if( schedule == null ) {
+            return "not scheduled";
+        } else {
+            if( lastUpdate == null )
+                 return new Date( schedule.getNextOccurrence(new Date().getTime()) ).toString();
+            else return new Date( schedule.getNextOccurrence(lastUpdate.getTime()) ).toString();
+        }
+    }
     public RuleSetDescriptor getRuleSet()
     {
         return ruleSet;
@@ -159,5 +169,4 @@ public class Profile implements Serializable
 		
         this.listeners = new ArrayList();
 	}
-	
 }

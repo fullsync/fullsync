@@ -106,13 +106,13 @@ public class SyncFilesBufferedNode implements BufferedFile
             		+"\t"+getFsFileAttributes().getLength()+"\t"+getFsFileAttributes().getLastModified();
         }
     }
-    protected void loadFromBuffer()
+    protected void loadFromBuffer() throws IOException
     {
-        File node = unbuff.getChild( syncBufferFilename );
-        if( node == null || !node.exists() || node.isDirectory() )
-            return; // TODO clear children list ?
-        
         try {
+            File node = unbuff.getChild( syncBufferFilename );
+            if( node == null || !node.exists() || node.isDirectory() )
+                return; // TODO clear children list ?
+            
 	        String line;
 	        File f = (File)node;
 	        ByteArrayOutputStream out = new ByteArrayOutputStream((int)f.getFileAttributes().getLength());
@@ -150,17 +150,18 @@ public class SyncFilesBufferedNode implements BufferedFile
     }
     public void saveToBuffer()
     {
-        File node = unbuff.getChild( syncBufferFilename );
-        
-        if( node == null )
-        {
-            node = unbuff.createChild( syncBufferFilename, false );
-        } else if( node.isDirectory() ) {
-            return;  // TODO throw exception, log error, whatever
-        }
-        // TODO avoid writing empty files
         try {
-	        String line;
+            File node = unbuff.getChild( syncBufferFilename );
+            
+            if( node == null )
+            {
+                node = unbuff.createChild( syncBufferFilename, false );
+            } else if( node.isDirectory() ) {
+                return;  // TODO throw exception, log error, whatever
+            }
+            // TODO avoid writing empty files
+
+            String line;
 	        File f = (File)node;
 	        BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( f.getOutputStream() ) );
 	        Collection items = getChildren();
@@ -192,7 +193,7 @@ public class SyncFilesBufferedNode implements BufferedFile
         }
     }
 
-    public File createChild( String name, boolean directory )
+    public File createChild( String name, boolean directory ) throws IOException
     {
         markDirty();
         File n = unbuff.getChild( name );
@@ -217,6 +218,10 @@ public class SyncFilesBufferedNode implements BufferedFile
     public FileAttributes getFileAttributes()
     {
         return attributes;
+    }
+    public void writeFileAttributes() throws IOException
+    {
+        
     }
     public void setFileAttributes( FileAttributes attributes )
     {
@@ -257,7 +262,7 @@ public class SyncFilesBufferedNode implements BufferedFile
     {
         children.put( node.getName(), node );
     }
-    public void refreshReference()
+    public void refreshReference() throws IOException
     {
         unbuff = getParent().getUnbuffered().getChild( getName() );
     }

@@ -87,7 +87,7 @@ public class AbstractFile implements File
         return false;
     }
 
-    public File getUnbuffered()
+    public File getUnbuffered() throws IOException
     {
         return this;
     }
@@ -95,26 +95,29 @@ public class AbstractFile implements File
     public void setFileAttributes( FileAttributes att )
     {
         this.attributes = att;
-        getConnection().setFileAttributes( this, att );
+    }
+    public void writeFileAttributes() throws IOException
+    {
+        getConnection().writeFileAttributes( this, attributes );
     }
     public FileAttributes getFileAttributes()
     {
         return attributes;
     }
     
-    public File createChild( String name, boolean directory )
+    public File createChild( String name, boolean directory ) throws IOException
     {
         File f = getConnection().createChild( this, name, directory );
         children.put( name, f );
         return f;
     }
-    public File getChild( String name )
+    public File getChild( String name ) throws IOException
     {
         if( children == null )
             refresh();
         return (File)children.get( name );
     }
-    public Collection getChildren()
+    public Collection getChildren() throws IOException
     {
         if( children == null )
             refresh();
@@ -166,7 +169,7 @@ public class AbstractFile implements File
             return false;
         }
     }
-    public void refresh()
+    public void refresh() throws IOException
     {
         if( isDirectory() )
         {
@@ -190,7 +193,7 @@ public class AbstractFile implements File
             parent.refresh();
         }
     }
-    public void refreshBuffer()
+    public void refreshBuffer() throws IOException
     {
         
     }

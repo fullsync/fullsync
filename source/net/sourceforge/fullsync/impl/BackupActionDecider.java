@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync.impl;
 
+import java.io.IOException;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.Action;
@@ -32,7 +33,8 @@ public class BackupActionDecider implements ActionDecider
         return getPossibleActions( src, dst, sd, bsd )[0];
     }
 */
-    public Task getTask( File src, File dst, StateDecider sd, BufferStateDecider bsd ) throws DataParseException
+    public Task getTask( File src, File dst, StateDecider sd, BufferStateDecider bsd ) 
+    	throws DataParseException, IOException
     {
         Vector actions = new Vector( 3 );
         State state = sd.getState( src, dst );

@@ -3,6 +3,8 @@
  */
 package net.sourceforge.fullsync.fs.buffering;
 
+import java.io.IOException;
+
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
 
@@ -19,5 +21,5 @@ public interface BufferedFile extends File
     public void addChild( File node );
     public void removeChild( String name );
     
-    public void refreshReference();
+    public void refreshReference() throws IOException;
 }

@@ -114,7 +114,7 @@ public abstract class AbstractProcessor implements Processor
         return tree;
 	}
     public abstract void synchronizeNodes( File src, File dst, RuleSet rules, Task parent )
-		throws DataParseException, FileSystemException;
+		throws DataParseException, IOException;
     public abstract void synchronizeDirectories( File src, File dst, RuleSet rules, Task parent )
-    	throws DataParseException, FileSystemException;
+    	throws DataParseException, IOException;
 }

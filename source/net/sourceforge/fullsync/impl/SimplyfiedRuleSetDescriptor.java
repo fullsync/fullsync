@@ -3,12 +3,12 @@
  */
 package net.sourceforge.fullsync.impl;
 
+import net.sourceforge.fullsync.RuleSet;
+import net.sourceforge.fullsync.RuleSetDescriptor;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import net.sourceforge.fullsync.RuleSet;
-import net.sourceforge.fullsync.RuleSetDescriptor;
 
 /**
  * @author Michele Aiello

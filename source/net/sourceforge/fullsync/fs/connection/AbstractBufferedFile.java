@@ -49,7 +49,7 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
         return true;
     }
 
-    public File getUnbuffered()
+    public File getUnbuffered() throws IOException
     {
         if( unbuffered == null )
             refreshReference();
@@ -76,7 +76,7 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
              return fsAttributes;
         else return attrib;
     }
-    public void clearCachedFileAttributes()
+    public void clearCachedFileAttributes() throws IOException
     {
         setFileAttributes( getFsFileAttributes() );
     }
@@ -99,13 +99,13 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
     }
     
 	
-    public void refresh()
+    public void refresh() throws IOException
     {
         // FIXME a dir refresh must be performed on the underlaying layer pretty carefully 
         getUnbuffered().refresh();
         refreshReference();
     }
-    public void refreshBuffer()
+    public void refreshBuffer() throws IOException
     {
         directory = getUnbuffered().isDirectory();
         exists = getUnbuffered().exists();
@@ -114,7 +114,7 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
             setFsFileAttributes( getUnbuffered().getFileAttributes() );
     }
     
-    public void refreshReference()
+    public void refreshReference() throws IOException
     {
         unbuffered = getParent().getUnbuffered().getChild( getName() );
         if( unbuffered == null )

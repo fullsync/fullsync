@@ -164,6 +164,11 @@ Sheduler:
 	[X]	copy sheduler from backup - we use Timer and ProfileManager directly
 		(so changes to intervals and stuff are propagated much easier)
 	[X] add button to toolbar enable/disable scheduling
+	[X] add column next update
+	[X] update lastUpdate / nextUpdate correctly
+
+Connection:
+	[X] reconnect
 
 Release-critical:
 	[X] LogWindow should have: global source - destination, filename just once,
@@ -173,19 +178,26 @@ Release-critical:
     [X] configurable action decider per profile
     [X] "checking <file>" is taking most of the time when comparing local to local
     	we shouldn't push but poll this status string !
-    [ ] scheduler not creating popup logwindow
-    [ ] set next update after LogWindow - go, or scheduler run (but after execution phase!!)
-   	[ ] scheduler in profile
-   	[ ] we should calculate next update from lastupdate, not now
-   	[ ] verify scheduler functionallity
-   	[ ] put images into source / jar. 
+    [X] scheduler not creating popup logwindow
+    [X] set next update after LogWindow - go, or scheduler run (but after execution phase!!)
+   	[X] scheduler in profile
+   	[X] we should calculate next update from lastupdate, not now
+   	[X] verify scheduler functionallity
    	[X] make config files not required.
-   	[ ]	put logging.xml into jar as well
    	[X] passive ftp
-   	[ ] handle case where no profile is selected but edit or run is clicked
-   	[ ] look for timeout/disconnect before committing changes and reconnect or report error
+   	[X] handle case where no profile is selected but edit or run is clicked
+   	[X] look for timeout/disconnect before committing changes and reconnect or report error
    	[X] verify simple rulesets
    	[X] rename of profiles (see hashtable in profilemanager)
+   	[ ] add crontab scheduler to profile
+   	[ ] add symbol for scheduled tasks
+   	[ ] make sure schedules are not executed more than once, just
+   		because they were inactive for some time
+
+Sheduler:
+	[ ] add some simple stuff to the profile (interval, enabled and errorflag 
+		with different levels like minor, major, blocker (could not connect))
+	[ ] show that a profile is currently processed
 
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
 
@@ -204,6 +216,7 @@ Backup:
 
 Configuration:
 	[ ] make config files user-local
+	[ ] flush profiles every now and then, maybe use dirty flag
 
 Feedback:
 	[ ] cancel in sync phase
@@ -217,6 +230,9 @@ Naming:
 	[ ] call ActionQueue TaskExecutor ? (as we don't care about the buffer at all)
 	[X] call FullSync Synchronizer ? (encapsuling main sync actions / objects)
 
+Distro:
+   	[ ] put images into source / jar. 
+   	[ ]	put logging.xml into jar as well
 
 ---===[ to 0.10 Tasks ]====------------------------------------------------
 
@@ -247,13 +263,8 @@ Realtime-Reporting:
 	[?] Implement events for certain actions
 
 Sheduler:
-	[ ] add column next update
-	[ ] update lastUpdate / nextUpdate correctly
-	[ ] add some simple stuff to the profile (interval, enabled and errorflag 
-		with different levels like minor, major, blocker (could not connect))
 	[ ] add groups to profiles (so we can cli fullsync saying schedule group a)
 	[ ] access to logfiles
-	[ ] show that a profile is currently processed
 
 SB:
 	[?] we need to build buffer info from fs as well, so fs orphans are
@@ -319,9 +330,6 @@ Connections:
 Threading
 	[ ] better UI / task differenciation
 	[ ] console <-> ui 
-
-Connection:
-	[ ] reconnect
 	
 Dispose:
 	[ ]	Dispose all images we draw and all other widgets too

@@ -102,7 +102,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 			labelSource.setText( "Source: "+profile.getSource() );
 			labelDestination.setText( "Destination: "+profile.getDestination() );
 			labelLastUpdate.setText( "Last Update: "+profile.getLastUpdate() );
-			labelNextUpdate.setText( "Next Update: "+(profile.getSchedule()==null?"not scheduled":new Date( profile.getSchedule().getNextOccurrence(now) ).toString()) );
+			labelNextUpdate.setText( "Next Update: "+profile.getNextUpdate() );
         }
         public void setProfile( Profile profile )
         {
@@ -182,7 +182,10 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
     
     public Profile getSelectedProfile()
     {
-        return ((ContentComposite)profileList.getSelectedContent()).getProfile();
+        ContentComposite content = (ContentComposite)profileList.getSelectedContent();
+        if( content != null )
+             return content.getProfile();
+        else return null;
     }
     public void setProfileManager( ProfileManager profileManager )
     {

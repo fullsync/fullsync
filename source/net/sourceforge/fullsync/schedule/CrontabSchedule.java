@@ -74,11 +74,12 @@ public class CrontabSchedule implements Schedule
             bDaysOfWeek[1] = true;
     }
     
-    public String toString()
-    {
-        return origPattern;
-    }
-        
+    public String getPattern()
+	{
+        // TODO this should be generated
+	    return origPattern;
+	}        
+	
     public boolean parseToken(String token, boolean[] arrayBool, boolean bBeginInOne, int offset)
     	throws DataParseException
     {
@@ -263,6 +264,11 @@ public class CrontabSchedule implements Schedule
         		//bYears[cal.get(Calendar.YEAR)]) ;
 	}
 	
+	public String toString()
+    {
+        return "Crontab: "+origPattern;
+    }
+    
 	
 	public static void main( String[] args ) throws DataParseException
     {

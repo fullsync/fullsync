@@ -130,10 +130,16 @@ public class CommandLineInterpreter
 		    System.setErr( new PrintStream( new FileOutputStream( "logs/stderr.log" ) ) );
 		    //System.setOut( new PrintStream( new FileOutputStream( "logs/stdout.log" ) ) );
 
-		    GuiController guiController = new GuiController( preferences, profileManager, sync );
-            guiController.startGui();
-        	guiController.run();
-        	guiController.disposeGui();
+		    try {
+			    GuiController guiController = new GuiController( preferences, profileManager, sync );
+	            guiController.startGui();
+	        	guiController.run();
+	        	guiController.disposeGui();
+		    } catch( Exception ex ) {
+		        ex.printStackTrace();
+		    } finally {
+		        profileManager.save();
+		    }
         	if (remoteServer != null) {
         		Naming.unbind(serverURL);
         	}

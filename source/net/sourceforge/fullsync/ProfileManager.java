@@ -344,8 +344,8 @@ public class ProfileManager implements ProfileChangeListener
     	String type = element.getAttribute( "type" );
     	if( type.equals( "interval" ) )
     	{
-    		long firstSpan = element.hasAttribute( "firstspan" )?Long.parseLong( element.getAttribute("firstspan") ):0;
-    		long span = Long.parseLong( element.getAttribute( "span" ) );
+    		long firstSpan = element.hasAttribute( "firstinterval" )?Long.parseLong( element.getAttribute("firstinterval") ):0;
+    		long span = Long.parseLong( element.getAttribute( "interval" ) );
     		schedule = new IntervalSchedule( firstSpan, span );
     	} else if( type.equals( "crontab" ) ) {
     	    try {
@@ -368,7 +368,6 @@ public class ProfileManager implements ProfileChangeListener
         p.setName( element.getAttribute( "name" ) );
         p.setDescription( element.getAttribute( "description" ) );
         p.setSynchronizationType( element.getAttribute( "type" ) );
-        p.setRuleSet(unserializeRuleSetDescriptor((Element)element.getElementsByTagName("RuleSetDescriptor").item(0)));
         
         try {
             p.setLastUpdate( DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT ).parse( element.getAttribute( "lastUpdate" ) ) );
@@ -376,6 +375,7 @@ public class ProfileManager implements ProfileChangeListener
             p.setLastUpdate( new Date() );
         }
         
+        p.setRuleSet( unserializeRuleSetDescriptor( (Element)element.getElementsByTagName("RuleSetDescriptor").item(0) ) );
         p.setSchedule( unserializeSchedule( (Element)element.getElementsByTagName( "Schedule" ).item(0) ) );
         p.setSource( unserializeConnectionDescription( (Element)element.getElementsByTagName( "Source" ).item(0) ) );
         p.setDestination( unserializeConnectionDescription( (Element)element.getElementsByTagName( "Destination" ).item(0) ) );
@@ -405,7 +405,25 @@ public class ProfileManager implements ProfileChangeListener
         
         return elem;
     }
-    protected Element serialize( RuleSetDescriptor desc, String name, Document doc ) {
+    protected Element serialize( Schedule schedule, String name, Document doc )
+    {
+        Element element = doc.createElement( name );
+
+    	if( schedule instanceof IntervalSchedule )
+    	{
+    	    IntervalSchedule is = (IntervalSchedule)schedule;
+            element.setAttribute( "type", "interval" );
+            element.setAttribute( "firstinterval", String.valueOf( is.getFirstInterval() ) );
+            element.setAttribute( "interval", String.valueOf( is.getInterval() ) );
+    	} else if( schedule instanceof CrontabSchedule ) {
+    	    CrontabSchedule cs = (CrontabSchedule)schedule;
+    	    element.setAttribute( "type", "crontab" );
+            element.setAttribute( "pattern", cs.getPattern() );
+    	}
+    	return element;
+    }
+    protected Element serialize( RuleSetDescriptor desc, String name, Document doc ) 
+    {
     	Element elem = doc.createElement( name );
 
     	elem.setAttribute("type", desc.getType());
@@ -424,7 +442,8 @@ public class ProfileManager implements ProfileChangeListener
         elem.setAttribute( "type", p.getSynchronizationType() );
         elem.setAttribute( "lastUpdate", DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT ).format( p.getLastUpdate() ) );
         
-        elem.appendChild( serialize( p.getRuleSet(), "RuleSetDescriptor", doc));
+        elem.appendChild( serialize( p.getRuleSet(), "RuleSetDescriptor", doc) );
+        elem.appendChild( serialize( p.getSchedule(), "Schedule", doc ) );
         elem.appendChild( serialize( p.getSource(), "Source", doc ) );
         elem.appendChild( serialize( p.getDestination(), "Destination", doc ) );
         

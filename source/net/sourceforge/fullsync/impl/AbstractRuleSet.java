@@ -1,6 +1,5 @@
 package net.sourceforge.fullsync.impl;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -8,7 +7,6 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.DataParseException;
-import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
@@ -215,7 +213,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 	}
 	
 	public RuleSet createChild( File src, File dst )
-		throws DataParseException, FileSystemException
+		throws DataParseException, IOException
 	{
 	    try {
 		    AbstractRuleSet rules = (AbstractRuleSet)this.clone();
@@ -231,23 +229,18 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 	}
 	
 	public void processRules( File dir )
-		throws DataParseException, FileSystemException
+		throws DataParseException, IOException
 	{
 	    // TODO really unbuffered ?
 	    File node = ((File)dir.getUnbuffered()).getChild( syncRulesFilename );
 	    if( node != null && !node.isDirectory() )
 	    {
-			try {
-				InputStream in = ((File)node).getInputStream();
-				processRules( in, ((File)node).getPath() );
-				in.close();
-			} catch( FileNotFoundException fnfe ) {
-			} catch( IOException ioe ) {
-			    ioe.printStackTrace();
-			}
+			InputStream in = ((File)node).getInputStream();
+			processRules( in, ((File)node).getPath() );
+			in.close();
 	    }
 	}
-	public abstract void processRules( InputStream in, String filename ) throws FileSystemException, DataParseException;
+	public abstract void processRules( InputStream in, String filename ) throws IOException, DataParseException;
 	/**
 	 * 
 	 * @return boolean true if rules should be processed, false if not; it does not depend on the active direction

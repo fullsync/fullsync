@@ -48,7 +48,7 @@ public class FileSystemManager
     }
     
     public Site resolveBuffering( Site dir, String bufferStrategy )
-		throws FileSystemException
+		throws FileSystemException, IOException
     {
         BufferingProvider p = (BufferingProvider)buffering.get( bufferStrategy );
         

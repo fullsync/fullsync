@@ -23,20 +23,21 @@ public interface File
     public void setFiltered( boolean filtered );
     
     public boolean isBuffered();
-    public File getUnbuffered();
-    public void refreshBuffer();
+    public File getUnbuffered() throws IOException;
+    public void refreshBuffer() throws IOException;
     
+    public void writeFileAttributes() throws IOException;
     public void setFileAttributes( FileAttributes att );
     public FileAttributes getFileAttributes();
 
-    public Collection getChildren();
-    public File getChild( String name );
+    public Collection getChildren() throws IOException;
+    public File getChild( String name ) throws IOException;
     
     // TODO currently, 'create' isnt the right word
     //		they do not exist before and may not exists after sync
-    public File createChild( String name, boolean directory );// throws FileSystemException;
+    public File createChild( String name, boolean directory ) throws IOException;
     
-    public void refresh();
+    public void refresh() throws IOException;
     
     public boolean makeDirectory()  throws IOException;
     

@@ -487,6 +487,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
     {
         Synchronizer sync = guiController.getSynchronizer();
         sync.performActions( sync.executeProfile( profile ) );
+        profile.setLastUpdate( new Date() );
     }
 
 	
@@ -525,14 +526,8 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 					} finally {
 	                	guiController.showBusyCursor( false );
 					}
-                    TaskDecisionList.show( guiController, t );
+                    TaskDecisionList.show( guiController, p, t );
                     
-                    // HACK this really doesn't belong here, because the user
-                    //      can abort the real execution, but logwindow does not
-                    //      know the initial profile. maybe tasktree should get
-                    //      a reference to the profile ?
-                    p.setLastUpdate( new Date() );
-                    guiController.getProfileManager().save();
                 } catch( Exception e ) {
                     e.printStackTrace();
                 }

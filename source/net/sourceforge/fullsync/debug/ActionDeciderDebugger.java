@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync.debug;
 
+import java.io.IOException;
+
 import net.sourceforge.fullsync.ActionDecider;
 import net.sourceforge.fullsync.BufferStateDecider;
 import net.sourceforge.fullsync.DataParseException;
@@ -16,7 +18,7 @@ import net.sourceforge.fullsync.fs.debug.DebugNode;
 public class ActionDeciderDebugger
 {
     public void debugTask( ActionDecider ad, File src, File dst, StateDecider sd, BufferStateDecider bsd )
-    	throws DataParseException
+    	throws DataParseException, IOException
     {
         Task task = ad.getTask( src, dst, sd, bsd );
         System.out.println( src+" <-> "+dst+" : "+task.toString() );
@@ -55,7 +57,7 @@ public class ActionDeciderDebugger
         return node;
     }
     public void debugActionDecider( ActionDecider ac, boolean srcBuffering, boolean dstBuffering )
-    	throws DataParseException
+    	throws DataParseException, IOException
     {
         FileComparer fc = new DebugFileComparer();
         StateDecider sd = new net.sourceforge.fullsync.impl.StateDecider( fc );

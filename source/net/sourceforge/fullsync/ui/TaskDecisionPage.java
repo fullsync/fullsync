@@ -1,9 +1,11 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
+import java.util.Date;
 
 import net.sourceforge.fullsync.ActionQueue;
 import net.sourceforge.fullsync.IoStatistics;
+import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
@@ -37,6 +39,7 @@ public class TaskDecisionPage implements WizardPage
 {
     private WizardDialog dialog;
     private GuiController guiController;
+    private Profile profile;
     private TaskTree taskTree;
     private boolean processing;
 	private int tasksFinished;
@@ -47,10 +50,11 @@ public class TaskDecisionPage implements WizardPage
     private Label labelProgress;
     private Button buttonGo;
     
-    public TaskDecisionPage( WizardDialog dialog, GuiController guiController, TaskTree taskTree )
+    public TaskDecisionPage( WizardDialog dialog, GuiController guiController, Profile profile, TaskTree taskTree )
     {
         this.dialog = dialog;
         this.guiController = guiController;
+        this.profile = profile;
         this.taskTree = taskTree;
         
         dialog.setPage( this );
@@ -230,6 +234,8 @@ public class TaskDecisionPage implements WizardPage
 			        taskTree.getDestination().close();
 			        logger.info( "finished synchronization" );
 			        
+			        profile.setLastUpdate( new Date() );
+
 			        dialog.getDisplay().asyncExec( new Runnable() {
 						public void run() {
 			            	// Notification Window before disposal.

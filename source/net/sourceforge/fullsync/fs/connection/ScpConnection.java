@@ -127,7 +127,7 @@ public class ScpConnection implements FileSystemConnection
         }
     }
 
-    public boolean setFileAttributes( File file, net.sourceforge.fullsync.fs.FileAttributes att )
+    public boolean writeFileAttributes( File file, net.sourceforge.fullsync.fs.FileAttributes att )
     {
         return false;
     }

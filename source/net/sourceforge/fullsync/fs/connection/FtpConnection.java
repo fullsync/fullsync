@@ -8,7 +8,6 @@ import java.net.URISyntaxException;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
 
@@ -19,7 +18,7 @@ import org.apache.commons.net.ftp.FTPFile;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class FtpConnection implements FileSystemConnection
+public class FtpConnection extends InstableConnection
 {
     class FtpFileInputStream extends InputStream
     {
@@ -103,6 +102,7 @@ public class FtpConnection implements FileSystemConnection
     }
     
     private ConnectionDescription desc;
+    private URI connectionUri;
     private FTPClient client;
     private String basePath;
     private File root;
@@ -110,124 +110,49 @@ public class FtpConnection implements FileSystemConnection
     private boolean caseSensitive;
     
     public FtpConnection( ConnectionDescription desc )
-    	throws FileSystemException, URISyntaxException
+    	throws IOException, URISyntaxException
     {
-        try {
-            this.desc = desc;
-	        client = new FTPClient();
-	        URI uri = new URI( desc.getUri() );
-	        client.connect( uri.getHost(), uri.getPort()==-1?21:uri.getPort() );
-	        client.login( desc.getUsername(), desc.getPassword() );
-	        client.enterLocalPassiveMode(); // FIXME i need to be specified in the ConnectionDescription
-	        client.setFileType( FTP.BINARY_FILE_TYPE );
-	        basePath = client.printWorkingDirectory()+uri.getPath();
-	        
-	        // TODO find out whether remote server is case sensitive or not (win or unix)
-	        //      maybe check whether . has x permission
-	        caseSensitive = false;
-	        
-	        if( !client.changeWorkingDirectory( basePath ) )
-	        {
-	            client.quit();
-	            throw new FileSystemException( "Could not set working dir" );
-	        }
-	        
-	        if( basePath.endsWith("/") )
-                basePath = basePath.substring( 0, basePath.length()-1 );
-	        
-	        root = new AbstractFile( this, ".", ".", null, true, true ); 
-        } catch( IOException ioe ) {
-            throw new FileSystemException(ioe);
+        this.desc = desc;
+        this.root = new AbstractFile( this, ".", ".", null, true, true );
+        this.client = new FTPClient();
+        this.connectionUri = new URI( desc.getUri() );
+        
+        connect();
+    }
+    public void connect()
+    	throws IOException
+    {
+        client.connect( connectionUri.getHost(), connectionUri.getPort()==-1?21:connectionUri.getPort() );
+        client.login( desc.getUsername(), desc.getPassword() );
+        client.enterLocalPassiveMode(); // FIXME i need to be specified in the ConnectionDescription
+        client.setFileType( FTP.BINARY_FILE_TYPE );
+        basePath = client.printWorkingDirectory()+connectionUri.getPath();
+        
+        // TODO find out whether remote server is case sensitive or not (win or unix)
+        // maybe check whether . has x permission
+        caseSensitive = false;
+        
+        if( !client.changeWorkingDirectory( basePath ) )
+        {
+            client.quit();
+            throw new IOException( "Could not set working dir" );
         }
-    }
-
-    public File getRoot()
-    {
-        return root;
-    }
-
-    public File createChild( File parent, String name, boolean directory )
-    {
-        return new AbstractFile( this, name, parent.getPath()+"/"+name, parent, directory, false );
-    }
-
-    public File buildNode( File parent, FTPFile file )
-    {
-        String name = file.getName();
-        String path = parent.getPath()+"/"+name;
         
-        File n = new AbstractFile( this, name, path, parent, file.isDirectory(), true );
-        if( !file.isDirectory() )
-            n.setFileAttributes( new FileAttributes( file.getSize(), file.getTimestamp().getTimeInMillis()) );
-        return n;
+        if( basePath.endsWith("/") )
+            basePath = basePath.substring( 0, basePath.length()-1 );
     }
-    
-    public Hashtable getChildren( File dir )
+    public void reconnect() throws IOException
     {
-        try {
-	        //client.changeWorkingDirectory( basePath+dir.getPath() );
-	        FTPFile[] files = client.listFiles( "-a "+basePath+"/"+dir.getPath() );
-	        
-	        Hashtable table = new Hashtable();
-	        for( int i = 0; i < files.length; i++ )
-	        {
-	            String name = files[i].getName();
-	            if( !name.equals( "." ) && !name.equals( ".." ) )
-	                table.put( name, buildNode( dir, files[i] ) );
-	        }
-	        
-	        return table;
-        } catch( IOException ioe ) {
-            return null;
-        }
+        client.disconnect();
+        connect();
     }
-    
-
-    public boolean makeDirectory( File dir ) throws IOException
-    {
-        return client.makeDirectory( basePath +"/"+ dir.getPath() );
-    }
-
-    public boolean setFileAttributes( File file, FileAttributes attr )
-    {
-        return false;
-    }
-
-    public InputStream readFile( File file ) throws IOException
-    {
-        //client.changeWorkingDirectory( basePath+file.getParent().getPath() );
-        InputStream in = client.retrieveFileStream( basePath+"/"+file.getPath() );
-        if( in == null )
-            throw new IOException( "Ftp error while trying to read "+file.getPath()+" [" + client.getReplyCode() + "] " + client.getReplyString() );
-            
-        return new FtpFileInputStream( in, client );
-    }
-
-    public OutputStream writeFile( File file ) throws IOException
-    {
-        //client.changeWorkingDirectory( basePath+file.getParent().getPath() );
-        
-        OutputStream out = client.storeFileStream( basePath+"/"+file.getPath() );
-        if( out == null )
-            throw new IOException( "Ftp error while trying to write "+file.getPath()+" [" + client.getReplyCode() + "] " + client.getReplyString() );
-        return new FtpFileOutputStream( out, client );
-    }
-
-    public boolean delete( File file ) throws IOException
-    {
-	    if( file.isDirectory() )
-	         return client.removeDirectory( basePath+"/"+file.getPath() );
-	    else return client.deleteFile( basePath+"/"+file.getPath() );
-    }
-    
-    public void flush() throws IOException
-    {
-        
-    }
-    
     public void close() throws IOException
     {
         client.disconnect();
+    }
+    public void flush() throws IOException
+    {
+        
     }
     
     public String getUri()
@@ -238,5 +163,78 @@ public class FtpConnection implements FileSystemConnection
     public boolean isCaseSensitive()
     {
     	return caseSensitive;
+    }
+    public File getRoot()
+    {
+        return root;
+    }
+    
+    
+    
+    
+    public File _createChild( File parent, String name, boolean directory )
+    {
+        return new AbstractFile( this, name, parent.getPath()+"/"+name, parent, directory, false );
+    }
+
+    public File _buildNode( File parent, FTPFile file )
+    {
+        String name = file.getName();
+        String path = parent.getPath()+"/"+name;
+        
+        File n = new AbstractFile( this, name, path, parent, file.isDirectory(), true );
+        if( !file.isDirectory() )
+            n.setFileAttributes( new FileAttributes( file.getSize(), file.getTimestamp().getTimeInMillis()) );
+        return n;
+    }
+    
+    public Hashtable _getChildren( File dir ) throws IOException
+    {
+        FTPFile[] files = client.listFiles( "-a "+basePath+"/"+dir.getPath() );
+        
+        Hashtable table = new Hashtable();
+        for( int i = 0; i < files.length; i++ )
+        {
+            String name = files[i].getName();
+            if( !name.equals( "." ) && !name.equals( ".." ) )
+                table.put( name, _buildNode( dir, files[i] ) );
+        }
+        
+        return table;
+    }
+    
+
+    public boolean _makeDirectory( File dir ) throws IOException
+    {
+        return client.makeDirectory( basePath +"/"+ dir.getPath() );
+    }
+
+    public boolean _writeFileAttributes( File file, FileAttributes attr )
+    {
+        return false;
+    }
+
+    public InputStream _readFile( File file ) throws IOException
+    {
+        InputStream in = client.retrieveFileStream( basePath+"/"+file.getPath() );
+        if( in == null )
+            throw new IOException( "Ftp error while trying to read "+file.getPath()+" [" + client.getReplyCode() + "] " + client.getReplyString() );
+            
+        return new FtpFileInputStream( in, client );
+    }
+
+    public OutputStream _writeFile( File file ) throws IOException
+    {
+        OutputStream out = client.storeFileStream( basePath+"/"+file.getPath() );
+        if( out == null )
+            throw new IOException( "Ftp error while trying to write "+file.getPath()+" [" + client.getReplyCode() + "] " + client.getReplyString() );
+        return new FtpFileOutputStream( out, client );
+    }
+
+    public boolean _delete( File file ) throws IOException
+    {
+	    if( file.isDirectory() )
+	         return client.removeDirectory( basePath+"/"+file.getPath() );
+	    else return client.deleteFile( basePath+"/"+file.getPath() );
     }
 }

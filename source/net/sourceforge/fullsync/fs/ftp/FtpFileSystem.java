@@ -3,6 +3,7 @@
  */
 package net.sourceforge.fullsync.fs.ftp;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.ConnectionDescription;
@@ -59,6 +60,8 @@ public class FtpFileSystem implements FileSystem
         try {
             conn = new FtpConnection( desc );
         } catch( URISyntaxException e ) {
+            throw new FileSystemException( e );
+        } catch( IOException e ) {
             throw new FileSystemException( e );
         }
         return conn;

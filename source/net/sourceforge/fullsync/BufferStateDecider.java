@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync;
 
+import java.io.IOException;
+
 import net.sourceforge.fullsync.fs.File;
 
 /**
@@ -7,5 +9,5 @@ import net.sourceforge.fullsync.fs.File;
  */
 public interface BufferStateDecider
 {
-    public State getState( File buffered ) throws DataParseException;
+    public State getState( File buffered ) throws DataParseException, IOException;
 }

@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync.fs.buffering.syncfiles;
 
+import java.io.IOException;
+
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
 import net.sourceforge.fullsync.fs.connection.SyncFileBufferedConnection;
@@ -11,6 +13,7 @@ public class SyncFilesBufferingProvider implements BufferingProvider
 {
 
     public Site createBufferedSite( Site dir )
+    	throws IOException
     {
         SyncFileBufferedConnection conn = 
             new SyncFileBufferedConnection( dir );

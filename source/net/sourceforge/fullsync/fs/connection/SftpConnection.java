@@ -10,7 +10,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.ui.GuiController;
 
@@ -27,22 +26,30 @@ import com.sshtools.j2ssh.sftp.SftpSubsystemClient;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class SftpConnection implements FileSystemConnection
+public class SftpConnection extends InstableConnection
 {
     private ConnectionDescription desc;
+    private URI connectionUri;
     private SshClient sshClient;
     private SftpSubsystemClient sftpClient;
     private String basePath;
     private AbstractFile root;
 
     public SftpConnection( ConnectionDescription desc )
-    	throws FileSystemException, IOException, URISyntaxException
+    	throws IOException, URISyntaxException
     {
         this.desc = desc;
-        URI uri = new URI( desc.getUri() );
-        sshClient = new SshClient();
+        this.root = new AbstractFile( this, ".", ".", null, true, true );
+        this.connectionUri = new URI( desc.getUri() );
+        this.sshClient = new SshClient();
+        
+        connect();
+    }
+    public void connect()
+    	throws IOException
+    {
         SshConnectionProperties prop = new SshConnectionProperties();
-        prop.setHost( uri.getHost() );
+        prop.setHost( connectionUri.getHost() );
         
         // REVISIT not really fine
         sshClient.connect( prop, new DialogKnownHostsKeyVerification( GuiController.getInstance().getMainShell() ) );
@@ -56,18 +63,39 @@ public class SftpConnection implements FileSystemConnection
         {
             sftpClient = sshClient.openSftpChannel();
             //sftpClient.cd( path );
-            basePath = sftpClient.getDefaultDirectory()+uri.getPath();
+            basePath = sftpClient.getDefaultDirectory()+connectionUri.getPath();
             if( basePath.endsWith("/") )
                 basePath = basePath.substring( 0, basePath.length()-1 );
             
         } else {
-            throw new FileSystemException( "Could not connect" );
+            throw new IOException( "Could not connect" );
         }
         this.root = new AbstractFile( this, ".", ".", null, true, true );
-        /* 
-         * sftpClient.quit();
-         * sshClient.disconnect();
-         */
+    }
+    public void reconnect() throws IOException
+    {
+        sshClient.disconnect();
+        connect();
+    }
+    public void close() throws IOException
+    {
+        sftpClient.close();
+        sshClient.disconnect();
+    }
+    public void flush() throws IOException
+    {
+        
+    }
+    
+    public String getUri()
+    {
+        return desc.getUri();
+    }
+    
+    public boolean isCaseSensitive()
+    {
+    	// TODO find out whether current fs is case sensitive
+    	return false;
     }
 
     public File getRoot()
@@ -75,7 +103,10 @@ public class SftpConnection implements FileSystemConnection
         return root;
     }
 
-    public File createChild( File parent, String name, boolean directory )
+    
+    
+    
+    public File _createChild( File parent, String name, boolean directory )
     {
         return new AbstractFile( this, name, parent.getPath()+"/"+name, parent, directory, false );
     }
@@ -94,97 +125,52 @@ public class SftpConnection implements FileSystemConnection
         return n;
     }
     
-    public Hashtable getChildren( File dir )
+    public Hashtable _getChildren( File dir ) throws IOException
     {
-        try {
-	        SftpFile f = sftpClient.openDirectory( basePath+"/"+dir.getPath() );
-	        ArrayList files = new ArrayList();
-	        sftpClient.listChildren( f, files );
-	        
-	        Hashtable table = new Hashtable();
-	        for( Iterator i = files.iterator(); i.hasNext(); )
-	        {
-	            SftpFile file = (SftpFile)i.next();
-	            table.put( file.getFilename(), buildNode( dir, file ) );
-	        }
-	        
-	        return table;
-        } catch( IOException ioe ) {
-            //ioe.printStackTrace();
-            return new Hashtable();
+        SftpFile f = sftpClient.openDirectory( basePath+"/"+dir.getPath() );
+        ArrayList files = new ArrayList();
+        sftpClient.listChildren( f, files );
+        
+        Hashtable table = new Hashtable();
+        for( Iterator i = files.iterator(); i.hasNext(); )
+        {
+            SftpFile file = (SftpFile)i.next();
+            table.put( file.getFilename(), buildNode( dir, file ) );
         }
+        
+        return table;
     }
     
 
-    public boolean makeDirectory( File dir )
+    public boolean _makeDirectory( File dir ) throws IOException
     {
-        try {
-            sftpClient.makeDirectory( basePath+"/"+dir.getPath() );
-            return true;
-        } catch( IOException e ) {
-            e.printStackTrace();
-            return false;
-        }
+        sftpClient.makeDirectory( basePath+"/"+dir.getPath() );
+        return true;
     }
 
-    public boolean setFileAttributes( File file, net.sourceforge.fullsync.fs.FileAttributes att )
+    public boolean _writeFileAttributes( File file, net.sourceforge.fullsync.fs.FileAttributes att )
     {
         return false;
     }
     
-    public InputStream readFile( File file )
+    public InputStream _readFile( File file ) throws IOException
     {
-        try {
-            return new SftpFileInputStream( sftpClient.openFile( basePath+"/"+file.getPath(), SftpSubsystemClient.OPEN_READ ) );
-        } catch( IOException e ) {
-            e.printStackTrace();
-            return null;
-        }
+        return new SftpFileInputStream( sftpClient.openFile( basePath+"/"+file.getPath(), SftpSubsystemClient.OPEN_READ ) );
     }
 
-    public OutputStream writeFile( File file )
+    public OutputStream _writeFile( File file ) throws IOException
     {
-        try {
-            FileAttributes attrs = new FileAttributes();
-            attrs.setPermissions("rw-rw----");
-            SftpFile f = sftpClient.openFile( basePath+"/"+file.getPath(), SftpSubsystemClient.OPEN_CREATE | SftpSubsystemClient.OPEN_WRITE, attrs );
-            return new SftpFileOutputStream( f );
-        } catch( IOException e ) {
-            e.printStackTrace();
-            return null;
-        }
+        FileAttributes attrs = new FileAttributes();
+        attrs.setPermissions("rw-rw----");
+        SftpFile f = sftpClient.openFile( basePath+"/"+file.getPath(), SftpSubsystemClient.OPEN_CREATE | SftpSubsystemClient.OPEN_WRITE | SftpSubsystemClient.OPEN_TRUNCATE, attrs );
+        return new SftpFileOutputStream( f );
     }
 
-    public boolean delete( File node )
+    public boolean _delete( File node ) throws IOException
     {
-        try {
-		    if( node.isDirectory() )
-		         sftpClient.removeDirectory( basePath+"/"+node.getPath() );
-		    else sftpClient.removeFile( basePath+"/"+node.getPath() );
-		    return true;
-        } catch( IOException e ) {
-            e.printStackTrace();
-            return false;
-        }
+	    if( node.isDirectory() )
+	         sftpClient.removeDirectory( basePath+"/"+node.getPath() );
+	    else sftpClient.removeFile( basePath+"/"+node.getPath() );
+	    return true;
     }
-    
-    public void flush() throws IOException
-    {
-        
-    }
-    public void close() throws IOException
-    {
-        sftpClient.close();
-        sshClient.disconnect();
-    }
-    public String getUri()
-    {
-        return desc.getUri();
-    }
-    public boolean isCaseSensitive()
-    {
-    	// TODO find out whether current fs is case sensitive
-    	return false;
-    }
-
 }
