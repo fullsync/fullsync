@@ -504,36 +504,40 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	    Thread worker = new Thread( new Runnable() {
 	        public void run()
             {
-				TaskTree t = null;
-                try {
-                    guiController.showBusyCursor( true );
-					try {
-					    // REVISIT wow, a timer here is pretty much overhead / specific for
-					    //         this generell problem
-					    statusDelayTimer = new Timer( true );
-					    statusDelayTimer.schedule( new TimerTask() {
-					        public void run()
-					        {
-					            statusLine.setMessage( statusDelayString );
-					        }
-					    }, 10, 100 );
-						statusLine.setMessage( "Starting profile "+p.getName()+"..." );
-						t = guiController.getSynchronizer().executeProfile( p );
-						statusLine.setMessage( "Finished profile "+p.getName() );
-					    statusDelayTimer.cancel();
-					} catch (Exception e) {
-						e.printStackTrace();
-					} finally {
-	                	guiController.showBusyCursor( false );
-					}
-                    TaskDecisionList.show( guiController, p, t );
-                    
-                } catch( Exception e ) {
-                    e.printStackTrace();
-                }
+				_doRunProfile( p );
             }
 	    });
 	    worker.start();
+	}
+	private synchronized void _doRunProfile( Profile p )
+	{
+	    TaskTree t = null;
+        try {
+            guiController.showBusyCursor( true );
+			try {
+			    // REVISIT wow, a timer here is pretty much overhead / specific for
+			    //         this generell problem
+			    statusDelayTimer = new Timer( true );
+			    statusDelayTimer.schedule( new TimerTask() {
+			        public void run()
+			        {
+			            statusLine.setMessage( statusDelayString );
+			        }
+			    }, 10, 100 );
+				statusLine.setMessage( "Starting profile "+p.getName()+"..." );
+				t = guiController.getSynchronizer().executeProfile( p );
+				statusLine.setMessage( "Finished profile "+p.getName() );
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+			    statusDelayTimer.cancel();
+            	guiController.showBusyCursor( false );
+			}
+            TaskDecisionList.show( guiController, p, t );
+            
+        } catch( Exception e ) {
+            e.printStackTrace();
+        }
 	}
 
 	public void editProfile( final Profile p )

@@ -22,7 +22,11 @@ public class Profile implements Serializable
     private Date lastUpdate;
     private Schedule schedule;
     
-    private ArrayList listeners;
+    //private int lastError;
+    //private String lastErrorString;
+    // TODO we need to communicate transient states like status (running, hadError,...) 
+
+    private transient ArrayList listeners;
     
     public Profile()
     {

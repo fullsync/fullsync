@@ -1,10 +1,15 @@
 package net.sourceforge.fullsync.schedule;
 
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 import net.sourceforge.fullsync.DataParseException;
 
 /**
+ * TODO the eights day of week should be wrapped to the first! (in cron: 0 == 7)
+ *  if( daysOfWeek.bArray[8] )
+            daysOfWeek.bArray[1] = true;
+ * 
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class CrontabPart
@@ -13,7 +18,7 @@ public class CrontabPart
     public final static CrontabPart HOURS = new CrontabPart( "hours", 0, 23, 0 );
     public final static CrontabPart DAYSOFMONTH = new CrontabPart( "days of month", 1, 31, 0 );
     public final static CrontabPart MONTHS = new CrontabPart( "months", 1, 12, -1 );
-    public final static CrontabPart DAYSOFWEEK = new CrontabPart( "days of week", 0, 8, +1 );
+    public final static CrontabPart DAYSOFWEEK = new CrontabPart( "days of week", 0, 7, +1 );
     public final static CrontabPart[] ALL_PARTS 
     	= new CrontabPart[] { MINUTES, HOURS, DAYSOFMONTH, MONTHS, DAYSOFWEEK };
     
@@ -26,37 +31,69 @@ public class CrontabPart
         public Instance()
         {
             pattern = "*";
-            bArray = new boolean[high+1];
+            bArray = new boolean[high+1+offset];
             all = true;
             
-            for( int i = low; i < high; i++ )
-                bArray[i] = true;
+            Arrays.fill( bArray, low, high, true );
         }
         public Instance( String pattern )
         	throws DataParseException
         {
             this.pattern = pattern;
-            bArray = new boolean[high+1];
-            all = parseToken( pattern );
+            this.bArray = new boolean[high+1+offset];
+            this.all = parseToken( pattern );
         }
         public Instance( boolean[] bArray )
         {
-            this.bArray = new boolean[high+1];
+            this.bArray = new boolean[high+1+offset];
+            this.pattern = generatePattern();
             this.all = false;
-            
-            StringBuffer p = new StringBuffer();
-            for( int i = low; i < high; i++ )
+        }
+        public Instance( int[] intArray, int intOffset )
+	    {
+	        bArray = new boolean[high+1+offset];
+	        setIntArray( intArray, intOffset );
+            this.pattern = generatePattern();
+            this.all = false;
+	    }
+        private void setIntArray( int[] intArray, int intOffset )
+        {
+            for( int i = 0; i < intArray.length; i++ )
+                bArray[intArray[i]-intOffset + offset] = true;
+        }
+        public int[] getIntArray( int intOffset )
+        {
+            int[] a = new int[high+1];
+            int   aPos = 0;
+            for( int i = low; i <= high; i++ )
             {
-                if( this.bArray[i] )
+                if( bArray[i+offset] )
+                    a[aPos++] = i+intOffset;
+            }
+            int[] res;
+            if( aPos == high+1 ) {
+                res = a;
+            } else {
+	            res = new int[aPos];
+	            for( int i = 0; i < aPos; i++ )
+	                res[i] = a[i];
+            }
+            return res;
+        }
+        private String generatePattern()
+        {
+            StringBuffer p = new StringBuffer();
+            for( int i = low; i <= high; i++ )
+            {
+                if( this.bArray[i+offset] )
                 {
-                    p.append( String.valueOf( i-offset ) ).append( ',' );
+                    p.append( String.valueOf( i ) ).append( ',' );
                 }
             }
             if( p.length() == 0 )
-                 pattern = "0";
-            else pattern = p.substring( 0, p.length()-1 );
+                 return "0";
+            else return p.substring( 0, p.length()-1 );
         }
-
         private boolean parseToken( String token )
 	    	throws DataParseException
 	    {
@@ -148,5 +185,9 @@ public class CrontabPart
     public Instance createInstance( boolean[] bArray )
 	{
 	    return new Instance( bArray );
+	}
+    public Instance createInstance( int[] intArray, int intOffset )
+	{
+	    return new Instance( intArray, intOffset );
 	}
 }

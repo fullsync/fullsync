@@ -28,6 +28,9 @@ public class CrontabSchedule implements Schedule
     	throws DataParseException
     {
         read( pattern );
+        
+        if( daysOfWeek.bArray[8] )
+            daysOfWeek.bArray[1] = true;
     }
     
     public CrontabSchedule( 
@@ -42,6 +45,9 @@ public class CrontabSchedule implements Schedule
         this.daysOfMonth = daysOfMonth;
         this.months = months;
         this.daysOfWeek = daysOfWeek;
+        
+        if( daysOfWeek.bArray[8] )
+            daysOfWeek.bArray[1] = true;
         
         StringBuffer buff = new StringBuffer();
         buff.append( minutes.pattern ).append( ' ' );
@@ -91,8 +97,6 @@ public class CrontabSchedule implements Schedule
         daysOfMonth = CrontabPart.DAYSOFMONTH.createInstance( tokenizer.nextToken() );
         months = CrontabPart.MONTHS.createInstance( tokenizer.nextToken() );
         daysOfWeek = CrontabPart.DAYSOFWEEK.createInstance( tokenizer.nextToken() );
-        if( daysOfWeek.bArray[8] )
-            daysOfWeek.bArray[8] = true;
     }
     
     public String getPattern()
@@ -157,6 +161,9 @@ public class CrontabSchedule implements Schedule
 
                 switch( field )
                 {
+                case Calendar.MONTH:
+                    cal.add( Calendar.YEAR, 1 );
+                    break;
                 case Calendar.DAY_OF_MONTH:
                     gotoNext( months.bArray, cal, Calendar.MONTH );
                     break;

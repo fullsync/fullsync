@@ -28,7 +28,7 @@ public class Synchronizer
     {
         return processor;
     }
-    public TaskTree executeProfile( Profile profile )
+    public synchronized TaskTree executeProfile( Profile profile )
     {
         try {
             return processor.execute( profile );

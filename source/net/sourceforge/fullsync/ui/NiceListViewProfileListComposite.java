@@ -103,6 +103,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 			labelDestination.setText( "Destination: "+profile.getDestination() );
 			labelLastUpdate.setText( "Last Update: "+profile.getLastUpdate() );
 			labelNextUpdate.setText( "Next Update: "+profile.getNextUpdate() );
+			layout();			
         }
         public void setProfile( Profile profile )
         {

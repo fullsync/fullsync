@@ -12,9 +12,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 
@@ -29,9 +33,9 @@ public class CrontabScheduleOptions extends ScheduleOptions
         private Text text;
         private Button buttonChoose;
         
-        public PartContainer( CrontabPart part )
+        public PartContainer( CrontabPart crontabPart )
         {
-            this.part = part;
+            this.part = crontabPart;
             
             label = new Label( CrontabScheduleOptions.this, SWT.NULL );
             label.setText( part.name );
@@ -69,7 +73,57 @@ public class CrontabScheduleOptions extends ScheduleOptions
     	    buttonChoose.addSelectionListener( new SelectionAdapter() {
     	        public void widgetSelected(SelectionEvent arg0)
     	        {
-    	            // TODO show popup so the user can choose
+    	            final Shell shell = new Shell( getShell(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.TOOL );
+    	            shell.setLayout( new GridLayout(2, true) );
+    	            shell.setText( "Select "+part.name );
+    	            
+    	            final List table = new List( shell, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI );
+    	            GridData data = new GridData( GridData.FILL, GridData.FILL, true, true, 2, 1 );
+    	            data.heightHint = 230;
+    	            table.setLayoutData( data );
+    	            for( int i = part.low; i <= part.high; i++ )
+    	            {
+    	                //TableItem item = new TableItem( table, SWT.NULL );
+    	                //item.setText( String.valueOf( i ) );
+    	                table.add( String.valueOf( i ) );
+    	            }
+    	            try {
+    	                table.select( part.createInstance(text.getText()).getIntArray(-part.low) );
+    	            } catch( DataParseException dpe ) {
+    	                dpe.printStackTrace();
+    	                // TODO report exception
+    	            }
+    	            
+    	            Button buttonOk = new Button( shell, SWT.NULL );
+    	            buttonOk.setLayoutData( new GridData( GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL ) );
+    	            buttonOk.setText( "Ok" );
+    	            buttonOk.addSelectionListener( new SelectionAdapter() {
+    	                public void widgetSelected(SelectionEvent e)
+    	                {
+    	                    text.setText( part.createInstance( table.getSelectionIndices(), -part.low ).pattern );
+    	                    shell.dispose();
+    	                }
+    	            } );
+    	            
+    	            Button buttonClose = new Button( shell, SWT.NULL );
+    	            buttonClose.setLayoutData( new GridData( GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL ) );
+    	            buttonClose.setText( "Close" );
+    	            buttonClose.addSelectionListener( new SelectionAdapter() {
+    	                public void widgetSelected(SelectionEvent e)
+    	                {
+    	                    shell.dispose();
+    	                }
+    	            } );
+
+    	            shell.setLocation( buttonChoose.toDisplay( 0, 0 ) );
+    	            shell.setSize( 150, 300 );
+    	            shell.layout();
+    	    		shell.open();
+    	    		Display display = getDisplay();
+    				while( !shell.isDisposed() ) {
+    					if (!display.readAndDispatch())
+    						display.sleep();
+    				}
     	        }
     	    });
     	    

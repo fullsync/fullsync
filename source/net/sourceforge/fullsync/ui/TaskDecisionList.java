@@ -158,7 +158,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	public static void show( final GuiController guiController, final Profile profile, final TaskTree task )
 	{
 		final Display display = Display.getDefault();
-		display.syncExec( new Runnable() {
+		display.asyncExec( new Runnable() {
 		    public void run()
             {
 		        try {

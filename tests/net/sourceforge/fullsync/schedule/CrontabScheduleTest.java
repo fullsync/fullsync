@@ -42,6 +42,7 @@ public class CrontabScheduleTest extends TestCase
     {
         now.set( 2004, 0, 1, 0, 0, 0 );
         expectedResult.set( 2004, 0, 1, 10, 0, 0 );
+        expectedResult.set( Calendar.MILLISECOND, 0 );
         
         assertNextOccurence( "0 10,20 * * *" );
     }
@@ -51,6 +52,7 @@ public class CrontabScheduleTest extends TestCase
 	{
 	    now.set( 2004, 0, 1, 10, 0, 1 );
 	    expectedResult.set( 2004, 0, 1, 20, 0, 0 );
+        expectedResult.set( Calendar.MILLISECOND, 0 );
 	    
 	    assertNextOccurence( "0 10,20 * * *" );
 	}
@@ -60,6 +62,7 @@ public class CrontabScheduleTest extends TestCase
 	{
 	    now.set( 2004, 0, 1, 0, 0, 0 );
 	    expectedResult.set( 2004, 0, 10, 10, 0, 0 );
+        expectedResult.set( Calendar.MILLISECOND, 0 );
 	    
 	    assertNextOccurence( "0 10,20 10,20 * *" );
 	}
@@ -69,6 +72,7 @@ public class CrontabScheduleTest extends TestCase
 	{
 	    now.set( 2004, 0, 1, 15, 0, 0 );
 	    expectedResult.set( 2004, 0, 10, 10, 0, 0 );
+        expectedResult.set( Calendar.MILLISECOND, 0 );
 	    
 	    assertNextOccurence( "0 10,20 10,20 * *" );
 	}
@@ -78,6 +82,7 @@ public class CrontabScheduleTest extends TestCase
 	{
 	    now.set( 2004, 0, 10, 20, 0, 1 );
 	    expectedResult.set( 2004, 0, 20, 10, 0, 0 );
+        expectedResult.set( Calendar.MILLISECOND, 0 );
 	    
 	    assertNextOccurence( "0 10,20 10,20 * *" );
 	}
@@ -87,6 +92,7 @@ public class CrontabScheduleTest extends TestCase
 	{
 	    now.set( 2004, 0, 1, 0, 0, 1 );
 	    expectedResult.set( 2004, 0, 4, 10, 0, 0 ); // saturday
+        expectedResult.set( Calendar.MILLISECOND, 0 );
 	    
 	    assertNextOccurence( "0 10,20 * * 7" );
 	}

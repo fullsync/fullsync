@@ -65,6 +65,7 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
     
 	private Group groupOptions;
 	private Combo cbType;
+	private Composite compositeTop;
 	private Button buttonCancel;
 	private Button buttonOk;
 	private org.eclipse.swt.widgets.Shell dialogShell;
@@ -82,43 +83,51 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
 	{
 		try {
 		    dialogShell = new Shell( getParent(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.TOOL );
+		    dialogShell.setText( "Edit Scheduling" );
 			GridLayout thisLayout = new GridLayout();
-			thisLayout.numColumns = 3;
-			GridLayout thisLayout1 = new GridLayout();
-			thisLayout1.numColumns = 3;
-			dialogShell.setLayout(thisLayout1);
-            {
-                labelScheduleType = new Label(dialogShell, SWT.NONE);
-                labelScheduleType.setText("Scheduling Type:");
-                GridData labelScheduleTypeLData = new GridData();
-                labelScheduleTypeLData.widthHint = 89;
-                labelScheduleTypeLData.heightHint = 14;
-                labelScheduleType.setLayoutData(labelScheduleTypeLData);
-            }
-            {
-                cbType = new Combo(dialogShell, SWT.DROP_DOWN | SWT.READ_ONLY);
-                GridData cbTypeLData = new GridData();
-                cbTypeLData.widthHint = 85;
-                cbTypeLData.heightHint = 25;
-                cbType.setLayoutData(cbTypeLData);
-                cbType.addListener( SWT.Modify, new Listener() {
-                    public void handleEvent(Event arg0)
-                    {
-                        ((StackLayout)groupOptions.getLayout()).topControl 
-                        	= groupOptions.getChildren()[cbType.getSelectionIndex()];
-                        groupOptions.layout();
-                    }
-                });
+			thisLayout.numColumns = 2;
+			dialogShell.setLayout(thisLayout);
+			{
+                compositeTop = new Composite(dialogShell, SWT.NONE);
+                GridLayout compositeTopLayout = new GridLayout();
+                GridData compositeTopLData = new GridData();
+                compositeTopLData.heightHint = 21;
+                compositeTopLData.horizontalSpan = 2;
+                compositeTopLData.horizontalAlignment = GridData.FILL;
+                compositeTop.setLayoutData(compositeTopLData);
+                compositeTopLayout.numColumns = 2;
+                compositeTopLayout.marginHeight = 0;
+                compositeTopLayout.horizontalSpacing = 15;
+                compositeTop.setLayout(compositeTopLayout);
+                {
+                    labelScheduleType = new Label(compositeTop, SWT.NONE);
+                    labelScheduleType.setText("Scheduling Type:");
+                    GridData labelScheduleTypeLData = new GridData();
+                    labelScheduleTypeLData.heightHint = 13;
+                    labelScheduleType.setLayoutData(labelScheduleTypeLData);
+                }
+                {
+                    cbType = new Combo(compositeTop, SWT.DROP_DOWN | SWT.READ_ONLY);
+                    GridData cbTypeLData = new GridData();
+                    cbTypeLData.heightHint = 21;
+                    cbType.setLayoutData(cbTypeLData);
+                    cbType.addListener(SWT.Modify, new Listener() {
+                        public void handleEvent(Event arg0) {
+                            ((StackLayout) groupOptions.getLayout()).topControl = groupOptions
+                                .getChildren()[cbType.getSelectionIndex()];
+                            groupOptions.layout();
+                        }
+                    });
+                }
             }
             {
                 groupOptions = new Group(dialogShell, SWT.NONE);
                 StackLayout groupOptionsLayout = new StackLayout();
                 GridData groupOptionsLData = new GridData();
-                groupOptionsLData.grabExcessHorizontalSpace = true;
                 groupOptionsLData.grabExcessVerticalSpace = true;
                 groupOptionsLData.horizontalAlignment = GridData.FILL;
                 groupOptionsLData.verticalAlignment = GridData.FILL;
-                groupOptionsLData.horizontalSpan = 3;
+                groupOptionsLData.horizontalSpan = 2;
                 groupOptions.setLayoutData(groupOptionsLData);
                 groupOptions.setLayout(groupOptionsLayout);
                 groupOptions.setText("Options");
@@ -126,7 +135,6 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
             {
                 buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
                 buttonOk.setText("Ok");
-                GridData buttonOkLData = new GridData();
                 buttonOk.addSelectionListener(new SelectionAdapter() {
                     public void widgetSelected(SelectionEvent evt) 
                     {
@@ -144,15 +152,19 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
                         }
                     }
                 });
-                
-                buttonOkLData.horizontalSpan = 2;
-                buttonOkLData.grabExcessHorizontalSpace = true;
+
+                GridData buttonOkLData = new GridData();
                 buttonOkLData.horizontalAlignment = GridData.END;
+                buttonOkLData.heightHint = 23;
+                buttonOkLData.grabExcessHorizontalSpace = true;
                 buttonOk.setLayoutData(buttonOkLData);
             }
             {
                 buttonCancel = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
                 buttonCancel.setText("Cancel");
+                GridData buttonCancelLData = new GridData();
+                buttonCancelLData.heightHint = 23;
+                buttonCancel.setLayoutData(buttonCancelLData);
                 buttonCancel.addSelectionListener(new SelectionAdapter() {
                     public void widgetSelected(SelectionEvent evt) {
                         dialogShell.dispose();
@@ -166,6 +178,7 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
 
     		Display display = dialogShell.getDisplay();
 			dialogShell.setSize(346, 280);
+            
 			Rectangle rect = getParent().getBounds();
 			dialogShell.setLocation( 
 			        rect.x + (rect.width /2) - dialogShell.getSize().x/2,
