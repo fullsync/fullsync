@@ -37,24 +37,23 @@
 		classpath="${izpack.dir}/lib/compiler.jar"/>
 
 	<fileset id="dependentJars" dir="${basedir}/lib">
-		<include name="j2ssh-core.jar"/>
-		<include name="jakarta-oro-2.0.7.jar"/>
-		<include name="commons-cli-1.0.jar"/>
-		<include name="commons-configuration-1.0.jar"/>
-		<!-- <include name="commons-lang-2.0.jar"/> -->
+		<include name="commons-cli.jar"/>
+		<include name="commons-configuration.jar"/>
+		<!-- <include name="commons-collections.jar"/> -->
+		<!-- <include name="commons-lang.jar"/> -->
 		<include name="commons-logging.jar"/>
-		<!-- <include name="commons-beanutils.jar"/> -->
-		<!-- <include name="commons-collections-3.1.jar"/> -->
-		<include name="commons-net-1.2.2.jar"/>
+		<include name="commons-net.jar"/>
+		<include name="j2ssh-core.jar"/>
+		<include name="jakarta-oro.jar"/>
+		<include name="log4j.jar"/>
+		<include name="swt.jar"/>
 		<include name="xercesImpl.jar"/>
 		<include name="xml-apis.jar"/>
-		<include name="swt.jar"/>
-		<include name="utils.jar"/>
-		<include name="log4j-1.2.8.jar"/>
 	</fileset>
 	<path id="classpath">
 		<fileset refid="dependentJars"/>
 		<pathelement location="${classes.dir}" />
+		<pathelement location="${build.lib.dir}/utils.jar" />
 	</path>
 
 	
@@ -63,13 +62,23 @@
 		<echo message="--- ${name} ${version} Build ---"/>
 	</target>
 
+	<target name="jar-utils">
+		<delete dir="${utils.classes.dir}"/>
+		<mkdir dir="${utils.classes.dir}"/>
+		<javac debug="off" optimize="on" srcdir="${utils.source.dir}" destdir="${utils.classes.dir}"/>
+		<jar destfile="${build.lib.dir}/utils.jar">
+			<fileset dir="${utils.classes.dir}" includes="**/*"/>
+		</jar>
+		<delete dir="${utils.classes.dir}"/>
+	</target>
+				
 	<target name="clean" description="cleans project files" >
 		<delete dir="${build.dir}" /> 
 		<delete dir="${dist.dir}" />
 		<delete dir="${classes.dir}"/>
 	</target>
 
-	<target name="compile">
+	<target name="compile" depends="jar-utils">
 		<mkdir dir="${classes.dir}"/>
 		<javac debug="${debug}" srcdir="${source.dir}" destdir="${classes.dir}" classpathref="classpath"/>
 	</target>
@@ -142,7 +151,7 @@
 		<pathconvert pathsep=" " property="dist.classpath" refid="lib.dist.fileset">
 			<map from="${build.lib.dir}" to=".\lib"/>
 		</pathconvert>
-		<jar destfile="${build.dir}/lib/fullsync.jar">
+		<jar destfile="${build.lib.dir}/fullsync.jar">
 			<fileset dir="${classes.dir}" includes="**/*"/>
 			<manifest>
 				<attribute name="Main-Class" value="net.sourceforge.fullsync.Main"/>
@@ -156,7 +165,7 @@
 		      skeletonroot="${jsmooth.dir}/skeletons" verbose="true"/>
 	</target>
 	
-	<target name="build" depends="detect, copy-libs, copy-resources, javadoc, jar-utils, jar, win32-exe">
+	<target name="build" depends="detect, copy-libs, copy-resources, javadoc, jar, win32-exe">
 	</target>
 
 	
@@ -217,14 +226,5 @@
 		<java classname="net.sourceforge.fullsync.Main" classpathref="classpath" />
 	</target>
 	
-	<target name="jar-utils">
-		<delete dir="${utils.classes.dir}"/>
-		<mkdir dir="${utils.classes.dir}"/>
-		<javac debug="off" optimize="on" srcdir="${utils.source.dir}" destdir="${utils.classes.dir}"/>
-		<jar destfile="${basedir}/lib/utils.jar">
-			<fileset dir="${utils.classes.dir}" includes="**/*"/>
-		</jar>
-		<delete dir="${utils.classes.dir}"/>
-	</target>
 	
 </project>

@@ -58,6 +58,7 @@ public class FtpConnectionTest extends TestCase
     protected void tearDown() throws Exception
     {
         ftpServer.stopRunning();
+        ftpServer.join();
 
         clearUp();
         testingSource.delete();
@@ -161,6 +162,26 @@ public class FtpConnectionTest extends TestCase
         
         Hashtable expectation = new Hashtable();
         expectation.put( "sourceFile1.txt", new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "" ) );
+        expectation.put( "sourceFile2.txt", new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "" ) );
+        /* Phase One: */ TaskTree tree = assertPhaseOneActions( expectation );
+        /* Phase Two: */ synchronizer.performActions( tree ); // TODO assert task finished events ?
+    }
+    
+    public void testSingleSpaceMinus()
+        throws Exception
+    {
+        createRuleFile();
+        long lm = new Date().getTime();
+        
+        new File( testingSource, "sub - folder" ).mkdir();
+        new File( testingSource, "sub - folder/sub2 -folder" ).mkdir();
+        createNewFileWithContents( testingSource, "sub - folder/sub2 - folder/sourceFile1.txt", lm, "this is a test\ncontent1" );
+        createNewFileWithContents( testingSource, "sub - folder/sourceFile2.txt", lm, "this is a test\ncontent2" );
+        
+        Hashtable expectation = new Hashtable();
+        expectation.put( "sub - folder", new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "" ) );
+        expectation.put( "sub2 - folder", new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "" ) );
+        expectation.put( "sourceFile1.txt", new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "" ) );
         expectation.put( "sourceFile2.txt", new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "" ) );
         /* Phase One: */ TaskTree tree = assertPhaseOneActions( expectation );
         /* Phase Two: */ synchronizer.performActions( tree ); // TODO assert task finished events ?

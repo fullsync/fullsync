@@ -1,4 +1,20 @@
-commons-cli-1.0.jar
+Versions of dependent libraries in distributions:
+
+commons-cli.jar				1.0		2004-11-06
+commons-collections.jar		3.1		2004-06-26	(in utils.jar)
+commons-configuration.jar	1.0		2004-10-12
+commons-lang.jar			2.0		2004-08-27	(in utils.jar)
+commons-logging.jar			1.0.4	2004-06-15
+commons-net.jar				1.3		2004-12-14
+j2ssh-core.jar
+jakarta-oro.jar				2.0.8	2003-12-28
+log4j.jar					1.2.9	2004-11-01
+swt.jar						3.063	2004-??-??
+xercesImpl.jar+xml-apis.jar	2.6.2	2004-02-20
+
+
+
+commons-cli.jar
 	Dependencies:
 		none
 
@@ -49,9 +65,9 @@ commons-logging.jar
 		none
 
 
-commons-net-1.2.2.jar (removed. all needed classes are available in utils.jar)
+commons-net-1.2.2.jar
 	Dependencies:
-		jakarta-oro-2.0.7.jar (actually 2.0.8)
+		jakarta-oro.jar (2.0.8)
 
 	Used in:
 		net.sourceforge.fullsync.fs.connection.FtpConnection
