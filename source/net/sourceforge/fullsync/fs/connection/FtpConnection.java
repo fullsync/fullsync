@@ -12,6 +12,7 @@ import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
@@ -115,7 +116,7 @@ public class FtpConnection implements FileSystemConnection
 	        URI uri = new URI( desc.getUri() );
 	        client.connect( uri.getHost(), uri.getPort()==-1?21:uri.getPort() );
 	        client.login( desc.getUsername(), desc.getPassword() );
-	        
+	        client.setFileType( FTP.BINARY_FILE_TYPE );
 	        basePath = client.printWorkingDirectory()+uri.getPath();
 	        
 	        if( !client.changeWorkingDirectory( basePath ) )
@@ -158,12 +159,14 @@ public class FtpConnection implements FileSystemConnection
     {
         try {
 	        //client.changeWorkingDirectory( basePath+dir.getPath() );
-	        FTPFile[] files = client.listFiles( basePath+"/"+dir.getPath() );
+	        FTPFile[] files = client.listFiles( "-a "+basePath+"/"+dir.getPath() );
 	        
 	        Hashtable table = new Hashtable();
 	        for( int i = 0; i < files.length; i++ )
 	        {
-	            table.put( files[i].getName(), buildNode( dir, files[i] ) );
+	            String name = files[i].getName();
+	            if( !name.equals( "." ) && !name.equals( ".." ) )
+	                table.put( name, buildNode( dir, files[i] ) );
 	        }
 	        
 	        return table;

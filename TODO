@@ -170,7 +170,17 @@ Threading
 Connection:
 	[ ] reconnect
 	
+syncfiles
+	[ ] gzip them
+	
 ---===[ to 1.0 Tasks ]====-----------------------------------------------------
+
+Dispose:
+	[ ]	Dispose all images we draw and all other widgets too
+	[ ] dispose tableitems
+
+Images:
+	[ ] cache images for different states/actions
 
 Logging:
 	[ ] verify logging quality
@@ -196,9 +206,6 @@ Optimization:
 	[ ] getChild() - on null create, put this into a method ?
 		nope...
 	[ ] refresh of fs files
-
-Dispose:
-	[ ]	Dispose all images we draw and all other widgets too
 	
 Realtime-Reporting:
 	[ ] Implement realtime status information updating

@@ -1,0 +1,6 @@
+
+	
+2004-08-27
+	corrected BufferStateDecider (was using buffered FileAttributes)
+	store and load syncfiles using gzip
+	FTP uses -a parameter to find files beginning with . as well

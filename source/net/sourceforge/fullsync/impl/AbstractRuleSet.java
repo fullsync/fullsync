@@ -13,6 +13,7 @@ import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.rules.Rule;
 
 
@@ -149,10 +150,10 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 	}
 
 
-	protected long evalRealValue( File f, String exp ) throws DataParseException
+	protected long evalRealValue( FileAttributes f, String exp ) throws DataParseException
 	{
-		if( exp.equalsIgnoreCase( "length" ) ) return f.getFileAttributes().getLength();
-		else if( exp.equalsIgnoreCase( "date" ) ) return f.getFileAttributes().getLastModified();
+		if( exp.equalsIgnoreCase( "length" ) ) return f.getLength();
+		else if( exp.equalsIgnoreCase( "date" ) ) return Math.round(f.getLastModified()/1000.0);
 		else throw new DataParseException( "Error while parsing SyncRule: '"+exp+"' is unknown", 0 );
 	}
 
@@ -165,7 +166,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 		else throw new DataParseException( "Error while parsing SyncRule: '"+operator+"' is unknown operator", 0 );
 	}
 
-	public State compareFiles( File src, File dst ) throws DataParseException
+	public State compareFiles( FileAttributes src, FileAttributes dst ) throws DataParseException
 	{
 		for( Enumeration e = syncRules.elements(); e.hasMoreElements(); )
 		{

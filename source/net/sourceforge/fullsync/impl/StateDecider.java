@@ -11,7 +11,7 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class StateDecider implements net.sourceforge.fullsync.StateDecider
 {
-    private FileComparer comparer;
+    protected FileComparer comparer;
     
     public StateDecider( FileComparer comparer )
     {
@@ -35,6 +35,6 @@ public class StateDecider implements net.sourceforge.fullsync.StateDecider
         else if( destination.isDirectory() )
              return new State( State.DirHereFileThere, Location.Destination );
 
-        return comparer.compareFiles( (File)source, (File)destination );	
+        return comparer.compareFiles( source.getFileAttributes(), destination.getFileAttributes() );	
     }
 }

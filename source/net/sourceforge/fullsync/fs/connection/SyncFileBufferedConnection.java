@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -187,21 +189,24 @@ public class SyncFileBufferedConnection implements BufferedConnection
             /* */
             return;
         }
-        
+        ByteArrayOutputStream out;
+        InputStream reader = null;
         try {
-	        ByteArrayOutputStream out = new ByteArrayOutputStream((int)f.getFileAttributes().getLength());
+            // TODO if we dont require ftp calls while creating buffer use 
+            //		input stream directly
+            
+	        out = new ByteArrayOutputStream((int)f.getFileAttributes().getLength());
 	        
-	        InputStream in = f.getInputStream();
+	        InputStream in = new GZIPInputStream( f.getInputStream() );
 	        int i; byte[] block = new byte[1024];
 	        while( (i = in.read(block)) > 0 )
-	            out.write( block );
+	            out.write( block, 0, i );
 	        in.close();
 	        out.close();
-	        
-	        ByteArrayInputStream reader = new ByteArrayInputStream( out.toByteArray() );
+
+	        reader = new ByteArrayInputStream( out.toByteArray() );
 	        SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
 	        sax.parse( reader, new SyncFileDefaultHandler( this ) );
-	        reader.close();
             
         } catch( IOException ioe ) {
             ioe.printStackTrace();
@@ -218,6 +223,14 @@ public class SyncFileBufferedConnection implements BufferedConnection
             e.printStackTrace();
         } catch( FactoryConfigurationError e ) {
             e.printStackTrace();
+        } finally {
+            try {
+                if( reader != null )
+                    reader.close();
+            } catch( IOException e1 ) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
         }
     }
     protected Element serializeFile( BufferedFile file, Document doc )
@@ -261,7 +274,7 @@ public class SyncFileBufferedConnection implements BufferedConnection
             doc.appendChild( e );
             
 	        File f = (File)node;
-	        OutputStream out = f.getOutputStream();
+	        OutputStream out = new GZIPOutputStream( f.getOutputStream() );
 	        
 	        OutputFormat format = new OutputFormat( doc, "UTF-8", true );
 	        XMLSerializer serializer = new XMLSerializer ( out, format);
