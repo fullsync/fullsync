@@ -7,6 +7,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.Action;
+import net.sourceforge.fullsync.ActionFinishedListener;
 import net.sourceforge.fullsync.ActionQueue;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
@@ -17,12 +18,13 @@ import net.sourceforge.fullsync.impl.FillBufferActionQueue;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -32,17 +34,15 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
@@ -75,6 +75,9 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	
 	private boolean onlyChanges;
 	private boolean processing;
+	private int tasksFinished;
+	private int tasksTotal;
+	private Object mutex = new Object();
 	
 	
 	public LogWindow(Composite parent, int style) 
@@ -165,13 +168,13 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	
 			GridData labelProgressLData = new GridData();
 			labelProgressLData.verticalAlignment = GridData.CENTER;
-			labelProgressLData.horizontalAlignment = GridData.BEGINNING;
+			labelProgressLData.horizontalAlignment = GridData.FILL;
 			labelProgressLData.widthHint = 42;
 			labelProgressLData.heightHint = 13;
 			labelProgressLData.horizontalIndent = 5;
 			labelProgressLData.horizontalSpan = 1;
 			labelProgressLData.verticalSpan = 1;
-			labelProgressLData.grabExcessHorizontalSpace = false;
+			labelProgressLData.grabExcessHorizontalSpace = true;
 			labelProgressLData.grabExcessVerticalSpace = false;
 			labelProgress.setLayoutData(labelProgressLData);
 			labelProgress.setText("Progress");
@@ -431,36 +434,63 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
     }
     protected void performActions()
     {
-        try {
-            processing = true;
-            
-            //Logger logger = Logger.getRootLogger();
-            //logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
-            Logger logger = Logger.getLogger( "FullSync" );
-	        logger.info( "Synchronizing "+taskTree.getSource().getUri().toString()+" and "+taskTree.getDestination().getUri().toString() );
-	        BlockBuffer buffer = new BlockBuffer( logger );
-	        buffer.load();
-	        ActionQueue queue = new FillBufferActionQueue(buffer);
-	        Color inProc = new Color( null, 150, 150, 255 );
-	        // TODO use TaskTree instead of table items
-	        TableItem[] items = tableLogLines.getItems();
-	        for( int i = 0; i < items.length; i++ )
-	        {
-	            Task t = (Task)items[i].getData();
-	            queue.enqueue( t.getCurrentAction(), t.getSource(), t.getDestination() );
-	            items[i].setBackground( inProc );
-	        }
-	        queue.flush();
-	        buffer.unload();
-	        
-	        taskTree.getSource().flush();
-	        taskTree.getDestination().flush();
-	        taskTree.getSource().close();
-	        taskTree.getDestination().close();
-	        logger.info( "finished synchronization" );
-	    } catch( IOException e ) {
-	        e.printStackTrace();
-	    }
+        Thread worker = new Thread( new Runnable() {
+			public void run() {
+		        try {
+		            processing = true;
+		            final Display display = getDisplay();
+		            
+		            tasksTotal = taskTree.getTaskCount();
+				    tasksFinished = 0;
+				    
+					// Logger logger = Logger.getRootLogger();
+		            // logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
+		            Logger logger = Logger.getLogger( "FullSync" );
+			        logger.info( "Synchronizing "+taskTree.getSource().getUri().toString()+" and "+taskTree.getDestination().getUri().toString() );
+			        
+			        BlockBuffer buffer = new BlockBuffer( logger );
+			        ActionQueue queue = new FillBufferActionQueue(buffer);
+			        // TODO add some visualisation of finished tasks 
+			        // final Color colorFinished = new Color( null, 150, 255, 150 );
+			        // item.setBackground()
+			        
+			        queue.addActionFinishedListener( new ActionFinishedListener() {
+			        	public void actionFinished() 
+			        	{
+			        		//final TableItem i = ((TableItem)callbackObj);
+				            display.asyncExec( new Runnable() {
+				            	public void run() {
+						            tasksFinished++;
+						            labelProgress.setText( tasksFinished+" of "+tasksTotal+" tasks finished" );
+								}
+				            } );
+			        	} 
+			        } );
+			        
+			        buffer.load();
+			        queue.enqueue( taskTree );
+			        queue.flush();
+			        buffer.unload();
+			        
+			        taskTree.getSource().flush();
+			        taskTree.getDestination().flush();
+			        taskTree.getSource().close();
+			        taskTree.getDestination().close();
+			        logger.info( "finished synchronization" );
+			        
+			        getDisplay().asyncExec( new Runnable() {
+						public void run() {
+							getShell().dispose();
+						}
+			        } );
+					
+			        processing = false;
+			    } catch( IOException e ) {
+			        e.printStackTrace();
+			    }
+			}
+        }, "Action Performer" );
+        worker.start();
     }
     
 	/** Auto-generated event handler method */
@@ -478,7 +508,6 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	    if( !processing )
 	    {
 	        performActions();
-	        getShell().dispose();
 	    }
 	}
 

@@ -85,4 +85,14 @@ public class Task
     {
         return getCurrentAction().toString();
     }
+    public int getTaskCount()
+    {
+    	int count = 0;
+    	Enumeration e = children.elements();
+    	while( e.hasMoreElements() )
+    	{
+    		count += ((Task)e.nextElement()).getTaskCount();
+    	}
+    	return count+1;
+    }
 }

@@ -34,4 +34,8 @@ public class TaskTree
     {
         return source;
     }
+    public int getTaskCount()
+    {
+    	return root.getTaskCount();
+    }
 }

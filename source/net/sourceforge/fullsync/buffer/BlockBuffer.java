@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
@@ -28,6 +30,8 @@ public class BlockBuffer implements Buffer
 	
 	int flushes;
 	
+	Vector finishedListeners;
+	
 	public BlockBuffer( Logger logger )
 	{
 	    this.logger = logger;
@@ -42,6 +46,8 @@ public class BlockBuffer implements Buffer
 		entries = null;
 		
 		flushes = 0;
+		
+		finishedListeners = new Vector();
 	}
 	public int getCapacity()
 	{
@@ -94,6 +100,11 @@ public class BlockBuffer implements Buffer
 				if( opDesc != null )
 				    logger.info( opDesc );
 				
+				Enumeration en = finishedListeners.elements();
+				while( en.hasMoreElements() )
+				{
+					((EntryFinishedListener)en.nextElement()).entryFinished( desc );
+				}
 		    } catch( IOException ioe ) {
 		        logger.error( "Exception", ioe );
 		    }
@@ -199,6 +210,14 @@ public class BlockBuffer implements Buffer
         } else {
             storeEntry( descriptor.getInputStream(), descriptor.getLength(), descriptor );
         }
-        
+    }
+    
+    public void addEntryFinishedListener( EntryFinishedListener listener )
+    {
+    	finishedListeners.add( listener );
+    }
+    public void removeEntryFinishedListener( EntryFinishedListener listener )
+    {
+    	finishedListeners.remove( listener );
     }
 }

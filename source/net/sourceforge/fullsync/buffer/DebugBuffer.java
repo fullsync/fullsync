@@ -33,4 +33,11 @@ public class DebugBuffer implements Buffer
     {
         entries.add( descriptor );
     }
+    
+    public void addEntryFinishedListener( EntryFinishedListener listener )
+    {
+    }
+    public void removeEntryFinishedListener( EntryFinishedListener listener )
+    {
+    }
 }

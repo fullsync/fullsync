@@ -1,3 +1,5 @@
+2004-09-18
+	showing process of synchronization process (very alpha)
 
 2004-09-08
 	Processor was keeping changed rulesets in parent. now it's reverting to
