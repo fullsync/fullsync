@@ -28,6 +28,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -232,14 +233,12 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	    comboFilter.add( "Changes only" );
 	    comboFilter.select(1);
 	    
-	    // MICHELE log windows can't be closed during processing.
-	    // We might think of adding a stop capability (Stop button or close the window to stop the syncronization).
 		getShell().addShellListener(new ShellAdapter() {
 		    public void shellClosed(ShellEvent event) {
 		    	if (processing) {
 					MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
 					mb.setText("Error");
-					mb.setMessage("The Syncronization Window can't be closed during Syncronization.");
+					mb.setMessage("The Synchronization Window can't be closed during Synchronization.");
 					mb.open();
 
 					event.doit = false;
@@ -384,6 +383,9 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	            Long.toString(t.getSource().getFileAttributes()!=null?t.getSource().getFileAttributes().getLength():0L)+" bytes"
 	        } );
 	        item.setData( t );
+	        
+	        // putting the tableitem in the data slot of the task.
+	        t.setData(item);
         }
 
         if( t.getCurrentAction().isBeforeRecursion() )
@@ -475,23 +477,25 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 			        
 			        BlockBuffer buffer = new BlockBuffer( logger );
 			        ActionQueue queue = new FillBufferActionQueue(buffer);
-			        // TODO add some visualisation of finished tasks 
-			        // final Color colorFinished = new Color( null, 150, 255, 150 );
-			        // item.setBackground()
+			        final Color colorFinished = new Color( null, 150, 255, 150 );
 
 			        IoStatistics stats = queue.createStatistics( taskTree );
 		            tasksTotal = stats.getCountActions();
 				    tasksFinished = 0;
-				    
 			        
 			        queue.addActionFinishedListener( new TaskFinishedListener() {
-			        	public void actionFinished( Task task, int bytes ) 
+			        	public void actionFinished( final Task task, int bytes ) 
 			        	{
-			        		//final TableItem i = ((TableItem)callbackObj);
 				            display.asyncExec( new Runnable() {
 				            	public void run() {
 						            tasksFinished++;
 						            labelProgress.setText( tasksFinished+" of "+tasksTotal+" tasks finished" );
+						            Object taskData = task.getData();
+						            if ((taskData != null) && (taskData instanceof TableItem)) {
+						            	TableItem item = (TableItem) taskData;
+						            	item.setBackground(colorFinished);
+						            	tableLogLines.showItem(item);
+						            }
 								}
 				            } );
 			        	} 

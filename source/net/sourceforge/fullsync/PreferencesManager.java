@@ -121,7 +121,6 @@ public class PreferencesManager {
 	        out.close();
         } catch( Exception e ) {
             // TODO messagebox ?
-        	// MICHELE same question you have! :-D
             e.printStackTrace();
         }
 

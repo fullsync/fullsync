@@ -291,7 +291,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		images.add( i );
 		//toolBar1.layout();
 		
-		// MICHELE PopUp Menu for the Profile list.
+		// PopUp Menu for the Profile list.
 		Menu profilesPopupMenu = new Menu(getShell(), SWT.POP_UP);
 		
 		MenuItem runItem = new MenuItem(profilesPopupMenu, SWT.PUSH);

@@ -16,6 +16,10 @@ public class Task
     private Action[] actions;
     private int currentAction;
     
+    // REVISIT if we dont need this data here we can also create a map in the 
+    //         LogWindow class to keep track of Task-TableItem association.
+    private Object data;
+    
     private Vector children;
     
     public Task( File source, File destination, State state, Action[] actions )
@@ -95,4 +99,13 @@ public class Task
     	}
     	return count+1;
     }
+    
+    public Object getData() {
+    	return data;
+    }
+    
+    public void setData(Object data) {
+    	this.data = data;
+    }
+    
 }

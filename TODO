@@ -156,6 +156,7 @@ Feedback:
 		show "(Task 2130 of 2430) E:\bla -> ftp:// ..."
 		-> that will make multithreaded task execution extremely hard
 	[ ] Cancel in sync phase
+	[ ] cancel in execution phase
 	[X]	progress indication for performing actions
 	[X] progress indication (or at least what am i doing atm) for check phase
 	[?] some encapsulement for src and dst files ? [Task?]
@@ -166,6 +167,12 @@ Interface:
 		not be controlling too many gui items, it's much more the heart of the 
 		sync processes. so mainwin should get a fullsync instance... or maybe we
 		rename this 'sync-controller' somehow ?
+		
+	[ ] investigate why the busy cursor is not shown when above the scrollbar
+		or table headers
+		
+	[ ] investigate whether it's possible to make the state image in the logwindow
+		transparent in bg
 				
 Processor:
 	[ ] impl new TraveralTypes

@@ -64,6 +64,7 @@ public class SystemTrayItem
 		item.addListener( SWT.Selection, new Listener() {
 		    public void handleEvent( Event event )
             {
+		        // TODO uhh, MainWindow has already closeApplication, we should use this
 		    	if (mainWindow.getPreferencesManager().confirmExit()) 
 		    	{
 		    		MessageBox mb = new MessageBox(mainWindow.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
@@ -83,8 +84,7 @@ public class SystemTrayItem
 	                mainWindow.dispose();
 	                trayItem.dispose();							    		
 		    	}
-                // TODO check for running ops and ask whether he is sure
-                // MICHELE Done the "ask whether he is sure"
+                // TODO check for running ops
             }
 		} );
     }

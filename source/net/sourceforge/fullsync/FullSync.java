@@ -62,10 +62,7 @@ public class FullSync
         {
             startGui();
         	trayItem = new SystemTrayItem( mainWindow );
-
-        	//MICHELE Added
 			mainWindow.setSystemTrayItem(trayItem);
-
         	run();
         }
     }
