@@ -96,7 +96,7 @@ public class WizardDialog {
                 {
                     labelCaption = new Label(compositeTop, SWT.NONE);
                     labelCaption.setBackground(white);
-                    captionFont = new Font( display, "Tohama", 9, SWT.BOLD );
+                    captionFont = new Font( display, "Tohama", 9, SWT.BOLD ); //$NON-NLS-1$
                     labelCaption.setFont( captionFont );
                     FormData labelCaptionLData = new FormData();
                     labelCaptionLData.width = 330;

@@ -117,29 +117,29 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
             {
                 tableColumn1 = new TableColumn(tableLogLines, SWT.NONE);
                 tableColumn1.setResizable(false);
-                tableColumn1.setText("tableColumn1");
+                tableColumn1.setText("tableColumn1"); //$NON-NLS-1$
             }
             {
                 tableColumnFilename = new TableColumn(tableLogLines, SWT.NONE);
-                tableColumnFilename.setText("Filename");
+                tableColumnFilename.setText(Messages.getString("TaskDecisionList.Filename")); //$NON-NLS-1$
                 tableColumnFilename.setWidth(238);
             }
             {
                 tableColumnSourceSize = new TableColumn(tableLogLines, SWT.NONE);
-                tableColumnSourceSize.setText("Size");
+                tableColumnSourceSize.setText(Messages.getString("TaskDecisionList.Size")); //$NON-NLS-1$
                 tableColumnSourceSize.setWidth(80);
             }
             {
                 tableColumnAction = new TableColumn(tableLogLines, SWT.NONE);
                 tableColumnAction.setResizable(false);
-                tableColumnAction.setText("Action");
+                tableColumnAction.setText(Messages.getString("TaskDecisionList.Action")); //$NON-NLS-1$
                 tableColumnAction.setWidth(50);
             }
             {
                 tableColumnExplanation = new TableColumn(
                     tableLogLines,
                     SWT.NONE);
-                tableColumnExplanation.setText("Explanation");
+                tableColumnExplanation.setText(Messages.getString("TaskDecisionList.Explanation")); //$NON-NLS-1$
                 tableColumnExplanation.setWidth(154);
             }
 			tableLogLines.addMouseListener( new MouseAdapter() {
@@ -182,21 +182,21 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	public void initializeImages()
 	{
 	    GuiController gui = GuiController.getInstance();
-	    nodeFile = gui.getImage( "Node_File.png" );
-	    nodeDirectory = gui.getImage( "Node_Directory.png" );
-	    nodeUndefined = gui.getImage( "Node_Undefined.png" );
-	    locationSource = gui.getImage( "Location_Source.png" );
-	    locationDestination = gui.getImage( "Location_Destination.png" );
-	    locationBoth = gui.getImage( "Location_Both.png" );
+	    nodeFile = gui.getImage( "Node_File.png" ); //$NON-NLS-1$
+	    nodeDirectory = gui.getImage( "Node_Directory.png" ); //$NON-NLS-1$
+	    nodeUndefined = gui.getImage( "Node_Undefined.png" ); //$NON-NLS-1$
+	    locationSource = gui.getImage( "Location_Source.png" ); //$NON-NLS-1$
+	    locationDestination = gui.getImage( "Location_Destination.png" ); //$NON-NLS-1$
+	    locationBoth = gui.getImage( "Location_Both.png" ); //$NON-NLS-1$
 	    	    
 	    actionImages = new Hashtable();
 	    for( int i = 0; i < Action.names.length; i++ )
 	    {
-	        actionImages.put( new Integer( i ), gui.getImage( "Action_"+Action.names[i]+".png" ) );
+	        actionImages.put( new Integer( i ), gui.getImage( "Action_"+Action.names[i]+".png" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 	    }
 	    for( int i = 0; i < Action.errorNames.length; i++ )
 	    {
-	        actionImages.put( new Integer( i+10 ), gui.getImage( "Action_"+Action.errorNames[i]+".png" ) );
+	        actionImages.put( new Integer( i+10 ), gui.getImage( "Action_"+Action.errorNames[i]+".png" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 	    }
 	    
 	    taskImages = new Hashtable();
@@ -360,10 +360,10 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	        }
 	        item.setImage( 3, image );
 	        item.setText( new String[] {
-	            "",
+	            "", //$NON-NLS-1$
 	            t.getSource().getPath(),
-	            Long.toString(t.getSource().getFileAttributes()!=null?t.getSource().getFileAttributes().getLength():0L)+" bytes",
-	            "",
+	            Long.toString(t.getSource().getFileAttributes()!=null?t.getSource().getFileAttributes().getLength():0L)+" bytes", //$NON-NLS-1$
+	            "", //$NON-NLS-1$
 	            t.getCurrentAction().getExplanation() 
 	        } );
 	        item.setData( t );
@@ -499,7 +499,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 		    Image image = getTaskImage( referenceTask, action );
 	        mi = new MenuItem( m, SWT.NULL );
 	        mi.setImage( image );
-	        mi.setText( Action.toString( action.getType() )+" - "+action.getExplanation() );
+	        mi.setText( Action.toString( action.getType() )+" - "+action.getExplanation() ); //$NON-NLS-1$
 	        mi.setData( action );
 	        mi.addSelectionListener( selListener );
         }

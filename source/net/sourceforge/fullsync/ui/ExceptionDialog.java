@@ -188,11 +188,11 @@ public class ExceptionDialog extends Dialog
 	    {
 	        Rectangle r = dialogShell.computeTrim( 0, 0, compositeBase.getSize().x, compositeBase.getSize().y );
             dialogShell.setSize( r.width, r.height );
-            buttonDetails.setText( Messages.getString("ExceptionDialog.Details")+" >>" ); //$NON-NLS-1$
+            buttonDetails.setText( Messages.getString("ExceptionDialog.Details")+" >>" ); //$NON-NLS-1$ //$NON-NLS-2$
             expanded = false;
 	    } else {
 	        dialogShell.setSize( dialogShell.getSize().x, dialogShell.getSize().y+200 );
-            buttonDetails.setText( Messages.getString("ExceptionDialog.Details")+" <<" ); //$NON-NLS-1$
+            buttonDetails.setText( Messages.getString("ExceptionDialog.Details")+" <<" ); //$NON-NLS-1$ //$NON-NLS-2$
 	        expanded = true;
 	    }
 	}

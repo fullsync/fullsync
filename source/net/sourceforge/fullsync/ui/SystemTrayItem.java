@@ -43,13 +43,13 @@ public class SystemTrayItem implements TaskGenerationListener
         this.trayItem = new TrayItem( tray, SWT.NULL );
         
         imageList = new Image[2];
-        imageList[0] = GuiController.getInstance().getImage( "Tray_Active_01.png" );
-        imageList[1] = GuiController.getInstance().getImage( "Tray_Active_02.png" );
+        imageList[0] = GuiController.getInstance().getImage( "Tray_Active_01.png" ); //$NON-NLS-1$
+        imageList[1] = GuiController.getInstance().getImage( "Tray_Active_02.png" ); //$NON-NLS-1$
         imageActive = 0;
         
         // initialize trayItem
         trayItem.setImage( imageList[0] );
-    	trayItem.setToolTipText( "FullSync" );
+    	trayItem.setToolTipText( "FullSync" ); //$NON-NLS-1$
     	trayItem.addListener( SWT.DefaultSelection, new Listener() {
     	    public void handleEvent(Event arg0) 
     	    {

@@ -88,11 +88,11 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			this.setSize(274, 139);
 			{
 				label1 = new Label(this, SWT.NONE);
-				label1.setText(Messages.getString("ConnectionComposite.Hostname")+":"); //$NON-NLS-1$
+				label1.setText(Messages.getString("ConnectionComposite.Hostname")+":"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			{
 				textFieldHostname = new Text(this, SWT.BORDER);
-				textFieldHostname.setText("localhost");
+				textFieldHostname.setText("localhost"); //$NON-NLS-1$
 				GridData textFieldHostnameLData = new GridData();
 				textFieldHostnameLData.widthHint = 95;
 				textFieldHostnameLData.heightHint = 13;
@@ -101,11 +101,11 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			}
 			{
 				label2 = new Label(this, SWT.NONE);
-				label2.setText(Messages.getString("ConnectionComposite.Port")+":"); //$NON-NLS-1$
+				label2.setText(Messages.getString("ConnectionComposite.Port")+":"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			{
 				textFieldPort = new Text(this, SWT.BORDER);
-				textFieldPort.setText("10000");
+				textFieldPort.setText("10000"); //$NON-NLS-1$
 				GridData textFieldPortLData = new GridData();
 				textFieldPortLData.widthHint = 34;
 				textFieldPortLData.heightHint = 13;
@@ -113,7 +113,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			}
 			{
 				label3 = new Label(this, SWT.NONE);
-				label3.setText(Messages.getString("ConnectionComposite.Password")+":"); //$NON-NLS-1$
+				label3.setText(Messages.getString("ConnectionComposite.Password")+":"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			{
 				textPassword = new Text(this, SWT.BORDER);

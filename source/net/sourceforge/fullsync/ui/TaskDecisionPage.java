@@ -32,6 +32,21 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.TableItem;
 
+
+/**
+* This code was generated using CloudGarden's Jigloo
+* SWT/Swing GUI Builder, which is free for non-commercial
+* use. If Jigloo is being used commercially (ie, by a corporation,
+* company or business for any purpose whatever) then you
+* should purchase a license for each developer using Jigloo.
+* Please visit www.cloudgarden.com for details.
+* Use of Jigloo implies acceptance of these licensing terms.
+* *************************************
+* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
+* for this machine, so Jigloo or this code cannot be used legally
+* for any corporate or commercial purpose.
+* *************************************
+*/
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
@@ -62,28 +77,28 @@ public class TaskDecisionPage implements WizardPage, Serializable
     
     public String getTitle()
     {
-        return "Task Decision";
+        return Messages.getString("TaskDecisionPage.TaskDecision"); //$NON-NLS-1$
     }
 
     public String getCaption()
     {
-        return "Choose the actions that should be performed.";
+        return Messages.getString("TaskDecisionPage.ChooseTheActions"); //$NON-NLS-1$
     }
 
     public String getDescription()
     {
-        return "Source: "+taskTree.getSource().getUri()+"\n"
-        	 + "Destination: "+taskTree.getDestination().getUri();
+        return Messages.getString("TaskDecisionPage.Source")+": "+taskTree.getSource().getUri()+"\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        	 + Messages.getString("TaskDecisionPage.Destination")+": "+taskTree.getDestination().getUri(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public Image getIcon()
     {
-        return GuiController.getInstance().getImage( "Tasklist_Icon.png" );
+        return GuiController.getInstance().getImage( "Tasklist_Icon.png" ); //$NON-NLS-1$
     }
 
     public Image getImage()
     {
-        return GuiController.getInstance().getImage( "Tasklist_Wizard.png" );
+        return GuiController.getInstance().getImage( "Tasklist_Wizard.png" ); //$NON-NLS-1$
     }
 
     public void createContent( Composite content )
@@ -97,8 +112,8 @@ public class TaskDecisionPage implements WizardPage, Serializable
 		    public void shellClosed(ShellEvent event) {
 		    	if (processing) {
 					MessageBox mb = new MessageBox(dialog.getShell(), SWT.ICON_ERROR | SWT.OK);
-					mb.setText("Error");
-					mb.setMessage("The Synchronization Window can't be closed during Synchronization.");
+					mb.setText(Messages.getString("TaskDecisionPage.Error")); //$NON-NLS-1$
+					mb.setMessage(Messages.getString("TaskDecisionPage.SyncWindowCantBeClosed")); //$NON-NLS-1$
 					mb.open();
 
 					event.doit = false;
@@ -127,7 +142,7 @@ public class TaskDecisionPage implements WizardPage, Serializable
             comboFilter = new Combo(compositeBottom, SWT.DROP_DOWN
                 | SWT.READ_ONLY);
             GridData comboFilterLData = new GridData();
-            comboFilterLData.widthHint = 68;
+            comboFilterLData.widthHint = 90;
             comboFilterLData.heightHint = 21;
             comboFilter.setLayoutData(comboFilterLData);
             comboFilter.addModifyListener(new ModifyListener() {
@@ -159,7 +174,7 @@ public class TaskDecisionPage implements WizardPage, Serializable
             buttonGoLData.widthHint = 25;
             buttonGoLData.heightHint = 23;
             buttonGo.setLayoutData(buttonGoLData);
-            buttonGo.setText("Go");
+            buttonGo.setText(Messages.getString("TaskDecisionPage.Go")); //$NON-NLS-1$
             buttonGo.addSelectionListener(new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent evt) {
                     if( !processing )
@@ -170,8 +185,8 @@ public class TaskDecisionPage implements WizardPage, Serializable
             });
         }
 
-	    comboFilter.add( "Everything" );
-	    comboFilter.add( "Changes only" );
+	    comboFilter.add( Messages.getString("TaskDecisionPage.Everything") ); //$NON-NLS-1$
+	    comboFilter.add( Messages.getString("TaskDecisionPage.ChangesOnly") ); //$NON-NLS-1$
 	    comboFilter.select(1);
         
     }
@@ -200,7 +215,7 @@ public class TaskDecisionPage implements WizardPage, Serializable
 		            		display.asyncExec( new Runnable() {
 		            			public void run() {
 		            				tasksFinished++;
-		            				labelProgress.setText( tasksFinished+" of "+tasksTotal+" tasks finished" );
+		            				labelProgress.setText( tasksFinished+" "+Messages.getString("TaskDecisionPage.of")+" "+tasksTotal+" "+Messages.getString("TaskDecisionPage.tasksFinished") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		            				Task task = event.getTask();
 		            				TableItem item = list.getTableItemForTask(task);
 		            				if (item != null) {
@@ -221,8 +236,8 @@ public class TaskDecisionPage implements WizardPage, Serializable
 						public void run() {
 			            	// Notification Window before disposal.
 							MessageBox mb = new MessageBox( dialog.getShell(), SWT.ICON_INFORMATION | SWT.OK );
-							mb.setText( "Finished" );
-						    mb.setMessage( "Profile execution finished");
+							mb.setText( Messages.getString("TaskDecisionPage.Finished") ); //$NON-NLS-1$
+						    mb.setMessage( Messages.getString("TaskDecisionPage.ProfileFinished")); //$NON-NLS-1$
 						    mb.open();
 						    
 						    dialog.getShell().dispose();
@@ -236,7 +251,7 @@ public class TaskDecisionPage implements WizardPage, Serializable
 			        list.setChangeAllowed( true );
 			    }
 			}
-        }, "Action Performer" );
+        }, Messages.getString("TaskDecisionPage.ActionPerformer") ); //$NON-NLS-1$
         worker.start();
     }
 }

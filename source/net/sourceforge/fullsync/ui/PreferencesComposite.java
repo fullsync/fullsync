@@ -46,18 +46,18 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		private static LanguageCodes _instance;
 		
 		private LanguageCodes() {
-			languageNames.put("en", "English");
-			languageNames.put("it", "Italiano");
-			languageNames.put("de", "Deutsch");
-			languageNames.put("es", "Español"); 
-			languageNames.put("fr", "Français");
+			languageNames.put("en", "English"); //$NON-NLS-1$ //$NON-NLS-2$
+			languageNames.put("it", "Italiano"); //$NON-NLS-1$ //$NON-NLS-2$
+			languageNames.put("de", "Deutsch"); //$NON-NLS-1$ //$NON-NLS-2$
+			languageNames.put("es", "Español");  //$NON-NLS-1$ //$NON-NLS-2$
+			languageNames.put("fr", "Français"); //$NON-NLS-1$ //$NON-NLS-2$
 			
 
-			languageCodes.put("English", "en");
-			languageCodes.put("Italiano", "it");
-			languageCodes.put("Deutsch", "de");
-			languageCodes.put("Español", "es"); 
-			languageCodes.put("Français", "fr");
+			languageCodes.put("English", "en"); //$NON-NLS-1$ //$NON-NLS-2$
+			languageCodes.put("Italiano", "it"); //$NON-NLS-1$ //$NON-NLS-2$
+			languageCodes.put("Deutsch", "de"); //$NON-NLS-1$ //$NON-NLS-2$
+			languageCodes.put("Español", "es");  //$NON-NLS-1$ //$NON-NLS-2$
+			languageCodes.put("Français", "fr"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
 		private static LanguageCodes getInstance() {
@@ -206,7 +206,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                  */
                 {
                     label1 = new Label(groupInterface, SWT.NONE);
-                    label1.setText(Messages.getString("PreferencesComposite.ProfileListStyle")+": "); //$NON-NLS-1$
+                    label1.setText(Messages.getString("PreferencesComposite.ProfileListStyle")+": "); //$NON-NLS-1$ //$NON-NLS-2$
                     GridData label1LData = new GridData();
                     label1LData.heightHint = 15;
                     label1.setLayoutData(label1LData);
@@ -224,7 +224,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                 }
 				{
 					label4 = new Label(groupInterface, SWT.NONE);
-					label4.setText(Messages.getString("PreferencesComposite.Language")+":"); //$NON-NLS-1$
+					label4.setText(Messages.getString("PreferencesComposite.Language")+":"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				{
 					comboLanguage = new Combo(groupInterface, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -273,14 +273,14 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                 }
                 {
                     label2 = new Label(groupRemoteConnection, SWT.NONE);
-                    label2.setText(Messages.getString("PreferencesComposite.IncomingPort")+":"); //$NON-NLS-1$
+                    label2.setText(Messages.getString("PreferencesComposite.IncomingPort")+":"); //$NON-NLS-1$ //$NON-NLS-2$
                     label2.setEnabled(false);
                 }
                 {
                     textListeningPort = new Text(
                         groupRemoteConnection,
                         SWT.BORDER);
-                    textListeningPort.setText("10000");
+                    textListeningPort.setText("10000"); //$NON-NLS-1$
                     GridData textListeningPortLData = new GridData();
                     textListeningPort.setEnabled(false);
                     textListeningPortLData.widthHint = 39;
@@ -289,7 +289,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                 }
                 {
                     label3 = new Label(groupRemoteConnection, SWT.NONE);
-                    label3.setText(Messages.getString("PreferencesComposite.IncomingPassword")+":"); //$NON-NLS-1$
+                    label3.setText(Messages.getString("PreferencesComposite.IncomingPassword")+":"); //$NON-NLS-1$ //$NON-NLS-2$
                     label3.setEnabled(false);
                 }
                 {
@@ -399,7 +399,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 						ExceptionHandler.reportException( e );
 						MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
 						mb.setText(Messages.getString("PreferencesComposite.ConnectionError")); //$NON-NLS-1$
-						mb.setMessage(Messages.getString("PreferencesComposite.UnableToStart")+".\n("+e.getMessage()+")"); //$NON-NLS-1$
+						mb.setMessage(Messages.getString("PreferencesComposite.UnableToStart")+".\n("+e.getMessage()+")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						mb.open();
 					}				
 				}				
@@ -411,7 +411,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 				ExceptionHandler.reportException( e );
 				MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
 				mb.setText(Messages.getString("PreferencesComposite.ConnectionError")); //$NON-NLS-1$
-				mb.setMessage(Messages.getString("PreferencesComposite.UnableToStop")+".\n("+e.getMessage()+")"); //$NON-NLS-1$
+				mb.setMessage(Messages.getString("PreferencesComposite.UnableToStop")+".\n("+e.getMessage()+")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				mb.open();
 			}
 		}

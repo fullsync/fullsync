@@ -38,7 +38,7 @@ public class PreferencesPage implements WizardPage
 
     public String getDescription()
     {
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     public Image getIcon()

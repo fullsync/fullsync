@@ -46,7 +46,7 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
         }
         public String getSchedulingName()
         {
-            return "none";
+            return Messages.getString("ScheduleSelectionDialog.none"); //$NON-NLS-1$
         }
         public boolean canHandleSchedule( Schedule sched )
         {
@@ -81,8 +81,8 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
 	{
 		try {
 		    dialogShell = new Shell( getParent(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM );
-		    dialogShell.setText( "Edit Scheduling" );
-		    dialogShell.setImage( GuiController.getInstance().getImage( "Scheduler_Icon.png" ) );
+		    dialogShell.setText( Messages.getString("ScheduleSelectionDialog.EditScheduling") ); //$NON-NLS-1$
+		    dialogShell.setImage( GuiController.getInstance().getImage( "Scheduler_Icon.png" ) ); //$NON-NLS-1$
 			GridLayout thisLayout = new GridLayout();
 			thisLayout.numColumns = 2;
 			dialogShell.setLayout(thisLayout);
@@ -100,7 +100,7 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
                 compositeTop.setLayout(compositeTopLayout);
                 {
                     labelScheduleType = new Label(compositeTop, SWT.NONE);
-                    labelScheduleType.setText("Scheduling Type:");
+                    labelScheduleType.setText(Messages.getString("ScheduleSelectionDialog.SchedulingType")+":"); //$NON-NLS-1$ //$NON-NLS-2$
                     GridData labelScheduleTypeLData = new GridData();
                     labelScheduleTypeLData.heightHint = 13;
                     labelScheduleType.setLayoutData(labelScheduleTypeLData);
@@ -134,11 +134,11 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
                 groupOptionsLData.horizontalSpan = 2;
                 groupOptions.setLayoutData(groupOptionsLData);
                 groupOptions.setLayout(groupOptionsLayout);
-                groupOptions.setText("Options");
+                groupOptions.setText(Messages.getString("ScheduleSelectionDialog.Options")); //$NON-NLS-1$
             }
             {
                 buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
-                buttonOk.setText("Ok");
+                buttonOk.setText(Messages.getString("ScheduleSelectionDialog.Ok")); //$NON-NLS-1$
                 buttonOk.addSelectionListener(new SelectionAdapter() {
                     public void widgetSelected(SelectionEvent evt) 
                     {
@@ -159,7 +159,7 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
             }
             {
                 buttonCancel = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
-                buttonCancel.setText("Cancel");
+                buttonCancel.setText(Messages.getString("ScheduleSelectionDialog.Cancel")); //$NON-NLS-1$
                 GridData buttonCancelLData = new GridData();
                 buttonCancelLData.heightHint = 23;
                 buttonCancel.setLayoutData(buttonCancelLData);

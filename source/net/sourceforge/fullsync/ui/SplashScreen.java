@@ -26,7 +26,7 @@ public class SplashScreen extends Composite {
 	public static void main(String args[]) throws InterruptedException {
 		Display display = Display.getDefault();
 		Shell mainShell = new Shell(display, SWT.NONE);
-		SplashScreen splashScreen = new SplashScreen(mainShell, "./images/About.png");
+		SplashScreen splashScreen = new SplashScreen(mainShell, "./images/About.png"); //$NON-NLS-1$
 		splashScreen.show();
 		Thread.sleep(3000);
 		splashScreen.hide();

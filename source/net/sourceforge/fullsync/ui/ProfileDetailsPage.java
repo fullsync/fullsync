@@ -31,7 +31,7 @@ public class ProfileDetailsPage implements WizardPage
     }
     public String getTitle()
     {
-        return Messages.getString("ProfileDetailsPage.Profile")+" "+profileName; //$NON-NLS-1$
+        return Messages.getString("ProfileDetailsPage.Profile")+" "+profileName; //$NON-NLS-1$ //$NON-NLS-2$
     }
     public String getCaption()
     {
@@ -39,15 +39,15 @@ public class ProfileDetailsPage implements WizardPage
     }
     public String getDescription()
     {
-        return "";
+        return ""; //$NON-NLS-1$
     }
     public Image getIcon()
     {
-        return GuiController.getInstance().getImage( "Profile_Default.png" );
+        return GuiController.getInstance().getImage( "Profile_Default.png" ); //$NON-NLS-1$
     }
     public Image getImage()
     {
-        return GuiController.getInstance().getImage( "Profile_Wizard.png" ); 
+        return GuiController.getInstance().getImage( "Profile_Wizard.png" );  //$NON-NLS-1$
     }
     public void createContent( Composite content )
     {

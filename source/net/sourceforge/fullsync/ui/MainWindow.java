@@ -136,7 +136,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                         toolBar1 = new ToolBar(coolBar, SWT.FLAT);
                         {
                             toolItemNew = new ToolItem(toolBar1, SWT.PUSH);
-                    		toolItemNew.setImage( guiController.getImage( "Button_New.png" ) );
+                    		toolItemNew.setImage( guiController.getImage( "Button_New.png" ) ); //$NON-NLS-1$
                     		toolItemNew.setToolTipText(Messages.getString("MainWindow.New_Profile")); //$NON-NLS-1$
                             toolItemNew
                                 .addSelectionListener(new SelectionAdapter() {
@@ -147,7 +147,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                         }
                         {
                             toolItemEdit = new ToolItem(toolBar1, SWT.PUSH);
-                    		toolItemEdit.setImage( guiController.getImage( "Button_Edit.png" ) );
+                    		toolItemEdit.setImage( guiController.getImage( "Button_Edit.png" ) ); //$NON-NLS-1$
                     		toolItemEdit.setToolTipText(Messages.getString("MainWindow.Edit_Profile")); //$NON-NLS-1$
                             toolItemEdit
                                 .addSelectionListener(new SelectionAdapter() {
@@ -158,7 +158,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                         }
                         {
                             toolItemDelete = new ToolItem(toolBar1, SWT.PUSH);
-                    		toolItemDelete.setImage( guiController.getImage( "Button_Delete.png" ) );
+                    		toolItemDelete.setImage( guiController.getImage( "Button_Delete.png" ) ); //$NON-NLS-1$
                     		toolItemDelete.setToolTipText(Messages.getString("MainWindow.Delete_Profile")); //$NON-NLS-1$
                             toolItemDelete
                                 .addSelectionListener(new SelectionAdapter() {
@@ -169,7 +169,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                         }
                         {
                             toolItemRun = new ToolItem(toolBar1, SWT.PUSH);
-                    		toolItemRun.setImage( guiController.getImage( "Button_Run.png" ) );
+                    		toolItemRun.setImage( guiController.getImage( "Button_Run.png" ) ); //$NON-NLS-1$
                     		toolItemRun.setToolTipText(Messages.getString("MainWindow.Run_Profile")); //$NON-NLS-1$
                             toolItemRun
                                 .addSelectionListener(new SelectionAdapter() {
@@ -194,14 +194,14 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                         coolItem2.setControl(toolBar2);
                         {
                             toolItemScheduleIcon = new ToolItem(toolBar2, SWT.NULL);
-                            toolItemScheduleIcon.setImage( guiController.getImage( "Scheduler_Icon.png" ) );
-            		        toolItemScheduleIcon.setDisabledImage( guiController.getImage( "Scheduler_Icon.png" ) );
+                            toolItemScheduleIcon.setImage( guiController.getImage( "Scheduler_Icon.png" ) ); //$NON-NLS-1$
+            		        toolItemScheduleIcon.setDisabledImage( guiController.getImage( "Scheduler_Icon.png" ) ); //$NON-NLS-1$
             		        toolItemScheduleIcon.setEnabled( false );
                         }
                         {
                             toolItemScheduleStart = new ToolItem(toolBar2, SWT.NULL);
                             toolItemScheduleStart.setToolTipText( Messages.getString("MainWindow.Start_Scheduler") ); //$NON-NLS-1$
-            		        toolItemScheduleStart.setImage( guiController.getImage( "Scheduler_Start.png" ) );
+            		        toolItemScheduleStart.setImage( guiController.getImage( "Scheduler_Start.png" ) ); //$NON-NLS-1$
                             toolItemScheduleStart
                                 .addSelectionListener(new SelectionAdapter() {
                                     public void widgetSelected(SelectionEvent evt) {
@@ -212,7 +212,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                         {
                             toolItemScheduleStop = new ToolItem(toolBar2, SWT.PUSH);
                             toolItemScheduleStop.setToolTipText( Messages.getString("MainWindow.Stop_Scheduler") ); //$NON-NLS-1$
-            		        toolItemScheduleStop.setImage( guiController.getImage( "Scheduler_Stop.png" ) );
+            		        toolItemScheduleStop.setImage( guiController.getImage( "Scheduler_Stop.png" ) ); //$NON-NLS-1$
                             toolItemScheduleStop
                                 .addSelectionListener(new SelectionAdapter() {
                                     public void widgetSelected(SelectionEvent evt) {
@@ -272,7 +272,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		
 		MenuItem menuItemNewProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemNewProfile.setText(Messages.getString("MainWindow.New_Profile_Menu")); //$NON-NLS-1$
-		menuItemNewProfile.setImage( guiController.getImage( "Button_New.png" ) );
+		menuItemNewProfile.setImage( guiController.getImage( "Button_New.png" ) ); //$NON-NLS-1$
 		menuItemNewProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					createNewProfile();
@@ -284,7 +284,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MenuItem menuItemEditProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemEditProfile.setText(Messages.getString("MainWindow.Edit_Profile_Menu")); //$NON-NLS-1$
-		menuItemEditProfile.setImage( guiController.getImage( "Button_Edit.png" ) );
+		menuItemEditProfile.setImage( guiController.getImage( "Button_Edit.png" ) ); //$NON-NLS-1$
 		menuItemEditProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					editProfile( profileList.getSelectedProfile() );
@@ -294,7 +294,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MenuItem menuItemRunProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemRunProfile.setText(Messages.getString("MainWindow.Run_Profile_Menu")); //$NON-NLS-1$
-		menuItemRunProfile.setImage( guiController.getImage( "Button_Run.png" ) );
+		menuItemRunProfile.setImage( guiController.getImage( "Button_Run.png" ) ); //$NON-NLS-1$
 		menuItemRunProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					runProfile( profileList.getSelectedProfile() );
@@ -306,7 +306,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MenuItem menuItemDeleteProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemDeleteProfile.setText(Messages.getString("MainWindow.Delete_Profile_Menu")); //$NON-NLS-1$
-		menuItemDeleteProfile.setImage( guiController.getImage( "Button_Delete.png" ) );
+		menuItemDeleteProfile.setImage( guiController.getImage( "Button_Delete.png" ) ); //$NON-NLS-1$
 		menuItemDeleteProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					deleteProfile( profileList.getSelectedProfile() );
@@ -338,7 +338,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		logItem .addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					// open main log file
-					Program.launch( new java.io.File( "logs/fullsync.log" ).getAbsolutePath() );
+					Program.launch( new java.io.File( "logs/fullsync.log" ).getAbsolutePath() ); //$NON-NLS-1$
 				}
 			}
 		);
@@ -381,7 +381,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 						connectItem.setEnabled(false);
 						disconnectItem.setEnabled(true);
 						GuiController.getInstance().getMainShell().setImage(
-						        GuiController.getInstance().getImage( "Remote_Connect.png" ));
+						        GuiController.getInstance().getImage( "Remote_Connect.png" )); //$NON-NLS-1$
 					}
 				}
 			}
@@ -391,7 +391,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 				public void handleEvent(Event e) {
 					MessageBox mb = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
 					mb.setText(Messages.getString("MainWindow.Confirmation")); //$NON-NLS-1$
-					mb.setMessage(Messages.getString("MainWindow.Do_You_Want_To_Disconnect")+" \n"); //$NON-NLS-1$
+					mb.setMessage(Messages.getString("MainWindow.Do_You_Want_To_Disconnect")+" \n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 					if (mb.open() == SWT.YES) {
 		            	GuiController.getInstance().getProfileManager().disconnectRemote();		            	
@@ -400,7 +400,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 						connectItem.setEnabled(true);
 						disconnectItem.setEnabled(false);
 						GuiController.getInstance().getMainShell().setImage(
-						        GuiController.getInstance().getImage( "FullSync.png" ));					
+						        GuiController.getInstance().getImage( "FullSync.png" ));					 //$NON-NLS-1$
 					}
 				}
 			}
@@ -417,14 +417,14 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		menuItemHelpContent.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					//TODO help contents
-				    java.io.File helpIndex = new java.io.File("docs/manual/index.html");
+				    java.io.File helpIndex = new java.io.File("docs/manual/index.html"); //$NON-NLS-1$
 				    if( helpIndex.exists() )
 				    {
 				        try {
 				            Program.launch(helpIndex.toURL().toString());
 				        } catch( MalformedURLException ex ) {}
 				    } else {
-				        Program.launch("http://fullsync.sourceforge.net/docs/manual/index.html");
+				        Program.launch("http://fullsync.sourceforge.net/docs/manual/index.html"); //$NON-NLS-1$
 				    }
 				}
 			}
@@ -450,7 +450,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		
 		MenuItem runItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		runItem.setText(Messages.getString("MainWindow.Run_Profile")); //$NON-NLS-1$
-		runItem.setImage( guiController.getImage( "Button_Run.png" ) );
+		runItem.setImage( guiController.getImage( "Button_Run.png" ) ); //$NON-NLS-1$
 		runItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					runProfile( profileList.getSelectedProfile() );
@@ -460,7 +460,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MenuItem editItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		editItem.setText(Messages.getString("MainWindow.Edit_Profile")); //$NON-NLS-1$
-		editItem.setImage( guiController.getImage( "Button_Edit.png" ) );
+		editItem.setImage( guiController.getImage( "Button_Edit.png" ) ); //$NON-NLS-1$
 		editItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					editProfile( profileList.getSelectedProfile() );
@@ -470,7 +470,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MenuItem deleteItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		deleteItem.setText(Messages.getString("MainWindow.Delete_Profile")); //$NON-NLS-1$
-		deleteItem.setImage( guiController.getImage( "Button_Delete.png" ) );
+		deleteItem.setImage( guiController.getImage( "Button_Delete.png" ) ); //$NON-NLS-1$
 		deleteItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					deleteProfile( profileList.getSelectedProfile() );
@@ -482,7 +482,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MenuItem addItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		addItem.setText(Messages.getString("MainWindow.New_Profile")); //$NON-NLS-1$
-		addItem.setImage( guiController.getImage( "Button_New.png" ) );
+		addItem.setImage( guiController.getImage( "Button_New.png" ) ); //$NON-NLS-1$
 		addItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					createNewProfile();
@@ -499,7 +499,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
             profileList.dispose();
         }
 
-        if( guiController.getPreferences().getProfileListStyle().equals( "NiceListView" ) )
+        if( guiController.getPreferences().getProfileListStyle().equals( "NiceListView" ) ) //$NON-NLS-1$
 	         profileList = new NiceListViewProfileListComposite( profileListContainer, SWT.NULL );
 	    else profileList = new ListViewProfileListComposite( profileListContainer, SWT.NULL );
         profileList.setMenu( profilePopupMenu );
@@ -544,7 +544,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
     public void taskGenerationStarted( final File source, final File destination )
     {
         //statusLine.setMessage( "checking "+source.getPath() );
-        statusDelayString = "checking "+source.getPath();
+        statusDelayString = Messages.getString("MainWindow.checking")+" "+source.getPath(); //$NON-NLS-1$ //$NON-NLS-2$
     }
     public void taskGenerationFinished( Task task )
     {
@@ -608,7 +608,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 			            statusLine.setMessage( statusDelayString );
 			        }
 			    }, 10, 100 );
-			    statusDelayString = Messages.getString("MainWindow.Starting_Profile")+p.getName()+"..."; //$NON-NLS-1$
+			    statusDelayString = Messages.getString("MainWindow.Starting_Profile")+p.getName()+"..."; //$NON-NLS-1$ //$NON-NLS-2$
 				statusLine.setMessage( statusDelayString );
 				t = guiController.getSynchronizer().executeProfile( p );
 				if( t == null )
@@ -649,7 +649,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MessageBox mb = new MessageBox( getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO );
 		mb.setText( Messages.getString("MainWindow.Confirmation") ); //$NON-NLS-1$
-	    mb.setMessage( Messages.getString("MainWindow.Do_You_Want_To_Delete_Profile")+" "+p.getName()+" ?"); //$NON-NLS-1$
+	    mb.setMessage( Messages.getString("MainWindow.Do_You_Want_To_Delete_Profile")+" "+p.getName()+" ?"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	    if( mb.open() == SWT.YES )
 	    {
 	        profileManager.removeProfile( p );

@@ -51,8 +51,8 @@ public class GuiController implements Runnable
 			mainShell.setLayout(new org.eclipse.swt.layout.FillLayout());
 			Rectangle shellBounds = mainShell.computeTrim(0,0,mainWindow.getSize().x,mainWindow.getSize().y);
 			mainShell.setSize(shellBounds.width, shellBounds.height);
-			mainShell.setText( "FullSync 0.8.0" );
-			mainShell.setImage( getImage( "FullSync.png" ) );
+			mainShell.setText( "FullSync 0.8.0" );  //$NON-NLS-1$
+			mainShell.setImage( getImage( "FullSync.png" ) ); //$NON-NLS-1$
 			if( !minimized )
 			    mainShell.setVisible( true );
 		} catch (Exception e) {
@@ -141,7 +141,7 @@ public class GuiController implements Runnable
 		{
 			MessageBox mb = new MessageBox(mainShell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
-			mb.setMessage(Messages.getString("GuiController.Do_You_Want_To_Quit") + "\n" //$NON-NLS-1$
+			mb.setMessage(Messages.getString("GuiController.Do_You_Want_To_Quit") + "\n" //$NON-NLS-1$ //$NON-NLS-2$
 			        	 +Messages.getString("GuiController.Schedule_is_stopped")); //$NON-NLS-1$
 
 			// check whether the user really wants to close

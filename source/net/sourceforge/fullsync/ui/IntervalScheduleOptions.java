@@ -57,7 +57,7 @@ public class IntervalScheduleOptions extends ScheduleOptions
             }
             {
                 textCount = new Text(this, SWT.BORDER | SWT.RIGHT);
-                textCount.setText("1");
+                textCount.setText("1"); //$NON-NLS-1$
                 GridData textCountLData = new GridData();
                 textCountLData.widthHint = 50;
                 textCountLData.heightHint = 13;

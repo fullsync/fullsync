@@ -101,10 +101,10 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
         public void updateComponent()
         {
             long now = new Date().getTime();
-			labelSource.setText( Messages.getString("NiceListViewProfileListComposite.Source")+": "+profile.getSource() ); //$NON-NLS-1$
-			labelDestination.setText( Messages.getString("NiceListViewProfileListComposite.Destination")+": "+profile.getDestination() ); //$NON-NLS-1$
-			labelLastUpdate.setText( Messages.getString("NiceListViewProfileListComposite.LastUpdate")+": "+profile.getLastUpdate() ); //$NON-NLS-1$
-			labelNextUpdate.setText( Messages.getString("NiceListViewProfileListComposite.NextUpdate")+": "+profile.getNextUpdate() ); //$NON-NLS-1$
+			labelSource.setText( Messages.getString("NiceListViewProfileListComposite.Source")+": "+profile.getSource() ); //$NON-NLS-1$ //$NON-NLS-2$
+			labelDestination.setText( Messages.getString("NiceListViewProfileListComposite.Destination")+": "+profile.getDestination() ); //$NON-NLS-1$ //$NON-NLS-2$
+			labelLastUpdate.setText( Messages.getString("NiceListViewProfileListComposite.LastUpdate")+": "+profile.getLastUpdate() ); //$NON-NLS-1$ //$NON-NLS-2$
+			labelNextUpdate.setText( Messages.getString("NiceListViewProfileListComposite.NextUpdate")+": "+profile.getNextUpdate() ); //$NON-NLS-1$ //$NON-NLS-2$
 			layout();			
         }
         public void setProfile( Profile profile )
@@ -156,14 +156,14 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
     }
     private void loadImages()
     {
-        imageProfileDefault = GuiController.getInstance().getImage( "Profile_Default.png" );
-        imageProfileScheduled = GuiController.getInstance().getImage( "Profile_Default_Scheduled.png" );
-        imageProfileError = GuiController.getInstance().getImage( "Profile_Default_Error.png" );
-        imageProfileErrorScheduled = GuiController.getInstance().getImage( "Profile_Default_Error_Scheduled.png" );
+        imageProfileDefault = GuiController.getInstance().getImage( "Profile_Default.png" ); //$NON-NLS-1$
+        imageProfileScheduled = GuiController.getInstance().getImage( "Profile_Default_Scheduled.png" ); //$NON-NLS-1$
+        imageProfileError = GuiController.getInstance().getImage( "Profile_Default_Error.png" ); //$NON-NLS-1$
+        imageProfileErrorScheduled = GuiController.getInstance().getImage( "Profile_Default_Error_Scheduled.png" ); //$NON-NLS-1$
         
-        imageRun = GuiController.getInstance().getImage( "Profile_Run.png" );
-        imageEdit = GuiController.getInstance().getImage( "Profile_Edit.png" );
-        imageDelete = GuiController.getInstance().getImage( "Profile_Delete.png" );
+        imageRun = GuiController.getInstance().getImage( "Profile_Run.png" ); //$NON-NLS-1$
+        imageEdit = GuiController.getInstance().getImage( "Profile_Edit.png" ); //$NON-NLS-1$
+        imageDelete = GuiController.getInstance().getImage( "Profile_Delete.png" ); //$NON-NLS-1$
     }
     public void dispose()
     {
@@ -195,12 +195,12 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
             item.setStatusText( profile.getLastErrorString() );
 		} else {
 		    String desc = profile.getDescription();
-		    if( desc != null && !desc.equals( "" ) )
+		    if( desc != null && !desc.equals( "" ) ) //$NON-NLS-1$
 		        item.setStatusText( desc );
 		    else if( profile.isEnabled() && profile.getSchedule() != null )
 		        item.setStatusText( profile.getNextUpdate() );
 		    else 
-		        item.setStatusText( "" );
+		        item.setStatusText( "" ); //$NON-NLS-1$
 		}
     }
     

@@ -39,11 +39,11 @@ public class ConnectionPage implements WizardPage {
 	}
 
 	public Image getIcon() {
-		return GuiController.getInstance().getImage( "Remote_Connect.png" );
+		return GuiController.getInstance().getImage( "Remote_Connect.png" ); //$NON-NLS-1$
     }
 
 	public Image getImage() {
-		return GuiController.getInstance().getImage( "Remote_Wizard.png" );	}
+		return GuiController.getInstance().getImage( "Remote_Wizard.png" );	} //$NON-NLS-1$
 
 	public void createContent(Composite content) {
 		composite = new ConnectionComposite(content, SWT.NULL);

@@ -63,7 +63,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
                 labelPictureLData.horizontalAlignment = GridData.FILL;
                 labelPictureLData.verticalAlignment = GridData.FILL;
                 labelPicture.setLayoutData(labelPictureLData);
-        		labelPicture.setImage( GuiController.getInstance().getImage( "About.png" ) );
+        		labelPicture.setImage( GuiController.getInstance().getImage( "About.png" ) ); //$NON-NLS-1$
             }
             {
                 labelSeparator = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -88,7 +88,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
                     GridData buttonWebsiteLData = new GridData();
                     buttonWebsite.addSelectionListener(new SelectionAdapter() {
                         public void widgetSelected(SelectionEvent evt) {
-                            Program.launch( "http://fullsync.sourceforge.net" );
+                            Program.launch( "http://fullsync.sourceforge.net" ); //$NON-NLS-1$
                         }
                     });
                     buttonWebsiteLData.widthHint = 80;

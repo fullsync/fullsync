@@ -115,7 +115,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 label1 = new Label(this, SWT.NONE);
                 GridData label1LData = new GridData();
                 label1.setLayoutData(label1LData);
-                label1.setText(Messages.getString("ProfileDetails.Name")+":"); //$NON-NLS-1$
+                label1.setText(Messages.getString("ProfileDetails.Name")+":"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             {
                 textName = new Text(this, SWT.BORDER);
@@ -127,7 +127,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label15 = new Label(this, SWT.NONE);
-                label15.setText(Messages.getString("ProfileDetails.Description")+":"); //$NON-NLS-1$
+                label15.setText(Messages.getString("ProfileDetails.Description")+":"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             {
                 textDescription = new Text(this, SWT.BORDER);
@@ -138,7 +138,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label2 = new Label(this, SWT.NONE);
-                label2.setText(Messages.getString("ProfileDetails.Source")+":"); //$NON-NLS-1$
+                label2.setText(Messages.getString("ProfileDetails.Source")+":"); //$NON-NLS-1$ //$NON-NLS-2$
                 GridData label2LData = new GridData();
                 label2.setLayoutData(label2LData);
             }
@@ -153,7 +153,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 buttonBrowseSrc = new Button(this, SWT.PUSH | SWT.CENTER);
-                buttonBrowseSrc.setText("...");
+                buttonBrowseSrc.setText("..."); //$NON-NLS-1$
                 buttonBrowseSrc.addSelectionListener(new SelectionAdapter() {
                     public void widgetSelected(SelectionEvent evt) {
                         buttonBrowseSrcWidgetSelected(evt);
@@ -170,7 +170,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label5 = new Label(this, SWT.NONE);
-                label5.setText(Messages.getString("ProfileDetails.Username")+":"); //$NON-NLS-1$
+                label5.setText(Messages.getString("ProfileDetails.Username")+":"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             {
                 textSourceUsername = new Text(this, SWT.BORDER);
@@ -181,7 +181,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label6 = new Label(this, SWT.NONE);
-                label6.setText(Messages.getString("ProfileDetails.Password")+":"); //$NON-NLS-1$
+                label6.setText(Messages.getString("ProfileDetails.Password")+":"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             {
                 textSourcePassword = new Text(this, SWT.BORDER);
@@ -210,7 +210,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 buttonBrowseDst = new Button(this, SWT.PUSH | SWT.CENTER);
-                buttonBrowseDst.setText("...");
+                buttonBrowseDst.setText("..."); //$NON-NLS-1$
                 GridData buttonBrowseDstLData = new GridData();
                 buttonBrowseDst.setLayoutData(buttonBrowseDstLData);
                 buttonBrowseDst.addSelectionListener(new SelectionAdapter() {
@@ -229,7 +229,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label10 = new Label(this, SWT.NONE);
-                label10.setText(Messages.getString("ProfileDetails.Username")+":"); //$NON-NLS-1$
+                label10.setText(Messages.getString("ProfileDetails.Username")+":"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             {
                 textDestinationUsername = new Text(this, SWT.BORDER);
@@ -239,7 +239,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label11 = new Label(this, SWT.NONE);
-                label11.setText(Messages.getString("ProfileDetails.Password")+":"); //$NON-NLS-1$
+                label11.setText(Messages.getString("ProfileDetails.Password")+":"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             {
                 textDestinationPassword = new Text(this, SWT.BORDER);
@@ -486,13 +486,13 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
         textName.setText( p.getName() );
         textDescription.setText( p.getDescription() );
         textSource.setText( p.getSource().getUri().toString() );
-        buttonSourceBuffered.setSelection( "syncfiles".equals( p.getSource().getBufferStrategy() ) );
+        buttonSourceBuffered.setSelection( "syncfiles".equals( p.getSource().getBufferStrategy() ) ); //$NON-NLS-1$
         if( p.getSource().getUsername() != null )
             textSourceUsername.setText( p.getSource().getUsername() );
         if( p.getSource().getPassword() != null )
             textSourcePassword.setText( p.getSource().getPassword() );
         textDestination.setText( p.getDestination().getUri().toString() );
-        buttonDestinationBuffered.setSelection( "syncfiles".equals( p.getDestination().getBufferStrategy() ) );
+        buttonDestinationBuffered.setSelection( "syncfiles".equals( p.getDestination().getBufferStrategy() ) ); //$NON-NLS-1$
         if( p.getDestination().getUsername() != null )
             textDestinationUsername.setText( p.getDestination().getUsername() );
         if( p.getDestination().getPassword() != null )
@@ -539,7 +539,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	    try {
 	        src = new ConnectionDescription( textSource.getText(), "" ); //$NON-NLS-1$
 	        if( buttonSourceBuffered.getSelection() )
-	            src.setBufferStrategy( "syncfiles" );
+	            src.setBufferStrategy( "syncfiles" ); //$NON-NLS-1$
 	        if( textSourceUsername.getText().length() > 0 )
 	        {
 	            src.setUsername( textSourceUsername.getText() );
@@ -547,7 +547,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	        }
 	        dst = new ConnectionDescription( textDestination.getText(), "" ); //$NON-NLS-1$
 	        if( buttonDestinationBuffered.getSelection() )
-	            dst.setBufferStrategy( "syncfiles" );
+	            dst.setBufferStrategy( "syncfiles" ); //$NON-NLS-1$
 	        if( textDestinationUsername.getText().length() > 0 )
 	        {
 	            dst.setUsername( textDestinationUsername.getText() );

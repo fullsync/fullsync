@@ -64,11 +64,11 @@ public class CrontabScheduleOptions extends ScheduleOptions
 
     	    text = new Text( CrontabScheduleOptions.this, SWT.BORDER );
     	    text.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
-    	    text.setText( "*" );
+    	    text.setText( "*" ); //$NON-NLS-1$
     	    text.setEnabled( false );
     	    
     	    buttonChoose = new Button( CrontabScheduleOptions.this, SWT.NULL );
-    	    buttonChoose.setText( "..." );
+    	    buttonChoose.setText( "..." ); //$NON-NLS-1$
     	    buttonChoose.setEnabled( false );
     	    buttonChoose.addSelectionListener( new SelectionAdapter() {
     	        public void widgetSelected(SelectionEvent arg0)
@@ -132,7 +132,7 @@ public class CrontabScheduleOptions extends ScheduleOptions
         {
             if( instance.all )
             {
-                text.setText( "*" );
+                text.setText( "*" ); //$NON-NLS-1$
             } else {
                 text.setText( instance.pattern );
             }

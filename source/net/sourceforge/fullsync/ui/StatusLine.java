@@ -82,7 +82,7 @@ public class StatusLine extends org.eclipse.swt.widgets.Composite
             public void run()
             {
                 labelIcon.setImage( null );
-        		labelMessage.setText( message==null?"":message );
+        		labelMessage.setText( message==null?"":message ); //$NON-NLS-1$
             }
         } );
 	}
