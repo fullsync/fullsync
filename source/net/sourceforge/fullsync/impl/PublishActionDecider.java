@@ -57,7 +57,7 @@ public class PublishActionDecider implements ActionDecider
         case State.DirHereFileThere:
             State buff = bsd.getState( dst );
             if( buff.equals( State.Orphan, Location.Buffer ) ) {
-                actions.add( new Action( Action.Add, Location.getOpposite( state.getLocation() ), BufferUpdate.None, "There was a node in buff, but its orphan, so add" ) );
+                actions.add( new Action( Action.Add, Location.getOpposite( state.getLocation() ), BufferUpdate.Destination, "There was a node in buff, but its orphan, so add" ) );
             } else if( buff.equals( State.DirHereFileThere, state.getLocation() ) ) {
                  if( state.getLocation() == Location.Source )
                      actions.add( new Action( Action.Nothing, Location.None, BufferUpdate.None, "dirherefilethere, but there is a dir instead of file, so its in sync" ) );

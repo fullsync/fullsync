@@ -178,6 +178,9 @@ Release-critical:
    	[ ] scheduler in profile
    	[ ] we should calculate next update from lastupdate, not now
    	[ ] verify scheduler functionallity
+   	[ ] put images into source / jar. 
+   	[X] make config files not required.
+   	[ ]	put logging.xml into jar as well
    	[X] verify simple rulesets
    	[X] rename of profiles (see hashtable in profilemanager)
 
@@ -195,6 +198,9 @@ License:
 Backup:
 	[ ] copy to temp, then rename
 	[ ] scan whole src, then dst - saves hd jumps
+
+Configuration:
+	[ ] make config files user-local
 
 Feedback:
 	[ ] cancel in sync phase

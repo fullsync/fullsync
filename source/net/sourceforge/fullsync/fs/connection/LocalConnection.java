@@ -48,17 +48,21 @@ public class LocalConnection implements FileSystemConnection
     
     public Hashtable getChildren( File dir )
     {
-        java.io.File f = new java.io.File( base+"/"+dir.getPath() );
-        java.io.File[] files = f.listFiles();
-        
-        Hashtable table = new Hashtable( files.length );
-        if( files != null )
-        for( int i = 0; i < files.length; i++ )
+        if( dir.exists() )
         {
-            table.put( files[i].getName(), buildNode( dir, files[i] ) );
+	        java.io.File f = new java.io.File( base+"/"+dir.getPath() );
+	        java.io.File[] files = f.listFiles();
+	        
+	        Hashtable table = new Hashtable( files.length );
+	        if( files != null )
+	        for( int i = 0; i < files.length; i++ )
+	        {
+	            table.put( files[i].getName(), buildNode( dir, files[i] ) );
+	        }
+	        return table;
+        } else {
+            return new Hashtable();
         }
-        
-        return table;
     }
 
     public boolean makeDirectory( File dir )
