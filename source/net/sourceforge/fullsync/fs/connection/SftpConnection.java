@@ -128,7 +128,14 @@ public class SftpConnection extends InstableConnection
     
     public Hashtable _getChildren( File dir ) throws IOException
     {
-        SftpFile f = sftpClient.openDirectory( basePath+"/"+dir.getPath() );
+        SftpFile f = null;
+        try {
+            f = sftpClient.openDirectory( basePath+"/"+dir.getPath() );
+        } catch( IOException ioe ) {
+            if( ioe.getMessage().equals( "No such file") )
+                 return new Hashtable(0);
+            else throw ioe;
+        }
         ArrayList files = new ArrayList();
         sftpClient.listChildren( f, files );
         
@@ -136,7 +143,8 @@ public class SftpConnection extends InstableConnection
         for( Iterator i = files.iterator(); i.hasNext(); )
         {
             SftpFile file = (SftpFile)i.next();
-            table.put( file.getFilename(), buildNode( dir, file ) );
+            if( !file.getFilename().equals(".") && !file.getFilename().equals("..") )
+                table.put( file.getFilename(), buildNode( dir, file ) );
         }
         
         return table;
