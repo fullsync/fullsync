@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync.ui;
 
+import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.eclipse.swt.widgets.Composite;
@@ -17,5 +18,5 @@ public abstract class ScheduleOptions extends Composite
     public abstract String getSchedulingName();
     public abstract boolean canHandleSchedule( Schedule sched );
     public abstract void setSchedule( Schedule sched );
-    public abstract Schedule getSchedule();
+    public abstract Schedule getSchedule() throws DataParseException;
 }

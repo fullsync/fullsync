@@ -1,5 +1,8 @@
 package net.sourceforge.fullsync.ui;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.eclipse.swt.SWT;
@@ -17,6 +20,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 
@@ -124,9 +128,20 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
                 buttonOk.setText("Ok");
                 GridData buttonOkLData = new GridData();
                 buttonOk.addSelectionListener(new SelectionAdapter() {
-                    public void widgetSelected(SelectionEvent evt) {
-                        schedule = ((ScheduleOptions)((StackLayout)groupOptions.getLayout()).topControl).getSchedule();
-                        dialogShell.dispose();
+                    public void widgetSelected(SelectionEvent evt) 
+                    {
+                        try {
+                            schedule = ((ScheduleOptions)((StackLayout)groupOptions.getLayout()).topControl).getSchedule();
+                            dialogShell.dispose();
+                        } catch( Exception ex ) {
+                            MessageBox mb = new MessageBox( dialogShell, SWT.ICON_ERROR );
+                            mb.setText( "An error occured" );
+                            
+                            StringWriter writer = new StringWriter();
+                            ex.printStackTrace( new PrintWriter( writer ) );
+                            mb.setMessage( "The following error occured: "+writer.getBuffer().toString() );
+                            mb.open();
+                        }
                     }
                 });
                 
@@ -147,6 +162,7 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
             addScheduleOptions( new NullScheduleOptions( groupOptions, SWT.NULL ) );
             cbType.select( 0 );
     		addScheduleOptions( new IntervalScheduleOptions( groupOptions, SWT.NULL ) );
+    		addScheduleOptions( new CrontabScheduleOptions( groupOptions, SWT.NULL ) );
 
     		Display display = dialogShell.getDisplay();
 			dialogShell.setSize(346, 280);

@@ -189,7 +189,8 @@ Release-critical:
    	[X] look for timeout/disconnect before committing changes and reconnect or report error
    	[X] verify simple rulesets
    	[X] rename of profiles (see hashtable in profilemanager)
-   	[ ] add crontab scheduler to profile
+   	[X] add crontab scheduler to profile
+   	[ ] finished crontab editor (buttons)
    	[ ] add symbol for scheduled tasks
    	[ ] make sure schedules are not executed more than once, just
    		because they were inactive for some time

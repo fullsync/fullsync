@@ -101,9 +101,9 @@ public class Profile implements Serializable
         if( schedule == null ) {
             return "not scheduled";
         } else {
-            if( lastUpdate == null )
+            //if( lastUpdate == null )
                  return new Date( schedule.getNextOccurrence(new Date().getTime()) ).toString();
-            else return new Date( schedule.getNextOccurrence(lastUpdate.getTime()) ).toString();
+            //else return new Date( schedule.getNextOccurrence(lastUpdate.getTime()) ).toString();
         }
     }
     public RuleSetDescriptor getRuleSet()

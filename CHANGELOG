@@ -1,3 +1,4 @@
+* added crontab scheduler gui (but editor not finished yet)
 * verified scheduler and lastUpdate/nextUpdate functionality
 * added scheduling property to profile dialog
 * added initial update support
