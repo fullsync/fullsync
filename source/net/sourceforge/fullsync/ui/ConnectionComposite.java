@@ -2,15 +2,17 @@ package net.sourceforge.fullsync.ui;
 
 import net.sourceforge.fullsync.remote.RemoteManager;
 
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.SWT;
-
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 /**
 * This code was generated using CloudGarden's Jigloo
@@ -26,9 +28,6 @@ import org.eclipse.swt.SWT;
 * for any corporate or commercial purpose.
 * *************************************
 */
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Text;
 public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 	private Label label1;
 	private Label label2;
@@ -142,6 +141,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 		
 		String password = textPassword.getText();
 		try {
+		    GuiController.getInstance().getProfileManager().stopTimer();
 			RemoteManager remoteManager = new RemoteManager(hostname, port, password);
 			GuiController.getInstance().getProfileManager().setRemoteConnection(remoteManager);
 			GuiController.getInstance().getSynchronizer().setRemoteConnection(remoteManager);

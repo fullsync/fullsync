@@ -13,6 +13,7 @@ import net.sourceforge.fullsync.ui.SplashScreen;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
@@ -23,56 +24,75 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 
-
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class CommandLineInterpreter
 {
+    private static Options options;
+    
+    private static void initOptions()
+    {
+		options = new Options();
+		options.addOption( "h", "help", false, "this help" );
+		options.addOption( "v", "verbose", false, "verbose output to stdout" );
+		
+		OptionBuilder.withLongOpt( "run" );
+		OptionBuilder.withDescription( "run the specified profile" );
+		OptionBuilder.hasArg();
+		OptionBuilder.withArgName("profile");
+		options.addOption( OptionBuilder.create("r") ); 
+		
+		options.addOption( "d", "daemon", false, "disables the gui and runs in daemon mode with scheduler" );
+		
+		OptionBuilder.withLongOpt( "remoteport" );
+		OptionBuilder.withDescription( "accept incoming connection on the specified port or 10000" );
+		OptionBuilder.hasOptionalArg();
+		OptionBuilder.withArgName("port");
+		options.addOption( OptionBuilder.create("p") ); 
+		// + interactive mode
+    }
+    
+    private static void printHelp()
+    {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp( "fullsync [-hvrdp]", options );
+    }
+    
     public static void parse( String[] args )
     {
-    	// FIXME We should decide a better options list :-).
-    	// create the Options
-		Options options = new Options();
-		options.addOption( "h", "help", false, "this help" );
-		options.addOption( "d", "daemon", false, "disables the gui and runs in daemon mode" );
-		options.addOption( "v", "verbose", false, "verbose output to stdout" );
-		options.addOption( "r", "run", true, "run the specified profile" );
-		options.addOption( "p", "remoteport", true, "accept incomming connection on the specified port" );
+        initOptions();
 
-		// interactive mode
-		// no actions and stuff
-		
 		try {
 		    System.setErr( new PrintStream( new FileOutputStream( "logs/stderr.log" ) ) );
-//		    System.setOut( new PrintStream( new FileOutputStream( "logs/stdout.log" ) ) );
+		    // System.setOut( new PrintStream( new FileOutputStream( "logs/stdout.log" ) ) );
 
 		    CommandLineParser parser = new PosixParser();
 		    CommandLine line = null;
+		    
 		    try {
 		    	line = parser.parse( options, args );
-		    }
-		    catch (ParseException pe) {
+		    } catch (ParseException pe) {
 		    	System.err.println(pe.getMessage());
-		        HelpFormatter formatter = new HelpFormatter();
-		        formatter.printHelp( "fullsync [-hvrdp]", options );
+		        printHelp();
 		        return;		    	
 		    }
 		    
 		    if( line.hasOption( "h" ) )
 		    {
-		        HelpFormatter formatter = new HelpFormatter();
-		        formatter.printHelp( "fullsync [-hvrdp]", options );
+		        printHelp();
 		        return;
 		    }
 
 
+		    // Initialize basic facilities
 		    DOMConfigurator.configure( "logging.xml" );
 		    Preferences preferences = new ConfigurationPreferences("preferences.properties");
 		    ProfileManager profileManager = new ProfileManager( "profiles.xml" );
 
 		    final Synchronizer sync = new Synchronizer();
 		    
+		    // Apply modifying options
 		    if( line.hasOption( "v" ) )
 		    {
 		        ConsoleAppender appender = 
@@ -85,6 +105,7 @@ public class CommandLineInterpreter
 		        logger.addAppender( appender );
 		    }
 
+		    // Apply executing options
 		    if (line.hasOption( "r" ))
 		    {
 				    Profile p = profileManager.getProfile( line.getOptionValue("r") );
@@ -103,40 +124,33 @@ public class CommandLineInterpreter
 	    		splash.setHideOnClick(false);
 	    		splash.setVisible(true);
 		    }
-		    
+		    boolean activateRemote = false;
 	    	int port = 10000;
+	    	String password = "admin";
 	    	RemoteException listenerStarupException = null;
+	    	
 		    if (line.hasOption("p")) {
-		    	String portStr = line.getOptionValue("p");
+		        activateRemote = true;
 		    	try {
+			    	String portStr = line.getOptionValue("p");
 					port = Integer.parseInt(portStr);
-				} catch (NumberFormatException e) {
-				}
-
-				// FIXME [Michele] password.
-		    	try {
+				} catch (NumberFormatException e) {}
+				// FIXME [Michele] password. -- specify via cmdline or read input
+		    } else {
+		    	activateRemote = preferences.listeningForRemoteConnections();
+		    	port = preferences.getRemoteConnectionsPort();
+		    	password = preferences.getRemoteConnectionsPassword();
+		    }
+	    	if (activateRemote) {
+	    		try {
 			    	System.out.println("Starting remote interface...");
-			    	RemoteController.getInstance().startServer(port, "admin", profileManager, sync);
-			    	System.out.println("Remote Interface available on port: "+port);
+			    	RemoteController.getInstance().startServer(port, password, profileManager, sync);
+					System.out.println("Remote Interface available on port: "+port);
 				} catch (RemoteException e) {
 					e.printStackTrace();
+					listenerStarupException = e;
 				}
-		    }
-		    else {
-		    	boolean activateRemote = preferences.listeningForRemoteConnections();
-		    	port = preferences.getRemoteConnectionsPort();
-		    	String password = preferences.getRemoteConnectionsPassword();
-		    	if (activateRemote) {
-			    	try {
-				    	System.out.println("Starting remote interface...");
-						RemoteController.getInstance().startServer(port, password, profileManager, sync);
-						System.out.println("Remote Interface available on port: "+port);
-					} catch (RemoteException e) {
-						e.printStackTrace();
-						listenerStarupException = e;
-					}
-		    	}
-		    }
+	    	}
 
 		    if (line.hasOption("d")) {
 		        profileManager.addSchedulerListener( new ProfileSchedulerListener() {
@@ -161,7 +175,7 @@ public class CommandLineInterpreter
 		    		mutex.wait();
 		    	}
 		    } else {
-		    	try {		    		
+		    	try {
 		    		GuiController guiController = new GuiController( preferences, profileManager, sync );
 		    		guiController.startGui();
 		    		

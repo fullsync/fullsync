@@ -165,7 +165,7 @@
     	<mkdir dir="${installer.dir}"/>
         <izpack 
         	input="${basedir}/resources/installer/install.xml"
-			output="${basedir}/installer/FullSyncInstaller.jar"
+			output="${dist.dir}/FullSyncInstaller.jar"
 			installerType="standard"
 			basedir="${basedir}"
 			izPackDir="${izpack.dir}"/>

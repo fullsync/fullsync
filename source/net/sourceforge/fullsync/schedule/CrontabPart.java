@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync.schedule;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
@@ -12,7 +13,7 @@ import net.sourceforge.fullsync.DataParseException;
  * 
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class CrontabPart
+public class CrontabPart implements Serializable
 {
     public final static CrontabPart MINUTES = new CrontabPart( "minutes", 0, 59, 0 );
     public final static CrontabPart HOURS = new CrontabPart( "hours", 0, 23, 0 );
@@ -22,7 +23,7 @@ public class CrontabPart
     public final static CrontabPart[] ALL_PARTS 
     	= new CrontabPart[] { MINUTES, HOURS, DAYSOFMONTH, MONTHS, DAYSOFWEEK };
     
-    public class Instance
+    public class Instance implements Serializable
     {
         public final String pattern;
         public final boolean[] bArray;

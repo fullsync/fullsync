@@ -208,6 +208,7 @@ Sheduler:
 	
 Remote:
 	[ ] password for connection
+	[ ] make scheduler available via remote interface
 
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
 
@@ -290,6 +291,9 @@ License:
 Backup:
 	[ ] copy to temp, then rename
 	[ ] scan whole src, then dst - saves hd jumps
+	[ ] maybe it would be nice to have a min lastmodified difference
+		so we can backup stuff that is not currently worked on(?)
+		(good for not exact backup, so we don't copy temp files)
 
 Configuration:
 	[ ] make config files user-local
@@ -391,6 +395,7 @@ Optimization:
 	[ ] getChild() - on null create, put this into a method ?
 		nope...
 	[ ] refresh of fs files
+	[ ] rewrite some connections using the nio package?
 	
 
 -------------------------------------------------------------------------------
