@@ -119,6 +119,7 @@ public class Task implements Serializable
     	out.writeObject(destination);
     	out.writeObject(state);
     	out.writeObject(actions);
+    	out.writeInt(currentAction);
     	out.writeObject(children);
 	}
     
@@ -129,8 +130,8 @@ public class Task implements Serializable
         this.destination = (File) in.readObject();
         this.state = (State) in.readObject();
         this.actions = (Action[]) in.readObject();
+        this.currentAction = in.readInt();
         this.children = (Vector) in.readObject();
-        this.currentAction = 0;
 	}
     
 }
