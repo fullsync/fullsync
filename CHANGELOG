@@ -1,3 +1,4 @@
+* added a Remote Connection menu to connect the running instance to a remote server (patch by michele)
 * changed ftp to use passive mode
 * added FullSync Installer for Windows and Linux systems (patch by michele)
 * fixed not correct file comparison and last modified update

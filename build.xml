@@ -6,7 +6,7 @@
 	<!-- Project Properties -->
 	<property name="name" 				value="FullSync"/>
 	<property name="project"			value="FullSync"/>
-	<property name="version"			value="0.7.1"/>
+	<property name="version"			value="0.8.0"/>
 	<property name="final.name"			value="${project}-${version}"/>
 	<property name="final-src.name"		value="${project}-${version}-src"/>
 
@@ -16,6 +16,7 @@
 	<property name="build.dir"			value="${basedir}\build" />
 	<property name="build.lib.dir"		value="${build.dir}\lib" />
 	<property name="dist.dir"			value="${basedir}/dist" />
+	<property name="installer.dir"		value="${basedir}/installer" />
 
 	<!-- External Tools Paths -->
 	<!-- need to be specified in the build.properties file
@@ -132,12 +133,9 @@
 		      skeletonroot="${jsmooth.dir}/skeletons" verbose="true"/>
 	</target>
 	
-	<!-- [MICHELE] this is for the client/server version I'm working on. -->
-	<!-- <target name="build" depends="detect, copy-libs, rmic, copy-resources, jar, javadoc, win32-exe, installer"> -->
-	<target name="build" depends="detect, copy-libs, copy-resources, javadoc, jar, win32-exe">
+	<target name="build" depends="detect, copy-libs, copy-resources, javadoc, rmic, jar, win32-exe">
 	</target>
 
-	
 	
 	<!-- Targets creating different distribution versions -->
 	<target name="dist-zip" description="Builds a zipfile distribution" depends="build">
@@ -154,7 +152,7 @@
 	
     <target name="dist-installer" description="Builds an multiplatform installer distribution" depends="build">
     	<echo message="Building a multi-platform installer distribution"/>
-    	
+    	<mkdir dir="${installer.dir}"/>
         <izpack 
         	input="${basedir}/resources/installer/install.xml"
 			output="${basedir}/installer/FullSyncInstaller.jar"
