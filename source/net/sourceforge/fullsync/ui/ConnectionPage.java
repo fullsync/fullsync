@@ -27,15 +27,15 @@ public class ConnectionPage implements WizardPage {
     }
     
 	public String getTitle() {
-		return "Connection...";
+		return Messages.getString("ConnectionPage.Connection"); //$NON-NLS-1$
 	}
 
 	public String getCaption() {
-		return "Connect to a Remote Server";
+		return Messages.getString("ConnectionPage.ConnectToARemoteServer"); //$NON-NLS-1$
 	}
 
 	public String getDescription() {
-		return "Choose the target host you want to connect to.";
+		return Messages.getString("ConnectionPage.ChooseTarget"); //$NON-NLS-1$
 	}
 
 	public Image getIcon() {
@@ -53,7 +53,7 @@ public class ConnectionPage implements WizardPage {
         bottom.setLayout( new GridLayout( 2, false ) );
         
         Button okButton = new Button( bottom, SWT.PUSH );
-        okButton.setText( "Ok" );
+        okButton.setText( Messages.getString("ConnectionPage.Ok") ); //$NON-NLS-1$
         okButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected( SelectionEvent e )
             {
@@ -64,7 +64,7 @@ public class ConnectionPage implements WizardPage {
         okButton.setLayoutData( new GridData( GridData.END, GridData.CENTER, true, true ) );
         
         Button cancelButton = new Button( bottom, SWT.PUSH );
-        cancelButton.setText( "Cancel" );
+        cancelButton.setText( Messages.getString("ConnectionPage.Cancel") ); //$NON-NLS-1$
         cancelButton.addSelectionListener( new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e)
             {

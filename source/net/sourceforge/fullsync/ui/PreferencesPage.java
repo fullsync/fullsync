@@ -28,12 +28,12 @@ public class PreferencesPage implements WizardPage
     }
     public String getTitle()
     {
-        return "Preferences";
+        return Messages.getString("PreferencesPage.Preferences"); //$NON-NLS-1$
     }
 
     public String getCaption()
     {
-        return "Preferences";
+        return Messages.getString("PreferencesPage.Preferences"); //$NON-NLS-1$
     }
 
     public String getDescription()
@@ -61,7 +61,7 @@ public class PreferencesPage implements WizardPage
         bottom.setLayout( new GridLayout( 2, false ) );
         
         Button okButton = new Button( bottom, SWT.PUSH );
-        okButton.setText( "Ok" );
+        okButton.setText( Messages.getString("PreferencesPage.Ok") ); //$NON-NLS-1$
         okButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected( SelectionEvent e )
             {
@@ -72,7 +72,7 @@ public class PreferencesPage implements WizardPage
         okButton.setLayoutData( new GridData( GridData.END, GridData.CENTER, true, true ) );
         
         Button cancelButton = new Button( bottom, SWT.PUSH );
-        cancelButton.setText( "Cancel" );
+        cancelButton.setText( Messages.getString("PreferencesPage.Cancel") ); //$NON-NLS-1$
         cancelButton.addSelectionListener( new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e)
             {

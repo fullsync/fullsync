@@ -53,7 +53,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 			dialogShellLayout.marginHeight = 0;
 			dialogShellLayout.marginWidth = 0;
 			dialogShellLayout.horizontalSpacing = 0;
-			dialogShell.setText("About FullSync");
+			dialogShell.setText(Messages.getString("AboutDialog.About_FullSync")); //$NON-NLS-1$
 			dialogShell.setSize(308, 406);
             {
                 labelPicture = new Label(dialogShell, SWT.NONE);
@@ -84,7 +84,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
                 {
                     buttonWebsite = new Button(compositeBottom, SWT.PUSH
                         | SWT.CENTER);
-                    buttonWebsite.setText("Website");
+                    buttonWebsite.setText(Messages.getString("AboutDialog.WebSite")); //$NON-NLS-1$
                     GridData buttonWebsiteLData = new GridData();
                     buttonWebsite.addSelectionListener(new SelectionAdapter() {
                         public void widgetSelected(SelectionEvent evt) {
@@ -99,7 +99,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
                 {
                     buttonOk = new Button(compositeBottom, SWT.PUSH
                         | SWT.CENTER);
-                    buttonOk.setText("Ok");
+                    buttonOk.setText("Ok"); //$NON-NLS-1$
                     GridData buttonOkLData = new GridData();
                     buttonOk.addSelectionListener(new SelectionAdapter() {
                         public void widgetSelected(SelectionEvent evt) {

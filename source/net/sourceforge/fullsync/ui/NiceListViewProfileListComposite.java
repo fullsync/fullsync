@@ -101,10 +101,10 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
         public void updateComponent()
         {
             long now = new Date().getTime();
-			labelSource.setText( "Source: "+profile.getSource() );
-			labelDestination.setText( "Destination: "+profile.getDestination() );
-			labelLastUpdate.setText( "Last Update: "+profile.getLastUpdate() );
-			labelNextUpdate.setText( "Next Update: "+profile.getNextUpdate() );
+			labelSource.setText( Messages.getString("NiceListViewProfileListComposite.Source")+": "+profile.getSource() ); //$NON-NLS-1$
+			labelDestination.setText( Messages.getString("NiceListViewProfileListComposite.Destination")+": "+profile.getDestination() ); //$NON-NLS-1$
+			labelLastUpdate.setText( Messages.getString("NiceListViewProfileListComposite.LastUpdate")+": "+profile.getLastUpdate() ); //$NON-NLS-1$
+			labelNextUpdate.setText( Messages.getString("NiceListViewProfileListComposite.NextUpdate")+": "+profile.getNextUpdate() ); //$NON-NLS-1$
 			layout();			
         }
         public void setProfile( Profile profile )

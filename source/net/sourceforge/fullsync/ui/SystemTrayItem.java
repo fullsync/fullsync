@@ -67,7 +67,7 @@ public class SystemTrayItem implements TaskGenerationListener
     	menu = new Menu( guiController.getMainShell(), SWT.POP_UP );
 		MenuItem item;
 		item = new MenuItem( menu, SWT.NULL );
-		item.setText( "Open FullSync" );
+		item.setText( Messages.getString("SystemTrayItem.OpenFullSync") ); //$NON-NLS-1$
 		item.addListener(SWT.Selection, new Listener() {
 		    public void handleEvent( Event arg0 )
             {
@@ -76,7 +76,7 @@ public class SystemTrayItem implements TaskGenerationListener
 		} );
 		
 		item = new MenuItem( menu, SWT.NULL );
-		item.setText( "Exit" );
+		item.setText( Messages.getString("SystemTrayItem.Exit") ); //$NON-NLS-1$
 		item.addListener( SWT.Selection, new Listener() {
 		    
 		    public void handleEvent( Event event )

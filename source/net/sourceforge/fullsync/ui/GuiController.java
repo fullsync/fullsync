@@ -140,10 +140,9 @@ public class GuiController implements Runnable
 		if (preferences.confirmExit()) 
 		{
 			MessageBox mb = new MessageBox(mainShell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
-			mb.setText("Confirmation");
-			mb.setMessage("Do you really want to quit FullSync? \n"
-			        	 +"Any scheduled tasks will not be performed while " 
-			        	 +"FullSync is closed.");
+			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
+			mb.setMessage(Messages.getString("GuiController.Do_You_Want_To_Quit") + "\n" //$NON-NLS-1$
+			        	 +Messages.getString("GuiController.Schedule_is_stopped")); //$NON-NLS-1$
 
 			// check whether the user really wants to close
 			if (mb.open() != SWT.YES) 

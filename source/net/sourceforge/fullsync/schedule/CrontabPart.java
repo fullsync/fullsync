@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 import net.sourceforge.fullsync.DataParseException;
+import net.sourceforge.fullsync.ui.Messages;
 
 /**
  * TODO the eights day of week should be wrapped to the first! (in cron: 0 == 7)
@@ -15,11 +16,11 @@ import net.sourceforge.fullsync.DataParseException;
  */
 public class CrontabPart implements Serializable
 {
-    public final static CrontabPart MINUTES = new CrontabPart( "minutes", 0, 59, 0 );
-    public final static CrontabPart HOURS = new CrontabPart( "hours", 0, 23, 0 );
-    public final static CrontabPart DAYSOFMONTH = new CrontabPart( "days of month", 1, 31, 0 );
-    public final static CrontabPart MONTHS = new CrontabPart( "months", 1, 12, -1 );
-    public final static CrontabPart DAYSOFWEEK = new CrontabPart( "days of week", 0, 7, +1 );
+    public final static CrontabPart MINUTES = new CrontabPart( Messages.getString("CrontabPart.minutes"), 0, 59, 0 ); //$NON-NLS-1$
+    public final static CrontabPart HOURS = new CrontabPart( Messages.getString("CrontabPart.hours"), 0, 23, 0 ); //$NON-NLS-1$
+    public final static CrontabPart DAYSOFMONTH = new CrontabPart( Messages.getString("CrontabPart.daysOfMonth"), 1, 31, 0 ); //$NON-NLS-1$
+    public final static CrontabPart MONTHS = new CrontabPart( Messages.getString("CrontabPart.months"), 1, 12, -1 ); //$NON-NLS-1$
+    public final static CrontabPart DAYSOFWEEK = new CrontabPart( Messages.getString("CrontabPart.daysOfWeek"), 0, 7, +1 ); //$NON-NLS-1$
     public final static CrontabPart[] ALL_PARTS 
     	= new CrontabPart[] { MINUTES, HOURS, DAYSOFMONTH, MONTHS, DAYSOFWEEK };
     
@@ -110,7 +111,7 @@ public class CrontabPart implements Serializable
 				{
 					each = Integer.parseInt(token.substring(index + 1));
 					if (each == 0) 
-						throw new DataParseException("Never use expressions like */0 ");
+						throw new DataParseException(Messages.getString("CrontabPart.NeverUseExpressions")); //$NON-NLS-1$
 	
 					token = token.substring(0,index);
 				}
@@ -154,7 +155,7 @@ public class CrontabPart implements Serializable
 	            bArray[iValue+offset] = true;
 	            return false;
 	        } catch (Exception e) {
-	            throw new DataParseException( "Smth was wrong with " + token, e );
+	            throw new DataParseException( Messages.getString("CrontabPart.SomethingWasWrong") + token, e ); //$NON-NLS-1$
 	        }
 	    }
     }

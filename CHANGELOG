@@ -1,4 +1,4 @@
-
+* added support for languages other than english (i18n)
 * fixed sftp not recognizing port correctly
 
 

@@ -67,7 +67,7 @@ public class ExceptionDialog extends Dialog
 			Display display = parent.getDisplay();
 			
 			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-			dialogShell.setText( "Exception" );
+			dialogShell.setText( Messages.getString("ExceptionDialog.Exception") ); //$NON-NLS-1$
 			
 			GridLayout dialogShellLayout = new GridLayout();
 			dialogShellLayout.marginHeight = 0;
@@ -111,7 +111,7 @@ public class ExceptionDialog extends Dialog
                 }
                 {
                     buttonOk = new Button(compositeBase, SWT.PUSH | SWT.CENTER);
-                    buttonOk.setText("Ok");
+                    buttonOk.setText(Messages.getString("ExceptionDialog.Ok")); //$NON-NLS-1$
                     GridData buttonOkLData = new GridData();
                     buttonOk.addSelectionListener(new SelectionAdapter() {
                         public void widgetSelected(SelectionEvent evt) {
@@ -128,7 +128,7 @@ public class ExceptionDialog extends Dialog
                 {
                     buttonDetails = new Button(compositeBase, SWT.PUSH
                         | SWT.CENTER);
-                    buttonDetails.setText("Details");
+                    buttonDetails.setText(Messages.getString("ExceptionDialog.Details")); //$NON-NLS-1$
                     GridData buttonDetailsLData = new GridData();
                     buttonDetails.addSelectionListener(new SelectionAdapter() {
                         public void widgetSelected(SelectionEvent evt) {
@@ -188,11 +188,11 @@ public class ExceptionDialog extends Dialog
 	    {
 	        Rectangle r = dialogShell.computeTrim( 0, 0, compositeBase.getSize().x, compositeBase.getSize().y );
             dialogShell.setSize( r.width, r.height );
-            buttonDetails.setText( "Details >>" );
+            buttonDetails.setText( Messages.getString("ExceptionDialog.Details")+" >>" ); //$NON-NLS-1$
             expanded = false;
 	    } else {
 	        dialogShell.setSize( dialogShell.getSize().x, dialogShell.getSize().y+200 );
-            buttonDetails.setText( "Details <<" );
+            buttonDetails.setText( Messages.getString("ExceptionDialog.Details")+" <<" ); //$NON-NLS-1$
 	        expanded = true;
 	    }
 	}

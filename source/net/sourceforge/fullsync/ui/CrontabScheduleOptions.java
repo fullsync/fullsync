@@ -41,7 +41,7 @@ public class CrontabScheduleOptions extends ScheduleOptions
             label.setText( part.name );
     	    
     	    radioAll = new Button( CrontabScheduleOptions.this, SWT.CHECK );
-    	    radioAll.setText( "all" );
+    	    radioAll.setText( Messages.getString("CrontabScheduleOptions.all") ); //$NON-NLS-1$
     	    radioAll.setSelection( true );
     	    radioAll.addListener( SWT.Selection, new Listener() {
     	        public void handleEvent(Event event)
@@ -75,7 +75,7 @@ public class CrontabScheduleOptions extends ScheduleOptions
     	        {
     	            final Shell shell = new Shell( getShell(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.TOOL );
     	            shell.setLayout( new GridLayout(2, true) );
-    	            shell.setText( "Select "+part.name );
+    	            shell.setText( Messages.getString("CrontabScheduleOptions.Select")+part.name ); //$NON-NLS-1$
     	            
     	            final List table = new List( shell, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI );
     	            GridData data = new GridData( GridData.FILL, GridData.FILL, true, true, 2, 1 );
@@ -96,7 +96,7 @@ public class CrontabScheduleOptions extends ScheduleOptions
     	            
     	            Button buttonOk = new Button( shell, SWT.NULL );
     	            buttonOk.setLayoutData( new GridData( GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL ) );
-    	            buttonOk.setText( "Ok" );
+    	            buttonOk.setText( Messages.getString("CrontabScheduleOptions.Ok") ); //$NON-NLS-1$
     	            buttonOk.addSelectionListener( new SelectionAdapter() {
     	                public void widgetSelected(SelectionEvent e)
     	                {
@@ -107,7 +107,7 @@ public class CrontabScheduleOptions extends ScheduleOptions
     	            
     	            Button buttonClose = new Button( shell, SWT.NULL );
     	            buttonClose.setLayoutData( new GridData( GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL ) );
-    	            buttonClose.setText( "Close" );
+    	            buttonClose.setText( Messages.getString("CrontabScheduleOptions.Close") ); //$NON-NLS-1$
     	            buttonClose.addSelectionListener( new SelectionAdapter() {
     	                public void widgetSelected(SelectionEvent e)
     	                {
@@ -176,7 +176,7 @@ public class CrontabScheduleOptions extends ScheduleOptions
 	
 	public String getSchedulingName()  
 	{
-		return "Crontab";
+		return Messages.getString("CrontabScheduleOptions.Crontab"); //$NON-NLS-1$
 	}
 
 	public boolean canHandleSchedule(Schedule schedule)  

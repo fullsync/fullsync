@@ -69,7 +69,7 @@ public class ChooseDstBufferInitWindow extends org.eclipse.swt.widgets.Composite
 			label1LData.grabExcessHorizontalSpace = false;
 			label1LData.grabExcessVerticalSpace = false;
 			label1.setLayoutData(label1LData);
-			label1.setText("There was no destination buffer found.");
+			label1.setText(Messages.getString("ChooseDstBufferInitWindow.NoDestinationBufferFound")); //$NON-NLS-1$
 	
 			GridData label2LData = new GridData();
 			label2LData.verticalAlignment = GridData.BEGINNING;
@@ -82,7 +82,7 @@ public class ChooseDstBufferInitWindow extends org.eclipse.swt.widgets.Composite
 			label2LData.grabExcessHorizontalSpace = true;
 			label2LData.grabExcessVerticalSpace = false;
 			label2.setLayoutData(label2LData);
-			label2.setText("It is most likely that you are synchronizing with a new site or the buffer file was deleted. Please choose one of the following options:");
+			label2.setText(Messages.getString("ChooseDstBufferInitWindow.ItIsMostLikely")); //$NON-NLS-1$
 			label2.setSize(new org.eclipse.swt.graphics.Point(544,26));
 	
 			GridData button1LData = new GridData();
@@ -96,7 +96,7 @@ public class ChooseDstBufferInitWindow extends org.eclipse.swt.widgets.Composite
 			button1LData.grabExcessHorizontalSpace = false;
 			button1LData.grabExcessVerticalSpace = false;
 			button1.setLayoutData(button1LData);
-			button1.setText("There is nothing at the destination. (don't overwrite, build buffer while copying)");
+			button1.setText(Messages.getString("ChooseDstBufferInitWindow.NothingAtTheDestination")); //$NON-NLS-1$
 	
 			GridData button2LData = new GridData();
 			button2LData.verticalAlignment = GridData.CENTER;
@@ -109,7 +109,7 @@ public class ChooseDstBufferInitWindow extends org.eclipse.swt.widgets.Composite
 			button2LData.grabExcessHorizontalSpace = false;
 			button2LData.grabExcessVerticalSpace = false;
 			button2.setLayoutData(button2LData);
-			button2.setText("There is something at the destination but its not sure its the same as in source. (don't ask overwrite)");
+			button2.setText(Messages.getString("ChooseDstBufferInitWindow.SomethingAtTheDestination")); //$NON-NLS-1$
 	
 			GridData button3LData = new GridData();
 			button3LData.verticalAlignment = GridData.CENTER;
@@ -122,7 +122,7 @@ public class ChooseDstBufferInitWindow extends org.eclipse.swt.widgets.Composite
 			button3LData.grabExcessHorizontalSpace = false;
 			button3LData.grabExcessVerticalSpace = false;
 			button3.setLayoutData(button3LData);
-			button3.setText("There is the same version in destination. (build buffer from filesystem)");
+			button3.setText(Messages.getString("ChooseDstBufferInitWindow.SameVersionInDestination")); //$NON-NLS-1$
 			button3.setSize(new org.eclipse.swt.graphics.Point(357,16));
 	
 			GridData buttonOkLData = new GridData();
@@ -136,7 +136,7 @@ public class ChooseDstBufferInitWindow extends org.eclipse.swt.widgets.Composite
 			buttonOkLData.grabExcessHorizontalSpace = true;
 			buttonOkLData.grabExcessVerticalSpace = false;
 			buttonOk.setLayoutData(buttonOkLData);
-			buttonOk.setText("Ok");
+			buttonOk.setText(Messages.getString("ChooseDstBufferInitWindow.Ok")); //$NON-NLS-1$
 	
 			GridData buttonAbortLData = new GridData();
 			buttonAbortLData.verticalAlignment = GridData.CENTER;
@@ -149,7 +149,7 @@ public class ChooseDstBufferInitWindow extends org.eclipse.swt.widgets.Composite
 			buttonAbortLData.grabExcessHorizontalSpace = true;
 			buttonAbortLData.grabExcessVerticalSpace = false;
 			buttonAbort.setLayoutData(buttonAbortLData);
-			buttonAbort.setText("Cancel");
+			buttonAbort.setText(Messages.getString("ChooseDstBufferInitWindow.Cancel")); //$NON-NLS-1$
 			GridLayout thisLayout = new GridLayout(2, true);
 			this.setLayout(thisLayout);
 			thisLayout.marginWidth = 8;

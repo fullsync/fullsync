@@ -115,19 +115,19 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 label1 = new Label(this, SWT.NONE);
                 GridData label1LData = new GridData();
                 label1.setLayoutData(label1LData);
-                label1.setText("Name:");
+                label1.setText(Messages.getString("ProfileDetails.Name")+":"); //$NON-NLS-1$
             }
             {
                 textName = new Text(this, SWT.BORDER);
                 GridData textNameLData = new GridData();
-                textName.setToolTipText("Name for the profile");
+                textName.setToolTipText(Messages.getString("ProfileDetails.Name_ToolTip")); //$NON-NLS-1$
                 textNameLData.horizontalAlignment = GridData.FILL;
                 textNameLData.horizontalSpan = 6;
                 textName.setLayoutData(textNameLData);
             }
             {
                 label15 = new Label(this, SWT.NONE);
-                label15.setText("Description:");
+                label15.setText(Messages.getString("ProfileDetails.Description")+":"); //$NON-NLS-1$
             }
             {
                 textDescription = new Text(this, SWT.BORDER);
@@ -138,14 +138,14 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label2 = new Label(this, SWT.NONE);
-                label2.setText("Source:");
+                label2.setText(Messages.getString("ProfileDetails.Source")+":"); //$NON-NLS-1$
                 GridData label2LData = new GridData();
                 label2.setLayoutData(label2LData);
             }
             {
                 textSource = new Text(this, SWT.BORDER);
                 GridData textSourceLData = new GridData();
-                textSource.setToolTipText("Source location");
+                textSource.setToolTipText(Messages.getString("ProfileDetails.Source_location")); //$NON-NLS-1$
                 textSourceLData.horizontalAlignment = GridData.FILL;
                 textSourceLData.horizontalSpan = 5;
                 textSourceLData.grabExcessHorizontalSpace = true;
@@ -165,12 +165,12 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 buttonSourceBuffered = new Button(this, SWT.CHECK | SWT.LEFT);
-                buttonSourceBuffered.setText("buffered");
+                buttonSourceBuffered.setText(Messages.getString("ProfileDetails.buffered")); //$NON-NLS-1$
                 buttonSourceBuffered.setEnabled( false );
             }
             {
                 label5 = new Label(this, SWT.NONE);
-                label5.setText("Username:");
+                label5.setText(Messages.getString("ProfileDetails.Username")+":"); //$NON-NLS-1$
             }
             {
                 textSourceUsername = new Text(this, SWT.BORDER);
@@ -181,7 +181,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label6 = new Label(this, SWT.NONE);
-                label6.setText("Password:");
+                label6.setText(Messages.getString("ProfileDetails.Password")+":"); //$NON-NLS-1$
             }
             {
                 textSourcePassword = new Text(this, SWT.BORDER);
@@ -195,14 +195,14 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label3 = new Label(this, SWT.NONE);
-                label3.setText("Destination:");
+                label3.setText(Messages.getString("ProfileDetails.Destination")); //$NON-NLS-1$
                 GridData label3LData = new GridData();
                 label3.setLayoutData(label3LData);
             }
             {
                 textDestination = new Text(this, SWT.BORDER);
                 GridData textDestinationLData = new GridData();
-                textDestination.setToolTipText("Destination location");
+                textDestination.setToolTipText(Messages.getString("ProfileDetails.Destination_location")); //$NON-NLS-1$
                 textDestinationLData.horizontalAlignment = GridData.FILL;
                 textDestinationLData.horizontalSpan = 5;
                 textDestinationLData.grabExcessHorizontalSpace = true;
@@ -224,12 +224,12 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 buttonDestinationBuffered = new Button(this, SWT.CHECK | SWT.LEFT);
-                buttonDestinationBuffered.setText("buffered");
+                buttonDestinationBuffered.setText(Messages.getString("ProfileDetails.buffered")); //$NON-NLS-1$
                 //buttonDestinationBuffered.setEnabled( false );
             }
             {
                 label10 = new Label(this, SWT.NONE);
-                label10.setText("Username:");
+                label10.setText(Messages.getString("ProfileDetails.Username")+":"); //$NON-NLS-1$
             }
             {
                 textDestinationUsername = new Text(this, SWT.BORDER);
@@ -239,7 +239,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label11 = new Label(this, SWT.NONE);
-                label11.setText("Password:");
+                label11.setText(Messages.getString("ProfileDetails.Password")+":"); //$NON-NLS-1$
             }
             {
                 textDestinationPassword = new Text(this, SWT.BORDER);
@@ -252,30 +252,30 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label16 = new Label(this, SWT.NONE);
-                label16.setText("Type:");
+                label16.setText(Messages.getString("ProfileDetails.Type")); //$NON-NLS-1$
             }
             {
                 comboType = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
                 comboType.addModifyListener(new ModifyListener() {
                     public void modifyText(ModifyEvent evt) {
-                        if( comboType.getText().equals( "Publish/Update" ) )
+                        if( comboType.getText().equals( "Publish/Update" ) ) //$NON-NLS-1$
                         {
                             labelTypeDescription.setText( 
-                                    "Will apply any changes in source to destination. \n" +
-                                    "New files created in destination will be ignored, \n" +
-                                    "and changes to existing ones will result in a warning." );
+                                    Messages.getString("ProfileDetails.Publish_description_1") + //$NON-NLS-1$
+                                    Messages.getString("ProfileDetails.Publish_description_2") + //$NON-NLS-1$
+                                    Messages.getString("ProfileDetails.Publish_description_3") ); //$NON-NLS-1$
                             buttonSourceBuffered.setSelection( false );
                             buttonDestinationBuffered.setSelection( true );
-                        } else if( comboType.getText().equals( "Backup Copy" ) ) {
+                        } else if( comboType.getText().equals( "Backup Copy" ) ) { //$NON-NLS-1$
                             labelTypeDescription.setText( 
-                                     "Will copy any changes to destination but \n" +
-                                     "won't delete anything." );
+                                     Messages.getString("ProfileDetails.Backup_description_1") + //$NON-NLS-1$
+                                     Messages.getString("ProfileDetails.Backup_description_2") ); //$NON-NLS-1$
 	                        buttonSourceBuffered.setSelection( false );
 	                        buttonDestinationBuffered.setSelection( false );
-                        } else if( comboType.getText().equals( "Exact Copy" ) ) {
+                        } else if( comboType.getText().equals( "Exact Copy" ) ) { //$NON-NLS-1$
                             labelTypeDescription.setText( 
-                                     "Will copy any changes to destination so \n" +
-                                     "it stays an exact copy of the source." );
+                                     Messages.getString("ProfileDetails.Copy_description_1") + //$NON-NLS-1$
+                                     Messages.getString("ProfileDetails.Copy_description_2") ); //$NON-NLS-1$
 	                        buttonSourceBuffered.setSelection( false );
 	                        buttonDestinationBuffered.setSelection( false );
                         }
@@ -284,7 +284,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 labelTypeDescription = new Label(this, SWT.WRAP);
-                labelTypeDescription.setText("Description");
+                labelTypeDescription.setText(Messages.getString("ProfileDetails.Description")); //$NON-NLS-1$
                 GridData labelTypeDescriptionLData = new GridData();
                 labelTypeDescriptionLData.heightHint = 40;
                 labelTypeDescriptionLData.horizontalSpan = 5;
@@ -293,11 +293,11 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label17 = new Label(this, SWT.NONE);
-                label17.setText("Scheduling:");
+                label17.setText(Messages.getString("ProfileDetails.Scheduling")); //$NON-NLS-1$
             }
             {
                 buttonScheduling = new Button(this, SWT.PUSH | SWT.CENTER);
-                buttonScheduling.setText("Edit Scheduling");
+                buttonScheduling.setText(Messages.getString("ProfileDetails.Edit_Scheduling")); //$NON-NLS-1$
                 buttonScheduling.addSelectionListener(new SelectionAdapter() {
                     public void widgetSelected(SelectionEvent evt) {
                         ScheduleSelectionDialog dialog = new ScheduleSelectionDialog( getShell(), SWT.NULL );
@@ -310,11 +310,11 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 buttonEnabled = new Button(this, SWT.CHECK | SWT.RIGHT);
-                buttonEnabled.setText("Enabled");
+                buttonEnabled.setText(Messages.getString("ProfileDetails.Enabled")); //$NON-NLS-1$
             }
             {
                 buttonResetError = new Button(this, SWT.CHECK | SWT.RIGHT);
-                buttonResetError.setText("Reset Errorflag");
+                buttonResetError.setText(Messages.getString("ProfileDetails.Reset_ErrorFlag")); //$NON-NLS-1$
                 GridData buttonResetErrorLData = new GridData();
                 buttonResetErrorLData.horizontalSpan = 3;
                 buttonResetError.setLayoutData(buttonResetErrorLData);
@@ -332,10 +332,10 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 ruleSetGroupLayout.makeColumnsEqualWidth = true;
                 ruleSetGroupLayout.horizontalSpacing = 20;
                 ruleSetGroup.setLayout(ruleSetGroupLayout);
-                ruleSetGroup.setText("RuleSet");
+                ruleSetGroup.setText(Messages.getString("ProfileDetails.RuleSet")); //$NON-NLS-1$
                 {
                     rbSimplyfiedRuleSet = new Button(ruleSetGroup, SWT.RADIO | SWT.LEFT);
-                    rbSimplyfiedRuleSet.setText("Simple Rule Set");
+                    rbSimplyfiedRuleSet.setText(Messages.getString("ProfileDetails.Simple_Rule_Set")); //$NON-NLS-1$
                     rbSimplyfiedRuleSet.setSelection(true);
                     GridData rbSimplyfiedRuleSetLData = new GridData();
                     rbSimplyfiedRuleSetLData.grabExcessHorizontalSpace = true;
@@ -350,7 +350,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 }
                 {
                     rbAdvancedRuleSet = new Button(ruleSetGroup, SWT.RADIO | SWT.LEFT);
-                    rbAdvancedRuleSet.setText("Advanced Rule Set");
+                    rbAdvancedRuleSet.setText(Messages.getString("ProfileDetails.Advanced_Rule_Set")); //$NON-NLS-1$
                     GridData rbAdvancedRuleSetLData = new GridData();
                     rbAdvancedRuleSetLData.heightHint = 16;
                     rbAdvancedRuleSetLData.grabExcessHorizontalSpace = true;
@@ -373,26 +373,26 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     simplyfiedOptionsGroup.setLayoutData(simplyfiedOptionsGroupLData);
                     simplyfiedOptionsGroupLayout.numColumns = 2;
                     simplyfiedOptionsGroup.setLayout(simplyfiedOptionsGroupLayout);
-                    simplyfiedOptionsGroup.setText("Simple Rule Options");
+                    simplyfiedOptionsGroup.setText(Messages.getString("ProfileDetails.Simple_Rule_Options")); //$NON-NLS-1$
                     {
                         syncSubsButton = new Button(simplyfiedOptionsGroup, SWT.CHECK | SWT.LEFT);
-                        syncSubsButton.setText("Sync Subdirectories");
+                        syncSubsButton.setText(Messages.getString("ProfileDetails.Sync_SubDirs")); //$NON-NLS-1$
                         GridData syncSubsButtonLData = new GridData();
                         syncSubsButton
-                            .setToolTipText("Recurre into subdirectories?");
-                        syncSubsButtonLData.widthHint = 115;
+                            .setToolTipText(Messages.getString("ProfileDetails.Rucurre")); //$NON-NLS-1$
+                        syncSubsButtonLData.widthHint = 201;
                         syncSubsButtonLData.heightHint = 16;
                         syncSubsButtonLData.horizontalSpan = 2;
                         syncSubsButton.setLayoutData(syncSubsButtonLData);
                     }
                     {
                         label13 = new Label(simplyfiedOptionsGroup, SWT.NONE);
-                        label13.setText("Ignore pattern");
+                        label13.setText(Messages.getString("ProfileDetails.Ingore_Pattern")); //$NON-NLS-1$
                     }
                     {
                         textIgnorePatter = new Text(simplyfiedOptionsGroup, SWT.BORDER);
                         GridData textIgnorePatterLData = new GridData();
-                        textIgnorePatter.setToolTipText("Ignore RegExp");
+                        textIgnorePatter.setToolTipText(Messages.getString("ProfileDetails.Ignore_ToolTip")); //$NON-NLS-1$
                         textIgnorePatterLData.heightHint = 13;
                         //textIgnorePatterLData.widthHint = 100;
                         textIgnorePatterLData.grabExcessHorizontalSpace = true;
@@ -401,11 +401,12 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     }
                     {
                         label14 = new Label(simplyfiedOptionsGroup, SWT.NONE);
-                        label14.setText("Accept pattern");
+                        label14.setText(Messages.getString("ProfileDetails.Accept_Pattern")); //$NON-NLS-1$
                     }
                     {
                         textAcceptPattern = new Text(simplyfiedOptionsGroup, SWT.BORDER);
                         GridData textAcceptPatternLData = new GridData();
+                        textAcceptPattern.setToolTipText(Messages.getString("ProfileDetails.Accept_ToolTip")); //$NON-NLS-1$
                         textAcceptPatternLData.heightHint = 13;
                         //textAcceptPatternLData.widthHint = 100;
                         textAcceptPatternLData.grabExcessHorizontalSpace = true;
@@ -425,13 +426,13 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     advancedRuleOptionsGroup.setLayoutData(advancedRuleOptionsGroupLData);
                     advancedRuleOptionsGroupLayout.numColumns = 2;
                     advancedRuleOptionsGroup.setLayout(advancedRuleOptionsGroupLayout);
-                    advancedRuleOptionsGroup.setText("Advanced Rule Options");
+                    advancedRuleOptionsGroup.setText(Messages.getString("ProfileDetails.Advanced_Rule_Options")); //$NON-NLS-1$
                     {
                         label4 = new Label(advancedRuleOptionsGroup, SWT.NONE);
                         GridData label4LData = new GridData();
                         label4.setEnabled(false);
                         label4.setLayoutData(label4LData);
-                        label4.setText("RuleSet:");
+                        label4.setText(Messages.getString("ProfileDetails.RuleSet_2")); //$NON-NLS-1$
                     }
                     {
                         textRuleSet = new Text(advancedRuleOptionsGroup, SWT.BORDER);
@@ -443,9 +444,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     }
                 }
             }
-            comboType.add( "Publish/Update" );
-            comboType.add( "Backup Copy" );
-            comboType.add( "Exact Copy" );
+            comboType.add( "Publish/Update" ); //$NON-NLS-1$
+            comboType.add( "Backup Copy" ); //$NON-NLS-1$
+            comboType.add( "Exact Copy" ); //$NON-NLS-1$
 			this.layout();
 			this.setSize(500, 409);
 	
@@ -480,7 +481,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	    
 	    Profile p = profileManager.getProfile( profileName );
 	    if( p == null )
-	        throw new IllegalArgumentException( "profile does not exist" );
+	        throw new IllegalArgumentException( Messages.getString("ProfileDetails.profile_does_not_exist") ); //$NON-NLS-1$
 	        
         textName.setText( p.getName() );
         textDescription.setText( p.getDescription() );
@@ -536,7 +537,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	{
 	    ConnectionDescription src, dst;
 	    try {
-	        src = new ConnectionDescription( textSource.getText(), "" );
+	        src = new ConnectionDescription( textSource.getText(), "" ); //$NON-NLS-1$
 	        if( buttonSourceBuffered.getSelection() )
 	            src.setBufferStrategy( "syncfiles" );
 	        if( textSourceUsername.getText().length() > 0 )
@@ -544,7 +545,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	            src.setUsername( textSourceUsername.getText() );
 	            src.setPassword( textSourcePassword.getText() );
 	        }
-	        dst = new ConnectionDescription( textDestination.getText(), "" );
+	        dst = new ConnectionDescription( textDestination.getText(), "" ); //$NON-NLS-1$
 	        if( buttonDestinationBuffered.getSelection() )
 	            dst.setBufferStrategy( "syncfiles" );
 	        if( textDestinationUsername.getText().length() > 0 )
@@ -563,8 +564,8 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	        if( pr != null )
 	        {
 	            MessageBox mb = new MessageBox( this.getShell(), SWT.ICON_ERROR );
-	            mb.setText( "Duplicate Entry" );
-	            mb.setMessage( "A Profile with the same name already exists." );
+	            mb.setText( Messages.getString("ProfileDetails.Duplicate_Entry") ); //$NON-NLS-1$
+	            mb.setMessage( Messages.getString("ProfileDetails.Profile_already_exists") ); //$NON-NLS-1$
 	            mb.open();
 	            return;
 	        }
@@ -620,7 +621,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	/** Auto-generated event handler method */
 	protected void buttonBrowseSrcWidgetSelected(SelectionEvent evt){
 		DirectoryDialog dd = new DirectoryDialog( getShell() );
-		dd.setMessage( "Choose local source directory." );
+		dd.setMessage( Messages.getString("ProfileDetails.Choose_source_dir") ); //$NON-NLS-1$
 		String str = dd.open();
 		if( str != null )
 		    textSource.setText( new File( str ).toURI().toString() );
@@ -629,7 +630,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	/** Auto-generated event handler method */
 	protected void buttonBrowseDstWidgetSelected(SelectionEvent evt){
 		DirectoryDialog dd = new DirectoryDialog( getShell() );
-		dd.setMessage( "Choose local source directory." );
+		dd.setMessage( Messages.getString("ProfileDetails.Choose_source_dir") ); //$NON-NLS-1$
 		String str = dd.open();
 		if( str != null )
 		    textDestination.setText( new File( str ).toURI().toString() );

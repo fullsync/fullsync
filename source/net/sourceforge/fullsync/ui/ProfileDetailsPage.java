@@ -31,11 +31,11 @@ public class ProfileDetailsPage implements WizardPage
     }
     public String getTitle()
     {
-        return "Profile "+profileName;
+        return Messages.getString("ProfileDetailsPage.Profile")+" "+profileName; //$NON-NLS-1$
     }
     public String getCaption()
     {
-        return "Profile Details";
+        return Messages.getString("ProfileDetailsPage.ProfileDetails"); //$NON-NLS-1$
     }
     public String getDescription()
     {
@@ -60,7 +60,7 @@ public class ProfileDetailsPage implements WizardPage
         bottom.setLayout( new GridLayout( 2, false ) );
         
         Button okButton = new Button( bottom, SWT.PUSH );
-        okButton.setText( "Ok" );
+        okButton.setText( Messages.getString("ProfileDetailsPage.Ok") ); //$NON-NLS-1$
         okButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected( SelectionEvent e )
             {
@@ -71,7 +71,7 @@ public class ProfileDetailsPage implements WizardPage
         okButton.setLayoutData( new GridData( GridData.END, GridData.CENTER, true, true ) );
         
         Button cancelButton = new Button( bottom, SWT.PUSH );
-        cancelButton.setText( "Cancel" );
+        cancelButton.setText( Messages.getString("ProfileDetailsPage.Cancel") ); //$NON-NLS-1$
         cancelButton.addSelectionListener( new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e)
             {

@@ -123,9 +123,16 @@ public class ConfigurationPreferences implements Preferences
 		config.setProperty("Interface.ShowSplashScreen", new Boolean(bool));
 	}
 	public boolean autostartScheduler() {
-		return config.getBoolean("Interface.AutostartScheduler", true);
+		return config.getBoolean("Interface.AutostartScheduler", false);
 	}
 	public void setAutostartScheduler(boolean bool) {
 		config.setProperty("Interface.AutostartScheduler", new Boolean(bool));
 	}
+    public String getLanguageCode() {
+    	return config.getString("Interface.LanguageCode", new String("en"));
+    }
+    public void setLanguageCode(String code) {
+    	config.setProperty("Interface.LanguageCode", code);
+    }
+
 }

@@ -49,7 +49,7 @@ public class IntervalScheduleOptions extends ScheduleOptions
 			this.setSize(265, 32);
             {
                 label1 = new Label(this, SWT.NONE);
-                label1.setText("Execute every");
+                label1.setText(Messages.getString("IntervalScheduleOptions.ExecuteEvery")); //$NON-NLS-1$
                 GridData label1LData = new GridData();
                 label1LData.widthHint = 74;
                 label1LData.heightHint = 15;
@@ -67,7 +67,7 @@ public class IntervalScheduleOptions extends ScheduleOptions
                 cbUnit = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
                 // TODO sadly we can't support "days","months" as the interval is starting
                 // with program startup
-                cbUnit.setItems(new java.lang.String[] {"seconds","minutes","hours"});
+                cbUnit.setItems(new java.lang.String[] {Messages.getString("IntervalScheduleOptions.seconds"),Messages.getString("IntervalScheduleOptions.minutes"),Messages.getString("IntervalScheduleOptions.hours")}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
 			this.layout();
 		} catch (Exception e) {
@@ -76,7 +76,7 @@ public class IntervalScheduleOptions extends ScheduleOptions
 	}
 	public String getSchedulingName()
     {
-        return "Interval";
+        return Messages.getString("IntervalScheduleOptions.Interval"); //$NON-NLS-1$
     }
 	public boolean canHandleSchedule( Schedule sched )
     {

@@ -88,7 +88,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			this.setSize(274, 139);
 			{
 				label1 = new Label(this, SWT.NONE);
-				label1.setText("Hostname:");
+				label1.setText(Messages.getString("ConnectionComposite.Hostname")+":"); //$NON-NLS-1$
 			}
 			{
 				textFieldHostname = new Text(this, SWT.BORDER);
@@ -101,7 +101,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			}
 			{
 				label2 = new Label(this, SWT.NONE);
-				label2.setText("Port:");
+				label2.setText(Messages.getString("ConnectionComposite.Port")+":"); //$NON-NLS-1$
 			}
 			{
 				textFieldPort = new Text(this, SWT.BORDER);
@@ -113,7 +113,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			}
 			{
 				label3 = new Label(this, SWT.NONE);
-				label3.setText("Password:");
+				label3.setText(Messages.getString("ConnectionComposite.Password")+":"); //$NON-NLS-1$
 			}
 			{
 				textPassword = new Text(this, SWT.BORDER);
@@ -126,7 +126,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			{
 				cbDisableRemoteListener = new Button(this, SWT.CHECK | SWT.LEFT);
 				cbDisableRemoteListener
-					.setText("Disable progress indicator (for slow networks)");
+					.setText(Messages.getString("ConnectionComposite.Disable_Indicator")); //$NON-NLS-1$
 				GridData cbDisableRemoteListenerLData = new GridData();
 				cbDisableRemoteListenerLData.horizontalSpan = 2;
 				cbDisableRemoteListener.setLayoutData(cbDisableRemoteListenerLData);
@@ -160,7 +160,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			GuiController.getInstance().getProfileManager().setRemoteConnection(remoteManager);
 			GuiController.getInstance().getSynchronizer().setRemoteConnection(remoteManager);
 		} catch (Exception e1) {
-			ExceptionHandler.reportException( "Unable to connect to the remote server.", e1 );
+			ExceptionHandler.reportException( Messages.getString("ConnectionComposite.Unable_To_Connect"), e1 ); //$NON-NLS-1$
 		}
 	}
 }

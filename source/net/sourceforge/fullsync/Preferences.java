@@ -83,4 +83,7 @@ public interface Preferences
 
     public boolean autostartScheduler();
     public void setAutostartScheduler(boolean bool);
+    
+    public String getLanguageCode();
+    public void setLanguageCode(String code);
 }

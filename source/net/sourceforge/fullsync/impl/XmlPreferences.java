@@ -189,6 +189,12 @@ public class XmlPreferences implements Preferences
 	public void setAutostartScheduler( boolean bool )
     {
         // TODO Auto-generated method stub
-
     }
+	public String getLanguageCode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void setLanguageCode(String code) {
+		// TODO Auto-generated method stub
+	}
 }
