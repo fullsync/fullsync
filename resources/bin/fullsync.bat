@@ -1,1 +1,1 @@
-@java -jar ..\lib\fullsync.jar
+@start javaw -classpath lib/fullsync.jar;lib/commons-betwixt-1.0-alpha-1.jar;lib/commons-net-1.2.2.jar;lib/log4j-1.2.8.jar;lib/commons-io.jar;lib/swt.jar;lib/commons-beanutils.jar;lib/xml-apis.jar;lib/j2ssh-core.jar;lib/commons-collections.jar;lib/jakarta-oro-2.0.7.jar;lib/commons-logging.jar;lib/commons-digester-1.5.jar;lib/XercesImpl.jar net.sourceforge.fullsync.FullSync

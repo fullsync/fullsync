@@ -28,9 +28,10 @@
 		<include name="commons-collections.jar"/>
 		<include name="commons-net-1.2.2.jar"/>
 		<include name="commons-digester-1.5.jar"/>
-		<include name="xerces-2.4.0.jar"/>
+		<include name="xercesImpl.jar"/>
 		<include name="xml-apis.jar"/>
 		<include name="swt.jar"/>
+		<include name="log4j-1.2.8.jar"/>
 	</fileset>
 	<path id="classpath">
 		<fileset refid="dependentJars"/>
