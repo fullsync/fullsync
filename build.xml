@@ -6,7 +6,7 @@
 	<!-- Project Properties -->
 	<property name="name" 				value="FullSync"/>
 	<property name="project"			value="FullSync"/>
-	<property name="version"			value="0.8.0"/>
+	<property name="version"			value="0.9"/>
 	<property name="final.name"			value="${project}-${version}"/>
 	<property name="final-src.name"		value="${project}-${version}-src"/>
 

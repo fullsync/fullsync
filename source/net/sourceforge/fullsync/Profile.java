@@ -123,7 +123,7 @@ public class Profile implements Serializable
             return "not enabled";
         } else {
             //if( lastUpdate == null )
-                 return DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG ).format( schedule.getNextOccurrence(new Date().getTime()) );
+                 return DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG ).format( new Date( schedule.getNextOccurrence(new Date().getTime()) ) );
             //else return new Date( schedule.getNextOccurrence(lastUpdate.getTime()) ).toString();
         }
     }
