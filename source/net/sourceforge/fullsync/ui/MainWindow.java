@@ -395,58 +395,6 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
     {
         return guiController;
     }
-	
-//	public void populateProfileList()
-//	{
-//	    if( guiController != null )
-//	    {
-//	        tableProfiles.clearAll();
-//	        tableProfiles.setItemCount(0);
-//	        Enumeration e = guiController.getProfileManager().getProfiles();
-//	        while( e.hasMoreElements() )
-//	        {
-//	            Profile p = (Profile)e.nextElement();
-//	            TableItem item = new TableItem( tableProfiles, SWT.NULL );
-//	            item.setText( new String[] { 
-//	                    p.getName(),
-//	                    p.getLastUpdate().toString(),
-//	                    p.getSource().toString(),
-//	                    p.getDestination().toString() } );
-//	        }
-//	        tableColumnName.pack();
-//	        tableColumnLastUpdate.pack();
-//	        tableColumnSource.pack();
-//	        tableColumnDestination.pack();
-//	    }
-
-//		try {
-//			RemoteInterface remoteInterface = (RemoteInterface) Naming.lookup("rmi://localhost:10000/FullSync");
-//			Profile[] profiles = remoteInterface.getProfiles();
-//	        for (int i = 0; i < profiles.length; i++){
-//	        	Profile p = profiles[i];
-//	        	TableItem item = new TableItem( tableProfiles, SWT.NULL );
-//	        	item.setText( new String[] { 
-//	        			p.getName(),
-//						p.getLastUpdate().toString(),
-//						p.getSource().toString(),
-//						p.getDestination().toString() } );
-//	        }
-//	        tableColumnName.pack();
-//	        tableColumnLastUpdate.pack();
-//	        tableColumnSource.pack();
-//	        tableColumnDestination.pack();
-//		} catch (MalformedURLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (RemoteException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (NotBoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-
-//	}
 
 	protected void minimizeToTray() 
 	{
