@@ -68,6 +68,7 @@ public class ProfileManager implements ProfileChangeListener
     protected Vector profiles;
     private Vector changeListeners;
     private Vector scheduleListeners;
+    private Vector timerListeners;
     private Timer timer;
     private boolean timerActive;
 
@@ -81,6 +82,7 @@ public class ProfileManager implements ProfileChangeListener
     protected ProfileManager() {
         this.changeListeners = new Vector();
         this.scheduleListeners = new Vector();
+        this.timerListeners = new Vector();
         this.timerActive = false;
     }
     
@@ -90,6 +92,7 @@ public class ProfileManager implements ProfileChangeListener
         this.profiles = new Vector();
         this.changeListeners = new Vector();
         this.scheduleListeners = new Vector();
+        this.timerListeners = new Vector();
         this.timerActive = false;
         
         loadProfiles();
@@ -267,6 +270,7 @@ public class ProfileManager implements ProfileChangeListener
     		timer = new Timer( true);
     		updateTimer();
     	}
+    	fireTimerChangedEvent(timerActive);
     }
     void updateTimer()
     {
@@ -314,6 +318,7 @@ public class ProfileManager implements ProfileChangeListener
     			timer.cancel();
     		}
     	}
+    	fireTimerChangedEvent(timerActive);
     }
     public void addProfilesChangeListener( ProfileListChangeListener listener )
     {
@@ -346,11 +351,22 @@ public class ProfileManager implements ProfileChangeListener
     public void removeSchedulerListener( ProfileSchedulerListener listener )
     {
         scheduleListeners.remove( listener );
-    }
+    }    
     protected void fireProfileSchedulerEvent( Profile profile  )
     {
         for( int i = 0; i < scheduleListeners.size(); i++ )
             ((ProfileSchedulerListener)scheduleListeners.get( i )).profileExecutionScheduled( profile );
+    }
+    public void addTimerListener(TimerUpdateListener listener) {
+    	timerListeners.add(listener);
+    }
+    public void removeTimerListener(TimerUpdateListener listener) {
+    	timerListeners.remove(listener);
+    }
+    protected void fireTimerChangedEvent(boolean status) {
+    	for (int i = 0; i < timerListeners.size(); i++) {
+    		((TimerUpdateListener)timerListeners.get(i)).timerStatusChanged(status);
+    	}
     }
     protected ConnectionDescription unserializeConnectionDescription( Element element )
     {

@@ -168,8 +168,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                     cbListenForIncomming = new Button(
                         groupRemoteConnection,
                         SWT.CHECK | SWT.LEFT);
-                    cbListenForIncomming
-                        .setText("Start listen for incoming connections on startup");
+                    cbListenForIncomming.setText("Enable remote connections");
                     GridData cbListenForIncommingLData = new GridData();
                     cbListenForIncomming
                         .addSelectionListener(new SelectionAdapter() {

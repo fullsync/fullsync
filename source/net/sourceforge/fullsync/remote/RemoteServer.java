@@ -10,6 +10,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
@@ -34,7 +36,9 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	private String password;
 	
 	private HashMap listenersMap = new HashMap();
-		
+
+    Logger logger = Logger.getLogger( "FullSync" );
+	
 	public RemoteServer(ProfileManager profileManager, Synchronizer synchronizer) throws RemoteException {
 		this.profileManager = profileManager;
 		this.synchronizer = synchronizer;
@@ -45,7 +49,14 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	}
 	
 	public boolean checkPassword(String passwd) throws RemoteException {
-		return this.password.equals(passwd);
+		boolean check = password.equals(passwd);
+		if (check) {
+			logger.info("Received client connection on remote interface.");
+		}
+		else {
+			logger.info("Client connection on remote interface rejected because of wrong password.");
+		}
+		return check;
 	}
 	
 	public Profile getProfile(String name) throws RemoteException {
@@ -170,6 +181,9 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 				p.setSynchronizationType(profiles[i].getSynchronizationType());
 				p.setRuleSet(profiles[i].getRuleSet());
 				p.setSchedule(profiles[i].getSchedule());
+				p.setEnabled(profiles[i].isEnabled());
+				
+				profileManager.profileChanged(p);
 			}
 		}
 	}

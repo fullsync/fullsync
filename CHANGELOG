@@ -1,3 +1,4 @@
+* improved remote interface. now almost every feature of fullsync is available using the remote interface
 * added -P option, taking a filename which will overwrite the default profiles.xml
 * added popup menu to nicelistview
 * added exact copy action decider
@@ -31,17 +32,17 @@
 * added new preference: profile list
 * added NiceListView -> alternative profile list
 * added ProfileChange listener to profile
-* added a main menu bar (patch by michele)
+* added a main menu bar
 * LogWindow:
     - now caching and disposing images
     - tableitems are reused, action change does not rebuilt table
     - multi select and multi action change possible
-* added RuleSetDescriptor and divided into simple rulesets and advanced (the old ones) (patch by michele)
-* added changing background color of finished actions in logwindow (patch by michele)
-* added busy indicator for sync and execution phases (patch by michele)
-* added context menu for profile actions (patch by michele)
-* added initial preferences dialog (patch by michele)
-* added initial preferences manager (patch by michele)
+* added RuleSetDescriptor and divided into simple rulesets and advanced
+* added changing background color of finished actions in logwindow
+* added busy indicator for sync and execution phases
+* added context menu for profile actions
+* added initial preferences dialog
+* added initial preferences manager
 * now number of tasks that must be performed is correct
 * added traversal types, so source buffer<->fs check is now implementable
 * added feedback in synchronization phase 

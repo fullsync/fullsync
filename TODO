@@ -211,10 +211,10 @@ Release-critical:
    	[X] if scheduling is changed we need to refresh the timer
    	[X] show correct number of tasks to do in taskDecider window
 	[X] show icons in profile list popups
-	[ ] set serialVersionIds... otherwise we'll have huge problems releasing 
+	[X] set serialVersionIds... otherwise we'll have huge problems releasing 
 		patches even if not a single serializeable object has changed.
 	[X] get rid of gifs, so we only use one patentfree format ;)
-	[ ] propagate updates of server profiles to client-gui
+	[X] propagate updates of server profiles to client-gui
 	[ ] enable/disable certain menu items if not available
 	
 GraphicsTodo:

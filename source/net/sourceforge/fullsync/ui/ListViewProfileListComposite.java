@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.TableItem;
 * for any corporate or commercial purpose.
 * *************************************
 */
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */

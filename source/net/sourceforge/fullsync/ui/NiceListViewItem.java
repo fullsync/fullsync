@@ -1,6 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Profile;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -31,6 +32,7 @@ public class NiceListViewItem extends Canvas
     private Color colorSelectedHover;
     
     private ProfileListControlHandler handler;
+    private Profile profile;
     
     private boolean selected;
 
@@ -72,7 +74,7 @@ public class NiceListViewItem extends Canvas
 			            getMenu().setVisible( true );
                 }
 				public void mouseDoubleClick(MouseEvent e) {
-
+					handler.editProfile(profile);
 				}
 			};
 			
@@ -242,7 +244,7 @@ public class NiceListViewItem extends Canvas
 		            getMenu().setVisible( true );
             }
 			public void mouseDoubleClick(MouseEvent e) {
-			
+				handler.editProfile(profile);
 			}
 		};
 
@@ -262,6 +264,12 @@ public class NiceListViewItem extends Canvas
     public void setHandler( ProfileListControlHandler handler )
     {
         this.handler = handler;
+    }
+    public Profile getProfile() {
+    	return profile;
+    }
+    public void setProfile(Profile profile) {
+    	this.profile = profile;
     }
 
 }

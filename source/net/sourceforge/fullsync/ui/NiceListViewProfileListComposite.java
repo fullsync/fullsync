@@ -222,6 +222,8 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 				content.setProfile( p );
 				item.setContent( content );
 				item.setMenu( getMenu() );
+				item.setHandler(handler);
+				item.setProfile(p);
 				updateItem( item, p );
 				
 				profilesToItems.put( p, item );
