@@ -166,12 +166,15 @@ public class NiceListViewItem extends Canvas
 	public void setText( String text )
 	{
 	    labelCaption.setText( text );
+	    labelCaption.pack();
+	    layout();
 	}
 	public void setStatusText( String status )
 	{
 	    if( status == null || status.length() == 0 )
 	         labelStatus.setText( "" );
 	    else labelStatus.setText( "("+status+")" );
+	    labelStatus.pack();
 	}
 	
 	public void setSelected( boolean selected )

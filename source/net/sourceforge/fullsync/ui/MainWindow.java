@@ -517,7 +517,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	    mb.setMessage( "Do you really want to delete profile "+p.getName()+" ?");
 	    if( mb.open() == SWT.YES )
 	    {
-	        profileManager.removeProfile( p.getName() );
+	        profileManager.removeProfile( p );
 	        profileManager.save();
 	    }
 	}

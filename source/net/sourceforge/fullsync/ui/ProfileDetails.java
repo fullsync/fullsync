@@ -414,6 +414,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	        throw new IllegalArgumentException( "profile does not exist" );
 	        
         textName.setText( p.getName() );
+        textDescription.setText( p.getDescription() );
         textSource.setText( p.getSource().getUri().toString() );
         buttonSourceBuffered.setSelection( "syncfiles".equals( p.getSource().getBufferStrategy() ) );
         if( p.getSource().getUsername() != null )

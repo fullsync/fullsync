@@ -9,7 +9,6 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -64,7 +63,7 @@ public class ProfileManager implements ProfileChangeListener
 	
 	
     private String configFile;
-    private Hashtable profiles;
+    private Vector profiles;
     private Vector changeListeners;
     private Vector scheduleListeners;
     private Timer timer;
@@ -73,7 +72,7 @@ public class ProfileManager implements ProfileChangeListener
     public ProfileManager( String configFile ) throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError
     {
         this.configFile = configFile;
-        this.profiles = new Hashtable();
+        this.profiles = new Vector();
         this.changeListeners = new Vector();
         this.scheduleListeners = new Vector();
         this.timerActive = false;
@@ -123,10 +122,10 @@ public class ProfileManager implements ProfileChangeListener
         }
         */
     }
-    public void addProfile( Profile p )
+    public void addProfile( Profile profile )
     {
-        profiles.put( p.getName(), p );
-        p.addProfileChangeListener( this );
+        profiles.add( profile );
+        profile.addProfileChangeListener( this );
         fireProfilesChangeEvent();
     }
     public void addProfile( String name, ConnectionDescription source, ConnectionDescription destination, RuleSetDescriptor ruleSet, String lastUpdate )
@@ -139,10 +138,10 @@ public class ProfileManager implements ProfileChangeListener
         }
         addProfile( new Profile( name, source, destination, ruleSet, date ) );
     }
-    public void removeProfile( String name )
+    public void removeProfile( Profile profile )
     {
-        Profile profile = (Profile)profiles.remove( name );
         profile.removeProfileChangeListener( this );
+        profiles.remove( profile );
         fireProfilesChangeEvent();
     }
     public Enumeration getProfiles()
@@ -151,7 +150,13 @@ public class ProfileManager implements ProfileChangeListener
     }
     public Profile getProfile( String name )
     {
-        return (Profile)profiles.get( name );
+        for( int i = 0; i < profiles.size(); i++ )
+        {
+            Profile p = (Profile)profiles.get( i );
+            if( p.getName().equals( name ) )
+                return p;
+        }
+        return null;
     }
     public void startTimer()
     {

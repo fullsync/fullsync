@@ -1,3 +1,4 @@
+* fixed renaming of profiles and description in profile details dialog
 * changed feedback of task generation phase to poll instead of push
   which took a lot of time
 * added TaskFinishedEvent, which allows unsuccessful feedback

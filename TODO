@@ -162,6 +162,8 @@ Release-critical:
     [X] "checking <file>" is taking most of the time when comparing local to local
     	we shouldn't push but poll this status string !
    	[ ] scheduler in profile
+   	[ ] verify simple rulesets
+   	[X] rename of profiles (see hashtable in profilemanager)
 
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
 
