@@ -54,7 +54,31 @@ public class CrontabScheduleTest extends TestCase
 	    	    
 	    assertNextOccurence( "0 0 * * *" );
 	}
-    
+
+    public void testGetNextOccurrenceTwice()
+		throws Exception
+	{
+	    now.set( 2004, 0, 1, 0, 0, 0 );
+	    now.set( Calendar.MILLISECOND, 0 );
+	    expectedResult.set( 2004, 0, 1, 0, 0, 0 );
+	    expectedResult.set( Calendar.MILLISECOND, 0 );
+	    
+	    Schedule schedule = new CrontabSchedule( "0 0 * * *" );
+        long res;
+        
+        res = schedule.getNextOccurrence(now.getTimeInMillis());
+        assertEquals( new Date( expectedResult.getTimeInMillis() ),
+                	  new Date( res ) );
+        
+        schedule.setLastOccurrence( now.getTimeInMillis() ) ;
+	    expectedResult.set( 2004, 0, 2, 0, 0, 0 );
+	    expectedResult.set( Calendar.MILLISECOND, 0 );
+
+	    res = schedule.getNextOccurrence(now.getTimeInMillis());
+        assertEquals( new Date( expectedResult.getTimeInMillis() ),
+                	  new Date( res ) );
+	}
+
     
     public void testGetNextOccurrenceHour1()
     	throws Exception

@@ -20,6 +20,8 @@ public class CrontabSchedule implements Schedule
     private CrontabPart.Instance months;
     private CrontabPart.Instance daysOfWeek;
     
+    private transient long lastExecution; 
+    
     public CrontabSchedule()
     	throws DataParseException
     {
@@ -111,6 +113,8 @@ public class CrontabSchedule implements Schedule
     
     public long getNextOccurrence( long now )
     {
+        if( now == lastExecution )
+            now += 1000;
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis( now );
 
@@ -131,7 +135,7 @@ public class CrontabSchedule implements Schedule
         //gotoNextOrStay( bDaysOfWeek, cal, Calendar.DAY_OF_WEEK );
         gotoNextOrStay( hours.bArray, cal, Calendar.HOUR_OF_DAY ); 
         gotoNextOrStay( minutes.bArray, cal, Calendar.MINUTE );
-        if( cal.get( Calendar.MILLISECOND ) != 0 )
+        if( cal.get( Calendar.SECOND ) != 0 || cal.get( Calendar.MILLISECOND ) != 0 )
 		{
 			cal.set( Calendar.SECOND, 0 );
 			cal.set( Calendar.MILLISECOND, 0 );
@@ -213,10 +217,9 @@ public class CrontabSchedule implements Schedule
         cal.set( field, now );
     }
     
-    public void update()
+    public void setLastOccurrence(long now)
     {
-        
-
+        lastExecution = now;
     }
     
     public CrontabPart.Instance[] getParts()

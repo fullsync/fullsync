@@ -258,7 +258,7 @@ public class CrontabSchedule3 implements Schedule
         return false;
     }
     
-    public void update()
+    public void setLastOccurrence(long now)
     {
         
 

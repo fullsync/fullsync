@@ -12,6 +12,5 @@ import java.io.Serializable;
 public interface Schedule extends Serializable
 {
 	public long getNextOccurrence( long now );
-	// TODO instead of update we should use set last occurrence
-	public void update();
+	public void setLastOccurrence( long now );
 }

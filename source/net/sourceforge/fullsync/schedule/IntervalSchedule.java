@@ -3,7 +3,6 @@
  */
 package net.sourceforge.fullsync.schedule;
 
-import java.util.Date;
 
 
 
@@ -31,9 +30,9 @@ public class IntervalSchedule implements Schedule
 		return next>now?next:now;
 	}
 	
-	public void update()
+	public void setLastOccurrence( long now )
 	{
-		this.next = new Date().getTime() + interval;
+		this.next = now + interval;
 	}
 	
 	public long getFirstInterval()

@@ -5,6 +5,8 @@ package net.sourceforge.fullsync.schedule;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 
 
 /**
@@ -12,6 +14,7 @@ import java.util.ArrayList;
  */
 public class SchedulerImpl implements Scheduler, Runnable
 {
+    private Logger logger = Logger.getLogger( Scheduler.class );
     private ScheduleTaskSource scheduleSource;
 	private Thread worker;
 	private boolean running;
@@ -106,8 +109,12 @@ public class SchedulerImpl implements Scheduler, Runnable
 		while( enabled )
 		{
 		    long now = System.currentTimeMillis();
+		    if( logger.isDebugEnabled() )
+		        logger.debug( "searching for next task after "+now );
 			ScheduleTask task = scheduleSource.getNextScheduleTask();
-						
+			if( logger.isDebugEnabled() )
+			    logger.debug( "found: "+task.toString()+" at "+task.getExecutionTime() );
+			
 			if( task == null )
 			{
 				// TODO log sth here ?
@@ -116,8 +123,12 @@ public class SchedulerImpl implements Scheduler, Runnable
 			
 			long nextTime = task.getExecutionTime();
 			try {
+				if( logger.isDebugEnabled() )
+					logger.debug( "waiting for "+(nextTime-now)+" mseconds" );
 				if( nextTime >= now )
 					Thread.sleep( nextTime-now );
+				if( logger.isDebugEnabled() )
+				    logger.debug( "Running task "+task );
 				task.run();
 			} catch( InterruptedException ie ) {
 			}

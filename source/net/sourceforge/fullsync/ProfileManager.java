@@ -68,13 +68,17 @@ public class ProfileManager
 	            }
 			} );
 			worker.start();
-			profile.getSchedule().update();
+			profile.getSchedule().setLastOccurrence( System.currentTimeMillis() );
 			Thread.yield();
 		}
 		public long getExecutionTime()
         {
             return executionTime;
         }
+		public String toString()
+		{
+		    return "Scheduled execution of "+profile.getName();
+		}
 	}
 	class ProfileComparator implements Comparator
 	{
