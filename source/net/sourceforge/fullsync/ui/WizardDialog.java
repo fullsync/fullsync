@@ -162,6 +162,14 @@ public class WizardDialog {
                 size.x = 500;
             if( size.y < 400 )
                 size.y = 400;
+            
+            if (size.x > display.getBounds().width - dialogShell.getBounds().x) {
+            	size.x = display.getBounds().width - dialogShell.getBounds().x - 50;
+            }
+            if (size.y > display.getBounds().height - dialogShell.getBounds().y) {
+            	size.y = display.getBounds().height - dialogShell.getBounds().y - 50;
+            }
+            
             dialogShell.setSize( size );
 			dialogShell.open();
 			while( !dialogShell.isDisposed() ) {
