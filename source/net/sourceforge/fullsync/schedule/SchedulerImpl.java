@@ -66,7 +66,7 @@ public class SchedulerImpl implements Scheduler, Runnable
 	        return;
 	    
 		enabled = true;
-		if( worker == null )
+		if( worker == null || !worker.isAlive() )
 		{
 			worker = new Thread( this, "Scheduler" );
 			worker.setDaemon( true );
@@ -125,5 +125,7 @@ public class SchedulerImpl implements Scheduler, Runnable
 			
 		}
 		running = false;
+		enabled = false;
+		fireSchedulerChangedEvent();
 	}
 }

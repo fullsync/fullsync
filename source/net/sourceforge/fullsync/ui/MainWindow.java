@@ -270,7 +270,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		menuItemFile.setMenu(menuFile);
 		
 		MenuItem menuItemNewProfile = new MenuItem(menuFile, SWT.PUSH);
-		menuItemNewProfile.setText("&New Profile...");
+		menuItemNewProfile.setText("&New Profile");
 		menuItemNewProfile.setImage( guiController.getImage( "Button_New.png" ) );
 		menuItemNewProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
@@ -282,7 +282,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		MenuItem separatorItem3 = new MenuItem(menuFile, SWT.SEPARATOR);
 
 		MenuItem menuItemEditProfile = new MenuItem(menuFile, SWT.PUSH);
-		menuItemEditProfile.setText("&Edit Profile...");
+		menuItemEditProfile.setText("&Edit Profile");
 		menuItemEditProfile.setImage( guiController.getImage( "Button_Edit.png" ) );
 		menuItemEditProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
@@ -292,7 +292,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		);
 
 		MenuItem menuItemRunProfile = new MenuItem(menuFile, SWT.PUSH);
-		menuItemRunProfile.setText("&Run Profile...");
+		menuItemRunProfile.setText("&Run Profile");
 		menuItemRunProfile.setImage( guiController.getImage( "Button_Run.png" ) );
 		menuItemRunProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
@@ -304,7 +304,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		MenuItem separatorItem4 = new MenuItem(menuFile, SWT.SEPARATOR);
 
 		MenuItem menuItemDeleteProfile = new MenuItem(menuFile, SWT.PUSH);
-		menuItemDeleteProfile.setText("&Delete Profile...");
+		menuItemDeleteProfile.setText("&Delete Profile");
 		menuItemDeleteProfile.setImage( guiController.getImage( "Button_Delete.png" ) );
 		menuItemDeleteProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
@@ -332,7 +332,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		menuItemEdit.setMenu(menuEdit);
 
 		MenuItem logItem = new MenuItem(menuEdit, SWT.PUSH);
-		logItem .setText("&Show Logs...\tCtrl+Shift+L");
+		logItem .setText("&Show Logs\tCtrl+Shift+L");
 		logItem .setAccelerator(SWT.CTRL|SWT.SHIFT+'L');
 		logItem .addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
@@ -343,7 +343,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		);
 
 		MenuItem preferencesItem = new MenuItem(menuEdit, SWT.PUSH);
-		preferencesItem.setText("&Preferences...\tCtrl+Shift+P");
+		preferencesItem.setText("&Preferences\tCtrl+Shift+P");
 		preferencesItem.setAccelerator(SWT.CTRL|SWT.SHIFT+'P');
 		preferencesItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
@@ -362,7 +362,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		menuItemRemoteConnection.setMenu(menuRemoteConnection);
 		
 		final MenuItem connectItem = new MenuItem(menuRemoteConnection, SWT.PUSH);
-		connectItem.setText("&Connect to a remote server...\tCtrl+Shift+C");
+		connectItem.setText("&Connect to a remote server\tCtrl+Shift+C");
 		connectItem.setAccelerator(SWT.CTRL|SWT.SHIFT+'C');
 		connectItem.setEnabled(true);
 
@@ -522,7 +522,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	// TODO [Michele] Implement this listener also on the remote interface
 	public void schedulerStatusChanged( final boolean enabled ) 
 	{
-    	getDisplay().asyncExec(new Runnable() {
+    	getDisplay().syncExec(new Runnable() {
     		public void run() {
 		        toolItemScheduleStart.setEnabled( !enabled );
 		        toolItemScheduleStop.setEnabled( enabled );

@@ -228,8 +228,10 @@ Release-critical:
 		patches even if not a single serializeable object has changed.
 	[X] propagate updates of server profiles to client-gui
 	[X] timer still creating/stopping thread?
-	[ ] make remote 'experimental feature' or add some texts in dialog
+	[X] make remote 'experimental feature' or add some texts in dialog
 		explaining how to use and that it's still unstable
+		-> actually, its working, and the whole program is without warrenty,
+		   so i guess it's in about the same level of unstability as the whole app
 	
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
 

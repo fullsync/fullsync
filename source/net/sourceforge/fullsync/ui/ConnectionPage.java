@@ -35,7 +35,7 @@ public class ConnectionPage implements WizardPage {
 	}
 
 	public String getDescription() {
-		return "You can connect to remote instance of FullSync.";
+		return "Choose the target host you want to connect to.";
 	}
 
 	public Image getIcon() {
