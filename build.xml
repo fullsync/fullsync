@@ -81,6 +81,11 @@
 	<target name="compile" depends="jar-utils">
 		<mkdir dir="${classes.dir}"/>
 		<javac debug="${debug}" srcdir="${source.dir}" destdir="${classes.dir}" classpathref="classpath"/>
+		<copy todir="${classes.dir}">
+			<fileset dir="${source.dir}">
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
 	</target>
 
     <target name="rmic">
