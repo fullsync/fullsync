@@ -26,6 +26,8 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -41,6 +43,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -228,6 +231,23 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	    comboFilter.add( "Everything" );
 	    comboFilter.add( "Changes only" );
 	    comboFilter.select(1);
+	    
+	    // MICHELE log windows can't be closed during processing.
+	    // We might think of adding a stop capability (Stop button or close the window to stop the syncronization).
+		getShell().addShellListener(new ShellAdapter() {
+		    public void shellClosed(ShellEvent event) {
+		    	if (processing) {
+					MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
+					mb.setText("Error");
+					mb.setMessage("The Syncronization Window can't be closed during Syncronization.");
+					mb.open();
+
+					event.doit = false;
+		    	}
+		    }
+
+		} );
+
 	}
 
 	public static void show( final TaskTree task )
@@ -443,9 +463,10 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
     {
         Thread worker = new Thread( new Runnable() {
 			public void run() {
-		        try {
+	            MainWindow.showBusyCursor( true );
+				try {
+				    final Display display = getDisplay(); 
 		            processing = true;
-		            final Display display = getDisplay();
 		            
 					// Logger logger = Logger.getRootLogger();
 		            // logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
@@ -489,13 +510,21 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 			        
 			        getDisplay().asyncExec( new Runnable() {
 						public void run() {
-							getShell().dispose();
+			            	// MICHELE Notification Window before disposal.
+							MessageBox mb = new MessageBox( getShell(), SWT.ICON_INFORMATION | SWT.OK );
+							mb.setText( "Finished" );
+						    mb.setMessage( "Profile execution finished");
+						    mb.open();
+						    
+						    getShell().dispose();
 						}
 			        } );
 					
 			        processing = false;
 			    } catch( IOException e ) {
 			        e.printStackTrace();
+			    } finally {
+	            	MainWindow.showBusyCursor( false );
 			    }
 			}
         }, "Action Performer" );
@@ -516,8 +545,8 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	{
 	    if( !processing )
 	    {
-	        performActions();
-	    }
+			performActions();
+		}
 	}
 
 	/** Auto-generated event handler method */

@@ -35,6 +35,8 @@ public class FullSync
     private ProfileManager profileManager;
     private AbstractProcessor processor;
     
+    private PreferencesManager preferencesManager;
+
     private boolean guiEnabled;
     private Display display;
     private MainWindow mainWindow;
@@ -47,6 +49,7 @@ public class FullSync
         
         guiEnabled = false;
         profileManager = new ProfileManager( "profiles.xml" );
+        preferencesManager = new PreferencesManager("preferences.xml");
         processor = new ProcessorImpl();
 
         singleton = this;
@@ -59,6 +62,10 @@ public class FullSync
         {
             startGui();
         	trayItem = new SystemTrayItem( mainWindow );
+
+        	//MICHELE Added
+			mainWindow.setSystemTrayItem(trayItem);
+
         	run();
         }
     }
@@ -162,6 +169,7 @@ public class FullSync
 			Shell mainShell = new Shell(display);
 			mainWindow = new MainWindow(mainShell, SWT.NULL);
 			mainWindow.setProfileManager( profileManager );
+			mainWindow.setPreferencesManager( preferencesManager );
 			mainWindow.setProcessor( processor );
 			mainShell.setLayout(new org.eclipse.swt.layout.FillLayout());
 			Rectangle shellBounds = mainShell.computeTrim(0,0,635,223);

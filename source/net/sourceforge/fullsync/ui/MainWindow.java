@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+import net.sourceforge.fullsync.PreferencesManager;
 import net.sourceforge.fullsync.Processor;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
@@ -18,13 +19,20 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -68,19 +76,39 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
     private Image imageTimerRunning;
     private Image imageTimerStopped;
     
+	private SystemTrayItem trayItem;
+
+	private PreferencesManager preferencesManager;
+	
 	public MainWindow(Composite parent, int style) 
 	{
 		super(parent, style);
 		images = new ArrayList();
 		initGUI();
-		
+
 		getShell().addShellListener(new ShellAdapter() {
 		    public void shellClosed(ShellEvent event) {
-		        // TODO add some config stuff, so we can change this behavior to dispose
-		        event.doit = false;
-		        minimizeToTray();
+				event.doit = false;
+		    	if (preferencesManager.closeMinimizesToSystemTray()) 
+		    	{
+					minimizeToTray();
+		    	} else {
+		    	    closeApplication();
+		    	}
 		    }
+
+		    public void shellIconified(ShellEvent event) {
+		        if (preferencesManager.minimizeMinimizesToSystemTray())
+		        {
+		            event.doit = false;
+		            minimizeToTray();
+		        } else {
+		            event.doit = true;
+		        }
+			}
+
 		} );
+		
 	}
 
 	/**
@@ -110,9 +138,8 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
                             toolItemNew = new ToolItem(toolBar1, SWT.PUSH);
                             toolItemNew
                                 .addSelectionListener(new SelectionAdapter() {
-                                    public void widgetSelected(
-                                        SelectionEvent evt) {
-                                        toolItemNewWidgetSelected(evt);
+                                    public void widgetSelected(SelectionEvent evt) {
+                                        createNewProfile();
                                     }
                                 });
                         }
@@ -120,9 +147,8 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
                             toolItemEdit = new ToolItem(toolBar1, SWT.PUSH);
                             toolItemEdit
                                 .addSelectionListener(new SelectionAdapter() {
-                                    public void widgetSelected(
-                                        SelectionEvent evt) {
-                                        toolItemEditWidgetSelected(evt);
+                                    public void widgetSelected(SelectionEvent evt) {
+                                        editCurrentProfile();
                                     }
                                 });
                         }
@@ -130,9 +156,8 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
                             toolItemDelete = new ToolItem(toolBar1, SWT.PUSH);
                             toolItemDelete
                                 .addSelectionListener(new SelectionAdapter() {
-                                    public void widgetSelected(
-                                        SelectionEvent evt) {
-                                        toolItemDeleteWidgetSelected(evt);
+                                    public void widgetSelected(SelectionEvent evt) {
+                                        deleteCurrentProfile();
                                     }
                                 });
                         }
@@ -140,9 +165,8 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
                             toolItemRun = new ToolItem(toolBar1, SWT.PUSH);
                             toolItemRun
                                 .addSelectionListener(new SelectionAdapter() {
-                                    public void widgetSelected(
-                                        SelectionEvent evt) {
-                                        toolItemRunWidgetSelected(evt);
+                                    public void widgetSelected(SelectionEvent evt) {
+                                        runCurrentProfile();
                                     }
                                 });
                         }
@@ -245,15 +269,19 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		Image i;
 		i = LogWindow.loadImage( "Button_New.gif" );
 		toolItemNew.setImage( i );
+		toolItemNew.setToolTipText("New Profile");
 		images.add( i );
 		i = LogWindow.loadImage( "Button_Edit.gif" );
 		toolItemEdit.setImage( i );
+		toolItemEdit.setToolTipText("Edit Profile");
 		images.add( i );
 		i = LogWindow.loadImage( "Button_Delete.gif" );
 		toolItemDelete.setImage( i );
+		toolItemDelete.setToolTipText("Delete Profile");
 		images.add( i );
 		i = LogWindow.loadImage( "Button_Run.gif" );
 		toolItemRun.setImage( i );
+		toolItemRun.setToolTipText("Run Profile");
 		images.add( i );
 		i = LogWindow.loadImage( "Timer_Running.gif" );
 		imageTimerRunning = i;
@@ -262,6 +290,66 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		imageTimerStopped = i;
 		images.add( i );
 		//toolBar1.layout();
+		
+		// MICHELE PopUp Menu for the Profile list.
+		Menu profilesPopupMenu = new Menu(getShell(), SWT.POP_UP);
+		
+		MenuItem runItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		runItem.setText("Run Profile...");
+		runItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					runCurrentProfile();
+				}
+			}
+		);
+		
+		MenuItem separatorItem1 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
+		
+		MenuItem editItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		editItem.setText("Edit Profile...");
+		editItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					editCurrentProfile();
+				}
+			}
+		);
+
+		MenuItem deleteItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		deleteItem.setText("Delete Profile...");
+		deleteItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					deleteCurrentProfile();
+				}
+			}
+		);
+
+		MenuItem separatorItem2 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
+
+		MenuItem addItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		addItem.setText("New Profile...");
+		addItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					createNewProfile();
+				}
+			}
+		);
+
+		MenuItem separatorItem3 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
+
+		// FIXME this menu item is not supposed to be here. It should be in a menu bar.
+		MenuItem preferencesItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		preferencesItem.setText("Preferences...");
+		preferencesItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					// show the Preferences Dialog.
+					PreferencesDialog prefDialog = new PreferencesDialog(getShell(), SWT.NULL);
+					prefDialog.setPreferencesManager(preferencesManager);
+					prefDialog.open();
+				}
+			}
+		);
+		
+		tableProfiles.setMenu(profilesPopupMenu);
 	}
 	public void dispose()
     {
@@ -300,6 +388,18 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	public ProfileManager getProfileManager()
 	{
 	    return profileManager;
+	}
+	
+	public void setPreferencesManager(PreferencesManager preferencesManager) {
+		this.preferencesManager = preferencesManager;
+	}
+	
+	public PreferencesManager getPreferencesManager() {
+		return preferencesManager;
+	}
+	
+	public void setSystemTrayItem(SystemTrayItem trayItem) {
+		this.trayItem = trayItem;
 	}
 	
 	public void populateProfileList()
@@ -377,7 +477,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
             }
         } );
     }
-	protected void toolItemRunWidgetSelected(SelectionEvent evt)
+	protected void runCurrentProfile()
 	{
 		TableItem[] items = tableProfiles.getSelection();
 		if( items.length == 0 )
@@ -392,11 +492,18 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	    Thread worker = new Thread( new Runnable() {
 	        public void run()
             {
-				TaskTree t;
+				TaskTree t = null;
                 try {
-                    statusLine.setMessage( "Starting profile "+p.getName()+"..." );
-                    t = getProcessor().execute( p );
-                    statusLine.setMessage( "Finished profile "+p.getName() );
+                    showBusyCursor( true );
+					try {
+						statusLine.setMessage( "Starting profile "+p.getName()+"..." );
+						t = getProcessor().execute( p );
+						statusLine.setMessage( "Finished profile "+p.getName() );
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+	                	showBusyCursor( false );
+					}
                     LogWindow.show( t );
                 } catch( Exception e ) {
                     e.printStackTrace();
@@ -406,12 +513,43 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	    worker.start();
 	}
 
-	protected void toolItemNewWidgetSelected(SelectionEvent evt)
+	// FIXME i dont want to be static, but i need to be accessable by
+	//       mainwindow and logwindow... we should consider one gui item
+	//       as gui controller who gets such "general" gui stuff
+	//       (just like closeApplication)  
+	public static void showBusyCursor( final boolean show )
+	{
+		final Display display = Display.getDefault();
+		
+		display.asyncExec(new Runnable() {
+			public void run() {
+				try {
+				    Cursor cursor = show?display.getSystemCursor(SWT.CURSOR_WAIT):null;
+					Shell[] shells = display.getShells();
+					//final String BUSYID_NAME = "SWT BusyIndicator";
+					//final Integer busyId = new Integer(0);
+
+					for (int i = 0; i < shells.length; i++) 
+					{
+						//Integer id = (Integer) shells[i].getData(BUSYID_NAME);
+						//if (id == null) {
+							shells[i].setCursor(cursor);
+						//	shells[i].setData(BUSYID_NAME, busyId);
+						//}
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+			
+	}
+	public void createNewProfile()
 	{
 		ProfileDetails.showProfile( getProfileManager(), null );
 	}
 
-	protected void toolItemEditWidgetSelected(SelectionEvent evt)
+	protected void editCurrentProfile()
 	{
 		TableItem[] items = tableProfiles.getSelection();
 		if( items.length == 0 )
@@ -425,7 +563,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		ProfileDetails.showProfile( getProfileManager(), p.getName() );
 	}
 
-	protected void toolItemDeleteWidgetSelected(SelectionEvent evt)
+	protected void deleteCurrentProfile()
 	{
 		TableItem[] items = tableProfiles.getSelection();
 		if( items.length == 0 )
@@ -454,5 +592,28 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
             getProfileManager().startTimer();
         }
         updateTimerEnabled();
+    }
+    
+    public void closeApplication()
+    {
+	    // Close the application, but give him a chance to 
+	    // confirm his action first
+		if (preferencesManager.confirmExit()) 
+		{
+			MessageBox mb = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+			mb.setText("Confirmation");
+			mb.setMessage("Do you really want to quit FullSync? \n"
+			        	 +"Any scheduled tasks will not be performed while " 
+			        	 +"FullSync is closed.");
+
+			// check whether the user really wants to close
+			if (mb.open() != SWT.YES) 
+			    return;
+		}
+		
+		this.dispose();
+		if (trayItem != null) {
+			trayItem.dispose();
+		}
     }
 }

@@ -1,4 +1,9 @@
 
+* added busy indicator for sync and execution phases (patch by michele)
+* added context menu for profile actions (patch by michele)
+* added initial preferences dialog (patch by michele)
+* added initial preferences manager (patch by michele)
+* now number of tasks that must be performed is correct
 * added traversal types, so source buffer<->fs check is now implementable
 * added feedback in synchronization phase 
 * added initial cli support (try -h option)

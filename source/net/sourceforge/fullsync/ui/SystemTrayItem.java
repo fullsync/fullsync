@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
@@ -35,6 +36,7 @@ public class SystemTrayItem
     	    public void handleEvent(Event arg0) 
     	    {
     	        mainWindow.getShell().setVisible( true );
+    	        mainWindow.getShell().setMinimized( false );
     	    }
     	} );
     	trayItem.addListener( SWT.MenuDetect, new Listener() {
@@ -53,17 +55,36 @@ public class SystemTrayItem
 		    public void handleEvent( Event arg0 )
             {
 		    	mainWindow.getShell().setVisible( true );
+		    	mainWindow.getShell().setMinimized( false );
             }
 		} );
 		
 		item = new MenuItem( menu, SWT.NULL );
 		item.setText( "Exit" );
 		item.addListener( SWT.Selection, new Listener() {
-		    public void handleEvent( Event arg0 )
+		    public void handleEvent( Event event )
             {
-                mainWindow.dispose();
-                trayItem.dispose();
+		    	if (mainWindow.getPreferencesManager().confirmExit()) 
+		    	{
+		    		MessageBox mb = new MessageBox(mainWindow.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+		    		mb.setText("Confirmation");
+		    		mb.setMessage("Do you really want to quit FullSync? \nAny scheduled tasks can't be performed while " +
+		    		"FullSync is closed.");
+		    		int result = mb.open();
+		    		if (result == SWT.YES) {
+		    			event.doit = true;
+		    			mainWindow.dispose();
+		    			trayItem.dispose();					
+		    		} else {
+		    			event.doit = false;
+		    		}
+		    	}
+		    	else {
+	                mainWindow.dispose();
+	                trayItem.dispose();							    		
+		    	}
                 // TODO check for running ops and ask whether he is sure
+                // MICHELE Done the "ask whether he is sure"
             }
 		} );
     }

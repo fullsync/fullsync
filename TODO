@@ -160,6 +160,13 @@ Feedback:
 	[X] progress indication (or at least what am i doing atm) for check phase
 	[?] some encapsulement for src and dst files ? [Task?]
 	
+Interface:
+	[ ] we should consider one gui item as gui controller who gets "general" gui 
+		stuff lile closeApplication and show busy cursor. generally "FullSync" should
+		not be controlling too many gui items, it's much more the heart of the 
+		sync processes. so mainwin should get a fullsync instance... or maybe we
+		rename this 'sync-controller' somehow ?
+				
 Processor:
 	[ ] impl new TraveralTypes
 	
@@ -236,6 +243,10 @@ Execution:
 	[ ]	make logwindow use fullsync#performActions 
 
 ---===[ to 1.0 Tasks ]====-----------------------------------------------------
+
+Backup:
+	[ ] copy to temp, then rename
+	[ ] scan whole src, then dst - saves hd jumps
 
 Threading
 	[ ] better UI / task differenciation
