@@ -58,16 +58,20 @@ public class RemoteManager {
 	public void addProfileListChangeListener(ProfileListChangeListener listener)
 		throws RemoteException
 	{
-		RemoteProfileListChangeListener remoteListener = new RemoteProfileListChangeListener(listener);
-		remoteInterface.addProfileListChangeListener(remoteListener);
-		listenersMap.put(listener, remoteListener);
+		if (listener != null) {
+			RemoteProfileListChangeListener remoteListener = new RemoteProfileListChangeListener(listener);
+			remoteInterface.addProfileListChangeListener(remoteListener);
+			listenersMap.put(listener, remoteListener);
+		}
 	}
 	
 	public void removeProfileListChangeListener (ProfileListChangeListener listener)
 		throws RemoteException
 	{
-		RemoteProfileListChangeListener remoteListener = (RemoteProfileListChangeListener) listenersMap.remove(listener);
-		remoteInterface.removeProfileListChangeListener(remoteListener);
+		if (listener != null) {
+			RemoteProfileListChangeListener remoteListener = (RemoteProfileListChangeListener) listenersMap.remove(listener);
+			remoteInterface.removeProfileListChangeListener(remoteListener);
+		}
 	}
 	
 	public void addSchedulerChangeListener(SchedulerChangeListener listener)

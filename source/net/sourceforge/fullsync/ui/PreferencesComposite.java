@@ -281,6 +281,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		preferences.setListeningForRemoteConnections(listenForIncoming);
 		int port = -1;
 		String password = null;
+		
 		if (listenForIncoming) {
 			try {
 				port = Integer.parseInt(textListeningPort.getText());
@@ -292,12 +293,36 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 			
 			password = textPassword.getText();
 			preferences.setRemoteConnectionsPassword(password);
-		}
-		
-		boolean isActive = RemoteController.getInstance().isActive();
-		
-		// TODO [Michele] what if the port or password is changed?
-		if ((isActive) && (!listenForIncoming)) {
+			
+			if (RemoteController.getInstance().isActive()) {
+				int oldPort = RemoteController.getInstance().getPort();
+				
+				RemoteController.getInstance().setPassword(password);
+				
+				if (oldPort != port) {
+					MessageBox mb = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
+					mb.setText("Warning");
+					mb.setMessage("Changes in the listening port requires a restart to take effect.");
+					mb.open();
+				}
+				
+			}
+			else {
+				if (port > 0) {
+					try {
+						RemoteController.getInstance().startServer(port, password, 
+								GuiController.getInstance().getProfileManager(),
+								GuiController.getInstance().getSynchronizer());
+					} catch (RemoteException e) {
+						ExceptionHandler.reportException( e );
+						MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
+						mb.setText("Connection Error");
+						mb.setMessage("Unable to start incomming connections listener.\n("+e.getMessage()+")");
+						mb.open();
+					}				
+				}				
+			}
+		} else {
 			try {
 				RemoteController.getInstance().stopServer();
 			} catch (RemoteException e) {
@@ -308,23 +333,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 				mb.open();
 			}
 		}
-		if ((!isActive) && (listenForIncoming)) {
-			if (port > 0) {
-				try {
-					RemoteController.getInstance().startServer(port, password, 
-							GuiController.getInstance().getProfileManager(),
-							GuiController.getInstance().getSynchronizer());
-				} catch (RemoteException e) {
-					ExceptionHandler.reportException( e );
-					MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
-					mb.setText("Connection Error");
-					mb.setMessage("Unable to start incomming connections listener.\n("+e.getMessage()+")");
-					mb.open();
 
-				}				
-			}
-		}
-		
 		preferences.save();
 	}
 }

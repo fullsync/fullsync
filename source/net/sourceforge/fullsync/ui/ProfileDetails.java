@@ -505,8 +505,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
         buttonEnabled.setSelection( p.isEnabled() );
         
         RuleSetDescriptor ruleSetDescriptor = p.getRuleSet();
-        // TODO [Michele] I don't like this extend use of instanceof.
-        // I'll try to find a better way soon.
+
         if (ruleSetDescriptor instanceof SimplyfiedRuleSetDescriptor) {
         	selectRuleSetButton(rbSimplyfiedRuleSet);
         	rbSimplyfiedRuleSet.setSelection(true);

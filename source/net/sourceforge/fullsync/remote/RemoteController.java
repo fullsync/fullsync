@@ -22,6 +22,7 @@ public class RemoteController {
 	private static RemoteController _instance;
 	private RemoteServer remoteServer;
 	private String serverURL;
+	private int port;
 	private String password;
 	private boolean isActive = false;
 	
@@ -37,7 +38,8 @@ public class RemoteController {
 	public void startServer(int port, String password, ProfileManager profileManager, Synchronizer sync) 
 		throws RemoteException 
 	{
-		try {			
+		try {		
+			this.port = port;
 			serverURL = "rmi://localhost:"+port+"/FullSync";
 			this.password = password;
 			
@@ -76,5 +78,18 @@ public class RemoteController {
 	
 	public boolean isActive() {
 		return isActive;
+	}
+	
+	public int getPort() {
+		return port;	
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+		remoteServer.setPassword(password);
 	}
 }

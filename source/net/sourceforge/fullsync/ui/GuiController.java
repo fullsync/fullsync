@@ -148,6 +148,10 @@ public class GuiController implements Runnable
 			if (mb.open() != SWT.YES) 
 			    return;
 		}
+		
+    	GuiController.getInstance().getProfileManager().disconnectRemote();		            	
+    	GuiController.getInstance().getSynchronizer().disconnectRemote();
+		
 		disposeGui();
 		active = false;
     }

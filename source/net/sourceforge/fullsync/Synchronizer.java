@@ -69,18 +69,23 @@ public class Synchronizer
      */
     public int performActions( TaskTree taskTree, TaskFinishedListener listener )
     {
+        Logger logger = Logger.getLogger( "FullSync" );
     	if (remoteManager != null) {
-    		// TODO [Michele] Logging?
+    		logger.info("Remote Synchronization started");
     		try {
     			remoteManager.performActions(taskTree, listener);
+    	        logger.info( "synchronization successful" ); // TODO ...with x errors and y warnings
+    	        logger.info( "------------------------------------------------------------" );
     			return 0;
     		} catch (RemoteException e) {
     			ExceptionHandler.reportException(e);
+                logger.error( "An Exception occured while performing actions", e);
+    	        logger.info( "synchronization failed" );
+    	        logger.info( "------------------------------------------------------------" );
     			return 1;
     		}
     	}
     	else {
-            Logger logger = Logger.getLogger( "FullSync" );
             try {
     	        logger.info( "Synchronization started" );
     	        logger.info( "  source:      "+taskTree.getSource().getUri().toString() );

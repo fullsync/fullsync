@@ -57,6 +57,12 @@ public class CommandLineInterpreter
 		OptionBuilder.hasOptionalArg();
 		OptionBuilder.withArgName("port");
 		options.addOption( OptionBuilder.create("p") ); 
+		
+		OptionBuilder.withLongOpt( "password" );
+		OptionBuilder.withDescription( "password for incoming connections" );
+		OptionBuilder.hasOptionalArg();
+		OptionBuilder.withArgName("passwd");
+		options.addOption( OptionBuilder.create("a") ); 
 		// + interactive mode
     }
     
@@ -147,7 +153,10 @@ public class CommandLineInterpreter
 			    	String portStr = line.getOptionValue("p");
 					port = Integer.parseInt(portStr);
 				} catch (NumberFormatException e) {}
-				// FIXME [Michele] password. -- specify via cmdline or read input
+
+				if (line.hasOption("a")) {
+					password = line.getOptionValue("a");
+				}
 		    } else {
 		    	activateRemote = preferences.listeningForRemoteConnections();
 		    	port = preferences.getRemoteConnectionsPort();

@@ -12,7 +12,6 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.Timer;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -94,7 +93,6 @@ public class ProfileManager
     //       don't forget calling profilesChangeEvent if dao is changed
     private RemoteManager remoteManager;
     private ProfileListChangeListener remoteListener;
-    private Timer updateTimer;
     
     protected ProfileManager() 
     {
@@ -160,13 +158,6 @@ public class ProfileManager
     	remoteManager.addSchedulerChangeListener(this);
     	updateRemoteProfiles();
     	fireSchedulerChangedEvent();
-    	
-//    	updateTimer = new Timer(true);
-//    	updateTimer.scheduleAtFixedRate(new TimerTask() {
-//			public void run() {
-//				updateRemoteProfiles();
-//			}
-//    	}, 0, 1000);
     }
     
     private void updateRemoteProfiles() {
@@ -182,20 +173,18 @@ public class ProfileManager
     }	
     
     public void disconnectRemote() {
+
+    	if (remoteManager != null) {
     	try {
 			remoteManager.removeProfileListChangeListener(remoteListener);
 			remoteManager.removeSchedulerChangeListener(this);
 		} catch (RemoteException e) {
 			ExceptionHandler.reportException( e );
 		}
-    	
-    	remoteManager = null;
-    	
-    	if (updateTimer != null) {
-    		updateTimer.cancel();
-    		updateTimer = null;
     	}
     	
+    	remoteManager = null;
+
         this.profiles = new Vector();
         
         try {
