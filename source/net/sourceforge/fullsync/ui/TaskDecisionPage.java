@@ -251,7 +251,7 @@ public class TaskDecisionPage implements WizardPage, Serializable
 			        list.setChangeAllowed( true );
 			    }
 			}
-        }, Messages.getString("TaskDecisionPage.ActionPerformer") ); //$NON-NLS-1$
+        }, "ActionPerformer" ); //$NON-NLS-1$
         worker.start();
     }
 }

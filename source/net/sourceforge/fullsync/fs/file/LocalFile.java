@@ -18,6 +18,7 @@ import net.sourceforge.fullsync.fs.FileAttributes;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
+ * @deprecated
  */
 public class LocalFile implements File
 {

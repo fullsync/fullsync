@@ -1,3 +1,6 @@
+* added german localization, removed some that aren't supported anyway
+* added two way sync
+* added smb connection support
 * added availability for Sites / FileSystemConnections
 * fixed #1096602 Out of memory
 * fixed #1094795 Exact copy syncs even unchanged files
@@ -14,7 +17,7 @@ Version 0.8.0
 * fixed bug in Task Decision List updating the wrong items
 * added an option for autostarting scheduler in gui mode (for autostart)
 * the gui version will now popup the "getting started" manual page if
-  there was now profiles.xml found
+  there was no profiles.xml found
 * added -m option, that starts fullsync minimized (for autostart)
 * extracted scheduler from profile manager, it's still too tightly connected
   as the remote stuff is like a second scheduler both encapsuled by the profile manager

@@ -9,7 +9,7 @@ import java.util.Hashtable;
 
 import junit.framework.TestCase;
 import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
-import net.sourceforge.fullsync.impl.ProcessorImpl;
+import net.sourceforge.fullsync.impl.TaskGeneratorImpl;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -20,7 +20,7 @@ public class PhaseOneTest extends TestCase
     private File testingSource;
     private File testingDestination;
     
-    private Processor processor;
+    private TaskGenerator processor;
     private Profile profile;
     
     protected void setUp() throws Exception
@@ -33,7 +33,7 @@ public class PhaseOneTest extends TestCase
         testingSource.mkdir();
         testingDestination.mkdir();
         
-        processor = new ProcessorImpl();
+        processor = new TaskGeneratorImpl();
         profile = new Profile();
         profile.setName( "TestProfile" );
         profile.setSource( new ConnectionDescription( testingSource.toURI().toString(), "" ) );

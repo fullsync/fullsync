@@ -193,7 +193,7 @@ public class AbstractFile implements File
             children = newChildren;
         } else {
             // TODO update file attribute data / existing / is dir and stuff
-            // HACK wtf !?
+            // HACK wtf !? this makes ftp reload the dir on every change
             parent.refresh();
         }
     }

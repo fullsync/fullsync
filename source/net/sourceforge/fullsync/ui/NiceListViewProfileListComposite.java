@@ -103,8 +103,8 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
             long now = new Date().getTime();
 			labelSource.setText( Messages.getString("NiceListViewProfileListComposite.Source")+": "+profile.getSource() ); //$NON-NLS-1$ //$NON-NLS-2$
 			labelDestination.setText( Messages.getString("NiceListViewProfileListComposite.Destination")+": "+profile.getDestination() ); //$NON-NLS-1$ //$NON-NLS-2$
-			labelLastUpdate.setText( Messages.getString("NiceListViewProfileListComposite.LastUpdate")+": "+profile.getLastUpdate() ); //$NON-NLS-1$ //$NON-NLS-2$
-			labelNextUpdate.setText( Messages.getString("NiceListViewProfileListComposite.NextUpdate")+": "+profile.getNextUpdate() ); //$NON-NLS-1$ //$NON-NLS-2$
+			labelLastUpdate.setText( Messages.getString("NiceListViewProfileListComposite.LastUpdate")+": "+profile.getLastUpdateText() ); //$NON-NLS-1$ //$NON-NLS-2$
+			labelNextUpdate.setText( Messages.getString("NiceListViewProfileListComposite.NextUpdate")+": "+profile.getNextUpdateText() ); //$NON-NLS-1$ //$NON-NLS-2$
 			layout();			
         }
         public void setProfile( Profile profile )
@@ -198,7 +198,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		    if( desc != null && !desc.equals( "" ) ) //$NON-NLS-1$
 		        item.setStatusText( desc );
 		    else if( profile.isEnabled() && profile.getSchedule() != null )
-		        item.setStatusText( profile.getNextUpdate() );
+		        item.setStatusText( profile.getNextUpdateText() );
 		    else 
 		        item.setStatusText( "" ); //$NON-NLS-1$
 		}

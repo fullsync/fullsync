@@ -2,6 +2,7 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -106,15 +107,23 @@ public class Profile implements Serializable
         this.lastUpdate = lastUpdate;
         notifyProfileChangeListeners();
     }
-    public String getNextUpdate()
+    public String getLastUpdateText()
     {
+        // TODO this doesnt belong here (l18n)
+        if( lastUpdate == null )
+             return "never";
+        else return DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG ).format( lastUpdate );
+    }
+    public String getNextUpdateText()
+    {
+        // TODO this doesnt belong here (l18n)
         if( schedule == null ) {
             return "not scheduled";
         } else if( !enabled ) {
             return "not enabled";
         } else {
             //if( lastUpdate == null )
-                 return new Date( schedule.getNextOccurrence(new Date().getTime()) ).toString();
+                 return DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG ).format( schedule.getNextOccurrence(new Date().getTime()) );
             //else return new Date( schedule.getNextOccurrence(lastUpdate.getTime()) ).toString();
         }
     }

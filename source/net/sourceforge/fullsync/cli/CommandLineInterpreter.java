@@ -1,4 +1,4 @@
-package net.sourceforge.fullsync;
+package net.sourceforge.fullsync.cli;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -6,6 +6,13 @@ import java.io.PrintStream;
 import java.rmi.RemoteException;
 import java.util.Date;
 
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Preferences;
+import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.ProfileSchedulerListener;
+import net.sourceforge.fullsync.Synchronizer;
+import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 import net.sourceforge.fullsync.ui.GuiController;

@@ -233,13 +233,16 @@ Release-critical:
 		-> actually, its working, and the whole program is without warrenty,
 		   so i guess it's in about the same level of unstability as the whole app
 	
----===[ intermediate release ]====-----------------------------------------
+---===[ to 0.9 Tasks ]====-----------------------------------------
 
 User reports:
 	[X] sftp not recognizing port
-	[ ] two-way sync
+	[X] two-way sync
 	
----===[ to 0.9 Tasks ]====-------------------------------------------------
+Buffering:
+	[ ] write fs buffer file to bla+"_", delete existing and rename it
+	
+---===[ to 0.10 Tasks ]====-------------------------------------------------
 
 Small Things:
 	[ ] enable/disable certain menu items if not available
@@ -270,8 +273,8 @@ Feedback:
 		when all are finished (a general task/progress win like eclipse has?)
 		
 Naming:
-	[ ] call Processor TaskGenerator ? (or is the ActionDecider the generator?)
-	[ ] call ActionQueue TaskExecutor ? (as we don't care about the buffer at all)
+	[X] call Processor TaskGenerator ? (or is the ActionDecider the generator?)
+	[X] call ActionQueue TaskExecutor ? (as we don't care about the buffer at all)
 	[X] call FullSync Synchronizer ? (encapsuling main sync actions / objects)
 
 Syncprocess encapsulement:
@@ -290,6 +293,7 @@ Architecture:
 	[ ] give ActionQueue or Buffer some kind of input stream ?
 	[ ] generally make more stream-like behaviour ?		
 		nah, it destroys all means of statistics/feedback
+		but enables us to sync much larger dirs and consume much less memory
 
 Realtime-Reporting:
 	[ ] Implement realtime status information updating
@@ -340,7 +344,7 @@ License:
 
 Backup:
 	[ ] copy to temp, then rename
-	[ ] scan whole src, then dst - saves hd jumps
+	[ ] scan whole src, then dst - saves hd jumps (traversal type)
 	[ ] maybe it would be nice to have a min lastmodified difference
 		so we can backup stuff that is not currently worked on(?)
 		(good for not exact backup, so we don't copy temp files)
@@ -360,7 +364,7 @@ Gui:
 		host, port, path and so on for ftp
 
 
----===[ to 0.10 Tasks ]====------------------------------------------------
+---===[ to 0.11 Tasks ]====------------------------------------------------
 
 ---===[ to 1.0 Tasks ]====-------------------------------------------------
 
@@ -424,7 +428,7 @@ Connections:
 		after a few minutes
 		
 	[ ]	ZIP File System
-	[ ] SMB File System (may be using jcifs - http://jcifs.sourceforge.net)
+	[X] SMB File System (may be using jcifs - http://jcifs.sourceforge.net)
 
 Threading
 	[ ] better UI / task differenciation

@@ -115,19 +115,19 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 label1 = new Label(this, SWT.NONE);
                 GridData label1LData = new GridData();
                 label1.setLayoutData(label1LData);
-                label1.setText(Messages.getString("ProfileDetails.Name")+":"); //$NON-NLS-1$ //$NON-NLS-2$
+                label1.setText(Messages.getString("ProfileDetails.Name.Label")+":"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             {
                 textName = new Text(this, SWT.BORDER);
                 GridData textNameLData = new GridData();
-                textName.setToolTipText(Messages.getString("ProfileDetails.Name_ToolTip")); //$NON-NLS-1$
+                textName.setToolTipText(Messages.getString("ProfileDetails.Name.ToolTip")); //$NON-NLS-1$
                 textNameLData.horizontalAlignment = GridData.FILL;
                 textNameLData.horizontalSpan = 6;
                 textName.setLayoutData(textNameLData);
             }
             {
                 label15 = new Label(this, SWT.NONE);
-                label15.setText(Messages.getString("ProfileDetails.Description")+":"); //$NON-NLS-1$ //$NON-NLS-2$
+                label15.setText(Messages.getString("ProfileDetails.Description.Label")+":"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             {
                 textDescription = new Text(this, SWT.BORDER);
@@ -138,14 +138,14 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label2 = new Label(this, SWT.NONE);
-                label2.setText(Messages.getString("ProfileDetails.Source")+":"); //$NON-NLS-1$ //$NON-NLS-2$
+                label2.setText(Messages.getString("ProfileDetails.Source.Label")+":"); //$NON-NLS-1$ //$NON-NLS-2$
                 GridData label2LData = new GridData();
                 label2.setLayoutData(label2LData);
             }
             {
                 textSource = new Text(this, SWT.BORDER);
                 GridData textSourceLData = new GridData();
-                textSource.setToolTipText(Messages.getString("ProfileDetails.Source_location")); //$NON-NLS-1$
+                textSource.setToolTipText(Messages.getString("ProfileDetails.Source.ToolTip")); //$NON-NLS-1$
                 textSourceLData.horizontalAlignment = GridData.FILL;
                 textSourceLData.horizontalSpan = 5;
                 textSourceLData.grabExcessHorizontalSpace = true;
@@ -165,12 +165,12 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 buttonSourceBuffered = new Button(this, SWT.CHECK | SWT.LEFT);
-                buttonSourceBuffered.setText(Messages.getString("ProfileDetails.buffered")); //$NON-NLS-1$
+                buttonSourceBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
                 buttonSourceBuffered.setEnabled( false );
             }
             {
                 label5 = new Label(this, SWT.NONE);
-                label5.setText(Messages.getString("ProfileDetails.Username")+":"); //$NON-NLS-1$ //$NON-NLS-2$
+                label5.setText(Messages.getString("ProfileDetails.Username.Label")+":"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             {
                 textSourceUsername = new Text(this, SWT.BORDER);
@@ -181,7 +181,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label6 = new Label(this, SWT.NONE);
-                label6.setText(Messages.getString("ProfileDetails.Password")+":"); //$NON-NLS-1$ //$NON-NLS-2$
+                label6.setText(Messages.getString("ProfileDetails.Password.Label")+":"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             {
                 textSourcePassword = new Text(this, SWT.BORDER);
@@ -195,14 +195,14 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label3 = new Label(this, SWT.NONE);
-                label3.setText(Messages.getString("ProfileDetails.Destination")); //$NON-NLS-1$
+                label3.setText(Messages.getString("ProfileDetails.Destination.Label")); //$NON-NLS-1$
                 GridData label3LData = new GridData();
                 label3.setLayoutData(label3LData);
             }
             {
                 textDestination = new Text(this, SWT.BORDER);
                 GridData textDestinationLData = new GridData();
-                textDestination.setToolTipText(Messages.getString("ProfileDetails.Destination_location")); //$NON-NLS-1$
+                textDestination.setToolTipText(Messages.getString("ProfileDetails.Destination.ToolTip")); //$NON-NLS-1$
                 textDestinationLData.horizontalAlignment = GridData.FILL;
                 textDestinationLData.horizontalSpan = 5;
                 textDestinationLData.grabExcessHorizontalSpace = true;
@@ -224,12 +224,12 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 buttonDestinationBuffered = new Button(this, SWT.CHECK | SWT.LEFT);
-                buttonDestinationBuffered.setText(Messages.getString("ProfileDetails.buffered")); //$NON-NLS-1$
+                buttonDestinationBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
                 //buttonDestinationBuffered.setEnabled( false );
             }
             {
                 label10 = new Label(this, SWT.NONE);
-                label10.setText(Messages.getString("ProfileDetails.Username")+":"); //$NON-NLS-1$ //$NON-NLS-2$
+                label10.setText(Messages.getString("ProfileDetails.Username.Label")+":"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             {
                 textDestinationUsername = new Text(this, SWT.BORDER);
@@ -239,7 +239,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label11 = new Label(this, SWT.NONE);
-                label11.setText(Messages.getString("ProfileDetails.Password")+":"); //$NON-NLS-1$ //$NON-NLS-2$
+                label11.setText(Messages.getString("ProfileDetails.Password.Label")+":"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             {
                 textDestinationPassword = new Text(this, SWT.BORDER);
@@ -252,7 +252,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             }
             {
                 label16 = new Label(this, SWT.NONE);
-                label16.setText(Messages.getString("ProfileDetails.Type")); //$NON-NLS-1$
+                label16.setText(Messages.getString("ProfileDetails.Type.Label")); //$NON-NLS-1$
             }
             {
                 comboType = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -260,31 +260,28 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     public void modifyText(ModifyEvent evt) {
                         if( comboType.getText().equals( "Publish/Update" ) ) //$NON-NLS-1$
                         {
-                            labelTypeDescription.setText( 
-                                    Messages.getString("ProfileDetails.Publish_description_1") + //$NON-NLS-1$
-                                    Messages.getString("ProfileDetails.Publish_description_2") + //$NON-NLS-1$
-                                    Messages.getString("ProfileDetails.Publish_description_3") ); //$NON-NLS-1$
+                            labelTypeDescription.setText( Messages.getString("ProfileDetails.ProfileDescription.Publish") ); //$NON-NLS-1$
                             buttonSourceBuffered.setSelection( false );
                             buttonDestinationBuffered.setSelection( true );
                         } else if( comboType.getText().equals( "Backup Copy" ) ) { //$NON-NLS-1$
-                            labelTypeDescription.setText( 
-                                     Messages.getString("ProfileDetails.Backup_description_1") + //$NON-NLS-1$
-                                     Messages.getString("ProfileDetails.Backup_description_2") ); //$NON-NLS-1$
+                            labelTypeDescription.setText( Messages.getString("ProfileDetails.ProfileDescription.BackupCopy") ); //$NON-NLS-1$
 	                        buttonSourceBuffered.setSelection( false );
 	                        buttonDestinationBuffered.setSelection( false );
                         } else if( comboType.getText().equals( "Exact Copy" ) ) { //$NON-NLS-1$
-                            labelTypeDescription.setText( 
-                                     Messages.getString("ProfileDetails.Copy_description_1") + //$NON-NLS-1$
-                                     Messages.getString("ProfileDetails.Copy_description_2") ); //$NON-NLS-1$
+                            labelTypeDescription.setText( Messages.getString("ProfileDetails.ProfileDescription.ExactCopy") ); //$NON-NLS-1$
 	                        buttonSourceBuffered.setSelection( false );
 	                        buttonDestinationBuffered.setSelection( false );
+                        } else if( comboType.getText().equals( "Two Way Sync" ) ) { //$NON-NLS-1$
+                            labelTypeDescription.setText( Messages.getString("ProfileDetails.ProfileDescription.TwoWaySync") ); //$NON-NLS-1$
+                            buttonSourceBuffered.setSelection( false );
+                            buttonDestinationBuffered.setSelection( false );
                         }
                    }
                 });
             }
             {
                 labelTypeDescription = new Label(this, SWT.WRAP);
-                labelTypeDescription.setText(Messages.getString("ProfileDetails.Description")); //$NON-NLS-1$
+                labelTypeDescription.setText(Messages.getString("ProfileDetails.Description.Label")); //$NON-NLS-1$
                 GridData labelTypeDescriptionLData = new GridData();
                 labelTypeDescriptionLData.heightHint = 40;
                 labelTypeDescriptionLData.horizontalSpan = 5;
@@ -447,6 +444,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             comboType.add( "Publish/Update" ); //$NON-NLS-1$
             comboType.add( "Backup Copy" ); //$NON-NLS-1$
             comboType.add( "Exact Copy" ); //$NON-NLS-1$
+            comboType.add( "Two Way Sync" ); //$NON-NLS-1$
 			this.layout();
 			this.setSize(500, 409);
 	

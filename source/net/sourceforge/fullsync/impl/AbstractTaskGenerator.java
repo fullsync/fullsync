@@ -11,7 +11,7 @@ import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.Location;
-import net.sourceforge.fullsync.Processor;
+import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
@@ -25,7 +25,7 @@ import net.sourceforge.fullsync.fs.Site;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public abstract class AbstractProcessor implements Processor
+public abstract class AbstractTaskGenerator implements TaskGenerator
 {
     protected FileSystemManager fsm;
     protected ArrayList taskGenerationListeners;
@@ -34,7 +34,7 @@ public abstract class AbstractProcessor implements Processor
     
     private ActionDecider actionDecider;
     
-    public AbstractProcessor()
+    public AbstractTaskGenerator()
     {
         this.fsm = new FileSystemManager();
         active = true;
@@ -87,6 +87,8 @@ public abstract class AbstractProcessor implements Processor
             actionDecider = new BackupActionDecider();
         else if( profile.getSynchronizationType().equals( "Exact Copy" ) )
             actionDecider = new ExactCopyActionDecider();
+        else if( profile.getSynchronizationType().equals( "Two Way Sync" ) )
+            actionDecider = new TwoWaySyncActionDecider();
         else throw new IllegalArgumentException( "Profile has unknown synchronization type." );
 			
         try {

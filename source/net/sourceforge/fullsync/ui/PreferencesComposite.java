@@ -49,15 +49,15 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 			languageNames.put("en", "English"); //$NON-NLS-1$ //$NON-NLS-2$
 			languageNames.put("it", "Italiano"); //$NON-NLS-1$ //$NON-NLS-2$
 			languageNames.put("de", "Deutsch"); //$NON-NLS-1$ //$NON-NLS-2$
-			languageNames.put("es", "Español");  //$NON-NLS-1$ //$NON-NLS-2$
-			languageNames.put("fr", "Français"); //$NON-NLS-1$ //$NON-NLS-2$
+			//languageNames.put("es", "Español");  //$NON-NLS-1$ //$NON-NLS-2$
+			//languageNames.put("fr", "Français"); //$NON-NLS-1$ //$NON-NLS-2$
 			
 
 			languageCodes.put("English", "en"); //$NON-NLS-1$ //$NON-NLS-2$
 			languageCodes.put("Italiano", "it"); //$NON-NLS-1$ //$NON-NLS-2$
 			languageCodes.put("Deutsch", "de"); //$NON-NLS-1$ //$NON-NLS-2$
-			languageCodes.put("Español", "es");  //$NON-NLS-1$ //$NON-NLS-2$
-			languageCodes.put("Français", "fr"); //$NON-NLS-1$ //$NON-NLS-2$
+			//languageCodes.put("Español", "es");  //$NON-NLS-1$ //$NON-NLS-2$
+			//languageCodes.put("Français", "fr"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
 		private static LanguageCodes getInstance() {

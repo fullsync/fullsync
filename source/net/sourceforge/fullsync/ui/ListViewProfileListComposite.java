@@ -104,8 +104,8 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 	            TableItem item = new TableItem( tableProfiles, SWT.NULL );
 	            item.setText( new String[] { 
 	                    p.getName(),
-	                    p.getLastUpdate().toString(),
-	                    p.getNextUpdate(),
+	                    p.getLastUpdateText(),
+	                    p.getNextUpdateText(),
 	                    p.getSource().toString(),
 	                    p.getDestination().toString() } );
 	            item.setData( p );

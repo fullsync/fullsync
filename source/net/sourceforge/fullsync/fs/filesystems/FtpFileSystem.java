@@ -1,7 +1,7 @@
 /*
  * Created on 20.07.2004
  */
-package net.sourceforge.fullsync.fs.ftp;
+package net.sourceforge.fullsync.fs.filesystems;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

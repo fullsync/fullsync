@@ -20,6 +20,7 @@ import org.apache.commons.net.ftp.FTPFile;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
+ * @deprecated
  */
 public class FtpFile implements File
 {

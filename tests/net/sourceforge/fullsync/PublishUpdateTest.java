@@ -134,7 +134,7 @@ public class PublishUpdateTest extends TestCase
 	        public void taskTreeStarted( TaskTree tree ) {}
 	    };
 	    
-	    Processor processor = synchronizer.getProcessor();
+	    TaskGenerator processor = synchronizer.getTaskGenerator();
 	    processor.addTaskGenerationListener( list ); 
 	    TaskTree tree = processor.execute( profile );
 	    processor.removeTaskGenerationListener( list );

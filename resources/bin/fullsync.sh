@@ -76,4 +76,4 @@ else
   echo "  to the installation directory of java."
 fi
 
-$JAVACMD -classpath "$LOCALCLASSPATH" -Djava.library.path="$FULLSYNC_HOME/lib" net.sourceforge.fullsync.Main "$@"
+$JAVACMD -classpath "$LOCALCLASSPATH" -Djava.library.path="$FULLSYNC_HOME/lib" net.sourceforge.fullsync.cli.Main "$@"

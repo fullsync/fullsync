@@ -10,7 +10,7 @@ import net.sourceforge.fullsync.fs.Site;
  * 
  * TODO call me TaskGenerator ?
  */
-public interface Processor
+public interface TaskGenerator extends Phase
 {
     // main functionallity
     public TaskTree execute( Profile profile )
@@ -21,10 +21,4 @@ public interface Processor
     // listeners
     public void addTaskGenerationListener( TaskGenerationListener listener );
     public void removeTaskGenerationListener( TaskGenerationListener listener );
-    
-    // process interaction
-    public boolean isActive();
-    public void suspend();
-    public void resume();
-    public void cancel();
 }

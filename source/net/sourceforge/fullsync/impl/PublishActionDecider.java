@@ -21,7 +21,6 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class PublishActionDecider implements ActionDecider
 {
-
     private static final Action addDestination = new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "Add" );
     private static final Action ignoreDestinationExists = new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "will not add, destination already exists" );
     private static final Action overwriteSource = new Action( Action.Update, Location.Source, BufferUpdate.Destination, "overwrite source" );

@@ -45,6 +45,7 @@
 		<include name="commons-net.jar"/>
 		<include name="j2ssh-core.jar"/>
 		<include name="jakarta-oro.jar"/>
+		<include name="jcifs.jar"/>
 		<include name="log4j.jar"/>
 		<include name="swt.jar"/>
 		<include name="xercesImpl.jar"/>

@@ -9,9 +9,10 @@ import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
 import net.sourceforge.fullsync.fs.buffering.syncfiles.SyncFilesBufferingProvider;
-import net.sourceforge.fullsync.fs.file.LocalFileSystem;
-import net.sourceforge.fullsync.fs.ftp.FtpFileSystem;
-import net.sourceforge.fullsync.fs.sftp.SftpFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.FtpFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.SftpFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -27,6 +28,7 @@ public class FileSystemManager
         schemes.put( "file", new LocalFileSystem() );
         schemes.put( "ftp", new FtpFileSystem() );
         schemes.put( "sftp", new SftpFileSystem() );
+        schemes.put( "smb", new SmbFileSystem() );
         
         buffering = new Hashtable();
         buffering.put( "syncfiles", new SyncFilesBufferingProvider() );

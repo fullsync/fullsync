@@ -1,7 +1,7 @@
 /*
  * Created on 18.07.2004
  */
-package net.sourceforge.fullsync.fs.file;
+package net.sourceforge.fullsync.fs.filesystems;
 
 
 import java.io.IOException;
@@ -14,6 +14,7 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.LocalConnection;
+import net.sourceforge.fullsync.fs.file.LocalFile;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>

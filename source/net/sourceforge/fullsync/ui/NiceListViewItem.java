@@ -91,7 +91,6 @@ public class NiceListViewItem extends Canvas implements Listener
 			}
             {
                 labelCaption = new Label(this, SWT.NULL);
-                labelCaption.setText(Messages.getString("NiceListViewItem.Caption")); //$NON-NLS-1$
                 labelCaption.setFont(new Font( getDisplay(), "Tahoma", 9, 1 )); //$NON-NLS-1$
                 labelCaption.setSize(200, 14);
                 GridData labelCaptionLData = new GridData();
@@ -106,7 +105,6 @@ public class NiceListViewItem extends Canvas implements Listener
             }
             {
                 labelStatus = new Label(this, SWT.NONE);
-                labelStatus.setText(Messages.getString("NiceListViewItem.Status")); //$NON-NLS-1$
                 GridData labelStatusLData = new GridData();
                 labelStatusLData.grabExcessHorizontalSpace = true;
                 labelStatusLData.horizontalAlignment = GridData.FILL;

@@ -127,6 +127,7 @@ public class FtpConnection extends InstableConnection
         client.login( desc.getUsername(), desc.getPassword() );
         client.enterLocalPassiveMode(); // FIXME i need to be specified in the ConnectionDescription
         client.setFileType( FTP.BINARY_FILE_TYPE );
+        client.setSoTimeout( 0 );
         basePath = client.printWorkingDirectory()+connectionUri.getPath();
         
         // TODO find out whether remote server is case sensitive or not (win or unix)

@@ -10,6 +10,6 @@ import java.util.EventListener;
  */
 public interface TaskFinishedListener extends EventListener
 {
-	// TODO better use some action class given to the actionqueue
+	// TODO better use some action class given to the taskexecutor
 	public void taskFinished( TaskFinishedEvent event );
 }

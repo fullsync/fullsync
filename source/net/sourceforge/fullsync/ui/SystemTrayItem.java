@@ -85,7 +85,7 @@ public class SystemTrayItem implements TaskGenerationListener
             }
 		} );
 		
-		guiController.getSynchronizer().getProcessor().addTaskGenerationListener( this );
+		guiController.getSynchronizer().getTaskGenerator().addTaskGenerationListener( this );
     }
     public void setVisible( boolean visible )
     {

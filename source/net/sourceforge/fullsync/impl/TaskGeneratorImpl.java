@@ -16,7 +16,7 @@ import net.sourceforge.fullsync.fs.File;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class ProcessorImpl extends AbstractProcessor
+public class TaskGeneratorImpl extends AbstractTaskGenerator
 {
     // TODO this should be execution local so the class
     //      itself is multithreadable
@@ -27,7 +27,7 @@ public class ProcessorImpl extends AbstractProcessor
     private BufferStateDecider bufferStateDecider;
     //private ActionDecider actionDecider;
     
-    public ProcessorImpl()
+    public TaskGeneratorImpl()
     {
         super(); 
     }

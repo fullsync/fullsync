@@ -9,7 +9,7 @@ import java.util.Vector;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class DebugBuffer implements Buffer
+public class DebugBuffer implements ExecutionBuffer
 {
     private Vector entries = null;
     

@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class BlockBuffer implements Buffer
+public class BlockBuffer implements ExecutionBuffer
 {
     Logger logger;
     

@@ -5,7 +5,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.Action;
-import net.sourceforge.fullsync.ActionQueue;
+import net.sourceforge.fullsync.TaskExecutor;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Location;
@@ -13,7 +13,7 @@ import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.buffer.Buffer;
+import net.sourceforge.fullsync.buffer.ExecutionBuffer;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.buffer.EntryFinishedListener;
 import net.sourceforge.fullsync.fs.File;
@@ -21,14 +21,14 @@ import net.sourceforge.fullsync.fs.File;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class FillBufferActionQueue implements ActionQueue, EntryFinishedListener
+public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListener
 {
     private Vector listeners;
     private boolean statisticsOnly;
     private IoStatisticsImpl stats;
-    private Buffer buffer;
+    private ExecutionBuffer buffer;
     
-    public FillBufferActionQueue( Buffer buffer )
+    public FillBufferTaskExecutor( ExecutionBuffer buffer )
     {
         this.listeners = new Vector();
         this.statisticsOnly = false;
@@ -163,5 +163,23 @@ public class FillBufferActionQueue implements ActionQueue, EntryFinishedListener
     public void removeTaskFinishedListener( TaskFinishedListener listener )
     {
     	listeners.remove( listener );
+    }
+    
+    public boolean isActive()
+    {
+        // TODO please impl me !!
+        return true;
+    }
+    public void resume()
+    {
+        // TODO please impl me !!
+    }
+    public void suspend()
+    {
+        // TODO please impl me !!
+    }
+    public void cancel()
+    {
+        // TODO please impl me !!
     }
 }

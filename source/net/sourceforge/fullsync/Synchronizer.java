@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 import net.sourceforge.fullsync.buffer.BlockBuffer;
-import net.sourceforge.fullsync.impl.FillBufferActionQueue;
-import net.sourceforge.fullsync.impl.ProcessorImpl;
+import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
+import net.sourceforge.fullsync.impl.TaskGeneratorImpl;
 import net.sourceforge.fullsync.remote.RemoteManager;
 
 import org.apache.log4j.Logger;
@@ -19,17 +19,17 @@ import org.apache.log4j.Logger;
  */
 public class Synchronizer
 {
-    private Processor processor;
+    private TaskGenerator taskGenerator;
     private RemoteManager remoteManager;
 
     public Synchronizer()
     {
-        processor = new ProcessorImpl();
+        taskGenerator = new TaskGeneratorImpl();
     }
-    // TODO we should hide the processor we use
-    public Processor getProcessor()
+    // TODO we should hide the taskgenerator we use
+    public TaskGenerator getTaskGenerator()
     {
-        return processor;
+        return taskGenerator;
     }
     public synchronized TaskTree executeProfile( Profile profile )
     {
@@ -42,7 +42,7 @@ public class Synchronizer
     	}
     	else {
     		try {
-    			return processor.execute( profile );
+    			return taskGenerator.execute( profile );
     		} catch( Exception e ) {
     			ExceptionHandler.reportException( e );
     		}
@@ -51,9 +51,9 @@ public class Synchronizer
     }
     public synchronized TaskTree executeProfile( Profile profile, TaskGenerationListener taskGenerationListener )
     {
-        processor.addTaskGenerationListener( taskGenerationListener );
+        taskGenerator.addTaskGenerationListener( taskGenerationListener );
         TaskTree tree = executeProfile( profile );
-        processor.removeTaskGenerationListener( taskGenerationListener );
+        taskGenerator.removeTaskGenerationListener( taskGenerationListener );
         
         return tree;
     }
@@ -100,7 +100,7 @@ public class Synchronizer
     	        logger.info( "  destination: "+taskTree.getDestination().getUri().toString() );
     	        
     	        BlockBuffer buffer = new BlockBuffer( logger );
-    	        ActionQueue queue = new FillBufferActionQueue(buffer);
+    	        TaskExecutor queue = new FillBufferTaskExecutor(buffer);
     	        
     	        if( listener != null )
     	            queue.addTaskFinishedListener( listener );
@@ -139,7 +139,7 @@ public class Synchronizer
         // HACK omg, that's not the way io stats are intended to be generated / used
     	Logger logger = Logger.getLogger("FullSync");
     	BlockBuffer buffer = new BlockBuffer(logger);
-    	ActionQueue queue = new FillBufferActionQueue(buffer);
+    	TaskExecutor queue = new FillBufferTaskExecutor(buffer);
 		return queue.createStatistics(taskTree);
 	}
 }

@@ -1,5 +1,9 @@
 package net.sourceforge.fullsync;
 
+import java.util.Locale;
+
+import net.sourceforge.fullsync.cli.CommandLineInterpreter;
+
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -26,7 +30,6 @@ public class Main
     	fs.start();
     	
     	/* */
-        
         CommandLineInterpreter.parse( args );
         
         /* /
@@ -66,8 +69,8 @@ public class Main
 		
 		Buffer buffer = new BlockBuffer();
 		buffer.load();
-        ProcessorImpl c = new ProcessorImpl(  );
-        c.setActionQueue( new FillBufferActionQueue( buffer ) );
+        TaskGeneratorImpl c = new TaskGeneratorImpl(  );
+        c.setTaskExecutor( new FillBufferTaskExecutor( buffer ) );
         c.execute( task );
         buffer.unload();
         /* */ 

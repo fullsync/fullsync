@@ -1,4 +1,4 @@
-package net.sourceforge.fullsync.fs.sftp;
+package net.sourceforge.fullsync.fs.filesystems;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

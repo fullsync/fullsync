@@ -58,6 +58,7 @@ public class FtpConnectionTest extends TestCase
     protected void tearDown() throws Exception
     {
         ftpServer.stopRunning();
+        ftpServer.interrupt();
         ftpServer.join();
 
         clearUp();
@@ -143,7 +144,7 @@ public class FtpConnectionTest extends TestCase
             public void taskTreeStarted( TaskTree tree ) {}
         };
         
-        Processor processor = synchronizer.getProcessor();
+        TaskGenerator processor = synchronizer.getTaskGenerator();
 	    processor.addTaskGenerationListener( list ); 
 	    TaskTree tree = processor.execute( profile );
 	    processor.removeTaskGenerationListener( list );
@@ -163,8 +164,8 @@ public class FtpConnectionTest extends TestCase
         Hashtable expectation = new Hashtable();
         expectation.put( "sourceFile1.txt", new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "" ) );
         expectation.put( "sourceFile2.txt", new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "" ) );
-        /* Phase One: */ TaskTree tree = assertPhaseOneActions( expectation );
-        /* Phase Two: */ synchronizer.performActions( tree ); // TODO assert task finished events ?
+        /* Phase One:   */ TaskTree tree = assertPhaseOneActions( expectation );
+        /* Phase Three: */ synchronizer.performActions( tree ); // TODO assert task finished events ?
     }
     
     public void testSingleSpaceMinus()
@@ -174,7 +175,7 @@ public class FtpConnectionTest extends TestCase
         long lm = new Date().getTime();
         
         new File( testingSource, "sub - folder" ).mkdir();
-        new File( testingSource, "sub - folder/sub2 -folder" ).mkdir();
+        new File( testingSource, "sub - folder/sub2 - folder" ).mkdir();
         createNewFileWithContents( testingSource, "sub - folder/sub2 - folder/sourceFile1.txt", lm, "this is a test\ncontent1" );
         createNewFileWithContents( testingSource, "sub - folder/sourceFile2.txt", lm, "this is a test\ncontent2" );
         
@@ -183,7 +184,7 @@ public class FtpConnectionTest extends TestCase
         expectation.put( "sub2 - folder", new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "" ) );
         expectation.put( "sourceFile1.txt", new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "" ) );
         expectation.put( "sourceFile2.txt", new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "" ) );
-        /* Phase One: */ TaskTree tree = assertPhaseOneActions( expectation );
-        /* Phase Two: */ synchronizer.performActions( tree ); // TODO assert task finished events ?
+        /* Phase One:   */ TaskTree tree = assertPhaseOneActions( expectation );
+        /* Phase Three: */ synchronizer.performActions( tree ); // TODO assert task finished events ?
     }
 }

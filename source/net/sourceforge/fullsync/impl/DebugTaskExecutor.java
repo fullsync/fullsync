@@ -1,6 +1,6 @@
 package net.sourceforge.fullsync.impl;
 
-import net.sourceforge.fullsync.ActionQueue;
+import net.sourceforge.fullsync.TaskExecutor;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskFinishedListener;
@@ -9,9 +9,9 @@ import net.sourceforge.fullsync.TaskTree;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class DebugActionQueue implements ActionQueue
+public class DebugTaskExecutor implements TaskExecutor
 {
-    public DebugActionQueue()
+    public DebugTaskExecutor()
     {
     }
     public IoStatistics createStatistics( TaskTree tree )
@@ -26,6 +26,19 @@ public class DebugActionQueue implements ActionQueue
     public void enqueue( Task task )
     {
         System.out.println( task.getSource() + ": " + task.getCurrentAction() );
+    }
+    public boolean isActive()
+    {
+        return true;
+    }
+    public void resume()
+    {
+    }
+    public void suspend()
+    {
+    }
+    public void cancel()
+    {
     }
     public void flush()
     {

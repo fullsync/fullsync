@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public interface Buffer
+public interface ExecutionBuffer
 {
     public void load();
     public void unload();

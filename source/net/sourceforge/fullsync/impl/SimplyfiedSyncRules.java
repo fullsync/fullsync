@@ -140,16 +140,14 @@ public class SimplyfiedSyncRules implements RuleSet {
 	public State compareFiles(FileAttributes src, FileAttributes dst)
 			throws DataParseException 
 	{
+        if (Math.floor(src.getLastModified()/1000.0) > Math.floor(dst.getLastModified()/1000.0)) {
+            return new State(State.FileChange, Location.Source);
+        } else if (Math.floor(src.getLastModified()/1000.0) < Math.floor(dst.getLastModified()/1000.0)){
+            return new State(State.FileChange, Location.Destination);
+        }
 		if (src.getLength() != dst.getLength()) {
 			return new State(State.FileChange, Location.None);
 		}
-
-		if (Math.floor(src.getLastModified()/1000.0) > Math.floor(dst.getLastModified()/1000.0)) {
-			return new State(State.FileChange, Location.Source);
-		} else if (Math.floor(src.getLastModified()/1000.0) < Math.floor(dst.getLastModified()/1000.0)){
-		    return new State(State.FileChange, Location.Destination);
-		}
-
 		return new State(State.NodeInSync, Location.Both);
 	}
 	
