@@ -135,10 +135,22 @@ Logwindow
 	[X] show progress of performing actions
 	[X] show size of files
 
+Syncprocess encapsulement:
+	[ ] beside having access to all the neat classes we can use to 
+		do a very custom synchronization process we need to encapsule
+		the functionallity offered by the program itself, like:
+		  - do full sync
+		  - just try
+		params:
+		  - profile name
+		  - gui yes/no
+		  - interactive yes/no
+		  - verbose yes/no
+
 Sheduler:
 	[X]	copy sheduler from backup - we use Timer and ProfileManager directly
 		(so changes to intervals and stuff are propagated much easier)
-	[ ] add button to toolbar enable/disable scheduling
+	[X] add button to toolbar enable/disable scheduling
 	[ ] add column next update
 	[ ] update lastUpdate / nextUpdate correctly
 	[ ] add some simple stuff to the profile (interval, enabled and errorflag 

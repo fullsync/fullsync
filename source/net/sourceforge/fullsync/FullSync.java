@@ -39,12 +39,12 @@ public class FullSync
     private MainWindow mainWindow;
     private SystemTrayItem trayItem;
     
-    public FullSync( boolean guiEnabled )
+    public FullSync()
     	throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError
     {
-        this.guiEnabled = guiEnabled;
         DOMConfigurator.configure( "logging.xml" );
         
+        guiEnabled = false;
         profileManager = new ProfileManager( "profiles.xml" );
         processor = new ProcessorImpl();
 
@@ -114,7 +114,9 @@ public class FullSync
 			// Logger logger = Logger.getRootLogger();
             // logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
             Logger logger = Logger.getLogger( "FullSync" );
-	        logger.info( "Synchronizing "+taskTree.getSource().getUri().toString()+" and "+taskTree.getDestination().getUri().toString() );
+	        logger.info( "Synchronization started" );
+	        logger.info( "  source:      "+taskTree.getSource().getUri().toString() );
+	        logger.info( "  destination: "+taskTree.getDestination().getUri().toString() );
 	        
 	        BlockBuffer buffer = new BlockBuffer( logger );
 	        ActionQueue queue = new FillBufferActionQueue(buffer);
@@ -136,6 +138,11 @@ public class FullSync
 	    } catch( IOException e ) {
 	        e.printStackTrace();
 	    }
+    }
+    
+    public void setGuiEnabled( boolean guiEnabled )
+    {
+        this.guiEnabled = guiEnabled;
     }
     
     public boolean isGuiEnabled()
@@ -186,10 +193,14 @@ public class FullSync
         System.out.println( Security.getAlgorithms("KeyAgreement") );//, "DH" ) );
         KeyPairGenerator dhKeyPairGen = KeyPairGenerator.getInstance("DH");
         KeyAgreement dhKeyAgreement = KeyAgreement.getInstance("DH");
-        /* */
+        /* /
     	
     	FullSync fs = new FullSync(true);
     	fs.start();
+    	
+    	/* */
+        
+        CommandLineInterpreter.parse( args );
         
         /* /
         FileSystemManager fsm = new FileSystemManager();

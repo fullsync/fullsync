@@ -53,7 +53,7 @@ public class FillBufferActionQueue implements ActionQueue, EntryFinishedListener
     public void enqueue( Action action, File source, File destination )
     {
         try {
-	        System.out.println( action );
+	        //System.out.println( action );
 	        switch( action.getType() )
 	        {
 	        case Action.Add:

@@ -85,7 +85,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 		super(parent, style);
 		initGUI();
 		initializeImages();
-		onlyChanges = false;
+		onlyChanges = true;
 		processing = false;
 	}
 
@@ -220,7 +220,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	public void postInitGUI(){
 	    comboFilter.add( "Everything" );
 	    comboFilter.add( "Changes only" );
-	    comboFilter.select(0);
+	    comboFilter.select(1);
 	}
 
 	public static void show( final TaskTree task )
