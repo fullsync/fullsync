@@ -1,6 +1,6 @@
-* added a Remote Connection menu to connect the running instance to a remote server (patch by michele)
+* added a Remote Connection menu to connect the running instance to a remote server
 * changed ftp to use passive mode
-* added FullSync Installer for Windows and Linux systems (patch by michele)
+* added FullSync Installer for Windows and Linux systems
 * fixed not correct file comparison and last modified update
   changes seem to generate a lot of new updates !?
 * added systemtray showing activity
@@ -15,7 +15,7 @@
 * changed most dialogs to wizard style
 * added new images and icons
 * added AboutDialog
-* added new preference: profile list (needs restart)
+* added new preference: profile list
 * added NiceListView -> alternative profile list
 * added ProfileChange listener to profile
 * added a main menu bar (patch by michele)
