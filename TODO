@@ -173,6 +173,16 @@ Connection:
 Gui:
 	[X] realize the gui concept (2004-11-07)
 
+Linux:
+	[X] about dialog has no picture and no buttons!? but splash works
+	[X] preferences... layout is pretty bad
+
+Sheduler:
+	[X] add some simple stuff to the profile (interval, enabled and errorflag 
+		with different levels like minor, major, blocker (could not connect))
+   	[X] add symbol for scheduled tasks
+   	[X] does daemon mode scheduling work atm ? we don't specify a listener !
+	
 Release-critical:
 	[X] LogWindow should have: global source - destination, filename just once,
 		                       explanation on the right side
@@ -199,21 +209,27 @@ Release-critical:
    	[X] make src/dst buffering set by the type and use text field to explain
    		the types a little
    	[X] if scheduling is changed we need to refresh the timer
-   	[ ] show correct number of tasks to do in taskDecider window
+   	[X] show correct number of tasks to do in taskDecider window
 	[X] show icons in profile list popups
 	[ ] set serialVersionIds... otherwise we'll have huge problems releasing 
 		patches even if not a single serializeable object has changed.
-	[ ] get rid of gifs, so we only use one patentfree format ;)
-
-Sheduler:
-	[X] add some simple stuff to the profile (interval, enabled and errorflag 
-		with different levels like minor, major, blocker (could not connect))
-   	[X] add symbol for scheduled tasks
-   	[X] does daemon mode scheduling work atm ? we don't specify a listener !
+	[X] get rid of gifs, so we only use one patentfree format ;)
+	[ ] propagate updates of server profiles to client-gui
+	[ ] enable/disable certain menu items if not available
 	
+GraphicsTodo:
+	[X] a clock icon for the scheduler
+	[X] a small clock to indicated profiles that are scheduled
+	[X] an icon for remote connection (startup / being connected)
+	[X] a wizard image for starting a remote connection
+	[ ] some different images for start scheduler and stop scheduler
+	[ ] an icon to indicate fullsync is in remote listening mode (?)
+
 Remote:
+	[X] make scheduler available via remote interface
 	[ ] password for connection
-	[ ] make scheduler available via remote interface
+
+---===[ to 0.9 Tasks ]====-------------------------------------------------
 
 Linux:
 	[ ] popups of taskdecision dialog are pretty high (about twice the normal height)
@@ -222,10 +238,6 @@ Linux:
 		the latter one looks like a standard font
 	[ ] filter combo of task dec is too small (width)
 	[ ] nicelistview: all non bold fonts look rather large
-	[X] about dialog has no picture and no buttons!? but splash works
-	[X] preferences... layout is pretty bad
-
----===[ to 0.9 Tasks ]====-------------------------------------------------
 
 Remote:
 	[X] make gui mode listening for incoming connections

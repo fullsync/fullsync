@@ -5,7 +5,6 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
@@ -37,22 +36,6 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 	private Composite compositeBottom;
 	private Button buttonOk;
 	private Button buttonWebsite;
-	private Image imageAbout;
-
-	/**
-	* Auto-generated main method to display this 
-	* org.eclipse.swt.widgets.Dialog inside a new Shell.
-	*/
-	public static void main(String[] args) {
-		try {
-			Display display = Display.getDefault();
-			Shell shell = new Shell(display);
-			AboutDialog inst = new AboutDialog(shell, SWT.NULL);
-			inst.open();
-		} catch (Exception e) {
-			ExceptionHandler.reportException( e );
-		}
-	}
 
 	public AboutDialog(Shell parent, int style) 
 	{
@@ -80,8 +63,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
                 labelPictureLData.horizontalAlignment = GridData.FILL;
                 labelPictureLData.verticalAlignment = GridData.FILL;
                 labelPicture.setLayoutData(labelPictureLData);
-                imageAbout = GuiController.getInstance().getImage( "About.png" );
-        		labelPicture.setImage( imageAbout );
+        		labelPicture.setImage( GuiController.getInstance().getImage( "About.png" ) );
             }
             {
                 labelSeparator = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -138,8 +120,6 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 				if (!display.readAndDispatch())
 					display.sleep();
 			}
-			imageAbout.dispose();
-			imageAbout = null;
 		} catch (Exception e) {
 			ExceptionHandler.reportException( e );
 		}

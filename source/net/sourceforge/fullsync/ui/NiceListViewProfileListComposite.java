@@ -154,14 +154,14 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
     }
     private void loadImages()
     {
-        imageProfileDefault = GuiController.getInstance().getImage( "Profile_Default.gif" );
-        imageProfileScheduled = GuiController.getInstance().getImage( "Profile_Default_Scheduled.gif" );
-        imageProfileError = GuiController.getInstance().getImage( "Profile_Default_Error.gif" );
-        imageProfileErrorScheduled = GuiController.getInstance().getImage( "Profile_Default_Error_Scheduled.gif" );
+        imageProfileDefault = GuiController.getInstance().getImage( "Profile_Default.png" );
+        imageProfileScheduled = GuiController.getInstance().getImage( "Profile_Default_Scheduled.png" );
+        imageProfileError = GuiController.getInstance().getImage( "Profile_Default_Error.png" );
+        imageProfileErrorScheduled = GuiController.getInstance().getImage( "Profile_Default_Error_Scheduled.png" );
         
-        imageRun = GuiController.getInstance().getImage( "Profile_Run.gif" );
-        imageEdit = GuiController.getInstance().getImage( "Profile_Edit.gif" );
-        imageDelete = GuiController.getInstance().getImage( "Profile_Delete.gif" );
+        imageRun = GuiController.getInstance().getImage( "Profile_Run.png" );
+        imageEdit = GuiController.getInstance().getImage( "Profile_Edit.png" );
+        imageDelete = GuiController.getInstance().getImage( "Profile_Delete.png" );
     }
     public void dispose()
     {

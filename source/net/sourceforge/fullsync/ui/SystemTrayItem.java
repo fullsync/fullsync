@@ -43,8 +43,8 @@ public class SystemTrayItem implements TaskGenerationListener
         this.trayItem = new TrayItem( tray, SWT.NULL );
         
         imageList = new Image[2];
-        imageList[0] = GuiController.getInstance().getImage( "Tray_Active_01.gif" );
-        imageList[1] = GuiController.getInstance().getImage( "Tray_Active_02.gif" );
+        imageList[0] = GuiController.getInstance().getImage( "Tray_Active_01.png" );
+        imageList[1] = GuiController.getInstance().getImage( "Tray_Active_02.png" );
         imageActive = 0;
         
         // initialize trayItem

@@ -43,7 +43,7 @@ public class ProfileDetailsPage implements WizardPage
     }
     public Image getIcon()
     {
-        return GuiController.getInstance().getImage( "Profile_Default.gif" );
+        return GuiController.getInstance().getImage( "Profile_Default.png" );
     }
     public Image getImage()
     {

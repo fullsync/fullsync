@@ -39,7 +39,7 @@ public class ConnectionPage implements WizardPage {
 	}
 
 	public Image getIcon() {
-		return GuiController.getInstance().getImage( "Remote_Connect.gif" );
+		return GuiController.getInstance().getImage( "Remote_Connect.png" );
     }
 
 	public Image getImage() {

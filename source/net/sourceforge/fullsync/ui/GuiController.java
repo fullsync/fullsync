@@ -52,7 +52,7 @@ public class GuiController implements Runnable
 			Rectangle shellBounds = mainShell.computeTrim(0,0,mainWindow.getSize().x,mainWindow.getSize().y);
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText( "FullSync 0.8.0" );
-			mainShell.setImage( getImage( "FullSync.gif" ) );
+			mainShell.setImage( getImage( "FullSync.png" ) );
 			mainShell.setVisible( true );
 		} catch (Exception e) {
 			ExceptionHandler.reportException( e );

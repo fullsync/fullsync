@@ -76,7 +76,7 @@ public class TaskDecisionPage implements WizardPage
 
     public Image getIcon()
     {
-        return GuiController.getInstance().getImage( "Tasklist_Icon.gif" );
+        return GuiController.getInstance().getImage( "Tasklist_Icon.png" );
     }
 
     public Image getImage()

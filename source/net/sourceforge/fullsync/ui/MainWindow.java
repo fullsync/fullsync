@@ -127,7 +127,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                         toolBar1 = new ToolBar(coolBar, SWT.FLAT);
                         {
                             toolItemNew = new ToolItem(toolBar1, SWT.PUSH);
-                    		toolItemNew.setImage( guiController.getImage( "Button_New.gif" ) );
+                    		toolItemNew.setImage( guiController.getImage( "Button_New.png" ) );
                     		toolItemNew.setToolTipText("New Profile");
                             toolItemNew
                                 .addSelectionListener(new SelectionAdapter() {
@@ -138,7 +138,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                         }
                         {
                             toolItemEdit = new ToolItem(toolBar1, SWT.PUSH);
-                    		toolItemEdit.setImage( guiController.getImage( "Button_Edit.gif" ) );
+                    		toolItemEdit.setImage( guiController.getImage( "Button_Edit.png" ) );
                     		toolItemEdit.setToolTipText("Edit Profile");
                             toolItemEdit
                                 .addSelectionListener(new SelectionAdapter() {
@@ -149,7 +149,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                         }
                         {
                             toolItemDelete = new ToolItem(toolBar1, SWT.PUSH);
-                    		toolItemDelete.setImage( guiController.getImage( "Button_Delete.gif" ) );
+                    		toolItemDelete.setImage( guiController.getImage( "Button_Delete.png" ) );
                     		toolItemDelete.setToolTipText("Delete Profile");
                             toolItemDelete
                                 .addSelectionListener(new SelectionAdapter() {
@@ -160,7 +160,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                         }
                         {
                             toolItemRun = new ToolItem(toolBar1, SWT.PUSH);
-                    		toolItemRun.setImage( guiController.getImage( "Button_Run.gif" ) );
+                    		toolItemRun.setImage( guiController.getImage( "Button_Run.png" ) );
                     		toolItemRun.setToolTipText("Run Profile");
                             toolItemRun
                                 .addSelectionListener(new SelectionAdapter() {
@@ -251,7 +251,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		
 		MenuItem menuItemNewProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemNewProfile.setText("&New Profile...");
-		menuItemNewProfile.setImage( guiController.getImage( "Button_New.gif" ) );
+		menuItemNewProfile.setImage( guiController.getImage( "Button_New.png" ) );
 		menuItemNewProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					createNewProfile();
@@ -263,7 +263,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MenuItem menuItemEditProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemEditProfile.setText("&Edit Profile...");
-		menuItemEditProfile.setImage( guiController.getImage( "Button_Edit.gif" ) );
+		menuItemEditProfile.setImage( guiController.getImage( "Button_Edit.png" ) );
 		menuItemEditProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					editProfile( profileList.getSelectedProfile() );
@@ -273,7 +273,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MenuItem menuItemRunProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemRunProfile.setText("&Run Profile...");
-		menuItemRunProfile.setImage( guiController.getImage( "Button_Run.gif" ) );
+		menuItemRunProfile.setImage( guiController.getImage( "Button_Run.png" ) );
 		menuItemRunProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					runProfile( profileList.getSelectedProfile() );
@@ -285,7 +285,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MenuItem menuItemDeleteProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemDeleteProfile.setText("&Delete Profile...");
-		menuItemDeleteProfile.setImage( guiController.getImage( "Button_Delete.gif" ) );
+		menuItemDeleteProfile.setImage( guiController.getImage( "Button_Delete.png" ) );
 		menuItemDeleteProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					deleteProfile( profileList.getSelectedProfile() );
@@ -360,7 +360,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 						connectItem.setEnabled(false);
 						disconnectItem.setEnabled(true);
 						GuiController.getInstance().getMainShell().setImage(
-						        GuiController.getInstance().getImage( "Remote_Connect.gif" ));
+						        GuiController.getInstance().getImage( "Remote_Connect.png" ));
 					}
 				}
 			}
@@ -379,7 +379,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 						connectItem.setEnabled(true);
 						disconnectItem.setEnabled(false);
 						GuiController.getInstance().getMainShell().setImage(
-						        GuiController.getInstance().getImage( "FullSync.gif" ));					
+						        GuiController.getInstance().getImage( "FullSync.png" ));					
 					}
 				}
 			}
@@ -422,7 +422,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		
 		MenuItem runItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		runItem.setText("Run Profile");
-		runItem.setImage( guiController.getImage( "Button_Run.gif" ) );
+		runItem.setImage( guiController.getImage( "Button_Run.png" ) );
 		runItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					runProfile( profileList.getSelectedProfile() );
@@ -432,7 +432,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MenuItem editItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		editItem.setText("Edit Profile");
-		editItem.setImage( guiController.getImage( "Button_Edit.gif" ) );
+		editItem.setImage( guiController.getImage( "Button_Edit.png" ) );
 		editItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					editProfile( profileList.getSelectedProfile() );
@@ -442,7 +442,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MenuItem deleteItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		deleteItem.setText("Delete Profile");
-		deleteItem.setImage( guiController.getImage( "Button_Delete.gif" ) );
+		deleteItem.setImage( guiController.getImage( "Button_Delete.png" ) );
 		deleteItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					deleteProfile( profileList.getSelectedProfile() );
@@ -454,7 +454,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		MenuItem addItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		addItem.setText("New Profile");
-		addItem.setImage( guiController.getImage( "Button_New.gif" ) );
+		addItem.setImage( guiController.getImage( "Button_New.png" ) );
 		addItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					createNewProfile();
@@ -506,10 +506,10 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	    
 	    if( pm.isTimerEnabled() )
 	    {
-	        toolItemSchedule.setImage( guiController.getImage( "Timer_Running.gif" ) );
+	        toolItemSchedule.setImage( guiController.getImage( "Timer_Running.png" ) );
 	        toolItemSchedule.setToolTipText( "Suspend Timer" );
 	    } else {
-	        toolItemSchedule.setImage( guiController.getImage( "Timer_Stopped.gif" ) );
+	        toolItemSchedule.setImage( guiController.getImage( "Timer_Stopped.png" ) );
 	        toolItemSchedule.setToolTipText( "Start Timer" );
 	    }
 	}

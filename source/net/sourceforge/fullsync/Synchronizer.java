@@ -122,6 +122,7 @@ public class Synchronizer
     }
 
     public IoStatistics getIoStatistics(TaskTree taskTree) {
+        // HACK omg, that's not the way io stats are intended to be generated / used
     	Logger logger = Logger.getLogger("FullSync");
     	BlockBuffer buffer = new BlockBuffer(logger);
     	ActionQueue queue = new FillBufferActionQueue(buffer);

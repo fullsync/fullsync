@@ -177,21 +177,21 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	public void initializeImages()
 	{
 	    GuiController gui = GuiController.getInstance();
-	    nodeFile = gui.getImage( "Node_File.gif" );
-	    nodeDirectory = gui.getImage( "Node_Directory.gif" );
-	    nodeUndefined = gui.getImage( "Node_Undefined.gif" );
-	    locationSource = gui.getImage( "Location_Source.gif" );
-	    locationDestination = gui.getImage( "Location_Destination.gif" );
-	    locationBoth = gui.getImage( "Location_Both.gif" );
+	    nodeFile = gui.getImage( "Node_File.png" );
+	    nodeDirectory = gui.getImage( "Node_Directory.png" );
+	    nodeUndefined = gui.getImage( "Node_Undefined.png" );
+	    locationSource = gui.getImage( "Location_Source.png" );
+	    locationDestination = gui.getImage( "Location_Destination.png" );
+	    locationBoth = gui.getImage( "Location_Both.png" );
 	    	    
 	    actionImages = new Hashtable();
 	    for( int i = 0; i < Action.names.length; i++ )
 	    {
-	        actionImages.put( new Integer( i ), gui.getImage( "Action_"+Action.names[i]+".gif" ) );
+	        actionImages.put( new Integer( i ), gui.getImage( "Action_"+Action.names[i]+".png" ) );
 	    }
 	    for( int i = 0; i < Action.errorNames.length; i++ )
 	    {
-	        actionImages.put( new Integer( i+10 ), gui.getImage( "Action_"+Action.errorNames[i]+".gif" ) );
+	        actionImages.put( new Integer( i+10 ), gui.getImage( "Action_"+Action.errorNames[i]+".png" ) );
 	    }
 	    
 	    taskImages = new Hashtable();

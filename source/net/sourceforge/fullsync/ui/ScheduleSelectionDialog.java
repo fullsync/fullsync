@@ -82,7 +82,7 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog
 		try {
 		    dialogShell = new Shell( getParent(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM );
 		    dialogShell.setText( "Edit Scheduling" );
-		    dialogShell.setImage( GuiController.getInstance().getImage( "Scheduler_Icon.gif" ) );
+		    dialogShell.setImage( GuiController.getInstance().getImage( "Scheduler_Icon.png" ) );
 			GridLayout thisLayout = new GridLayout();
 			thisLayout.numColumns = 2;
 			dialogShell.setLayout(thisLayout);
