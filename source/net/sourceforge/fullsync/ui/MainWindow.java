@@ -1,6 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 
@@ -488,6 +489,14 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	                	guiController.showBusyCursor( false );
 					}
                     LogWindow.show( guiController, t );
+                    
+                    // HACK this really doesn't belong here, because the user
+                    //      can abort the real execution, but logwindow does not
+                    //      know the initial profile. maybe tasktree should get
+                    //      a reference to the profile ?
+                    p.setLastUpdate( new Date() );
+                    guiController.getProfileManager().fireProfilesChangeEvent();
+                    guiController.getProfileManager().save();
                 } catch( Exception e ) {
                     e.printStackTrace();
                 }

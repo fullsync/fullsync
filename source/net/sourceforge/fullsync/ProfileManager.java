@@ -19,6 +19,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
+import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 import net.sourceforge.fullsync.schedule.IntervalSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
 
@@ -122,7 +124,7 @@ public class ProfileManager
         profiles.put( p.getName(), p );
         fireProfilesChangeEvent();
     }
-    public void addProfile( String name, ConnectionDescription source, ConnectionDescription destination, String ruleSet, String lastUpdate )
+    public void addProfile( String name, ConnectionDescription source, ConnectionDescription destination, RuleSetDescriptor ruleSet, String lastUpdate )
     {
         Profile p;
         try {
@@ -200,7 +202,7 @@ public class ProfileManager
     {
         changeListeners.remove( listener );
     }
-    protected void fireProfilesChangeEvent()
+    public void fireProfilesChangeEvent()
     {
         for( int i = 0; i < changeListeners.size(); i++ )
             ((ProfilesChangeListener)changeListeners.get( i )).profilesChanged();
@@ -260,16 +262,45 @@ public class ProfileManager
     	}
     	return schedule;
     }
+    
+    protected RuleSetDescriptor unserializeRuleSetDescriptor(Element element) {
+    	if (element == null) {
+    		// REVISIT backward compatibility for profiles with an empty RuleSet.
+    		return new AdvancedRuleSetDescriptor("");
+    	}
+    	RuleSetDescriptor descriptor = null;
+    	String ruleSetType = element.getAttribute("type");
+    	if (ruleSetType.equals("simple")) {
+    		descriptor = new SimplyfiedRuleSetDescriptor();
+    	}
+    	else {
+    		Element ruleSetNameElement = (Element)element.getElementsByTagName("AdvancedRuleSet").item(0);
+    		descriptor = new AdvancedRuleSetDescriptor(ruleSetNameElement.getAttribute("name"));
+    	}
+    	return descriptor;
+    }
+    
     protected Profile unserializeProfile( Element element )
     {
         Profile p = new Profile();
         p.setName( element.getAttribute( "name" ) );
-        p.setRuleSet( element.getAttribute( "ruleSet" ) );
+        // REVISIT this is used only for backward compatibility with old profiles.
+        String ruleSetNameOldVersion = element.getAttribute( "ruleSet" );
+        if ((ruleSetNameOldVersion != null) && (!ruleSetNameOldVersion.equals(""))) {
+        	RuleSetDescriptor ruleSetDescriptor = new AdvancedRuleSetDescriptor(ruleSetNameOldVersion);
+        	p.setRuleSet(ruleSetDescriptor);
+        }
+        else {
+        	// new profile version with a tag for the rule set descriptor.
+        	p.setRuleSet(unserializeRuleSetDescriptor((Element)element.getElementsByTagName("RuleSetDescriptor").item(0)));
+        }
+        
         try {
             p.setLastUpdate( DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT ).parse( element.getAttribute( "lastUpdate" ) ) );
         } catch( ParseException e ) {
             p.setLastUpdate( new Date() );
         }
+        
         p.setSchedule( unserializeSchedule( (Element)element.getElementsByTagName( "Schedule" ).item(0) ) );
         p.setSource( unserializeConnectionDescription( (Element)element.getElementsByTagName( "Source" ).item(0) ) );
         p.setDestination( unserializeConnectionDescription( (Element)element.getElementsByTagName( "Destination" ).item(0) ) );
@@ -299,15 +330,31 @@ public class ProfileManager
         
         return elem;
     }
+    protected Element serialize( RuleSetDescriptor desc, String name, Document doc ) {
+    	Element elem = doc.createElement( name );
+    	// TODO [Michele] soon I'll move the serialization for each descriptor type in the descriptor itself.
+    	if (desc instanceof SimplyfiedRuleSetDescriptor) {
+    		elem.setAttribute("type", "simple");
+    	}
+    	else {
+    		AdvancedRuleSetDescriptor advDesc = (AdvancedRuleSetDescriptor) desc;
+    		elem.setAttribute("type", "advanced");
+    		Element advancedRuleSetElement = doc.createElement("AdvancedRuleSet");
+    		advancedRuleSetElement.setAttribute("name", advDesc.getRuleSetName());
+    		elem.appendChild(advancedRuleSetElement);
+    	}
+    	
+    	return elem;
+    }
     protected Element serialize( Profile p, Document doc)
     {
         Element elem = doc.createElement( "Profile" );
         Element e;
         
         elem.setAttribute( "name", p.getName() );
-        elem.setAttribute( "ruleSet", p.getRuleSet() );
         elem.setAttribute( "lastUpdate", DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT ).format( p.getLastUpdate() ) );
         
+        elem.appendChild( serialize( p.getRuleSet(), "RuleSetDescriptor", doc));
         elem.appendChild( serialize( p.getSource(), "Source", doc ) );
         elem.appendChild( serialize( p.getDestination(), "Destination", doc ) );
         

@@ -5,6 +5,9 @@ import java.io.File;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.RuleSetDescriptor;
+import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
+import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -16,18 +19,24 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
-
 /**
 * This code was generated using CloudGarden's Jigloo
 * SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a
-* for-profit company or business) then you should purchase
-* a license - please visit www.cloudgarden.com for details.
+* use. If Jigloo is being used commercially (ie, by a corporation,
+* company or business for any purpose whatever) then you
+* should purchase a license for each developer using Jigloo.
+* Please visit www.cloudgarden.com for details.
+* Use of Jigloo implies acceptance of these licensing terms.
+* *************************************
+* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
+* for this machine, so Jigloo or this code cannot be used legally
+* for any corporate or commercial purpose.
+* *************************************
 */
 public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 
@@ -59,6 +68,13 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	private Label label1;
 	
 	private ProfileManager profileManager;
+	private Button userRecursioneButton;
+	private Button deleteOnDestinationButton;
+	private Group advancedRuleOptionsGroup;
+	private Group simplyfiedOptionsGroup;
+	private Button rbAdvancedRuleSet;
+	private Button rbSimplyfiedRuleSet;
+	private Group ruleSetGroup;
 	private String profileName;
 	
 	public ProfileDetails(Composite parent, int style) {
@@ -96,12 +112,102 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			label11 = new Label(this,SWT.NULL);
 			textDestinationPassword = new Text(this,SWT.NULL);
 			label12 = new Label(this,SWT.NULL);
-			label4 = new Label(this,SWT.NULL);
-			textRuleSet = new Text(this,SWT.BORDER);
-			buttonOk = new Button(this,SWT.PUSH| SWT.CENTER);
-			buttonCancel = new Button(this,SWT.PUSH| SWT.CENTER);
-	
-			this.setSize(new org.eclipse.swt.graphics.Point(472,195));
+			{
+				ruleSetGroup = new Group(this, SWT.NONE);
+				GridLayout ruleSetGroupLayout = new GridLayout();
+				GridData ruleSetGroupLData = new GridData();
+				ruleSetGroupLData.horizontalSpan = 7;
+				ruleSetGroupLData.widthHint = 443;
+				ruleSetGroupLData.heightHint = 97;
+				ruleSetGroupLData.horizontalIndent = 5;
+				ruleSetGroup.setLayoutData(ruleSetGroupLData);
+				ruleSetGroupLayout.makeColumnsEqualWidth = true;
+				ruleSetGroupLayout.numColumns = 2;
+				ruleSetGroup.setLayout(ruleSetGroupLayout);
+				ruleSetGroup.setText("RuleSet");
+				{
+					rbSimplyfiedRuleSet = new Button(ruleSetGroup, SWT.RADIO
+						| SWT.LEFT);
+					rbSimplyfiedRuleSet.setText("Simple Rule Set");
+					rbSimplyfiedRuleSet.setSelection(true);
+					rbSimplyfiedRuleSet
+						.addSelectionListener(new SelectionAdapter() {
+						public void widgetSelected(SelectionEvent evt) {
+							selectRuleSetButton(rbSimplyfiedRuleSet);
+						}
+						});
+				}
+				{
+					rbAdvancedRuleSet = new Button(ruleSetGroup, SWT.RADIO
+						| SWT.LEFT);
+					rbAdvancedRuleSet.setText("Advanced Rule Set");
+					GridData rbAdvancedRuleSetLData = new GridData();
+					rbAdvancedRuleSetLData.widthHint = 112;
+					rbAdvancedRuleSetLData.heightHint = 16;
+					rbAdvancedRuleSet.setLayoutData(rbAdvancedRuleSetLData);
+					rbAdvancedRuleSet
+						.addSelectionListener(new SelectionAdapter() {
+							public void widgetSelected(SelectionEvent evt) {
+								selectRuleSetButton(rbAdvancedRuleSet);
+							}
+						});
+				}
+				{
+					simplyfiedOptionsGroup = new Group(ruleSetGroup, SWT.NONE);
+					GridLayout simplyfiedOptionsGroupLayout = new GridLayout();
+					GridData simplyfiedOptionsGroupLData = new GridData();
+					simplyfiedOptionsGroupLData.widthHint = 150;
+					simplyfiedOptionsGroupLData.heightHint = 48;
+					simplyfiedOptionsGroupLData.verticalAlignment = GridData.BEGINNING;
+					simplyfiedOptionsGroup.setLayoutData(simplyfiedOptionsGroupLData);
+					simplyfiedOptionsGroupLayout.makeColumnsEqualWidth = true;
+					simplyfiedOptionsGroup
+						.setLayout(simplyfiedOptionsGroupLayout);
+					simplyfiedOptionsGroup.setText("Simple Rule Options");
+					{
+						userRecursioneButton = new Button(
+							simplyfiedOptionsGroup,
+							SWT.CHECK | SWT.LEFT);
+						userRecursioneButton.setText("Sync Subdirectories");
+					}
+					{
+						deleteOnDestinationButton = new Button(
+							simplyfiedOptionsGroup,
+							SWT.CHECK | SWT.LEFT);
+						deleteOnDestinationButton.setText("Delete on Destination");
+					}
+				}
+				{
+					advancedRuleOptionsGroup = new Group(ruleSetGroup, SWT.NONE);
+					GridLayout advancedRuleOptionsGroupLayout = new GridLayout();
+					GridData advancedRuleOptionsGroupLData = new GridData();
+					advancedRuleOptionsGroup.setEnabled(false);
+					advancedRuleOptionsGroupLData.widthHint = 172;
+					advancedRuleOptionsGroupLData.heightHint = 31;
+					advancedRuleOptionsGroupLData.verticalAlignment = GridData.BEGINNING;
+					advancedRuleOptionsGroup.setLayoutData(advancedRuleOptionsGroupLData);
+					advancedRuleOptionsGroupLayout.numColumns = 2;
+					advancedRuleOptionsGroup.setLayout(advancedRuleOptionsGroupLayout);
+					advancedRuleOptionsGroup.setText("Advanced Rule Options");
+					{
+						label4 = new Label(advancedRuleOptionsGroup, SWT.NONE);
+						GridData label4LData = new GridData();
+						label4.setEnabled(false);
+						label4.setLayoutData(label4LData);
+						label4.setText("RuleSet:");
+					}
+					{
+						textRuleSet = new Text(advancedRuleOptionsGroup, SWT.BORDER);
+						GridData textRuleSetLData = new GridData();
+						textRuleSet.setEnabled(false);
+						textRuleSetLData.widthHint = 100;
+						textRuleSetLData.heightHint = 13;
+						textRuleSet.setLayoutData(textRuleSetLData);
+					}
+				}
+			}
+
+			this.setSize(470, 277);
 	
 			GridData label1LData = new GridData();
 			label1LData.verticalAlignment = GridData.CENTER;
@@ -231,69 +337,32 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	
 	
 			label11.setText("Password:");
-	
-	
-	
-			GridData label4LData = new GridData();
-			label4LData.verticalAlignment = GridData.CENTER;
-			label4LData.horizontalAlignment = GridData.BEGINNING;
-			label4LData.widthHint = -1;
-			label4LData.heightHint = -1;
-			label4LData.horizontalIndent = 0;
-			label4LData.horizontalSpan = 1;
-			label4LData.verticalSpan = 1;
-			label4LData.grabExcessHorizontalSpace = false;
-			label4LData.grabExcessVerticalSpace = false;
-			label4.setLayoutData(label4LData);
-			label4.setText("RuleSet:");
-	
-			GridData textRuleSetLData = new GridData();
-			textRuleSetLData.verticalAlignment = GridData.CENTER;
-			textRuleSetLData.horizontalAlignment = GridData.BEGINNING;
-			textRuleSetLData.widthHint = 100;
-			textRuleSetLData.heightHint = -1;
-			textRuleSetLData.horizontalIndent = 0;
-			textRuleSetLData.horizontalSpan = 5;
-			textRuleSetLData.verticalSpan = 1;
-			textRuleSetLData.grabExcessHorizontalSpace = false;
-			textRuleSetLData.grabExcessVerticalSpace = false;
-			textRuleSet.setLayoutData(textRuleSetLData);
-	
-			GridData buttonOkLData = new GridData();
-			buttonOkLData.verticalAlignment = GridData.CENTER;
-			buttonOkLData.horizontalAlignment = GridData.END;
-			buttonOkLData.widthHint = -1;
-			buttonOkLData.heightHint = -1;
-			buttonOkLData.horizontalIndent = 0;
-			buttonOkLData.horizontalSpan = 6;
-			buttonOkLData.verticalSpan = 1;
-			buttonOkLData.grabExcessHorizontalSpace = false;
-			buttonOkLData.grabExcessVerticalSpace = false;
-			buttonOk.setLayoutData(buttonOkLData);
-			buttonOk.setText("Ok");
-			buttonOk.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent evt) {
-					buttonOkWidgetSelected(evt);
-				}
-			});
-	
-			GridData buttonCancelLData = new GridData();
-			buttonCancelLData.verticalAlignment = GridData.CENTER;
-			buttonCancelLData.horizontalAlignment = GridData.BEGINNING;
-			buttonCancelLData.widthHint = -1;
-			buttonCancelLData.heightHint = -1;
-			buttonCancelLData.horizontalIndent = 0;
-			buttonCancelLData.horizontalSpan = 1;
-			buttonCancelLData.verticalSpan = 1;
-			buttonCancelLData.grabExcessHorizontalSpace = false;
-			buttonCancelLData.grabExcessVerticalSpace = false;
-			buttonCancel.setLayoutData(buttonCancelLData);
-			buttonCancel.setText("Cancel");
-			buttonCancel.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent evt) {
-					buttonCancelWidgetSelected(evt);
-				}
-			});
+
+			{
+				buttonOk = new Button(this, SWT.PUSH | SWT.CENTER);
+				GridData buttonOkLData = new GridData();
+				buttonOkLData.horizontalAlignment = GridData.END;
+				buttonOkLData.horizontalSpan = 6;
+				buttonOk.setLayoutData(buttonOkLData);
+				buttonOk.setText("Ok");
+				buttonOk.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent evt) {
+						buttonOkWidgetSelected(evt);
+					}
+				});
+
+			}
+			{
+				buttonCancel = new Button(this, SWT.PUSH | SWT.CENTER);
+				GridData buttonCancelLData = new GridData();
+				buttonCancel.setLayoutData(buttonCancelLData);
+				buttonCancel.setText("Cancel");
+				buttonCancel.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent evt) {
+						buttonCancelWidgetSelected(evt);
+					}
+				});
+			}
 			GridLayout thisLayout = new GridLayout(7, true);
 			this.setLayout(thisLayout);
 			thisLayout.marginWidth = 5;
@@ -345,7 +414,21 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	            textDestinationUsername.setText( p.getDestination().getUsername() );
 	        if( p.getDestination().getPassword() != null )
 	            textDestinationPassword.setText( p.getDestination().getPassword() );
-	        textRuleSet.setText( p.getRuleSet() );
+	        
+	        RuleSetDescriptor ruleSetDescriptor = p.getRuleSet();
+	        // TODO [Michele] I don't like this extend use of instanceof.
+	        // I'll try to find a better way soon.
+	        if (ruleSetDescriptor instanceof SimplyfiedRuleSetDescriptor) {
+	        	selectRuleSetButton(rbSimplyfiedRuleSet);
+	        	rbSimplyfiedRuleSet.setSelection(true);
+	        	rbAdvancedRuleSet.setSelection(false);
+	        } else {
+	        	selectRuleSetButton(rbAdvancedRuleSet);
+	        	rbSimplyfiedRuleSet.setSelection(false);
+	        	rbAdvancedRuleSet.setSelection(true);
+	        	AdvancedRuleSetDescriptor advDesc = (AdvancedRuleSetDescriptor) ruleSetDescriptor;
+	        	textRuleSet.setText(advDesc.getRuleSetName());
+	        }
 	    }
 	}
 	
@@ -409,13 +492,32 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	    Profile p;
         if( profileName == null )
         {
-            p = new Profile( textName.getText(), src, dst, textRuleSet.getText() );
+    		RuleSetDescriptor ruleSetDescriptor = null;
+        	if (rbSimplyfiedRuleSet.getSelection()) {
+				ruleSetDescriptor = new SimplyfiedRuleSetDescriptor();
+        	}
+        	if (rbAdvancedRuleSet.getSelection()) {
+        		String ruleSetName = textRuleSet.getText();
+        		ruleSetDescriptor = new AdvancedRuleSetDescriptor(ruleSetName);
+        	}
+        	
+            p = new Profile( textName.getText(), src, dst, ruleSetDescriptor );
         } else {
             p = profileManager.getProfile( profileName );
             p.setName( textName.getText() );
             p.setSource( src );
             p.setDestination( dst );
-            p.setRuleSet( textRuleSet.getText() );
+    		
+            RuleSetDescriptor ruleSetDescriptor = null;
+        	if (rbSimplyfiedRuleSet.getSelection()) {
+				ruleSetDescriptor = new SimplyfiedRuleSetDescriptor();
+        	}
+        	if (rbAdvancedRuleSet.getSelection()) {
+        		String ruleSetName = textRuleSet.getText();
+        		ruleSetDescriptor = new AdvancedRuleSetDescriptor(ruleSetName);
+        	}
+            p.setRuleSet( ruleSetDescriptor );
+            
             profileManager.removeProfile( profileName );
         }
         profileManager.addProfile( p );
@@ -445,5 +547,26 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 		if( str != null )
 		    textDestination.setText( new File( str ).toURI().toString() );
 
+	}
+	
+	protected void selectRuleSetButton(Button button) {
+		
+		if (button.equals(rbSimplyfiedRuleSet)) {
+			advancedRuleOptionsGroup.setEnabled(false);
+			label4.setEnabled(false);
+			textRuleSet.setEnabled(false);
+			simplyfiedOptionsGroup.setEnabled(true);
+			deleteOnDestinationButton.setEnabled(true);
+			userRecursioneButton.setEnabled(true);
+		}
+		else {
+			advancedRuleOptionsGroup.setEnabled(true);
+			label4.setEnabled(true);
+			textRuleSet.setEnabled(true);
+			simplyfiedOptionsGroup.setEnabled(false);
+			deleteOnDestinationButton.setEnabled(false);
+			userRecursioneButton.setEnabled(false);
+		}
+		
 	}
 }

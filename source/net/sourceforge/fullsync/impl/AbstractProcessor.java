@@ -71,8 +71,7 @@ public abstract class AbstractProcessor implements Processor
         Site d1 = fsm.createConnection( profile.getSource() );
         Site d2 = fsm.createConnection( profile.getDestination() );
         
-        SyncRules rules = new SyncRules(profile.getRuleSet());
-		rules.setJustLogging( false );
+        RuleSet rules = profile.getRuleSet().createRuleSet();        
 		
 		return execute( d1, d2, rules );
     }

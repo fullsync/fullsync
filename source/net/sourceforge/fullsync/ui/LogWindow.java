@@ -528,7 +528,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 			        
 			        getDisplay().asyncExec( new Runnable() {
 						public void run() {
-			            	// MICHELE Notification Window before disposal.
+			            	// Notification Window before disposal.
 							MessageBox mb = new MessageBox( getShell(), SWT.ICON_INFORMATION | SWT.OK );
 							mb.setText( "Finished" );
 						    mb.setMessage( "Profile execution finished");

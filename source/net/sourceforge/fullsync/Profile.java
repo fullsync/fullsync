@@ -12,18 +12,18 @@ public class Profile
     private String name;
     private ConnectionDescription source;
     private ConnectionDescription destination;
-    private String ruleSet;
+    private RuleSetDescriptor ruleSet;
     private Date lastUpdate;
     private Schedule schedule;
     
     public Profile()
     {
     }
-    public Profile( String name, ConnectionDescription source, ConnectionDescription destination, String ruleSet )
+    public Profile( String name, ConnectionDescription source, ConnectionDescription destination, RuleSetDescriptor ruleSet )
     {
         this( name, source, destination, ruleSet, new Date() );
     }
-    public Profile( String name, ConnectionDescription source, ConnectionDescription destination, String ruleSet, Date lastUpdate )
+    public Profile( String name, ConnectionDescription source, ConnectionDescription destination, RuleSetDescriptor ruleSet, Date lastUpdate )
     {
         this.name = name;
         this.source = source;
@@ -56,11 +56,11 @@ public class Profile
     {
         this.name = name;
     }
-    public String getRuleSet()
+    public RuleSetDescriptor getRuleSet()
     {
         return ruleSet;
     }
-    public void setRuleSet( String ruleSet )
+    public void setRuleSet( RuleSetDescriptor ruleSet )
     {
         this.ruleSet = ruleSet;
     }
