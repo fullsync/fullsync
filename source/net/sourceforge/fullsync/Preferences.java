@@ -77,4 +77,7 @@ public interface Preferences
     
     public String getRemoteConnectionsPassword();
     public void setRemoteConnectionsPassword(String password);
+    
+    public boolean showSplashScreen();
+    public void setShowSplashScreen(boolean bool);
 }

@@ -27,6 +27,8 @@ import net.sourceforge.fullsync.fs.buffering.BufferedFile;
  */
 public class SyncFilesBufferedNode implements BufferedFile
 {
+	private static final long serialVersionUID = 1;
+	
     protected BufferedFile parent;
     protected File unbuff;
     protected boolean dirty;

@@ -68,11 +68,11 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 		return tree;
 	}
 	
-	public void preformActions(String profilename, TaskTree tree) throws RemoteException {
-		synchronizer.performActions(tree);
-		Profile p = profileManager.getProfile(profilename);
-	    p.setLastUpdate(new Date());
-	    profileManager.save();
+	public void performActions(TaskTree tree) throws RemoteException {
+		int result = synchronizer.performActions(tree);
+		if (result != 0) {
+			throw new RemoteException("Exception while performing actions");
+		}
 	}
 	
 	public void save(Profile[] profiles) throws RemoteException {

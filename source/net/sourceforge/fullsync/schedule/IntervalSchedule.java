@@ -12,6 +12,8 @@ import java.util.Date;
  */
 public class IntervalSchedule implements Schedule 
 {
+	private static final long serialVersionUID = 1;
+	
     long firstInterval;
     long interval;
 	long next;

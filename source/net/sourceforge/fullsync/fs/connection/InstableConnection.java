@@ -13,6 +13,8 @@ import net.sourceforge.fullsync.fs.FileAttributes;
  */
 public abstract class InstableConnection implements FileSystemConnection
 {
+	private static final long serialVersionUID = 1;
+	
     public File createChild( File parent, String name, boolean directory )
     	throws IOException
     {

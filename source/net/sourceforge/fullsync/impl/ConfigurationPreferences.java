@@ -115,4 +115,10 @@ public class ConfigurationPreferences implements Preferences
 		String encryptedPasswd = Crypt.encrypt(password);
 		config.setProperty("RemoteConnection.password", encryptedPasswd);
 	}
+	public boolean showSplashScreen() {
+		return config.getBoolean("Interface.ShowSplashScreen", true);
+	}
+	public void setShowSplashScreen(boolean bool) {
+		config.setProperty("Interface.ShowSplashScreen", new Boolean(bool));
+	}
 }

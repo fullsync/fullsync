@@ -21,7 +21,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
-import net.sourceforge.fullsync.remote.RemoteProfileManager;
+import net.sourceforge.fullsync.remote.RemoteManager;
 import net.sourceforge.fullsync.schedule.CrontabSchedule;
 import net.sourceforge.fullsync.schedule.IntervalSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
@@ -75,7 +75,7 @@ public class ProfileManager implements ProfileChangeListener
     // FIXME omg, a profilemanager having a remoteprofilemanager?
     //       please make a dao of me, with save/load and that's it
     //       don't forget calling profilesChangeEvent if dao is changed
-    private RemoteProfileManager remoteManager;
+    private RemoteManager remoteManager;
     private Timer updateTimer;
     
     protected ProfileManager() {
@@ -92,23 +92,24 @@ public class ProfileManager implements ProfileChangeListener
         this.scheduleListeners = new Vector();
         this.timerActive = false;
         
-        File file = new File( configFile );
-        if( file.exists() )
-        {
-	        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-	        Document doc = builder.parse( file );
-	        
-	        NodeList list = doc.getDocumentElement().getChildNodes();
-	        for( int i = 0; i < list.getLength(); i++ )
-	        {
-	            Node n = list.item( i );
-	            if( n.getNodeType() == Node.ELEMENT_NODE ) 
-	            {
-	            	Profile p = unserializeProfile( (Element)n );
-	                addProfile( p );
-	            }
-	        }
-        }
+//        File file = new File( configFile );
+//        if( file.exists() )
+//        {
+//	        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+//	        Document doc = builder.parse( file );
+//	        
+//	        NodeList list = doc.getDocumentElement().getChildNodes();
+//	        for( int i = 0; i < list.getLength(); i++ )
+//	        {
+//	            Node n = list.item( i );
+//	            if( n.getNodeType() == Node.ELEMENT_NODE ) 
+//	            {
+//	            	Profile p = unserializeProfile( (Element)n );
+//	                addProfile( p );
+//	            }
+//	        }
+//        }
+        loadProfiles();
         
         /*
         Digester dig = new Digester();
@@ -138,10 +139,10 @@ public class ProfileManager implements ProfileChangeListener
         */
     }
     
-    public void setRemoteConnection(String hostname, int port, String password) 
+    public void setRemoteConnection(RemoteManager remoteManager) 
     	throws MalformedURLException, RemoteException, NotBoundException
 	{
-    	remoteManager = new RemoteProfileManager(hostname, port, password);
+    	this.remoteManager = remoteManager;
     	updateRemoteProfiles();
     	
 //    	updateTimer = new Timer(true);
@@ -177,26 +178,39 @@ public class ProfileManager implements ProfileChangeListener
     	
         this.profiles = new Vector();
         
+        try {
+			loadProfiles();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FactoryConfigurationError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+        fireProfilesChangeEvent();
+    }
+    
+    public boolean isConnected() {
+    	return (remoteManager != null);
+    }
+    
+    public RemoteManager getRemoteProfileManager() {
+    	return remoteManager;
+    }
+    
+    private void loadProfiles() throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
         File file = new File( configFile );
         if( file.exists() )
         {
-	        Document doc = null;
-			try {
-				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				doc = builder.parse( file );
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (FactoryConfigurationError e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+	        Document doc = builder.parse( file );
 	        
 	        NodeList list = doc.getDocumentElement().getChildNodes();
 	        for( int i = 0; i < list.getLength(); i++ )
@@ -209,15 +223,7 @@ public class ProfileManager implements ProfileChangeListener
 	            }
 	        }
         }
-        fireProfilesChangeEvent();
-    }
-    
-    public boolean isConnected() {
-    	return (remoteManager != null);
-    }
-    
-    public RemoteProfileManager getRemoteProfileManager() {
-    	return remoteManager;
+
     }
     
     public void addProfile( Profile profile )

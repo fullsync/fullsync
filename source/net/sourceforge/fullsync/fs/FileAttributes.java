@@ -1,10 +1,14 @@
 package net.sourceforge.fullsync.fs;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class FileAttributes
+public class FileAttributes implements Serializable
 {
+	private static final long serialVersionUID = 1;
+	
     private long length;
     private long lastModified;
     

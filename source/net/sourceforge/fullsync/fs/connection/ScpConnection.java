@@ -26,6 +26,8 @@ import com.sshtools.j2ssh.sftp.SftpFile;
  */
 public class ScpConnection implements FileSystemConnection
 {
+	private static final long serialVersionUID = 1;
+	
     private ConnectionDescription desc;
     private SshClient sshClient;
     private ScpClient scpClient;

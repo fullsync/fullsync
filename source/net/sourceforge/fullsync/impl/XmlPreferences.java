@@ -172,6 +172,12 @@ public class XmlPreferences implements Preferences
 	}
 	public void setRemoteConnectionsPassword(String password) {
 		// TODO Auto-generated method stub
-
+	}
+	public boolean showSplashScreen() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public void setShowSplashScreen(boolean bool) {
+		// TODO Auto-generated method stub
 	}
 }

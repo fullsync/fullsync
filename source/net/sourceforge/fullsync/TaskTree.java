@@ -9,6 +9,8 @@ import net.sourceforge.fullsync.fs.Site;
  */
 public class TaskTree implements Serializable
 {
+	private static final long serialVersionUID = 1;
+	
     private Site source;
     private Site destination;
     private Task root;

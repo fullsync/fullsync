@@ -8,6 +8,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
@@ -23,6 +24,8 @@ public class RemoteController {
 	private String password;
 	private boolean isActive = false;
 	
+	private Registry registry = null;
+	
 	public static RemoteController getInstance() {
 		if (_instance == null) {
 			_instance = new RemoteController();
@@ -30,7 +33,9 @@ public class RemoteController {
 		return _instance;
 	}
 	
-	public void startRemoteServer(int port, String password, ProfileManager profileManager, Synchronizer sync) {
+	public void startServer(int port, String password, ProfileManager profileManager, Synchronizer sync) 
+		throws RemoteException 
+	{
 		try {
 			serverURL = "rmi://localhost:"+port+"/FullSync";
 			this.password = password;
@@ -40,24 +45,20 @@ public class RemoteController {
 				remoteServer.setPassword(password);
 			}
 			
-			try {
-				LocateRegistry.createRegistry(port);
-			} catch (RemoteException e1) {
-				e1.printStackTrace();
-			}	
+			if (registry == null) {
+				registry = LocateRegistry.createRegistry(port);
+			}
 			
 			Naming.rebind(serverURL, remoteServer);
 			isActive = true;
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public void stopRemoteServer() {
+	public void stopServer() 
+		throws RemoteException 
+	{
 		if (!isActive) {
 			return;
 		}
@@ -65,14 +66,9 @@ public class RemoteController {
 		try {
 			Naming.unbind(serverURL);
 			isActive = false;
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

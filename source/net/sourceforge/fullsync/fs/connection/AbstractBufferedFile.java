@@ -14,6 +14,8 @@ import net.sourceforge.fullsync.fs.buffering.BufferedFile;
  */
 public class AbstractBufferedFile extends AbstractFile implements BufferedFile
 {
+	private static final long serialVersionUID = 1;
+	
     protected File unbuffered;
     
     private boolean dirty;

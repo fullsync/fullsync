@@ -13,6 +13,8 @@ import net.sourceforge.fullsync.fs.FileAttributes;
  */
 public class DebugNode implements File
 {
+	private static final long serialVersionUID = 1;
+	
     private String name;
     private String path;
     private boolean directory;

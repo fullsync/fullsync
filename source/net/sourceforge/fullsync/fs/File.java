@@ -6,12 +6,13 @@ package net.sourceforge.fullsync.fs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public interface File
+public interface File extends Serializable
 {
     public String getName();
     public String getPath();

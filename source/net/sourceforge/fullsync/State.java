@@ -1,10 +1,14 @@
 package net.sourceforge.fullsync;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class State
+public class State implements Serializable
 {
+	private static final long serialVersionUID = 1;
+	
     public static final int NodeInSync = 1;
     public static final int Orphan = 2;
     public static final int FileChange = 3;

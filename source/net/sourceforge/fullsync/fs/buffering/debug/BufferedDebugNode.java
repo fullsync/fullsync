@@ -10,6 +10,8 @@ import net.sourceforge.fullsync.fs.debug.DebugNode;
  */
 public class BufferedDebugNode extends DebugNode implements BufferedFile
 {
+	private static final long serialVersionUID = 1;
+	
     private DebugNode unbuff;
     
     public BufferedDebugNode( boolean exists, boolean directory, long length, long lm )

@@ -1,6 +1,5 @@
 package net.sourceforge.fullsync.ui;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -15,7 +14,6 @@ import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.remote.RemoteProfileManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -386,7 +384,9 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 					mb.setMessage("Do you really want to Disconnect the Remote Server? \n");
 
 					if (mb.open() == SWT.YES) {
-		            	GuiController.getInstance().getProfileManager().disconnectRemote();
+		            	GuiController.getInstance().getProfileManager().disconnectRemote();		            	
+		            	GuiController.getInstance().getSynchronizer().disconnectRemote();
+		            	
 						connectItem.setEnabled(true);
 						disconnectItem.setEnabled(false);
 						GuiController.getInstance().getMainShell().setImage(new Image( null, "images/FullSync.gif" ));					
@@ -514,69 +514,15 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	public void runProfile( final Profile p )
 	{
 		if( p == null )
-		    return;
-		
-		// FIXME [Michele] don't like it done this way. Move to another place. It might go through the ProfileManager.
-		final RemoteProfileManager remoteProfileManager = GuiController.getInstance().getProfileManager().getRemoteProfileManager();
-		if (remoteProfileManager != null) {
-			try {
-				remoteProfileManager.runProfile(p.getName());
-				
-				MessageBox mb = new MessageBox( getShell(), SWT.ICON_INFORMATION | SWT.OK );
-				mb.setText( "Finished" );
-				mb.setMessage( "Remote Profile execution finished");
-				mb.open();
-				
-			} catch (RemoteException e) {
-				MessageBox mb = new MessageBox( getShell(), SWT.ICON_ERROR | SWT.OK );
-				mb.setText( "Error" );
-				mb.setMessage( "Remote Profile *NOT* executed. "+e.getMessage());
-				mb.open();
-			}
 			return;
-
-//			[MICHELE] This is the code for the next version with user interaction on the remote interface			
-//			Thread worker = new Thread( new Runnable() {
-//				public void run()
-//				{
-//					TaskTree t = null;
-//					try {
-//						guiController.showBusyCursor( true );
-//						try {
-//							statusLine.setMessage( "Starting remote profile "+p.getName()+"..." );
-//							t = remoteProfileManager.executeProfile(p.getName());
-//							statusLine.setMessage( "Finished remote profile "+p.getName() );
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//						} finally {
-//							guiController.showBusyCursor( false );
-//						}
-//						// FIXME [Michele] this will execute actions locally!!! MOVE TO REMOTE!!!
-//						TaskDecisionList.show( guiController, p, t );
-//						
-//						// HACK this really doesn't belong here, because the user
-//						//      can abort the real execution, but logwindow does not
-//						//      know the initial profile. maybe tasktree should get
-//						//      a reference to the profile ?
-//						p.setLastUpdate( new Date() );
-//						guiController.getProfileManager().save();
-//					} catch( Exception e ) {
-//						e.printStackTrace();
-//					}
-//				}
-//			});
-//			worker.start();
-
-		}
-		else {
-			Thread worker = new Thread( new Runnable() {
-				public void run()
-				{
-					_doRunProfile(p);
-				}
-			});
-			worker.start();
-		}
+		
+		Thread worker = new Thread( new Runnable() {
+			public void run()
+			{
+				_doRunProfile(p);
+			}
+		});
+		worker.start();
 	}
 	private synchronized void _doRunProfile( Profile p )
 	{

@@ -14,11 +14,11 @@ import net.sourceforge.fullsync.TaskTree;
 /**
  * @author Michele Aiello
  */
-public class RemoteProfileManager {
+public class RemoteManager {
 
 	private RemoteInterface remoteInterface;
 
-	public RemoteProfileManager(String host, int port, String password) 
+	public RemoteManager(String host, int port, String password) 
 		throws MalformedURLException, RemoteException, NotBoundException 
 	{
 		remoteInterface = (RemoteInterface) Naming.lookup("rmi://"+host+":"+port+"/FullSync");
@@ -55,6 +55,10 @@ public class RemoteProfileManager {
 		return remoteInterface.executeProfile(name);
 	}
 	
+	public void performActions(TaskTree taskTree) throws RemoteException {
+		remoteInterface.performActions(taskTree);
+	}
+
 	public void save(Profile[] profiles) {
 		try {
 			remoteInterface.save(profiles);
@@ -62,4 +66,5 @@ public class RemoteProfileManager {
 			e.printStackTrace();
 		}
 	}
+
 }

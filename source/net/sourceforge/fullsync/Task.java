@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -11,6 +12,8 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class Task implements Serializable
 {
+	private static final long serialVersionUID = 1;
+	
     private File source;
     private File destination;
     private State state;
@@ -108,5 +111,26 @@ public class Task implements Serializable
     public void setData(Object data) {
     	this.data = data;
     }
+    
+    private void writeObject(java.io.ObjectOutputStream out)
+    	throws IOException
+	{
+    	out.writeObject(source);
+    	out.writeObject(destination);
+    	out.writeObject(state);
+    	out.writeObject(actions);
+    	out.writeObject(children);
+	}
+    
+    private void readObject(java.io.ObjectInputStream in)
+    	throws IOException, ClassNotFoundException
+	{
+        this.source = (File) in.readObject();
+        this.destination = (File) in.readObject();
+        this.state = (State) in.readObject();
+        this.actions = (Action[]) in.readObject();
+        this.children = (Vector) in.readObject();
+        this.currentAction = 0;
+	}
     
 }

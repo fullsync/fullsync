@@ -212,7 +212,7 @@ Remote:
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
 
 Remote:
-	[ ] make gui mode listening for incoming connections
+	[X] make gui mode listening for incoming connections
 	[ ] log remote connections (out and incoming)
 
 == Architecture Revamp ==

@@ -2,11 +2,13 @@ package net.sourceforge.fullsync;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.rmi.RemoteException;
 import java.util.Date;
 
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 import net.sourceforge.fullsync.ui.GuiController;
+import net.sourceforge.fullsync.ui.SplashScreen;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -18,6 +20,9 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.xml.DOMConfigurator;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
+
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -26,7 +31,7 @@ public class CommandLineInterpreter
 {
     public static void parse( String[] args )
     {
-
+    	// FIXME We should decide a better options list :-).
     	// create the Options
 		Options options = new Options();
 		options.addOption( "h", "help", false, "this help" );
@@ -90,10 +95,18 @@ public class CommandLineInterpreter
 				    return;
 		    }
 
+		    SplashScreen splash = null;
+		    // FIXME [Michele] I'm using (!line.hasOption("d") to decide if the GUI is enabled or not.
+		    // We really need to decide a better command line style.
+		    if ((!line.hasOption("d")) && (preferences.showSplashScreen())) {
+		    	splash = new SplashScreen("./images/About.png");
+	    		splash.setHideOnClick(false);
+	    		splash.setVisible(true);
+		    }
+		    
 	    	int port = 10000;
-	    	
+	    	RemoteException listenerStarupException = null;
 		    if (line.hasOption("p")) {
-		    	System.out.println("Starting remote interface...");
 		    	String portStr = line.getOptionValue("p");
 		    	try {
 					port = Integer.parseInt(portStr);
@@ -101,17 +114,27 @@ public class CommandLineInterpreter
 				}
 
 				// FIXME [Michele] password.
-		    	RemoteController.getInstance().startRemoteServer(port, "admin", profileManager, sync);
-				System.out.println("Remote Interface available on port: "+port);
+		    	try {
+			    	System.out.println("Starting remote interface...");
+			    	RemoteController.getInstance().startServer(port, "admin", profileManager, sync);
+			    	System.out.println("Remote Interface available on port: "+port);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
 		    }
 		    else {
 		    	boolean activateRemote = preferences.listeningForRemoteConnections();
 		    	port = preferences.getRemoteConnectionsPort();
 		    	String password = preferences.getRemoteConnectionsPassword();
 		    	if (activateRemote) {
-			    	System.out.println("Starting remote interface...");
-			    	RemoteController.getInstance().startRemoteServer(port, password, profileManager, sync);
-					System.out.println("Remote Interface available on port: "+port);
+			    	try {
+				    	System.out.println("Starting remote interface...");
+						RemoteController.getInstance().startServer(port, password, profileManager, sync);
+						System.out.println("Remote Interface available on port: "+port);
+					} catch (RemoteException e) {
+						e.printStackTrace();
+						listenerStarupException = e;
+					}
 		    	}
 		    }
 
@@ -138,9 +161,23 @@ public class CommandLineInterpreter
 		    		mutex.wait();
 		    	}
 		    } else {
-		    	try {
+		    	try {		    		
 		    		GuiController guiController = new GuiController( preferences, profileManager, sync );
 		    		guiController.startGui();
+		    		
+		    		if (listenerStarupException != null) {
+		    			MessageBox mb = new MessageBox(guiController.getMainShell(), SWT.ICON_ERROR | SWT.OK);
+		    			mb.setText("Connection Error");
+		    			mb.setMessage("Unable to start incomming connections listener.\n("+listenerStarupException.getMessage()+")");
+		    			mb.open();
+		    		}
+
+		    		if (splash != null) {
+		    			splash.setVisible(false);
+		    			splash.dispose();
+		    			splash = null;
+		    		}
+		    		
 		    		guiController.run();
 		    		guiController.disposeGui();
 		    	} catch( Exception ex ) {
@@ -150,7 +187,7 @@ public class CommandLineInterpreter
 		    	}
 
 		    	// FIXME [Michele] For some reasons there is some thread still alive if you run the remote interface
-	            RemoteController.getInstance().stopRemoteServer();
+	            RemoteController.getInstance().stopServer();
 	            System.exit(-1);
 		    }
 		    

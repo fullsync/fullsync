@@ -1,11 +1,15 @@
 package net.sourceforge.fullsync;
 
+import java.io.Serializable;
+
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class Action
+public class Action implements Serializable
 {
+	private static final long serialVersionUID = 1;
+	
     public static final int Nothing = 0;
     public static final int Add = 1;
     public static final int Update = 2;

@@ -10,6 +10,8 @@ import net.sourceforge.fullsync.DataParseException;
  */
 public class CrontabSchedule implements Schedule
 {
+	private static final long serialVersionUID = 1;
+	
     private String origPattern;
     
     private CrontabPart.Instance minutes;

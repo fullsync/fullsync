@@ -10,6 +10,8 @@ import net.sourceforge.fullsync.DataParseException;
  */
 public class CrontabSchedule3 implements Schedule
 {
+	private static final long serialVersionUID = 1;
+	
     private String origPattern;
     
     private boolean[] bMinutes = new boolean[60];

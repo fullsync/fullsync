@@ -22,6 +22,8 @@ import org.apache.commons.net.ftp.FTPFile;
  */
 public class FtpFile implements File
 {
+	private static final long serialVersionUID = 1;
+	
     class FtpFileInputStream extends InputStream
     {
         private InputStream in;

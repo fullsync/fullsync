@@ -1,16 +1,12 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
-import java.util.Date;
 
-import net.sourceforge.fullsync.ActionQueue;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.buffer.BlockBuffer;
-import net.sourceforge.fullsync.impl.FillBufferActionQueue;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -187,56 +183,84 @@ public class TaskDecisionPage implements WizardPage
 		            processing = true;
 		            list.setChangeAllowed( false );
 		            
-					// Logger logger = Logger.getRootLogger();
-		            // logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
-		            Logger logger = Logger.getLogger( "FullSync" );
-			        logger.info( "Synchronization started" );
-			        logger.info( "  source:      "+taskTree.getSource().getUri().toString() );
-			        logger.info( "  destination: "+taskTree.getDestination().getUri().toString() );
-			        
-			        // TODO we should use the Synchronizer here ! maybe (TaskTree, ActionFinishedListener) ?
-			        BlockBuffer buffer = new BlockBuffer( logger );
-			        ActionQueue queue = new FillBufferActionQueue(buffer);
-			        final Color colorFinishedSuccessful = new Color( null, 150, 255, 150 );
-			        final Color colorFinishedUnsuccessful = new Color( null, 255, 150, 150 );
+//					// Logger logger = Logger.getRootLogger();
+//		            // logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
+//		            Logger logger = Logger.getLogger( "FullSync" );
+//			        logger.info( "Synchronization started" );
+//			        logger.info( "  source:      "+taskTree.getSource().getUri().toString() );
+//			        logger.info( "  destination: "+taskTree.getDestination().getUri().toString() );
+//			        
+//			        // TODO we should use the Synchronizer here ! maybe (TaskTree, ActionFinishedListener) ?
+//			        BlockBuffer buffer = new BlockBuffer( logger );
+//			        ActionQueue queue = new FillBufferActionQueue(buffer);
+//			        final Color colorFinishedSuccessful = new Color( null, 150, 255, 150 );
+//			        final Color colorFinishedUnsuccessful = new Color( null, 255, 150, 150 );
+//
+//			        IoStatistics stats = queue.createStatistics( taskTree );
+//		            tasksTotal = stats.getCountActions();
+//				    tasksFinished = 0;
+//
+//			        queue.addTaskFinishedListener( new TaskFinishedListener() {
+//			        	public void taskFinished( final TaskFinishedEvent event ) 
+//			        	{
+//				            display.asyncExec( new Runnable() {
+//				            	public void run() {
+//						            tasksFinished++;
+//						            labelProgress.setText( tasksFinished+" of "+tasksTotal+" tasks finished" );
+//						            Object taskData = event.getTask().getData();
+//						            if ((taskData != null) && (taskData instanceof TableItem)) {
+//						            	TableItem item = (TableItem) taskData;
+//						            	if( event.isSuccessful() )
+//						            	     item.setBackground(colorFinishedSuccessful);
+//						            	else item.setBackground(colorFinishedUnsuccessful);
+//						            	list.showItem(item);
+//						            }
+//								}
+//				            } );
+//			        	} 
+//			        } );
+//
+//			        buffer.load();
+//			        queue.enqueue( taskTree );
+//			        queue.flush();
+//			        buffer.unload();
+//			        
+//			        taskTree.getSource().flush();
+//			        taskTree.getDestination().flush();
+//			        taskTree.getSource().close();
+//			        taskTree.getDestination().close();
+//			        logger.info( "finished synchronization" );
+//			        
+//			        profile.setLastUpdate( new Date() );
 
-			        IoStatistics stats = queue.createStatistics( taskTree );
-		            tasksTotal = stats.getCountActions();
+		            // FIXME [Michele] The total number of tasks is missing!!!
+//			        IoStatistics stats = queue.createStatistics( taskTree );
+//		            tasksTotal = stats.getCountActions();
 				    tasksFinished = 0;
 
-			        queue.addTaskFinishedListener( new TaskFinishedListener() {
-			        	public void taskFinished( final TaskFinishedEvent event ) 
-			        	{
-				            display.asyncExec( new Runnable() {
-				            	public void run() {
-						            tasksFinished++;
-						            labelProgress.setText( tasksFinished+" of "+tasksTotal+" tasks finished" );
-						            Object taskData = event.getTask().getData();
-						            if ((taskData != null) && (taskData instanceof TableItem)) {
-						            	TableItem item = (TableItem) taskData;
-						            	if( event.isSuccessful() )
-						            	     item.setBackground(colorFinishedSuccessful);
-						            	else item.setBackground(colorFinishedUnsuccessful);
-						            	list.showItem(item);
-						            }
-								}
-				            } );
-			        	} 
-			        } );
-
-			        buffer.load();
-			        queue.enqueue( taskTree );
-			        queue.flush();
-			        buffer.unload();
-			        
-			        taskTree.getSource().flush();
-			        taskTree.getDestination().flush();
-			        taskTree.getSource().close();
-			        taskTree.getDestination().close();
-			        logger.info( "finished synchronization" );
-			        
-			        profile.setLastUpdate( new Date() );
-
+		            final Color colorFinishedSuccessful = new Color( null, 150, 255, 150 );
+		            final Color colorFinishedUnsuccessful = new Color( null, 255, 150, 150 );
+		            
+		            GuiController.getInstance().getSynchronizer().performActions(taskTree, new TaskFinishedListener() {
+		            	public void taskFinished( final TaskFinishedEvent event ) 
+		            	{
+		            		display.asyncExec( new Runnable() {
+		            			public void run() {
+		            				tasksFinished++;
+		            				labelProgress.setText( tasksFinished+" of "+tasksTotal+" tasks finished" );
+		            				Object taskData = event.getTask().getData();
+		            				if ((taskData != null) && (taskData instanceof TableItem)) {
+		            					TableItem item = (TableItem) taskData;
+		            					if( event.isSuccessful() )
+		            						item.setBackground(colorFinishedSuccessful);
+		            					else item.setBackground(colorFinishedUnsuccessful);
+		            					list.showItem(item);
+		            				}
+		            			}
+		            		});
+		            	}
+		            });
+		            
 			        dialog.getDisplay().asyncExec( new Runnable() {
 						public void run() {
 			            	// Notification Window before disposal.
@@ -249,8 +273,8 @@ public class TaskDecisionPage implements WizardPage
 						}
 			        } );
 					
-			    } catch( IOException e ) {
-			        e.printStackTrace();
+//			    } catch( IOException e ) {
+//			        e.printStackTrace();
 			    } catch( Exception e ) {
 			        e.printStackTrace();
 			    } finally {

@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
+import java.rmi.RemoteException;
+
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 
@@ -11,6 +13,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 
 
 
@@ -37,6 +40,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 	private Button cbConfirmExit;
 	private Button cbCloseMinimizesToSystemTray;
 	private Button cbMinimizeMinimizesToSystemTray;
+	private Button cbShowSplashScreen;
 	private Text textPassword;
 	private Label label3;
 	private Group groupRemoteConnection;
@@ -105,6 +109,14 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                     cbMinimizeMinimizesToSystemTrayLData.horizontalSpan = 2;
                     cbMinimizeMinimizesToSystemTray.setLayoutData(cbMinimizeMinimizesToSystemTrayLData);
                 }
+				{
+					cbShowSplashScreen = new Button(groupInterface, SWT.CHECK
+						| SWT.LEFT);
+					cbShowSplashScreen.setText("Show Splash Screen");
+					GridData cbShowSplashScreenLData = new GridData();
+					cbShowSplashScreenLData.horizontalSpan = 2;
+					cbShowSplashScreen.setLayoutData(cbShowSplashScreenLData);
+				}
                 /*
                 {
                     cbEnableSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
@@ -225,6 +237,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		cbListenForIncomming.setSelection(preferences.listeningForRemoteConnections());
 		textListeningPort.setText(String.valueOf(preferences.getRemoteConnectionsPort()));
 		textPassword.setText(preferences.getRemoteConnectionsPassword());
+		cbShowSplashScreen.setSelection(preferences.showSplashScreen());
 		updateRemoteConnectionGroup();
 	}
 	
@@ -252,13 +265,12 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		//preferences.setSystemTrayEnabled(cbEnableSystemTray.getSelection());
 		boolean profileListStyleChanged = (!preferences.getProfileListStyle().equals(comboProfileList.getText()));
 		preferences.setProfileListStyle(comboProfileList.getText());
+		preferences.setShowSplashScreen(cbShowSplashScreen.getSelection());
 
 		if (profileListStyleChanged) {
 			GuiController.getInstance().getMainWindow().updateProfileList();
 		}
-		
-		// TODO [Michele] Write Remote Connection preferences in the preferences file
-		// On startup the remote connection must startup if asked to.
+
 		boolean listenForIncoming = cbListenForIncomming.getSelection();
 		preferences.setListeningForRemoteConnections(listenForIncoming);
 		int port = -1;
@@ -280,13 +292,30 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		
 		// TODO [Michele] what if the port or password is changed?
 		if ((isActive) && (!listenForIncoming)) {
-			RemoteController.getInstance().stopRemoteServer();
+			try {
+				RemoteController.getInstance().stopServer();
+			} catch (RemoteException e) {
+				e.printStackTrace();
+				MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
+				mb.setText("Connection Error");
+				mb.setMessage("Unable to stop incomming connections listener.\n("+e.getMessage()+")");
+				mb.open();
+			}
 		}
 		if ((!isActive) && (listenForIncoming)) {
 			if (port > 0) {
-				RemoteController.getInstance().startRemoteServer(port, password, 
-						GuiController.getInstance().getProfileManager(),
-						GuiController.getInstance().getSynchronizer());				
+				try {
+					RemoteController.getInstance().startServer(port, password, 
+							GuiController.getInstance().getProfileManager(),
+							GuiController.getInstance().getSynchronizer());
+				} catch (RemoteException e) {
+					e.printStackTrace();
+					MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
+					mb.setText("Connection Error");
+					mb.setMessage("Unable to start incomming connections listener.\n("+e.getMessage()+")");
+					mb.open();
+
+				}				
 			}
 		}
 		

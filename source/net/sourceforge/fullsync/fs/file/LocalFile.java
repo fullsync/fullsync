@@ -21,6 +21,8 @@ import net.sourceforge.fullsync.fs.FileAttributes;
  */
 public class LocalFile implements File
 {
+	private static final long serialVersionUID = 1;
+	
     private java.io.File file;
     private boolean directory;
     private boolean filtered;

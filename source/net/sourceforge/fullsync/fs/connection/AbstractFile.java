@@ -15,6 +15,8 @@ import net.sourceforge.fullsync.fs.FileAttributes;
  */
 public class AbstractFile implements File
 {
+	private static final long serialVersionUID = 1;
+	
     protected FileSystemConnection fs;
     protected String name;
     protected String path;

@@ -9,6 +9,8 @@ import java.util.Hashtable;
  */
 public class ConnectionDescription implements Serializable
 {
+	private static final long serialVersionUID = 1;
+	
     private String uri;
     private String bufferStrategy;
     private String username;

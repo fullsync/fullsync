@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
+import net.sourceforge.fullsync.remote.RemoteManager;
+
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
@@ -140,7 +142,9 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 		
 		String password = textPassword.getText();
 		try {
-			GuiController.getInstance().getProfileManager().setRemoteConnection(hostname, port, password);
+			RemoteManager remoteManager = new RemoteManager(hostname, port, password);
+			GuiController.getInstance().getProfileManager().setRemoteConnection(remoteManager);
+			GuiController.getInstance().getSynchronizer().setRemoteConnection(remoteManager);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);

@@ -26,7 +26,7 @@ public interface RemoteInterface extends Remote {
 
 	TaskTree executeProfile(String name) throws RemoteException;
 	
-	void preformActions(String profilename, TaskTree tree) throws RemoteException;
+	void performActions(TaskTree tree) throws RemoteException;
 	
 	void save(Profile[] profiles) throws RemoteException;
 

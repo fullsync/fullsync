@@ -37,6 +37,8 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SyncFileBufferedConnection implements BufferedConnection
 {
+	private static final long serialVersionUID = 1;
+	
     class SyncFileDefaultHandler extends DefaultHandler
     {
         BufferedConnection bc;

@@ -16,6 +16,8 @@ import net.sourceforge.fullsync.fs.FileAttributes;
  */
 public class LocalConnection implements FileSystemConnection
 {
+	private static final long serialVersionUID = 1;
+	
     private java.io.File base;
     private AbstractFile root;
     
