@@ -349,6 +349,9 @@ Connections:
 	[ ] Sftp seems to pretty instable, it starts throwing exceptions
 		named "Failure", when trying to retrieve response headers,
 		after a few minutes
+		
+	[ ]	ZIP File System
+	[ ] SMB File System (may be using jcifs - http://jcifs.sourceforge.net)
 
 Threading
 	[ ] better UI / task differenciation

@@ -1,11 +1,13 @@
 package net.sourceforge.fullsync;
 
+import java.io.Serializable;
+
 import net.sourceforge.fullsync.fs.Site;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class TaskTree
+public class TaskTree implements Serializable
 {
     private Site source;
     private Site destination;

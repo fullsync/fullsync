@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync;
 
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -8,7 +9,7 @@ import net.sourceforge.fullsync.fs.File;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class Task
+public class Task implements Serializable
 {
     private File source;
     private File destination;

@@ -12,11 +12,14 @@
 
 	<property name="source.dir"			value="${basedir}/source" />
 	<property name="res.dir"			value="${basedir}/resources" />
-	<property name="classes.dir"		value="${basedir}/classes" />
 	<property name="build.dir"			value="${basedir}\build" />
 	<property name="build.lib.dir"		value="${build.dir}\lib" />
+	<property name="classes.dir"		value="${build.dir}/classes" />
 	<property name="dist.dir"			value="${basedir}/dist" />
 	<property name="installer.dir"		value="${basedir}/installer" />
+
+	<property name="utils.source.dir"	value="${basedir}/utils" />
+	<property name="utils.classes.dir"	value="${basedir}/utils-classes" />
 
 	<!-- External Tools Paths -->
 	<!-- need to be specified in the build.properties file
@@ -36,17 +39,18 @@
 
 	<fileset id="dependentJars" dir="${basedir}/lib">
 		<include name="j2ssh-core.jar"/>
-		<include name="jakarta-oro-2.0.7.jar"/>		
+		<include name="jakarta-oro-2.0.7.jar"/>
 		<include name="commons-cli-1.0.jar"/>
 		<include name="commons-configuration-1.0.jar"/>
-		<include name="commons-lang-2.0.jar"/>
+		<!-- <include name="commons-lang-2.0.jar"/> -->
 		<include name="commons-logging.jar"/>
-		<include name="commons-beanutils.jar"/>
-		<include name="commons-collections-3.1.jar"/>
+		<!-- <include name="commons-beanutils.jar"/> -->
+		<!-- <include name="commons-collections-3.1.jar"/> -->
 		<include name="commons-net-1.2.2.jar"/>
 		<include name="xercesImpl.jar"/>
 		<include name="xml-apis.jar"/>
 		<include name="swt.jar"/>
+		<include name="utils.jar"/>
 		<include name="log4j-1.2.8.jar"/>
 	</fileset>
 	<path id="classpath">
@@ -62,17 +66,23 @@
 
 	<target name="clean" description="cleans project files" >
 		<delete dir="${build.dir}" /> 
-		<delete dir="${dist.dir}" /> 		
+		<delete dir="${dist.dir}" />
+		<delete dir="${classes.dir}"/>
 	</target>
 
 	<target name="compile">
+		<mkdir dir="${classes.dir}"/>
 		<javac debug="${debug}" srcdir="${source.dir}" destdir="${classes.dir}" classpathref="classpath"/>
 	</target>
 
     <target name="rmic">
         <rmic classname="net.sourceforge.fullsync.remote.RemoteServer" base="${classes.dir}" classpathref="classpath"/>
     </target>
-    	
+
+    <target name="rmic-eclipse" description="RMIC compiler for classes used by the IDE">
+        <rmic classname="net.sourceforge.fullsync.remote.RemoteServer" base="${basedir}/classes" classpathref="classpath"/>
+    </target>
+
 	<target name="javadoc">
 		<mkdir dir="${build.dir}/doc/api"/>
 		<javadoc destdir="${build.dir}/doc/api" classpathref="classpath">
@@ -83,6 +93,7 @@
 	</target>
 	
 	<target name="copy-libs">
+		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${build.lib.dir}"/>
 		<copy todir="${build.lib.dir}">
 			<fileset refid="dependentJars"></fileset>
@@ -110,7 +121,7 @@
 		<!-- copy readme and so on -->
 	</target>
 
-	<target name="jar" depends="compile, copy-libs">
+	<target name="jar" depends="compile, rmic, copy-libs">
 		<fileset dir="${build.lib.dir}" id="lib.dist.fileset">
 			<include name="**/*.jar"/>
 			<!-- add win swt lib -->
@@ -132,7 +143,7 @@
 		      skeletonroot="${jsmooth.dir}/skeletons" verbose="true"/>
 	</target>
 	
-	<target name="build" depends="detect, copy-libs, copy-resources, javadoc, rmic, jar, win32-exe">
+	<target name="build" depends="detect, copy-libs, copy-resources, javadoc, jar-utils, jar, win32-exe">
 	</target>
 
 	
@@ -190,4 +201,15 @@
 	<target name="run" depends="compile">
 		<java classname="net.sourceforge.fullsync.Main" classpathref="classpath" />
 	</target>
+	
+	<target name="jar-utils">
+		<delete dir="${utils.classes.dir}"/>
+		<mkdir dir="${utils.classes.dir}"/>
+		<javac debug="off" optimize="on" srcdir="${utils.source.dir}" destdir="${utils.classes.dir}"/>
+		<jar destfile="${basedir}/lib/utils.jar">
+			<fileset dir="${utils.classes.dir}" includes="**/*"/>
+		</jar>
+		<delete dir="${utils.classes.dir}"/>
+	</target>
+	
 </project>

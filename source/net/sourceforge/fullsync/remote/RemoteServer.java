@@ -5,11 +5,14 @@ package net.sourceforge.fullsync.remote;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.Synchronizer;
+import net.sourceforge.fullsync.TaskTree;
 
 /**
  * This class is the server for remote connections.
@@ -21,35 +24,11 @@ import net.sourceforge.fullsync.ProfileManager;
 public class RemoteServer extends UnicastRemoteObject implements RemoteInterface {
 		
 	private ProfileManager profileManager;
-	
-//	public static void main(String[] args) throws RemoteException, MalformedURLException, InterruptedException {
-//		java.rmi.registry.LocateRegistry.createRegistry(10000);
-//		RemoteInterfaceServer server = new RemoteInterfaceServer();
-//		Naming.rebind("rmi://localhost:10000/FullSync", server);
-//		System.out.println("Server ready.");
-//		synchronized(server) {
-//			while (true) {
-//				server.wait();
-//			}
-//		}
-//	}
-//	
-//	public RemoteInterfaceServer() throws RemoteException {
-//		try {
-//			profileManager = new ProfileManager("profiles.xml");
-//		} catch (SAXException e) {
-//			throw new RemoteException("SAXException", e);
-//		} catch (IOException e) {
-//			throw new RemoteException("IOException", e);
-//		} catch (ParserConfigurationException e) {
-//			throw new RemoteException("ParserConfigurationException", e);
-//		} catch (FactoryConfigurationError e) {
-//			throw new RemoteException("FactoryConfigurationError", e);
-//		}
-//	}
-	
-	public RemoteServer(ProfileManager profileManager) throws RemoteException {
+	private Synchronizer synchronizer;
+		
+	public RemoteServer(ProfileManager profileManager, Synchronizer synchronizer) throws RemoteException {
 		this.profileManager = profileManager;
+		this.synchronizer = synchronizer;
 	}
 	
 	public Profile getProfile(String name) throws RemoteException {
@@ -64,6 +43,27 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 		}
 		
 		return (Profile[]) profilesVector.toArray(new Profile[] {});
+	}
+
+	public void runProfile(String name) throws RemoteException {
+		Profile p = profileManager.getProfile(name);
+		TaskTree tree = synchronizer.executeProfile(p);
+		synchronizer.performActions(tree);
+	    p.setLastUpdate(new Date());
+	    profileManager.save();
+	}
+	
+	public TaskTree executeProfile(String name) throws RemoteException {
+		Profile p = profileManager.getProfile(name);
+		TaskTree tree = synchronizer.executeProfile(p);
+		return tree;
+	}
+	
+	public void preformActions(String profilename, TaskTree tree) throws RemoteException {
+		synchronizer.performActions(tree);
+		Profile p = profileManager.getProfile(profilename);
+	    p.setLastUpdate(new Date());
+	    profileManager.save();
 	}
 	
 	public void save(Profile[] profiles) throws RemoteException {

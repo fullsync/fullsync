@@ -87,6 +87,7 @@
 			<!-- EXE for Linux -->
             <!-- TODO [Michele] Missing startup script for Unix-based systems -->
             
+            <file src="build/sample.syncrules" targetdir="$INSTALL_PATH/"/>
             <file src="build/logging.xml" targetdir="$INSTALL_PATH/"/>
             <file src="build/profiles.xml" targetdir="$INSTALL_PATH/" override="false"/>
 

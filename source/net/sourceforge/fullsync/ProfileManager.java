@@ -76,6 +76,7 @@ public class ProfileManager implements ProfileChangeListener
     //       please make a dao of me, with save/load and that's it
     //       don't forget calling profilesChangeEvent if dao is changed
     private RemoteProfileManager remoteManager;
+    private Timer updateTimer;
     
     protected ProfileManager() {
         this.changeListeners = new Vector();
@@ -141,18 +142,37 @@ public class ProfileManager implements ProfileChangeListener
     	throws MalformedURLException, RemoteException, NotBoundException
 	{
     	remoteManager = new RemoteProfileManager(hostname, port);	
-		
+    	updateRemoteProfiles();
+    	
+//    	updateTimer = new Timer(true);
+//    	updateTimer.scheduleAtFixedRate(new TimerTask() {
+//			public void run() {
+//				updateRemoteProfiles();
+//			}
+//    	}, 0, 1000);
+    }
+    
+    private void updateRemoteProfiles() {
     	this.profiles = new Vector();
-		Profile[] remoteprofiles = remoteManager.getProfiles();
+		
+    	Profile[] remoteprofiles = remoteManager.getProfiles();
 		for (int i = 0; i < remoteprofiles.length; i++) {
 			this.profiles.add(remoteprofiles[i]);
 			remoteprofiles[i].addProfileChangeListener(this);
 		}
-		fireProfilesChangeEvent();
+
+		// TODO [Michele] this refresh of remote profiles makes the application flashes a little.
+		// Find a way to call update only when needed.
+		fireProfilesChangeEvent();    	
     }
     
     public void disconnectRemote() {
     	remoteManager = null;
+    	
+    	if (updateTimer != null) {
+    		updateTimer.cancel();
+    		updateTimer = null;
+    	}
     	
         this.profiles = new Vector();
         
@@ -188,10 +208,15 @@ public class ProfileManager implements ProfileChangeListener
 	            }
 	        }
         }
+        fireProfilesChangeEvent();
     }
     
     public boolean isConnected() {
     	return (remoteManager != null);
+    }
+    
+    public RemoteProfileManager getRemoteProfileManager() {
+    	return remoteManager;
     }
     
     public void addProfile( Profile profile )
@@ -233,8 +258,8 @@ public class ProfileManager implements ProfileChangeListener
     public void startTimer()
     {
     	timerActive = true;
-    	timer = new Timer( true );
-    	updateTimer();
+    	timer = new Timer( true);
+    	updateTimer();    	
     }
     void updateTimer()
     {

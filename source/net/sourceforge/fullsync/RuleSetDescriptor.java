@@ -17,6 +17,8 @@ import org.w3c.dom.Element;
  */
 public abstract class RuleSetDescriptor implements Serializable {
 	
+	private static final long serialVersionUID = 1;
+	
 	private static Hashtable descriptorRegister;
 	
 	// TODO [Michele] change this!
