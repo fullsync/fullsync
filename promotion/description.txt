@@ -1,4 +1,8 @@
 
+--==[200 chars]==-------------------------
+
+FullSync publishes and updates websites, synchronizes local dirs or backs up data. Special features are configuration per dir, multiple protocols (FTP, SFTP...), flexible rules and much more.
+
 --==[256 chars]==-------------------------
 
 FullSync publishes and updates websites, synchronizes local dirs or backs up data. special features are configuration per dir, buffered filesystems (so the tools only sees files it created itself), multiple protocols (FTP, SFTP...) and flexible rules.
@@ -9,7 +13,7 @@ FullSync publishes and updates websites, synchronizes local dirs or backs up dat
 FullSync is a powerful tool that helps you keep multiple copies of various data in sync. It can update your Website using FTP or SFTP, backup your data on the local disk or refresh a working copy from a remote server on your local drive, and much more. It features multiple protocol support, flexible rules, a scheduler, and many other features that give you a solid basis for nearly all situations.
 
 
---==[very long, not really good]==--------
+--==[very long, bad for public use]==--------
 
 The tools should provide a flexible way to synchronize various formes of file masses. a graphical interface is only planned for configuration and visible logging but not for comparing the two sides. the synchronization process should be pretty silent (except logging) and fast.
 the most interesting feature for updating websites is that the target information can be buffered. that means the program knows which files it uploaded, their size, lastmodified date and maybe a checksum. multiple advantages arise:
