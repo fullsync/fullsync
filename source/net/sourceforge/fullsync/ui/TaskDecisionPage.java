@@ -184,57 +184,6 @@ public class TaskDecisionPage implements WizardPage
 		            processing = true;
 		            list.setChangeAllowed( false );
 		            
-//					// Logger logger = Logger.getRootLogger();
-//		            // logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
-//		            Logger logger = Logger.getLogger( "FullSync" );
-//			        logger.info( "Synchronization started" );
-//			        logger.info( "  source:      "+taskTree.getSource().getUri().toString() );
-//			        logger.info( "  destination: "+taskTree.getDestination().getUri().toString() );
-//			        
-//			        // TODO we should use the Synchronizer here ! maybe (TaskTree, ActionFinishedListener) ?
-//			        BlockBuffer buffer = new BlockBuffer( logger );
-//			        ActionQueue queue = new FillBufferActionQueue(buffer);
-//			        final Color colorFinishedSuccessful = new Color( null, 150, 255, 150 );
-//			        final Color colorFinishedUnsuccessful = new Color( null, 255, 150, 150 );
-//
-//			        IoStatistics stats = queue.createStatistics( taskTree );
-//		            tasksTotal = stats.getCountActions();
-//				    tasksFinished = 0;
-//
-//			        queue.addTaskFinishedListener( new TaskFinishedListener() {
-//			        	public void taskFinished( final TaskFinishedEvent event ) 
-//			        	{
-//				            display.asyncExec( new Runnable() {
-//				            	public void run() {
-//						            tasksFinished++;
-//						            labelProgress.setText( tasksFinished+" of "+tasksTotal+" tasks finished" );
-//						            Object taskData = event.getTask().getData();
-//						            if ((taskData != null) && (taskData instanceof TableItem)) {
-//						            	TableItem item = (TableItem) taskData;
-//						            	if( event.isSuccessful() )
-//						            	     item.setBackground(colorFinishedSuccessful);
-//						            	else item.setBackground(colorFinishedUnsuccessful);
-//						            	list.showItem(item);
-//						            }
-//								}
-//				            } );
-//			        	} 
-//			        } );
-//
-//			        buffer.load();
-//			        queue.enqueue( taskTree );
-//			        queue.flush();
-//			        buffer.unload();
-//			        
-//			        taskTree.getSource().flush();
-//			        taskTree.getDestination().flush();
-//			        taskTree.getSource().close();
-//			        taskTree.getDestination().close();
-//			        logger.info( "finished synchronization" );
-//			        
-//			        profile.setLastUpdate( new Date() );
-
-		            // FIXME [Michele] The total number of tasks is missing!!!
 		            Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
 		            IoStatistics stats = synchronizer.getIoStatistics(taskTree);		            
 		            tasksTotal = stats.getCountActions();
