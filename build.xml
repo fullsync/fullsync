@@ -143,6 +143,8 @@
 	<target name="dist-zip" description="Builds a zipfile distribution" depends="build">
     	<echo message="Building a zip distribution"/>
 
+		<delete dir="${dist.dir}"/>
+		<mkdir dir="${dist.dir}"/>
 		<zip zipfile="${dist.dir}/FullSync-${version}.zip">
 			<fileset dir="${build.dir}">
 				<include name="**/*.*"/>
@@ -154,14 +156,14 @@
     	<echo message="Building a multi-platform installer distribution"/>
     	
         <izpack 
-        	input="${basedir}/installer/install.xml"
+        	input="${basedir}/resources/installer/install.xml"
 			output="${basedir}/installer/FullSyncInstaller.jar"
 			installerType="standard"
 			basedir="${basedir}"
 			izPackDir="${izpack.dir}"/>
 
         <jsmoothgen 
-        	project="installer/FullSyncInstaller.jsmooth" 
+        	project="${basedir}/resources/installer/FullSyncInstaller.jsmooth" 
 			skeletonroot="${jsmooth.dir}/skeletons" 
         	verbose="true"/>
     </target>
