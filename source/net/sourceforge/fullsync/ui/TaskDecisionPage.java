@@ -3,7 +3,9 @@ package net.sourceforge.fullsync.ui;
 import java.io.IOException;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
@@ -233,14 +235,15 @@ public class TaskDecisionPage implements WizardPage
 //			        profile.setLastUpdate( new Date() );
 
 		            // FIXME [Michele] The total number of tasks is missing!!!
-//			        IoStatistics stats = queue.createStatistics( taskTree );
-//		            tasksTotal = stats.getCountActions();
+		            Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
+		            IoStatistics stats = synchronizer.getIoStatistics(taskTree);		            
+		            tasksTotal = stats.getCountActions();
 				    tasksFinished = 0;
 
 		            final Color colorFinishedSuccessful = new Color( null, 150, 255, 150 );
 		            final Color colorFinishedUnsuccessful = new Color( null, 255, 150, 150 );
 		            
-		            GuiController.getInstance().getSynchronizer().performActions(taskTree, new TaskFinishedListener() {
+		            synchronizer.performActions(taskTree, new TaskFinishedListener() {
 		            	public void taskFinished( final TaskFinishedEvent event ) 
 		            	{
 		            		display.asyncExec( new Runnable() {

@@ -30,6 +30,8 @@ public class NiceListViewItem extends Canvas
     private Color colorSelectedDefault;
     private Color colorSelectedHover;
     
+    private ProfileListControlHandler handler;
+    
     private boolean selected;
 
 	public NiceListViewItem(NiceListView parent, int style) 
@@ -69,6 +71,9 @@ public class NiceListViewItem extends Canvas
 			        if( e.button == 3 )
 			            getMenu().setVisible( true );
                 }
+				public void mouseDoubleClick(MouseEvent e) {
+
+				}
 			};
 			
 			GridData layoutData = new GridData();
@@ -236,6 +241,9 @@ public class NiceListViewItem extends Canvas
 		        if( e.button == 3 )
 		            getMenu().setVisible( true );
             }
+			public void mouseDoubleClick(MouseEvent e) {
+			
+			}
 		};
 
         compositeContent.addMouseListener( ml );
@@ -247,4 +255,13 @@ public class NiceListViewItem extends Canvas
     {
         return true;
     }
+    public ProfileListControlHandler getHandler()
+    {
+        return handler;
+    }
+    public void setHandler( ProfileListControlHandler handler )
+    {
+        this.handler = handler;
+    }
+
 }
