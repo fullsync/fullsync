@@ -77,25 +77,26 @@ public abstract class AbstractProcessor implements Processor
     	throws FileSystemException, URISyntaxException, DataParseException, IOException
     {
         Site d1 = null, d2 = null;
+	        
+        RuleSet rules = profile.getRuleSet().createRuleSet();
+        
+        ActionDecider actionDecider;
+        if( profile.getSynchronizationType().equals( "Publish/Update" ) )
+            actionDecider = new PublishActionDecider();
+        else if( profile.getSynchronizationType().equals( "Backup" ) )
+            actionDecider = new BackupActionDecider();
+        else throw new IllegalArgumentException( "Profile has unknown synchronization type." );
+			
         try {
 	        d1 = fsm.createConnection( profile.getSource() );
 	        d2 = fsm.createConnection( profile.getDestination() );
-	        
-	        RuleSet rules = profile.getRuleSet().createRuleSet();
-	        
-	        ActionDecider actionDecider;
-	        if( profile.getSynchronizationType().equals( "Publish/Update" ) )
-	            actionDecider = new PublishActionDecider();
-	        else if( profile.getSynchronizationType().equals( "Backup" ) )
-	            actionDecider = new BackupActionDecider();
-	        else throw new IllegalArgumentException( "Profile has unknown synchronization type." );
-			
 			return execute( d1, d2, actionDecider, rules );
-        } finally {
+        } catch( FileSystemException ex ) {
             if( d1 != null )
                 d1.close();
             if( d2 != null )
                 d2.close();
+            throw ex;
         }
     }
     public TaskTree execute( Site source, Site destination, ActionDecider actionDecider, RuleSet rules )
