@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import org.eclipse.swt.widgets.Button;
 /**
 * This code was generated using CloudGarden's Jigloo
 * SWT/Swing GUI Builder, which is free for non-commercial
@@ -32,6 +33,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 	private Label label1;
 	private Label label2;
 	private Text textFieldPort;
+	private Button cbDisableRemoteListener;
 	private Text textPassword;
 	private Label label3;
 	private Text textFieldHostname;
@@ -83,7 +85,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			GridLayout thisLayout = new GridLayout();
 			this.setLayout(thisLayout);
 			thisLayout.numColumns = 2;
-			this.setSize(215, 101);
+			this.setSize(274, 139);
 			{
 				label1 = new Label(this, SWT.NONE);
 				label1.setText("Hostname:");
@@ -121,6 +123,14 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 				textPasswordLData.grabExcessHorizontalSpace = true;
 				textPassword.setLayoutData(textPasswordLData);
 			}
+			{
+				cbDisableRemoteListener = new Button(this, SWT.CHECK | SWT.LEFT);
+				cbDisableRemoteListener
+					.setText("Disable progress indicator (for slow networks)");
+				GridData cbDisableRemoteListenerLData = new GridData();
+				cbDisableRemoteListenerLData.horizontalSpan = 2;
+				cbDisableRemoteListener.setLayoutData(cbDisableRemoteListenerLData);
+			}
 			this.layout();
 		} catch (Exception e) {
 			ExceptionHandler.reportException( e );
@@ -140,9 +150,13 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 		}
 		
 		String password = textPassword.getText();
+		
+		boolean useRemoteListener = !cbDisableRemoteListener.getSelection();
+		
 		try {
 		    GuiController.getInstance().getProfileManager().stopTimer();
 			RemoteManager remoteManager = new RemoteManager(hostname, port, password);
+			remoteManager.setUseRemoteListener(useRemoteListener);
 			GuiController.getInstance().getProfileManager().setRemoteConnection(remoteManager);
 			GuiController.getInstance().getSynchronizer().setRemoteConnection(remoteManager);
 		} catch (Exception e1) {

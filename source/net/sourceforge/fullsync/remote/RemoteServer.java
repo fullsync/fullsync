@@ -84,16 +84,20 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 		return synchronizer.getIoStatistics(taskTree);
 	}
 	
-	public void performActions(TaskTree tree, final RemoteTaskFinishedListenerInterface listener) throws RemoteException {
-		int result = synchronizer.performActions(tree, new TaskFinishedListener() {
-			public void taskFinished(TaskFinishedEvent event) {
-				try {
-					listener.taskFinished(event);
-				} catch (RemoteException e) {
-					ExceptionHandler.reportException(e);
+	public void performActions(TaskTree tree, final RemoteTaskFinishedListenerInterface remoteListener) throws RemoteException {
+		TaskFinishedListener listener = null;
+		if (remoteListener != null) {
+			listener = new TaskFinishedListener() {
+				public void taskFinished(TaskFinishedEvent event) {
+					try {
+						remoteListener.taskFinished(event);
+					} catch (RemoteException e) {
+						ExceptionHandler.reportException(e);
+					}
 				}
-			}
-		});
+			};
+		}
+		int result = synchronizer.performActions(tree, listener);
 		if (result != 0) {
 			throw new RemoteException("Exception while performing actions");
 		}

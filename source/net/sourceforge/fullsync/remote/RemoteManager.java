@@ -20,6 +20,7 @@ import net.sourceforge.fullsync.TaskTree;
 public class RemoteManager {
 
 	private RemoteInterface remoteInterface;
+	private boolean useRemoteListener = false;
 
 	public RemoteManager(String host, int port, String password) 
 		throws MalformedURLException, RemoteException, NotBoundException 
@@ -81,8 +82,19 @@ public class RemoteManager {
 	}
 		
 	public void performActions(TaskTree taskTree, TaskFinishedListener listener) throws RemoteException {
-		RemoteTaskFinishedListener remoteListener = new RemoteTaskFinishedListener(listener);
+		RemoteTaskFinishedListener remoteListener = null;
+		if (useRemoteListener) {
+			remoteListener = new RemoteTaskFinishedListener(listener);
+		}
 		remoteInterface.performActions(taskTree, remoteListener);
+	}
+	
+	public void setUseRemoteListener(boolean bool) {
+		this.useRemoteListener = bool;
+	}
+	
+	public boolean getUseRemoteListener() {
+		return this.useRemoteListener;
 	}
 
 	public void save(Profile[] profiles) {
