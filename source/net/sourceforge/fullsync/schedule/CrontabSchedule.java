@@ -181,9 +181,6 @@ public class CrontabSchedule implements Schedule
         // FIXME we assume that there is a true in the array,
         //       but we should avoid a deadloop anyways.
         
-        // TODO omg, we need to descent to find out whether the current month
-        //      is ok and ascent to set the correct next month (i.e.)
-        
         int orig = cal.get( field );
         int now = orig+1;
         int max = cal.getActualMaximum( field );

@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.Date;
 
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
@@ -79,7 +81,8 @@ public class CommandLineInterpreter
 				    return;
 				}
 		    }
-		    
+		    System.setErr( new PrintStream( new FileOutputStream( "logs/stderr.log" ) ) );
+		    //System.setOut( new PrintStream( new FileOutputStream( "logs/stdout.log" ) ) );
 		    GuiController guiController = new GuiController( preferences, profileManager, sync );
             guiController.startGui();
         	guiController.run();

@@ -5,11 +5,11 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.Action;
-import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.ActionQueue;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.buffer.Buffer;
@@ -80,6 +80,8 @@ public class FillBufferActionQueue implements ActionQueue, EntryFinishedListener
 	        stats.filesCopied++;
 	        stats.bytesTransferred += source.getFileAttributes().getLength();
         } catch( IOException ioe ) {
+            // FIXME that's not right, the task does not neccessarily be the one
+            //       that throws this exception as there are flushs involved
             fireTaskFinished( new TaskFinishedEvent( task, ioe.getMessage() ) );
         }
     }
@@ -132,12 +134,9 @@ public class FillBufferActionQueue implements ActionQueue, EntryFinishedListener
         }
     }
     public void flush()
+    	throws IOException
     {
-        try {
-            buffer.flush();
-        } catch( IOException e ) {
-            e.printStackTrace();
-        }
+        buffer.flush();
     }
     public void entryFinished(EntryDescriptor entry) 
     {

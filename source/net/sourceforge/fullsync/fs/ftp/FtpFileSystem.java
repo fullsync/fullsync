@@ -31,7 +31,7 @@ public class FtpFileSystem implements FileSystem
         try {
 	        FTPClient client = new FTPClient();
 	        client.connect( uri.getHost(), uri.getPort()==-1?21:uri.getPort() );
-	        client.login( uri.getUserInfo(), "test" ); // FIXME args, where to get the password ?!?
+	        client.login( uri.getUserInfo(), "test" );
 	        
 	        if( !client.changeWorkingDirectory( uri.getPath() ) )
 	        {

@@ -53,8 +53,8 @@ public class Synchronizer
      */
     public void performActions( TaskTree taskTree, TaskFinishedListener listener )
     {
+        Logger logger = Logger.getLogger( "FullSync" );
         try {
-            Logger logger = Logger.getLogger( "FullSync" );
 	        logger.info( "Synchronization started" );
 	        logger.info( "  source:      "+taskTree.getSource().getUri().toString() );
 	        logger.info( "  destination: "+taskTree.getDestination().getUri().toString() );
@@ -74,10 +74,12 @@ public class Synchronizer
 	        taskTree.getDestination().flush();
 	        taskTree.getSource().close();
 	        taskTree.getDestination().close();
-	        logger.info( "finished synchronization" ); // ...with x errors and y warnings
+	        logger.info( "synchronization successful" ); // TODO ...with x errors and y warnings
 	        logger.info( "------------------------------------------------------------" );
-	    } catch( IOException e ) {
-	        e.printStackTrace();
-	    }
+        } catch( IOException ioe ) {
+            logger.error( "An Exception occured while performing actions", ioe );
+	        logger.info( "synchronization failed" );
+	        logger.info( "------------------------------------------------------------" );
+        }
     }
 }
