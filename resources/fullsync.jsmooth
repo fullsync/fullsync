@@ -7,10 +7,7 @@
 <JVMSearchPath>exepath</JVMSearchPath>
 <JVMSearchPath>jview</JVMSearchPath>
 <arguments></arguments>
-<classPath>..\build\lib\commons-beanutils.jar</classPath>
-<classPath>..\build\lib\commons-betwixt-1.0-alpha-1.jar</classPath>
 <classPath>..\build\lib\commons-cli-1.0.jar</classPath>
-<classPath>..\build\lib\commons-digester-1.5.jar</classPath>
 <classPath>..\build\lib\commons-io.jar</classPath>
 <classPath>..\build\lib\commons-logging.jar</classPath>
 <classPath>..\build\lib\commons-net-1.2.2.jar</classPath>
@@ -24,6 +21,7 @@
 <classPath>..\build\lib\commons-configuration-1.0.jar</classPath>
 <classPath>..\build\lib\commons-lang-2.0.jar</classPath>
 <classPath>..\build\lib\commons-collections-3.1.jar</classPath>
+<classPath>..\build\lib\utils.jar</classPath>
 <currentDirectory>.</currentDirectory>
 <embeddedJar>false</embeddedJar>
 <executableName>..\build\FullSync.exe</executableName>
