@@ -432,6 +432,9 @@ Threading
 	
 Logging:
 	[ ] verify logging quality
+	[ ] it would be nice if we explain in the logs, why we
+        think that a file has changed or not and show the 
+        relevant modification times of both file versions.
 			
 Buffer:
 	[ ] test largefile handling (filesize > buffersize)
