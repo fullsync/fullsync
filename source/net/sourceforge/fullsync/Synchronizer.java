@@ -122,7 +122,8 @@ public class Synchronizer
 		this.remoteManager = remoteManager;
 	}
 
-    public void disconnectRemote() {
+    public void disconnectRemote() 
+    {
     	remoteManager = null;
     }
 

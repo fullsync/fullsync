@@ -183,6 +183,18 @@ Sheduler:
    	[X] add symbol for scheduled tasks
    	[X] does daemon mode scheduling work atm ? we don't specify a listener !
 	
+Remote:
+	[X] make scheduler available via remote interface
+	[X] close gui while being connected doesn't remove listeners :-/
+	[X] password for connection
+
+GraphicsTodo:
+	[X] a clock icon for the scheduler
+	[X] a small clock to indicated profiles that are scheduled
+	[X] an icon for remote connection (startup / being connected)
+	[X] a wizard image for starting a remote connection
+	[X] some different images for start scheduler and stop scheduler
+
 Release-critical:
 	[X] LogWindow should have: global source - destination, filename just once,
 		                       explanation on the right side
@@ -216,19 +228,9 @@ Release-critical:
 		patches even if not a single serializeable object has changed.
 	[X] propagate updates of server profiles to client-gui
 	[X] timer still creating/stopping thread?
+	[ ] make remote 'experimental feature' or add some texts in dialog
+		explaining how to use and that it's still unstable
 	
-GraphicsTodo:
-	[X] a clock icon for the scheduler
-	[X] a small clock to indicated profiles that are scheduled
-	[X] an icon for remote connection (startup / being connected)
-	[X] a wizard image for starting a remote connection
-	[ ] some different images for start scheduler and stop scheduler
-
-Remote:
-	[X] make scheduler available via remote interface
-	[ ] password for connection
-	[ ] close gui while being connected doesn't remove listeners :-/
-
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
 
 Small Things:

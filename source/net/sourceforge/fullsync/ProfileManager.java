@@ -175,25 +175,24 @@ public class ProfileManager
     public void disconnectRemote() {
 
     	if (remoteManager != null) {
-    	try {
-			remoteManager.removeProfileListChangeListener(remoteListener);
-			remoteManager.removeSchedulerChangeListener(this);
-		} catch (RemoteException e) {
-			ExceptionHandler.reportException( e );
-		}
-    	}
-    	
-    	remoteManager = null;
+	    	try {
+				remoteManager.removeProfileListChangeListener(remoteListener);
+				remoteManager.removeSchedulerChangeListener(this);
+			} catch (RemoteException e) {
+				ExceptionHandler.reportException( e );
+			}
+	    	remoteManager = null;
 
-        this.profiles = new Vector();
-        
-        try {
-			loadProfiles();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			ExceptionHandler.reportException( e );
-		}
-		fireProfilesChangeEvent();
+	        this.profiles = new Vector();
+	        
+	        try {
+				loadProfiles();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				ExceptionHandler.reportException( e );
+			}
+			fireProfilesChangeEvent();
+    	}
     }
     
     public boolean isConnected() {

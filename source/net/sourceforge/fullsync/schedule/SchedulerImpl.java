@@ -96,7 +96,8 @@ public class SchedulerImpl implements Scheduler, Runnable
 	
 	public void refresh()
     {
-        worker.interrupt();
+	    if( worker != null )
+	        worker.interrupt();
     }
 	
 	public void run()

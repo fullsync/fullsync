@@ -54,15 +54,17 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
     private ToolItem toolItemNew;
     private Menu menuBarMainWindow;
     private StatusLine statusLine;
-    private ToolBar toolBar2;
-    private CoolItem coolItem2;
-    private ToolItem toolItemSchedule;
+    private CoolBar coolBar;
+    private CoolItem coolItem1;
+    private ToolBar toolBar1;
     private ToolItem toolItemRun;
     private ToolItem toolItemDelete;
     private ToolItem toolItemEdit;
-    private ToolBar toolBar1;
-    private CoolItem coolItem1;
-    private CoolBar coolBar;
+    private CoolItem coolItem2;
+    private ToolBar toolBar2;
+    private ToolItem toolItemScheduleIcon;
+    private ToolItem toolItemScheduleStart;
+    private ToolItem toolItemScheduleStop;
     
     private Composite profileListContainer;
     private Menu profilePopupMenu; 
@@ -184,25 +186,36 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                 {
                     coolItem2 = new CoolItem(coolBar, SWT.NONE);
                     coolItem2.setSize(494, 22);
-                    coolItem2
-                        .setMinimumSize(new org.eclipse.swt.graphics.Point(
-                            24,
-                            22));
-                    coolItem2
-                        .setPreferredSize(new org.eclipse.swt.graphics.Point(
-                            24,
-                            22));
-                    coolItem2.setText("coolItem2");
+                    coolItem2.setMinimumSize(new org.eclipse.swt.graphics.Point(24,22));
+                    coolItem2.setPreferredSize(new org.eclipse.swt.graphics.Point(24,22));
                     {
                         toolBar2 = new ToolBar(coolBar, SWT.FLAT);
                         coolItem2.setControl(toolBar2);
                         {
-                            toolItemSchedule = new ToolItem(toolBar2, SWT.PUSH);
-                            toolItemSchedule
+                            toolItemScheduleIcon = new ToolItem(toolBar2, SWT.NULL);
+                            toolItemScheduleIcon.setImage( guiController.getImage( "Scheduler_Icon.png" ) );
+            		        toolItemScheduleIcon.setDisabledImage( guiController.getImage( "Scheduler_Icon.png" ) );
+            		        toolItemScheduleIcon.setEnabled( false );
+                        }
+                        {
+                            toolItemScheduleStart = new ToolItem(toolBar2, SWT.NULL);
+                            toolItemScheduleStart.setToolTipText( "Start Scheduler" );
+            		        toolItemScheduleStart.setImage( guiController.getImage( "Scheduler_Start.png" ) );
+                            toolItemScheduleStart
                                 .addSelectionListener(new SelectionAdapter() {
-                                    public void widgetSelected(
-                                        SelectionEvent evt) {
-                                        toolItemScheduleWidgedSelected(evt);
+                                    public void widgetSelected(SelectionEvent evt) {
+                                        guiController.getProfileManager().startScheduler();
+                                    }
+                                });
+                        }
+                        {
+                            toolItemScheduleStop = new ToolItem(toolBar2, SWT.PUSH);
+                            toolItemScheduleStop.setToolTipText( "Stop Scheduler" );
+            		        toolItemScheduleStop.setImage( guiController.getImage( "Scheduler_Stop.png" ) );
+                            toolItemScheduleStop
+                                .addSelectionListener(new SelectionAdapter() {
+                                    public void widgetSelected(SelectionEvent evt) {
+                                        guiController.getProfileManager().stopScheduler();
                                     }
                                 });
                         }
@@ -213,6 +226,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                 coolBarLData.horizontalAlignment = GridData.FILL;
                 coolBarLData.verticalAlignment = GridData.FILL;
                 coolBar.setLayoutData(coolBarLData);
+                coolBar.setLocked(true);
             }
 			{
 				menuBarMainWindow = new Menu(getShell(), SWT.BAR);
@@ -506,17 +520,12 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	}
 	
 	// TODO [Michele] Implement this listener also on the remote interface
-	public void schedulerStatusChanged( final boolean status ) 
+	public void schedulerStatusChanged( final boolean enabled ) 
 	{
     	getDisplay().asyncExec(new Runnable() {
     		public void run() {
-    		    if( status ) {
-    		        toolItemSchedule.setImage( guiController.getImage( "Timer_Running.png" ) );
-    		        toolItemSchedule.setToolTipText( "Suspend Timer" );
-    		    } else { 
-    		        toolItemSchedule.setImage( guiController.getImage( "Timer_Stopped.png" ) );
-    		        toolItemSchedule.setToolTipText( "Start Timer" );
-    		    }
+		        toolItemScheduleStart.setEnabled( !enabled );
+		        toolItemScheduleStop.setEnabled( enabled );
     		}
     	});
 	}
