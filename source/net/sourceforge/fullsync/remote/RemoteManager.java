@@ -9,6 +9,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.TaskTree;
 
@@ -72,6 +73,10 @@ public class RemoteManager {
 	
 	public TaskTree executeProfile(String name) throws RemoteException {
 		return remoteInterface.executeProfile(name);
+	}
+	
+	public IoStatistics getIoStatistics(TaskTree taskTree) throws RemoteException {
+		return remoteInterface.getIoStatistics(taskTree);
 	}
 	
 	public void performActions(TaskTree taskTree) throws RemoteException {

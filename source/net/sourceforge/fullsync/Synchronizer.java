@@ -75,6 +75,7 @@ public class Synchronizer
     			remoteManager.performActions(taskTree);
     			return 0;
     		} catch (RemoteException e) {
+    			ExceptionHandler.reportException(e);
     			return 1;
     		}
     	}
@@ -119,4 +120,11 @@ public class Synchronizer
     public void disconnectRemote() {
     	remoteManager = null;
     }
+
+    public IoStatistics getIoStatistics(TaskTree taskTree) {
+    	Logger logger = Logger.getLogger("FullSync");
+    	BlockBuffer buffer = new BlockBuffer(logger);
+    	ActionQueue queue = new FillBufferActionQueue(buffer);
+		return queue.createStatistics(taskTree);
+	}
 }

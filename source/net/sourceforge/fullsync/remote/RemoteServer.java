@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
@@ -74,6 +75,10 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 		Profile p = profileManager.getProfile(name);
 		TaskTree tree = synchronizer.executeProfile(p);
 		return tree;
+	}
+	
+	public IoStatistics getIoStatistics(TaskTree taskTree) throws RemoteException {
+		return synchronizer.getIoStatistics(taskTree);
 	}
 	
 	public void performActions(TaskTree tree) throws RemoteException {

@@ -7,6 +7,8 @@ import net.sourceforge.fullsync.IoStatistics;
  */
 public class IoStatisticsImpl implements IoStatistics
 {
+	private static final long serialVersionUID = 1;
+	
 	public int filesCopied;
 	public int dirsCreated;
 	public int deletions;

@@ -6,6 +6,7 @@ package net.sourceforge.fullsync.remote;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.TaskTree;
 
@@ -29,6 +30,8 @@ public interface RemoteInterface extends Remote {
 	void stopTimer() throws RemoteException;
 	
 	TaskTree executeProfile(String name) throws RemoteException;
+	
+    public IoStatistics getIoStatistics(TaskTree taskTree) throws RemoteException;
 	
 	void performActions(TaskTree tree) throws RemoteException;
 	
