@@ -1,9 +1,11 @@
 package net.sourceforge.fullsync;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class TaskFinishedEvent
+public class TaskFinishedEvent implements Serializable
 {
     private Task task;
     private boolean successful;

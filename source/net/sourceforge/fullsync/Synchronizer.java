@@ -72,7 +72,7 @@ public class Synchronizer
     	if (remoteManager != null) {
     		// TODO [Michele] Logging?
     		try {
-    			remoteManager.performActions(taskTree);
+    			remoteManager.performActions(taskTree, listener);
     			return 0;
     		} catch (RemoteException e) {
     			ExceptionHandler.reportException(e);

@@ -1,6 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
@@ -33,20 +34,20 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class TaskDecisionPage implements WizardPage
+public class TaskDecisionPage implements WizardPage, Serializable
 {
-    private WizardDialog dialog;
-    private GuiController guiController;
-    private Profile profile;
-    private TaskTree taskTree;
-    private boolean processing;
-	private int tasksFinished;
-	private int tasksTotal;
+    private transient WizardDialog dialog;
+    private transient GuiController guiController;
+    private transient Profile profile;
+    private transient TaskTree taskTree;
+    private transient boolean processing;
+	private transient int tasksFinished;
+	private transient int tasksTotal;
     
-    private TaskDecisionList list;
-    private Combo comboFilter;
-    private Label labelProgress;
-    private Button buttonGo;
+    private transient TaskDecisionList list;
+    private transient Combo comboFilter;
+    private transient Label labelProgress;
+    private transient Button buttonGo;
     
     public TaskDecisionPage( WizardDialog dialog, GuiController guiController, Profile profile, TaskTree taskTree )
     {
@@ -199,6 +200,9 @@ public class TaskDecisionPage implements WizardPage
 		            			public void run() {
 		            				tasksFinished++;
 		            				labelProgress.setText( tasksFinished+" of "+tasksTotal+" tasks finished" );
+		            				// FIXME [Michele] In the remote interface the TableItem are not serialized
+		            				// We might use an "external" structure to map tasks to tableitem,
+		            				// the task in the event is serialized.
 		            				Object taskData = event.getTask().getData();
 		            				if ((taskData != null) && (taskData instanceof TableItem)) {
 		            					TableItem item = (TableItem) taskData;

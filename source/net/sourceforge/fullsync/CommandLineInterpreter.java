@@ -127,7 +127,7 @@ public class CommandLineInterpreter
 				    return;
 		    }
 
-		    SplashScreen splash = null;
+	        SplashScreen splash = null;
 		    // FIXME [Michele] I'm using (!line.hasOption("d") to decide if the GUI is enabled or not.
 		    // We really need to decide a better command line style.
 		    long startMillis = System.currentTimeMillis();
@@ -212,6 +212,10 @@ public class CommandLineInterpreter
 		    	} catch( Exception ex ) {
 		    		ExceptionHandler.reportException( ex );
 		    	} finally {
+		        	if (splash != null) {
+		        		splash.hide();
+		        		splash = null;
+		        	}
 		    		profileManager.save();
 		    	}
 

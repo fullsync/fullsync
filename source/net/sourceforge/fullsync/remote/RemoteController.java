@@ -37,7 +37,7 @@ public class RemoteController {
 	public void startServer(int port, String password, ProfileManager profileManager, Synchronizer sync) 
 		throws RemoteException 
 	{
-		try {
+		try {			
 			serverURL = "rmi://localhost:"+port+"/FullSync";
 			this.password = password;
 			

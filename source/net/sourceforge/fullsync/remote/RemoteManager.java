@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 
 /**
@@ -78,9 +79,10 @@ public class RemoteManager {
 	public IoStatistics getIoStatistics(TaskTree taskTree) throws RemoteException {
 		return remoteInterface.getIoStatistics(taskTree);
 	}
-	
-	public void performActions(TaskTree taskTree) throws RemoteException {
-		remoteInterface.performActions(taskTree);
+		
+	public void performActions(TaskTree taskTree, TaskFinishedListener listener) throws RemoteException {
+		RemoteTaskFinishedListener remoteListener = new RemoteTaskFinishedListener(listener);
+		remoteInterface.performActions(taskTree, remoteListener);
 	}
 
 	public void save(Profile[] profiles) {

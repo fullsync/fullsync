@@ -119,15 +119,17 @@ public class SplashScreen extends Composite {
 	}
 	
 	public void hide() {
-		Shell mainShell = this.getShell();
-		if (!mainShell.isDisposed()) {
-			mainShell.dispose();
+		if (!this.isDisposed()) {
+			Shell mainShell = this.getShell();
+			if (!mainShell.isDisposed()) {
+				mainShell.dispose();
+			}
 		}
 	}
 	
 	public void dispose()
 	{
-	    labelPicture.getImage().dispose();
 	    super.dispose();
+	    labelPicture.getImage().dispose();
 	}
 }

@@ -33,7 +33,7 @@ public interface RemoteInterface extends Remote {
 	
     public IoStatistics getIoStatistics(TaskTree taskTree) throws RemoteException;
 	
-	void performActions(TaskTree tree) throws RemoteException;
+	void performActions(TaskTree tree, RemoteTaskFinishedListenerInterface listener) throws RemoteException;
 	
 	void save(Profile[] profiles) throws RemoteException;
 

@@ -8,7 +8,7 @@ import java.util.EventListener;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public interface TaskFinishedListener extends EventListener 
+public interface TaskFinishedListener extends EventListener
 {
 	// TODO better use some action class given to the actionqueue
 	public void taskFinished( TaskFinishedEvent event );

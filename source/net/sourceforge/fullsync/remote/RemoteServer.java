@@ -9,10 +9,13 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
+import net.sourceforge.fullsync.TaskFinishedEvent;
+import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 
 /**
@@ -23,7 +26,7 @@ import net.sourceforge.fullsync.TaskTree;
  * @author Michele Aiello
  */
 public class RemoteServer extends UnicastRemoteObject implements RemoteInterface {
-		
+	
 	private ProfileManager profileManager;
 	private Synchronizer synchronizer;
 	private String password;
@@ -81,8 +84,16 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 		return synchronizer.getIoStatistics(taskTree);
 	}
 	
-	public void performActions(TaskTree tree) throws RemoteException {
-		int result = synchronizer.performActions(tree);
+	public void performActions(TaskTree tree, final RemoteTaskFinishedListenerInterface listener) throws RemoteException {
+		int result = synchronizer.performActions(tree, new TaskFinishedListener() {
+			public void taskFinished(TaskFinishedEvent event) {
+				try {
+					listener.taskFinished(event);
+				} catch (RemoteException e) {
+					ExceptionHandler.reportException(e);
+				}
+			}
+		});
 		if (result != 0) {
 			throw new RemoteException("Exception while performing actions");
 		}
