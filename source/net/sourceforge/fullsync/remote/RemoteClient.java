@@ -1,7 +1,7 @@
 /*
  * Created on Nov 7, 2004
  */
-package net.sourceforge.fullsync.remoteinterface;
+package net.sourceforge.fullsync.remote;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -13,7 +13,7 @@ import net.sourceforge.fullsync.Profile;
 /**
  * @author Michele Aiello
  */
-public class RemoteInterfaceClient {
+public class RemoteClient {
 
     public static void main(String args[]) throws MalformedURLException, RemoteException, NotBoundException {
     	RemoteInterface remoteInterface = (RemoteInterface) Naming.lookup("rmi://localhost:10000/FullSync");

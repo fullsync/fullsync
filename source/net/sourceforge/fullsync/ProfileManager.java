@@ -21,7 +21,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
-import net.sourceforge.fullsync.remoteinterface.RemoteProfileManager;
+import net.sourceforge.fullsync.remote.RemoteProfileManager;
 import net.sourceforge.fullsync.schedule.CrontabSchedule;
 import net.sourceforge.fullsync.schedule.IntervalSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;

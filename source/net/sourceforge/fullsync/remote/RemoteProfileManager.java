@@ -1,7 +1,7 @@
 /*
  * Created on Nov 18, 2004
  */
-package net.sourceforge.fullsync.remoteinterface;
+package net.sourceforge.fullsync.remote;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;

@@ -7,7 +7,7 @@ import java.io.PrintStream;
 import java.util.Date;
 
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
-import net.sourceforge.fullsync.remoteinterface.RemoteInterfaceServer;
+import net.sourceforge.fullsync.remote.RemoteServer;
 import net.sourceforge.fullsync.ui.GuiController;
 
 import org.apache.commons.cli.CommandLine;
@@ -96,7 +96,7 @@ public class CommandLineInterpreter
 		        Logger logger = Logger.getLogger( "FullSync" );
 		        logger.addAppender( appender );
 		    }
-	    	RemoteInterfaceServer remoteServer = null;
+	    	RemoteServer remoteServer = null;
 	    	int port = 10000;
 	    	String serverURL = null;
 	    	
@@ -108,7 +108,7 @@ public class CommandLineInterpreter
 				}
 				serverURL = "rmi://localhost:"+port+"/FullSync";
 		    	
-		    	remoteServer = new RemoteInterfaceServer(profileManager);
+		    	remoteServer = new RemoteServer(profileManager);
 
 		    	LocateRegistry.createRegistry(port);	
 		    	Naming.rebind(serverURL, remoteServer);

@@ -1,7 +1,7 @@
 /*
  * Created on Nov 7, 2004
  */
-package net.sourceforge.fullsync.remoteinterface;
+package net.sourceforge.fullsync.remote;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

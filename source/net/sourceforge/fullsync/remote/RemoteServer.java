@@ -1,7 +1,7 @@
 /*
  * Created on Nov 7, 2004
  */
-package net.sourceforge.fullsync.remoteinterface;
+package net.sourceforge.fullsync.remote;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -18,7 +18,7 @@ import net.sourceforge.fullsync.ProfileManager;
  * 
  * @author Michele Aiello
  */
-public class RemoteInterfaceServer extends UnicastRemoteObject implements RemoteInterface {
+public class RemoteServer extends UnicastRemoteObject implements RemoteInterface {
 		
 	private ProfileManager profileManager;
 	
@@ -48,7 +48,7 @@ public class RemoteInterfaceServer extends UnicastRemoteObject implements Remote
 //		}
 //	}
 	
-	public RemoteInterfaceServer(ProfileManager profileManager) throws RemoteException {
+	public RemoteServer(ProfileManager profileManager) throws RemoteException {
 		this.profileManager = profileManager;
 	}
 	
