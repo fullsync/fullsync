@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE installation SYSTEM "installer/installation.dtd">
+<!DOCTYPE installation SYSTEM "resources/installer/installation.dtd">
 
 <installation version="1.0">
 	<info>
@@ -28,8 +28,8 @@
 	<resources>
 		<res id="LicencePanel.licence" src="LICENSE"/>
 		<res id="InfoPanel.info" src="RELEASE NOTES" parse="no" type="plain"/>
-        <res id="shortcutSpec.xml" src="installer/shortcut.xml"/>
-        <res id="Installer.image" src="installer/installbox.png"/>
+        <res id="shortcutSpec.xml" src="resources/installer/shortcut.xml"/>
+        <res id="Installer.image" src="resources/installer/installbox.png"/>
 	</resources>
 
     <native type="izpack" name="ShellLink.dll"/>
@@ -90,7 +90,7 @@
             <file src="build/logging.xml" targetdir="$INSTALL_PATH/"/>
             <file src="build/profiles.xml" targetdir="$INSTALL_PATH/" override="false"/>
 
-            <fileset dir="installer/logs" targetdir="$INSTALL_PATH/logs" override="false">
+            <fileset dir="resources/installer/logs" targetdir="$INSTALL_PATH/logs" override="false">
                 <exclude name="**/CVS"/>
                 <include name="readme.txt"/>
             </fileset>
