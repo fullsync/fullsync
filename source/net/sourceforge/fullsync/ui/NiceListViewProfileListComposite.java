@@ -17,7 +17,11 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -120,6 +124,8 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
     private NiceListView profileList;
     private HashMap profilesToItems;
     
+    private Menu profilesPopupMenu;
+    
     private ProfileManager profileManager;
     private ProfileListControlHandler handler;
     
@@ -136,6 +142,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
         super( parent, style );
         loadImages();
         initGui();
+        initMenu();
     }
     
     private void initGui()
@@ -151,6 +158,49 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		profileList.pack();
 		this.setLayout( new FillLayout() );
 		this.layout();
+    }
+    private void initMenu()
+    {
+        profilesPopupMenu = new Menu(getShell(), SWT.POP_UP);
+		
+		MenuItem runItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		runItem.setText("Run Profile");
+		runItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					handler.runProfile( getSelectedProfile() );
+				}
+			}
+		);
+
+		MenuItem editItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		editItem.setText("Edit Profile");
+		editItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					handler.editProfile( getSelectedProfile() );
+				}
+			}
+		);
+
+		MenuItem deleteItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		deleteItem.setText("Delete Profile");
+		deleteItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					handler.deleteProfile( getSelectedProfile() );
+				}
+			}
+		);
+		
+		MenuItem separatorItem1 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
+
+		MenuItem addItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		addItem.setText("New Profile");
+		addItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					handler.createNewProfile();
+				}
+			}
+		);
+
     }
     private void loadImages()
     {
@@ -227,6 +277,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 				ContentComposite content = new ContentComposite( item, SWT.NULL );
 				content.setProfile( p );
 				item.setContent( content );
+				item.setMenu( profilesPopupMenu );
 				updateItem( item, p );
 				
 				profilesToItems.put( p, item );

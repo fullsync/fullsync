@@ -66,6 +66,8 @@ public class NiceListViewItem extends Canvas
                 {
 			        if( !selected )
 			            ((NiceListView)getParent()).setSelected( NiceListViewItem.this );
+			        if( e.button == 3 )
+			            getMenu().setVisible( true );
                 }
 			};
 			
@@ -209,6 +211,13 @@ public class NiceListViewItem extends Canvas
 	{
 	    return compositeContent;
 	}
+	/**
+	 * @param content The composite that will be shown when the item is
+	 * 				  selectes. ATTENTION: this composite should not have
+	 * 				  any more composites, as the background color and 
+	 * 				  mouselisteners are set only on all direct children 
+	 * 				  of this composite 
+	 */
 	public void setContent( Composite content )
 	{
 	    this.compositeContent = content;
@@ -220,6 +229,19 @@ public class NiceListViewItem extends Canvas
         compositeContentLData.widthHint = 0;
         compositeContent.setLayoutData(compositeContentLData);
         compositeContent.setVisible( false );
+        
+        MouseListener ml = new MouseAdapter() {
+		    public void mouseUp( MouseEvent e )
+            {
+		        if( e.button == 3 )
+		            getMenu().setVisible( true );
+            }
+		};
+
+        compositeContent.addMouseListener( ml );
+		Control[] children = compositeContent.getChildren();
+		for( int i = 0; i < children.length; i++ )
+		    children[i].addMouseListener( ml );
 	}
 	public boolean isFocusControl()
     {

@@ -1,3 +1,5 @@
+* added -P option, taking a filename which will overwrite the default profiles.xml
+* added popup menu to nicelistview
 * added exact copy action decider
 * added way better exception reporting
 * added new profile icons in nicelistview, which is default now

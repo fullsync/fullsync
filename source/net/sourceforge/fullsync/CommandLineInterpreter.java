@@ -35,6 +35,12 @@ public class CommandLineInterpreter
 		options.addOption( "h", "help", false, "this help" );
 		options.addOption( "v", "verbose", false, "verbose output to stdout" );
 		
+		OptionBuilder.withLongOpt( "profiles-file" );
+		OptionBuilder.withDescription( "uses the specified file instead of profiles.xml" );
+		OptionBuilder.hasArg();
+		OptionBuilder.withArgName("filename");
+		options.addOption( OptionBuilder.create("P") ); 
+		
 		OptionBuilder.withLongOpt( "run" );
 		OptionBuilder.withDescription( "run the specified profile" );
 		OptionBuilder.hasArg();
@@ -43,6 +49,9 @@ public class CommandLineInterpreter
 		
 		options.addOption( "d", "daemon", false, "disables the gui and runs in daemon mode with scheduler" );
 		
+		// REVISIT somehow i don't like -p so much, but it's the standard for specifying ports.
+		// the problem is that it implies "enable remote connection" in our case what
+		// i consider more important, espec because the port is optional.
 		OptionBuilder.withLongOpt( "remoteport" );
 		OptionBuilder.withDescription( "accept incoming connection on the specified port or 10000" );
 		OptionBuilder.hasOptionalArg();
@@ -86,7 +95,11 @@ public class CommandLineInterpreter
 		    // Initialize basic facilities
 		    DOMConfigurator.configure( "logging.xml" );
 		    Preferences preferences = new ConfigurationPreferences("preferences.properties");
-		    ProfileManager profileManager = new ProfileManager( "profiles.xml" );
+		    
+		    String profilesFile = "profiles.xml";
+		    if( line.hasOption( "P" ) ) 
+		        profilesFile = line.getOptionValue("P");
+		    ProfileManager profileManager = new ProfileManager( profilesFile );
 
 		    final Synchronizer sync = new Synchronizer();
 		    

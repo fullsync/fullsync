@@ -128,29 +128,9 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 		// PopUp Menu for the Profile list.
 		Menu profilesPopupMenu = new Menu(getShell(), SWT.POP_UP);
 		
-		MenuItem addItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		addItem.setText("New Profile...");
-		addItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					handler.createNewProfile();
-				}
-			}
-		);
-
-		MenuItem separatorItem1 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);		
 		
-		MenuItem editItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		editItem.setText("Edit Profile...");
-		editItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					handler.editProfile( getSelectedProfile() );
-				}
-			}
-		);
-
 		MenuItem runItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		runItem.setText("Run Profile...");
-		runItem.setImage( TaskDecisionList.loadImage( "Button_Run.gif" ) );
+		runItem.setText("Run Profile");
 		runItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					handler.runProfile( getSelectedProfile() );
@@ -158,13 +138,31 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 			}
 		);
 
-		MenuItem separatorItem2 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
+		MenuItem editItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		editItem.setText("Edit Profile");
+		editItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					handler.editProfile( getSelectedProfile() );
+				}
+			}
+		);
 
 		MenuItem deleteItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		deleteItem.setText("Delete Profile...");
+		deleteItem.setText("Delete Profile");
 		deleteItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					handler.deleteProfile( getSelectedProfile() );
+				}
+			}
+		);
+		
+		MenuItem separatorItem1 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
+
+		MenuItem addItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
+		addItem.setText("New Profile");
+		addItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					handler.createNewProfile();
 				}
 			}
 		);
