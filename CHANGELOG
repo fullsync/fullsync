@@ -1,5 +1,5 @@
 Version 0.8.0
-(?? December 2004)
+(12 December 2004)
 
 * reduced memory consumption by using static actions in actionDeciders, static states
   in StateDecider and not saving path field in files.
