@@ -20,10 +20,6 @@ public class Task implements Serializable
     private Action[] actions;
     private int currentAction;
     
-    // REVISIT if we dont need this data here we can also create a map in the 
-    //         LogWindow class to keep track of Task-TableItem association.
-    private Object data;
-    
     private Vector children;
     
     public Task( File source, File destination, State state, Action[] actions )
@@ -103,14 +99,19 @@ public class Task implements Serializable
     	}
     	return count+1;
     }
-    
-    public Object getData() {
-    	return data;
+
+    // HACK equals and hashCode should use more fields!!! Moreover some of the fields can be null.
+    public boolean equals(Object o) {
+    	if (o instanceof Task) {
+    		Task t = (Task) o;
+    		if ((source.getName().equals(t.source.getName()))) return true;
+    	}
+    	return false;
     }
     
-    public void setData(Object data) {
-    	this.data = data;
-    }
+	public int hashCode() {
+		return source.getName().hashCode();
+	}
     
     private void writeObject(java.io.ObjectOutputStream out)
     	throws IOException

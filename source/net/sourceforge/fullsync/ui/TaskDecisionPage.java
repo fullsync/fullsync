@@ -7,6 +7,7 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.Synchronizer;
+import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
@@ -200,16 +201,16 @@ public class TaskDecisionPage implements WizardPage, Serializable
 		            			public void run() {
 		            				tasksFinished++;
 		            				labelProgress.setText( tasksFinished+" of "+tasksTotal+" tasks finished" );
-		            				// FIXME [Michele] In the remote interface the TableItem are not serialized
-		            				// We might use an "external" structure to map tasks to tableitem,
-		            				// the task in the event is serialized.
-		            				Object taskData = event.getTask().getData();
-		            				if ((taskData != null) && (taskData instanceof TableItem)) {
-		            					TableItem item = (TableItem) taskData;
-		            					if( event.isSuccessful() )
+		            				Task task = event.getTask();
+		            				TableItem item = list.getTableItemForTask(task);
+		            				if (item != null) {
+		            					if(event.isSuccessful()) {
 		            						item.setBackground(colorFinishedSuccessful);
-		            					else item.setBackground(colorFinishedUnsuccessful);
-		            					list.showItem(item);
+		            					}
+		            					else {
+		            						item.setBackground(colorFinishedUnsuccessful);
+		            					}
+		            					list.showItem(item);		            					
 		            				}
 		            			}
 		            		});
@@ -227,10 +228,7 @@ public class TaskDecisionPage implements WizardPage, Serializable
 						    dialog.getShell().dispose();
 						}
 			        } );
-					
-//			    } catch( IOException e ) {
-//			        ExceptionHandler.reportException( e );
-			    } catch( Exception e ) {
+				} catch( Exception e ) {
 			        ExceptionHandler.reportException( e );
 			    } finally {
 			        guiController.showBusyCursor( false );

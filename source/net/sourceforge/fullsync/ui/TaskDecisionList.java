@@ -1,6 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.Action;
@@ -69,6 +70,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	
 	//private GuiController guiController;
 	private TaskTree taskTree;
+	private HashMap taskItemMap;
 	
 	private boolean onlyChanges;
 	private boolean changeAllowed;
@@ -78,6 +80,9 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	public TaskDecisionList(Composite parent, int style) 
 	{
 		super(parent, style);
+		
+		this.taskItemMap = new HashMap();
+		
 		initGUI();
 		initializeImages();
 		onlyChanges = true;
@@ -364,7 +369,8 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	        item.setData( t );
 	        
 	        // putting the tableitem in the data slot of the task.
-	        t.setData(item);
+//	        t.setData(item);
+	        taskItemMap.put(t, item);
         }
         addTaskChildren( t );
     }
@@ -526,5 +532,8 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 		{
 		    showPopup( evt.x, evt.y );
 		}
+	}
+	public TableItem getTableItemForTask(Task task) {
+		return (TableItem) taskItemMap.get(task);
 	}
 }
