@@ -138,6 +138,7 @@ public class ProfileManager
     }
     public void removeProfile( String name )
     {
+    	profiles.remove(name);
         fireProfilesChangeEvent();
     }
     public Enumeration getProfiles()
