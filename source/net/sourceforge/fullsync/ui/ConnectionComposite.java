@@ -154,7 +154,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 		boolean useRemoteListener = !cbDisableRemoteListener.getSelection();
 		
 		try {
-		    GuiController.getInstance().getProfileManager().stopTimer();
+		    GuiController.getInstance().getProfileManager().stopScheduler();
 			RemoteManager remoteManager = new RemoteManager(hostname, port, password);
 			remoteManager.setUseRemoteListener(useRemoteListener);
 			GuiController.getInstance().getProfileManager().setRemoteConnection(remoteManager);

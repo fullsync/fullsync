@@ -78,12 +78,14 @@
         <rmic classname="net.sourceforge.fullsync.remote.RemoteServer" base="${classes.dir}" classpathref="classpath"/>
         <rmic classname="net.sourceforge.fullsync.remote.RemoteTaskFinishedListener" base="${classes.dir}" classpathref="classpath"/>
         <rmic classname="net.sourceforge.fullsync.remote.RemoteProfileListChangeListener" base="${classes.dir}" classpathref="classpath"/>
+        <rmic classname="net.sourceforge.fullsync.remote.RemoteSchedulerChangeListener" base="${classes.dir}" classpathref="classpath"/>
     </target>
 
     <target name="rmic-eclipse" description="RMIC compiler for classes used by the IDE">
         <rmic classname="net.sourceforge.fullsync.remote.RemoteServer" base="${basedir}/classes" classpathref="classpath"/>
         <rmic classname="net.sourceforge.fullsync.remote.RemoteTaskFinishedListener" base="${basedir}/classes" classpathref="classpath"/>
         <rmic classname="net.sourceforge.fullsync.remote.RemoteProfileListChangeListener" base="${basedir}/classes" classpathref="classpath"/>
+        <rmic classname="net.sourceforge.fullsync.remote.RemoteSchedulerChangeListener" base="${basedir}/classes" classpathref="classpath"/>
     </target>
 
 	<target name="javadoc">

@@ -4,10 +4,6 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -17,10 +13,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 
-public class NiceListViewItem extends Canvas 
+public class NiceListViewItem extends Canvas implements Listener
 {
+    private NiceListView parent;
+    
     private Label labelIcon;
     private Label labelCaption;
     private Label labelStatus;
@@ -29,63 +29,45 @@ public class NiceListViewItem extends Canvas
     private Color colorDefault;
     private Color colorHover;
     private Color colorSelectedDefault;
-    private Color colorSelectedHover;
+    private Color colorSelectedFocus;
     
     private ProfileListControlHandler handler;
     private Profile profile;
     
+    private boolean mouseOver;
+    private boolean hasFocus;
     private boolean selected;
 
 	public NiceListViewItem(NiceListView parent, int style) 
 	{
 		super(parent, style);
+		this.parent = parent;
 		
 		colorDefault = getDisplay().getSystemColor( SWT.COLOR_WHITE );
 		colorHover = new Color( getDisplay(), 248, 252, 255 );
-		colorSelectedDefault = new Color( getDisplay(), 230, 240, 255 );
-		colorSelectedHover = new Color( getDisplay(), 230, 240, 255 );
+		colorSelectedDefault = new Color( getDisplay(), 236, 233, 216 );
+		colorSelectedFocus = new Color( getDisplay(), 230, 240, 255 );
 		
 		initGUI();
-		selected = false;
 	}
 
 	private void initGUI() 
 	{
 		try {
-			MouseTrackListener mouseTrackListener = new MouseTrackListener() {
-		    	public void mouseExit(MouseEvent evt) {
-		    	    setBackground( selected?colorSelectedDefault:colorDefault );
-		    	    
-		        }
-		        public void mouseEnter(MouseEvent evt) {
-		            setBackground( selected?colorSelectedHover:colorHover );
-		        }
-		        public void mouseHover( MouseEvent e )
-		        {
-		        }
-			};
-
-			MouseListener mouseListener = new MouseAdapter() {
-			    public void mouseUp( MouseEvent e )
-                {
-			        if( !selected )
-			            ((NiceListView)getParent()).setSelected( NiceListViewItem.this );
-			        if( e.button == 3 )
-			            getMenu().setVisible( true );
-                }
-				public void mouseDoubleClick(MouseEvent e) {
-					handler.editProfile(profile);
-				}
-			};
-			
 			GridData layoutData = new GridData();
 			layoutData.grabExcessHorizontalSpace = true;
 			layoutData.horizontalAlignment = GridData.FILL;
 			this.setLayoutData( layoutData );
 			
 			GridLayout thisLayout = new GridLayout();
-            this.addMouseTrackListener( mouseTrackListener );
-            this.addMouseListener( mouseListener );
+            this.addListener( SWT.MouseEnter, this );
+            this.addListener( SWT.MouseExit, this );
+            this.addListener( SWT.MouseUp, this );
+            this.addListener( SWT.MouseDown, this );
+            this.addListener( SWT.MouseDoubleClick, this );
+            this.addListener( SWT.KeyDown, this );
+            this.addListener( SWT.FocusIn, this );
+            this.addListener( SWT.FocusOut, this );
 			this.setLayout(thisLayout);
 			thisLayout.numColumns = 3;
 			thisLayout.marginHeight = 3;
@@ -101,8 +83,11 @@ public class NiceListViewItem extends Canvas
 			    labelIconLData.widthHint = 16;
 			    labelIconLData.heightHint = 16;
 			    labelIcon.setLayoutData(labelIconLData);
-			    labelIcon.addMouseTrackListener( mouseTrackListener );
-			    labelIcon.addMouseListener( mouseListener );
+	            labelIcon.addListener( SWT.MouseEnter, this );
+	            labelIcon.addListener( SWT.MouseExit, this );
+	            labelIcon.addListener( SWT.MouseUp, this );
+	            labelIcon.addListener( SWT.MouseDown, this );
+	            labelIcon.addListener( SWT.MouseDoubleClick, this );
 			}
             {
                 labelCaption = new Label(this, SWT.NULL);
@@ -113,8 +98,11 @@ public class NiceListViewItem extends Canvas
                 labelCaptionLData.widthHint = -1;
                 labelCaptionLData.heightHint = 14;
                 labelCaption.setLayoutData(labelCaptionLData);
-                labelCaption.addMouseTrackListener( mouseTrackListener );
-                labelCaption.addMouseListener( mouseListener );
+	            labelCaption.addListener( SWT.MouseEnter, this );
+	            labelCaption.addListener( SWT.MouseExit, this );
+	            labelCaption.addListener( SWT.MouseUp, this );
+	            labelCaption.addListener( SWT.MouseDown, this );
+	            labelCaption.addListener( SWT.MouseDoubleClick, this );
             }
             {
                 labelStatus = new Label(this, SWT.NONE);
@@ -124,8 +112,11 @@ public class NiceListViewItem extends Canvas
                 labelStatusLData.horizontalAlignment = GridData.FILL;
                 labelStatusLData.horizontalIndent = 10;
                 labelStatus.setLayoutData(labelStatusLData);
-                labelStatus.addMouseTrackListener( mouseTrackListener );
-                labelStatus.addMouseListener( mouseListener );
+                labelStatus.addListener( SWT.MouseEnter, this );
+                labelStatus.addListener( SWT.MouseExit, this );
+                labelStatus.addListener( SWT.MouseUp, this );
+                labelStatus.addListener( SWT.MouseDown, this );
+	            labelStatus.addListener( SWT.MouseDoubleClick, this );
             }
             /*
             {
@@ -150,6 +141,42 @@ public class NiceListViewItem extends Canvas
 			ExceptionHandler.reportException( e );
 		}
 	}
+	public void handleEvent( Event event )
+    {
+	    switch( event.type )
+	    {
+	    case SWT.MouseEnter:
+	        mouseOver = true;
+	    	updateBackground();
+	    	break;
+	    case SWT.MouseExit:
+	        mouseOver = false;
+	    	updateBackground();
+	    	break;
+	    case SWT.MouseDown:
+	    	parent.setSelected( NiceListViewItem.this );
+	    	break;
+	    case SWT.MouseUp:
+	        if( event.button == 3 )
+	            getMenu().setVisible( true );
+	        break;
+	    case SWT.MouseDoubleClick:
+	        handler.editProfile(profile);
+	    	break;
+	    case SWT.KeyDown:
+	        parent.handleEvent( event );
+	    	break;
+	    case SWT.FocusIn:
+	        hasFocus = true;
+	    	updateBackground();
+	    	break;
+	    case SWT.FocusOut:
+	        hasFocus = false;
+	    	updateBackground();
+	    	break;
+		};
+
+    }
 	
 	public void setBackground( Color color )
 	{
@@ -168,6 +195,19 @@ public class NiceListViewItem extends Canvas
 			for( int i = 0; i < children.length; i++ )
 			    children[i].setBackground( color );
 		}
+	}
+	public void updateBackground()
+	{
+	    if( selected )
+	    {
+	        if( hasFocus )
+	             setBackground( colorSelectedFocus );
+	        else setBackground( colorSelectedDefault );
+	    } else if( mouseOver ) {
+	        setBackground( colorHover );
+	    } else {
+	        setBackground( colorDefault );
+	    }
 	}
 
 	public void setImage( Image image )
@@ -198,20 +238,20 @@ public class NiceListViewItem extends Canvas
 	{
 	    if( selected )
 	    {
-	        setBackground( colorSelectedHover );
+	        forceFocus();
 	        compositeContent.setVisible( true );
 	        Point size = compositeContent.computeSize( SWT.DEFAULT, SWT.DEFAULT );
 	        ((GridData)compositeContent.getLayoutData()).widthHint = size.x;
 	        ((GridData)compositeContent.getLayoutData()).heightHint = size.y;
 	        //labelCaption.setFocus();
-	        this.setFocus();
+	        //this.setFocus();
 	    } else {
-	        setBackground( colorDefault );
 	        compositeContent.setVisible( false );
 	        ((GridData)compositeContent.getLayoutData()).widthHint = 0;
 	        ((GridData)compositeContent.getLayoutData()).heightHint = 0;
 	    }
 	    this.selected = selected;
+        updateBackground();
 	    this.layout();
 	}
 	public Composite getContent()
@@ -236,27 +276,22 @@ public class NiceListViewItem extends Canvas
         compositeContentLData.widthHint = 0;
         compositeContent.setLayoutData(compositeContentLData);
         compositeContent.setVisible( false );
-        
-        MouseListener ml = new MouseAdapter() {
-		    public void mouseUp( MouseEvent e )
-            {
-		        if( e.button == 3 )
-		            getMenu().setVisible( true );
-            }
-			public void mouseDoubleClick(MouseEvent e) {
-				handler.editProfile(profile);
-			}
-		};
-
-        compositeContent.addMouseListener( ml );
+        compositeContent.addListener( SWT.MouseDoubleClick, this );
+        compositeContent.addListener( SWT.MouseUp, this );
+        compositeContent.addListener( SWT.MouseDown, this );
 		Control[] children = compositeContent.getChildren();
 		for( int i = 0; i < children.length; i++ )
-		    children[i].addMouseListener( ml );
+		{
+		    children[i].addListener( SWT.MouseDoubleClick, this );
+		    children[i].addListener( SWT.MouseUp, this );
+		    children[i].addListener( SWT.MouseDown, this );
+		}
 	}
+	/*
 	public boolean isFocusControl()
     {
         return true;
-    }
+    }*/
     public ProfileListControlHandler getHandler()
     {
         return handler;

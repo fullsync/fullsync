@@ -27,11 +27,17 @@ public interface RemoteInterface extends Remote {
 	
 	void removeProfileListChangeListener (RemoteProfileListChangeListenerInterface listener) throws RemoteException;
 	
+	void addSchedulerChangeListener(RemoteSchedulerChangeListenerInterface remotelistener) throws RemoteException;
+	
+	void removeSchedulerChangeListener(RemoteSchedulerChangeListenerInterface remotelistener) throws RemoteException;
+	
 	void runProfile(String name) throws RemoteException;
 
 	void startTimer() throws RemoteException;
 	
 	void stopTimer() throws RemoteException;
+	
+	boolean isSchedulerEnabled() throws RemoteException;
 	
 	TaskTree executeProfile(String name) throws RemoteException;
 	

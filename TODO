@@ -211,11 +211,11 @@ Release-critical:
    	[X] if scheduling is changed we need to refresh the timer
    	[X] show correct number of tasks to do in taskDecider window
 	[X] show icons in profile list popups
+	[X] get rid of gifs, so we only use one patentfree format ;)
 	[X] set serialVersionIds... otherwise we'll have huge problems releasing 
 		patches even if not a single serializeable object has changed.
-	[X] get rid of gifs, so we only use one patentfree format ;)
 	[X] propagate updates of server profiles to client-gui
-	[ ] enable/disable certain menu items if not available
+	[X] timer still creating/stopping thread?
 	
 GraphicsTodo:
 	[X] a clock icon for the scheduler
@@ -223,13 +223,17 @@ GraphicsTodo:
 	[X] an icon for remote connection (startup / being connected)
 	[X] a wizard image for starting a remote connection
 	[ ] some different images for start scheduler and stop scheduler
-	[ ] an icon to indicate fullsync is in remote listening mode (?)
 
 Remote:
 	[X] make scheduler available via remote interface
 	[ ] password for connection
+	[ ] close gui while being connected doesn't remove listeners :-/
 
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
+
+Small Things:
+	[ ] enable/disable certain menu items if not available
+	[ ] an icon to indicate fullsync is in remote listening mode (?)
 
 Linux:
 	[ ] popups of taskdecision dialog are pretty high (about twice the normal height)

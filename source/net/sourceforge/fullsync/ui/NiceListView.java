@@ -13,6 +13,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 /**
 * This code was generated using CloudGarden's Jigloo
 * SWT/Swing GUI Builder, which is free for non-commercial
@@ -27,14 +29,11 @@ import org.eclipse.swt.widgets.Control;
 * for any corporate or commercial purpose.
 * *************************************
 */
-public class NiceListView extends Composite 
+public class NiceListView extends Composite implements Listener
 {
 	private NiceListViewItem selected;
 	
-	public boolean isFocusControl()
-    {
-        return true;
-    }
+	
 	public NiceListView(org.eclipse.swt.widgets.Composite parent, int style) 
 	{
 		super(parent, style );
@@ -61,6 +60,26 @@ public class NiceListView extends Composite
 		});
 		initGUI();
 	}
+	
+	public void handleEvent( Event event )
+    {
+	    switch( event.type )
+	    {
+	    case SWT.KeyDown:
+	    	switch( event.keyCode )
+	    	{
+	    	case SWT.ARROW_UP:
+	    	case SWT.ARROW_DOWN:
+		        Control[] children = getChildren();
+		    	int index = Arrays.asList(children).indexOf( selected );
+		    	if( event.keyCode == SWT.ARROW_UP && index > 0 )
+		    	    setSelected( (NiceListViewItem)children[index-1] );
+		    	else if( event.keyCode == SWT.ARROW_DOWN && index+1 < children.length )
+		    	    setSelected( (NiceListViewItem)children[index+1] );
+		    	break;
+	    	}
+	    }
+    }
 
 	private void initGUI() {
 		try {
@@ -83,6 +102,11 @@ public class NiceListView extends Composite
 
 	public void setSelected( NiceListViewItem item )
 	{
+	    if( item == selected )
+	    {
+	        selected.forceFocus();
+	        return;
+	    }
 	    Control[] children = this.getChildren();
 	    for( int i = 0; i < children.length; i++ )
 	    {
@@ -94,6 +118,31 @@ public class NiceListView extends Composite
 	    this.setSize( this.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 	    this.layout();
 	}
+	
+	public boolean setFocus() 
+	{
+	    if( selected != null )
+	    {
+	        selected.forceFocus();
+	        return true;
+	    }
+		Control[] cs= getChildren();
+		/*
+		for (int i= 0; i < cs.length; i++) {
+			NiceListViewItem ji= (NiceListViewItem) cs[i];
+			if( ji.isSelected() ) {
+				ji.forceFocus();
+				return;
+			}
+		}*/
+		if (cs.length > 0)
+		{
+			cs[0].forceFocus();
+			return true;
+		} else {
+		    return false;
+		}
+    }
 	
 	public void clear()
 	{

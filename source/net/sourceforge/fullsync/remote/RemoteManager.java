@@ -15,6 +15,7 @@ import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 
 /**
  * @author Michele Aiello
@@ -69,6 +70,21 @@ public class RemoteManager {
 		remoteInterface.removeProfileListChangeListener(remoteListener);
 	}
 	
+	public void addSchedulerChangeListener(SchedulerChangeListener listener)
+		throws RemoteException
+	{
+		RemoteSchedulerChangeListener remoteListener = new RemoteSchedulerChangeListener(listener);
+		remoteInterface.addSchedulerChangeListener(remoteListener);
+		listenersMap.put(listener, remoteListener);
+	}
+	
+	public void removeSchedulerChangeListener (SchedulerChangeListener listener)
+		throws RemoteException
+	{
+		RemoteSchedulerChangeListener remoteListener = (RemoteSchedulerChangeListener) listenersMap.remove(listener);
+		remoteInterface.removeSchedulerChangeListener(remoteListener);
+	}
+	
 	public void runProfile(String name) throws RemoteException {
 		remoteInterface.runProfile(name);
 	}
@@ -87,6 +103,15 @@ public class RemoteManager {
 		} catch (RemoteException e) {
 			ExceptionHandler.reportException( e );
 		}
+	}
+	
+	public boolean isSchedulerEnabled() {
+	    try {
+	        return remoteInterface.isSchedulerEnabled();
+	    } catch( RemoteException e ) {
+	        ExceptionHandler.reportException( e );
+	        return false;
+	    }
 	}
 	
 	public TaskTree executeProfile(String name) throws RemoteException {

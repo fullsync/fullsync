@@ -181,12 +181,12 @@ public class CommandLineInterpreter
                         }
                     }
 		        } );
-		    	profileManager.startTimer();
-		    	
+		    	profileManager.startScheduler();
+		    	/*
 		    	Object mutex = new Object();
 		    	synchronized (mutex) {
 		    		mutex.wait();
-		    	}
+		    	}*/
 		    } else {
 		    	try {
 		    		GuiController guiController = new GuiController( preferences, profileManager, sync );

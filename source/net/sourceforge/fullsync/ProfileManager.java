@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -25,6 +24,11 @@ import net.sourceforge.fullsync.remote.RemoteManager;
 import net.sourceforge.fullsync.schedule.CrontabSchedule;
 import net.sourceforge.fullsync.schedule.IntervalSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
+import net.sourceforge.fullsync.schedule.ScheduleTask;
+import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
+import net.sourceforge.fullsync.schedule.Scheduler;
+import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
+import net.sourceforge.fullsync.schedule.SchedulerImpl;
 
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
@@ -34,20 +38,25 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+
+// TODO remove schedulerChangeListener
 /**
  * A ProfileManager handles persistence of Profiles and provides
  * a scheduler for creating events when a Profile should be executed.
  *  
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class ProfileManager implements ProfileChangeListener
+public class ProfileManager 
+	implements ProfileChangeListener, ScheduleTaskSource, SchedulerChangeListener
 {
-	class ProfileManagerTimerTask extends TimerTask
+	class ProfileManagerSchedulerTask implements ScheduleTask
 	{
 		private Profile profile;
-		public ProfileManagerTimerTask( Profile p ) 
+		private long executionTime;
+		public ProfileManagerSchedulerTask( Profile profile, long executionTime ) 
 		{
-			this.profile = p;
+			this.profile = profile;
+			this.executionTime = executionTime;
 		}
 		public void run() 
 		{
@@ -59,8 +68,11 @@ public class ProfileManager implements ProfileChangeListener
 			} );
 			worker.start();
 			profile.getSchedule().update();
-			updateTimer();
 		}
+		public long getExecutionTime()
+        {
+            return executionTime;
+        }
 	}
 	
 	
@@ -68,9 +80,14 @@ public class ProfileManager implements ProfileChangeListener
     protected Vector profiles;
     private Vector changeListeners;
     private Vector scheduleListeners;
-    private Vector timerListeners;
-    private Timer timer;
-    private boolean timerActive;
+
+    // FIXME this list is only needed because we need to give feedback from
+    //		 the local scheduler and a remote scheduler.
+    private Vector schedulerChangeListeners;
+
+    // TODO  the scheduler shouldn't reside within the profile manager
+    //       but just use it as task source
+    private Scheduler scheduler;
 
     // FIXME omg, a profilemanager having a remoteprofilemanager?
     //       please make a dao of me, with save/load and that's it
@@ -79,22 +96,21 @@ public class ProfileManager implements ProfileChangeListener
     private ProfileListChangeListener remoteListener;
     private Timer updateTimer;
     
-    protected ProfileManager() {
+    protected ProfileManager() 
+    {
+        this.profiles = new Vector();
         this.changeListeners = new Vector();
         this.scheduleListeners = new Vector();
-        this.timerListeners = new Vector();
-        this.timerActive = false;
+        this.schedulerChangeListeners = new Vector();
+        this.scheduler = new SchedulerImpl( this );
+        this.scheduler.addSchedulerChangeListener( this );
     }
     
     public ProfileManager( String configFile ) throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError
     {
+        this();
         this.configFile = configFile;
-        this.profiles = new Vector();
-        this.changeListeners = new Vector();
-        this.scheduleListeners = new Vector();
-        this.timerListeners = new Vector();
-        this.timerActive = false;
-        
+
         loadProfiles();
         
         /*
@@ -141,7 +157,9 @@ public class ProfileManager implements ProfileChangeListener
 			}
     	};
     	remoteManager.addProfileListChangeListener(remoteListener);
+    	remoteManager.addSchedulerChangeListener(this);
     	updateRemoteProfiles();
+    	fireSchedulerChangedEvent();
     	
 //    	updateTimer = new Timer(true);
 //    	updateTimer.scheduleAtFixedRate(new TimerTask() {
@@ -166,6 +184,7 @@ public class ProfileManager implements ProfileChangeListener
     public void disconnectRemote() {
     	try {
 			remoteManager.removeProfileListChangeListener(remoteListener);
+			remoteManager.removeSchedulerChangeListener(this);
 		} catch (RemoteException e) {
 			ExceptionHandler.reportException( e );
 		}
@@ -181,21 +200,11 @@ public class ProfileManager implements ProfileChangeListener
         
         try {
 			loadProfiles();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			ExceptionHandler.reportException( e );
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			ExceptionHandler.reportException( e );
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			ExceptionHandler.reportException( e );
-		} catch (FactoryConfigurationError e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			ExceptionHandler.reportException( e );
 		}
-		
-        fireProfilesChangeEvent();
+		fireProfilesChangeEvent();
     }
     
     public boolean isConnected() {
@@ -259,20 +268,34 @@ public class ProfileManager implements ProfileChangeListener
         }
         return null;
     }
-    public void startTimer()
+    public void startScheduler()
     {
-    	if (remoteManager != null) {
+    	if (remoteManager != null) 
+    	{
     		remoteManager.startTimer();
-    		timerActive = true;
+    	} else {
+    		scheduler.start();
     	}
-    	else {
-    		timerActive = true;
-    		timer = new Timer( true);
-    		updateTimer();
-    	}
-    	fireTimerChangedEvent(timerActive);
     }
-    void updateTimer()
+    public void stopScheduler()
+    {
+    	if (remoteManager != null) 
+    	{
+    		remoteManager.stopTimer();
+    	} else {
+    		scheduler.stop();
+    	}
+    }
+    public boolean isSchedulerEnabled()
+    {
+        if( remoteManager != null )
+        {
+            return remoteManager.isSchedulerEnabled();
+        } else {
+            return scheduler.isEnabled();
+        }
+    }
+    public ScheduleTask getNextScheduleTask()
     {
         long now = System.currentTimeMillis();
     	long nextTime = Long.MAX_VALUE;
@@ -296,29 +319,10 @@ public class ProfileManager implements ProfileChangeListener
     	
     	if( nextProfile != null )
     	{
-    		timer.schedule( 
-    				new ProfileManagerTimerTask( nextProfile ),
-					new Date( nextTime ) );
+    		return new ProfileManagerSchedulerTask( nextProfile, nextTime );
+    	} else {
+    	    return null;
     	}
-    }
-    public boolean isTimerEnabled()
-    {
-        return timerActive;
-    }
-    public void stopTimer()
-    {
-    	if (remoteManager != null) {
-    		remoteManager.stopTimer();
-			timerActive = false;
-    	}
-    	else {
-    		if( timerActive )
-    		{
-    			timerActive = false;
-    			timer.cancel();
-    		}
-    	}
-    	fireTimerChangedEvent(timerActive);
     }
     public void addProfilesChangeListener( ProfileListChangeListener listener )
     {
@@ -335,12 +339,7 @@ public class ProfileManager implements ProfileChangeListener
     }
     public void profileChanged( Profile profile )
     {
-        if( isTimerEnabled() )
-        {
-            stopTimer();
-            startTimer();
-        }
-        
+        scheduler.refresh();
         for( int i = 0; i < changeListeners.size(); i++ )
             ((ProfileListChangeListener)changeListeners.get( i )).profileChanged( profile );
     }
@@ -357,15 +356,31 @@ public class ProfileManager implements ProfileChangeListener
         for( int i = 0; i < scheduleListeners.size(); i++ )
             ((ProfileSchedulerListener)scheduleListeners.get( i )).profileExecutionScheduled( profile );
     }
-    public void addTimerListener(TimerUpdateListener listener) {
-    	timerListeners.add(listener);
+    /*
+    public void addSchedulerChangeListener(SchedulerChangeListener listener) {
+    	scheduler.addSchedulerChangeListener(listener);
     }
-    public void removeTimerListener(TimerUpdateListener listener) {
-    	timerListeners.remove(listener);
+    public void removeSchedulerChangeListener(SchedulerChangeListener listener) {
+    	scheduler.removeSchedulerChangeListener(listener);
     }
-    protected void fireTimerChangedEvent(boolean status) {
-    	for (int i = 0; i < timerListeners.size(); i++) {
-    		((TimerUpdateListener)timerListeners.get(i)).timerStatusChanged(status);
+    */
+    public void schedulerStatusChanged( boolean status )
+    {
+        fireSchedulerChangedEvent();
+    }
+    public void addSchedulerChangeListener(SchedulerChangeListener listener) 
+	{
+    	schedulerChangeListeners.add(listener);
+    }
+    public void removeSchedulerChangeListener(SchedulerChangeListener listener) 
+    {
+    	schedulerChangeListeners.remove(listener);
+    }
+    protected void fireSchedulerChangedEvent() 
+    {
+        boolean enabled = isSchedulerEnabled();
+    	for (int i = 0; i < schedulerChangeListeners.size(); i++) {
+    		((SchedulerChangeListener)schedulerChangeListeners.get(i)).schedulerStatusChanged(enabled);
     	}
     }
     protected ConnectionDescription unserializeConnectionDescription( Element element )

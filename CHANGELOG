@@ -1,3 +1,5 @@
+* extracted scheduler from profile manager, it's still too tightly connected
+  as the remote stuff is like a second scheduler both encapsuled by the profile manager
 * improved remote interface. now almost every feature of fullsync is available using the remote interface
 * added -P option, taking a filename which will overwrite the default profiles.xml
 * added popup menu to nicelistview

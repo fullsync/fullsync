@@ -10,8 +10,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
-
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
@@ -21,6 +19,9 @@ import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
+
+import org.apache.log4j.Logger;
 
 /**
  * This class is the server for remote connections.
@@ -103,7 +104,31 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 		ProfileListChangeListener listener = (ProfileListChangeListener) listenersMap.remove(remoteListener);
 		profileManager.removeProfilesChangeListener(listener);
 	}
-
+	
+	public void addSchedulerChangeListener(final RemoteSchedulerChangeListenerInterface remotelistener)
+		throws RemoteException 
+	{
+	    SchedulerChangeListener listener = new SchedulerChangeListener() {
+	        public void schedulerStatusChanged( boolean status )
+            {
+	            try {
+					remotelistener.schedulerStatusChanged( status );
+				} catch (RemoteException e) {
+	//				ExceptionHandler.reportException(e);
+				}
+			}
+		};
+		profileManager.addSchedulerChangeListener(listener);
+		listenersMap.put(remotelistener, listener);
+	}
+	
+	public void removeSchedulerChangeListener (RemoteSchedulerChangeListenerInterface remoteListener) 
+		throws RemoteException
+	{
+	    SchedulerChangeListener listener = (SchedulerChangeListener) listenersMap.remove(remoteListener);
+		profileManager.removeSchedulerChangeListener(listener);
+	}
+	
 	
 	public void runProfile(String name) throws RemoteException {
 		Profile p = profileManager.getProfile(name);
@@ -114,12 +139,17 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	}
 	
 	public void startTimer() throws RemoteException {
-		profileManager.startTimer();
+		profileManager.startScheduler();
 	}
 	
 	public void stopTimer() throws RemoteException {
-		profileManager.stopTimer();
+		profileManager.stopScheduler();
 	}
+	
+	public boolean isSchedulerEnabled() throws RemoteException
+    {
+        return profileManager.isSchedulerEnabled();
+    }
 	
 	public TaskTree executeProfile(String name) throws RemoteException {
 		Profile p = profileManager.getProfile(name);
