@@ -200,6 +200,7 @@ Release-critical:
    		the types a little
    	[X] if scheduling is changed we need to refresh the timer
    	[ ] show correct number of tasks to do in taskDecider window
+	[ ] show icons in profile list popups
 
 Sheduler:
 	[X] add some simple stuff to the profile (interval, enabled and errorflag 
@@ -210,6 +211,15 @@ Sheduler:
 Remote:
 	[ ] password for connection
 	[ ] make scheduler available via remote interface
+
+Linux:
+	[ ] popups of taskdecision dialog are pretty high (about twice the normal height)
+	[ ] some fonts are wrong: task decision: choose is smaller than source...
+		the latter one looks like a standard font
+	[ ] filter combo of task dec is too small (width)
+	[ ] nicelistview: all non bold fonts look rather large
+	[ ] about dialog has no picture and no buttons!? but splash works
+	[ ] preferences... layout is pretty bad
 
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
 

@@ -269,9 +269,6 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                         }
                    }
                 });
-                comboType.add( "Publish/Update" );
-                comboType.add( "Backup Copy" );
-                comboType.add( "Exact Copy" );
             }
             {
                 labelTypeDescription = new Label(this, SWT.WRAP);
@@ -431,6 +428,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     }
                 }
             }
+            comboType.add( "Publish/Update" );
+            comboType.add( "Backup Copy" );
+            comboType.add( "Exact Copy" );
 			this.layout();
 			this.setSize(500, 400);
 	
