@@ -1,3 +1,4 @@
+* added FullSync Installer for Windows and Linux systems (patch by michele)
 * fixed not correct file comparison and last modified update
   changes seem to generate a lot of new updates !?
 * added systemtray showing activity

@@ -44,7 +44,7 @@
 </skeletonProperties>
 <skeletonProperties>
 <key>SingleProcess</key>
-<value>0</value>
+<value>1</value>
 </skeletonProperties>
 <skeletonProperties>
 <key>Debug</key>
