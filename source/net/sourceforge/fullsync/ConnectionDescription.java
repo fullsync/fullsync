@@ -1,12 +1,13 @@
 package net.sourceforge.fullsync;
 
+import java.io.Serializable;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class ConnectionDescription
+public class ConnectionDescription implements Serializable
 {
     private String uri;
     private String bufferStrategy;

@@ -594,6 +594,10 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			simplyfiedOptionsGroup.setEnabled(true);
 			deleteOnDestinationButton.setEnabled(true);
 			syncSubsButton.setEnabled(true);
+			label13.setEnabled(true);
+			label14.setEnabled(true);
+			textAcceptPattern.setEnabled(true);
+			textIgnorePatter.setEnabled(true);
 		}
 		else {
 			advancedRuleOptionsGroup.setEnabled(true);
@@ -602,6 +606,10 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			simplyfiedOptionsGroup.setEnabled(false);
 			deleteOnDestinationButton.setEnabled(false);
 			syncSubsButton.setEnabled(false);
+			label13.setEnabled(false);
+			label14.setEnabled(false);
+			textAcceptPattern.setEnabled(false);
+			textIgnorePatter.setEnabled(false);
 		}
 		
 	}

@@ -145,7 +145,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 			return new State(State.FileChange, Location.None);
 		}
 
-		if (src.getLastModified() > dst.getLastModified()) {
+		if (Math.round(src.getLastModified()/1000.0) > Math.round(dst.getLastModified()/1000.0)) {
 			return new State(State.FileChange, Location.Source);
 		} else if (src.getLastModified() < dst.getLastModified()){
 		    return new State(State.FileChange, Location.Destination);
@@ -160,7 +160,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	public RuleSet createChild(File src, File dst) throws FileSystemException,
 			DataParseException 
 	{
-	    // TODO even simple sync rules should allow overwrite rules
+	    // TODO even simple sync rules should allow override rules
 		return this;
 	}
 	

@@ -3,18 +3,49 @@
  */
 package net.sourceforge.fullsync.impl;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 
 /**
  * @author Michele Aiello
  */
-public class AdvancedRuleSetDescriptor implements RuleSetDescriptor {
+public class AdvancedRuleSetDescriptor extends RuleSetDescriptor {
 
 	private String ruleSetName;
 	
+	public AdvancedRuleSetDescriptor() {
+		
+	}
+	
 	public AdvancedRuleSetDescriptor(String ruleSetName) {
 		this.ruleSetName = ruleSetName;
+	}
+	
+	/** (non-Javadoc)
+	 * @see net.sourceforge.fullsync.RuleSetDescriptor#getType()
+	 */
+	public String getType() {
+		return "advanced";
+	}
+	
+	/** (non-Javadoc)
+	 * @see net.sourceforge.fullsync.RuleSetDescriptor#serialize(org.w3c.dom.Document)
+	 */
+	public Element serialize(Document document) {
+		Element advancedRuleSetElement = document.createElement("AdvancedRuleSet");
+		advancedRuleSetElement.setAttribute("name", getRuleSetName());
+		return advancedRuleSetElement;
+	}
+	
+	/** (non-Javadoc)
+	 * @see net.sourceforge.fullsync.RuleSetDescriptor#unserializeDescriptor(org.w3c.dom.Element)
+	 */
+	protected void unserializeDescriptor(Element element) {
+		Element ruleSetNameElement = (Element)element.getElementsByTagName("AdvancedRuleSet").item(0);
+		ruleSetName = ruleSetNameElement.getAttribute("name");
 	}
 	
 	/**

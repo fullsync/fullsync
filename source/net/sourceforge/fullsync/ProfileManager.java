@@ -19,7 +19,6 @@ import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
-import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 import net.sourceforge.fullsync.schedule.CrontabSchedule;
 import net.sourceforge.fullsync.schedule.IntervalSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
@@ -69,6 +68,12 @@ public class ProfileManager implements ProfileChangeListener
     private Vector scheduleListeners;
     private Timer timer;
     private boolean timerActive;
+    
+    protected ProfileManager() {
+        this.changeListeners = new Vector();
+        this.scheduleListeners = new Vector();
+        this.timerActive = false;
+    }
     
     public ProfileManager( String configFile ) throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError
     {
@@ -291,26 +296,7 @@ public class ProfileManager implements ProfileChangeListener
     		// REVISIT backward compatibility for profiles with an empty RuleSet.
     		return new AdvancedRuleSetDescriptor("");
     	}
-    	RuleSetDescriptor descriptor = null;
-    	String ruleSetType = element.getAttribute("type");
-    	if (ruleSetType.equals("simple")) {
-    		NodeList ruleSetConfigNodeList = element.getElementsByTagName("SimpleRuleSet");
-    		if (ruleSetConfigNodeList.getLength() == 0) {
-    			descriptor = new SimplyfiedRuleSetDescriptor(true, false, "", "");
-    		}
-    		else {
-    			Element simpleRuleSetConfigElement = (Element)ruleSetConfigNodeList.item(0);
-    			boolean syncSubs = Boolean.valueOf(simpleRuleSetConfigElement.getAttribute("syncSubs")).booleanValue();
-    			boolean deleteOnDest = Boolean.valueOf(simpleRuleSetConfigElement.getAttribute("deleteOnDestination")).booleanValue();
-    			String ignorePattern = simpleRuleSetConfigElement.getAttribute("ignorePattern");
-    			String takePattern = simpleRuleSetConfigElement.getAttribute("takePattern");
-    			descriptor = new SimplyfiedRuleSetDescriptor(syncSubs, deleteOnDest, ignorePattern, takePattern);
-    		}
-    	}
-    	else {
-    		Element ruleSetNameElement = (Element)element.getElementsByTagName("AdvancedRuleSet").item(0);
-    		descriptor = new AdvancedRuleSetDescriptor(ruleSetNameElement.getAttribute("name"));
-    	}
+    	RuleSetDescriptor descriptor = RuleSetDescriptor.unserialize(element);
     	return descriptor;
     }
     
@@ -368,24 +354,10 @@ public class ProfileManager implements ProfileChangeListener
     }
     protected Element serialize( RuleSetDescriptor desc, String name, Document doc ) {
     	Element elem = doc.createElement( name );
-    	// TODO [Michele] soon I'll move the serialization for each descriptor type in the descriptor itself.
-    	if (desc instanceof SimplyfiedRuleSetDescriptor) {
-    		SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor)desc;
-    		elem.setAttribute("type", "simple");
-    		Element simpleRuleSetElement = doc.createElement("SimpleRuleSet");
-    		simpleRuleSetElement.setAttribute("syncSubs", String.valueOf(simpleDesc.isSyncSubDirs()));
-    		simpleRuleSetElement.setAttribute("deleteOnDestination", String.valueOf(simpleDesc.isDeleteOnDestination()));
-    		simpleRuleSetElement.setAttribute("ignorePattern", simpleDesc.getIgnorePattern());
-    		simpleRuleSetElement.setAttribute("takePattern", simpleDesc.getTakePattern());
-    		elem.appendChild(simpleRuleSetElement);
-    	}
-    	else {
-    		AdvancedRuleSetDescriptor advDesc = (AdvancedRuleSetDescriptor) desc;
-    		elem.setAttribute("type", "advanced");
-    		Element advancedRuleSetElement = doc.createElement("AdvancedRuleSet");
-    		advancedRuleSetElement.setAttribute("name", advDesc.getRuleSetName());
-    		elem.appendChild(advancedRuleSetElement);
-    	}
+
+    	elem.setAttribute("type", desc.getType());
+    	Element ruleDescriptorElement = desc.serialize(doc);
+		elem.appendChild(ruleDescriptorElement);
     	
     	return elem;
     }

@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -9,7 +11,7 @@ import net.sourceforge.fullsync.schedule.Schedule;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class Profile
+public class Profile implements Serializable
 {
     private String name;
     private String description;
@@ -129,4 +131,30 @@ public class Profile
 	        ((ProfileChangeListener)i.next()).profileChanged( this );
 	    }
 	}
+	private void writeObject(java.io.ObjectOutputStream out)
+		throws IOException
+	{
+		out.writeObject(name);
+	    out.writeObject(description);
+	    out.writeObject(synchronizationType);
+	    out.writeObject(source);
+	    out.writeObject(destination);
+	    out.writeObject(ruleSet);
+	    out.writeObject(lastUpdate);
+	    out.writeObject(schedule);
+	}
+
+	private void readObject(java.io.ObjectInputStream in)
+    	throws IOException, ClassNotFoundException
+	{
+		name = (String) in.readObject();
+		description = (String) in.readObject();
+		synchronizationType = (String) in.readObject();
+		source = (ConnectionDescription) in.readObject();
+		destination = (ConnectionDescription) in.readObject();
+		ruleSet = (RuleSetDescriptor) in.readObject();
+		lastUpdate = (Date) in.readObject();
+		schedule = (Schedule) in.readObject();
+	}
+	
 }
