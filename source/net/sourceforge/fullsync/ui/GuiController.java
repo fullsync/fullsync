@@ -94,7 +94,16 @@ public class GuiController implements Runnable
 		display = Display.getDefault();
 		createMainShell();
 	    systemTrayItem = new SystemTrayItem( this );
-		ExceptionHandler.registerExceptionHandler( new DialogExceptionHandler( mainShell ) );
+		ExceptionHandler.registerExceptionHandler( 
+		        new ExceptionHandler() {
+		            protected void doReportException( String message, Throwable exception )
+		            {
+		                exception.printStackTrace();
+		                
+		                ExceptionDialog ed = new ExceptionDialog( mainShell, message, exception );
+		                ed.open();
+		            }
+		        });
 		active = true;
     }
     public void run()
