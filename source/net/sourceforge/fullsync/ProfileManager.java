@@ -31,6 +31,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
+ * A ProfileManager handles persistence of Profiles and provides
+ * a scheduler for creating events when a Profile should be executed.
+ *  
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class ProfileManager
@@ -44,11 +47,11 @@ public class ProfileManager
 		}
 		public void run() 
 		{
-			System.out.println( "Running profile: "+profile.getName());
+			//System.out.println( "Running profile: "+profile.getName());
 			Thread worker = new Thread( new Runnable() {
 		        public void run()
 	            {
-		        	FullSync.getInstance().executeProfile( profile, false );
+		        	fireProfileSchedulerEvent( profile );
 	            }
 			} );
 			worker.start();
@@ -60,7 +63,8 @@ public class ProfileManager
 	
     private String configFile;
     private Hashtable profiles;
-    private Vector listeners;
+    private Vector changeListeners;
+    private Vector scheduleListeners;
     private Timer timer;
     private boolean timerActive;
     
@@ -68,7 +72,8 @@ public class ProfileManager
     {
         this.configFile = configFile;
         this.profiles = new Hashtable();
-        this.listeners = new Vector();
+        this.changeListeners = new Vector();
+        this.scheduleListeners = new Vector();
         this.timerActive = false;
         
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -115,7 +120,7 @@ public class ProfileManager
     public void addProfile( Profile p )
     {
         profiles.put( p.getName(), p );
-        fireChange();
+        fireProfilesChangeEvent();
     }
     public void addProfile( String name, ConnectionDescription source, ConnectionDescription destination, String ruleSet, String lastUpdate )
     {
@@ -127,12 +132,11 @@ public class ProfileManager
             e.printStackTrace();
         }
         profiles.put( name, p );
-        fireChange();
+        fireProfilesChangeEvent();
     }
     public void removeProfile( String name )
     {
-        profiles.remove( name );
-        fireChange();
+        fireProfilesChangeEvent();
     }
     public Enumeration getProfiles()
     {
@@ -145,7 +149,7 @@ public class ProfileManager
     public void startTimer()
     {
     	timerActive = true;
-    	timer = new Timer();
+    	timer = new Timer( true );
     	updateTimer();
     }
     void updateTimer()
@@ -188,18 +192,31 @@ public class ProfileManager
             timer.cancel();
         }
     }
-    public void addChangeListener( ProfilesChangeListener list )
+    public void addProfilesChangeListener( ProfilesChangeListener listener )
     {
-        listeners.add( list );
+        changeListeners.add( listener );
     }
-    public void removeChangeListener( ProfilesChangeListener list )
+    public void removeProfilesChangeListener( ProfilesChangeListener listener )
     {
-        listeners.remove( list );
+        changeListeners.remove( listener );
     }
-    protected void fireChange()
+    protected void fireProfilesChangeEvent()
     {
-        for( int i = 0; i < listeners.size(); i++ )
-            ((ProfilesChangeListener)listeners.get( i )).profilesChanged();
+        for( int i = 0; i < changeListeners.size(); i++ )
+            ((ProfilesChangeListener)changeListeners.get( i )).profilesChanged();
+    }
+    public void addSchedulerListener( ProfileSchedulerListener listener )
+    {
+        scheduleListeners.add( listener );
+    }
+    public void removeSchedulerListener( ProfileSchedulerListener listener )
+    {
+        scheduleListeners.remove( listener );
+    }
+    protected void fireProfileSchedulerEvent( Profile profile  )
+    {
+        for( int i = 0; i < scheduleListeners.size(); i++ )
+            ((ProfileSchedulerListener)scheduleListeners.get( i )).profileExecutionScheduled( profile );
     }
     protected ConnectionDescription unserializeConnectionDescription( Element element )
     {

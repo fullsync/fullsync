@@ -9,6 +9,7 @@ import net.sourceforge.fullsync.ProfileManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -356,6 +357,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			ProfileDetails inst = new ProfileDetails(shell, SWT.NULL);
 			inst.setProfileManager( manager );
 			inst.setProfileName( name );
+			shell.setImage( new Image( display, "images/Button_Edit.gif" ) );
 			shell.setLayout(new org.eclipse.swt.layout.FillLayout());
 			shell.setSize( shell.computeSize( inst.getSize().x, inst.getSize().y ) );
 			shell.open();

@@ -30,6 +30,6 @@ public class IoStatisticsImpl implements IoStatistics
     }
 	public int getCountActions()
 	{
-	    return filesCopied + dirsCreated;
+	    return filesCopied + dirsCreated + deletions;
 	}
 }

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 
-import net.sourceforge.fullsync.PreferencesManager;
-import net.sourceforge.fullsync.Processor;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.ProfileSchedulerListener;
 import net.sourceforge.fullsync.ProfilesChangeListener;
+import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.TaskTree;
@@ -19,20 +19,17 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -52,9 +49,9 @@ import org.eclipse.swt.widgets.ToolItem;
 * for any corporate or commercial purpose.
 * *************************************
 */
-public class MainWindow extends org.eclipse.swt.widgets.Composite implements ProfilesChangeListener, TaskGenerationListener
+public class MainWindow extends org.eclipse.swt.widgets.Composite 
+	implements ProfilesChangeListener, ProfileSchedulerListener, TaskGenerationListener
 {
-    private ProfileManager profileManager;
     private ToolItem toolItemNew;
     private TableColumn tableColumnName;
     private StatusLine statusLine;
@@ -71,14 +68,11 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
     private ToolBar toolBar1;
     private CoolItem coolItem1;
     private CoolBar coolBar;
-    private Processor processor;
     private ArrayList images;
     private Image imageTimerRunning;
     private Image imageTimerStopped;
     
-	private SystemTrayItem trayItem;
-
-	private PreferencesManager preferencesManager;
+    private GuiController guiController;
 	
 	public MainWindow(Composite parent, int style) 
 	{
@@ -89,16 +83,16 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		getShell().addShellListener(new ShellAdapter() {
 		    public void shellClosed(ShellEvent event) {
 				event.doit = false;
-		    	if (preferencesManager.closeMinimizesToSystemTray()) 
+		    	if (guiController.getPreferences().closeMinimizesToSystemTray()) 
 		    	{
 					minimizeToTray();
 		    	} else {
-		    	    closeApplication();
+		    	    guiController.closeGui();
 		    	}
 		    }
 
 		    public void shellIconified(ShellEvent event) {
-		        if (preferencesManager.minimizeMinimizesToSystemTray())
+		        if (guiController.getPreferences().minimizeMinimizesToSystemTray())
 		        {
 		            event.doit = false;
 		            minimizeToTray();
@@ -343,7 +337,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 				public void handleEvent(Event e) {
 					// show the Preferences Dialog.
 					PreferencesDialog prefDialog = new PreferencesDialog(getShell(), SWT.NULL);
-					prefDialog.setPreferencesManager(preferencesManager);
+					prefDialog.setGuiController(guiController);
 					prefDialog.open();
 				}
 			}
@@ -364,51 +358,34 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	{
 	    return statusLine;
 	}
-	public Processor getProcessor()
+	
+	public void setGuiController( GuiController guiController )
     {
-        return processor;
+	    if( guiController != null )
+	    {
+	        guiController.getProfileManager().removeProfilesChangeListener( this );
+	        guiController.getProfileManager().removeSchedulerListener( this );
+	        guiController.getSynchronizer().getProcessor().removeTaskGenerationListener(this);
+	    }
+        this.guiController = guiController;
+        guiController.getProfileManager().addProfilesChangeListener( this );
+        guiController.getProfileManager().addSchedulerListener( this );
+        guiController.getSynchronizer().getProcessor().addTaskGenerationListener(this);
+        populateProfileList();
+        updateTimerEnabled();
     }
-    public void setProcessor( Processor processor )
+	public GuiController getGuiController()
     {
-        if( this.processor != null )
-            this.processor.removeTaskGenerationListener( this );
-        this.processor = processor;
-        if( this.processor != null )
-            this.processor.addTaskGenerationListener( this );
+        return guiController;
     }
-	public void setProfileManager( ProfileManager profileManager )
-	{
-	    if( this.profileManager != null )
-	        this.profileManager.removeChangeListener( this );
-	    this.profileManager = profileManager;
-	    this.profileManager.addChangeListener( this );
-	    populateProfileList();
-	    updateTimerEnabled();
-	}
-	public ProfileManager getProfileManager()
-	{
-	    return profileManager;
-	}
-	
-	public void setPreferencesManager(PreferencesManager preferencesManager) {
-		this.preferencesManager = preferencesManager;
-	}
-	
-	public PreferencesManager getPreferencesManager() {
-		return preferencesManager;
-	}
-	
-	public void setSystemTrayItem(SystemTrayItem trayItem) {
-		this.trayItem = trayItem;
-	}
 	
 	public void populateProfileList()
 	{
-	    if( profileManager != null )
+	    if( guiController != null )
 	    {
 	        tableProfiles.clearAll();
 	        tableProfiles.setItemCount(0);
-	        Enumeration e = profileManager.getProfiles();
+	        Enumeration e = guiController.getProfileManager().getProfiles();
 	        while( e.hasMoreElements() )
 	        {
 	            Profile p = (Profile)e.nextElement();
@@ -439,9 +416,10 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	// TODO this should be an event caught from ProfileManager
 	protected void updateTimerEnabled()
 	{
-	    ProfileManager pm = getProfileManager();
-	    if( pm == null ) 
+	    if( guiController == null )
 	        return;
+
+	    ProfileManager pm = guiController.getProfileManager();
 	    
 	    if( pm.isTimerEnabled() )
 	    {
@@ -477,6 +455,11 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
             }
         } );
     }
+    public void profileExecutionScheduled( Profile profile )
+    {
+        Synchronizer sync = guiController.getSynchronizer();
+        sync.performActions( sync.executeProfile( profile ) );
+    }
 	protected void runCurrentProfile()
 	{
 		TableItem[] items = tableProfiles.getSelection();
@@ -484,7 +467,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		    return;
 		    
 		TableItem i = items[0];
-		final Profile p = getProfileManager().getProfile( i.getText( 0 ) );
+		final Profile p = guiController.getProfileManager().getProfile( i.getText( 0 ) );
 		if( p == null )
 		    return;
 		
@@ -494,17 +477,17 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
             {
 				TaskTree t = null;
                 try {
-                    showBusyCursor( true );
+                    guiController.showBusyCursor( true );
 					try {
 						statusLine.setMessage( "Starting profile "+p.getName()+"..." );
-						t = getProcessor().execute( p );
+						t = guiController.getSynchronizer().executeProfile( p );
 						statusLine.setMessage( "Finished profile "+p.getName() );
 					} catch (Exception e) {
 						e.printStackTrace();
 					} finally {
-	                	showBusyCursor( false );
+	                	guiController.showBusyCursor( false );
 					}
-                    LogWindow.show( t );
+                    LogWindow.show( guiController, t );
                 } catch( Exception e ) {
                     e.printStackTrace();
                 }
@@ -513,64 +496,36 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	    worker.start();
 	}
 
-	// FIXME i dont want to be static, but i need to be accessable by
-	//       mainwindow and logwindow... we should consider one gui item
-	//       as gui controller who gets such "general" gui stuff
-	//       (just like closeApplication)  
-	public static void showBusyCursor( final boolean show )
-	{
-		final Display display = Display.getDefault();
-		
-		display.asyncExec(new Runnable() {
-			public void run() {
-				try {
-				    Cursor cursor = show?display.getSystemCursor(SWT.CURSOR_WAIT):null;
-					Shell[] shells = display.getShells();
-					//final String BUSYID_NAME = "SWT BusyIndicator";
-					//final Integer busyId = new Integer(0);
-
-					for (int i = 0; i < shells.length; i++) 
-					{
-						//Integer id = (Integer) shells[i].getData(BUSYID_NAME);
-						//if (id == null) {
-							shells[i].setCursor(cursor);
-						//	shells[i].setData(BUSYID_NAME, busyId);
-						//}
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		});
-			
-	}
+	
 	public void createNewProfile()
 	{
-		ProfileDetails.showProfile( getProfileManager(), null );
+		ProfileDetails.showProfile( guiController.getProfileManager(), null );
 	}
 
-	protected void editCurrentProfile()
+	public void editCurrentProfile()
 	{
 		TableItem[] items = tableProfiles.getSelection();
 		if( items.length == 0 )
 		    return;
 		    
 		TableItem i = items[0];
-		Profile p = getProfileManager().getProfile( i.getText( 0 ) );
+		Profile p = guiController.getProfileManager().getProfile( i.getText( 0 ) );
 		if( p == null )
 		    return;
 
-		ProfileDetails.showProfile( getProfileManager(), p.getName() );
+		ProfileDetails.showProfile( guiController.getProfileManager(), p.getName() );
 	}
 
-	protected void deleteCurrentProfile()
+	public void deleteCurrentProfile()
 	{
+	    ProfileManager profileManager = guiController.getProfileManager();
+	    
 		TableItem[] items = tableProfiles.getSelection();
 		if( items.length == 0 )
 		    return;
 		    
 		TableItem i = items[0];
-		Profile p = getProfileManager().getProfile( i.getText( 0 ) );
+		Profile p = profileManager.getProfile( i.getText( 0 ) );
 		if( p == null )
 		    return;
 
@@ -585,35 +540,14 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	}
     protected void toolItemScheduleWidgedSelected(SelectionEvent evt)
     {
-        if( getProfileManager().isTimerEnabled() )
+	    ProfileManager profileManager = guiController.getProfileManager();
+	    if( profileManager.isTimerEnabled() )
         {
-            getProfileManager().stopTimer();
+            profileManager.stopTimer();
         } else {
-            getProfileManager().startTimer();
+            profileManager.startTimer();
         }
         updateTimerEnabled();
     }
     
-    public void closeApplication()
-    {
-	    // Close the application, but give him a chance to 
-	    // confirm his action first
-		if (preferencesManager.confirmExit()) 
-		{
-			MessageBox mb = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
-			mb.setText("Confirmation");
-			mb.setMessage("Do you really want to quit FullSync? \n"
-			        	 +"Any scheduled tasks will not be performed while " 
-			        	 +"FullSync is closed.");
-
-			// check whether the user really wants to close
-			if (mb.open() != SWT.YES) 
-			    return;
-		}
-		
-		this.dispose();
-		if (trayItem != null) {
-			trayItem.dispose();
-		}
-    }
 }

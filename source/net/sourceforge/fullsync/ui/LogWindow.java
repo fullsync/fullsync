@@ -64,8 +64,8 @@ import org.eclipse.swt.widgets.TableItem;
 * for any corporate or commercial purpose.
 * *************************************
 */
-public class LogWindow extends org.eclipse.swt.widgets.Composite {
-
+public class LogWindow extends org.eclipse.swt.widgets.Composite 
+{
 	private Label labelProgress;
 	private Combo comboFilter;
 	private Button buttonGo;
@@ -83,6 +83,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	private Image nodeFile;
 	private Image nodeDirectory;
 	
+	private GuiController guiController;
 	private TaskTree taskTree;
 	
 	private boolean onlyChanges;
@@ -99,6 +100,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 		initializeImages();
 		onlyChanges = true;
 		processing = false;
+		guiController = null;
 	}
 
 	/**
@@ -249,7 +251,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 
 	}
 
-	public static void show( final TaskTree task )
+	public static void show( final GuiController guiController, final TaskTree task )
 	{
 		final Display display = Display.getDefault();
 		display.syncExec( new Runnable() {
@@ -258,6 +260,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 		        try {
 					Shell shell = new Shell(display);
 					LogWindow inst = new LogWindow(shell, SWT.NULL);
+					inst.setGuiController( guiController );
 					inst.setTaskTree( task );
 					inst.rebuildActionList();
 					shell.setLayout(new org.eclipse.swt.layout.FillLayout());
@@ -272,6 +275,14 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
             }
 		});
 	}
+	public void setGuiController( GuiController guiController )
+	{
+	    this.guiController = guiController;
+	}
+	public GuiController getGuiController()
+    {
+        return guiController;
+    }
 	public void setTaskTree( TaskTree task )
 	{
 	    this.taskTree = task;
@@ -465,7 +476,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
     {
         Thread worker = new Thread( new Runnable() {
 			public void run() {
-	            MainWindow.showBusyCursor( true );
+	            guiController.showBusyCursor( true );
 				try {
 				    final Display display = getDisplay(); 
 		            processing = true;
@@ -473,8 +484,11 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 					// Logger logger = Logger.getRootLogger();
 		            // logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
 		            Logger logger = Logger.getLogger( "FullSync" );
-			        logger.info( "Synchronizing "+taskTree.getSource().getUri().toString()+" and "+taskTree.getDestination().getUri().toString() );
+			        logger.info( "Synchronization started" );
+			        logger.info( "  source:      "+taskTree.getSource().getUri().toString() );
+			        logger.info( "  destination: "+taskTree.getDestination().getUri().toString() );
 			        
+			        // TODO we should use the Synchronizer here ! maybe (TaskTree, ActionFinishedListener) ?
 			        BlockBuffer buffer = new BlockBuffer( logger );
 			        ActionQueue queue = new FillBufferActionQueue(buffer);
 			        final Color colorFinished = new Color( null, 150, 255, 150 );
@@ -528,7 +542,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 			    } catch( IOException e ) {
 			        e.printStackTrace();
 			    } finally {
-	            	MainWindow.showBusyCursor( false );
+			        guiController.showBusyCursor( false );
 			    }
 			}
         }, "Action Performer" );

@@ -1,5 +1,10 @@
 package net.sourceforge.fullsync;
 
+import java.util.Date;
+
+import net.sourceforge.fullsync.impl.ConfigurationPreferences;
+import net.sourceforge.fullsync.ui.GuiController;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -9,6 +14,7 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.apache.log4j.xml.DOMConfigurator;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -45,7 +51,11 @@ public class CommandLineInterpreter
 		        return;
 		    }
 
-		    FullSync fs = new FullSync();
+		    DOMConfigurator.configure( "logging.xml" );
+		    Preferences preferences = new ConfigurationPreferences("preferences.properties");
+		    ProfileManager profileManager = new ProfileManager( "profiles.xml" );
+		    Synchronizer sync = new Synchronizer();
+		    
 		    if( line.hasOption( "v" ) )
 		    {
 		        ConsoleAppender appender = 
@@ -61,15 +71,21 @@ public class CommandLineInterpreter
 		    {
 				if( line.hasOption( "p" ) ) 
 				{
-				    Profile p = fs.getProfileManager().getProfile( line.getOptionValue("p") );
-				    fs.executeProfile( p, false );
+				    Profile p = profileManager.getProfile( line.getOptionValue("p") );
+				    TaskTree tree = sync.executeProfile( p );
+				    sync.performActions( tree );
+				    p.setLastUpdate( new Date() );
+				    profileManager.save();
 				    return;
 				}
 		    }
-		    fs.setGuiEnabled( true );
-		    fs.start();
-		} catch( Exception exp ) {
-		    System.out.println( "Unexpected exception:" + exp.getMessage() );
+		    
+		    GuiController guiController = new GuiController( preferences, profileManager, sync );
+            guiController.startGui();
+        	guiController.run();
+        	guiController.disposeGui();
+        } catch( Exception exp ) {
+		    exp.printStackTrace();
         }
     }
 }

@@ -1,6 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.PreferencesManager;
+import net.sourceforge.fullsync.Preferences;
+import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -31,15 +32,17 @@ import org.eclipse.swt.widgets.Shell;
 public class PreferencesDialog extends org.eclipse.swt.widgets.Dialog {
 
 	private Shell dialogShell;
-	private Button cbConfirmExit;
-	private Group GeneralPreferencesGroup;
-	private Button cancelButton;
+	
 	private Button okButton;
-	private Button cbCloseMinimizesToSystemTray;
+	private Button cancelButton;
 
-	private PreferencesManager preferencesManager;
+	private Group groupInterface;
+	private Button cbConfirmExit;
+	private Button cbCloseMinimizesToSystemTray;
 	private Button cbMinimizeMinimizesToSystemTray;
 	private Button cbEnableSystemTray;
+
+	private GuiController guiController;
 
 	/**
 	* Auto-generated main method to display this 
@@ -49,7 +52,7 @@ public class PreferencesDialog extends org.eclipse.swt.widgets.Dialog {
 		try {
 			Display display = Display.getDefault();
 			Shell shell = new Shell(display);
-			PreferencesManager pref = new PreferencesManager( "preferences.xml" );
+			Preferences pref = new ConfigurationPreferences( "preferences.xml" );
 			PreferencesDialog inst = new PreferencesDialog(shell, SWT.NULL);
 			inst.open();
 		} catch (Exception e) {
@@ -69,13 +72,14 @@ public class PreferencesDialog extends org.eclipse.swt.widgets.Dialog {
 			GridLayout dialogShellLayout = new GridLayout();
 			dialogShell.setText("Preferences...");
 			dialogShellLayout.numColumns = 2;
-			dialogShellLayout.horizontalSpacing = 25;
+			dialogShellLayout.horizontalSpacing = 20;
+			dialogShellLayout.makeColumnsEqualWidth = true;
 			dialogShell.setLayout(dialogShellLayout);
 			dialogShell.layout();
 			dialogShell.pack();
 			dialogShell.setSize(261, 231);
 			{
-				GeneralPreferencesGroup = new Group(dialogShell, SWT.NONE);
+				groupInterface = new Group(dialogShell, SWT.NONE);
 				GridLayout GeneralPreferencesGroupLayout = new GridLayout();
 				GridData GeneralPreferencesGroupLData = new GridData();
 				GeneralPreferencesGroupLData.horizontalSpan = 2;
@@ -83,14 +87,14 @@ public class PreferencesDialog extends org.eclipse.swt.widgets.Dialog {
 				GeneralPreferencesGroupLData.grabExcessVerticalSpace = true;
 				GeneralPreferencesGroupLData.horizontalAlignment = GridData.FILL;
 				GeneralPreferencesGroupLData.verticalAlignment = GridData.FILL;
-				GeneralPreferencesGroup.setLayoutData(GeneralPreferencesGroupLData);
+				groupInterface.setLayoutData(GeneralPreferencesGroupLData);
 				GeneralPreferencesGroupLayout.makeColumnsEqualWidth = true;
 				GeneralPreferencesGroupLayout.marginHeight = 8;
 				GeneralPreferencesGroupLayout.marginWidth = 8;
-				GeneralPreferencesGroup.setLayout(GeneralPreferencesGroupLayout);
-				GeneralPreferencesGroup.setText("Interface");
+				groupInterface.setLayout(GeneralPreferencesGroupLayout);
+				groupInterface.setText("Interface");
 				{
-					cbConfirmExit = new Button(	GeneralPreferencesGroup, SWT.CHECK | SWT.LEFT);
+					cbConfirmExit = new Button(	groupInterface, SWT.CHECK | SWT.LEFT);
 					cbConfirmExit.setText("Show confirmation dialog on exit");
 					GridData askOnClosingCheckBoxLData = new GridData();
 					askOnClosingCheckBoxLData.horizontalAlignment = GridData.FILL;
@@ -99,7 +103,7 @@ public class PreferencesDialog extends org.eclipse.swt.widgets.Dialog {
 				}
 				{
 					cbCloseMinimizesToSystemTray = new Button(
-						GeneralPreferencesGroup,
+						groupInterface,
 						SWT.CHECK | SWT.LEFT);
 					cbCloseMinimizesToSystemTray.setText("Close minimizes to System Tray");
 					GridData closeButtonMinimizesCheckBoxLData = new GridData();
@@ -109,7 +113,7 @@ public class PreferencesDialog extends org.eclipse.swt.widgets.Dialog {
 				}
                 {
                     cbMinimizeMinimizesToSystemTray = new Button(
-                        GeneralPreferencesGroup,
+                        groupInterface,
                         SWT.CHECK | SWT.LEFT);
                     cbMinimizeMinimizesToSystemTray
                         .setText("Minimize minimizes to System Tray");
@@ -119,7 +123,7 @@ public class PreferencesDialog extends org.eclipse.swt.widgets.Dialog {
                 }
                 {
                     cbEnableSystemTray = new Button(
-                        GeneralPreferencesGroup,
+                        groupInterface,
                         SWT.CHECK | SWT.LEFT);
                     cbEnableSystemTray.setText("Enable System Tray Icon");
                 }
@@ -130,16 +134,18 @@ public class PreferencesDialog extends org.eclipse.swt.widgets.Dialog {
 				GridData okButtonLData = new GridData();
 				okButton.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(SelectionEvent evt) {
-						preferencesManager.setConfirmExit(cbConfirmExit.getSelection());
-						preferencesManager.setCloseMinimizesToSystemTray(cbCloseMinimizesToSystemTray.getSelection());
-						preferencesManager.setMinimizeMinimizesToSystemTray(cbMinimizeMinimizesToSystemTray.getSelection());
-						preferencesManager.setSystemTrayEnabled(cbEnableSystemTray.getSelection());
-						preferencesManager.save();
+					    Preferences preferences = guiController.getPreferences(); 
+						preferences.setConfirmExit(cbConfirmExit.getSelection());
+						preferences.setCloseMinimizesToSystemTray(cbCloseMinimizesToSystemTray.getSelection());
+						preferences.setMinimizeMinimizesToSystemTray(cbMinimizeMinimizesToSystemTray.getSelection());
+						preferences.setSystemTrayEnabled(cbEnableSystemTray.getSelection());
+						preferences.save();
 						dialogShell.dispose();
 					}
 				});
 				okButtonLData.horizontalAlignment = GridData.FILL;
 				okButtonLData.grabExcessHorizontalSpace = true;
+				okButtonLData.heightHint = 23;
 				okButton.setLayoutData(okButtonLData);
 			}
 			{
@@ -169,12 +175,16 @@ public class PreferencesDialog extends org.eclipse.swt.widgets.Dialog {
 		}
 	}
 	
-	public void setPreferencesManager(PreferencesManager preferencesManager) {
-		this.preferencesManager = preferencesManager;
+	public void setGuiController(GuiController guiController) {
+		this.guiController = guiController;
 	}
 	
-	private void initialize() {
-		cbConfirmExit.setSelection(preferencesManager.confirmExit());
-		cbCloseMinimizesToSystemTray.setSelection(preferencesManager.closeMinimizesToSystemTray());
+	private void initialize() 
+	{
+	    Preferences preferences = guiController.getPreferences();
+		cbConfirmExit.setSelection(preferences.confirmExit());
+		cbCloseMinimizesToSystemTray.setSelection(preferences.closeMinimizesToSystemTray());
+		cbMinimizeMinimizesToSystemTray.setSelection(preferences.minimizeMinimizesToSystemTray());
+		cbEnableSystemTray.setSelection(preferences.systemTrayEnabled());
 	}
 }

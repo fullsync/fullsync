@@ -11,8 +11,8 @@ import java.util.Iterator;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.ui.GuiController;
 
 import com.sshtools.j2ssh.SshClient;
 import com.sshtools.j2ssh.authentication.AuthenticationProtocolState;
@@ -45,7 +45,7 @@ public class SftpConnection implements FileSystemConnection
         prop.setHost( uri.getHost() );
         
         // REVISIT not really fine
-        sshClient.connect( prop, new DialogKnownHostsKeyVerification( FullSync.getInstance().getMainWindow().getShell() ) );
+        sshClient.connect( prop, new DialogKnownHostsKeyVerification( GuiController.getInstance().getMainWindow().getShell() ) );
         
         PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
         pwd.setUsername( desc.getUsername() );

@@ -9,7 +9,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
@@ -18,15 +17,15 @@ import org.eclipse.swt.widgets.TrayItem;
  */
 public class SystemTrayItem
 {
-    private MainWindow mainWindow;
+    private GuiController guiController;
     private Tray tray;
     private TrayItem trayItem;
     private Menu menu;
 
-    public SystemTrayItem( MainWindow mainWin )
+    public SystemTrayItem( GuiController gui )
     {
-        this.mainWindow = mainWin;
-        this.tray = mainWindow.getDisplay().getSystemTray();
+        this.guiController = gui;
+        this.tray = guiController.getDisplay().getSystemTray();
         this.trayItem = new TrayItem( tray, SWT.NULL );
         
         // initialize trayItem
@@ -35,8 +34,7 @@ public class SystemTrayItem
     	trayItem.addListener( SWT.DefaultSelection, new Listener() {
     	    public void handleEvent(Event arg0) 
     	    {
-    	        mainWindow.getShell().setVisible( true );
-    	        mainWindow.getShell().setMinimized( false );
+    	        guiController.setMainShellVisible( true );
     	    }
     	} );
     	trayItem.addListener( SWT.MenuDetect, new Listener() {
@@ -47,15 +45,14 @@ public class SystemTrayItem
     	} );
     	
     	// initialize popup menu
-    	menu = new Menu( mainWindow.getShell(), SWT.POP_UP );
+    	menu = new Menu( guiController.getMainShell(), SWT.POP_UP );
 		MenuItem item;
 		item = new MenuItem( menu, SWT.NULL );
 		item.setText( "Open FullSync" );
 		item.addListener(SWT.Selection, new Listener() {
 		    public void handleEvent( Event arg0 )
             {
-		    	mainWindow.getShell().setVisible( true );
-		    	mainWindow.getShell().setMinimized( false );
+		    	guiController.setMainShellVisible( true );
             }
 		} );
 		
@@ -64,27 +61,7 @@ public class SystemTrayItem
 		item.addListener( SWT.Selection, new Listener() {
 		    public void handleEvent( Event event )
             {
-		        // TODO uhh, MainWindow has already closeApplication, we should use this
-		    	if (mainWindow.getPreferencesManager().confirmExit()) 
-		    	{
-		    		MessageBox mb = new MessageBox(mainWindow.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
-		    		mb.setText("Confirmation");
-		    		mb.setMessage("Do you really want to quit FullSync? \nAny scheduled tasks can't be performed while " +
-		    		"FullSync is closed.");
-		    		int result = mb.open();
-		    		if (result == SWT.YES) {
-		    			event.doit = true;
-		    			mainWindow.dispose();
-		    			trayItem.dispose();					
-		    		} else {
-		    			event.doit = false;
-		    		}
-		    	}
-		    	else {
-	                mainWindow.dispose();
-	                trayItem.dispose();							    		
-		    	}
-                // TODO check for running ops
+		        guiController.closeGui();
             }
 		} );
     }
@@ -92,13 +69,13 @@ public class SystemTrayItem
     {
         trayItem.setVisible( visible );
     }
+    public boolean isDisposed()
+    {
+        return trayItem.isDisposed();
+    }
     public void dispose()
     {
         trayItem.dispose();
         menu.dispose();
-    }
-    public boolean isDisposed()
-    {
-        return trayItem.isDisposed();
     }
 }
