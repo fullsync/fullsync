@@ -3,16 +3,15 @@
  */
 package net.sourceforge.fullsync.fs.ftp;
 
-import java.io.IOException;
-import java.net.URI;
+import java.net.URISyntaxException;
 
+import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.fs.Directory;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileSystem;
-import net.sourceforge.fullsync.fs.Node;
-
-import org.apache.commons.net.ftp.FTPClient;
+import net.sourceforge.fullsync.fs.Site;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
+import net.sourceforge.fullsync.fs.connection.FtpConnection;
 
 
 /**
@@ -23,12 +22,12 @@ public class FtpFileSystem implements FileSystem
     public FtpFileSystem()
     {
     }
-    public Directory resolveUri( URI uri )
+    public Site createConnection( ConnectionDescription desc)
     	throws FileSystemException
     {
-        if( !uri.getScheme().equals( "ftp" ) )
+        if( !desc.getUri().startsWith( "ftp:" ) )
             return null;
-        
+        /*
         try {
 	        FTPClient client = new FTPClient();
 	        client.connect( uri.getHost(), uri.getPort()==-1?21:uri.getPort() );
@@ -45,7 +44,7 @@ public class FtpFileSystem implements FileSystem
 	                Directory d = new FtpDirectory( client, path, null );
 	                d.getChild( url.getPath() )
 	            }*/
-	            
+	            /*
 	            // nah, just print an error
 	            client.quit();
 	            throw new FileSystemException( "Could not set working dir" );
@@ -54,10 +53,18 @@ public class FtpFileSystem implements FileSystem
 	        return new FtpDirectory(client, client.printWorkingDirectory() );
         } catch( IOException ioe ) {
             throw new FileSystemException(ioe);
+        }*/
+        
+        FileSystemConnection conn;
+        try {
+            conn = new FtpConnection( desc );
+        } catch( URISyntaxException e ) {
+            throw new FileSystemException( e );
         }
+        return conn;
     }
     
-    public Directory getDirectory( String path )
+    public File getDirectory( String path )
     {
         // TODO look for .. s
         /*
@@ -69,13 +76,11 @@ public class FtpFileSystem implements FileSystem
 
     public File getFile( String path )
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
-    public Node getNode( String path )
+    public File getNode( String path )
     {
-        // TODO Auto-generated method stub
         return null;
     }
 

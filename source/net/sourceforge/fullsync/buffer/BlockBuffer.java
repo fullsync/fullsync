@@ -8,11 +8,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class BlockBuffer implements Buffer
 {
+    Logger logger;
+    
 	int maxSize;
 	int maxEntries;
 	
@@ -24,8 +28,10 @@ public class BlockBuffer implements Buffer
 	
 	int flushes;
 	
-	public BlockBuffer()
+	public BlockBuffer( Logger logger )
 	{
+	    this.logger = logger;
+	    
 		maxSize = 1024*1024*10;
 		maxEntries = 5000;
 		numberBytes = 0;
@@ -84,9 +90,12 @@ public class BlockBuffer implements Buffer
 				    out.close();
 				}
 				desc.finishWrite();
+				String opDesc = desc.getOperationDescription();
+				if( opDesc != null )
+				    logger.info( opDesc );
 				
 		    } catch( IOException ioe ) {
-		        ioe.printStackTrace();
+		        logger.error( "Exception", ioe );
 		    }
 			
 			// TODO args, large file copy will invoke a lot of

@@ -6,10 +6,12 @@ package net.sourceforge.fullsync.fs.ftp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
-import net.sourceforge.fullsync.fs.Directory;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.Node;
+import net.sourceforge.fullsync.fs.FileAttributes;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -107,30 +109,56 @@ public class FtpFile implements File
     private String path;
     private String name;
     private FTPFile file;
-    private FtpDirectory parent;
+    private FtpFile parent;
+    private boolean directory;
+    private boolean filtered;
     
-    public FtpFile( FTPClient client, String name, FtpDirectory parent )
+    private Hashtable children;
+
+    
+    public FtpFile( FTPClient client, String name, FtpFile parent, boolean directory )
     {
         this.client = client;
         this.path = parent.getPath()+"/"+name;
         this.name = name;
         this.file = null;
         this.parent = parent;
+        this.directory = directory;
     }
-    public FtpFile( FTPClient client, FTPFile file, FtpDirectory parent )
+    public FtpFile( FTPClient client, FTPFile file, FtpFile parent )
     {
         this.client = client;
         this.path = parent.getPath()+"/"+file.getName();
         this.name = file.getName();
         this.file = file;
         this.parent = parent;
+        this.directory = file.isDirectory();
     }
 
-    public Directory getDirectory()
+    public File getParent()
     {
         return parent;
     }
 
+    public void initialize()
+    {
+        try {
+            children = new Hashtable();
+            if( !client.changeWorkingDirectory( path ) )
+                return;
+
+            FTPFile[] files = client.listFiles();
+            for( int c = 0; c < files.length; c++ )
+            {
+                if( files[c].isDirectory() )
+                     children.put( files[c].getName(), new FtpFile( client, files[c].getName(), this, true ) );
+                else children.put( files[c].getName(), new FtpFile( client, files[c], this ) );
+            }
+            
+        } catch( Exception e ) {
+            e.printStackTrace();
+        }
+    }
     public long getLength()
     {
         return file.getSize();
@@ -146,6 +174,28 @@ public class FtpFile implements File
         return;
     }
 
+    public Collection getChildren()
+    {
+        if( children == null )
+            initialize();
+        
+        return children.values();
+    }
+
+    public File getChild( String name )
+    {
+        if( children == null )
+            initialize();
+        return (File)children.get( name );
+    }
+
+    public File createChild( String name, boolean directory )
+    {
+        // TODO check existing
+        FtpFile dir = new FtpFile( client, name, this, directory );
+        children.put( name, dir );
+        return dir;
+    }
     public InputStream getInputStream() throws IOException
     {
         client.changeWorkingDirectory( parent.getPath() );
@@ -156,6 +206,30 @@ public class FtpFile implements File
     {
         client.changeWorkingDirectory( parent.getPath() );
         return new FtpFileOutputStream( client.storeFileStream( name ), client );
+    }
+    
+    public FileAttributes getFileAttributes()
+    {
+        return new FileAttributes( file.getSize(), file.getTimestamp().getTimeInMillis() );
+    }
+    public void setFileAttributes( FileAttributes att )
+    {
+    }
+    public boolean isFile()
+    {
+        return !directory;
+    }
+    public boolean isFiltered()
+    {
+        return filtered;
+    }
+    public void setFiltered( boolean filtered )
+    {
+        this.filtered = filtered;
+    }
+    public boolean makeDirectory() throws IOException
+    {
+        return client.makeDirectory( path );
     }
     
     public String getName()
@@ -183,32 +257,61 @@ public class FtpFile implements File
         return false;
     }
 
-    public Node getUnbuffered()
+    public File getUnbuffered()
     {
         return this;
     }
-
-    public boolean delete()
+    
+    public boolean delete() throws IOException
     {
-        try {
-            client.changeWorkingDirectory( parent.getPath() );
-            return client.deleteFile( name );
-        } catch( IOException ioe ) {
-            return false;
+        if( isDirectory() )
+        {
+	        if( children == null )
+	            initialize();
+	        if( children.isEmpty() )
+	        {
+	            try {
+	                return client.removeDirectory( getPath() );
+	            } catch( IOException ioe ) {
+	                return false;
+	            }
+	        } else {
+	            return false;
+	        }
+        } else {
+	        client.changeWorkingDirectory( parent.getPath() );
+	        return client.deleteFile( name );
         }
     }
 
     public void refresh()
     {
         try {
-	        client.changeWorkingDirectory( parent.getPath() );
-	        FTPFile[] a = client.listFiles( name );
-	        if( a.length == 0 )
-	             file = null;
-	        else file = a[0];
+            if( isDirectory() )
+            {
+	            if( children == null )
+	                initialize();
+	            
+	            for( Enumeration e = children.elements(); e.hasMoreElements(); )
+	            {
+	                File n = (File)e.nextElement();
+	                if( n.isDirectory() == false )
+	                    n.refresh();
+	            }
+            } else {
+                client.changeWorkingDirectory( parent.getPath() );
+		        FTPFile[] a = client.listFiles( name );
+		        if( a.length == 0 )
+		             file = null;
+		        else file = a[0];
+            }
         } catch( IOException ioe ) {
-            // TODO why catching all IOs, just put them throu
+            ioe.printStackTrace();
         }
+    }
+    public void refreshBuffer()
+    {
+        
     }
 
 }

@@ -3,7 +3,6 @@
  */
 package net.sourceforge.fullsync.buffer;
 
-import java.util.Formatter;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -28,7 +27,8 @@ public class Entry
 	}
 	public String toString()
 	{
-	    Formatter format = new Formatter().format( "%10d-%10d: %s", new Object[] { new Integer(start), new Integer(start+length-1), descriptor.toString()} );
-		return format.out().toString();
+	    return "bla";
+	    //Formatter format = new Formatter().format( "%10d-%10d: %s", new Object[] { new Integer(start), new Integer(start+length-1), descriptor.toString()} );
+		//return format.out().toString();
 	}
 }

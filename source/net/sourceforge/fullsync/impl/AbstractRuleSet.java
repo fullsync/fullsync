@@ -12,9 +12,7 @@ import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
-import net.sourceforge.fullsync.fs.Directory;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.Node;
 import net.sourceforge.fullsync.rules.Rule;
 
 
@@ -119,7 +117,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 	/**
 	 * @return Returns true if the file should be taken, false if ignored
 	 */
-	public boolean isNodeIgnored( Node node )
+	public boolean isNodeIgnored( File node )
 	{
 	    String filename = node.getName();
 		boolean take = !ignoreAll;
@@ -153,8 +151,8 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 
 	protected long evalRealValue( File f, String exp ) throws DataParseException
 	{
-		if( exp.equalsIgnoreCase( "length" ) ) return f.getLength();
-		else if( exp.equalsIgnoreCase( "date" ) ) return f.getLastModified();
+		if( exp.equalsIgnoreCase( "length" ) ) return f.getFileAttributes().getLength();
+		else if( exp.equalsIgnoreCase( "date" ) ) return f.getFileAttributes().getLastModified();
 		else throw new DataParseException( "Error while parsing SyncRule: '"+exp+"' is unknown", 0 );
 	}
 
@@ -217,7 +215,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 		return new State( State.NodeInSync, Location.Both );
 	}
 	
-	public RuleSet createChild( Directory src, Directory dst )
+	public RuleSet createChild( File src, File dst )
 		throws DataParseException, FileSystemException
 	{
 	    AbstractRuleSet rules = this;
@@ -228,12 +226,12 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 		return rules;
 	}
 	
-	public AbstractRuleSet createChild( Directory dir )
+	public AbstractRuleSet createChild( File dir )
 		throws DataParseException, FileSystemException
 	{
 	    // TODO really unbuffered ?
 	    AbstractRuleSet rules = this;
-	    Node node = ((Directory)dir.getUnbuffered()).getChild( syncRulesFilename );
+	    File node = ((File)dir.getUnbuffered()).getChild( syncRulesFilename );
 	    if( node != null && !node.isDirectory() )
 	    {
 			try {

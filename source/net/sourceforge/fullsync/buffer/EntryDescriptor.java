@@ -20,4 +20,5 @@ public interface EntryDescriptor
     public void finishStore(); // into buffer
     public void finishWrite(); // to target
     //public void flush( Buffer buffer, Entry entry ) throws IOException;
+    public String getOperationDescription();
 }

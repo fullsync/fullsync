@@ -119,6 +119,7 @@
 			</Component>
 			<Component class="org.eclipse.swt.widgets.Button" name="buttonGo" style="16777224">
 				<Constraints>
+					<Constraint class="org.eclipse.swt.layout.GridData"/>
 					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
 						<Property name="verticalAlignment" type="int" value="2"/>
 						<Property name="horizontalAlignment" type="int" value="3"/>
@@ -136,6 +137,9 @@
 				</Events>
 				<Properties>
 					<Property name="text" type="String" value="Go"/>
+					<Property name="bounds" type="Rectangle">
+						<Rectangle value="[684, 200, 25, 23]"/>
+					</Property>
 				</Properties>
 			</Component>
 		</SubComponents>

@@ -6,7 +6,6 @@ import java.io.OutputStream;
 
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
 
 /**
@@ -25,7 +24,7 @@ public class FileCopyEntryDescriptor implements EntryDescriptor
     
     public long getLength()
     {
-        return src.getLength();
+        return src.getFileAttributes().getLength();
     }
     public InputStream getInputStream()
     	throws IOException
@@ -39,14 +38,15 @@ public class FileCopyEntryDescriptor implements EntryDescriptor
     }
     public void finishWrite()
     {
-        if( dst.isBuffered() )
-            ((BufferedFile)dst).setLength( src.getLength() );
-        dst.setLastModified( src.getLastModified() );
-        // TODO set attributes
+        dst.setFileAttributes( src.getFileAttributes() );
         dst.refresh();
     }
     public void finishStore()
     {
         
+    }
+    public String getOperationDescription()
+    {
+        return "Copied "+src.getPath()+" to "+dst.getPath(); 
     }
 }

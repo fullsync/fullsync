@@ -1,11 +1,11 @@
 package net.sourceforge.fullsync.rules;
 
-import net.sourceforge.fullsync.fs.Node;
+import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public interface Rule
 {
-    public boolean accepts( Node node );
+    public boolean accepts( File node );
 }

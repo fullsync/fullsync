@@ -1,6 +1,6 @@
 package net.sourceforge.fullsync;
 
-import net.sourceforge.fullsync.fs.Directory;
+import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -17,7 +17,7 @@ public interface RuleSet extends IgnoreDecider, FileComparer
     public boolean isCheckingBufferAlways( int location );
     public boolean isCheckingBufferOnReplace( int location );
     
-    public RuleSet createChild( Directory src, Directory dst ) throws FileSystemException, DataParseException;
+    public RuleSet createChild( File src, File dst ) throws FileSystemException, DataParseException;
     
     // public boolean isUsingRulesFile( int location ); 
     // public boolean isBuffering( int where );

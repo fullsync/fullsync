@@ -1,11 +1,11 @@
 package net.sourceforge.fullsync;
 
-import net.sourceforge.fullsync.fs.Node;
+import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public interface StateDecider
 {
-    public State getState( Node src, Node dst );
+    public State getState( File src, File dst ) throws DataParseException;
 }

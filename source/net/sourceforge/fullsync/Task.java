@@ -3,22 +3,22 @@ package net.sourceforge.fullsync;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import net.sourceforge.fullsync.fs.Node;
+import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class Task
 {
-    private Node source;
-    private Node destination;
+    private File source;
+    private File destination;
     private State state;
     private Action[] actions;
     private int currentAction;
     
     private Vector children;
     
-    public Task( Node source, Node destination, State state, Action[] actions )
+    public Task( File source, File destination, State state, Action[] actions )
     {
         this.source = source;
         this.destination = destination;
@@ -28,19 +28,19 @@ public class Task
         this.children = new Vector();
     }
     
-    public Node getDestination()
+    public File getDestination()
     {
         return destination;
     }
-    public void setDestination( Node destination )
+    public void setDestination( File destination )
     {
         this.destination = destination;
     }
-    public Node getSource()
+    public File getSource()
     {
         return source;
     }
-    public void setSource( Node source )
+    public void setSource( File source )
     {
         this.source = source;
     }
@@ -80,5 +80,9 @@ public class Task
     public Enumeration getChildren()
     {
         return children.elements();
+    }
+    public String toString()
+    {
+        return getCurrentAction().toString();
     }
 }

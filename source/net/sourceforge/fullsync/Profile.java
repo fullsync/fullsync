@@ -1,6 +1,5 @@
 package net.sourceforge.fullsync;
 
-import java.net.URI;
 import java.util.Date;
 
 /**
@@ -9,12 +8,19 @@ import java.util.Date;
 public class Profile
 {
     private String name;
-    private URI source;
-    private URI destination;
+    private ConnectionDescription source;
+    private ConnectionDescription destination;
     private String ruleSet;
     private Date lastUpdate;
     
-    public Profile( String name, URI source, URI destination, String ruleSet, Date lastUpdate )
+    public Profile()
+    {
+    }
+    public Profile( String name, ConnectionDescription source, ConnectionDescription destination, String ruleSet )
+    {
+        this( name, source, destination, ruleSet, new Date() );
+    }
+    public Profile( String name, ConnectionDescription source, ConnectionDescription destination, String ruleSet, Date lastUpdate )
     {
         this.name = name;
         this.source = source;
@@ -23,11 +29,11 @@ public class Profile
         this.lastUpdate = lastUpdate;
     }
     
-    public URI getDestination()
+    public ConnectionDescription getDestination()
     {
         return destination;
     }
-    public void setDestination( URI destination )
+    public void setDestination( ConnectionDescription destination )
     {
         this.destination = destination;
     }
@@ -55,11 +61,11 @@ public class Profile
     {
         this.ruleSet = ruleSet;
     }
-    public URI getSource()
+    public ConnectionDescription getSource()
     {
         return source;
     }
-    public void setSource( URI source )
+    public void setSource( ConnectionDescription source )
     {
         this.source = source;
     }

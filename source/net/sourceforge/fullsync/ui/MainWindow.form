@@ -49,7 +49,7 @@
 				</Events>
 				<Properties>
 					<Property name="bounds" type="Rectangle">
-						<Rectangle value="[0, 0, 635, 22]"/>
+						<Rectangle value="[0, 0, 635, 21]"/>
 					</Property>
 					<Property name="visible" type="boolean" value="true"/>
 				</Properties>
@@ -62,10 +62,10 @@
 						</Events>
 						<Properties>
 							<Property name="minimumSize" type="Dimension">
-								<Dimension value="[23, 22]"/>
+								<Dimension value="[31, 21]"/>
 							</Property>
 							<Property name="preferredSize" type="Dimension">
-								<Dimension value="[23, 22]"/>
+								<Dimension value="[31, 21]"/>
 							</Property>
 						</Properties>
 						<SubComponents>
@@ -76,19 +76,50 @@
 								<Events>
 								</Events>
 								<Properties>
+									<Property name="size" type="Dimension">
+										<Dimension value="[619, 21]"/>
+									</Property>
 								</Properties>
 								<SubComponents>
-									<Component class="org.eclipse.swt.widgets.ToolItem" name="toolItem1" style="0">
+									<Component class="org.eclipse.swt.widgets.ToolItem" name="toolItemNew" style="0">
 										<Constraints>
 											<LayoutConstraint/>
 										</Constraints>
 										<Events>
-											<EventHandler event="widgetSelected" handler="toolItem1WidgetSelected" listener="org.eclipse.swt.events.SelectionListener"/>
+											<EventHandler event="widgetSelected" handler="toolItemNewWidgetSelected" listener="org.eclipse.swt.events.SelectionListener"/>
 										</Events>
 										<Properties>
-											<Property name="image" type="Image">
-												<Image name="\Runbutton.gif"/>
-											</Property>
+											<Property name="text" type="String" value=""/>
+										</Properties>
+									</Component>
+									<Component class="org.eclipse.swt.widgets.ToolItem" name="toolItemEdit" style="0">
+										<Constraints>
+											<LayoutConstraint/>
+										</Constraints>
+										<Events>
+											<EventHandler event="widgetSelected" handler="toolItemEditWidgetSelected" listener="org.eclipse.swt.events.SelectionListener"/>
+										</Events>
+										<Properties>
+										</Properties>
+									</Component>
+									<Component class="org.eclipse.swt.widgets.ToolItem" name="toolItemDelete" style="0">
+										<Constraints>
+											<LayoutConstraint/>
+										</Constraints>
+										<Events>
+											<EventHandler event="widgetSelected" handler="toolItemDeleteWidgetSelected" listener="org.eclipse.swt.events.SelectionListener"/>
+										</Events>
+										<Properties>
+										</Properties>
+									</Component>
+									<Component class="org.eclipse.swt.widgets.ToolItem" name="toolItemRun" style="0">
+										<Constraints>
+											<LayoutConstraint/>
+										</Constraints>
+										<Events>
+											<EventHandler event="widgetSelected" handler="toolItemRunWidgetSelected" listener="org.eclipse.swt.events.SelectionListener"/>
+										</Events>
+										<Properties>
 										</Properties>
 									</Component>
 								</SubComponents>
@@ -118,7 +149,7 @@
 					<Property name="headerVisible" type="boolean" value="true"/>
 					<Property name="linesVisible" type="boolean" value="false"/>
 					<Property name="bounds" type="Rectangle">
-						<Rectangle value="[0, 22, 635, 201]"/>
+						<Rectangle value="[0, 21, 635, 202]"/>
 					</Property>
 				</Properties>
 				<SubComponents>

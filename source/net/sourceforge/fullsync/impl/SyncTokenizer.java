@@ -15,7 +15,7 @@ public class SyncTokenizer extends StreamTokenizer
 	public final static int	LOCAL	= 1;
 	public final static int	REMOTE	= 2;
 	public final static int	BOTH	= 3;
-	public final static String[] locations = new String[] { "none", "local", "remote", "both" }; 
+	public final static String[] locations = new String[] { "none", "source", "destination", "both" }; 
 	
 	public final static String[] boolwords = new String[] { "no", "yes", "false", "true" };
 	

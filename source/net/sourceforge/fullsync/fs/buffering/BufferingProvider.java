@@ -3,7 +3,8 @@
  */
 package net.sourceforge.fullsync.fs.buffering;
 
-import net.sourceforge.fullsync.fs.Directory;
+import net.sourceforge.fullsync.fs.Site;
+
 
 
 /**
@@ -11,5 +12,5 @@ import net.sourceforge.fullsync.fs.Directory;
  */
 public interface BufferingProvider
 {
-    public BufferedDirectory createBufferedDirectory( Directory dir );
+    public Site createBufferedSite( Site site );
 }

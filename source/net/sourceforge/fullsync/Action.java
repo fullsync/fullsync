@@ -20,17 +20,19 @@ public class Action
     
     private int type;
     private int location;
+    private int bufferUpdate;
     private boolean beforeRecursion;
     private String explanation;
     
-    public Action( int type, int location, String explanation )
+    public Action( int type, int location, int bufferUpdate, String explanation )
     {
-        this( type, location, explanation, true );
+        this( type, location, bufferUpdate, explanation, true );
     }
-    public Action( int type, int location, String explanation, boolean beforeRecursion )
+    public Action( int type, int location, int bufferUpdate, String explanation, boolean beforeRecursion )
     {
         this.type = type;
         this.location = location;
+        this.bufferUpdate = bufferUpdate;
         this.beforeRecursion = beforeRecursion;
         this.explanation = explanation;
     }
@@ -42,6 +44,10 @@ public class Action
     public int getLocation()
     {
         return location;
+    }
+    public int getBufferUpdate()
+    {
+        return bufferUpdate;
     }
     public boolean isBeforeRecursion()
     {

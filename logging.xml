@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="false">
+
+	<appender name="FullSync" class="org.apache.log4j.FileAppender">
+		<param name="File" value="log/fullsync.log" />	
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %c %x - %m%n"/>
+		</layout>
+	</appender>
+
+	<appender name="Ssh" class="org.apache.log4j.FileAppender">
+        <param name="File" value="log/ssh.log" />	
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %c %x - %m%n"/>
+		</layout>
+	</appender>
+
+	<category name="com.sshtools.j2ssh">
+		<priority value ="WARNING"/>
+		<appender-ref ref="Ssh"/> 
+	</category>
+	
+	<category name="FullSync">
+		<priority value ="DEBUG"/>
+		<appender-ref ref="FullSync"/> 
+	</category>
+	
+	<root>
+		<priority value ="DEBUG"/>
+	</root>
+	
+</log4j:configuration>

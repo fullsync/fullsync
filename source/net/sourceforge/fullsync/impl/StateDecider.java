@@ -5,12 +5,11 @@ import net.sourceforge.fullsync.FileComparer;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.Node;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class StateDecider
+public class StateDecider implements net.sourceforge.fullsync.StateDecider
 {
     private FileComparer comparer;
     
@@ -19,7 +18,7 @@ public class StateDecider
         this.comparer = comparer;
     }
     
-    public State getState( Node source, Node destination )
+    public State getState( File source, File destination )
     	throws DataParseException
     {
         if( !source.exists() )

@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
-import net.sourceforge.fullsync.fs.Directory;
+import net.sourceforge.fullsync.fs.File;
 
 
 /**
@@ -14,9 +14,9 @@ import net.sourceforge.fullsync.fs.Directory;
 public class DirCreationEntryDescriptor implements EntryDescriptor
 {
     //private Directory src;
-    private Directory dst;
+    private File dst;
     
-    public DirCreationEntryDescriptor( /*Directory src,*/ Directory dst )
+    public DirCreationEntryDescriptor( /*Directory src,*/ File dst )
     {
         //this.src = src;
         this.dst = dst;
@@ -40,10 +40,20 @@ public class DirCreationEntryDescriptor implements EntryDescriptor
     }
     public void finishWrite()
     {
-        dst.makeDirectory();
+        try {
+            dst.makeDirectory();
+            dst.refresh();
+            
+        } catch( IOException e ) {
+            e.printStackTrace();
+        }
     }
     public void finishStore()
     {
         
+    }
+    public String getOperationDescription()
+    {
+        return "Making Directory "+dst.getPath();
     }
 }

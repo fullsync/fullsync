@@ -3,8 +3,9 @@
  */
 package net.sourceforge.fullsync.fs;
 
-import java.net.URI;
+import java.io.IOException;
 
+import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 
 /**
@@ -12,9 +13,5 @@ import net.sourceforge.fullsync.FileSystemException;
  */
 public interface FileSystem
 {
-    public Directory getDirectory( String path );
-    public File getFile( String path );
-    public Node getNode( String path );
-    
-    public Directory resolveUri( URI uri ) throws FileSystemException;
+    public Site createConnection( ConnectionDescription desc ) throws FileSystemException, IOException;
 }

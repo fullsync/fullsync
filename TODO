@@ -1,3 +1,7 @@
+
+---===[ to 0.7 Tasks ]====-----------------------------------------------------
+
+
 Clarification
 	[X]	What situations can occur, how to handle them best,
 	[X] ignore directories ? so we dont depend on the order the
@@ -43,6 +47,59 @@ ProcessorResults:
 		files first and start sync afterwards)
 		
 		no diff, only task tree
+
+Expandability:
+	[X] put length and lm into FileAttributes ?
+
+FileSystem:
+	[X] Maybe make FileSystem and FileSystemProvider
+		then Fs could keep track of all dirs instantiated,
+		so there is no way we double-load a dir/file
+	
+		^we really need that... for example we do not know
+		when to close ftp connections atm
+		
+		we should call the access managing unit "FileSystemSite"
+		this also marks the virtual root for our sync purposes
+		and could be used to store one buffer file
+
+		what about creating universal Directory and File objects
+		and letting them get filled with data and functionallity
+		by FileSystemConnections ? 
+		
+		things that must be dynamic:
+			- get file info (size, last mod, perms)
+			- get childs of dir
+			- mkdir, mkfile, write file, read file, delete
+			
+		I think the new system is pretty nice
+		
+	[X]	Impl buffering
+
+Clarification:
+	[X] where is / and how to avoid //... use . instead
+
+Clarification:
+	[X] Bufferupdate !? when where and how ? State refresh and
+		ActionDecider recall after Bufferupdate or is it handled
+		within the decider ? (why not letting the ActionDecider call
+		the StateDecider on the initial objects?)
+		
+		the only change that can occur after actiondecider is
+		the selection of which action should take place.
+		ignore for example should not update the buffer.
+		
+		so it will be best to say we update buffer after action
+		and use buffered and unbuffered data to decide which actions
+		are possible. that means the AC needs the statedecider as well.
+		
+		source buffers will not get touched by actions !?
+		
+		task getting BufferActions ?
+
+FS/Buffer update:
+	[X] buffer layer must keep references
+		buffed file: refreshReference -> unbuff = parent.getChild( name )
 		
 ----------------------------------------------------------------------------
 
@@ -50,16 +107,41 @@ Task/Action Interaction:
 	we'll get trouble when changing actions creating
 	inconsistency, so dont expect too much here
 
-----------------------------------------------------------------------------
+---===[ 0.7 to 0.8 Tasks ]====-----------------------------------------------------
+		
+Ignore:
+	[X] apply filter at filesystem level [NO] and add Node.isFiltered() [YES]
+		umpf, but it may change during folder traversal...
 
-Clarification:
-	[ ] Bufferupdate !? when where and how ? State refresh and
-		ActionDecider recall after Bufferupdate or is it handled
-		within the decider ? (why not letting the ActionDecider call
-		the StateDecider on the initial objects?)
-	[ ] getChild() - on null create, put this into a method ?
+FTP passwording
+	[X] impl general way of supplying more properties to schemes (?password=... ?)
+		or popup?
+	[X] save pw crypted
+	
+SFTP fingerprint 
+	[X] w/o questioning or MB question
 
-TakeIgnore:
+Logging:
+	[X] Implement logging mechanisms
+	[X] put sftp logging outside of main log file
+	
+Connection:
+	[X] disconnect properly 
+
+---===[ 0.8 to 0.9 Tasks ]====-----------------------------------------------------
+
+SB:
+	[ ] we need to build buffer info from fs as well, so fs orphans are
+		detected without having the same file on the other side
+		maybe make different buffers / different behaviors as
+		destination buffer does not want to know about new files in fs
+		(it would delete them ?)
+
+Case sensitive:
+	[ ] we need to differenciate between case sensitivity. 
+		store names toLower in hashtables and search for toLower
+
+TakeIgnore -> Filter:
 	[ ] Ignore takes place immediatly atm, on src and dst resulting
 		in absolutely no action, just being ignored from all syncs.
 		we should maybe add a special rule whether "ignore" is relevant
@@ -70,33 +152,29 @@ TakeIgnore:
 		   deciders method
 		-> but the statedecider will mark them equal :-/
 		   Node.isIgnored ?
-
+		   
 NoBufferFound Handling:
-	[ ] let him choose between:
+	[ ] let him choose between:   [destination buffer]
 		  - There is nothing at the destination.
 			(don't overwrite, build buffer while copying)
 		  - There is something at the destination
 			but its not sure its the same as in source.
 			(don't ask overwrite)
 		  - There is the same version in destination.
-			(build buffer from filesystem (and source?))
+			(build buffer from filesystem (and source?))		   
+			
+Threading
+	[ ] better UI / task differenciation
+	[ ] console <-> ui 
 
-FileSystem:
-	[ ] Maybe make FileSystem and FileSystemProvider
-		then Fs could keep track of all dirs instantiated,
-		so there is no way we double-load a dir/file
+Connection:
+	[ ] reconnect
 	
-		^we really need that... for example we do not know
-		when to close ftp connections atm
-		
-	[ ] we should call the access managing unit "FileSystemSite"
-		this also marks the virtual root for our sync purposes
-		and could be used to store one buffer file
+---===[ to 1.0 Tasks ]====-----------------------------------------------------
 
-		what about creating universal Directory and File objects
-		and letting them get filled with data and functionallity
-		by FileSystemConnections ?
-	
+Logging:
+	[ ] verify logging quality
+			
 Buffer:
 	[ ] test largefile handling (filesize > buffersize)
 	[ ] optimize largefile handling
@@ -115,11 +193,17 @@ Sheduler:
 
 Optimization:
 	[ ]	how to optimize and secure FS-access
+	[ ] getChild() - on null create, put this into a method ?
+		nope...
+	[ ] refresh of fs files
 
-Logging:
-	[ ] Implement good logging mechanisms
+Dispose:
+	[ ]	Dispose all images we draw and all other widgets too
 	
 Realtime-Reporting:
 	[ ] Implement realtime status information updating
 	[ ] Implement events for certain actions
 
+
+
+make isDir info only valid if existant

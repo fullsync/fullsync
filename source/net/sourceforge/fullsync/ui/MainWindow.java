@@ -1,23 +1,25 @@
 package net.sourceforge.fullsync.ui;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import net.sourceforge.fullsync.Processor;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
-import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.ProfilesChangeListener;
+import net.sourceforge.fullsync.TaskTree;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -31,9 +33,13 @@ import org.eclipse.swt.widgets.ToolItem;
 * for-profit company or business) then you should purchase
 * a license - please visit www.cloudgarden.com for details.
 */
-public class MainWindow extends org.eclipse.swt.widgets.Composite {
-
-	private ToolItem toolItem1;
+public class MainWindow extends org.eclipse.swt.widgets.Composite implements ProfilesChangeListener 
+{
+    
+	private ToolItem toolItemDelete;
+	private ToolItem toolItemEdit;
+	private ToolItem toolItemNew;
+	private ToolItem toolItemRun;
 	private ToolBar toolBar1;
 	private CoolItem coolItem1;
 	private CoolBar coolBar;
@@ -44,9 +50,11 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite {
 	private TableColumn tableColumnLastUpdate;
 	private TableColumn tableColumnName;
 	private Table tableProfiles;
+    private ArrayList images;
     
 	public MainWindow(Composite parent, int style) {
 		super(parent, style);
+		images = new ArrayList();
 		initGUI();
 	}
 
@@ -61,7 +69,10 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite {
 			coolBar = new CoolBar(this,SWT.NULL);
 			coolItem1 = new CoolItem(coolBar,SWT.NULL);
 			toolBar1 = new ToolBar(coolBar,SWT.FLAT);
-			toolItem1 = new ToolItem(toolBar1,SWT.NULL);
+			toolItemNew = new ToolItem(toolBar1,SWT.NULL);
+			toolItemEdit = new ToolItem(toolBar1,SWT.NULL);
+			toolItemDelete = new ToolItem(toolBar1,SWT.NULL);
+			toolItemRun = new ToolItem(toolBar1,SWT.NULL);
 			tableProfiles = new Table(this,SWT.FULL_SELECTION| SWT.BORDER);
 			tableColumnName = new TableColumn(tableProfiles,SWT.NULL);
 			tableColumnLastUpdate = new TableColumn(tableProfiles,SWT.NULL);
@@ -83,15 +94,31 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite {
 			coolBar.setLayoutData(coolBarLData);
 	
 			coolItem1.setControl(toolBar1);
-			coolItem1.setMinimumSize(new org.eclipse.swt.graphics.Point(23,22));
-			coolItem1.setPreferredSize(new org.eclipse.swt.graphics.Point(23,22));
+			coolItem1.setMinimumSize(new org.eclipse.swt.graphics.Point(31,21));
+			coolItem1.setPreferredSize(new org.eclipse.swt.graphics.Point(31,21));
 	
 	
-			final org.eclipse.swt.graphics.Image toolItem1image = new org.eclipse.swt.graphics.Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream("Runbutton.gif"));
-			toolItem1.setImage(toolItem1image);
-			toolItem1.addSelectionListener( new SelectionAdapter() {
+			toolItemNew.addSelectionListener( new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent evt) {
-					toolItem1WidgetSelected(evt);
+					toolItemNewWidgetSelected(evt);
+				}
+			});
+	
+			toolItemEdit.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent evt) {
+					toolItemEditWidgetSelected(evt);
+				}
+			});
+	
+			toolItemDelete.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent evt) {
+					toolItemDeleteWidgetSelected(evt);
+				}
+			});
+	
+			toolItemRun.addSelectionListener( new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent evt) {
+					toolItemRunWidgetSelected(evt);
 				}
 			});
 	
@@ -129,11 +156,6 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite {
 			thisLayout.horizontalSpacing = 0;
 			thisLayout.verticalSpacing = 0;
 			this.layout();
-			addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e) {
-					toolItem1image.dispose();
-				}
-			});
 	
 			postInitGUI();
 		} catch (Exception e) {
@@ -145,8 +167,31 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite {
 	}
 
 	/** Add your post-init code in here 	*/
-	public void postInitGUI(){
+	public void postInitGUI()
+	{
+		Image i;
+		i = LogWindow.loadImage( "Button_New.gif" );
+		toolItemNew.setImage( i );
+		images.add( i );
+		i = LogWindow.loadImage( "Button_Edit.gif" );
+		toolItemEdit.setImage( i );
+		images.add( i );
+		i = LogWindow.loadImage( "Button_Delete.gif" );
+		toolItemDelete.setImage( i );
+		images.add( i );
+		i = LogWindow.loadImage( "Button_Run.gif" );
+		toolItemRun.setImage( i );
+		images.add( i );
 	}
+	public void dispose()
+    {
+        for( Iterator i = images.iterator(); i.hasNext(); )
+        {
+            Image image = (Image)i.next();
+            image.dispose();
+        }
+        super.dispose();
+    }
 	public Processor getProcessor()
     {
         return processor;
@@ -157,7 +202,10 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite {
     }
 	public void setProfileManager( ProfileManager profileManager )
 	{
+	    if( this.profileManager != null )
+	        this.profileManager.removeChangeListener( this );
 	    this.profileManager = profileManager;
+	    this.profileManager.addChangeListener( this );
 	    populateProfileList();
 	}
 	public ProfileManager getProfileManager()
@@ -170,6 +218,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite {
 	    if( profileManager != null )
 	    {
 	        tableProfiles.clearAll();
+	        tableProfiles.setItemCount(0);
 	        Enumeration e = profileManager.getProfiles();
 	        while( e.hasMoreElements() )
 	        {
@@ -189,10 +238,45 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite {
 	    
 	}
 
-	
 
-	/** Auto-generated event handler method */
-	protected void toolItem1WidgetSelected(SelectionEvent evt)
+    public void profilesChanged()
+    {
+        populateProfileList();
+
+    }
+	protected void toolItemRunWidgetSelected(SelectionEvent evt)
+	{
+		TableItem[] items = tableProfiles.getSelection();
+		if( items.length == 0 )
+		    return;
+		    
+		TableItem i = items[0];
+		final Profile p = getProfileManager().getProfile( i.getText( 0 ) );
+		if( p == null )
+		    return;
+		
+		
+	    Thread worker = new Thread( new Runnable() {
+	        public void run()
+            {
+				TaskTree t;
+                try {
+                    t = getProcessor().execute( p );
+                    LogWindow.show( t );
+                } catch( Exception e ) {
+                    e.printStackTrace();
+                }
+            }
+	    });
+	    worker.start();
+	}
+
+	protected void toolItemNewWidgetSelected(SelectionEvent evt)
+	{
+		ProfileDetails.showProfile( getProfileManager(), null );
+	}
+
+	protected void toolItemEditWidgetSelected(SelectionEvent evt)
 	{
 		TableItem[] items = tableProfiles.getSelection();
 		if( items.length == 0 )
@@ -202,14 +286,28 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite {
 		Profile p = getProfileManager().getProfile( i.getText( 0 ) );
 		if( p == null )
 		    return;
-		
-		
-		// TODO fork
-		try {
-			Task t = getProcessor().execute( p );
-		    LogWindow.show( t );
-        } catch( Exception e ) {
-            e.printStackTrace();
-        }
+
+		ProfileDetails.showProfile( getProfileManager(), p.getName() );
+	}
+
+	protected void toolItemDeleteWidgetSelected(SelectionEvent evt)
+	{
+		TableItem[] items = tableProfiles.getSelection();
+		if( items.length == 0 )
+		    return;
+		    
+		TableItem i = items[0];
+		Profile p = getProfileManager().getProfile( i.getText( 0 ) );
+		if( p == null )
+		    return;
+
+		MessageBox mb = new MessageBox( getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO );
+		mb.setText( "Confirmation" );
+	    mb.setMessage( "Do you really want to delete profile "+p.getName()+" ?");
+	    if( mb.open() == SWT.YES )
+	    {
+	        profileManager.removeProfile( p.getName() );
+	        profileManager.save();
+	    }
 	}
 }

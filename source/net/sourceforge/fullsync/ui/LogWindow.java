@@ -2,6 +2,7 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -9,12 +10,12 @@ import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionQueue;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.buffer.BlockBuffer;
-import net.sourceforge.fullsync.fs.Node;
-import net.sourceforge.fullsync.fs.buffering.BufferedDirectory;
-import net.sourceforge.fullsync.fs.buffering.BufferedFile;
+import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.impl.FillBufferActionQueue;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -62,7 +63,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	private Image nodeFile;
 	private Image nodeDirectory;
 	
-	private Task rootTask;
+	private TaskTree taskTree;
 	
 	
 	public LogWindow(Composite parent, int style) 
@@ -166,34 +167,38 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	public void postInitGUI(){
 	}
 
-	public static void show( Task task )
+	public static void show( final TaskTree task )
 	{
-		try {
-			Display display = Display.getDefault();
-			Shell shell = new Shell(display);
-			LogWindow inst = new LogWindow(shell, SWT.NULL);
-			inst.setRootTask( task );
-			inst.rebuildActionList();
-			shell.setLayout(new org.eclipse.swt.layout.FillLayout());
-			Rectangle shellBounds = shell.computeTrim(0,0,663,225);
-			shell.setSize(shellBounds.width, shellBounds.height);
-			shell.setText( "Synchronization Actions" );
-			shell.setImage( new Image( null, "images/Location_Both.gif" ) );
-			shell.open();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		final Display display = Display.getDefault();
+		display.syncExec( new Runnable() {
+		    public void run()
+            {
+		        try {
+					Shell shell = new Shell(display);
+					LogWindow inst = new LogWindow(shell, SWT.NULL);
+					inst.setTaskTree( task );
+					inst.rebuildActionList();
+					shell.setLayout(new org.eclipse.swt.layout.FillLayout());
+					Rectangle shellBounds = shell.computeTrim(0,0,663,225);
+					shell.setSize(shellBounds.width, shellBounds.height);
+					shell.setText( "Synchronization Actions" );
+					shell.setImage( new Image( null, "images/Location_Both.gif" ) );
+					shell.open();
+		        } catch( Exception ex ) {
+		            ex.printStackTrace();
+		        }
+            }
+		});
 	}
-	public void setRootTask( Task task )
+	public void setTaskTree( TaskTree task )
 	{
-	    this.rootTask = task;
+	    this.taskTree = task;
 	}
-	protected Image loadImage( String filename )
+	public static Image loadImage( String filename )
 	{
 	    try {
 	        return new Image( null, new FileInputStream( "images/"+filename) );
         } catch( FileNotFoundException e ) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
@@ -218,7 +223,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	}
 	protected void drawSide( GC g, Task t, Action a, int location )
 	{
-	    Node n = location==Location.Source?t.getSource():t.getDestination();
+	    File n = location==Location.Source?t.getSource():t.getDestination();
 	    int  x = location==Location.Source?2:2*16+2;
 
 	    if( n.exists() )
@@ -278,7 +283,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	}
     protected void addTask( Task t )
     {
-        if( t.getCurrentAction().isBeforeRecursion() )
+        if( !t.getCurrentAction().isBeforeRecursion() )
             addTaskChildren( t );
         
         Image image = buildTaskImage( t );
@@ -294,14 +299,14 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
         } );
         item.setData( t );
 
-        if( !t.getCurrentAction().isBeforeRecursion() )
+        if( t.getCurrentAction().isBeforeRecursion() )
             addTaskChildren( t );
     }
     public void rebuildActionList()
     {
         tableLogLines.clearAll();
         tableLogLines.setItemCount(0);
-        addTaskChildren( rootTask );
+        addTaskChildren( taskTree.getRoot() );
         //tableLogLines.redraw();
     }
 
@@ -324,7 +329,9 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
                 
                 tableLogLines.redraw();
                 */
+                int top = tableLogLines.getTopIndex();
                 rebuildActionList();
+                tableLogLines.setTopIndex( top );
             }
         };
         
@@ -367,20 +374,31 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
     }
     protected void performActions()
     {
-        BlockBuffer buffer = new BlockBuffer();
-        buffer.load();
-        ActionQueue queue = new FillBufferActionQueue(buffer);
-        TableItem[] items = tableLogLines.getItems();
-        for( int i = 0; i < items.length; i++ )
-        {
-            Task t = (Task)items[i].getData();
-            queue.enqueue( t.getCurrentAction(), t.getSource(), t.getDestination() );
-        }
-        queue.flush();
-        buffer.unload();
-        
-        // HACK WTF !?
-        ((BufferedDirectory)((BufferedFile)((Task)items[0].getData()).getDestination()).getDirectory()).flushDirty();
+        try {
+            //Logger logger = Logger.getRootLogger();
+            //logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
+            Logger logger = Logger.getLogger( "FullSync" );
+	        logger.info( "Synchronizing "+taskTree.getSource().getUri().toString()+" and "+taskTree.getDestination().getUri().toString() );
+	        BlockBuffer buffer = new BlockBuffer( logger );
+	        buffer.load();
+	        ActionQueue queue = new FillBufferActionQueue(buffer);
+	        TableItem[] items = tableLogLines.getItems();
+	        for( int i = 0; i < items.length; i++ )
+	        {
+	            Task t = (Task)items[i].getData();
+	            queue.enqueue( t.getCurrentAction(), t.getSource(), t.getDestination() );
+	        }
+	        queue.flush();
+	        buffer.unload();
+	        
+	        taskTree.getSource().flush();
+	        taskTree.getDestination().flush();
+	        taskTree.getSource().close();
+	        taskTree.getDestination().close();
+	        logger.info( "finished synchronization" );
+	    } catch( IOException e ) {
+	        e.printStackTrace();
+	    }
     }
     
 	/** Auto-generated event handler method */
@@ -396,5 +414,6 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	protected void buttonGoWidgetSelected(SelectionEvent evt)
 	{
 		performActions();
+		getShell().dispose();
 	}
 }

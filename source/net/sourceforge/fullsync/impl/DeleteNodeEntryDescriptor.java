@@ -5,16 +5,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
-import net.sourceforge.fullsync.fs.Node;
+import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class DeleteNodeEntryDescriptor implements EntryDescriptor
 {
-    private Node node;
+    private File node;
     
-    public DeleteNodeEntryDescriptor( Node node )
+    public DeleteNodeEntryDescriptor( File node )
     {
         this.node = node;
     }
@@ -40,7 +40,16 @@ public class DeleteNodeEntryDescriptor implements EntryDescriptor
 
     public void finishWrite()
     {
-        node.delete();
+        try {
+            node.delete();
+            
+        } catch( IOException ioe ) {
+            ioe.printStackTrace();
+        }
+    }
+    public String getOperationDescription()
+    {
+        return "Deleted File "+node.getPath();
     }
 
 }
