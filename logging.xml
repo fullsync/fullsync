@@ -24,17 +24,17 @@
 	</appender>
 
 	<logger name="com.sshtools.j2ssh" additivity="false">
-		<level value ="WARNING"/>
+		<level value="WARN"/>
 		<appender-ref ref="Ssh"/> 
 	</logger>
 	
 	<logger name="FullSync" additivity="false">
-		<level value ="INFO"/>
+		<level value="INFO"/>
 		<appender-ref ref="FullSyncAppender"/> 
 	</logger>
 	
 	<root>
-		<priority value ="WARNING"/>
+		<priority value="WARN"/>
 		<appender-ref ref="error"/>
 	</root>
 	
