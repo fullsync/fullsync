@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
-<project name="FullSync" default="run" basedir="." >
+<project name="FullSync" default="build" basedir="." >
 	
 	<property file="build.properties"/>
+	
 	
 	<!-- Project Properties -->
 	<property name="name" 				value="FullSync"/>
@@ -17,9 +18,20 @@
 	<property name="build.lib.dir"		value="${build.dir}\lib" />
 	<property name="dist.dir"			value="${basedir}/build" />
 
+	<!-- External Tools Paths -->
+	<property name="jsmooth.dir"		value="C:\Program Files\JSmooth 0.9.7"/>
+	<property name="izpack.dir" 		value="C:/Program Files/IzPack"/>
+	
 	<property name="debug" 				value="on" />
 	
-	<fileset id="dependentJars" dir="D:/Java/lib">
+	<taskdef name="jsmoothgen"
+	     classname="net.charabia.jsmoothgen.ant.JSmoothGen"
+	     classpath="${jsmooth.dir}\lib\jsmoothgen-ant.jar"/>
+
+	<taskdef name="izpack" classpath="${izpack.dir}/lib/compiler.jar"
+            classname="com.izforge.izpack.ant.IzPackTask"/>
+
+	<fileset id="dependentJars" dir="${basedir}/lib">
 		<include name="j2ssh-core.jar"/>
 		<include name="jakarta-oro-2.0.7.jar"/>		
 		<include name="commons-betwixt-1.0-alpha-1.jar"/>
@@ -55,6 +67,10 @@
 		<javac debug="${debug}" srcdir="${source.dir}" destdir="${classes.dir}" classpathref="classpath"/>
 	</target>
 
+    <target name="rmic">
+        <rmic classname="net.sourceforge.fullsync.remoteinterface.RemoteInterfaceServer" base="${classes.dir}" classpathref="classpath"/>
+    </target>
+    	
 	<target name="javadoc">
 		<mkdir dir="${build.dir}/doc/api"/>
 		<javadoc destdir="${build.dir}/doc/api" classpathref="classpath">
@@ -82,6 +98,14 @@
 		<copy file="${basedir}/resources/profiles-dist.xml" tofile="${build.dir}/profiles.xml"/>
 		<copy file="${basedir}/resources/logging-dist.xml" tofile="${build.dir}/logging.xml"/>		
 		<copy file="${basedir}/resources/sample.syncrules" tofile="${build.dir}/sample.syncrules"/>				
+		<copy todir="${build.dir}">
+			<fileset dir="./resources">
+				<include name="**/*.manifest"/>
+			</fileset>
+			<fileset dir="./resources/swt-win32">
+				<include name="**/*.dll"/>
+			</fileset>
+		</copy>
 		<!-- copy readme and so on -->
 	</target>
 
@@ -103,12 +127,28 @@
 	</target>
 	
 	<target name="win32-exe" description="Create Exe-Stub for Win32 distro" depends="jar">
-		<exec executable="resources/tools/jsmoothcmd.exe" failonerror="true">
-			<arg line="resources/fullsync.jsmooth"/>
-		</exec>
+		<jsmoothgen project="resources/fullsync.jsmooth" 
+		      skeletonroot="${jsmooth.dir}/skeletons" verbose="true"/>
 	</target>
 		
-	<target name="build" depends="detect, copy-libs, copy-resources, jar, javadoc">
+
+    <target name="installer" description="Builds the FullSync Installer">
+        <izpack input="${basedir}/installer/install.xml"
+                output="${basedir}/installer/FullSyncInstaller.jar"
+                installerType="standard"
+                basedir="${basedir}"
+                izPackDir="${izpack.dir}"/>
+
+        	<jsmoothgen project="installer/FullSyncInstaller.jsmooth" 
+		      skeletonroot="${jsmooth.dir}/skeletons" verbose="true"/>
+    </target>
+		
+	<!-- [MICHELE] this is for the client/server version I'm working on. -->
+	<!-- <target name="build" depends="detect, copy-libs, rmic, copy-resources, jar, javadoc, win32-exe, installer"> -->
+	<target name="build" depends="detect, copy-libs, copy-resources, jar, javadoc, win32-exe, installer">
+		<copydir src="${build.dir}" dest="FullSync-${version}"/>
+		<zip zipfile="FullSync-${version}.zip" basedir="FullSync-${version}"/>
+		<delete dir="FullSync-${version}"/>
 	</target>
 
 	<target name="win32-installer" description="Create Windows installer" depends="build">

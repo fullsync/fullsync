@@ -1,0 +1,16 @@
+<project name="FullSyncInstaller" default="installer" basedir=".">
+	
+	<property name="izpack.dir" value="C:/Program Files/IzPack" />
+
+	<taskdef name="izpack" classpath="${izpack.dir}/lib/compiler.jar"
+            classname="com.izforge.izpack.ant.IzPackTask"/>
+
+    <target name="installer" description="Builds the FullSync Installer">
+        <izpack input="${basedir}/installer/install.xml"
+                output="${basedir}/installer/FullSyncInstaller.jar"
+                installerType="standard"
+                basedir="${basedir}"
+                izPackDir="${izpack.dir}"/>
+    </target>
+
+</project>
