@@ -147,6 +147,8 @@ public class SimplyfiedSyncRules implements RuleSet {
 
 		if (src.getLastModified() > dst.getLastModified()) {
 			return new State(State.FileChange, Location.Source);
+		} else if (src.getLastModified() < dst.getLastModified()){
+		    return new State(State.FileChange, Location.Destination);
 		}
 
 		return new State(State.NodeInSync, Location.Both);
