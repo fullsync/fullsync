@@ -8,15 +8,15 @@ import net.sourceforge.fullsync.ActionDecider;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.IgnoreDecider;
-import net.sourceforge.fullsync.Processor;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class ProcessorImpl extends Processor
+public class ProcessorImpl extends AbstractProcessor
 {
     private IgnoreDecider takeIgnoreDecider;
     private StateDecider stateDecider;
@@ -66,9 +66,17 @@ public class ProcessorImpl extends Processor
     {
         if( !takeIgnoreDecider.isNodeIgnored( src ) )
 		{
-    		Task task = actionDecider.getTask( src, dst, stateDecider, bufferStateDecider );
-    		//Task task = new Task( src, dst, state, actions );
-			if( rules.isUsingRecursion() )
+            for( int i = 0; i < taskGenerationListeners.size(); i++ )
+                ((TaskGenerationListener)taskGenerationListeners.get(i))
+                	.taskGenerationStarted(src, dst);
+
+            Task task = actionDecider.getTask( src, dst, stateDecider, bufferStateDecider );
+
+            for( int i = 0; i < taskGenerationListeners.size(); i++ )
+                ((TaskGenerationListener)taskGenerationListeners.get(i))
+                	.taskGenerationFinished(task);
+            
+            if( rules.isUsingRecursion() )
 			    recurse( src, dst, rules, task );
     		parent.addChild(task);
 		} else {

@@ -12,7 +12,8 @@ public interface Site
     /*
     public boolean isBuffered();
     public File getUnbuffered();
-*/
+    */
+    
     // open ?
     public void flush() throws IOException;
     public void close() throws IOException;
@@ -21,4 +22,5 @@ public interface Site
     
     public boolean isCaseSensitive();
     
+    //public File getFile( String path );
 }

@@ -13,15 +13,20 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class FileCopyEntryDescriptor implements EntryDescriptor
 {
+    private Object reference;
     private File src;
     private File dst;
     
-    public FileCopyEntryDescriptor( File src, File dst )
+    public FileCopyEntryDescriptor( Object reference, File src, File dst )
     {
+        this.reference = reference;
         this.src = src;
         this.dst = dst;
     }
-    
+    public Object getReferenceObject()
+    {
+        return reference;
+    }
     public long getLength()
     {
         return src.getFileAttributes().getLength();

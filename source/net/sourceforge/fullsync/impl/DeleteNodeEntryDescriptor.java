@@ -12,13 +12,18 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class DeleteNodeEntryDescriptor implements EntryDescriptor
 {
+    private Object reference;
     private File node;
     
-    public DeleteNodeEntryDescriptor( File node )
+    public DeleteNodeEntryDescriptor( Object reference, File node )
     {
+        this.reference = reference;
         this.node = node;
     }
-
+    public Object getReferenceObject()
+    {
+        return reference;
+    }
     public long getLength()
     {
         return 0;

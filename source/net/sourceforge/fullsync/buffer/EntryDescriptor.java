@@ -12,6 +12,7 @@ import java.io.OutputStream;
  */
 public interface EntryDescriptor
 {
+    public Object getReferenceObject();
     public long getLength();
     
     public InputStream getInputStream() throws IOException;

@@ -1,4 +1,12 @@
 
+* added traversal types, so source buffer<->fs check is now implementable
+* added feedback in synchronization phase 
+* added initial cli support (try -h option)
+* added tray icon, now normally minimizing to tray when window is closed
+* added initial sheduler support
+* verified linux functionality
+* added jsmooth exe wrapper and application icon
+
 Version 0.7.1
 (18 September 2004)
 

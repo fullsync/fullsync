@@ -7,6 +7,7 @@ import net.sourceforge.fullsync.fs.File;
  */
 public interface ActionDecider
 {
+    public TraversalType getTraversalType();
     
     // needed ?
     //public Action getDefaultAction( File src, File dst, StateDecider sd, BufferStateDecider bsd )  throws DataParseException;

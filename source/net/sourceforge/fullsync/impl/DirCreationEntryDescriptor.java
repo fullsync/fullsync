@@ -13,17 +13,20 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class DirCreationEntryDescriptor implements EntryDescriptor
 {
-    //private Directory src;
+    private Object reference;
     private File dst;
     
-    public DirCreationEntryDescriptor( /*Directory src,*/ File dst )
+    public DirCreationEntryDescriptor( Object reference, File dst )
     {
-        //this.src = src;
+        this.reference = reference;
         this.dst = dst;
         if( dst == null )
             throw new RuntimeException( "can't give me null !!" );
     }
-    
+    public Object getReferenceObject()
+    {
+        return reference;
+    }
     public long getLength()
     {
         return 0;

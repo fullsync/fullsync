@@ -9,6 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import net.sourceforge.fullsync.buffer.BlockBuffer;
 import net.sourceforge.fullsync.impl.FillBufferActionQueue;
+import net.sourceforge.fullsync.impl.AbstractProcessor;
 import net.sourceforge.fullsync.impl.ProcessorImpl;
 import net.sourceforge.fullsync.ui.LogWindow;
 import net.sourceforge.fullsync.ui.MainWindow;
@@ -32,7 +33,7 @@ public class FullSync
     private static FullSync singleton;
     
     private ProfileManager profileManager;
-    private Processor processor;
+    private AbstractProcessor processor;
     
     private boolean guiEnabled;
     private Display display;
@@ -53,7 +54,7 @@ public class FullSync
     
     public void start()
     {
-    	profileManager.startTimer();
+    	//profileManager.startTimer();
         if( guiEnabled )
         {
             startGui();
@@ -76,7 +77,7 @@ public class FullSync
     	// stop gui
     }
     
-    public Processor getProcessor() 
+    public AbstractProcessor getProcessor() 
     {
 		return processor;
 	}

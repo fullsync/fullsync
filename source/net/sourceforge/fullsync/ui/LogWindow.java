@@ -7,10 +7,11 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.Action;
-import net.sourceforge.fullsync.ActionFinishedListener;
 import net.sourceforge.fullsync.ActionQueue;
+import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.buffer.BlockBuffer;
 import net.sourceforge.fullsync.fs.File;
@@ -48,9 +49,16 @@ import org.eclipse.swt.widgets.TableItem;
 /**
 * This code was generated using CloudGarden's Jigloo
 * SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a
-* for-profit company or business) then you should purchase
-* a license - please visit www.cloudgarden.com for details.
+* use. If Jigloo is being used commercially (ie, by a corporation,
+* company or business for any purpose whatever) then you
+* should purchase a license for each developer using Jigloo.
+* Please visit www.cloudgarden.com for details.
+* Use of Jigloo implies acceptance of these licensing terms.
+* *************************************
+* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
+* for this machine, so Jigloo or this code cannot be used legally
+* for any corporate or commercial purpose.
+* *************************************
 */
 public class LogWindow extends org.eclipse.swt.widgets.Composite {
 
@@ -177,7 +185,6 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 			labelProgressLData.grabExcessHorizontalSpace = true;
 			labelProgressLData.grabExcessVerticalSpace = false;
 			labelProgress.setLayoutData(labelProgressLData);
-			labelProgress.setText("Progress");
 			labelProgress.setSize(new org.eclipse.swt.graphics.Point(42,13));
 	
 			GridData buttonGoLData = new GridData();
@@ -372,7 +379,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 
     protected void showPopup( int x, int y )
     {
-        System.out.println( "Contextmenu at: "+x+", "+y );
+        //System.out.println( "Contextmenu at: "+x+", "+y );
         
         SelectionListener selListener = new SelectionAdapter() {
             public void widgetSelected( SelectionEvent e )
@@ -440,9 +447,6 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 		            processing = true;
 		            final Display display = getDisplay();
 		            
-		            tasksTotal = taskTree.getTaskCount();
-				    tasksFinished = 0;
-				    
 					// Logger logger = Logger.getRootLogger();
 		            // logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
 		            Logger logger = Logger.getLogger( "FullSync" );
@@ -453,9 +457,14 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 			        // TODO add some visualisation of finished tasks 
 			        // final Color colorFinished = new Color( null, 150, 255, 150 );
 			        // item.setBackground()
+
+			        IoStatistics stats = queue.createStatistics( taskTree );
+		            tasksTotal = stats.getCountActions();
+				    tasksFinished = 0;
+				    
 			        
-			        queue.addActionFinishedListener( new ActionFinishedListener() {
-			        	public void actionFinished() 
+			        queue.addActionFinishedListener( new TaskFinishedListener() {
+			        	public void actionFinished( Task task, int bytes ) 
 			        	{
 			        		//final TableItem i = ((TableItem)callbackObj);
 				            display.asyncExec( new Runnable() {

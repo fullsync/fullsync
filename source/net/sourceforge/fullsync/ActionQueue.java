@@ -1,15 +1,17 @@
 package net.sourceforge.fullsync;
 
-import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public interface ActionQueue
 {
+    // we are much more a TaskExecutor
+    public IoStatistics createStatistics( TaskTree tree );
 	public void enqueue( TaskTree tree );
-    public void enqueue( Action action, File source, File destination );
+    public void enqueue( Task task );
     public void flush();
-    public void addActionFinishedListener( ActionFinishedListener listener );
-    public void removeActionFinishedListener( ActionFinishedListener listener );
+    
+    public void addActionFinishedListener( TaskFinishedListener listener );
+    public void removeActionFinishedListener( TaskFinishedListener listener );
 }

@@ -39,7 +39,8 @@ ActionQueue:
 ProcessorResults:
 	[X] we do have two different ways of synchronization. we can have
 		a pipeline model  Processor->ActionQueue->Buffer->IO Operations
-		or a static model Processor->Task w/ Children->Interaction->AQ->Buff->IO
+		or a static model Processor->Task w/ 
+		Children->Interaction->AQ->Buff->IO
 		
 		there should be a clean differenciation between building a tasktree and
 		applying actions directly. on the other hand, when building a tasktree
@@ -101,21 +102,21 @@ FS/Buffer update:
 	[X] buffer layer must keep references
 		buffed file: refreshReference -> unbuff = parent.getChild( name )
 		
-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 Task/Action Interaction:
 	we'll get trouble when changing actions creating
 	inconsistency, so dont expect too much here
 
----===[ 0.7 to 0.8 Tasks ]====-----------------------------------------------------
+---===[ 0.7 to 0.8 Tasks ]====-------------------------------------------------
 		
 Ignore:
 	[X] apply filter at filesystem level [NO] and add Node.isFiltered() [YES]
 		umpf, but it may change during folder traversal...
 
 FTP passwording
-	[X] impl general way of supplying more properties to schemes (?password=... ?)
-		or popup?
+	[X] impl general way of supplying more properties to schemes 
+		(?password=... ?) or popup?
 	[X] save pw crypted
 	
 SFTP fingerprint 
@@ -135,6 +136,9 @@ Logwindow
 	[X] show progress of performing actions
 	[X] show size of files
 
+Logwindow
+	[ ] Show size of copied data
+	
 Syncprocess encapsulement:
 	[ ] beside having access to all the neat classes we can use to 
 		do a very custom synchronization process we need to encapsule
@@ -146,6 +150,31 @@ Syncprocess encapsulement:
 		  - gui yes/no
 		  - interactive yes/no
 		  - verbose yes/no
+
+Feedback:
+	[-] After ActionQueue: Action started (this may be multiple ?)
+		show "(Task 2130 of 2430) E:\bla -> ftp:// ..."
+		-> that will make multithreaded task execution extremely hard
+	[ ] Cancel in sync phase
+	[X]	progress indication for performing actions
+	[X] progress indication (or at least what am i doing atm) for check phase
+	[?] some encapsulement for src and dst files ? [Task?]
+	
+Processor:
+	[ ] impl new TraveralTypes
+	
+Naming:
+	[ ] call Processor TaskGenerator ? (or is the ActionDecider the generator?)
+	[ ] call ActionQueue TaskExecutor ? (as we don't care about the buffer at all)
+
+Architecture:
+	[ ] give ActionQueue or Buffer some kind of input stream ?
+	[ ] generally make more stream-like behaviour ?		
+		nah, it destroys all means of statistics/feedback
+
+Realtime-Reporting:
+	[?] Implement realtime status information updating
+	[?] Implement events for certain actions
 
 Sheduler:
 	[X]	copy sheduler from backup - we use Timer and ProfileManager directly
@@ -167,7 +196,8 @@ SB:
 	[ ] added monitor fs, but its still not working correctly (buff src
 		does not have a length when adding to buffer, maybe use fs ones)
 		furthermore, how should this all work at all, to-ftp will always
-		have differences to destination.
+		have differences to destination, so we'll need to ignore
+		src <-> dst state at all.
 
 Files:
 	[ ] we need to differenciate between case sensitivity. 
@@ -198,13 +228,6 @@ NoBufferFound Handling:
 		  - There is the same version in destination.
 			(build buffer from filesystem (and source?))		   
 			
-Threading
-	[ ] better UI / task differenciation
-	[ ] console <-> ui 
-
-Connection:
-	[ ] reconnect
-	
 Execution:
 	[ ] make some controlling unit which will handle profile execution
 	[ ] we should make sure profiles are locked while executed and 
@@ -214,6 +237,13 @@ Execution:
 
 ---===[ to 1.0 Tasks ]====-----------------------------------------------------
 
+Threading
+	[ ] better UI / task differenciation
+	[ ] console <-> ui 
+
+Connection:
+	[ ] reconnect
+	
 Dispose:
 	[ ]	Dispose all images we draw and all other widgets too
 	[ ] dispose tableitems
@@ -244,11 +274,8 @@ Optimization:
 		nope...
 	[ ] refresh of fs files
 	
-Realtime-Reporting:
-	[ ] Implement realtime status information updating
-	[ ] Implement events for certain actions
 
-Logwindow
-	[ ] Show size of copied data
+-------------------------------------------------------------------------------
 
-make isDir info only valid if existant
+make isDir info only valid if existant ?
+

@@ -134,22 +134,17 @@ public class DebugNode implements File
 
     public void refreshBuffer()
     {
-        // TODO Auto-generated method stub
-
     }
     public File createChild( String name, boolean directory )
     {
-        // TODO Auto-generated method stub
         return null;
     }
     public FileAttributes getFileAttributes()
     {
-        // TODO Auto-generated method stub
         return null;
     }
     public boolean isFile()
     {
-        // TODO Auto-generated method stub
         return false;
     }
     public boolean isFiltered()
@@ -162,8 +157,6 @@ public class DebugNode implements File
     }
     public void setFileAttributes( FileAttributes att )
     {
-        // TODO Auto-generated method stub
-
     }
     public void setDirectory( boolean directory )
     {

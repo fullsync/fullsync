@@ -11,6 +11,7 @@ import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.StateDecider;
 import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TraversalType;
 import net.sourceforge.fullsync.fs.File;
 
 /**
@@ -20,6 +21,10 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class PublishSBActionDecider implements ActionDecider
 {
+    public TraversalType getTraversalType()
+    {
+        return new TraversalType( Location.Source );
+    }
 
     public Task getTask( File src, File dst, StateDecider sd,
             BufferStateDecider bsd ) throws DataParseException

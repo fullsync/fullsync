@@ -8,7 +8,10 @@ import net.sourceforge.fullsync.Processor;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.ProfilesChangeListener;
+import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.fs.File;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -27,10 +30,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormLayout;
 /**
 * This code was generated using CloudGarden's Jigloo
 * SWT/Swing GUI Builder, which is free for non-commercial
@@ -45,11 +44,12 @@ import org.eclipse.swt.layout.FormLayout;
 * for any corporate or commercial purpose.
 * *************************************
 */
-public class MainWindow extends org.eclipse.swt.widgets.Composite implements ProfilesChangeListener 
+public class MainWindow extends org.eclipse.swt.widgets.Composite implements ProfilesChangeListener, TaskGenerationListener
 {
     private ProfileManager profileManager;
     private ToolItem toolItemNew;
     private TableColumn tableColumnName;
+    private StatusLine statusLine;
     private ToolBar toolBar2;
     private CoolItem coolItem2;
     private TableColumn tableColumnDestination;
@@ -221,6 +221,13 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
                 tableProfilesLData.verticalAlignment = GridData.FILL;
                 tableProfiles.setLayoutData(tableProfilesLData);
             }
+            {
+                statusLine = new StatusLine(this, SWT.NONE);
+                GridData statusLineLData = new GridData();
+                statusLineLData.grabExcessHorizontalSpace = true;
+                statusLineLData.horizontalAlignment = GridData.FILL;
+                statusLine.setLayoutData(statusLineLData);
+            }
 			this.layout();
 	
 			postInitGUI();
@@ -265,13 +272,21 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
         }
         super.dispose();
     }
+	public StatusLine getStatusLine()
+	{
+	    return statusLine;
+	}
 	public Processor getProcessor()
     {
         return processor;
     }
     public void setProcessor( Processor processor )
     {
+        if( this.processor != null )
+            this.processor.removeTaskGenerationListener( this );
         this.processor = processor;
+        if( this.processor != null )
+            this.processor.addTaskGenerationListener( this );
     }
 	public void setProfileManager( ProfileManager profileManager )
 	{
@@ -316,8 +331,8 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	{
 	    // on OSX use this: 
 	    //    mainWindow.setMinimized(true);
+	    getShell().setMinimized(true);
 	    getShell().setVisible(false);
-
 	    // TODO make sure Tray is visible here
 	}
 	
@@ -337,7 +352,22 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	        toolItemSchedule.setToolTipText( "Start Timer" );
 	    }
 	}
-
+	
+    public void taskTreeStarted( TaskTree tree )
+    {
+    }
+    public void taskGenerationStarted( final File source, final File destination )
+    {
+        statusLine.setMessage( "checking "+source.getPath() );
+    }
+    public void taskGenerationFinished( Task task )
+    {
+        
+    }
+    public void taskTreeFinished( TaskTree tree )
+    {
+        statusLine.setMessage( "synchronization finished");
+    }
     public void profilesChanged()
     {
         getDisplay().asyncExec( new Runnable() {
@@ -364,7 +394,9 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
             {
 				TaskTree t;
                 try {
+                    statusLine.setMessage( "Starting profile "+p.getName()+"..." );
                     t = getProcessor().execute( p );
+                    statusLine.setMessage( "Finished profile "+p.getName() );
                     LogWindow.show( t );
                 } catch( Exception e ) {
                     e.printStackTrace();

@@ -26,12 +26,13 @@ public class CommandLineInterpreter
 		// interactive mode
 		// no actions and stuff
 		
-		options.addOption( OptionBuilder.withLongOpt( "profile" )
-		        				.withDescription( "specifies a profile" )
-		        				.withValueSeparator( '=' )
-		        				.hasArg()
-		        				.withArgName("PROFILE")
-		        				.create("p") );
+		OptionBuilder.withLongOpt( "profile" );
+		OptionBuilder.withDescription( "specifies a profile" );
+		OptionBuilder.withValueSeparator( '=' );
+		OptionBuilder.hasArg();
+		OptionBuilder.withArgName("PROFILE");
+		options.addOption( OptionBuilder.create("p") ); 
+		        
 		
 		try {
 		    CommandLineParser parser = new PosixParser();

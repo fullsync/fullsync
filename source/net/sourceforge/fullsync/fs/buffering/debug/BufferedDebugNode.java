@@ -31,17 +31,14 @@ public class BufferedDebugNode extends DebugNode implements BufferedFile
 
     public File createChild( String name )
     {
-        // TODO Auto-generated method stub
         return null;
     }
     public boolean isFile()
     {
-        // TODO Auto-generated method stub
         return false;
     }
     public boolean isFiltered()
     {
-        // TODO Auto-generated method stub
         return false;
     }
     public boolean isDirty()
@@ -55,23 +52,18 @@ public class BufferedDebugNode extends DebugNode implements BufferedFile
 
     public FileAttributes getFsFileAttributes()
     {
-        // TODO Auto-generated method stub
         return null;
     }
     public File createChild( String name, boolean directory )
     {
-        // TODO Auto-generated method stub
         return null;
     }
     public FileAttributes getFileAttributes()
     {
-        // TODO Auto-generated method stub
         return null;
     }
     public void setFileAttributes( FileAttributes att )
     {
-        // TODO Auto-generated method stub
-
     }
     public boolean isBuffered()
     {
@@ -100,7 +92,5 @@ public class BufferedDebugNode extends DebugNode implements BufferedFile
     
     public void refreshReference()
     {
-        // TODO Auto-generated method stub
-
     }
 }

@@ -5,8 +5,9 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.Action;
-import net.sourceforge.fullsync.ActionFinishedListener;
+import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.ActionQueue;
+import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskTree;
@@ -20,18 +21,33 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class FillBufferActionQueue implements ActionQueue, EntryFinishedListener
 {
-    private Buffer buffer;
     private Vector listeners;
+    private boolean statisticsOnly;
+    private IoStatisticsImpl stats;
+    private Buffer buffer;
     
     public FillBufferActionQueue( Buffer buffer )
     {
-        this.buffer = buffer;
         this.listeners = new Vector();
+        this.statisticsOnly = false;
+        this.buffer = buffer;
         buffer.addEntryFinishedListener( this );
+    }
+    public IoStatistics createStatistics( TaskTree tree )
+    {
+        statisticsOnly = true;
+        enqueue( tree );
+        statisticsOnly = false;
+        return stats;
+    }
+    public IoStatistics getStatistics()
+    {
+        return stats;
     }
 
     public void enqueue( TaskTree tree )
     {
+        stats = new IoStatisticsImpl();
     	enqueue( tree.getRoot() );
     }
     protected void enqueueTaskChildren( Task t )
@@ -44,16 +60,39 @@ public class FillBufferActionQueue implements ActionQueue, EntryFinishedListener
         if( !task.getCurrentAction().isBeforeRecursion() )
         	enqueueTaskChildren( task );
 
-        enqueue( task.getCurrentAction(), task.getSource(), task.getDestination() );
+        executeTask( task );
     	
         if(  task.getCurrentAction().isBeforeRecursion() )
         	enqueueTaskChildren( task );
     }
-    
-    public void enqueue( Action action, File source, File destination )
+    protected void storeDirCreation( Task task, File subject ) throws IOException
+    {
+        if( !statisticsOnly )
+            buffer.storeEntry( new DirCreationEntryDescriptor( task, subject ) );
+        stats.dirsCreated++;
+    }
+    protected void storeFileCopy( Task task, File source, File destination ) throws IOException
+    {
+        if( !statisticsOnly )
+            buffer.storeEntry( new FileCopyEntryDescriptor( task, source, destination ) );
+        stats.filesCopied++;
+        stats.bytesTransferred += source.getFileAttributes().getLength();
+    }
+    protected void storeDeleteNode( Task task, File subject ) throws IOException
+    {
+        if( !statisticsOnly )
+            buffer.storeEntry( new DeleteNodeEntryDescriptor( task, subject ) );
+        stats.deletions++;
+    }
+    protected void executeTask( Task task )
     {
         try {
-	        //System.out.println( action );
+	        // TODO lock tasks here
+            
+            Action action = task.getCurrentAction();
+            File source = task.getSource();
+            File destination = task.getDestination();
+            
 	        switch( action.getType() )
 	        {
 	        case Action.Add:
@@ -61,21 +100,27 @@ public class FillBufferActionQueue implements ActionQueue, EntryFinishedListener
 	            if( action.getLocation() == Location.Destination )
 	            {
 	                if( source.isDirectory() )
-	                     buffer.storeEntry( new DirCreationEntryDescriptor( destination ) );
-	                else buffer.storeEntry( new FileCopyEntryDescriptor( source, destination ) );
+	                     storeDirCreation( task, destination );
+	                else storeFileCopy( task, source, destination );
+	            } else if( action.getLocation() == Location.Source ) {
+	                if( destination.isDirectory() )
+	                     storeDirCreation( task, source );
+	                else storeFileCopy( task, destination, source );
 	            }
 	            break;
 	        case Action.Delete:
 	            if( action.getLocation() == Location.Destination )
 	            {
-	                buffer.storeEntry( new DeleteNodeEntryDescriptor( destination ) );
+	                storeDeleteNode( task, destination );
+	            } else if( action.getLocation() == Location.Source ) {
+	                storeDeleteNode( task, source );
 	            }
+	               
 	            break;
 	        default:
-	        	entryFinished();
 	        	break;
 	        }
-	        if( action.getBufferUpdate() > 0 )
+	        if( action.getBufferUpdate() > 0 && !statisticsOnly )
 	            buffer.storeEntry( new BufferUpdateEntryDescriptor( source, destination, action.getBufferUpdate() ) );
         } catch( IOException ioe ) {
             ioe.printStackTrace();
@@ -89,30 +134,28 @@ public class FillBufferActionQueue implements ActionQueue, EntryFinishedListener
             e.printStackTrace();
         }
     }
-    public void entryFinished()
-    {
-    	Enumeration e = listeners.elements();
-    	while( e.hasMoreElements() )
-    	{
-    		((ActionFinishedListener)e.nextElement()).actionFinished();
-    	}
-    }
     public void entryFinished(EntryDescriptor entry) 
     {
-    	if( entry instanceof BufferUpdateEntryDescriptor )
-    		return;
-    	Enumeration e = listeners.elements();
+        Object ref = entry.getReferenceObject();
+        if( ref == null )
+            return;
+    	fireActionFinished( (Task)ref, 0 );
+	}
+    protected void fireActionFinished( Task task, int bytesTransferred )
+    {
+        Enumeration e = listeners.elements();
     	while( e.hasMoreElements() )
     	{
-    		((ActionFinishedListener)e.nextElement()).actionFinished();
+    		((TaskFinishedListener)e.nextElement())
+    			.actionFinished( task, bytesTransferred );
     	}
-	}
+    }
     
-    public void addActionFinishedListener( ActionFinishedListener listener )
+    public void addActionFinishedListener( TaskFinishedListener listener )
     {
     	listeners.add( listener );
     }
-    public void removeActionFinishedListener( ActionFinishedListener listener )
+    public void removeActionFinishedListener( TaskFinishedListener listener )
     {
     	listeners.remove( listener );
     }

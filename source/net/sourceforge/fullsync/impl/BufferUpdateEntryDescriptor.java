@@ -23,7 +23,10 @@ public class BufferUpdateEntryDescriptor implements EntryDescriptor
         this.src = src;
         this.dst = dst;
     }
-    
+    public Object getReferenceObject()
+    {
+        return null;
+    }
     public long getLength()
     {
         return 0;

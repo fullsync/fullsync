@@ -284,10 +284,10 @@ public class SyncFilesBufferedNode implements BufferedFile
     }
     public void refresh()
     {
-        // TODO
+        // TODO refresh()
     }
     public void refreshBuffer()
     {
-        // TODO
+        // TODO refreshBuffer()
     }
 }

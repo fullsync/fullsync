@@ -8,8 +8,8 @@ import java.util.EventListener;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public interface ActionFinishedListener extends EventListener 
+public interface TaskFinishedListener extends EventListener 
 {
 	// TODO better use some action class given to the actionqueue
-	public void actionFinished();
+	public void actionFinished( Task task, int bytesTransferred );
 }

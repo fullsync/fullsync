@@ -23,10 +23,7 @@ import net.sourceforge.fullsync.rules.Rule;
 /**
  * Provides informations and rules about how to handle specific<br>
  * files and whether system files should be used or not.<br>
- * <br>TODO:
- * <ul>
- * <li>refine commands to a lot of SETs and add RESET commands
- * </ul>
+ * TODO refine commands to a lot of SETs and add RESET commands
  * 
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
