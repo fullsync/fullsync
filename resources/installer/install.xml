@@ -27,7 +27,7 @@
 
 	<resources>
 		<res id="LicencePanel.licence" src="LICENSE"/>
-		<res id="InfoPanel.info" src="RELEASE NOTES" parse="no" type="plain"/>
+		<!--<res id="InfoPanel.info" src="RELEASE NOTES" parse="no" type="plain"/>-->
         <res id="shortcutSpec.xml" src="resources/installer/shortcut.xml"/>
         <res id="Installer.image" src="resources/installer/installbox.png"/>
 	</resources>
@@ -36,7 +36,7 @@
 
 	<panels>
 		<panel classname="HelloPanel"/>
-		<panel classname="InfoPanel"/>
+		<!--<panel classname="InfoPanel"/>-->
 		<panel classname="LicencePanel"/>
 		<panel classname="TargetPanel"/>
 		<panel classname="InstallPanel"/>
@@ -80,6 +80,8 @@
                 <exclude name="**/CVS"/>
             </fileset>
 
+			<fileset dir="build/docs/manual" targetdir="$INSTALL_PATH/docs/manual" override="true"/>
+
 			<!-- EXE for Win32 -->
             <file src="build/FullSync.exe" targetdir="$INSTALL_PATH/" os="windows"/>
             <file src="build/FullSync.exe.manifest" targetdir="$INSTALL_PATH/" os="windows"/>
@@ -90,6 +92,8 @@
             
             <file src="build/sample.syncrules" targetdir="$INSTALL_PATH/"/>
             <file src="build/logging.xml" targetdir="$INSTALL_PATH/"/>
+			<file src="build/CHANGELOG" targetdir="$INSTALL_PATH/"/>
+			<file src="build/LICENSE" targetdir="$INSTALL_PATH/"/>
 
             <fileset dir="resources/installer/logs" targetdir="$INSTALL_PATH/logs" override="false">
                 <exclude name="**/CVS"/>

@@ -307,7 +307,7 @@ Sync Rules
 	[ ]	Ignore files older than a given date (Simple Rule).
 	[ ]	Advanced Rules configuration wizard. A wizard to help users creating 
 		the .syncrules file in any directory (os subdirectory) where he needs it.
-	
+		
 ==========================
 
 Images:
@@ -322,6 +322,9 @@ Processor:
 	[ ] impl new TraveralTypes
 		actually we'll need the possibility to say "src didn't change, so
 		dst doesn't interest me" (in sync without retrieving file data)
+		
+ActionDecider:
+	[ ] make AD xml file
 
 Versioning:
 	[ ] implement working versioning system
@@ -343,6 +346,13 @@ Configuration:
 Distro:
    	[ ] put images into source / jar. 
    	[ ]	put logging.xml into jar as well
+   	
+Gui:
+	[ ] split profile details into multiple panels activated by treeview
+	[ ]	fields for connections should depend on the chosen connection type
+		so we don't need user/pw for local and could provide fields for
+		host, port, path and so on for ftp
+
 
 ---===[ to 0.10 Tasks ]====------------------------------------------------
 

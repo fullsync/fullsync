@@ -37,6 +37,25 @@ public class CrontabScheduleTest extends TestCase
                 	  new Date( res ) );
     }
 
+    public void testGetNextOccurrenceMilliseconds()
+		throws Exception
+	{
+	    now.set( 2004, 0, 1, 0, 0, 0 );
+	    now.set( Calendar.MILLISECOND, 0 );
+	    expectedResult.set( 2004, 0, 1, 0, 0, 0 );
+	    expectedResult.set( Calendar.MILLISECOND, 0 );
+	    
+	    assertNextOccurence( "0 0 * * *" );
+	    
+	    now.set( 2004, 0, 1, 0, 0, 0 );
+	    now.set( Calendar.MILLISECOND, 1 );
+	    expectedResult.set( 2004, 0, 2, 0, 0, 0 );
+	    expectedResult.set( Calendar.MILLISECOND, 0 );
+	    	    
+	    assertNextOccurence( "0 0 * * *" );
+	}
+    
+    
     public void testGetNextOccurrenceHour1()
     	throws Exception
     {

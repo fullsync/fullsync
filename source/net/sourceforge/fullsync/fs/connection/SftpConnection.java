@@ -109,15 +109,15 @@ public class SftpConnection extends InstableConnection
     
     public File _createChild( File parent, String name, boolean directory )
     {
-        return new AbstractFile( this, name, parent.getPath()+"/"+name, parent, directory, false );
+        return new AbstractFile( this, name, null, parent, directory, false );
     }
 
     public File buildNode( File parent, SftpFile file )
     {
         String name = file.getFilename();
-        String path = parent.getPath()+"/"+name;
+        //String path = parent.getPath()+"/"+name;
 
-        File n = new AbstractFile( this, name, path, parent, file.isDirectory(), true );
+        File n = new AbstractFile( this, name, null, parent, file.isDirectory(), true );
         
         FileAttributes att = file.getAttributes();
         if( file.isFile() )

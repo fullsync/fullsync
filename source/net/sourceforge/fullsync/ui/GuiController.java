@@ -43,7 +43,7 @@ public class GuiController implements Runnable
         
         singleton = this;
     }
-    protected void createMainShell()
+    protected void createMainShell( boolean minimized )
     {
 		try {
 			mainShell = new Shell(display);
@@ -53,7 +53,8 @@ public class GuiController implements Runnable
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText( "FullSync 0.8.0" );
 			mainShell.setImage( getImage( "FullSync.png" ) );
-			mainShell.setVisible( true );
+			if( !minimized )
+			    mainShell.setVisible( true );
 		} catch (Exception e) {
 			ExceptionHandler.reportException( e );
 		}
@@ -99,11 +100,11 @@ public class GuiController implements Runnable
     {
         imageRepository.removeImage( imageName );
     }
-    public void startGui()
+    public void startGui( boolean minimized )
     {
 		display = Display.getDefault();
 		imageRepository = new ImageRepository( display );
-		createMainShell();
+		createMainShell( minimized );
 	    systemTrayItem = new SystemTrayItem( this );
 		ExceptionHandler.registerExceptionHandler( 
 		        new ExceptionHandler() {

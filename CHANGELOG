@@ -1,3 +1,13 @@
+Version 0.8.0
+(?? December 2004)
+
+* reduced memory consumption by using static actions in actionDeciders, static states
+  in StateDecider and not saving path field in files.
+* fixed bug in Task Decision List updating the wrong items
+* added an option for autostarting scheduler in gui mode (for autostart)
+* the gui version will now popup the "getting started" manual page if
+  there was now profiles.xml found
+* added -m option, that starts fullsync minimized (for autostart)
 * extracted scheduler from profile manager, it's still too tightly connected
   as the remote stuff is like a second scheduler both encapsuled by the profile manager
 * improved remote interface. now almost every feature of fullsync is available using the remote interface

@@ -181,4 +181,14 @@ public class XmlPreferences implements Preferences
 	public void setShowSplashScreen(boolean bool) {
 		// TODO Auto-generated method stub
 	}
+	public boolean autostartScheduler()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+	public void setAutostartScheduler( boolean bool )
+    {
+        // TODO Auto-generated method stub
+
+    }
 }

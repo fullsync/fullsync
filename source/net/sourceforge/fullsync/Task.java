@@ -2,6 +2,7 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -29,7 +30,7 @@ public class Task implements Serializable
         this.state = state;
         this.actions = actions;
         this.currentAction = 0;
-        this.children = new Vector();
+        this.children = null;
     }
     
     public File getDestination()
@@ -79,10 +80,14 @@ public class Task implements Serializable
     }
     public void addChild( Task child )
     {
+        if( children == null )
+            children = new Vector(5);
         this.children.add( child );
     }
     public Enumeration getChildren()
     {
+        if( children == null )
+            return Collections.enumeration( Collections.EMPTY_LIST );
         return children.elements();
     }
     public String toString()
@@ -92,7 +97,7 @@ public class Task implements Serializable
     public int getTaskCount()
     {
     	int count = 0;
-    	Enumeration e = children.elements();
+    	Enumeration e = getChildren();
     	while( e.hasMoreElements() )
     	{
     		count += ((Task)e.nextElement()).getTaskCount();
@@ -110,7 +115,7 @@ public class Task implements Serializable
     }
     
 	public int hashCode() {
-		return source.getName().hashCode();
+		return source.getPath().hashCode();
 	}
     
     private void writeObject(java.io.ObjectOutputStream out)

@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.rmi.RemoteException;
@@ -21,6 +22,7 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.xml.DOMConfigurator;
+import org.eclipse.swt.program.Program;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -34,6 +36,7 @@ public class CommandLineInterpreter
 		options = new Options();
 		options.addOption( "h", "help", false, "this help" );
 		options.addOption( "v", "verbose", false, "verbose output to stdout" );
+		options.addOption( "m", "minimized", false, "starts fullsync gui in system tray " );
 		
 		OptionBuilder.withLongOpt( "profiles-file" );
 		OptionBuilder.withDescription( "uses the specified file instead of profiles.xml" );
@@ -198,14 +201,25 @@ public class CommandLineInterpreter
 		    	}*/
 		    } else {
 		    	try {
+		    	    if( !line.hasOption('P') && !(new File( profilesFile )).exists() )
+		    	    {
+		    	        try {
+		    	            File f = new File( "docs/manual/Getting_Started.html" );
+		    	            if( f.exists() )
+		    	                Program.launch( f.toURL().toString() );
+		    	        } catch( Error ex ) { }
+		    	    }
 		    		GuiController guiController = new GuiController( preferences, profileManager, sync );
-		    		guiController.startGui();
+		    		guiController.startGui( line.hasOption('m') );
 		    		
-		    		if (listenerStarupException != null) {
+		    	    if (listenerStarupException != null) {
 		    			ExceptionHandler.reportException( "Unable to start incoming connections listener.", listenerStarupException );
 		    		}
 
-		    		if (splash != null) {
+		    	    if( preferences.autostartScheduler() )
+		    	        profileManager.startScheduler();
+
+		    	    if (splash != null) {
 		    			long elapsed = System.currentTimeMillis() - startMillis;
 		    			if (elapsed < 1500) {
 		    				try {

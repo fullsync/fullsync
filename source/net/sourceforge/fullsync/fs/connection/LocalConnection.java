@@ -35,15 +35,15 @@ public class LocalConnection implements FileSystemConnection
 
     public File createChild( File parent, String name, boolean directory )
     {
-        return new AbstractFile( this, name, parent.getPath()+"/"+name, parent, directory, false );
+        return new AbstractFile( this, name, null, parent, directory, false );
     }
 
     public File buildNode( File parent, java.io.File file )
     {
         String name = file.getName();
-        String path = parent.getPath()+"/"+name;
+        //String path = parent.getPath()+"/"+name;
         
-        File n = new AbstractFile( this, name, path, parent, file.isDirectory(), true );
+        File n = new AbstractFile( this, name, null, parent, file.isDirectory(), true );
         if( file.isFile() ) {
             n.setFileAttributes( new FileAttributes( file.length(), file.lastModified() ) );
         }

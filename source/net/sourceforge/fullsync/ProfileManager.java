@@ -9,6 +9,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -67,13 +69,22 @@ public class ProfileManager
 			} );
 			worker.start();
 			profile.getSchedule().update();
+			Thread.yield();
 		}
 		public long getExecutionTime()
         {
             return executionTime;
         }
 	}
-	
+	class ProfileComparator implements Comparator
+	{
+	    public int compare( Object o1, Object o2 )
+        {
+            Profile p1 = (Profile)o1;
+            Profile p2 = (Profile)o2;
+            return p1.getName().compareTo( p2.getName() );
+        }
+	}
 	
     private String configFile;
     protected Vector profiles;
@@ -110,7 +121,7 @@ public class ProfileManager
         this.configFile = configFile;
 
         loadProfiles();
-        
+        Collections.sort( profiles, new ProfileComparator() );
         /*
         Digester dig = new Digester();
         dig.push( this );
@@ -199,7 +210,8 @@ public class ProfileManager
     	return (remoteManager != null);
     }
     
-    private void loadProfiles() throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
+    private void loadProfiles() throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError 
+    {
         File file = new File( configFile );
         if( file.exists() )
         {
@@ -212,8 +224,9 @@ public class ProfileManager
 	            Node n = list.item( i );
 	            if( n.getNodeType() == Node.ELEMENT_NODE ) 
 	            {
-	            	Profile p = unserializeProfile( (Element)n );
-	                addProfile( p );
+	            	Profile profile = unserializeProfile( (Element)n );
+	            	profiles.add( profile );
+	                profile.addProfileChangeListener( this );
 	            }
 	        }
         }

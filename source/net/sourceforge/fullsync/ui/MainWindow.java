@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync.ui;
 
+import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -416,8 +417,15 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		menuItemHelpContent.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					//TODO help contents
-					//The first version can be an HTML/TXT file to open
-					//with the default browser.
+				    java.io.File helpIndex = new java.io.File("docs/manual/index.html");
+				    if( helpIndex.exists() )
+				    {
+				        try {
+				            Program.launch(helpIndex.toURL().toString());
+				        } catch( MalformedURLException ex ) {}
+				    } else {
+				        Program.launch("http://fullsync.sourceforge.net/docs/manual/index.html");
+				    }
 				}
 			}
 		);
@@ -610,7 +618,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		        } else {
 		            statusLine.setMessage( "Finished profile "+p.getName() );
 		        }
-			} catch (Exception e) {
+			} catch (Error e) {
 				ExceptionHandler.reportException( e );
 			} finally {
 			    statusDelayTimer.cancel();

@@ -89,8 +89,8 @@
     </target>
 
 	<target name="javadoc">
-		<mkdir dir="${build.dir}/doc/api"/>
-		<javadoc destdir="${build.dir}/doc/api" classpathref="classpath">
+		<mkdir dir="${build.dir}/docs/api"/>
+		<javadoc destdir="${build.dir}/docs/api" classpathref="classpath">
 			<packageset dir="${source.dir}">
 				<include name="**"/>
 			</packageset>
@@ -123,6 +123,14 @@
 				<include name="**/*.dll"/>
 			</fileset>
 		</copy>
+		<mkdir dir="${build.dir}/docs"/>
+		<copy todir="${build.dir}/docs">
+			<fileset dir="${basedir}/docs">
+				<include name="manual/**/*"/>
+			</fileset>
+		</copy>
+		<copy file="${basedir}/CHANGELOG" tofile="${build.dir}/CHANGELOG"/>		
+		<copy file="${basedir}/LICENSE" tofile="${build.dir}/LICENSE"/>		
 		<!-- copy readme and so on -->
 	</target>
 

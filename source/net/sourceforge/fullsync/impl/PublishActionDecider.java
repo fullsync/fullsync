@@ -21,6 +21,18 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class PublishActionDecider implements ActionDecider
 {
+
+    private static final Action addDestination = new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "Add" );
+    private static final Action ignoreDestinationExists = new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "will not add, destination already exists" );
+    private static final Action overwriteSource = new Action( Action.Update, Location.Source, BufferUpdate.Destination, "overwrite source" );
+    private static final Action overwriteDestination = new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination" );
+    private static final Action updateDestination = new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "Source changed" );
+    private static final Action deleteDestination = new Action( Action.Delete, Location.Destination, BufferUpdate.Destination, "Delete destination file", false );
+    private static final Action unexpectedDestinationChanged = new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "will not delete, destination has changed" );
+    private static final Action unexpectedBothChanged = new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "Source changed, but changed remotely too" );
+    private static final Action inSync = new Action( Action.Nothing, Location.None, BufferUpdate.None, "In Sync" );
+    private static final Action ignore = new Action( Action.Nothing, Location.None, BufferUpdate.None, "Ignore" );
+    
     public TraversalType getTraversalType()
     {
         return new TraversalType();
@@ -43,17 +55,17 @@ public class PublishActionDecider implements ActionDecider
             {
                 if( !bsd.getState( dst ).equals( State.Orphan, Location.FileSystem ) )
                 {
-                    actions.add( new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "Add" ) );
+                    actions.add( addDestination );
                 } else {
-                    actions.add( new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "will not add, destination already exists" ) );
-                    actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination" ) );
+                    actions.add( ignoreDestinationExists );
+                    actions.add( overwriteDestination );
                 }
             } else if( state.getLocation() == Location.Destination ) {
                 if( !bsd.getState( dst ).equals( State.NodeInSync, Location.Both ) )
                 {
-                    actions.add( new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "will not delete, destination has changed" ) );
+                    actions.add( unexpectedDestinationChanged );
                 }
-                actions.add( new Action( Action.Delete, Location.Destination, BufferUpdate.Destination, "Deletion", false ) );
+                actions.add( deleteDestination );
             }
         	break;
         case State.DirHereFileThere:
@@ -72,19 +84,19 @@ public class PublishActionDecider implements ActionDecider
         case State.FileChange:
             if( bsd.getState( dst ).equals( State.NodeInSync, Location.Both ) )
             {
-                actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "Source changed" ) );
+                actions.add( updateDestination );
             } else {
-                actions.add( new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "Source changed, but changed remotely too" ) );
-                actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination changes" ) );
+                actions.add( unexpectedBothChanged );
+                actions.add( overwriteDestination );
             }
         	break;
         case State.NodeInSync:
             // TODO this check is not neccessary, check rules whether to do or not 
             //if( bsd.getState( dst ).equals( State.NodeInSync, Location.Both ) || bsd.getState( dst ).equals( State.NodeInSync, Location.None ) )
             {
-                actions.add( new Action( Action.Nothing, Location.None, BufferUpdate.None, "In Sync" ) );
-                actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination" ) );
-                actions.add( new Action( Action.Update, Location.Source, BufferUpdate.Destination, "overwrite source" ) );
+                actions.add( inSync );
+                actions.add( overwriteDestination );
+                actions.add( overwriteSource );
             } /*else {
                 actions.add( new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "no local change, but changed remotely" ) );
                 actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination changes" ) );
@@ -95,7 +107,7 @@ public class PublishActionDecider implements ActionDecider
         	break;
         }
         
-        actions.add( new Action( Action.Nothing, Location.None, BufferUpdate.None, "Ignore" ) );
+        actions.add( ignore );
         
         Action[] as = new Action[actions.size()];
         actions.toArray(as);

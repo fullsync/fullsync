@@ -122,4 +122,10 @@ public class ConfigurationPreferences implements Preferences
 	public void setShowSplashScreen(boolean bool) {
 		config.setProperty("Interface.ShowSplashScreen", new Boolean(bool));
 	}
+	public boolean autostartScheduler() {
+		return config.getBoolean("Interface.AutostartScheduler", true);
+	}
+	public void setAutostartScheduler(boolean bool) {
+		config.setProperty("Interface.AutostartScheduler", new Boolean(bool));
+	}
 }

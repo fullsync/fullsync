@@ -23,6 +23,14 @@ public class BackupActionDecider implements ActionDecider
 {
     // TODO param keep orphans/exact copy
     
+    private static final Action addDestination = new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "Add" );
+    private static final Action overwriteDestination = new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination" );
+    private static final Action updateDestination = new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "Source changed" );
+    private static final Action deleteDestinationOrphan = new Action( Action.Delete, Location.Destination, BufferUpdate.Destination, "Delete orphan in destination", false );
+    private static final Action ignoreDestinationOrphan = new Action( Action.Nothing, Location.None, BufferUpdate.None, "Ignoring orphan in destination" );
+    private static final Action inSync = new Action( Action.Nothing, Location.None, BufferUpdate.None, "In Sync" );
+    private static final Action ignore = new Action( Action.Nothing, Location.None, BufferUpdate.None, "Ignore" );
+   
     public TraversalType getTraversalType()
     {
         return new TraversalType();
@@ -45,13 +53,13 @@ public class BackupActionDecider implements ActionDecider
             {
                 if( !bsd.getState( dst ).equals( State.Orphan, Location.FileSystem ) )
                 {
-                    actions.add( new Action( Action.Add, Location.Destination, BufferUpdate.Destination, "Add" ) );
+                    actions.add( addDestination );
                 } else {
-                    actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination" ) );
+                    actions.add( overwriteDestination );
                 }
             } else if( state.getLocation() == Location.Destination ) {
-                actions.add( new Action( Action.Nothing, Location.None, BufferUpdate.None, "Ignoring orphan in destination" ) );
-                actions.add( new Action( Action.Delete, Location.Destination, BufferUpdate.Destination, "Delete orphan in destination", false ) );
+                actions.add( ignoreDestinationOrphan );
+                actions.add( deleteDestinationOrphan );
             }
         	break;
         case State.DirHereFileThere:
@@ -70,17 +78,17 @@ public class BackupActionDecider implements ActionDecider
         case State.FileChange:
             if( bsd.getState( dst ).equals( State.NodeInSync, Location.Both ) )
             {
-                actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "Source changed" ) );
+                actions.add( updateDestination );
             } else {
-                actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination changes" ) );
+                actions.add( overwriteDestination );
             }
         	break;
         case State.NodeInSync:
             // TODO this check is not neccessary, check rules whether to do or not 
             //if( bsd.getState( dst ).equals( State.NodeInSync, Location.Both ) || bsd.getState( dst ).equals( State.NodeInSync, Location.None ) )
             {
-                actions.add( new Action( Action.Nothing, Location.None, BufferUpdate.None, "In Sync" ) );
-                actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination" ) );
+                actions.add( inSync );
+                actions.add( overwriteDestination );
             } /*else {
                 actions.add( new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "no local change, but changed remotely" ) );
                 actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination changes" ) );
@@ -91,7 +99,7 @@ public class BackupActionDecider implements ActionDecider
         	break;
         }
         
-        actions.add( new Action( Action.Nothing, Location.None, BufferUpdate.None, "Ignore" ) );
+        actions.add( ignore );
         
         Action[] as = new Action[actions.size()];
         actions.toArray(as);

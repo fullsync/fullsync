@@ -38,6 +38,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 	private Button cbConfirmExit;
 	private Button cbCloseMinimizesToSystemTray;
 	private Button cbMinimizeMinimizesToSystemTray;
+	private Button cbAutostartScheduler;
 	private Button cbShowSplashScreen;
 	private Text textPassword;
 	private Label label3;
@@ -122,6 +123,15 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                     GridData cbShowSplashScreenLData = new GridData();
                     cbShowSplashScreenLData.horizontalSpan = 2;
                     cbShowSplashScreen.setLayoutData(cbShowSplashScreenLData);
+                }
+                {
+                    cbAutostartScheduler = new Button(
+                        groupInterface,
+                        SWT.CHECK | SWT.LEFT);
+                    cbAutostartScheduler.setText("autostart Scheduler");
+                    GridData cbAutostartSchedulerLData = new GridData();
+                    cbAutostartSchedulerLData.horizontalSpan = 2;
+                    cbAutostartScheduler.setLayoutData(cbAutostartSchedulerLData);
                 }
                 /*
                  {
@@ -272,6 +282,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		boolean profileListStyleChanged = (!preferences.getProfileListStyle().equals(comboProfileList.getText()));
 		preferences.setProfileListStyle(comboProfileList.getText());
 		preferences.setShowSplashScreen(cbShowSplashScreen.getSelection());
+		preferences.setAutostartScheduler(cbAutostartScheduler.getSelection());
 
 		if (profileListStyleChanged) {
 			GuiController.getInstance().getMainWindow().createProfileList();

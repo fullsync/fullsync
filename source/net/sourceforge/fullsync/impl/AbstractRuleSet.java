@@ -162,6 +162,10 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 		else throw new DataParseException( "Error while parsing SyncRule: '"+operator+"' is unknown operator", 0 );
 	}
 
+	private static final State inSyncBoth = new State( State.NodeInSync, Location.Both );
+	private static final State fileChgDst = new State( State.FileChange, Location.Destination );
+	private static final State fileChgSrc = new State( State.FileChange, Location.Source );
+	private static final State fileChgNone = new State( State.FileChange, Location.None );
 	public State compareFiles( FileAttributes src, FileAttributes dst ) throws DataParseException
 	{
 	    // TODO verify functionality of this method
@@ -202,13 +206,13 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 		}
 		totalVal = val;
 		if( totalVal == 0 && isEqual )
-		    return new State( State.NodeInSync, Location.Both );
+		    return inSyncBoth;
 		else if( totalVal > 0 ) {
-		    return new State( State.FileChange, Location.Destination );
+		    return fileChgDst;
 		} else if( totalVal < 0 ) {
-			return new State( State.FileChange, Location.Source );
+			return fileChgSrc;
 		} else {
-			return new State( State.FileChange, Location.None );
+			return fileChgNone;
 		}
 		//return new State( State.NodeInSync, Location.Both );
 	}

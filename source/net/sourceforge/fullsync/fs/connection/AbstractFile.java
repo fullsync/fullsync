@@ -51,7 +51,9 @@ public class AbstractFile implements File
 
     public String getPath()
     {
-        return path;
+        if( path == null )
+             return parent.getPath()+"/"+name;
+        else return path;
     }
 
     public File getParent()
@@ -184,7 +186,7 @@ public class AbstractFile implements File
                 if( !newChildren.containsKey( n.getName() ) )
                 {
                     if( n.exists() )
-                         newChildren.put( n.getName(), new AbstractFile( getConnection(), n.getName(), n.getPath(), n.getParent(), n.isDirectory(), false ) );
+                         newChildren.put( n.getName(), new AbstractFile( getConnection(), n.getName(), null, n.getParent(), n.isDirectory(), false ) );
                     else newChildren.put( n.getName(), n );
                 }
             }

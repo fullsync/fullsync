@@ -80,4 +80,7 @@ public interface Preferences
     
     public boolean showSplashScreen();
     public void setShowSplashScreen(boolean bool);
+
+    public boolean autostartScheduler();
+    public void setAutostartScheduler(boolean bool);
 }
