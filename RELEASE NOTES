@@ -39,14 +39,14 @@ HOW TO SET UP SYNCHRONIZATION
 	one as buffer initialization is not working yet, so fullsync
 	will not accept the files as the right ones. 
 
-	Now put the sample .syncrules into the source directory. this
-	file will tell fullsync which files to synchronize and configures
-	some special rules. The sample file is good enough for a
-	simple publish/update. it will look for more rule files only
-	at the source, recursed through directories, uses ignore and take 
-	rules and allows deletion at destination. normally this ruleset
-	will accept any file, except it matches to an ignore rule,
-	except if matches to an take rule. that means "take" is used
+	Now put the sample.syncrules into the source directory and name
+	it .syncrules. this file will tell fullsync which files to 
+	synchronize and configures some special rules. The sample file 
+	is good enough for a simple publish/update. it will look for more 
+	rule files only at the source, recursed through directories, uses 
+	ignore and take rules and allows deletion at destination. normally 
+	this ruleset will accept any file, except it matches to an ignore 
+	rule, except if matches to an take rule. that means "take" is used
 	to specify exceptions that should not be ignored. in this case
 	all files beginning with a dot will be ignored, except the
 	rules files which will be copied to the destination.

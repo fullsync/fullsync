@@ -130,6 +130,13 @@ Connection:
 
 ---===[ 0.8 to 0.9 Tasks ]====-----------------------------------------------------
 
+syncfiles
+	[X] gzip them
+
+Logwindow
+	[ ] show progress of performing actions
+	[ ] show size of files
+
 SB:
 	[ ] we need to build buffer info from fs as well, so fs orphans are
 		detected without having the same file on the other side
@@ -137,9 +144,10 @@ SB:
 		destination buffer does not want to know about new files in fs
 		(it would delete them ?)
 
-Case sensitive:
+Files:
 	[ ] we need to differenciate between case sensitivity. 
 		store names toLower in hashtables and search for toLower
+	[ ] ascii/bin
 
 TakeIgnore -> Filter:
 	[ ] Ignore takes place immediatly atm, on src and dst resulting
@@ -170,9 +178,7 @@ Threading
 Connection:
 	[ ] reconnect
 	
-syncfiles
-	[ ] gzip them
-	
+
 ---===[ to 1.0 Tasks ]====-----------------------------------------------------
 
 Dispose:
@@ -211,6 +217,7 @@ Realtime-Reporting:
 	[ ] Implement realtime status information updating
 	[ ] Implement events for certain actions
 
-
+Logwindow
+	[ ] Show size of copied data
 
 make isDir info only valid if existant

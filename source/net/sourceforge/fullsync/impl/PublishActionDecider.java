@@ -72,13 +72,15 @@ public class PublishActionDecider implements ActionDecider
         	break;
         case State.NodeInSync:
             // TODO this check is not neccessary, check rules whether to do or not 
-            if( bsd.getState( dst ).equals( State.NodeInSync, Location.Both ) || bsd.getState( dst ).equals( State.NodeInSync, Location.None ) )
+            //if( bsd.getState( dst ).equals( State.NodeInSync, Location.Both ) || bsd.getState( dst ).equals( State.NodeInSync, Location.None ) )
             {
                 actions.add( new Action( Action.Nothing, Location.None, BufferUpdate.None, "In Sync" ) );
-            } else {
+                actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination" ) );
+                actions.add( new Action( Action.Update, Location.Source, BufferUpdate.Destination, "overwrite source" ) );
+            } /*else {
                 actions.add( new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "no local change, but changed remotely" ) );
                 actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination changes" ) );
-            }
+            }*/
         	break;
         default:
             actions.add( new Action( Action.NotDecidableError, Location.None, BufferUpdate.None, "no rule found" ) );

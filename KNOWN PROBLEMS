@@ -1,0 +1,19 @@
+
+=====================================================================
+
+PROBLEM:
+	If you close the Application before the update process finished
+	some files will already be uploaded but the buffer isn't updated,
+	so the next sync will give you lots of "will not overwrite".
+	
+WORKAROUND:
+	if just a few files got uploaded, change the action to "Update".
+	if there are too many lines to do this manually, delete the uploaded
+	files and resync.
+	
+SOLUTION:
+	- add explicit "cancel", which stops performing actions and updates the buffer.
+	- make multiline-action-change possible
+	
+=====================================================================
+

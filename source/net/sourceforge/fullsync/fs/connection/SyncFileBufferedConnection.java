@@ -62,18 +62,18 @@ public class SyncFileBufferedConnection implements BufferedConnection
             {
                 if( name.equals( "/" ) || name.equals( "." ) )
                     return;
-                File n = current.getUnbuffered().getChild( name );
-                if( n == null )
-		            n = current.getUnbuffered().createChild( name, true );
-                AbstractBufferedFile newDir = new AbstractBufferedFile( bc, n, current, true, true );
+                //File n = current.getUnbuffered().getChild( name );
+                //if( n == null )
+		        //    n = current.getUnbuffered().createChild( name, true );
+                AbstractBufferedFile newDir = new AbstractBufferedFile( bc, name, current.getPath()+"/"+name, current, true, true );
                 current.addChild( newDir );
                 current = newDir;
             } else if( qName.equals( "File" ) ) {
-                File n = current.getUnbuffered().getChild( name );
-                if( n == null )
-                    n = current.getUnbuffered().createChild( name, false );
+                //File n = current.getUnbuffered().getChild( name );
+                //if( n == null )
+                //    n = current.getUnbuffered().createChild( name, false );
                 AbstractBufferedFile newFile = 
-                    new AbstractBufferedFile( bc, n, current, false, true );
+                    new AbstractBufferedFile( bc, name, current.getPath()+"/"+name, current, false, true );
                 newFile.setFileAttributes( 
                     new FileAttributes(
                         Long.parseLong(attributes.getValue( "BufferedLength" ) ),

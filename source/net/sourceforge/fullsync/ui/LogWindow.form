@@ -14,7 +14,7 @@
 		<Layout class="Grid">
 			<Property name="marginWidth" type="int" value="2"/>
 			<Property name="marginHeight" type="int" value="2"/>
-			<Property name="numColumns" type="int" value="1"/>
+			<Property name="numColumns" type="int" value="3"/>
 			<Property name="makeColumnsEqualWidth" type="boolean" value="false"/>
 			<Property name="horizontalSpacing" type="int" value="2"/>
 			<Property name="verticalSpacing" type="int" value="2"/>
@@ -39,7 +39,7 @@
 						<Property name="widthHint" type="int" value="-1"/>
 						<Property name="heightHint" type="int" value="-1"/>
 						<Property name="horizontalIndent" type="int" value="0"/>
-						<Property name="horizontalSpan" type="int" value="1"/>
+						<Property name="horizontalSpan" type="int" value="3"/>
 						<Property name="verticalSpan" type="int" value="1"/>
 						<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
 						<Property name="grabExcessVerticalSpace" type="boolean" value="true"/>
@@ -115,7 +115,70 @@
 							<Property name="width" type="int" value="220"/>
 						</Properties>
 					</Component>
+					<Component class="org.eclipse.swt.widgets.TableColumn" name="tableColumnSourceSize" style="0">
+						<Constraints>
+							<LayoutConstraint/>
+						</Constraints>
+						<Events>
+						</Events>
+						<Properties>
+							<Property name="text" type="String" value="Size"/>
+							<Property name="width" type="int" value="80"/>
+						</Properties>
+					</Component>
 				</SubComponents>
+			</Component>
+			<Component class="org.eclipse.swt.widgets.Combo" name="comboFilter" style="12">
+				<Constraints>
+					<Constraint class="org.eclipse.swt.layout.GridData"/>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+						<Property name="verticalAlignment" type="int" value="2"/>
+						<Property name="horizontalAlignment" type="int" value="1"/>
+						<Property name="widthHint" type="int" value="-1"/>
+						<Property name="heightHint" type="int" value="-1"/>
+						<Property name="horizontalIndent" type="int" value="0"/>
+						<Property name="horizontalSpan" type="int" value="1"/>
+						<Property name="verticalSpan" type="int" value="1"/>
+						<Property name="grabExcessHorizontalSpace" type="boolean" value="false"/>
+						<Property name="grabExcessVerticalSpace" type="boolean" value="false"/>
+					</LayoutConstraint>
+				</Constraints>
+				<Events>
+					<EventHandler event="modifyText" handler="comboFilterModifyText" listener="org.eclipse.swt.events.ModifyListener"/>
+				</Events>
+				<Properties>
+					<Property name="bounds" type="Rectangle">
+						<Rectangle value="[2, 201, 89, 21]"/>
+					</Property>
+					<Property name="visible" type="boolean" value="true"/>
+				</Properties>
+			</Component>
+			<Component class="org.eclipse.swt.widgets.Label" name="labelProgress" style="0">
+				<Constraints>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+						<Property name="verticalAlignment" type="int" value="2"/>
+						<Property name="horizontalAlignment" type="int" value="1"/>
+						<Property name="widthHint" type="int" value="42"/>
+						<Property name="heightHint" type="int" value="13"/>
+						<Property name="horizontalIndent" type="int" value="5"/>
+						<Property name="horizontalSpan" type="int" value="1"/>
+						<Property name="verticalSpan" type="int" value="1"/>
+						<Property name="grabExcessHorizontalSpace" type="boolean" value="false"/>
+						<Property name="grabExcessVerticalSpace" type="boolean" value="false"/>
+					</LayoutConstraint>
+				</Constraints>
+				<Events>
+				</Events>
+				<Properties>
+					<Property name="text" type="String" value="Progress"/>
+					<Property name="size" type="Dimension">
+						<Dimension value="[42, 13]"/>
+					</Property>
+					<Property name="bounds" type="Rectangle">
+						<Rectangle value="[98, 205, 42, 13]"/>
+					</Property>
+					<Property name="visible" type="boolean" value="true"/>
+				</Properties>
 			</Component>
 			<Component class="org.eclipse.swt.widgets.Button" name="buttonGo" style="16777224">
 				<Constraints>

@@ -19,6 +19,13 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
     private boolean dirty;
     private FileAttributes fsAttributes;
     
+    public AbstractBufferedFile( BufferedConnection bc, String name, String path, File parent, boolean directory, boolean exists )
+    {
+        super( bc, name, path, parent, directory, exists );
+        this.dirty = false;
+        this.unbuffered = null;
+        children = new Hashtable();
+    }
     
     public AbstractBufferedFile( BufferedConnection bc, File unbuffered, File parent, boolean directory, boolean exists )
     {
@@ -44,11 +51,13 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
 
     public File getUnbuffered()
     {
+        if( unbuffered == null )
+            refreshReference();
         return unbuffered;
     }
     public boolean makeDirectory() throws IOException
     {
-        return unbuffered.makeDirectory();
+        return getUnbuffered().makeDirectory();
     }
     public void setFsFileAttributes( FileAttributes fs )
     {
@@ -60,12 +69,12 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
     }
     public InputStream getInputStream() throws IOException
     {
-        return unbuffered.getInputStream();
+        return getUnbuffered().getInputStream();
     }
 
     public OutputStream getOutputStream() throws IOException
     {
-        return unbuffered.getOutputStream();
+        return getUnbuffered().getOutputStream();
     }
     public void addChild( File node )
     {
@@ -79,20 +88,23 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
     public void refresh()
     {
         // FIXME a dir refresh must be performed on the underlaying layer pretty carefully 
-        unbuffered.refresh();
+        getUnbuffered().refresh();
         refreshReference();
     }
     public void refreshBuffer()
     {
-        directory = unbuffered.isDirectory();
-        exists = unbuffered.exists();
+        directory = getUnbuffered().isDirectory();
+        exists = getUnbuffered().exists();
         
         if( exists && !directory )
-            setFsFileAttributes( unbuffered.getFileAttributes() );
+            setFsFileAttributes( getUnbuffered().getFileAttributes() );
     }
     
     public void refreshReference()
     {
         unbuffered = getParent().getUnbuffered().getChild( getName() );
+        if( unbuffered == null )
+            unbuffered = getParent().getUnbuffered().createChild( getName(), directory );
     }
+    
 }

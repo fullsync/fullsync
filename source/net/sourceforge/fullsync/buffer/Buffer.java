@@ -16,4 +16,6 @@ public interface Buffer
     
     public void storeEntry( EntryDescriptor descriptor ) throws IOException;
     //public void writeEntryTo( Entry entry, OutputStream out ) throws IOException;
+    
+    // FinishedListener
 }

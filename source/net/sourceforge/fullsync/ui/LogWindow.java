@@ -22,6 +22,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -38,6 +39,10 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
@@ -49,12 +54,15 @@ import org.eclipse.swt.widgets.TableItem;
 */
 public class LogWindow extends org.eclipse.swt.widgets.Composite {
 
+	private Label labelProgress;
+	private Combo comboFilter;
 	private Button buttonGo;
 	private TableColumn tableColumn1;
-	private TableColumn tableColumnDestination;
-	private TableColumn tableColumnAction;
-	private TableColumn tableColumnSource;
 	private TableColumn tableColumnExplanation;
+	private TableColumn tableColumnSource;
+	private TableColumn tableColumnAction;
+	private TableColumn tableColumnDestination;
+	private TableColumn tableColumnSourceSize;
 	private Table tableLogLines;
 	private Hashtable actionImages;
 	private Image locationSource;
@@ -65,12 +73,17 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	
 	private TaskTree taskTree;
 	
+	private boolean onlyChanges;
+	private boolean processing;
+	
 	
 	public LogWindow(Composite parent, int style) 
 	{
 		super(parent, style);
 		initGUI();
 		initializeImages();
+		onlyChanges = false;
+		processing = false;
 	}
 
 	/**
@@ -87,6 +100,9 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 			tableColumnSource = new TableColumn(tableLogLines,SWT.NULL);
 			tableColumnAction = new TableColumn(tableLogLines,SWT.NULL);
 			tableColumnDestination = new TableColumn(tableLogLines,SWT.NULL);
+			tableColumnSourceSize = new TableColumn(tableLogLines,SWT.NULL);
+			comboFilter = new Combo(this,SWT.DROP_DOWN| SWT.READ_ONLY);
+			labelProgress = new Label(this,SWT.NULL);
 			buttonGo = new Button(this,SWT.PUSH| SWT.CENTER);
 	
 			this.setSize(new org.eclipse.swt.graphics.Point(711,225));
@@ -97,7 +113,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 			tableLogLinesLData.widthHint = -1;
 			tableLogLinesLData.heightHint = -1;
 			tableLogLinesLData.horizontalIndent = 0;
-			tableLogLinesLData.horizontalSpan = 1;
+			tableLogLinesLData.horizontalSpan = 3;
 			tableLogLinesLData.verticalSpan = 1;
 			tableLogLinesLData.grabExcessHorizontalSpace = true;
 			tableLogLinesLData.grabExcessVerticalSpace = true;
@@ -127,6 +143,40 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 			tableColumnDestination.setText("Destination");
 			tableColumnDestination.setWidth(220);
 	
+			tableColumnSourceSize.setText("Size");
+			tableColumnSourceSize.setWidth(80);
+	
+			GridData comboFilterLData = new GridData();
+			comboFilterLData.verticalAlignment = GridData.CENTER;
+			comboFilterLData.horizontalAlignment = GridData.BEGINNING;
+			comboFilterLData.widthHint = -1;
+			comboFilterLData.heightHint = -1;
+			comboFilterLData.horizontalIndent = 0;
+			comboFilterLData.horizontalSpan = 1;
+			comboFilterLData.verticalSpan = 1;
+			comboFilterLData.grabExcessHorizontalSpace = false;
+			comboFilterLData.grabExcessVerticalSpace = false;
+			comboFilter.setLayoutData(comboFilterLData);
+			comboFilter.addModifyListener( new ModifyListener() {
+				public void modifyText(ModifyEvent evt) {
+					comboFilterModifyText(evt);
+				}
+			});
+	
+			GridData labelProgressLData = new GridData();
+			labelProgressLData.verticalAlignment = GridData.CENTER;
+			labelProgressLData.horizontalAlignment = GridData.BEGINNING;
+			labelProgressLData.widthHint = 42;
+			labelProgressLData.heightHint = 13;
+			labelProgressLData.horizontalIndent = 5;
+			labelProgressLData.horizontalSpan = 1;
+			labelProgressLData.verticalSpan = 1;
+			labelProgressLData.grabExcessHorizontalSpace = false;
+			labelProgressLData.grabExcessVerticalSpace = false;
+			labelProgress.setLayoutData(labelProgressLData);
+			labelProgress.setText("Progress");
+			labelProgress.setSize(new org.eclipse.swt.graphics.Point(42,13));
+	
 			GridData buttonGoLData = new GridData();
 			buttonGoLData.verticalAlignment = GridData.CENTER;
 			buttonGoLData.horizontalAlignment = GridData.END;
@@ -144,11 +194,11 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 					buttonGoWidgetSelected(evt);
 				}
 			});
-			GridLayout thisLayout = new GridLayout(1, true);
+			GridLayout thisLayout = new GridLayout(3, true);
 			this.setLayout(thisLayout);
 			thisLayout.marginWidth = 2;
 			thisLayout.marginHeight = 2;
-			thisLayout.numColumns = 1;
+			thisLayout.numColumns = 3;
 			thisLayout.makeColumnsEqualWidth = false;
 			thisLayout.horizontalSpacing = 2;
 			thisLayout.verticalSpacing = 2;
@@ -165,6 +215,9 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 
 	/** Add your post-init code in here 	*/
 	public void postInitGUI(){
+	    comboFilter.add( "Everything" );
+	    comboFilter.add( "Changes only" );
+	    comboFilter.select(0);
 	}
 
 	public static void show( final TaskTree task )
@@ -286,18 +339,22 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
         if( !t.getCurrentAction().isBeforeRecursion() )
             addTaskChildren( t );
         
-        Image image = buildTaskImage( t );
-        
-        TableItem item = new TableItem( tableLogLines, SWT.NULL );
-        item.setImage( 3, image );
-        item.setText( new String[] {
-            "",
-            t.getCurrentAction().getExplanation(), 
-            t.getSource().getPath(),
-            "",
-            t.getDestination().getPath()
-        } );
-        item.setData( t );
+        if( !onlyChanges || t.getCurrentAction().getType() != Action.Nothing )
+        {
+	        Image image = buildTaskImage( t );
+	        
+	        TableItem item = new TableItem( tableLogLines, SWT.NULL );
+	        item.setImage( 3, image );
+	        item.setText( new String[] {
+	            "",
+	            t.getCurrentAction().getExplanation(), 
+	            t.getSource().getPath(),
+	            "",
+	            t.getDestination().getPath(),
+	            Long.toString(t.getSource().getFileAttributes()!=null?t.getSource().getFileAttributes().getLength():0L)+" bytes"
+	        } );
+	        item.setData( t );
+        }
 
         if( t.getCurrentAction().isBeforeRecursion() )
             addTaskChildren( t );
@@ -375,6 +432,8 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
     protected void performActions()
     {
         try {
+            processing = true;
+            
             //Logger logger = Logger.getRootLogger();
             //logger.addAppender( new FileAppender( new PatternLayout( "%d{ISO8601} [%p] %c %x - %m%n" ), "log/log.txt" ) );
             Logger logger = Logger.getLogger( "FullSync" );
@@ -382,11 +441,14 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	        BlockBuffer buffer = new BlockBuffer( logger );
 	        buffer.load();
 	        ActionQueue queue = new FillBufferActionQueue(buffer);
+	        Color inProc = new Color( null, 150, 150, 255 );
+	        // TODO use TaskTree instead of table items
 	        TableItem[] items = tableLogLines.getItems();
 	        for( int i = 0; i < items.length; i++ )
 	        {
 	            Task t = (Task)items[i].getData();
 	            queue.enqueue( t.getCurrentAction(), t.getSource(), t.getDestination() );
+	            items[i].setBackground( inProc );
 	        }
 	        queue.flush();
 	        buffer.unload();
@@ -404,7 +466,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	/** Auto-generated event handler method */
 	protected void tableLogLinesMouseUp(MouseEvent evt)
 	{
-		if( evt.button == 3 )
+		if( !processing && evt.button == 3 )
 		{
 		    showPopup( evt.x, evt.y );
 		}
@@ -413,7 +475,21 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite {
 	/** Auto-generated event handler method */
 	protected void buttonGoWidgetSelected(SelectionEvent evt)
 	{
-		performActions();
-		getShell().dispose();
+	    if( !processing )
+	    {
+	        performActions();
+	        getShell().dispose();
+	    }
+	}
+
+	/** Auto-generated event handler method */
+	protected void comboFilterModifyText(ModifyEvent evt)
+	{
+	    if( !processing )
+	    {
+	        onlyChanges = comboFilter.getSelectionIndex() == 1;
+	        if( taskTree != null )
+	            rebuildActionList();
+	    }
 	}
 }

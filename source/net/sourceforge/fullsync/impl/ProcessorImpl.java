@@ -83,10 +83,10 @@ public class ProcessorImpl extends Processor
      * we could updateRules in synchronizeNodes and apply synchronizeDirectories
      * to the given src and dst if they are directories
      */
-    public void synchronizeDirectories( File src, File dst, RuleSet rules, Task parent )
+    public void synchronizeDirectories( File src, File dst, RuleSet oldrules, Task parent )
     	throws DataParseException, FileSystemException
     {
-        rules = updateRules( src, dst, rules );
+        RuleSet rules = updateRules( src, dst, oldrules );
 
 		Collection srcFiles = src.getChildren();
 		Collection dstFiles = new ArrayList( dst.getChildren() );
@@ -111,5 +111,11 @@ public class ProcessorImpl extends Processor
 			
 			synchronizeNodes( sfile, dfile, rules, parent );
 		}
+		
+		/* HACK OMG, that is utterly wrong !! */
+		this.takeIgnoreDecider = oldrules;
+        this.stateDecider = new StateDecider( oldrules );
+        this.bufferStateDecider = new BufferStateDecider( oldrules );
+        this.actionDecider = new PublishActionDecider();
     }
 }

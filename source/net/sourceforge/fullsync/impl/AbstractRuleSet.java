@@ -219,34 +219,37 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable
 	public RuleSet createChild( File src, File dst )
 		throws DataParseException, FileSystemException
 	{
-	    AbstractRuleSet rules = this;
-		if( rules.isUsingRulesFile( SyncTokenizer.LOCAL ) )
-	        rules = rules.createChild( src );
-		if( rules.isUsingRulesFile( SyncTokenizer.REMOTE ) )
-		    rules = rules.createChild( dst );
-		return rules;
+	    try {
+		    AbstractRuleSet rules = (AbstractRuleSet)this.clone();
+			if( rules.isUsingRulesFile( SyncTokenizer.LOCAL ) )
+		        rules.processRules( src );
+			if( rules.isUsingRulesFile( SyncTokenizer.REMOTE ) )
+			    rules.processRules( dst );
+			return rules;
+	    } catch( CloneNotSupportedException cnse ) {
+	        cnse.printStackTrace();
+	        return null;
+	    }
 	}
 	
-	public AbstractRuleSet createChild( File dir )
+	public void processRules( File dir )
 		throws DataParseException, FileSystemException
 	{
 	    // TODO really unbuffered ?
-	    AbstractRuleSet rules = this;
 	    File node = ((File)dir.getUnbuffered()).getChild( syncRulesFilename );
 	    if( node != null && !node.isDirectory() )
 	    {
 			try {
 				InputStream in = ((File)node).getInputStream();
-				rules = createChild( in, ((File)node).getPath() );
+				processRules( in, ((File)node).getPath() );
 				in.close();
 			} catch( FileNotFoundException fnfe ) {
 			} catch( IOException ioe ) {
 			    ioe.printStackTrace();
 			}
 	    }
-	    return rules;
 	}
-	public abstract AbstractRuleSet createChild( InputStream in, String filename ) throws FileSystemException, DataParseException;
+	public abstract void processRules( InputStream in, String filename ) throws FileSystemException, DataParseException;
 	/**
 	 * 
 	 * @return boolean true if rules should be processed, false if not; it does not depend on the active direction

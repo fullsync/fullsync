@@ -127,17 +127,10 @@ public class SyncRules extends AbstractRuleSet
 			
 	}
 
-    public AbstractRuleSet createChild( InputStream in, String filename ) throws FileSystemException,
-            DataParseException
+    public void processRules( InputStream in, String filename ) 
+    	throws FileSystemException, DataParseException
     {
-        try {
-            SyncRules s = (SyncRules) this.clone();
-            s.processSyncRules( new SyncTokenizer( new InputStreamReader( in ), filename ) );
-            return s;
-        } catch( CloneNotSupportedException e ) {
-            e.printStackTrace();
-        }
-        return null;
+        processSyncRules( new SyncTokenizer( new InputStreamReader( in ), filename ) );
     }
 
     

@@ -18,7 +18,7 @@ public class XmlRuleSet extends AbstractRuleSet
         
     }
 
-    public AbstractRuleSet createChild( InputStream in, String filename ) 
+    public void processRules( InputStream in, String filename ) 
     {
         XmlRulesFile file = null;
         try {
@@ -31,6 +31,5 @@ public class XmlRuleSet extends AbstractRuleSet
             e.printStackTrace();
         }
         XmlRuleSet ruleSet = file.getRuleSet( this.getName() );
-        return ruleSet;
     }
 }

@@ -1,4 +1,14 @@
 
+2004-09-08
+	Processor was keeping changed rulesets in parent. now it's reverting to
+	old ruleset (badly coded)
+
+2004-09-06
+	buffered dirs no longer require full scan of destination filesystem if
+	all is in sync (not really tested much, but works a lot faster now)
+
+2004-09-05
+	now you can filter the actions to see only items where actions will occur
 	
 2004-08-27
 	corrected BufferStateDecider (was using buffered FileAttributes)
