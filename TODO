@@ -181,6 +181,9 @@ Release-critical:
    	[ ] put images into source / jar. 
    	[X] make config files not required.
    	[ ]	put logging.xml into jar as well
+   	[X] passive ftp
+   	[ ] handle case where no profile is selected but edit or run is clicked
+   	[ ] look for timeout/disconnect before committing changes and reconnect or report error
    	[X] verify simple rulesets
    	[X] rename of profiles (see hashtable in profilemanager)
 

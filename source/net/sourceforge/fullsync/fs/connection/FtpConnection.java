@@ -118,6 +118,7 @@ public class FtpConnection implements FileSystemConnection
 	        URI uri = new URI( desc.getUri() );
 	        client.connect( uri.getHost(), uri.getPort()==-1?21:uri.getPort() );
 	        client.login( desc.getUsername(), desc.getPassword() );
+	        client.enterLocalPassiveMode(); // FIXME i need to be specified in the ConnectionDescription
 	        client.setFileType( FTP.BINARY_FILE_TYPE );
 	        basePath = client.printWorkingDirectory()+uri.getPath();
 	        
@@ -195,13 +196,21 @@ public class FtpConnection implements FileSystemConnection
     public InputStream readFile( File file ) throws IOException
     {
         //client.changeWorkingDirectory( basePath+file.getParent().getPath() );
-        return new FtpFileInputStream( client.retrieveFileStream( basePath+"/"+file.getPath() ), client );
+        InputStream in = client.retrieveFileStream( basePath+"/"+file.getPath() );
+        if( in == null )
+            throw new IOException( "Ftp error while trying to read "+file.getPath()+" [" + client.getReplyCode() + "] " + client.getReplyString() );
+            
+        return new FtpFileInputStream( in, client );
     }
 
     public OutputStream writeFile( File file ) throws IOException
     {
         //client.changeWorkingDirectory( basePath+file.getParent().getPath() );
-        return new FtpFileOutputStream( client.storeFileStream( basePath+"/"+file.getPath() ), client );
+        
+        OutputStream out = client.storeFileStream( basePath+"/"+file.getPath() );
+        if( out == null )
+            throw new IOException( "Ftp error while trying to write "+file.getPath()+" [" + client.getReplyCode() + "] " + client.getReplyString() );
+        return new FtpFileOutputStream( out, client );
     }
 
     public boolean delete( File file ) throws IOException
