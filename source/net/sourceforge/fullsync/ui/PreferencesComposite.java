@@ -143,7 +143,11 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		preferences.setCloseMinimizesToSystemTray(cbCloseMinimizesToSystemTray.getSelection());
 		preferences.setMinimizeMinimizesToSystemTray(cbMinimizeMinimizesToSystemTray.getSelection());
 		preferences.setSystemTrayEnabled(cbEnableSystemTray.getSelection());
+		boolean profileListStyleChanged = (!preferences.getProfileListStyle().equals(comboProfileList.getText()));
 		preferences.setProfileListStyle(comboProfileList.getText());
 		preferences.save();
+		if (profileListStyleChanged) {
+			GuiController.getInstance().getMainWindow().updateProfileList();
+		}
 	}
 }

@@ -65,7 +65,7 @@ public class GuiController implements Runnable
     {
         return mainShell;
     }
-    public Composite getMainWindow()
+    public MainWindow getMainWindow()
     {
         return mainWindow;
     }

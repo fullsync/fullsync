@@ -533,4 +533,29 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
         updateTimerEnabled();
     }
     
+    public void updateProfileList() {
+    	profileList.dispose();
+    	statusLine.dispose();
+		{
+		    if( guiController.getPreferences().getProfileListStyle().equals( "NiceListView" ) )
+		         profileList = new NiceListViewProfileListComposite( this, SWT.NULL );
+		    else profileList = new ListViewProfileListComposite( this, SWT.NULL );
+		    GridData profileListLData = new GridData();
+		    profileListLData.grabExcessHorizontalSpace = true;
+	        profileListLData.grabExcessVerticalSpace = true;
+	        profileListLData.horizontalAlignment = GridData.FILL;
+	        profileListLData.verticalAlignment = GridData.FILL;
+	        profileList.setLayoutData(profileListLData);
+	        profileList.setHandler( this );
+		}
+        {
+            statusLine = new StatusLine(this, SWT.NONE);
+            GridData statusLineLData = new GridData();
+            statusLineLData.grabExcessHorizontalSpace = true;
+            statusLineLData.horizontalAlignment = GridData.FILL;
+            statusLine.setLayoutData(statusLineLData);
+        }
+    	profileList.setProfileManager( guiController.getProfileManager() );
+	    this.layout();
+    }
 }
