@@ -249,9 +249,9 @@ public class FtpConnection extends InstableConnection
         if( changeDirBeforeList )
         {
             client.changeWorkingDirectory( basePath+"/"+dir.getPath() );
-            files = client.listFiles( "" );
+            files = client.listFiles( "-a" );
         } else {
-            files = client.listFiles( ""+basePath+"/"+dir.getPath() );
+            files = client.listFiles( "-a "+basePath+"/"+dir.getPath() );
         }
         
         Hashtable table = new Hashtable();
