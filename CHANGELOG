@@ -1,3 +1,5 @@
+* fixed #1112008 Problem with large files by setting SoTimeout of ftpclient to 0 (infinite)
+  hope this works ok, strangly the ftpconnection test doesnt work that good anymore, but that should be sth else
 * added german localization, removed some that aren't supported anyway
 * added two way sync
 * added smb connection support
