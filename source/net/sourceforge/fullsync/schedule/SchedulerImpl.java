@@ -111,7 +111,6 @@ public class SchedulerImpl implements Scheduler, Runnable
 			if( task == null )
 			{
 				// TODO log sth here ?
-				enabled = false;
 				break;
 			}
 			
