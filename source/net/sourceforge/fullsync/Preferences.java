@@ -60,4 +60,6 @@ public interface Preferences
     public void setMinimizeMinimizesToSystemTray( boolean bool );
     public boolean systemTrayEnabled();
     public void setSystemTrayEnabled( boolean bool );
+    public String getProfileListStyle();
+    public void setProfileListStyle( String profileListStyle );
 }

@@ -2,13 +2,13 @@ package net.sourceforge.fullsync.ui;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.ProfileSchedulerListener;
-import net.sourceforge.fullsync.ProfilesChangeListener;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerationListener;
@@ -31,9 +31,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 /**
@@ -51,18 +48,13 @@ import org.eclipse.swt.widgets.ToolItem;
 * *************************************
 */
 public class MainWindow extends org.eclipse.swt.widgets.Composite 
-	implements ProfilesChangeListener, ProfileSchedulerListener, TaskGenerationListener
+	implements ProfileSchedulerListener, ProfileListControlHandler, TaskGenerationListener
 {
     private ToolItem toolItemNew;
     private Menu menuBarMainWindow;
-    private TableColumn tableColumnName;
     private StatusLine statusLine;
     private ToolBar toolBar2;
     private CoolItem coolItem2;
-    private TableColumn tableColumnDestination;
-    private TableColumn tableColumnSource;
-    private TableColumn tableColumnLastUpdate;
-    private Table tableProfiles;
     private ToolItem toolItemSchedule;
     private ToolItem toolItemRun;
     private ToolItem toolItemDelete;
@@ -74,12 +66,17 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
     private Image imageTimerRunning;
     private Image imageTimerStopped;
     
+    private ProfileListComposite profileList;
     private GuiController guiController;
-	
-	public MainWindow(Composite parent, int style) 
+    
+    private String statusDelayString;
+    private Timer statusDelayTimer;
+    
+	public MainWindow(Composite parent, int style, GuiController initGuiController) 
 	{
 		super(parent, style);
-		images = new ArrayList();
+		this.guiController = initGuiController;
+		this.images = new ArrayList();
 		initGUI();
 
 		getShell().addShellListener(new ShellAdapter() {
@@ -105,6 +102,10 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 		} );
 		
+        profileList.setProfileManager( guiController.getProfileManager() );
+        guiController.getProfileManager().addSchedulerListener( this );
+        guiController.getSynchronizer().getProcessor().addTaskGenerationListener(this);
+        updateTimerEnabled();
 	}
 
 	/**
@@ -115,7 +116,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		try {
 			preInitGUI();
 
-			this.setSize(629, 199);
+			this.setSize(600, 300);
 
 			GridLayout thisLayout = new GridLayout();
 			thisLayout.horizontalSpacing = 0;
@@ -144,7 +145,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                             toolItemEdit
                                 .addSelectionListener(new SelectionAdapter() {
                                     public void widgetSelected(SelectionEvent evt) {
-                                        editCurrentProfile();
+                                        editProfile( profileList.getSelectedProfile() );
                                     }
                                 });
                         }
@@ -153,7 +154,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                             toolItemDelete
                                 .addSelectionListener(new SelectionAdapter() {
                                     public void widgetSelected(SelectionEvent evt) {
-                                        deleteCurrentProfile();
+                                        deleteProfile( profileList.getSelectedProfile() );
                                     }
                                 });
                         }
@@ -162,7 +163,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                             toolItemRun
                                 .addSelectionListener(new SelectionAdapter() {
                                     public void widgetSelected(SelectionEvent evt) {
-                                        runCurrentProfile();
+                                        runProfile( profileList.getSelectedProfile() );
                                     }
                                 });
                         }
@@ -209,42 +210,18 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 				menuBarMainWindow = new Menu(getShell(), SWT.BAR);
 				getShell().setMenuBar(menuBarMainWindow);
 			}
-            {
-                tableProfiles = new Table(this, SWT.FULL_SELECTION | SWT.BORDER);
-                {
-                    tableColumnName = new TableColumn(tableProfiles, SWT.NONE);
-                    tableColumnName.setText("Name");
-                    tableColumnName.setWidth(100);
-                }
-                {
-                    tableColumnLastUpdate = new TableColumn(
-                        tableProfiles,
-                        SWT.NONE);
-                    tableColumnLastUpdate.setText("Last Update");
-                    tableColumnLastUpdate.setWidth(100);
-                }
-                {
-                    tableColumnSource = new TableColumn(tableProfiles, SWT.NONE);
-                    tableColumnSource.setText("Source");
-                    tableColumnSource.setWidth(200);
-                }
-                {
-                    tableColumnDestination = new TableColumn(
-                        tableProfiles,
-                        SWT.NONE);
-                    tableColumnDestination.setText("Destination");
-                    tableColumnDestination.setWidth(200);
-                }
-                tableProfiles.setHeaderVisible(true);
-                tableProfiles.setLinesVisible(false);
-
-                GridData tableProfilesLData = new GridData();
-                tableProfilesLData.grabExcessHorizontalSpace = true;
-                tableProfilesLData.grabExcessVerticalSpace = true;
-                tableProfilesLData.horizontalAlignment = GridData.FILL;
-                tableProfilesLData.verticalAlignment = GridData.FILL;
-                tableProfiles.setLayoutData(tableProfilesLData);
-            }
+			{
+			    if( guiController.getPreferences().getProfileListStyle().equals( "NiceListView" ) )
+			         profileList = new NiceListViewProfileListComposite( this, SWT.NULL );
+			    else profileList = new ListViewProfileListComposite( this, SWT.NULL );
+			    GridData profileListLData = new GridData();
+			    profileListLData.grabExcessHorizontalSpace = true;
+		        profileListLData.grabExcessVerticalSpace = true;
+		        profileListLData.horizontalAlignment = GridData.FILL;
+		        profileListLData.verticalAlignment = GridData.FILL;
+		        profileList.setLayoutData(profileListLData);
+		        profileList.setHandler( this );
+			}
             {
                 statusLine = new StatusLine(this, SWT.NONE);
                 GridData statusLineLData = new GridData();
@@ -291,52 +268,6 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		images.add( i );
 		//toolBar1.layout();
 		
-		// PopUp Menu for the Profile list.
-		Menu profilesPopupMenu = new Menu(getShell(), SWT.POP_UP);
-		
-		MenuItem addItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		addItem.setText("New Profile...");
-		addItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					createNewProfile();
-				}
-			}
-		);
-
-		MenuItem separatorItem1 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);		
-		
-		MenuItem editItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		editItem.setText("Edit Profile...");
-		editItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					editCurrentProfile();
-				}
-			}
-		);
-
-		MenuItem runItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		runItem.setText("Run Profile...");
-		runItem.setImage(buttonRun);
-		runItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					runCurrentProfile();
-				}
-			}
-		);
-
-		MenuItem separatorItem2 = new MenuItem(profilesPopupMenu, SWT.SEPARATOR);
-
-		MenuItem deleteItem = new MenuItem(profilesPopupMenu, SWT.PUSH);
-		deleteItem.setText("Delete Profile...");
-		deleteItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					deleteCurrentProfile();
-				}
-			}
-		);
-
-		tableProfiles.setMenu(profilesPopupMenu);
-
 		// Menu Bar
 		MenuItem menuItemFile = new MenuItem(menuBarMainWindow, SWT.CASCADE);
 		menuItemFile.setText("&File");
@@ -359,7 +290,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		menuItemEditProfile.setText("&Edit Profile...");
 		menuItemEditProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
-					editCurrentProfile();
+					editProfile( profileList.getSelectedProfile() );
 				}
 			}
 		);
@@ -369,7 +300,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		menuItemRunProfile.setImage(buttonRun);
 		menuItemRunProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
-					runCurrentProfile();
+					runProfile( profileList.getSelectedProfile() );
 				}
 			}
 		);
@@ -380,7 +311,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		menuItemDeleteProfile.setText("&Delete Profile...");
 		menuItemDeleteProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
-					deleteCurrentProfile();
+					deleteProfile( profileList.getSelectedProfile() );
 				}
 			}
 		);
@@ -409,9 +340,9 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		preferencesItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					// show the Preferences Dialog.
-					PreferencesDialog prefDialog = new PreferencesDialog(getShell(), SWT.NULL);
-					prefDialog.setGuiController(guiController);
-					prefDialog.open();
+					WizardDialog dialog = new WizardDialog( getShell() );
+					WizardPage page = new PreferencesPage( dialog, guiController.getPreferences() );
+					dialog.show();
 				}
 			}
 		);
@@ -460,51 +391,11 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	    return statusLine;
 	}
 	
-	public void setGuiController( GuiController guiController )
-    {
-	    if( guiController != null )
-	    {
-	        guiController.getProfileManager().removeProfilesChangeListener( this );
-	        guiController.getProfileManager().removeSchedulerListener( this );
-	        guiController.getSynchronizer().getProcessor().removeTaskGenerationListener(this);
-	    }
-        this.guiController = guiController;
-        guiController.getProfileManager().addProfilesChangeListener( this );
-        guiController.getProfileManager().addSchedulerListener( this );
-        guiController.getSynchronizer().getProcessor().addTaskGenerationListener(this);
-        populateProfileList();
-        updateTimerEnabled();
-    }
 	public GuiController getGuiController()
     {
         return guiController;
     }
 	
-	public void populateProfileList()
-	{
-	    if( guiController != null )
-	    {
-	        tableProfiles.clearAll();
-	        tableProfiles.setItemCount(0);
-	        Enumeration e = guiController.getProfileManager().getProfiles();
-	        while( e.hasMoreElements() )
-	        {
-	            Profile p = (Profile)e.nextElement();
-	            TableItem item = new TableItem( tableProfiles, SWT.NULL );
-	            item.setText( new String[] { 
-	                    p.getName(),
-	                    p.getLastUpdate().toString(),
-	                    p.getSource().toString(),
-	                    p.getDestination().toString() } );
-	        }
-	        tableColumnName.pack();
-	        tableColumnLastUpdate.pack();
-	        tableColumnSource.pack();
-	        tableColumnDestination.pack();
-	    }
-	    
-	}
-
 	protected void minimizeToTray() 
 	{
 	    // on OSX use this: 
@@ -537,7 +428,8 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
     }
     public void taskGenerationStarted( final File source, final File destination )
     {
-        statusLine.setMessage( "checking "+source.getPath() );
+        //statusLine.setMessage( "checking "+source.getPath() );
+        statusDelayString = "checking "+source.getPath();
     }
     public void taskGenerationFinished( Task task )
     {
@@ -547,31 +439,22 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
     {
         statusLine.setMessage( "synchronization finished");
     }
-    public void profilesChanged()
-    {
-        getDisplay().asyncExec( new Runnable() {
-            public void run()
-            {
-                populateProfileList();
-            }
-        } );
-    }
     public void profileExecutionScheduled( Profile profile )
     {
         Synchronizer sync = guiController.getSynchronizer();
         sync.performActions( sync.executeProfile( profile ) );
     }
-	protected void runCurrentProfile()
+
+	
+	public void createNewProfile()
 	{
-		TableItem[] items = tableProfiles.getSelection();
-		if( items.length == 0 )
-		    return;
-		    
-		TableItem i = items[0];
-		final Profile p = guiController.getProfileManager().getProfile( i.getText( 0 ) );
+		ProfileDetails.showProfile( getShell(), guiController.getProfileManager(), null );
+	}
+
+	public void runProfile( final Profile p )
+	{
 		if( p == null )
 		    return;
-		
 		
 	    Thread worker = new Thread( new Runnable() {
 	        public void run()
@@ -580,9 +463,19 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                 try {
                     guiController.showBusyCursor( true );
 					try {
+					    // REVISIT wow, a timer here is pretty much overhead / specific for
+					    //         this generell problem
+					    statusDelayTimer = new Timer( true );
+					    statusDelayTimer.schedule( new TimerTask() {
+					        public void run()
+					        {
+					            statusLine.setMessage( statusDelayString );
+					        }
+					    }, 10, 100 );
 						statusLine.setMessage( "Starting profile "+p.getName()+"..." );
 						t = guiController.getSynchronizer().executeProfile( p );
 						statusLine.setMessage( "Finished profile "+p.getName() );
+					    statusDelayTimer.cancel();
 					} catch (Exception e) {
 						e.printStackTrace();
 					} finally {
@@ -595,7 +488,6 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                     //      know the initial profile. maybe tasktree should get
                     //      a reference to the profile ?
                     p.setLastUpdate( new Date() );
-                    guiController.getProfileManager().fireProfilesChangeEvent();
                     guiController.getProfileManager().save();
                 } catch( Exception e ) {
                     e.printStackTrace();
@@ -605,38 +497,20 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	    worker.start();
 	}
 
-	
-	public void createNewProfile()
+	public void editProfile( final Profile p )
 	{
-		ProfileDetails.showProfile( guiController.getProfileManager(), null );
-	}
-
-	public void editCurrentProfile()
-	{
-		TableItem[] items = tableProfiles.getSelection();
-		if( items.length == 0 )
-		    return;
-		    
-		TableItem i = items[0];
-		Profile p = guiController.getProfileManager().getProfile( i.getText( 0 ) );
 		if( p == null )
 		    return;
 
-		ProfileDetails.showProfile( guiController.getProfileManager(), p.getName() );
+		ProfileDetails.showProfile( getShell(), guiController.getProfileManager(), p.getName() );
 	}
 
-	public void deleteCurrentProfile()
+	public void deleteProfile( final Profile p )
 	{
-	    ProfileManager profileManager = guiController.getProfileManager();
-	    
-		TableItem[] items = tableProfiles.getSelection();
-		if( items.length == 0 )
-		    return;
-		    
-		TableItem i = items[0];
-		Profile p = profileManager.getProfile( i.getText( 0 ) );
 		if( p == null )
 		    return;
+
+		ProfileManager profileManager = guiController.getProfileManager();
 
 		MessageBox mb = new MessageBox( getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO );
 		mb.setText( "Confirmation" );

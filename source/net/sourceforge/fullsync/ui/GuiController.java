@@ -45,10 +45,9 @@ public class GuiController implements Runnable
     {
 		try {
 			mainShell = new Shell(display);
-			mainWindow = new MainWindow(mainShell, SWT.NULL);
-			mainWindow.setGuiController( this );
+			mainWindow = new MainWindow(mainShell, SWT.NULL, this);
 			mainShell.setLayout(new org.eclipse.swt.layout.FillLayout());
-			Rectangle shellBounds = mainShell.computeTrim(0,0,635,223);
+			Rectangle shellBounds = mainShell.computeTrim(0,0,mainWindow.getSize().x,mainWindow.getSize().y);
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText( "FullSync 0.7.1" );
 			mainShell.setImage( new Image( null, "images/FullSync.gif" ) );
@@ -144,16 +143,10 @@ public class GuiController implements Runnable
 				try {
 				    Cursor cursor = show?display.getSystemCursor(SWT.CURSOR_WAIT):null;
 					Shell[] shells = display.getShells();
-					//final String BUSYID_NAME = "SWT BusyIndicator";
-					//final Integer busyId = new Integer(0);
 
 					for (int i = 0; i < shells.length; i++) 
 					{
-						//Integer id = (Integer) shells[i].getData(BUSYID_NAME);
-						//if (id == null) {
-							shells[i].setCursor(cursor);
-						//	shells[i].setData(BUSYID_NAME, busyId);
-						//}
+						shells[i].setCursor(cursor);
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();

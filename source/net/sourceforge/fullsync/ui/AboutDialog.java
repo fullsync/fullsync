@@ -1,10 +1,19 @@
 package net.sourceforge.fullsync.ui;
 
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
+//FIXME [Michele] This might be the ugliest About Box EVER!!!
 
 /**
 * This code was generated using CloudGarden's Jigloo
@@ -20,19 +29,15 @@ import org.eclipse.swt.SWT;
 * for any corporate or commercial purpose.
 * *************************************
 */
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Button;
-
-//FIXME [Michele] This might be the ugliest About Box EVER!!!
 public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 
 	private Shell dialogShell;
-	private StyledText textAbout;
-	private Button buttonCloseAbout;
+	private Label labelPicture;
+	private Label labelSeparator;
+	private Composite compositeBottom;
+	private Button buttonOk;
+	private Button buttonWebsite;
+	private Image imageAbout;
 
 	/**
 	* Auto-generated main method to display this 
@@ -49,7 +54,8 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 		}
 	}
 
-	public AboutDialog(Shell parent, int style) {
+	public AboutDialog(Shell parent, int style) 
+	{
 		super(parent, style);
 	}
 
@@ -60,42 +66,81 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 
 			GridLayout dialogShellLayout = new GridLayout();
 			dialogShell.setLayout(dialogShellLayout);
-			dialogShellLayout.verticalSpacing = 10;
+			dialogShellLayout.verticalSpacing = 0;
+			dialogShellLayout.marginHeight = 0;
+			dialogShellLayout.marginWidth = 0;
+			dialogShellLayout.horizontalSpacing = 0;
 			dialogShell.setText("About FullSync");
 			dialogShell.layout();
 			dialogShell.pack();
-			dialogShell.setSize(161, 103);
-			{
-				textAbout = new StyledText(dialogShell, SWT.MULTI | SWT.READ_ONLY | SWT.NO_BACKGROUND | SWT.NO_FOCUS);
-				textAbout.setText("FullSync 0.8.0\n by Jan Kopcsek");
-				textAbout.setOrientation(SWT.HORIZONTAL);
-				GridData textAboutLData = new GridData();
-				textAbout.setEnabled(false);
-				textAbout.setDoubleClickEnabled(false);
-				textAbout.setBackground(new Color( null, 236, 233, 216 ));
-				textAboutLData.horizontalAlignment = GridData.CENTER;
-				textAboutLData.grabExcessHorizontalSpace = true;
-				textAbout.setLayoutData(textAboutLData);
-			}
-			{
-				buttonCloseAbout = new Button(dialogShell, SWT.PUSH
-					| SWT.CENTER);
-				buttonCloseAbout.setText("OK");
-				GridData buttonCloseAboutLData = new GridData();
-				buttonCloseAbout.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent evt) {
-						dialogShell.dispose();
-					}
-				});
-				buttonCloseAboutLData.horizontalAlignment = GridData.CENTER;
-				buttonCloseAbout.setLayoutData(buttonCloseAboutLData);
-			}
+			dialogShell.setSize(308, 406);
+            {
+                labelPicture = new Label(dialogShell, SWT.NONE);
+                GridData labelPictureLData = new GridData();
+                labelPictureLData.grabExcessHorizontalSpace = true;
+                labelPictureLData.grabExcessVerticalSpace = true;
+                labelPictureLData.horizontalAlignment = GridData.FILL;
+                labelPictureLData.verticalAlignment = GridData.FILL;
+                labelPicture.setLayoutData(labelPictureLData);
+                imageAbout = new Image( parent.getDisplay(), "images/About.png" );
+        		labelPicture.setImage( imageAbout );
+            }
+            {
+                labelSeparator = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
+                GridData labelSeparatorLData = new GridData();
+                labelSeparatorLData.horizontalAlignment = GridData.FILL;
+                labelSeparatorLData.grabExcessHorizontalSpace = true;
+                labelSeparator.setLayoutData(labelSeparatorLData);
+            }
+            {
+                compositeBottom = new Composite(dialogShell, SWT.NONE);
+                GridLayout compositeBottomLayout = new GridLayout();
+                GridData compositeBottomLData = new GridData();
+                compositeBottomLData.horizontalAlignment = GridData.FILL;
+                compositeBottom.setLayoutData(compositeBottomLData);
+                compositeBottomLayout.makeColumnsEqualWidth = true;
+                compositeBottomLayout.numColumns = 2;
+                compositeBottom.setLayout(compositeBottomLayout);
+                {
+                    buttonWebsite = new Button(compositeBottom, SWT.PUSH
+                        | SWT.CENTER);
+                    buttonWebsite.setText("Website");
+                    GridData buttonWebsiteLData = new GridData();
+                    buttonWebsite.addSelectionListener(new SelectionAdapter() {
+                        public void widgetSelected(SelectionEvent evt) {
+                            Program.launch( "http://fullsync.sourceforge.net" );
+                        }
+                    });
+                    buttonWebsiteLData.widthHint = 80;
+                    buttonWebsiteLData.heightHint = 23;
+                    buttonWebsiteLData.grabExcessHorizontalSpace = true;
+                    buttonWebsite.setLayoutData(buttonWebsiteLData);
+                }
+                {
+                    buttonOk = new Button(compositeBottom, SWT.PUSH
+                        | SWT.CENTER);
+                    buttonOk.setText("Ok");
+                    GridData buttonOkLData = new GridData();
+                    buttonOk.addSelectionListener(new SelectionAdapter() {
+                        public void widgetSelected(SelectionEvent evt) {
+                            dialogShell.close();
+                        }
+                    });
+                    buttonOkLData.horizontalAlignment = GridData.END;
+                    buttonOkLData.heightHint = 23;
+                    buttonOkLData.widthHint = 80;
+                    buttonOkLData.grabExcessHorizontalSpace = true;
+                    buttonOk.setLayoutData(buttonOkLData);
+                }
+            }
 			dialogShell.open();
 			Display display = dialogShell.getDisplay();
 			while (!dialogShell.isDisposed()) {
 				if (!display.readAndDispatch())
 					display.sleep();
 			}
+			imageAbout.dispose();
+			imageAbout = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -63,7 +63,7 @@ public class Synchronizer
 	        ActionQueue queue = new FillBufferActionQueue(buffer);
 	        
 	        if( listener != null )
-	            queue.addActionFinishedListener( listener );
+	            queue.addTaskFinishedListener( listener );
 	        
 	        buffer.load();
 	        queue.enqueue( taskTree );

@@ -153,19 +153,31 @@ Sheduler:
 	[X] add button to toolbar enable/disable scheduling
 
 Release-critical:
-	[ ] implement working versioning system
 	[ ] include license stuff correctly
-	
+	[X] LogWindow should have: global source - destination, filename just once,
+		                       explanation on the right side
+    [X] backup action decider
+    [X] stabilize/test backup action decider
+    [X] configurable action decider per profile
+    [X] "checking <file>" is taking most of the time when comparing local to local
+    	we shouldn't push but poll this status string !
+   	[ ] scheduler in profile
 
 ---===[ to 0.9 Tasks ]====-------------------------------------------------
 
 Gui:
-	[ ] realize the gui concept (2004-11-07)
+	[X] realize the gui concept (2004-11-07)
+	
+Versioning:
+	[ ] implement working versioning system
 
 
 ---===[ to 0.10 Tasks ]====------------------------------------------------
 
 ---===[ to 1.0 Tasks ]====-------------------------------------------------
+
+Images:
+	[X] cache images for different states/actions
 
 Logwindow
 	[ ] Show size of copied data
@@ -183,7 +195,7 @@ Syncprocess encapsulement:
 		  - verbose yes/no
 
 Feedback:
-	[-] After ActionQueue: Action started (this may be multiple ?)
+	[X] After ActionQueue: Action started (this may be multiple ?)
 		show "(Task 2130 of 2430) E:\bla -> ftp:// ..."
 		-> that will make multithreaded task execution extremely hard
 	[ ] cancel in sync phase
@@ -194,14 +206,12 @@ Feedback:
 		
 Interface:
 	[ ] investigate why the busy cursor is not shown when above the scrollbar
-		or table headers
+		or table headers - because the main thread still answers
 		
-	[ ] investigate whether it's possible to give the state image in the logwindow
-		a transparent bg ( so the green bg color is seen all over the line)
+	[X] investigate whether it's possible to give the state image in the logwindow
+		a transparent bg (so the green bg color is seen all over the line)
+		-> the image is transparent atm, we would need to draw a green bg then
 				
-Processor:
-	[ ] impl new TraveralTypes
-	
 Naming:
 	[ ] call Processor TaskGenerator ? (or is the ActionDecider the generator?)
 	[ ] call ActionQueue TaskExecutor ? (as we don't care about the buffer at all)
@@ -237,12 +247,20 @@ SB:
 		have differences to destination, so we'll need to ignore
 		src <-> dst state at all.
 
+Processor:
+	[ ] impl new TraveralTypes
+		actually we'll need the possibility to say "src didn't change, so
+		dst doesn't interest me" (in sync without retrieving file data)
+
 Files:
 	[ ] we need to differenciate between case sensitivity. 
 		store names toLower in hashtables and search for toLower
 		ftp: try checking x permission on . to find out if its a win system
 		local: check properties ?
 	[ ] ascii/bin
+	[ ] we can not handle the multiple actions when a dir changes to file or
+		the other way around. we would need to delete the exiting one and
+		copy over the new one.
 
 TakeIgnore -> Filter:
 	[ ] Ignore takes place immediatly atm, on src and dst resulting
@@ -292,9 +310,6 @@ Connection:
 Dispose:
 	[ ]	Dispose all images we draw and all other widgets too
 	[ ] dispose tableitems
-
-Images:
-	[X] cache images for different states/actions
 
 Logging:
 	[ ] verify logging quality

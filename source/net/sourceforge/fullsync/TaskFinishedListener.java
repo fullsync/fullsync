@@ -11,5 +11,5 @@ import java.util.EventListener;
 public interface TaskFinishedListener extends EventListener 
 {
 	// TODO better use some action class given to the actionqueue
-	public void actionFinished( Task task, int bytesTransferred );
+	public void taskFinished( TaskFinishedEvent event );
 }

@@ -5,7 +5,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ProgressBar;
 
 
 /**
@@ -24,15 +23,14 @@ import org.eclipse.swt.widgets.ProgressBar;
 */
 public class StatusLine extends org.eclipse.swt.widgets.Composite 
 {
-    private ProgressBar progressBar;
     private Label labelIcon;
     private Label labelMessage;
+    //private ProgressBar progressBar;
 
 	public StatusLine(org.eclipse.swt.widgets.Composite parent, int style) 
 	{
 		super(parent, style);
 		initGUI();
-		progressBar.setVisible( false );
 	}
 
 	private void initGUI() {
@@ -60,6 +58,7 @@ public class StatusLine extends org.eclipse.swt.widgets.Composite
                 labelMessageLData.verticalAlignment = GridData.END;
                 labelMessage.setLayoutData(labelMessageLData);
             }
+            /*
             {
                 progressBar = new ProgressBar(this, SWT.NONE);
                 GridData progressBarLData = new GridData();
@@ -68,6 +67,7 @@ public class StatusLine extends org.eclipse.swt.widgets.Composite
                 progressBarLData.heightHint = 17;
                 progressBar.setLayoutData(progressBarLData);
             }
+            */
 			this.layout();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -80,9 +80,7 @@ public class StatusLine extends org.eclipse.swt.widgets.Composite
             public void run()
             {
                 labelIcon.setImage( null );
-        	    //labelIcon.setVisible( false );
-        		labelMessage.setText( message );
-        		layout();
+        		labelMessage.setText( message==null?"":message );
             }
         } );
 	}
@@ -92,9 +90,7 @@ public class StatusLine extends org.eclipse.swt.widgets.Composite
             public void run()
             {
 			    labelIcon.setImage( icon );
-			    //labelIcon.setVisible( true );
 			    labelMessage.setText( message );
-			    layout();
             }
 	    } );
 	}

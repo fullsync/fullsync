@@ -1,3 +1,16 @@
+* changed feedback of task generation phase to poll instead of push
+  which took a lot of time
+* added TaskFinishedEvent, which allows unsuccessful feedback
+* changed ActionFinishedListener to TaskFinishedListener
+* changed the buffer, so file larger than the buffersize are working too
+* added BackupActionDecider
+* added new profile field type, saying which action decider to use
+* changed most dialogs to wizard style
+* added new images and icons
+* added AboutDialog
+* added new preference: profile list (needs restart)
+* added NiceListView -> alternative profile list
+* added ProfileChange listener to profile
 * added a main menu bar (patch by michele)
 * LogWindow:
     - now caching and disposing images

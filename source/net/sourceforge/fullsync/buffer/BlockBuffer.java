@@ -93,25 +93,25 @@ public class BlockBuffer implements Buffer
 				if( out != null )
 				{
 				    out.write( buffer, e.start, e.length );
-				    out.close();
+				    //if( (e.internalSegment & Segment.Last) > 0 )
+				    //    out.close();
 				}
-				desc.finishWrite();
-				String opDesc = desc.getOperationDescription();
-				if( opDesc != null )
-				    logger.info( opDesc );
-				
-				Enumeration en = finishedListeners.elements();
-				while( en.hasMoreElements() )
-				{
-					((EntryFinishedListener)en.nextElement()).entryFinished( desc );
-				}
+			    if( (e.internalSegment & Segment.Last) > 0 )
+			    {
+					desc.finishWrite();
+					String opDesc = desc.getOperationDescription();
+					if( opDesc != null )
+					    logger.info( opDesc );
+					
+					Enumeration en = finishedListeners.elements();
+					while( en.hasMoreElements() )
+					{
+						((EntryFinishedListener)en.nextElement()).entryFinished( desc );
+					}
+			    }
 		    } catch( IOException ioe ) {
 		        logger.error( "Exception", ioe );
 		    }
-			
-			// TODO args, large file copy will invoke a lot of
-			//      open/closes which will slowdown the copy process :-/
-			// what about copying large files via stream ? 
 		}
 		Arrays.fill( entries, null );
 		numberBytes = 0;
@@ -176,26 +176,20 @@ public class BlockBuffer implements Buffer
 
 		return entry.length;
 	}
-	public boolean storeEntry( InputStream data, long size, EntryDescriptor descriptor )
+	private void storeEntry( InputStream data, long size, EntryDescriptor descriptor )
+		throws IOException
     {
         long alreadyRead = 0;
 		long lengthLeft = size;
 		
-		try {
-			do {
-				if( lengthLeft > freeBytes || numberEntries == maxEntries )
-					flush();
-				int read = store( data, alreadyRead, lengthLeft, descriptor );
-				alreadyRead += read;
-				lengthLeft  -= read;
-			} while( lengthLeft > 0 );
-			data.close();
-			
-			return true;
-		} catch( IOException ie) {
-		    ie.printStackTrace();
-			return false;
-		}
+		do {
+			if( lengthLeft > freeBytes || numberEntries == maxEntries )
+				flush();
+			int read = store( data, alreadyRead, lengthLeft, descriptor );
+			alreadyRead += read;
+			lengthLeft  -= read;
+		} while( lengthLeft > 0 );
+		//data.close();
     }
     public void storeEntry( EntryDescriptor descriptor )
     	throws IOException
@@ -210,6 +204,7 @@ public class BlockBuffer implements Buffer
         } else {
             storeEntry( descriptor.getInputStream(), descriptor.getLength(), descriptor );
         }
+        descriptor.finishStore();
     }
     
     public void addEntryFinishedListener( EntryFinishedListener listener )

@@ -151,4 +151,14 @@ public class XmlPreferences implements Preferences
     {
         enableSystemTray = bool;
     }
+    public String getProfileListStyle()
+    {
+        // TODO Auto-generated method stub
+        return "Table";
+    }
+    public void setProfileListStyle( String profileListStyle )
+    {
+        // TODO Auto-generated method stub
+
+    }
 }

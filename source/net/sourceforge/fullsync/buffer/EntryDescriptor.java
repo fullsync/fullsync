@@ -15,6 +15,8 @@ public interface EntryDescriptor
     public Object getReferenceObject();
     public long getLength();
     
+    // FIXME if those streams don't get closed, the entry descriptor should
+    // return the same one as before (say the opened one)
     public InputStream getInputStream() throws IOException;
     public OutputStream getOutputStream() throws IOException;
     

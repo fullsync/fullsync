@@ -67,6 +67,19 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
     {
         return fsAttributes;
     }
+    public FileAttributes getFileAttributes()
+    {
+        // in case we are requesting file attributes that 
+        // were not explicitly set, just take the fs attributes
+        FileAttributes attrib = super.getFileAttributes();
+        if( attrib == null )
+             return fsAttributes;
+        else return attrib;
+    }
+    public void clearCachedFileAttributes()
+    {
+        setFileAttributes( getFsFileAttributes() );
+    }
     public InputStream getInputStream() throws IOException
     {
         return getUnbuffered().getInputStream();
@@ -84,7 +97,7 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
     {
         children.remove( name );
     }
-        
+    
 	
     public void refresh()
     {

@@ -16,6 +16,8 @@ public class FileCopyEntryDescriptor implements EntryDescriptor
     private Object reference;
     private File src;
     private File dst;
+    private InputStream inputStream;
+    private OutputStream outputStream;
     
     public FileCopyEntryDescriptor( Object reference, File src, File dst )
     {
@@ -34,21 +36,32 @@ public class FileCopyEntryDescriptor implements EntryDescriptor
     public InputStream getInputStream()
     	throws IOException
     {
-        return src.getInputStream();
+        if( inputStream == null )
+            inputStream = src.getInputStream();
+        return inputStream;
     }
     public OutputStream getOutputStream()
     	throws IOException
     {
-        return dst.getOutputStream();
+        if( outputStream == null )
+            outputStream = dst.getOutputStream();
+        return outputStream;
     }
     public void finishWrite()
     {
         dst.setFileAttributes( src.getFileAttributes() );
         dst.refresh();
+        try {
+	        if( outputStream != null )
+	            outputStream.close();
+        } catch( IOException ex ) {}
     }
     public void finishStore()
     {
-        
+        try {
+	        if( inputStream != null )
+	            inputStream.close();
+    	} catch( IOException ex ) {}
     }
     public String getOperationDescription()
     {

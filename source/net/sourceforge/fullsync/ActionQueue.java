@@ -12,6 +12,6 @@ public interface ActionQueue
     public void enqueue( Task task );
     public void flush();
     
-    public void addActionFinishedListener( TaskFinishedListener listener );
-    public void removeActionFinishedListener( TaskFinishedListener listener );
+    public void addTaskFinishedListener( TaskFinishedListener listener );
+    public void removeTaskFinishedListener( TaskFinishedListener listener );
 }

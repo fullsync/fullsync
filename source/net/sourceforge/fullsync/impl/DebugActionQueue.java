@@ -31,10 +31,10 @@ public class DebugActionQueue implements ActionQueue
     {
         
     }
-    public void addActionFinishedListener( TaskFinishedListener listener )
+    public void addTaskFinishedListener( TaskFinishedListener listener )
     {
     }
-    public void removeActionFinishedListener( TaskFinishedListener listener )
+    public void removeTaskFinishedListener( TaskFinishedListener listener )
     {
     }
 }

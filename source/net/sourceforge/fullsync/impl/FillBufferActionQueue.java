@@ -5,11 +5,12 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.Action;
-import net.sourceforge.fullsync.TaskFinishedListener;
+import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.ActionQueue;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.buffer.Buffer;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
@@ -73,10 +74,14 @@ public class FillBufferActionQueue implements ActionQueue, EntryFinishedListener
     }
     protected void storeFileCopy( Task task, File source, File destination ) throws IOException
     {
-        if( !statisticsOnly )
-            buffer.storeEntry( new FileCopyEntryDescriptor( task, source, destination ) );
-        stats.filesCopied++;
-        stats.bytesTransferred += source.getFileAttributes().getLength();
+        try {
+	        if( !statisticsOnly )
+	            buffer.storeEntry( new FileCopyEntryDescriptor( task, source, destination ) );
+	        stats.filesCopied++;
+	        stats.bytesTransferred += source.getFileAttributes().getLength();
+        } catch( IOException ioe ) {
+            fireTaskFinished( new TaskFinishedEvent( task, ioe.getMessage() ) );
+        }
     }
     protected void storeDeleteNode( Task task, File subject ) throws IOException
     {
@@ -139,23 +144,23 @@ public class FillBufferActionQueue implements ActionQueue, EntryFinishedListener
         Object ref = entry.getReferenceObject();
         if( ref == null )
             return;
-    	fireActionFinished( (Task)ref, 0 );
+    	fireTaskFinished( new TaskFinishedEvent( (Task)ref, 0 ) );
 	}
-    protected void fireActionFinished( Task task, int bytesTransferred )
+    protected void fireTaskFinished( TaskFinishedEvent event )
     {
         Enumeration e = listeners.elements();
     	while( e.hasMoreElements() )
     	{
     		((TaskFinishedListener)e.nextElement())
-    			.actionFinished( task, bytesTransferred );
+    			.taskFinished( event );
     	}
     }
     
-    public void addActionFinishedListener( TaskFinishedListener listener )
+    public void addTaskFinishedListener( TaskFinishedListener listener )
     {
     	listeners.add( listener );
     }
-    public void removeActionFinishedListener( TaskFinishedListener listener )
+    public void removeTaskFinishedListener( TaskFinishedListener listener )
     {
     	listeners.remove( listener );
     }

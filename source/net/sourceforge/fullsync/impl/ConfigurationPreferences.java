@@ -84,4 +84,12 @@ public class ConfigurationPreferences implements Preferences
 	{
 	    config.setProperty("Interface.SystemTray.Enabled", new Boolean( bool ));
 	}
+	public String getProfileListStyle()
+    {
+	    return config.getString("Interface.ProfileList.Style", "Table");
+    }
+	public void setProfileListStyle( String profileListStyle )
+    {
+	    config.setProperty("Interface.ProfileList.Style", profileListStyle);
+    }
 }

@@ -13,6 +13,7 @@ import net.sourceforge.fullsync.StateDecider;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TraversalType;
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.connection.AbstractBufferedFile;
 
 /**
  * An ActionDecider for source buffered publish/update. 
@@ -46,6 +47,8 @@ public class PublishSBActionDecider implements ActionDecider
                 else {
                     // we have to update buffer
                 	src.refreshBuffer();
+                	// FIXME one could do this a lot nicer
+                	((AbstractBufferedFile)src).clearCachedFileAttributes();
                     Task t = getTask( src, dst, sd, bsd );
                     return t;
                 }
@@ -73,13 +76,34 @@ public class PublishSBActionDecider implements ActionDecider
         	actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Source, "overwrite destination changes" ) );
         	break;
         case State.NodeInSync:
-            if( bsd.getState( src ).equals( State.NodeInSync, Location.Both ) ) {
+            State bufferState = bsd.getState( src );
+            if( bufferState.equals( State.NodeInSync, Location.Both ) ) {
                 actions.add( new Action( Action.Nothing, Location.None, BufferUpdate.None, "In Sync" ) );
             } else {
                 // Update buffer and check
             	src.refreshBuffer();
-                Task t = getTask( src, dst, sd, bsd );
-                return t;
+            	// FIXME one could do this a lot nicer
+            	((AbstractBufferedFile)src).clearCachedFileAttributes();
+            	
+            	// we know that source changed, so just mirror the current state
+            	File unbuff = src.getUnbuffered();
+            	State newState = sd.getState( unbuff, dst );
+            	switch( newState.getType() )
+            	{
+            	case State.Orphan:
+                    if( newState.getLocation() == Location.Destination )
+                        actions.add( new Action( Action.Delete, Location.Destination, BufferUpdate.Source, "Deletion", false ) );
+                    break;
+                case State.DirHereFileThere:
+                    actions.add( new Action( Action.DirHereFileThereError, newState.getLocation(), BufferUpdate.Source, "dir-attribute changed" ) );
+                    break;
+                case State.FileChange:
+                    actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Source, "update destination" ) );
+                    break;
+                case State.NodeInSync:
+                    actions.add( new Action( Action.Nothing, Location.Source, BufferUpdate.None, "In Sync" ) );
+                    break;
+            	}
             }
         	break;
         default:

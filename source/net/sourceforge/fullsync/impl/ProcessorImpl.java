@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.sourceforge.fullsync.ActionDecider;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.IgnoreDecider;
@@ -25,7 +24,7 @@ public class ProcessorImpl extends AbstractProcessor
     private IgnoreDecider takeIgnoreDecider;
     private StateDecider stateDecider;
     private BufferStateDecider bufferStateDecider;
-    private ActionDecider actionDecider;
+    //private ActionDecider actionDecider;
     
     public ProcessorImpl()
     {
@@ -41,7 +40,7 @@ public class ProcessorImpl extends AbstractProcessor
 		this.takeIgnoreDecider = rules;
         this.stateDecider = new StateDecider( rules );
         this.bufferStateDecider = new BufferStateDecider( rules );
-        this.actionDecider = new PublishActionDecider();
+        //this.actionDecider = new BackupActionDecider();
         
 		return rules;
     }
@@ -74,7 +73,7 @@ public class ProcessorImpl extends AbstractProcessor
                 ((TaskGenerationListener)taskGenerationListeners.get(i))
                 	.taskGenerationStarted(src, dst);
 
-            Task task = actionDecider.getTask( src, dst, stateDecider, bufferStateDecider );
+            Task task = getActionDecider().getTask( src, dst, stateDecider, bufferStateDecider );
 
             for( int i = 0; i < taskGenerationListeners.size(); i++ )
                 ((TaskGenerationListener)taskGenerationListeners.get(i))
@@ -98,6 +97,7 @@ public class ProcessorImpl extends AbstractProcessor
     public void synchronizeDirectories( File src, File dst, RuleSet oldrules, Task parent )
     	throws DataParseException, FileSystemException
     {
+        // update rules to current directory
         RuleSet rules = updateRules( src, dst, oldrules );
 
 		Collection srcFiles = src.getChildren();
@@ -128,6 +128,6 @@ public class ProcessorImpl extends AbstractProcessor
 		this.takeIgnoreDecider = oldrules;
         this.stateDecider = new StateDecider( oldrules );
         this.bufferStateDecider = new BufferStateDecider( oldrules );
-        this.actionDecider = new PublishActionDecider();
+        //this.actionDecider = new PublishActionDecider();
     }
 }

@@ -1,6 +1,7 @@
 package net.sourceforge.fullsync;
 
-import java.io.*;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>

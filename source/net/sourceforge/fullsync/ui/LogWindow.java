@@ -11,6 +11,7 @@ import net.sourceforge.fullsync.ActionQueue;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.buffer.BlockBuffer;
@@ -29,12 +30,16 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -68,12 +73,19 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 {
 	private Label labelProgress;
 	private Combo comboFilter;
+	private Label labelDestination;
+	private Label labelImage;
+	private Label labelCaption;
+	private Composite compositeBottom;
+	private Label labelSeparatorBottom;
+	private Label labelSeparatorTop;
+	private Composite compositeTop;
+	private Label labelSource;
 	private Button buttonGo;
 	private TableColumn tableColumn1;
 	private TableColumn tableColumnExplanation;
-	private TableColumn tableColumnSource;
+	private TableColumn tableColumnFilename;
 	private TableColumn tableColumnAction;
-	private TableColumn tableColumnDestination;
 	private TableColumn tableColumnSourceSize;
 	private Table tableLogLines;
 	private int tableLogLinesFillIndex;
@@ -116,18 +128,84 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 		try {
 			preInitGUI();
 	
+			Color white = getDisplay().getSystemColor( SWT.COLOR_WHITE );
+            {
+                compositeTop = new Composite(this, SWT.NONE);
+                compositeTop.setBackground( white );
+                FormLayout compositeTopLayout = new FormLayout();
+                GridData compositeTopLData = new GridData();
+                compositeTopLData.grabExcessHorizontalSpace = true;
+                compositeTopLData.horizontalSpan = 3;
+                compositeTopLData.horizontalAlignment = GridData.FILL;
+                compositeTopLData.heightHint = 64;
+                compositeTop.setLayoutData(compositeTopLData);
+                compositeTop.setLayout(compositeTopLayout);
+                {
+                    labelCaption = new Label(compositeTop, SWT.NONE);
+                    labelCaption.setBackground(white);
+                    labelCaption.setText("Choose the actions that should be performed.");
+                    labelCaption.setFont( new Font( getDisplay(), "Tohama", 9, SWT.BOLD ) );
+                    FormData labelCaptionLData = new FormData();
+                    labelCaptionLData.width = 330;
+                    labelCaptionLData.height = 16;
+                    labelCaptionLData.left =  new FormAttachment(0, 1000, 12);
+                    labelCaptionLData.right =  new FormAttachment(627, 1000, 0);
+                    labelCaptionLData.top =  new FormAttachment(164, 1000, 0);
+                    labelCaptionLData.bottom =  new FormAttachment(414, 1000, 0);
+                    labelCaption.setLayoutData(labelCaptionLData);
+                    // TODO dispose font !!
+                }
+                {
+                    labelSource = new Label(compositeTop, SWT.NONE);
+                    labelSource.setBackground(white);
+                    FormData labelSourceLData = new FormData();
+                    labelSource.setText("Source: ");
+                    labelSourceLData.width = 289;
+                    labelSourceLData.height = 14;
+                    labelSourceLData.left =  new FormAttachment(65, 1000, 0);
+                    labelSourceLData.right =  new FormAttachment(594, 1000, 0);
+                    labelSourceLData.top =  new FormAttachment(429, 1000, 0);
+                    labelSourceLData.bottom =  new FormAttachment(648, 1000, 0);
+                    labelSource.setLayoutData(labelSourceLData);
+                }
+                {
+                    labelDestination = new Label(compositeTop, SWT.NONE);
+                    labelDestination.setBackground(white);
+                    FormData labelDestinationLData = new FormData();
+                    labelDestination.setText("Destination:");
+                    labelDestinationLData.width = 381;
+                    labelDestinationLData.height = 17;
+                    labelDestinationLData.left =  new FormAttachment(65, 1000, 0);
+                    labelDestinationLData.right =  new FormAttachment(762, 1000, 0);
+                    labelDestinationLData.top =  new FormAttachment(695, 1000, 0);
+                    labelDestinationLData.bottom =  new FormAttachment(960, 1000, 0);
+                    labelDestination.setLayoutData(labelDestinationLData);
+                }
+                {
+                    labelImage = new Label(compositeTop, SWT.NONE);
+                    labelImage.setImage( new Image( getDisplay(), "images/Tasklist_Wizard.png") );
+                    FormData labelImageLData = new FormData();
+                    labelImageLData.width = 64;
+                    labelImageLData.height = 64;
+                    labelImageLData.left =  new FormAttachment(883, 1000, 0);
+                    labelImageLData.right =  new FormAttachment(1000, 1000, 0);
+                    labelImageLData.top =  new FormAttachment(7, 1000, 0);
+                    labelImageLData.bottom =  new FormAttachment(1007, 1000, 0);
+                    labelImage.setLayoutData(labelImageLData);
+                }
+            }
+            {
+                labelSeparatorTop = new Label(this, SWT.SEPARATOR
+                    | SWT.HORIZONTAL);
+                GridData labelSeparatorTopLData = new GridData();
+                labelSeparatorTopLData.grabExcessHorizontalSpace = true;
+                labelSeparatorTopLData.horizontalSpan = 3;
+                labelSeparatorTopLData.horizontalAlignment = GridData.FILL;
+                labelSeparatorTop.setLayoutData(labelSeparatorTopLData);
+            }
 			tableLogLines = new Table(this,SWT.FULL_SELECTION | SWT.MULTI);
-			tableColumn1 = new TableColumn(tableLogLines,SWT.NULL);
-			tableColumnExplanation = new TableColumn(tableLogLines,SWT.NULL);
-			tableColumnSource = new TableColumn(tableLogLines,SWT.NULL);
-			tableColumnAction = new TableColumn(tableLogLines,SWT.NULL);
-			tableColumnDestination = new TableColumn(tableLogLines,SWT.NULL);
-			tableColumnSourceSize = new TableColumn(tableLogLines,SWT.NULL);
-			comboFilter = new Combo(this,SWT.DROP_DOWN| SWT.READ_ONLY);
-			labelProgress = new Label(this,SWT.NULL);
-			buttonGo = new Button(this,SWT.PUSH| SWT.CENTER);
-	
-			this.setSize(new org.eclipse.swt.graphics.Point(711,225));
+
+			this.setSize(546, 395);
 	
 			GridData tableLogLinesLData = new GridData();
 			tableLogLinesLData.verticalAlignment = GridData.FILL;
@@ -143,86 +221,102 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 			tableLogLines.setHeaderVisible(true);
 			tableLogLines.setLinesVisible(true);
 			tableLogLines.setSize(new org.eclipse.swt.graphics.Point(690,179));
+            {
+                labelSeparatorBottom = new Label(this, SWT.SEPARATOR
+                    | SWT.HORIZONTAL);
+                GridData labelSeparatorBottomLData = new GridData();
+                labelSeparatorBottomLData.grabExcessHorizontalSpace = true;
+                labelSeparatorBottomLData.horizontalAlignment = GridData.FILL;
+                labelSeparatorBottom.setLayoutData(labelSeparatorBottomLData);
+            }
+            {
+                tableColumn1 = new TableColumn(tableLogLines, SWT.NONE);
+                tableColumn1.setResizable(false);
+                tableColumn1.setText("tableColumn1");
+            }
+            {
+                tableColumnFilename = new TableColumn(tableLogLines, SWT.NONE);
+                tableColumnFilename.setText("Filename");
+                tableColumnFilename.setWidth(238);
+            }
+            {
+                tableColumnSourceSize = new TableColumn(tableLogLines, SWT.NONE);
+                tableColumnSourceSize.setText("Size");
+                tableColumnSourceSize.setWidth(80);
+            }
+            {
+                tableColumnAction = new TableColumn(tableLogLines, SWT.NONE);
+                tableColumnAction.setResizable(false);
+                tableColumnAction.setText("Action");
+                tableColumnAction.setWidth(50);
+            }
+            {
+                tableColumnExplanation = new TableColumn(
+                    tableLogLines,
+                    SWT.NONE);
+                tableColumnExplanation.setText("Explanation");
+                tableColumnExplanation.setWidth(154);
+            }
 			tableLogLines.addMouseListener( new MouseAdapter() {
 				public void mouseUp(MouseEvent evt) {
 					tableLogLinesMouseUp(evt);
 				}
 			});
-	
-			tableColumn1.setResizable(false);
-			tableColumn1.setText("tableColumn1");
-	
-			tableColumnExplanation.setText("Explanation");
-			tableColumnExplanation.setWidth(150);
-	
-			tableColumnSource.setText("Source");
-			tableColumnSource.setWidth(220);
-	
-			tableColumnAction.setResizable(false);
-			tableColumnAction.setText("Action");
-			tableColumnAction.setWidth(50);
-	
-			tableColumnDestination.setText("Destination");
-			tableColumnDestination.setWidth(220);
-	
-			tableColumnSourceSize.setText("Size");
-			tableColumnSourceSize.setWidth(80);
-	
-			GridData comboFilterLData = new GridData();
-			comboFilterLData.verticalAlignment = GridData.CENTER;
-			comboFilterLData.horizontalAlignment = GridData.BEGINNING;
-			comboFilterLData.widthHint = -1;
-			comboFilterLData.heightHint = -1;
-			comboFilterLData.horizontalIndent = 0;
-			comboFilterLData.horizontalSpan = 1;
-			comboFilterLData.verticalSpan = 1;
-			comboFilterLData.grabExcessHorizontalSpace = false;
-			comboFilterLData.grabExcessVerticalSpace = false;
-			comboFilter.setLayoutData(comboFilterLData);
-			comboFilter.addModifyListener( new ModifyListener() {
-				public void modifyText(ModifyEvent evt) {
-					comboFilterModifyText(evt);
-				}
-			});
-	
-			GridData labelProgressLData = new GridData();
-			labelProgressLData.verticalAlignment = GridData.CENTER;
-			labelProgressLData.horizontalAlignment = GridData.FILL;
-			labelProgressLData.widthHint = 42;
-			labelProgressLData.heightHint = 13;
-			labelProgressLData.horizontalIndent = 5;
-			labelProgressLData.horizontalSpan = 1;
-			labelProgressLData.verticalSpan = 1;
-			labelProgressLData.grabExcessHorizontalSpace = true;
-			labelProgressLData.grabExcessVerticalSpace = false;
-			labelProgress.setLayoutData(labelProgressLData);
-			labelProgress.setSize(new org.eclipse.swt.graphics.Point(42,13));
-	
-			GridData buttonGoLData = new GridData();
-			buttonGoLData.verticalAlignment = GridData.CENTER;
-			buttonGoLData.horizontalAlignment = GridData.END;
-			buttonGoLData.widthHint = -1;
-			buttonGoLData.heightHint = -1;
-			buttonGoLData.horizontalIndent = 0;
-			buttonGoLData.horizontalSpan = 1;
-			buttonGoLData.verticalSpan = 1;
-			buttonGoLData.grabExcessHorizontalSpace = false;
-			buttonGoLData.grabExcessVerticalSpace = false;
-			buttonGo.setLayoutData(buttonGoLData);
-			buttonGo.setText("Go");
-			buttonGo.addSelectionListener( new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent evt) {
-					buttonGoWidgetSelected(evt);
-				}
-			});
-			GridLayout thisLayout = new GridLayout(3, true);
+
+            {
+                compositeBottom = new Composite(this, SWT.NONE);
+                GridLayout compositeBottomLayout = new GridLayout();
+                GridData compositeBottomLData = new GridData();
+                compositeBottomLData.grabExcessHorizontalSpace = true;
+                compositeBottomLData.horizontalAlignment = GridData.FILL;
+                compositeBottom.setLayoutData(compositeBottomLData);
+                compositeBottomLayout.numColumns = 3;
+                compositeBottom.setLayout(compositeBottomLayout);
+                {
+                    comboFilter = new Combo(compositeBottom, SWT.DROP_DOWN
+                        | SWT.READ_ONLY);
+                    GridData comboFilterLData = new GridData();
+                    comboFilterLData.widthHint = 68;
+                    comboFilterLData.heightHint = 21;
+                    comboFilter.setLayoutData(comboFilterLData);
+                    comboFilter.addModifyListener(new ModifyListener() {
+                        public void modifyText(ModifyEvent evt) {
+                            comboFilterModifyText(evt);
+                        }
+                    });
+                }
+                {
+                    labelProgress = new Label(compositeBottom, SWT.NONE);
+                    GridData labelProgressLData = new GridData();
+                    labelProgressLData.horizontalAlignment = GridData.FILL;
+                    labelProgressLData.heightHint = 13;
+                    labelProgressLData.horizontalIndent = 5;
+                    labelProgressLData.grabExcessHorizontalSpace = true;
+                    labelProgress.setLayoutData(labelProgressLData);
+                    labelProgress.setSize(new org.eclipse.swt.graphics.Point( 42, 13));
+                }
+                {
+                    buttonGo = new Button(compositeBottom, SWT.PUSH
+                        | SWT.CENTER);
+                    GridData buttonGoLData = new GridData();
+                    buttonGoLData.horizontalAlignment = GridData.END;
+                    buttonGoLData.widthHint = 25;
+                    buttonGoLData.heightHint = 23;
+                    buttonGo.setLayoutData(buttonGoLData);
+                    buttonGo.setText("Go");
+                    buttonGo.addSelectionListener(new SelectionAdapter() {
+                        public void widgetSelected(SelectionEvent evt) {
+                            buttonGoWidgetSelected(evt);
+                        }
+                    });
+                }
+            }
+			GridLayout thisLayout = new GridLayout();
 			this.setLayout(thisLayout);
-			thisLayout.marginWidth = 2;
-			thisLayout.marginHeight = 2;
-			thisLayout.numColumns = 3;
-			thisLayout.makeColumnsEqualWidth = false;
-			thisLayout.horizontalSpacing = 2;
-			thisLayout.verticalSpacing = 2;
+			thisLayout.marginWidth = 0;
+			thisLayout.marginHeight = 0;
+			thisLayout.horizontalSpacing = 0;
+			thisLayout.verticalSpacing = 0;
 			this.layout();
 	
 			postInitGUI();
@@ -269,10 +363,10 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 					inst.setTaskTree( task );
 					inst.rebuildActionList();
 					shell.setLayout(new org.eclipse.swt.layout.FillLayout());
-					Rectangle shellBounds = shell.computeTrim(0,0,663,225);
+					Rectangle shellBounds = shell.computeTrim(0,0,inst.getSize().x,inst.getSize().y);
 					shell.setSize(shellBounds.width, shellBounds.height);
 					shell.setText( "Synchronization Actions" );
-					shell.setImage( new Image( null, "images/FullSync.gif" ) );
+					shell.setImage( new Image( null, "images/Tasklist_Icon.gif" ) );
 					shell.open();
 		        } catch( Exception ex ) {
 		            ex.printStackTrace();
@@ -291,6 +385,11 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 	public void setTaskTree( TaskTree task )
 	{
 	    this.taskTree = task;
+	    
+	    labelSource.setText( "Source: "+task.getSource().getUri() );
+	    labelSource.pack();
+	    labelDestination.setText( "Destination: "+task.getDestination().getUri() );
+	    labelDestination.pack();
 	}
 	public static Image loadImage( String filename )
 	{
@@ -426,7 +525,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 	}
 	protected Image buildTaskImage( Task t, Action a )
 	{
-	    ImageData data = new ImageData( 16*3+2, 16, 8, new PaletteData( 0, 0, 0 ) );
+	    ImageData data = new ImageData( 16*3+2, 16, 8, new PaletteData( 255, 255, 255 ) );
 	    data.transparentPixel = data.palette.getPixel( new RGB( 0, 0, 0 ) );
 	    
 	    Image image = new Image( null, data );
@@ -482,11 +581,10 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 	        item.setImage( 3, image );
 	        item.setText( new String[] {
 	            "",
-	            t.getCurrentAction().getExplanation(), 
 	            t.getSource().getPath(),
+	            Long.toString(t.getSource().getFileAttributes()!=null?t.getSource().getFileAttributes().getLength():0L)+" bytes",
 	            "",
-	            t.getDestination().getPath(),
-	            Long.toString(t.getSource().getFileAttributes()!=null?t.getSource().getFileAttributes().getLength():0L)+" bytes"
+	            t.getCurrentAction().getExplanation() 
 	        } );
 	        item.setData( t );
 	        
@@ -500,7 +598,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
         Task t = (Task)item.getData();
         Image image = getTaskImage( t );
         item.setImage( 3, image );
-        item.setText( 1, t.getCurrentAction().getExplanation() ); 
+        item.setText( 4, t.getCurrentAction().getExplanation() ); 
     }
     public void rebuildActionList()
     {
@@ -625,7 +723,7 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 	        mi.addSelectionListener( selListener );
         }
 
-        m.setLocation( toDisplay( x, y ) );
+        m.setLocation( tableLogLines.toDisplay( x, y ) );
         m.setVisible( true );
     }
     protected void performActions()
@@ -647,30 +745,33 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 			        // TODO we should use the Synchronizer here ! maybe (TaskTree, ActionFinishedListener) ?
 			        BlockBuffer buffer = new BlockBuffer( logger );
 			        ActionQueue queue = new FillBufferActionQueue(buffer);
-			        final Color colorFinished = new Color( null, 150, 255, 150 );
+			        final Color colorFinishedSuccessful = new Color( null, 150, 255, 150 );
+			        final Color colorFinishedUnsuccessful = new Color( null, 255, 150, 150 );
 
 			        IoStatistics stats = queue.createStatistics( taskTree );
 		            tasksTotal = stats.getCountActions();
 				    tasksFinished = 0;
-			        
-			        queue.addActionFinishedListener( new TaskFinishedListener() {
-			        	public void actionFinished( final Task task, int bytes ) 
+
+			        queue.addTaskFinishedListener( new TaskFinishedListener() {
+			        	public void taskFinished( final TaskFinishedEvent event ) 
 			        	{
 				            display.asyncExec( new Runnable() {
 				            	public void run() {
 						            tasksFinished++;
 						            labelProgress.setText( tasksFinished+" of "+tasksTotal+" tasks finished" );
-						            Object taskData = task.getData();
+						            Object taskData = event.getTask().getData();
 						            if ((taskData != null) && (taskData instanceof TableItem)) {
 						            	TableItem item = (TableItem) taskData;
-						            	item.setBackground(colorFinished);
+						            	if( event.isSuccessful() )
+						            	     item.setBackground(colorFinishedSuccessful);
+						            	else item.setBackground(colorFinishedUnsuccessful);
 						            	tableLogLines.showItem(item);
 						            }
 								}
 				            } );
 			        	} 
 			        } );
-			        
+
 			        buffer.load();
 			        queue.enqueue( taskTree );
 			        queue.flush();
@@ -696,6 +797,8 @@ public class LogWindow extends org.eclipse.swt.widgets.Composite
 					
 			        processing = false;
 			    } catch( IOException e ) {
+			        e.printStackTrace();
+			    } catch( Exception e ) {
 			        e.printStackTrace();
 			    } finally {
 			        guiController.showBusyCursor( false );

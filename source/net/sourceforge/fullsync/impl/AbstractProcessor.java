@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import net.sourceforge.fullsync.Action;
+import net.sourceforge.fullsync.ActionDecider;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileSystemException;
@@ -30,6 +31,8 @@ public abstract class AbstractProcessor implements Processor
     protected ArrayList taskGenerationListeners;
     protected boolean active; // resume/suspend
     protected boolean cancelled; // cancel
+    
+    private ActionDecider actionDecider;
     
     public AbstractProcessor()
     {
@@ -64,6 +67,11 @@ public abstract class AbstractProcessor implements Processor
         cancelled = true;
         active = false;
     }
+    
+    public ActionDecider getActionDecider()
+    {
+        return actionDecider;
+    }
         
     public TaskTree execute( Profile profile )
     	throws FileSystemException, URISyntaxException, DataParseException, IOException
@@ -71,13 +79,22 @@ public abstract class AbstractProcessor implements Processor
         Site d1 = fsm.createConnection( profile.getSource() );
         Site d2 = fsm.createConnection( profile.getDestination() );
         
-        RuleSet rules = profile.getRuleSet().createRuleSet();        
+        RuleSet rules = profile.getRuleSet().createRuleSet();
+        
+        ActionDecider actionDecider;
+        if( profile.getSynchronizationType().equals( "Publish/Update" ) )
+            actionDecider = new PublishActionDecider();
+        else if( profile.getSynchronizationType().equals( "Backup" ) )
+            actionDecider = new BackupActionDecider();
+        else throw new IllegalArgumentException( "Profile has unknown synchronization type." );
 		
-		return execute( d1, d2, rules );
+		return execute( d1, d2, actionDecider, rules );
     }
-    public TaskTree execute( Site source, Site destination, RuleSet rules )
+    public TaskTree execute( Site source, Site destination, ActionDecider actionDecider, RuleSet rules )
 		throws DataParseException, FileSystemException, IOException
 	{
+        this.actionDecider = actionDecider;  
+
         TaskTree tree = new TaskTree( source, destination );
         Task root = new Task( null, null, new State( State.NodeInSync, Location.None ), new Action[] { new Action( Action.Nothing, Location.None, BufferUpdate.None, "Root" ) } );
         tree.setRoot( root );

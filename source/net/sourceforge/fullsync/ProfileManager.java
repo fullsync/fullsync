@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
  *  
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class ProfileManager
+public class ProfileManager implements ProfileChangeListener
 {
 	class ProfileManagerTimerTask extends TimerTask
 	{
@@ -78,18 +78,22 @@ public class ProfileManager
         this.scheduleListeners = new Vector();
         this.timerActive = false;
         
-        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document doc = builder.parse( new File( configFile ) );
-        
-        NodeList list = doc.getDocumentElement().getChildNodes();
-        for( int i = 0; i < list.getLength(); i++ )
+        File file = new File( configFile );
+        if( file.exists() )
         {
-            Node n = list.item( i );
-            if( n.getNodeType() == Node.ELEMENT_NODE ) 
-            {
-            	Profile p = unserializeProfile( (Element)n );
-                addProfile( p );
-            }
+	        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+	        Document doc = builder.parse( file );
+	        
+	        NodeList list = doc.getDocumentElement().getChildNodes();
+	        for( int i = 0; i < list.getLength(); i++ )
+	        {
+	            Node n = list.item( i );
+	            if( n.getNodeType() == Node.ELEMENT_NODE ) 
+	            {
+	            	Profile p = unserializeProfile( (Element)n );
+	                addProfile( p );
+	            }
+	        }
         }
         
         /*
@@ -122,23 +126,23 @@ public class ProfileManager
     public void addProfile( Profile p )
     {
         profiles.put( p.getName(), p );
+        p.addProfileChangeListener( this );
         fireProfilesChangeEvent();
     }
     public void addProfile( String name, ConnectionDescription source, ConnectionDescription destination, RuleSetDescriptor ruleSet, String lastUpdate )
     {
-        Profile p;
+        Date date;
         try {
-            p = new Profile( name, source, destination, ruleSet, DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT ).parse( lastUpdate ) );
+            date = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT ).parse( lastUpdate );
         } catch( ParseException e ) {
-            p = new Profile( name, source, destination, ruleSet, new Date() );
-            e.printStackTrace();
+            date = new Date();
         }
-        profiles.put( name, p );
-        fireProfilesChangeEvent();
+        addProfile( new Profile( name, source, destination, ruleSet, date ) );
     }
     public void removeProfile( String name )
     {
-    	profiles.remove(name);
+        Profile profile = (Profile)profiles.remove( name );
+        profile.removeProfileChangeListener( this );
         fireProfilesChangeEvent();
     }
     public Enumeration getProfiles()
@@ -195,18 +199,23 @@ public class ProfileManager
             timer.cancel();
         }
     }
-    public void addProfilesChangeListener( ProfilesChangeListener listener )
+    public void addProfilesChangeListener( ProfileListChangeListener listener )
     {
         changeListeners.add( listener );
     }
-    public void removeProfilesChangeListener( ProfilesChangeListener listener )
+    public void removeProfilesChangeListener( ProfileListChangeListener listener )
     {
         changeListeners.remove( listener );
     }
-    public void fireProfilesChangeEvent()
+    protected void fireProfilesChangeEvent()
     {
         for( int i = 0; i < changeListeners.size(); i++ )
-            ((ProfilesChangeListener)changeListeners.get( i )).profilesChanged();
+            ((ProfileListChangeListener)changeListeners.get( i )).profileListChanged();
+    }
+    public void profileChanged( Profile profile )
+    {
+        for( int i = 0; i < changeListeners.size(); i++ )
+            ((ProfileListChangeListener)changeListeners.get( i )).profileChanged( profile );
     }
     public void addSchedulerListener( ProfileSchedulerListener listener )
     {
@@ -296,6 +305,8 @@ public class ProfileManager
     {
         Profile p = new Profile();
         p.setName( element.getAttribute( "name" ) );
+        p.setDescription( element.getAttribute( "description" ) );
+        p.setSynchronizationType( element.getAttribute( "type" ) );
         // REVISIT this is used only for backward compatibility with old profiles.
         String ruleSetNameOldVersion = element.getAttribute( "ruleSet" );
         if ((ruleSetNameOldVersion != null) && (!ruleSetNameOldVersion.equals(""))) {
@@ -371,6 +382,8 @@ public class ProfileManager
         Element e;
         
         elem.setAttribute( "name", p.getName() );
+        elem.setAttribute( "description", p.getDescription() );
+        elem.setAttribute( "type", p.getSynchronizationType() );
         elem.setAttribute( "lastUpdate", DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT ).format( p.getLastUpdate() ) );
         
         elem.appendChild( serialize( p.getRuleSet(), "RuleSetDescriptor", doc));
@@ -386,10 +399,10 @@ public class ProfileManager
 	        Document doc = docBuilder.newDocument();
 	
 	        Element e = doc.createElement( "Profiles" );
-	        Enumeration enum = profiles.elements();
-	        while( enum.hasMoreElements() )
+	        Enumeration en = profiles.elements();
+	        while( en.hasMoreElements() )
 	        {
-	            e.appendChild( serialize( (Profile)enum.nextElement(), doc ) );
+	            e.appendChild( serialize( (Profile)en.nextElement(), doc ) );
 	        }
 	        doc.appendChild( e );
 	        
