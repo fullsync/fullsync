@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="AllSync" default="run" basedir="." >
+<project name="FullSync" default="run" basedir="." >
 	<property name="source.dir" value="${basedir}/source" />
 	<property name="classes.dir" value="${basedir}/classes" />
 	<property name="build.dir" value="${basedir}/build" />
@@ -33,7 +33,7 @@
 	
 	<target name="jar" depends="compile">
 		<mkdir dir="${build.dir}/lib"/>
-		<jar destfile="${build.dir}/lib/allsync.jar">
+		<jar destfile="${build.dir}/lib/fullsync.jar">
 			<fileset dir="${classes.dir}">
 				<include name="**/*"/>
 			</fileset>
@@ -44,6 +44,6 @@
 	</target>
 	
 	<target name="run" depends="compile">
-		<java classname="net.sourceforge.allsync.Main" classpathref="classpath" />
+		<java classname="net.sourceforge.fullsync.Main" classpathref="classpath" />
 	</target>
 </project>

@@ -29,7 +29,7 @@ public class Main
 			shell.setLayout(new org.eclipse.swt.layout.FillLayout());
 			Rectangle shellBounds = shell.computeTrim(0,0,635,223);
 			shell.setSize(shellBounds.width, shellBounds.height);
-			shell.setText( "AllSync Profiles" );
+			shell.setText( "FullSync Profiles" );
 			shell.setImage( new Image( null, "images/Location_Both.gif" ) );
 			shell.open();
 			while (!shell.isDisposed()) {
