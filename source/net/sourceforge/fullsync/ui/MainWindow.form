@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><Form builder="jigloo" ide="eclipse" style="SWT" version="2.7.2">
+<NonVisualComponents>
+		<Component class="java.lang.Object" name="object1" style="0">
+			<Constraints>
+				<LayoutConstraint/>
+			</Constraints>
+			<Properties>
+			</Properties>
+		</Component></NonVisualComponents>
+	<Component class="org.eclipse.swt.widgets.Composite" name="MainWindow" style="0">
+		<Constraints>
+			<LayoutConstraint/>
+		</Constraints>
+		<Layout class="Grid">
+			<Property name="marginWidth" type="int" value="0"/>
+			<Property name="marginHeight" type="int" value="0"/>
+			<Property name="numColumns" type="int" value="1"/>
+			<Property name="makeColumnsEqualWidth" type="boolean" value="false"/>
+			<Property name="horizontalSpacing" type="int" value="0"/>
+			<Property name="verticalSpacing" type="int" value="0"/>
+		</Layout>
+		<Events>
+		</Events>
+		<Properties>
+			<Property name="size" type="Dimension">
+				<Dimension value="[635, 223]"/>
+			</Property>
+			<Property name="bounds" type="Rectangle">
+				<Rectangle value="[0, 0, 635, 223]"/>
+			</Property>
+		</Properties>
+		<SubComponents>
+			<Component class="org.eclipse.swt.widgets.CoolBar" name="coolBar" style="0">
+				<Constraints>
+					<Constraint class="org.eclipse.swt.layout.GridData"/>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+						<Property name="verticalAlignment" type="int" value="2"/>
+						<Property name="horizontalAlignment" type="int" value="4"/>
+						<Property name="widthHint" type="int" value="-1"/>
+						<Property name="heightHint" type="int" value="-1"/>
+						<Property name="horizontalIndent" type="int" value="0"/>
+						<Property name="horizontalSpan" type="int" value="1"/>
+						<Property name="verticalSpan" type="int" value="1"/>
+						<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
+						<Property name="grabExcessVerticalSpace" type="boolean" value="false"/>
+					</LayoutConstraint>
+				</Constraints>
+				<Events>
+				</Events>
+				<Properties>
+					<Property name="bounds" type="Rectangle">
+						<Rectangle value="[0, 0, 635, 22]"/>
+					</Property>
+					<Property name="visible" type="boolean" value="true"/>
+				</Properties>
+				<SubComponents>
+					<Component class="org.eclipse.swt.widgets.CoolItem" name="coolItem1" style="0">
+						<Constraints>
+							<LayoutConstraint/>
+						</Constraints>
+						<Events>
+						</Events>
+						<Properties>
+							<Property name="minimumSize" type="Dimension">
+								<Dimension value="[23, 22]"/>
+							</Property>
+							<Property name="preferredSize" type="Dimension">
+								<Dimension value="[23, 22]"/>
+							</Property>
+						</Properties>
+						<SubComponents>
+							<Component class="org.eclipse.swt.widgets.ToolBar" name="toolBar1" style="8388608">
+								<Constraints>
+									<LayoutConstraint/>
+								</Constraints>
+								<Events>
+								</Events>
+								<Properties>
+								</Properties>
+								<SubComponents>
+									<Component class="org.eclipse.swt.widgets.ToolItem" name="toolItem1" style="0">
+										<Constraints>
+											<LayoutConstraint/>
+										</Constraints>
+										<Events>
+											<EventHandler event="widgetSelected" handler="toolItem1WidgetSelected" listener="org.eclipse.swt.events.SelectionListener"/>
+										</Events>
+										<Properties>
+											<Property name="image" type="Image">
+												<Image name="\Runbutton.gif"/>
+											</Property>
+										</Properties>
+									</Component>
+								</SubComponents>
+							</Component>
+						</SubComponents>
+					</Component>
+				</SubComponents>
+			</Component>
+			<Component class="org.eclipse.swt.widgets.Table" name="tableProfiles" style="67584">
+				<Constraints>
+					<Constraint class="org.eclipse.swt.layout.GridData"/>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+						<Property name="verticalAlignment" type="int" value="4"/>
+						<Property name="horizontalAlignment" type="int" value="4"/>
+						<Property name="widthHint" type="int" value="-1"/>
+						<Property name="heightHint" type="int" value="-1"/>
+						<Property name="horizontalIndent" type="int" value="0"/>
+						<Property name="horizontalSpan" type="int" value="1"/>
+						<Property name="verticalSpan" type="int" value="1"/>
+						<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
+						<Property name="grabExcessVerticalSpace" type="boolean" value="true"/>
+					</LayoutConstraint>
+				</Constraints>
+				<Events>
+				</Events>
+				<Properties>
+					<Property name="headerVisible" type="boolean" value="true"/>
+					<Property name="linesVisible" type="boolean" value="false"/>
+					<Property name="bounds" type="Rectangle">
+						<Rectangle value="[0, 22, 635, 201]"/>
+					</Property>
+				</Properties>
+				<SubComponents>
+					<Component class="org.eclipse.swt.widgets.TableColumn" name="tableColumnName" style="0">
+						<Constraints>
+							<LayoutConstraint/>
+						</Constraints>
+						<Events>
+						</Events>
+						<Properties>
+							<Property name="text" type="String" value="Name"/>
+							<Property name="width" type="int" value="100"/>
+						</Properties>
+					</Component>
+					<Component class="org.eclipse.swt.widgets.TableColumn" name="tableColumnLastUpdate" style="0">
+						<Constraints>
+							<LayoutConstraint/>
+						</Constraints>
+						<Events>
+						</Events>
+						<Properties>
+							<Property name="text" type="String" value="Last Update"/>
+							<Property name="width" type="int" value="100"/>
+						</Properties>
+					</Component>
+					<Component class="org.eclipse.swt.widgets.TableColumn" name="tableColumnSource" style="0">
+						<Constraints>
+							<LayoutConstraint/>
+						</Constraints>
+						<Events>
+						</Events>
+						<Properties>
+							<Property name="text" type="String" value="Source"/>
+							<Property name="width" type="int" value="200"/>
+						</Properties>
+					</Component>
+					<Component class="org.eclipse.swt.widgets.TableColumn" name="tableColumnDestination" style="0">
+						<Constraints>
+							<LayoutConstraint/>
+						</Constraints>
+						<Events>
+						</Events>
+						<Properties>
+							<Property name="text" type="String" value="Destination"/>
+							<Property name="width" type="int" value="200"/>
+						</Properties>
+					</Component>
+				</SubComponents>
+			</Component>
+		</SubComponents>
+	</Component>
+</Form>

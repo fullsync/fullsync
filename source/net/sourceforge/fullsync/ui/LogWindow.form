@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><Form builder="jigloo" ide="eclipse" style="SWT" version="2.7.2">
+<NonVisualComponents>
+		<Component class="java.lang.Object" name="object1" style="0">
+			<Constraints>
+				<LayoutConstraint/>
+			</Constraints>
+			<Properties>
+			</Properties>
+		</Component></NonVisualComponents>
+	<Component class="org.eclipse.swt.widgets.Composite" name="LogWindow" style="0">
+		<Constraints>
+			<LayoutConstraint/>
+		</Constraints>
+		<Layout class="Grid">
+			<Property name="marginWidth" type="int" value="2"/>
+			<Property name="marginHeight" type="int" value="2"/>
+			<Property name="numColumns" type="int" value="1"/>
+			<Property name="makeColumnsEqualWidth" type="boolean" value="false"/>
+			<Property name="horizontalSpacing" type="int" value="2"/>
+			<Property name="verticalSpacing" type="int" value="2"/>
+		</Layout>
+		<Events>
+		</Events>
+		<Properties>
+			<Property name="size" type="Dimension">
+				<Dimension value="[711, 225]"/>
+			</Property>
+			<Property name="bounds" type="Rectangle">
+				<Rectangle value="[0, 0, 711, 225]"/>
+			</Property>
+		</Properties>
+		<SubComponents>
+			<Component class="org.eclipse.swt.widgets.Table" name="tableLogLines" style="65536">
+				<Constraints>
+					<Constraint class="org.eclipse.swt.layout.GridData"/>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+						<Property name="verticalAlignment" type="int" value="4"/>
+						<Property name="horizontalAlignment" type="int" value="4"/>
+						<Property name="widthHint" type="int" value="-1"/>
+						<Property name="heightHint" type="int" value="-1"/>
+						<Property name="horizontalIndent" type="int" value="0"/>
+						<Property name="horizontalSpan" type="int" value="1"/>
+						<Property name="verticalSpan" type="int" value="1"/>
+						<Property name="grabExcessHorizontalSpace" type="boolean" value="true"/>
+						<Property name="grabExcessVerticalSpace" type="boolean" value="true"/>
+					</LayoutConstraint>
+				</Constraints>
+				<Events>
+					<EventHandler event="mouseUp" handler="tableLogLinesMouseUp" listener="org.eclipse.swt.events.MouseListener"/>
+				</Events>
+				<Properties>
+					<Property name="headerVisible" type="boolean" value="true"/>
+					<Property name="linesVisible" type="boolean" value="true"/>
+					<Property name="size" type="Dimension">
+						<Dimension value="[707, 196]"/>
+					</Property>
+					<Property name="bounds" type="Rectangle">
+						<Rectangle value="[2, 2, 707, 196]"/>
+					</Property>
+				</Properties>
+				<SubComponents>
+					<Component class="org.eclipse.swt.widgets.TableColumn" name="tableColumn1" style="0">
+						<Constraints>
+							<LayoutConstraint/>
+						</Constraints>
+						<Events>
+						</Events>
+						<Properties>
+							<Property name="resizable" type="boolean" value="false"/>
+							<Property name="text" type="String" value="tableColumn1"/>
+						</Properties>
+					</Component>
+					<Component class="org.eclipse.swt.widgets.TableColumn" name="tableColumnExplanation" style="0">
+						<Constraints>
+							<LayoutConstraint/>
+						</Constraints>
+						<Events>
+						</Events>
+						<Properties>
+							<Property name="text" type="String" value="Explanation"/>
+							<Property name="width" type="int" value="150"/>
+						</Properties>
+					</Component>
+					<Component class="org.eclipse.swt.widgets.TableColumn" name="tableColumnSource" style="0">
+						<Constraints>
+							<LayoutConstraint/>
+						</Constraints>
+						<Events>
+						</Events>
+						<Properties>
+							<Property name="text" type="String" value="Source"/>
+							<Property name="width" type="int" value="220"/>
+						</Properties>
+					</Component>
+					<Component class="org.eclipse.swt.widgets.TableColumn" name="tableColumnAction" style="0">
+						<Constraints>
+							<LayoutConstraint/>
+						</Constraints>
+						<Events>
+						</Events>
+						<Properties>
+							<Property name="resizable" type="boolean" value="false"/>
+							<Property name="text" type="String" value="Action"/>
+							<Property name="width" type="int" value="50"/>
+						</Properties>
+					</Component>
+					<Component class="org.eclipse.swt.widgets.TableColumn" name="tableColumnDestination" style="0">
+						<Constraints>
+							<LayoutConstraint/>
+						</Constraints>
+						<Events>
+						</Events>
+						<Properties>
+							<Property name="text" type="String" value="Destination"/>
+							<Property name="width" type="int" value="220"/>
+						</Properties>
+					</Component>
+				</SubComponents>
+			</Component>
+			<Component class="org.eclipse.swt.widgets.Button" name="buttonGo" style="16777224">
+				<Constraints>
+					<LayoutConstraint class="org.eclipse.swt.layout.GridData">
+						<Property name="verticalAlignment" type="int" value="2"/>
+						<Property name="horizontalAlignment" type="int" value="3"/>
+						<Property name="widthHint" type="int" value="-1"/>
+						<Property name="heightHint" type="int" value="-1"/>
+						<Property name="horizontalIndent" type="int" value="0"/>
+						<Property name="horizontalSpan" type="int" value="1"/>
+						<Property name="verticalSpan" type="int" value="1"/>
+						<Property name="grabExcessHorizontalSpace" type="boolean" value="false"/>
+						<Property name="grabExcessVerticalSpace" type="boolean" value="false"/>
+					</LayoutConstraint>
+				</Constraints>
+				<Events>
+					<EventHandler event="widgetSelected" handler="buttonGoWidgetSelected" listener="org.eclipse.swt.events.SelectionListener"/>
+				</Events>
+				<Properties>
+					<Property name="text" type="String" value="Go"/>
+				</Properties>
+			</Component>
+		</SubComponents>
+	</Component>
+</Form>

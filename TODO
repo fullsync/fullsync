@@ -1,0 +1,125 @@
+Clarification
+	[X]	What situations can occur, how to handle them best,
+	[X] ignore directories ? so we dont depend on the order the
+		actions are generated -> no
+
+Actions:
+	[X] Unify action model, add logging stream using actions
+		Actions can be "Add", "Update", "Delete", "Obsolete",
+		"UnexpectedChange" + where it happens
+	
+ActionList:
+	[X] Create some action list which will be a buffer pretty often
+	    (or reports to a buffer)
+
+Track local changes:
+	[X] buffer the situation of the local filesystem and
+		check whether there are changes. if so, be able to:
+			count these changes
+			show which files changed
+		... dont get too complex, we'll use svn/cvs anyway if
+		it's a large project...
+		-> Source Buffer
+
+Task:
+	[X] remove task as it is used now and add it as a container for:
+		src, dst, state, actions, chosen action
+		so we'll have a taskqueue receiving tasks from the processor and
+		sending actions to the action queue
+
+ActionQueue:
+	[X] those are getting pretty senseless if we remove src/dst.
+		either they get even more abstract, say they have a
+		add( Action, Node src, Node dst ) method or they get a task (first)
+
+ProcessorResults:
+	[X] we do have two different ways of synchronization. we can have
+		a pipeline model  Processor->ActionQueue->Buffer->IO Operations
+		or a static model Processor->Task w/ Children->Interaction->AQ->Buff->IO
+		
+		there should be a clean differenciation between building a tasktree and
+		applying actions directly. on the other hand, when building a tasktree
+		first we could make synchronization more atomic. (check r/w for all
+		files first and start sync afterwards)
+		
+		no diff, only task tree
+		
+----------------------------------------------------------------------------
+
+Task/Action Interaction:
+	we'll get trouble when changing actions creating
+	inconsistency, so dont expect too much here
+
+----------------------------------------------------------------------------
+
+Clarification:
+	[ ] Bufferupdate !? when where and how ? State refresh and
+		ActionDecider recall after Bufferupdate or is it handled
+		within the decider ? (why not letting the ActionDecider call
+		the StateDecider on the initial objects?)
+	[ ] getChild() - on null create, put this into a method ?
+
+TakeIgnore:
+	[ ] Ignore takes place immediatly atm, on src and dst resulting
+		in absolutely no action, just being ignored from all syncs.
+		we should maybe add a special rule whether "ignore" is relevant
+		for source, destination or both. this does only affect the 
+		ruleset, in detail the takeignoredecider. the action decider
+		will either not being asked or get a orphan state.
+		-> important is to add a location param to the takeignore 
+		   deciders method
+		-> but the statedecider will mark them equal :-/
+		   Node.isIgnored ?
+
+NoBufferFound Handling:
+	[ ] let him choose between:
+		  - There is nothing at the destination.
+			(don't overwrite, build buffer while copying)
+		  - There is something at the destination
+			but its not sure its the same as in source.
+			(don't ask overwrite)
+		  - There is the same version in destination.
+			(build buffer from filesystem (and source?))
+
+FileSystem:
+	[ ] Maybe make FileSystem and FileSystemProvider
+		then Fs could keep track of all dirs instantiated,
+		so there is no way we double-load a dir/file
+	
+		^we really need that... for example we do not know
+		when to close ftp connections atm
+		
+	[ ] we should call the access managing unit "FileSystemSite"
+		this also marks the virtual root for our sync purposes
+		and could be used to store one buffer file
+
+		what about creating universal Directory and File objects
+		and letting them get filled with data and functionallity
+		by FileSystemConnections ?
+	
+Buffer:
+	[ ] test largefile handling (filesize > buffersize)
+	[ ] optimize largefile handling
+	[ ] create multithreaded direct-read delayed-write buffer-access
+	[ ] create multithreaded delayed-read delayed-write buffer-access
+	[ ] create cyclic buffer-storage
+	
+Rules:
+	[ ] use xml for rulefiles
+	[ ] create generic rulesfile w/ dirrules
+	[ ] copy rule abstraction from backup
+	[ ] Merge rules or impl good "Set" mechanizm like syncrules in xml
+
+Sheduler:
+	[ ]	copy sheduler from backup
+
+Optimization:
+	[ ]	how to optimize and secure FS-access
+
+Logging:
+	[ ] Implement good logging mechanisms
+	
+Realtime-Reporting:
+	[ ] Implement realtime status information updating
+	[ ] Implement events for certain actions
+

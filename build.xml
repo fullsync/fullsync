@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project name="AllSync" default="run" basedir="." >
+	<property name="source.dir" value="${basedir}/source" />
+	<property name="classes.dir" value="${basedir}/classes" />
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="debug" value="on" />
+	
+	<path id="classpath">
+		<fileset dir="E:/java/lib/">
+			<include name="*.jar"/>
+		</fileset>
+		<pathelement location="D:/Development/eclipse/plugins/org.eclipse.swt.win32_3.0.0/ws/win32/swt.jar"/>
+		<pathelement location="j2ssh/dist/lib/j2ssh-code.jar"/>
+		<pathelement location="${classes.dir}" />
+	</path>
+
+	<target name="clean" description="cleans project files" >
+		<delete dir="${build.dir}" /> 
+	</target>
+
+	<target name="compile">
+		<javac debug="${debug}" srcdir="${source.dir}" destdir="${classes.dir}" classpathref="classpath"/>
+	</target>
+	
+	<target name="javadoc">
+		<mkdir dir="${build.dir}/doc/api"/>
+		<javadoc destdir="${build.dir}/doc/api" classpathref="classpath">
+			<packageset dir="${source.dir}">
+				<include name="**"/>
+			</packageset>
+		</javadoc>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<mkdir dir="${build.dir}/lib"/>
+		<jar destfile="${build.dir}/lib/allsync.jar">
+			<fileset dir="${classes.dir}">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="build" depends="jar, javadoc">
+	</target>
+	
+	<target name="run" depends="compile">
+		<java classname="net.sourceforge.allsync.Main" classpathref="classpath" />
+	</target>
+</project>

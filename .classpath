@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="source"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="E:/Java/lib/jakarta-oro-2.0.7.jar"/>
+	<classpathentry kind="lib" path="E:/Java/lib/commons-collections-2.1.1.jar"/>
+	<classpathentry kind="lib" path="E:/Java/lib/commons-io.jar"/>
+	<classpathentry kind="lib" path="E:/Java/lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="E:/Java/lib/commons-net-1.2.2.jar"/>
+	<classpathentry kind="lib" path="D:/Development/eclipse/plugins/org.eclipse.swt.win32_3.0.0/ws/win32/swt.jar"/>
+	<classpathentry sourcepath="E:/Java/lib/commons-digester-1.5-src.zip" kind="lib" path="E:/Java/lib/commons-digester-1.5.jar"/>
+	<classpathentry kind="lib" path="E:/Java/lib/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="E:/Java/lib/commons-betwixt-1.0-alpha-1.jar"/>
+	<classpathentry kind="lib" path="E:/Java/lib/xerces-2.4.0.jar"/>
+	<classpathentry kind="lib" path="E:/Java/lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="E:/Development/In Process/AllSync/j2ssh/dist/lib/j2ssh-core.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>
