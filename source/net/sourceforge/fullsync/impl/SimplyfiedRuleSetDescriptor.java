@@ -18,16 +18,18 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	private boolean syncSubDirs = false;
 	private String ignorePattern;
 	private String takePattern;
+	private String patternsType;
 	
 	public SimplyfiedRuleSetDescriptor() {
 		
 	}
 	
-	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, String ignorePatter, String acceptPatter) 
+	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, String ignorePatter, String acceptPatter, String patternsType) 
 	{
 		this.syncSubDirs = syncSubDirs;
 		this.ignorePattern = ignorePatter;
 		this.takePattern = acceptPatter;
+		this.patternsType = patternsType;
 	}
 	
 	/**
@@ -43,7 +45,8 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	public Element serialize(Document document) {
 		Element simpleRuleSetElement = document.createElement("SimpleRuleSet");
 
-		simpleRuleSetElement.setAttribute("syncSubs", String.valueOf(isSyncSubDirs()));
+		simpleRuleSetElement.setAttribute("syncSubs", String.valueOf(isSyncSubDirs()));		
+		simpleRuleSetElement.setAttribute("patternsType", getPatternsType());
 		simpleRuleSetElement.setAttribute("ignorePattern", getIgnorePattern());
 		simpleRuleSetElement.setAttribute("takePattern", getTakePattern());
 
@@ -64,6 +67,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		else {
 			Element simpleRuleSetConfigElement = (Element)ruleSetConfigNodeList.item(0);
 			syncSubDirs = Boolean.valueOf(simpleRuleSetConfigElement.getAttribute("syncSubs")).booleanValue();
+			patternsType = simpleRuleSetConfigElement.getAttribute("patternsType");
 			ignorePattern = simpleRuleSetConfigElement.getAttribute("ignorePattern");
 			takePattern = simpleRuleSetConfigElement.getAttribute("takePattern");
 		}
@@ -81,6 +85,20 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	 */
 	public void setSyncSubDirs(boolean syncSubDirs) {
 		this.syncSubDirs = syncSubDirs;
+	}
+	
+	/**
+	 * @return Returns the patternsType.
+	 */
+	public String getPatternsType() {
+		return patternsType;
+	}
+	
+	/**
+	 * @param type type The patternsType to set.
+	 */
+	public void setPatternsType(String type) {
+		this.patternsType = type;
 	}
 	
 	/**
@@ -118,6 +136,12 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		SimplyfiedSyncRules ruleSet = new SimplyfiedSyncRules();
 		ruleSet.setUsingRecursion(syncSubDirs);
 		
+		if ((patternsType != null) && (!patternsType.equals(""))) {
+			ruleSet.setPatternsType(patternsType);
+		}
+		else {
+			ruleSet.setPatternsType("RegExp");
+		}
 		ruleSet.setIgnorePattern(ignorePattern);
 		ruleSet.setTakePattern(takePattern);
 		

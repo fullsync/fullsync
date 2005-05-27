@@ -10,6 +10,8 @@ import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.rules.PatternRule;
+import net.sourceforge.fullsync.rules.Rule;
+import net.sourceforge.fullsync.rules.WildcardRule;
 
 /**
  * @author Michele Aiello
@@ -22,11 +24,13 @@ public class SimplyfiedSyncRules implements RuleSet {
 	
 	private int applyingDeletion = Location.None;
 	
+	private String patternsType;
+	
 	private String ignorePattern;
-	private PatternRule ignoreRule;
+	private Rule ignoreRule;
 	
 	private String takePattern;
-	private PatternRule takeRule;
+	private Rule takeRule;
 	
 	/**
 	 * Default Constructor
@@ -63,6 +67,14 @@ public class SimplyfiedSyncRules implements RuleSet {
 		this.isUsingRecursion = usingRecursion;
 	}
 	
+	public void setPatternsType(String type) {
+		this.patternsType = type;
+	}
+	
+	public String getPatternsType() {
+		return patternsType;
+	}
+	
 	public void setIgnorePattern(String pattern) {
 		this.ignorePattern = pattern;
 		
@@ -70,7 +82,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 			this.ignoreRule = null;
 		}
 		else {
-			ignoreRule = new PatternRule(ignorePattern);
+			ignoreRule = createRuleFromPattern(ignorePattern);
 		}
 	}
 	
@@ -81,7 +93,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 			this.takeRule = null;
 		}
 		else {
-			takeRule = new PatternRule(takePattern);
+			takeRule = createRuleFromPattern(takePattern);
 		}		
 	}
 	
@@ -122,6 +134,10 @@ public class SimplyfiedSyncRules implements RuleSet {
 		if (take) {
 			if (ignoreRule != null) {
 				take = !ignoreRule.accepts(node);
+			}
+			else {
+				if (takeRule != null)
+					take = false;
 			}
 		}
 		
@@ -194,4 +210,17 @@ public class SimplyfiedSyncRules implements RuleSet {
 	public boolean isCheckingBufferOnReplace(int location) {
 		return false;
 	}
+	
+	private Rule createRuleFromPattern(String pattern) {
+		if (patternsType.equals("Wildcard")) {
+			return new WildcardRule(pattern);
+		}
+		
+		if (patternsType.equals("RegExp")) {
+			return new PatternRule(pattern);
+		}
+		
+		return null;
+	}
+	
 }

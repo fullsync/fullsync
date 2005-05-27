@@ -1,3 +1,6 @@
+* added wildcards as ignore/accept patterns (regexp was default till now) in simplyfied syncrules.
+* changed the ignore/accept pattern behaviour. Now if the ignore pattern is empty but the accept is not empty, that 
+  everything is ignored but what matches the accept pattern
 
 Version 0.9.1
 (08 March 2005)

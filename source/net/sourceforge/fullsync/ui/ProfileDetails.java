@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Text;
 public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 
 	private ProfileManager profileManager;
+	private Combo comboPatternsType;
 	private Button buttonResetError;
 	private Button buttonEnabled;
 	private Button buttonScheduling;
@@ -59,7 +60,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	private Group advancedRuleOptionsGroup;
 	private Text textAcceptPattern;
 	private Label label14;
-	private Text textIgnorePatter;
+	private Text textIgnorePattern;
 	private Label label13;
 	private Button syncSubsButton;
 	private Group simplyfiedOptionsGroup;
@@ -368,7 +369,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     simplyfiedOptionsGroupLData.grabExcessHorizontalSpace = true;
                     simplyfiedOptionsGroupLData.horizontalAlignment = GridData.FILL;
                     simplyfiedOptionsGroup.setLayoutData(simplyfiedOptionsGroupLData);
-                    simplyfiedOptionsGroupLayout.numColumns = 2;
+                    simplyfiedOptionsGroupLayout.numColumns = 3;
                     simplyfiedOptionsGroup.setLayout(simplyfiedOptionsGroupLayout);
                     simplyfiedOptionsGroup.setText(Messages.getString("ProfileDetails.Simple_Rule_Options")); //$NON-NLS-1$
                     {
@@ -377,9 +378,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                         GridData syncSubsButtonLData = new GridData();
                         syncSubsButton
                             .setToolTipText(Messages.getString("ProfileDetails.Rucurre")); //$NON-NLS-1$
-                        syncSubsButtonLData.widthHint = 201;
-                        syncSubsButtonLData.heightHint = 16;
-                        syncSubsButtonLData.horizontalSpan = 2;
+                        syncSubsButtonLData.horizontalSpan = 3;
                         syncSubsButton.setLayoutData(syncSubsButtonLData);
                     }
                     {
@@ -387,15 +386,21 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                         label13.setText(Messages.getString("ProfileDetails.Ingore_Pattern")); //$NON-NLS-1$
                     }
                     {
-                        textIgnorePatter = new Text(simplyfiedOptionsGroup, SWT.BORDER);
+                        textIgnorePattern = new Text(simplyfiedOptionsGroup, SWT.BORDER);
                         GridData textIgnorePatterLData = new GridData();
-                        textIgnorePatter.setToolTipText(Messages.getString("ProfileDetails.Ignore_ToolTip")); //$NON-NLS-1$
+                        textIgnorePattern.setToolTipText(Messages.getString("ProfileDetails.Ignore_ToolTip")); //$NON-NLS-1$
                         textIgnorePatterLData.heightHint = 13;
                         //textIgnorePatterLData.widthHint = 100;
                         textIgnorePatterLData.grabExcessHorizontalSpace = true;
                         textIgnorePatterLData.horizontalAlignment = GridData.FILL;
-                        textIgnorePatter.setLayoutData(textIgnorePatterLData);
+                        textIgnorePattern.setLayoutData(textIgnorePatterLData);
                     }
+					{
+						comboPatternsType = new Combo(simplyfiedOptionsGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+						GridData comboPatternsTypeLData = new GridData();
+						comboPatternsTypeLData.verticalSpan = 2;
+						comboPatternsType.setLayoutData(comboPatternsTypeLData);
+					}
                     {
                         label14 = new Label(simplyfiedOptionsGroup, SWT.NONE);
                         label14.setText(Messages.getString("ProfileDetails.Accept_Pattern")); //$NON-NLS-1$
@@ -445,6 +450,10 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             comboType.add( "Backup Copy" ); //$NON-NLS-1$
             comboType.add( "Exact Copy" ); //$NON-NLS-1$
             comboType.add( "Two Way Sync" ); //$NON-NLS-1$
+
+            comboPatternsType.add("RegExp");
+			comboPatternsType.add("Wildcard");
+
 			this.layout();
 			this.setSize(500, 409);
 	
@@ -464,6 +473,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	    textDestinationPassword.setEchoChar( '*' );
 	    
 	    comboType.select(0);
+	    comboPatternsType.select(0);
 	}
 
 	public void setProfileManager( ProfileManager manager )
@@ -511,8 +521,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
         	rbAdvancedRuleSet.setSelection(false);
         	SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor)ruleSetDescriptor;
         	syncSubsButton.setSelection(simpleDesc.isSyncSubDirs());
-        	textIgnorePatter.setText(simpleDesc.getIgnorePattern());
+        	textIgnorePattern.setText(simpleDesc.getIgnorePattern());
         	textAcceptPattern.setText(simpleDesc.getTakePattern());
+        	comboPatternsType.setText(simpleDesc.getPatternsType());
         } else {
         	selectRuleSetButton(rbAdvancedRuleSet);
         	rbSimplyfiedRuleSet.setSelection(false);
@@ -574,8 +585,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 		RuleSetDescriptor ruleSetDescriptor = null;
     	if (rbSimplyfiedRuleSet.getSelection()) {
 			ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), 
-					textIgnorePatter.getText(),
-					textAcceptPattern.getText());
+					textIgnorePattern.getText(),
+					textAcceptPattern.getText(),
+					comboPatternsType.getText());
     	}
     	if (rbAdvancedRuleSet.getSelection()) {
     		String ruleSetName = textRuleSet.getText();
@@ -646,7 +658,8 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			label13.setEnabled(true);
 			label14.setEnabled(true);
 			textAcceptPattern.setEnabled(true);
-			textIgnorePatter.setEnabled(true);
+			textIgnorePattern.setEnabled(true);
+			comboPatternsType.setEnabled(true);
 		}
 		else {
 			advancedRuleOptionsGroup.setEnabled(true);
@@ -657,7 +670,8 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			label13.setEnabled(false);
 			label14.setEnabled(false);
 			textAcceptPattern.setEnabled(false);
-			textIgnorePatter.setEnabled(false);
+			textIgnorePattern.setEnabled(false);
+			comboPatternsType.setEnabled(false);
 		}
 		
 	}
