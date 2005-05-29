@@ -66,6 +66,31 @@ public class FileFilter {
 			default:
 				return true;
 		}
-		
 	}
+	
+	public String toString() {
+		if (rules.length == 0) {
+			return "Empty filter";
+		}
+		StringBuffer buff = new StringBuffer(30*rules.length);
+		
+		for (int i = 0; i < rules.length-1; i++) {
+			buff.append(rules[i].toString());
+			switch (match_type) {
+				case MATCH_ALL:
+					buff.append(" and ");
+					break;
+				case MATCH_ANY:
+					buff.append(" or ");
+					break;
+			}
+		}
+		
+		if (rules.length > 0) {
+			buff.append(rules[rules.length-1].toString());
+		}
+		
+		return buff.toString();
+	}
+	
 }

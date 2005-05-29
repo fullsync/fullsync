@@ -81,6 +81,20 @@ public class FileNameFileFilterRuleTest extends TestCase {
 		assertTrue(filterRule.match(new File(".foo.txt")));
 	}
 
+	public void testOpDoesntBeginsWith() {
+		FileNameFileFilterRule filterRule = new FileNameFileFilterRule("foo", FileNameFileFilterRule.OP_DOESNT_BEGINS_WITH);
+		assertTrue(!filterRule.match(new File("foobar.txt")));
+		assertTrue(filterRule.match(new File("afoobar.txt")));
+		assertTrue(!filterRule.match(new File("foobar.txta")));
+		assertTrue(!filterRule.match(new File("foobara.txt")));
+		assertTrue(!filterRule.match(new File("fooba.txt")));
+		assertTrue(filterRule.match(new File("foboar.txt")));
+		assertTrue(filterRule.match(new File("oofbar.txt")));
+		assertTrue(!filterRule.match(new File("foo")));
+		assertTrue(!filterRule.match(new File("foo.")));
+		assertTrue(!filterRule.match(new File("foo.txt")));
+	}
+
 	public void testOpEndsWith() {
 		FileNameFileFilterRule filterRule = new FileNameFileFilterRule("txt", FileNameFileFilterRule.OP_ENDS_WITH);
 		assertTrue(filterRule.match(new File("foobar.txt")));
@@ -109,6 +123,21 @@ public class FileNameFileFilterRuleTest extends TestCase {
 		assertTrue(!filterRule.match(new File("txt")));
 		assertTrue(filterRule.match(new File(".txt")));
 		assertTrue(!filterRule.match(new File("txt.")));
+	}
+
+	public void testOpDoesntEndsWith() {
+		FileNameFileFilterRule filterRule = new FileNameFileFilterRule("txt", FileNameFileFilterRule.OP_DOESNT_ENDS_WITH);
+		assertTrue(!filterRule.match(new File("foobar.txt")));
+		assertTrue(!filterRule.match(new File("afoobar.atxt")));
+		assertTrue(filterRule.match(new File("foobar.txta")));
+		assertTrue(!filterRule.match(new File("foobara.txt")));
+		assertTrue(!filterRule.match(new File("fooba.txt")));
+		assertTrue(!filterRule.match(new File("foboar.ttxt")));
+		assertTrue(filterRule.match(new File("oofbar.xt")));
+		assertTrue(filterRule.match(new File("foo")));
+		assertTrue(!filterRule.match(new File("txt")));
+		assertTrue(!filterRule.match(new File(".txt")));
+		assertTrue(filterRule.match(new File("txt.")));
 	}
 
 	public void testOpRegExp() {

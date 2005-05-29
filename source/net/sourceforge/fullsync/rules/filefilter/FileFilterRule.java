@@ -12,4 +12,6 @@ public interface FileFilterRule {
 
 	public boolean match(File file);
 	
+	public abstract String toString();
+
 }
