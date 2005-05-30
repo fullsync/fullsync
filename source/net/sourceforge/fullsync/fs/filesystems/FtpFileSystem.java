@@ -23,7 +23,7 @@ public class FtpFileSystem implements FileSystem
     public FtpFileSystem()
     {
     }
-    public Site createConnection( ConnectionDescription desc)
+    public Site createConnection( ConnectionDescription desc )
     	throws FileSystemException
     {
         if( !desc.getUri().startsWith( "ftp:" ) )

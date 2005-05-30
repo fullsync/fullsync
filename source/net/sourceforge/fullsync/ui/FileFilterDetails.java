@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync.ui;
 
+import java.awt.SystemColor;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -151,7 +152,8 @@ public class FileFilterDetails extends Composite {
 				textValue.setText(value);
 			}
 			
-			composite.layout();
+			//composite.layout();
+            composite.pack();
 		}
 	}
 	
@@ -222,18 +224,17 @@ public class FileFilterDetails extends Composite {
 				scrolledComposite1LData.horizontalAlignment = GridData.FILL;
 				scrolledComposite1LData.grabExcessVerticalSpace = true;
 				scrolledComposite1LData.grabExcessHorizontalSpace = true;
-				scrolledComposite1 = new ScrolledComposite(this, SWT.H_SCROLL
-						| SWT.V_SCROLL
+				scrolledComposite1 = new ScrolledComposite(this, SWT.V_SCROLL
 						| SWT.BORDER);
+                createCompositeRuleList();
 				scrolledComposite1.setLayout(null);
 				scrolledComposite1.setLayoutData(scrolledComposite1LData);
 				scrolledComposite1.setExpandHorizontal(true);
-				scrolledComposite1.setExpandVertical(true);
+				scrolledComposite1.setExpandVertical(false);
 				scrolledComposite1.setVisible(true);
 				scrolledComposite1.setEnabled(true);
 				scrolledComposite1.setBackground(whiteColor);
-				scrolledComposite1.setAlwaysShowScrollBars(false);
-				createCompositeRuleList();
+				scrolledComposite1.setAlwaysShowScrollBars(true);
 			}
 			{
 				buttonMore = new Button(this, SWT.PUSH | SWT.CENTER);
@@ -302,17 +303,14 @@ public class FileFilterDetails extends Composite {
 	protected void createCompositeRuleList() {
 		compositeRuleList = new Composite(scrolledComposite1, SWT.NONE);
 		scrolledComposite1.setContent(compositeRuleList);
+        
 		GridLayout compositeRuleListLayout2 = new GridLayout();
 		compositeRuleListLayout2.numColumns = 3;
 		compositeRuleListLayout2.makeColumnsEqualWidth = true;
 		compositeRuleList.setLayout(compositeRuleListLayout2);
-		compositeRuleList.setBounds(0, 0, 428, 298);
+		//compositeRuleList.setBounds(0, 0, 428, 298);
 		compositeRuleList.setBackground(whiteColor);
-		GridLayout compositeRuleListLayout1 = new GridLayout();
-		compositeRuleListLayout1.numColumns = 3;
-		compositeRuleListLayout1.makeColumnsEqualWidth = true;
-		GridLayout compositeRuleListLayout = new GridLayout();
-		compositeRuleListLayout.numColumns = 3;	
+        compositeRuleList.pack();
 	}
 	
 	public FileFilter getFileFilter() {
