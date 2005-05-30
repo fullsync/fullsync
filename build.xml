@@ -50,6 +50,8 @@
 		<include name="swt.jar"/>
 		<include name="xercesImpl.jar"/>
 		<include name="xml-apis.jar"/>
+		<include name="commons-vfs-1.0-dev.jar"/>
+		<include name="jsch-0.1.20.jar"/>
 	</fileset>
 	<path id="classpath">
 		<fileset refid="dependentJars"/>
