@@ -20,11 +20,27 @@ public class FileNameFileFilterRule implements FileFilterRule {
 	public static final int OP_ENDS_WITH = 6;
 	public static final int OP_DOESNT_ENDS_WITH = 7;
 	public static final int OP_REGEXP = 8;
+
+	private static final String[] allOperators = new String[] {
+			"is",
+			"isn't",
+			"contains",
+			"doesn't contains",
+			"begins with",
+			"doesn't begins with",
+			"ends with",
+			"doesnt' ends with",
+			"matches regexp"
+	};
 	
 	private String pattern;
 	private int op;
 	
 	private Pattern regexppattern;
+	
+	public static String[] getAllOperators() {
+		return allOperators;
+	}
 	
 	public FileNameFileFilterRule(String pattern, int operator) {
 		this.pattern = pattern;
@@ -83,48 +99,7 @@ public class FileNameFileFilterRule implements FileFilterRule {
 		StringBuffer buff = new StringBuffer(30);
 		
 		buff.append("file name ");
-		switch(op) {
-		case OP_IS:
-			buff.append("is");
-			break;
-			
-		case OP_ISNT:
-			buff.append("isn't");
-			break;
-			
-		case OP_CONTAINS:
-			buff.append("contains");
-			break;
-			
-		case OP_DOESNT_CONTAINS:
-			buff.append("doesn't contains");
-			break;
-			
-		case OP_BEGINS_WITH:
-			buff.append("begins with");
-			break;
-			
-		case OP_DOESNT_BEGINS_WITH:
-			buff.append("doesn't begins with");
-			break;
-
-		case OP_ENDS_WITH:
-			buff.append("ends with");
-			break;
-			
-		case OP_DOESNT_ENDS_WITH:
-			buff.append("doesn't ends with");
-			break;
-
-		case OP_REGEXP:
-			buff.append("matches regexp");
-			break;
-			
-		default:
-			buff.append("?");
-		break;
-		}
-
+		buff.append(allOperators[op]);
 		buff.append(" "+pattern);
 		
 		return buff.toString();

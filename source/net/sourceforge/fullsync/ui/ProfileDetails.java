@@ -1,5 +1,6 @@
 package net.sourceforge.fullsync.ui;
 
+import java.awt.Dialog;
 import java.io.File;
 
 import net.sourceforge.fullsync.ConnectionDescription;
@@ -9,6 +10,7 @@ import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
 import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
+import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.eclipse.swt.SWT;
@@ -44,6 +46,9 @@ import org.eclipse.swt.widgets.Text;
 public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 
 	private ProfileManager profileManager;
+	private Combo comboFilterType;
+	private Label label18;
+	private Button buttonFileFilter;
 	private Combo comboPatternsType;
 	private Button buttonResetError;
 	private Button buttonEnabled;
@@ -61,6 +66,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	private Text textAcceptPattern;
 	private Label label14;
 	private Text textIgnorePattern;
+	private Label labelFilterDescription;
 	private Label label13;
 	private Button syncSubsButton;
 	private Group simplyfiedOptionsGroup;
@@ -415,6 +421,52 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                         textAcceptPatternLData.horizontalAlignment = GridData.FILL;
                         textAcceptPattern.setLayoutData(textAcceptPatternLData);
                     }
+					{
+						label18 = new Label(simplyfiedOptionsGroup, SWT.NONE);
+						label18.setText("Files Filter: ");
+					}
+					{
+						comboFilterType = new Combo(
+							simplyfiedOptionsGroup,
+							SWT.DROP_DOWN | SWT.READ_ONLY);
+						comboFilterType.add("Include");
+						comboFilterType.add("Exclude");
+						comboFilterType.select(0);
+					}
+					{
+						buttonFileFilter = new Button(
+							simplyfiedOptionsGroup,
+							SWT.PUSH | SWT.CENTER);
+						buttonFileFilter.setText("Set Filter...");
+						buttonFileFilter
+							.addSelectionListener(new SelectionAdapter() {
+							public void widgetSelected(SelectionEvent evt) {
+								try {
+									WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
+									FileFilterPage page = new FileFilterPage(dialog);
+									dialog.show();
+									FileFilter filter = page.getFileFilter();
+									if (filter != null) {
+										labelFilterDescription.setText(filter.toString());
+									}
+									else {
+										labelFilterDescription.setText("none");
+									}
+								} catch (Exception e) {
+									ExceptionHandler.reportException( e );
+								}
+							}
+							});
+					}
+					{
+						labelFilterDescription = new Label(simplyfiedOptionsGroup, SWT.WRAP);
+						GridData labelFilterDescriptionLData = new GridData();
+						labelFilterDescriptionLData.horizontalSpan = 3;
+						labelFilterDescriptionLData.horizontalAlignment = GridData.FILL;
+						labelFilterDescriptionLData.heightHint = 48;
+						labelFilterDescription.setLayoutData(labelFilterDescriptionLData);
+						labelFilterDescription.setText("Filter description");
+					}
                 }
                 {
                     advancedRuleOptionsGroup = new Group(ruleSetGroup, SWT.NONE);
@@ -455,7 +507,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			comboPatternsType.add("Wildcard");
 
 			this.layout();
-			this.setSize(500, 409);
+			this.setSize(504, 468);
 	
 			postInitGUI();
 		} catch (Exception e) {

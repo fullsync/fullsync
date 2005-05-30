@@ -4,6 +4,7 @@
 package net.sourceforge.fullsync.rules.filefilter;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 /**
  * @author Michele Aiello
@@ -15,8 +16,21 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 	public static final int OP_IS_GREATER_THAN = 2;
 	public static final int OP_IS_LESS_THAN = 3;
 
+	private static final String[] allOperators = new String[] {
+			"is",
+			"isn't",
+			"is greater than",
+			"is less than"
+	};
+
 	private long size;
 	private int op;
+		
+	private Pattern regexppattern;
+	
+	public static String[] getAllOperators() {
+		return allOperators;
+	}
 	
 	public FileSizeFileFilterRule(long size, int operator) {
 		this.size = size;
@@ -53,28 +67,7 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 		StringBuffer buff = new StringBuffer(30);
 		
 		buff.append("file size ");
-		switch(op) {
-		case OP_IS:
-			buff.append("is");
-			break;
-			
-		case OP_ISNT:
-			buff.append("isn't");
-			break;
-			
-		case OP_IS_GREATER_THAN:
-			buff.append("is greater than");
-			break;
-			
-		case OP_IS_LESS_THAN:
-			buff.append("is less than");
-			break;
-			
-		default:
-			buff.append("?");
-		break;
-		}
-
+		buff.append(allOperators[op]);
 		buff.append(' ');
 		buff.append(size);
 		buff.append(" bytes");

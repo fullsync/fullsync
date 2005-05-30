@@ -70,19 +70,19 @@ public class FileFilterManager {
 		FileFilterRule rule = null;
 		String ruleType = fileFilterRuleElement.getAttribute("ruletype");
 		
-		if (ruleType.equals("FileName")) {
+		if (ruleType.equals("File name")) {
 			int op = Integer.parseInt(fileFilterRuleElement.getAttribute("op"));
 			String pattern = fileFilterRuleElement.getAttribute("pattern");
 			rule = new FileNameFileFilterRule(pattern, op);
 		}
 		
-		if (ruleType.equals("FileSize")) {
+		if (ruleType.equals("File size")) {
 			int op = Integer.parseInt(fileFilterRuleElement.getAttribute("op"));
 			int size = Integer.parseInt(fileFilterRuleElement.getAttribute("size"));
 			rule = new FileSizeFileFilterRule(size, op);
 		}
 
-		if (ruleType.equals("FileModificationDate")) {
+		if (ruleType.equals("File modification date")) {
 			int op = Integer.parseInt(fileFilterRuleElement.getAttribute("op"));
 			int millis = Integer.parseInt(fileFilterRuleElement.getAttribute("modificationdate"));
 			rule = new FileModificationDateFileFilterRule(millis , op);
@@ -91,15 +91,68 @@ public class FileFilterManager {
 		return rule;
 	}
 	
+	public FileFilterRule createFileFilterRule(String ruleType, String op, String value) {
+		FileFilterRule rule = null;
+		
+		if (ruleType.equals("File name")) {
+			int opIndex = getOperatorIndex(FileNameFileFilterRule.getAllOperators(), op);
+			rule = new FileNameFileFilterRule(value, opIndex);
+		}
+		
+		if (ruleType.equals("File size")) {
+			int opIndex = getOperatorIndex(FileSizeFileFilterRule.getAllOperators(), op);
+			int size = Integer.parseInt(value);
+			rule = new FileSizeFileFilterRule(size, opIndex);
+		}
+
+		if (ruleType.equals("File modification date")) {
+			int opIndex = getOperatorIndex(FileModificationDateFileFilterRule.getAllOperators(), op);
+			int millis = Integer.parseInt(value);
+			rule = new FileModificationDateFileFilterRule(millis , opIndex);
+		}
+
+		return rule;
+		
+	}
+	
+	private int getOperatorIndex(String[] operators, String opName) {
+		for (int i = 0; i < operators.length; i++) {
+			if (operators[i].equals(opName)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public String[] getAllRuleTypes() {
+		return new String[] {"File name", "File size", "File modification date"};
+	}
+	
+	public String[] getOperatorsForRuleType(String ruleType) {
+		if (ruleType.equals("File name")) {
+			return FileNameFileFilterRule.getAllOperators();
+		}
+		
+		if (ruleType.equals("File size")) {
+			return FileSizeFileFilterRule.getAllOperators();
+		}
+
+		if (ruleType.equals("File modification date")) {
+			return FileModificationDateFileFilterRule.getAllOperators();
+		}
+		
+		return new String[] {"N/A"};
+	}
+	
 	private String getRuleType(FileFilterRule fileFilterRule) {
 		if (fileFilterRule.getClass().equals(FileNameFileFilterRule.class)) {
-			return "FileName";
+			return "File name";
 		}
 		if (fileFilterRule.getClass().equals(FileSizeFileFilterRule.class)) {
-			return "FileSize";
+			return "File size";
 		}
 		if (fileFilterRule.getClass().equals(FileModificationDateFileFilterRule.class)) {
-			return "FileModificationDate";
+			return "File modification date";
 		}
 		return null;
 	}

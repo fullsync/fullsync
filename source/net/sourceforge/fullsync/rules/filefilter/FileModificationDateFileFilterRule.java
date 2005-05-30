@@ -19,8 +19,19 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 	
+	private static final String[] allOperators = new String[] {
+			"is",
+			"isn't",
+			"is before",
+			"is after"
+	};
+
 	private long millis;
 	private int op;
+	
+	public static String[] getAllOperators() {
+		return allOperators;
+	}
 	
 	public FileModificationDateFileFilterRule(long millis, int operator) {
 		this.millis = millis;
@@ -57,28 +68,7 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 		StringBuffer buff = new StringBuffer(30);
 		
 		buff.append("file modification date ");
-		switch(op) {
-		case OP_IS:
-			buff.append("is");
-			break;
-			
-		case OP_ISNT:
-			buff.append("isn't");
-			break;
-			
-		case OP_IS_BEFORE:
-			buff.append("is beofre");
-			break;
-			
-		case OP_IS_AFTER:
-			buff.append("is after");
-			break;
-			
-		default:
-			buff.append("?");
-		break;
-		}
-
+		buff.append(allOperators[op]);
 		buff.append(' ');
 		buff.append(dateFormat.format(new Date(millis)));
 		
