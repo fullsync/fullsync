@@ -12,6 +12,7 @@ import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.rules.PatternRule;
 import net.sourceforge.fullsync.rules.Rule;
 import net.sourceforge.fullsync.rules.WildcardRule;
+import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
 /**
  * @author Michele Aiello
@@ -31,6 +32,11 @@ public class SimplyfiedSyncRules implements RuleSet {
 	
 	private String takePattern;
 	private Rule takeRule;
+	
+	private FileFilter fileFilter;
+	private boolean filterSelectsFiles;
+	
+	private boolean useFilter;
 	
 	/**
 	 * Default Constructor
@@ -111,6 +117,26 @@ public class SimplyfiedSyncRules implements RuleSet {
 		return takePattern;
 	}
 	
+	public FileFilter getFileFilter() {
+		return fileFilter;
+	}
+	
+	public void setFileFilter(FileFilter fileFilter) {
+		this.fileFilter = fileFilter;
+	}
+	
+	public boolean getFilterSelectsFiles() {
+		return filterSelectsFiles;
+	}
+	
+	public void setFilterSelectsFiles(boolean bool) {
+		this.filterSelectsFiles = bool;
+	}
+	
+	public void setUseFilter(boolean bool) {
+		this.useFilter = bool;
+	}
+	
 	/**
 	 * @see net.sourceforge.fullsync.RuleSet#isUsingRecursionOnIgnore()
 	 */
@@ -129,25 +155,39 @@ public class SimplyfiedSyncRules implements RuleSet {
 	 * @see net.sourceforge.fullsync.IgnoreDecider#isNodeIgnored(net.sourceforge.fullsync.fs.File)
 	 */
 	public boolean isNodeIgnored(File node) {
-		boolean take = true;
-		
-		if (take) {
-			if (ignoreRule != null) {
-				take = !ignoreRule.accepts(node);
-			}
-			else {
-				if (takeRule != null)
-					take = false;
-			}
+		if (!useFilter) {
+			return false;
 		}
 		
-		if (!take) {
-			if (takeRule != null) {
-				take = takeRule.accepts(node);
-			}
+		boolean take = true;
+		
+		if (fileFilter != null) {
+			take = fileFilter.match(node);
+		}
+		if (!filterSelectsFiles) {
+			take = !take;
 		}
 		
 		return !take;
+//		boolean take = true;
+//		
+//		if (take) {
+//			if (ignoreRule != null) {
+//				take = !ignoreRule.accepts(node);
+//			}
+//			else {
+//				if (takeRule != null)
+//					take = false;
+//			}
+//		}
+//		
+//		if (!take) {
+//			if (takeRule != null) {
+//				take = takeRule.accepts(node);
+//			}
+//		}
+//		
+//		return !take;
 	}
 	
 	/**

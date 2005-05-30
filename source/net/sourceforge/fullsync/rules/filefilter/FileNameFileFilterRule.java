@@ -3,13 +3,16 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import java.io.File;
 import java.util.regex.Pattern;
+
+import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author Michele Aiello
  */
 public class FileNameFileFilterRule implements FileFilterRule {
+	
+	private static final String ruleType = "File name";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -41,7 +44,7 @@ public class FileNameFileFilterRule implements FileFilterRule {
 	public static String[] getAllOperators() {
 		return allOperators;
 	}
-	
+		
 	public FileNameFileFilterRule(String pattern, int operator) {
 		this.pattern = pattern;
 		this.op = operator;
@@ -51,6 +54,22 @@ public class FileNameFileFilterRule implements FileFilterRule {
 		}
 	}
 	
+	public String getRuleType() {
+		return ruleType;
+	}
+
+	public int getOperator() {
+		return op;
+	}
+
+	public String getOperatorName() {
+		return allOperators[op];
+	}
+	
+	public Object getValue() {
+		return pattern;
+	}
+
 	public boolean match(File file) {
 		String name = file.getName();
 		
@@ -86,21 +105,15 @@ public class FileNameFileFilterRule implements FileFilterRule {
 			return false;
 		}
 	}
-
-	public int getOperator() {
-		return op;
-	}
-	
-	public String getPattern() {
-		return pattern;
-	}
-	
+		
 	public String toString() {
 		StringBuffer buff = new StringBuffer(30);
 		
 		buff.append("file name ");
 		buff.append(allOperators[op]);
-		buff.append(" "+pattern);
+		buff.append(" '");
+		buff.append(pattern);
+		buff.append('\'');
 		
 		return buff.toString();
 	}

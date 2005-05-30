@@ -5,6 +5,8 @@ package net.sourceforge.fullsync.impl;
 
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.RuleSetDescriptor;
+import net.sourceforge.fullsync.rules.filefilter.FileFilter;
+import net.sourceforge.fullsync.rules.filefilter.FileFilterManager;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,17 +21,25 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	private String ignorePattern;
 	private String takePattern;
 	private String patternsType;
+	private FileFilter fileFilter;
+	private boolean filterSelectsFiles;
+	private boolean useFilter;
 	
 	public SimplyfiedRuleSetDescriptor() {
 		
 	}
 	
-	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, String ignorePatter, String acceptPatter, String patternsType) 
+	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, String ignorePatter, String acceptPatter, 
+			String patternsType, FileFilter fileFilter, 
+			boolean filterSelectsFiles, boolean useFilter) 
 	{
 		this.syncSubDirs = syncSubDirs;
 		this.ignorePattern = ignorePatter;
 		this.takePattern = acceptPatter;
 		this.patternsType = patternsType;
+		this.fileFilter = fileFilter;
+		this.filterSelectsFiles = filterSelectsFiles;
+		this.useFilter = useFilter;
 	}
 	
 	/**
@@ -49,7 +59,15 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		simpleRuleSetElement.setAttribute("patternsType", getPatternsType());
 		simpleRuleSetElement.setAttribute("ignorePattern", getIgnorePattern());
 		simpleRuleSetElement.setAttribute("takePattern", getTakePattern());
+		simpleRuleSetElement.setAttribute("filterSelectsFiles", String.valueOf(isFilterSelectsFiles()));
+		simpleRuleSetElement.setAttribute("useFilter", String.valueOf(isUseFilter()));
 
+		if (fileFilter != null) {
+			FileFilterManager filterManager = new FileFilterManager();
+			Element fileFilterElement = filterManager.serializeFileFilter(getFileFilter(), document);
+			simpleRuleSetElement.appendChild(fileFilterElement);
+		}
+		
 		return simpleRuleSetElement;
 	}
 	
@@ -70,6 +88,22 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 			patternsType = simpleRuleSetConfigElement.getAttribute("patternsType");
 			ignorePattern = simpleRuleSetConfigElement.getAttribute("ignorePattern");
 			takePattern = simpleRuleSetConfigElement.getAttribute("takePattern");
+			String filterSelectsStr = simpleRuleSetConfigElement.getAttribute("filterSelectsFiles");
+			if ((filterSelectsStr != null) && (!filterSelectsStr.equals(""))) {
+				filterSelectsFiles = Boolean.valueOf(filterSelectsStr).booleanValue();
+			}
+			String useFilterStr = simpleRuleSetConfigElement.getAttribute("useFilter");
+			if ((useFilterStr != null) && (!useFilterStr.equals(""))) {
+				useFilter = Boolean.valueOf(useFilterStr).booleanValue();
+			}
+			NodeList fileFilterNodeList = simpleRuleSetConfigElement.getElementsByTagName("FileFilter");
+			if (fileFilterNodeList.getLength() > 0) {
+				FileFilterManager filterManager = new FileFilterManager();
+				fileFilter = filterManager.unserializeFileFilter((Element)fileFilterNodeList.item(0));
+			}
+			else {
+				fileFilter = null;
+			}
 		}
 	}
 		
@@ -129,6 +163,22 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		this.ignorePattern = ignorePattern;
 	}
 	
+	public FileFilter getFileFilter() {
+		return fileFilter;
+	}
+	
+	public void setFileFilter(FileFilter filter) {
+		this.fileFilter = filter;
+	}
+	
+	public boolean isFilterSelectsFiles() {
+		return filterSelectsFiles;
+	}
+
+	public boolean isUseFilter() {
+		return useFilter;
+	}
+
 	/**
 	 * @see net.sourceforge.fullsync.RuleSetDescriptor#createRuleSet()
 	 */
@@ -144,6 +194,9 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		}
 		ruleSet.setIgnorePattern(ignorePattern);
 		ruleSet.setTakePattern(takePattern);
+		ruleSet.setFileFilter(fileFilter);
+		ruleSet.setFilterSelectsFiles(filterSelectsFiles);
+		ruleSet.setUseFilter(useFilter);
 		
 		return ruleSet;
 	}

@@ -3,15 +3,18 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author Michele Aiello
  */
 public class FileModificationDateFileFilterRule implements FileFilterRule {
 
+	private static final String ruleType = "File modification date";
+	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
 	public static final int OP_IS_BEFORE = 2;
@@ -38,8 +41,24 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 		this.op = operator;
 	}
 	
+	public String getRuleType() {
+		return ruleType;
+	}
+
+	public int getOperator() {
+		return op;
+	}
+
+	public String getOperatorName() {
+		return allOperators[op];
+	}
+	
+	public Object getValue() {
+		return new Long(millis);
+	}
+
 	public boolean match(File file) {
-		long lastModified = file.lastModified();
+		long lastModified = file.getFileAttributes().getLastModified();
 		switch (op) {
 			case OP_IS:
 				return ((lastModified+999)/1000) == ((millis+999)/1000);
@@ -56,22 +75,14 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 		return false;
 	}
 
-	public int getOperator() {
-		return op;
-	}
-	
-	public long getModificationDate() {
-		return millis;
-	}
-
 	public String toString() {
 		StringBuffer buff = new StringBuffer(30);
 		
 		buff.append("file modification date ");
 		buff.append(allOperators[op]);
-		buff.append(' ');
+		buff.append(" '");
 		buff.append(dateFormat.format(new Date(millis)));
-		
+		buff.append('\'');
 		return buff.toString();
 	}
 

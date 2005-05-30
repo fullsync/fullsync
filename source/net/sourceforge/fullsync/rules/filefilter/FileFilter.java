@@ -3,7 +3,7 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import java.io.File;
+import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author Michele Aiello

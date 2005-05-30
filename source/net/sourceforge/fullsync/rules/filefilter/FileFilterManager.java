@@ -144,7 +144,7 @@ public class FileFilterManager {
 		return new String[] {"N/A"};
 	}
 	
-	private String getRuleType(FileFilterRule fileFilterRule) {
+	public String getRuleType(FileFilterRule fileFilterRule) {
 		if (fileFilterRule.getClass().equals(FileNameFileFilterRule.class)) {
 			return "File name";
 		}
@@ -161,17 +161,17 @@ public class FileFilterManager {
 		if (fileFilterRule.getClass().equals(FileNameFileFilterRule.class)) {
 			FileNameFileFilterRule rule = (FileNameFileFilterRule) fileFilterRule;
 			ruleElement.setAttribute("op", String.valueOf(rule.getOperator()));
-			ruleElement.setAttribute("pattern", rule.getPattern());
+			ruleElement.setAttribute("pattern", rule.getValue().toString());
 		}
 		if (fileFilterRule.getClass().equals(FileSizeFileFilterRule.class)) {
 			FileSizeFileFilterRule rule = (FileSizeFileFilterRule) fileFilterRule;
 			ruleElement.setAttribute("op", String.valueOf(rule.getOperator()));
-			ruleElement.setAttribute("size", String.valueOf(rule.getSize()));
+			ruleElement.setAttribute("size", rule.getValue().toString());
 		}
 		if (fileFilterRule.getClass().equals(FileModificationDateFileFilterRule.class)) {
 			FileModificationDateFileFilterRule rule = (FileModificationDateFileFilterRule) fileFilterRule;
 			ruleElement.setAttribute("op", String.valueOf(rule.getOperator()));
-			ruleElement.setAttribute("modificationdate", String.valueOf(rule.getModificationDate()));
+			ruleElement.setAttribute("modificationdate", rule.getValue().toString());
 		}
 	}
 }

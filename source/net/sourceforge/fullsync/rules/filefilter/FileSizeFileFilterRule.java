@@ -3,13 +3,16 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import java.io.File;
 import java.util.regex.Pattern;
+
+import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author Michele Aiello
  */
 public class FileSizeFileFilterRule implements FileFilterRule {
+	
+	private static final String ruleType = "File size";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -37,8 +40,24 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 		this.op = operator;
 	}
 	
+	public String getRuleType() {
+		return ruleType;
+	}
+
+	public int getOperator() {
+		return op;
+	}
+
+	public String getOperatorName() {
+		return allOperators[op];
+	}
+	
+	public Object getValue() {
+		return new Long(size);
+	}
+
 	public boolean match(File file) {
-		long filesize = file.length();
+		long filesize = file.getFileAttributes().getLength();
 		switch (op) {
 			case OP_IS:
 				return filesize == size;
@@ -55,22 +74,14 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 		return false;
 	}
 
-	public int getOperator() {
-		return op;
-	}
-	
-	public long getSize() {
-		return size;
-	}
-
 	public String toString() {
 		StringBuffer buff = new StringBuffer(30);
 		
 		buff.append("file size ");
 		buff.append(allOperators[op]);
-		buff.append(' ');
+		buff.append(" '");
 		buff.append(size);
-		buff.append(" bytes");
+		buff.append("' bytes");
 		
 		return buff.toString();
 	}

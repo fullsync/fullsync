@@ -41,7 +41,7 @@ import org.eclipse.swt.SWT;
  * for any corporate or commercial purpose.
  * *************************************
  */
-public class FileFilterDetails extends org.eclipse.swt.widgets.Composite {
+public class FileFilterDetails extends Composite {
 		
 	private Label label1;
 	private Combo comboMatchType;
@@ -64,8 +64,12 @@ public class FileFilterDetails extends org.eclipse.swt.widgets.Composite {
 		
 		private FileFilterManager fileFilterManager;
 				
-		public RuleRow(Composite composite, FileFilterManager fileFilterManager) {
+		public RuleRow(Composite composite, FileFilterManager fileFilterManager, String ruleType, String op, String value) {
 			this.fileFilterManager = fileFilterManager;
+			this.ruleType = ruleType;
+			this.op = op;
+			this.value = value;
+			
 			init(composite);
 		}
 		
@@ -168,7 +172,7 @@ public class FileFilterDetails extends org.eclipse.swt.widgets.Composite {
 	public static void showGUI() {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
-		FileFilterDetails inst = new FileFilterDetails(shell, SWT.NULL);
+		FileFilterDetails inst = new FileFilterDetails(shell, SWT.NULL, null);
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
 		shell.layout();
@@ -186,8 +190,9 @@ public class FileFilterDetails extends org.eclipse.swt.widgets.Composite {
 		}
 	}
 	
-	public FileFilterDetails(org.eclipse.swt.widgets.Composite parent, int style) {
+	public FileFilterDetails(Composite parent, int style, FileFilter fileFilter) {
 		super(parent, style);
+		this.fileFilter = fileFilter;
 		initGUI();
 	}
 	
@@ -255,9 +260,18 @@ public class FileFilterDetails extends org.eclipse.swt.widgets.Composite {
 				});
 			}
 			
-			comboMatchType.select(0);
+			if (fileFilter != null) {
+				comboMatchType.select(fileFilter.getMatchType());
+				FileFilterRule[] rules = fileFilter.getFileFiltersRules();
+				for (int i = 0; i < rules.length; i++) {
+					addRuleRow(rules[i].getRuleType(), rules[i].getOperatorName(), rules[i].getValue().toString());
+				}
+			}
+			else {
+				comboMatchType.select(0);
+				addRuleRow();
+			}
 			
-			addRuleRow();
 			
 			this.layout();
 		} catch (Exception e) {
@@ -266,10 +280,14 @@ public class FileFilterDetails extends org.eclipse.swt.widgets.Composite {
 	}
 	
 	protected void addRuleRow() {
-		RuleRow ruleRow = new RuleRow(compositeRuleList, fileFilterManager);
+		addRuleRow(null, null, null);
+	}
+
+	protected void addRuleRow(String ruleType, String op, String value) {
+		RuleRow ruleRow = new RuleRow(compositeRuleList, fileFilterManager, ruleType, op, value);
 		ruleRows.add(ruleRow);
 	}
-	
+
 	protected void removeRuleRow() {
 		ruleRows.removeElementAt(ruleRows.size()-1);
 		compositeRuleList.dispose();
@@ -298,7 +316,7 @@ public class FileFilterDetails extends org.eclipse.swt.widgets.Composite {
 	}
 	
 	public FileFilter getFileFilter() {
-		FileFilter fileFilter = new FileFilter();
+		fileFilter = new FileFilter();
 		fileFilter.setMatchType(comboMatchType.getSelectionIndex());
 		
 		FileFilterRule[] rules = new FileFilterRule[ruleRows.size()];
@@ -309,6 +327,5 @@ public class FileFilterDetails extends org.eclipse.swt.widgets.Composite {
 		
 		fileFilter.setFileFilterRules(rules);
 		return fileFilter;
-		
 	}
 }

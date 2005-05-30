@@ -23,9 +23,10 @@ public class FileFilterPage implements WizardPage {
     private FileFilterDetails details;
     private FileFilter filter;
     
-    public FileFilterPage(WizardDialog dialog)
+    public FileFilterPage(WizardDialog dialog, FileFilter filter)
     {
         dialog.setPage(this);
+        this.filter = filter;
         this.dialog = dialog;
     }
     
@@ -51,7 +52,7 @@ public class FileFilterPage implements WizardPage {
     }
     public void createContent( Composite content )
     {
-        details = new FileFilterDetails( content, SWT.NULL );
+        details = new FileFilterDetails(content, SWT.NULL, filter);
     }
     public void createBottom( Composite bottom )
     {
