@@ -51,7 +51,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 			"Localizations",
 			"Deutsch: Jan Kopcsek",
 			"Español: Angela Verastegui Desouza",
-			"Français: ... ...",
+			"Français: Pascal Conil-lacoste",
 			"Italiano: Michele Aiello",
 			"",
 			"Testing",
