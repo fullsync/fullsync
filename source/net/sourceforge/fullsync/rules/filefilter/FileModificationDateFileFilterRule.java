@@ -61,16 +61,16 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 		long lastModified = file.getFileAttributes().getLastModified();
 		switch (op) {
 			case OP_IS:
-				return ((lastModified+999)/1000) == ((millis+999)/1000);
+				return (Math.floor(lastModified/1000.0)) == (Math.floor(millis/1000.0));
 				
 			case OP_ISNT:
-				return ((lastModified+999)/1000) != ((millis+999)/1000);
+				return (Math.floor(lastModified/1000.0)) != (Math.floor(millis/1000.0));
 				
 			case OP_IS_BEFORE:
-				return lastModified > millis;
+				return (Math.floor(lastModified/1000.0)) > (Math.floor(millis/1000.0));
 				
 			case OP_IS_AFTER:
-				return lastModified < millis;
+				return (Math.floor(lastModified/1000.0)) < (Math.floor(millis/1000.0));
 		}
 		return false;
 	}

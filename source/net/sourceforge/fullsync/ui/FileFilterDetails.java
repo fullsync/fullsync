@@ -1,6 +1,5 @@
 package net.sourceforge.fullsync.ui;
 
-import java.awt.SystemColor;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -18,6 +17,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -60,16 +60,21 @@ public class FileFilterDetails extends Composite {
 	private static class RuleRow {
 		
 		private String ruleType;
-		private String op;
+		private int op;
 		private String value;
+		private FileFilterDetails root;
 		
 		private FileFilterManager fileFilterManager;
 				
-		public RuleRow(Composite composite, FileFilterManager fileFilterManager, String ruleType, String op, String value) {
+		public RuleRow(FileFilterDetails root, Composite composite, 
+				FileFilterManager fileFilterManager, String ruleType, 
+				int op, String value) 
+		{
 			this.fileFilterManager = fileFilterManager;
 			this.ruleType = ruleType;
 			this.op = op;
 			this.value = value;
+			this.root = root;
 			
 			init(composite);
 		}
@@ -78,7 +83,7 @@ public class FileFilterDetails extends Composite {
 			return ruleType;
 		}
 		
-		public String getOperator() {
+		public int getOperator() {
 			return op;
 		}
 		
@@ -86,35 +91,21 @@ public class FileFilterDetails extends Composite {
 			return value;
 		}
 		
-		public void init(Composite composite) {
+		public void init(final Composite composite) {
 			final Combo comboRuleTypes = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 			final Combo comboOperators = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
-			final Text textValue = new Text(composite, SWT.BORDER);
 			
 			comboRuleTypes.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent evt) {
 					ruleType = comboRuleTypes.getText();
-					comboOperators.removeAll();
-					String[] ops = fileFilterManager.getOperatorsForRuleType(comboRuleTypes.getText());
-					comboOperators.removeAll();
-					for (int i = 0; i < ops.length; i++) {
-						comboOperators.add(ops[i]);
-					}
-					comboOperators.select(0);
-					comboOperators.getParent().layout();
+					root.recreateRuleList();
 				}
 			});
 
 			comboOperators.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent evt) {
-					op = comboOperators.getText();
+					op = comboOperators.getSelectionIndex();
 					comboOperators.getParent().layout();
-				}
-			});
-
-			textValue.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent arg0) {
-					value = textValue.getText();
 				}
 			});
 			
@@ -136,24 +127,46 @@ public class FileFilterDetails extends Composite {
 			for (int i = 0; i < ops.length; i++) {
 				comboOperators.add(ops[i]);
 			}
-			if ((op == null) || (op.equals(""))) {
-				comboOperators.select(0);
-				op = comboOperators.getText();
+			if ((op < 0) || (op >= comboOperators.getItemCount())) {
+				op = 0;
+			}
+			comboOperators.select(op);
+			
+			String[] allOperands = fileFilterManager.getOperandsForRuleType(comboRuleTypes.getText());
+			if ((allOperands == null) || (allOperands.length == 0)) {
+				final Text textValue = new Text(composite, SWT.BORDER);
+				textValue.addModifyListener(new ModifyListener() {
+					public void modifyText(ModifyEvent arg0) {
+						value = textValue.getText();
+					}
+				});
+				GridData text1LData = new GridData();
+				text1LData.widthHint = 112;
+				text1LData.heightHint = 13;
+				textValue.setLayoutData(text1LData);
+				if (value != null) {
+					textValue.setText(value);
+				}
 			}
 			else {
-				comboOperators.setText(op);
+				final Combo comboOperands = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
+				for (int i = 0; i < allOperands.length; i++) {
+					comboOperands.add(allOperands[i]);
+				}
+				if (value != null) {
+					comboOperands.setText(value);
+				}
+				if (comboOperands.getSelectionIndex() < 0) {	
+					comboOperands.select(0);
+				}
+				comboOperands.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent evt) {
+						value = comboOperands.getText();
+					}
+				});
+
 			}
-			
-			GridData text1LData = new GridData();
-			text1LData.widthHint = 112;
-			text1LData.heightHint = 13;
-			textValue.setLayoutData(text1LData);
-			if (value != null) {
-				textValue.setText(value);
-			}
-			
-			//composite.layout();
-            composite.pack();
+//            composite.pack();
 		}
 	}
 	
@@ -265,7 +278,7 @@ public class FileFilterDetails extends Composite {
 				comboMatchType.select(fileFilter.getMatchType());
 				FileFilterRule[] rules = fileFilter.getFileFiltersRules();
 				for (int i = 0; i < rules.length; i++) {
-					addRuleRow(rules[i].getRuleType(), rules[i].getOperatorName(), rules[i].getValue().toString());
+					addRuleRow(rules[i].getRuleType(), rules[i].getOperator(), rules[i].getValue().toString());
 				}
 			}
 			else {
@@ -281,23 +294,28 @@ public class FileFilterDetails extends Composite {
 	}
 	
 	protected void addRuleRow() {
-		addRuleRow(null, null, null);
+		addRuleRow(null, -1, null);
 	}
 
-	protected void addRuleRow(String ruleType, String op, String value) {
-		RuleRow ruleRow = new RuleRow(compositeRuleList, fileFilterManager, ruleType, op, value);
+	protected void addRuleRow(String ruleType, int op, String value) {
+		RuleRow ruleRow = new RuleRow(this, compositeRuleList, fileFilterManager, ruleType, op, value);
 		ruleRows.add(ruleRow);
+		compositeRuleList.pack();
 	}
 
 	protected void removeRuleRow() {
 		ruleRows.removeElementAt(ruleRows.size()-1);
+		recreateRuleList();
+	}
+	
+	protected void recreateRuleList() {
 		compositeRuleList.dispose();
 		createCompositeRuleList();
 		for (int i = 0; i < ruleRows.size(); i++) {
 			RuleRow ruleRow = (RuleRow)ruleRows.elementAt(i);
 			ruleRow.init(compositeRuleList);
 		}
-		compositeRuleList.layout();
+		compositeRuleList.pack();		
 	}
 	
 	protected void createCompositeRuleList() {

@@ -10,9 +10,9 @@ import net.sourceforge.fullsync.fs.File;
 /**
  * @author Michele Aiello
  */
-public class FileNameFileFilterRule implements FileFilterRule {
+public class FilePathFileFilterRule implements FileFilterRule {
 	
-	private static final String ruleType = "File name";
+	private static final String ruleType = "File path";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -45,7 +45,7 @@ public class FileNameFileFilterRule implements FileFilterRule {
 		return allOperators;
 	}
 		
-	public FileNameFileFilterRule(String pattern, int operator) {
+	public FilePathFileFilterRule(String pattern, int operator) {
 		this.pattern = pattern;
 		this.op = operator;
 		
@@ -71,7 +71,7 @@ public class FileNameFileFilterRule implements FileFilterRule {
 	}
 
 	public boolean match(File file) {
-		String name = file.getName();
+		String name = file.getPath();
 		
 		switch(op) {
 		case OP_IS:
@@ -109,7 +109,7 @@ public class FileNameFileFilterRule implements FileFilterRule {
 	public String toString() {
 		StringBuffer buff = new StringBuffer(30);
 		
-		buff.append("file name ");
+		buff.append("file path ");
 		buff.append(allOperators[op]);
 		buff.append(" '");
 		buff.append(pattern);

@@ -15,7 +15,7 @@ public interface FileFilterRule {
 	public int getOperator();
 	
 	public String getOperatorName();
-	
+		
 	public Object getValue();
 	
 	public boolean match(File file);

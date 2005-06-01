@@ -64,7 +64,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 
 		if (fileFilter != null) {
 			FileFilterManager filterManager = new FileFilterManager();
-			Element fileFilterElement = filterManager.serializeFileFilter(getFileFilter(), document);
+			Element fileFilterElement = filterManager.serializeFileFilter(getFileFilter(), document, "FileFilter");
 			simpleRuleSetElement.appendChild(fileFilterElement);
 		}
 		
