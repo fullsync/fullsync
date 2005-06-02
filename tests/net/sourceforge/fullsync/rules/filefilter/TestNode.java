@@ -21,37 +21,20 @@ public class TestNode implements File
     private boolean exists;
     private boolean filtered;
     
-    private long length;
-    private long lastModified;
-    
+    private FileAttributes attr;
+        
     public TestNode( String name, String path, boolean exists, boolean directory, long length, long lm )
     {
         this.name = name;
         this.path = path;
         this.exists = exists;
         this.directory = directory;
-        this.length = length;
-        this.lastModified = lm;
+        this.attr = new FileAttributes(length, lm);
     }
 
     public File getDirectory()
     {
         return null;
-    }
-
-    public long getLength()
-    {
-        return length;
-    }
-
-    public long getLastModified()
-    {
-        return lastModified;
-    }
-
-    public void setLastModified( long lm )
-    {
-        this.lastModified = lm;
     }
 
     public InputStream getInputStream() throws IOException
@@ -143,7 +126,7 @@ public class TestNode implements File
     }
     public FileAttributes getFileAttributes()
     {
-        return null;
+        return attr;
     }
     public boolean isFile()
     {
@@ -159,6 +142,7 @@ public class TestNode implements File
     }
     public void setFileAttributes( FileAttributes att )
     {
+    	this.attr = att;
     }
     public void writeFileAttributes() throws IOException
     {
@@ -171,10 +155,6 @@ public class TestNode implements File
     public void setExists( boolean exists )
     {
         this.exists = exists;
-    }
-    public void setLength( long length )
-    {
-        this.length = length;
     }
     public void setName( String name )
     {
@@ -191,6 +171,6 @@ public class TestNode implements File
         else if( directory )
             return "Directory";
         else
-            return "File ("+length+","+lastModified+")";
+            return "File ("+attr.getLength()+","+attr.getLastModified()+")";
     }
 }
