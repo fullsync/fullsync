@@ -3,9 +3,8 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import net.sourceforge.fullsync.SystemDate;
+import net.sourceforge.fullsync.fs.FileAttributes;
 
 import junit.framework.TestCase;
 
@@ -14,31 +13,21 @@ import junit.framework.TestCase;
  */
 public class FileModificationDateFileFilterRuleTest extends TestCase {
 
-	public void testOpIs() throws IOException {
-//		long now = System.currentTimeMillis();
-//		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(now, FileModificationDateFileFilterRule.OP_IS);
-//		File file = new File("foobar.txt");
-//		FileWriter writer = new FileWriter(file, false);
-//		char[] buff = new char[1000];
-//		writer.write(buff);
-//		writer.flush();
-//		file.setLastModified(now);
-//		
-//		assertTrue(filterRule.match(file));
-//		
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//		}
-//		
-//		writer.write(buff);
-//		writer.flush();
-//		file.setLastModified(System.currentTimeMillis());
-//
-//		assertTrue(!filterRule.match(file));
-//		
-//		file.delete();
-//		System.out.println(filterRule.toString());
+	public void testOpIs() {
+		long now = SystemDate.getInstance().currentTimeMillis();
+		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(now, FileModificationDateFileFilterRule.OP_IS);
+		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, now);
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		assertTrue(filterRule.match(file));
+		file.setFileAttributes(new FileAttributes(1000, SystemDate.getInstance().currentTimeMillis()));
+
+		assertTrue(!filterRule.match(file));
 	}
 	
 }
