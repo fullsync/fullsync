@@ -13,7 +13,7 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class FileModificationDateFileFilterRule implements FileFilterRule {
 
-	private static final String ruleType = "File modification date";
+	static final String typeName = "File modification date";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -42,7 +42,7 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 	}
 	
 	public String getRuleType() {
-		return ruleType;
+		return typeName;
 	}
 
 	public int getOperator() {

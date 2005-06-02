@@ -3,12 +3,14 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
+import java.io.Serializable;
+
 import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author Michele Aiello
  */
-public class FileFilter {
+public class FileFilter implements Serializable {
 	
 	public static final int MATCH_ALL = 0;
 	public static final int MATCH_ANY = 1;

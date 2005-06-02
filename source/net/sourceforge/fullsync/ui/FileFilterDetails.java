@@ -158,6 +158,7 @@ public class FileFilterDetails extends Composite {
 				}
 				if (comboOperands.getSelectionIndex() < 0) {	
 					comboOperands.select(0);
+					value = comboOperands.getText();
 				}
 				comboOperands.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(SelectionEvent evt) {
@@ -265,7 +266,6 @@ public class FileFilterDetails extends Composite {
 				buttonFewerLData.horizontalSpan = 2;
 				buttonFewer.setLayoutData(buttonFewerLData);
 				buttonFewer.setText("Fewer");
-				buttonFewer.setEnabled(false);
 				buttonFewer.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(SelectionEvent evt) {
 						removeRuleRow();
@@ -285,7 +285,7 @@ public class FileFilterDetails extends Composite {
 				comboMatchType.select(0);
 				addRuleRow();
 			}
-			
+			buttonFewer.setEnabled(ruleRows.size() > 1);			
 			
 			this.layout();
 		} catch (Exception e) {

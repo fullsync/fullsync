@@ -3,12 +3,14 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
+import java.io.Serializable;
+
 import net.sourceforge.fullsync.fs.File;
 
 /**
  * @author Michele Aiello
  */
-public interface FileFilterRule {
+public interface FileFilterRule extends Serializable {
 
 	public String getRuleType();
 	

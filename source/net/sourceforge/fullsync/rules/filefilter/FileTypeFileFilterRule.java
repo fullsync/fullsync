@@ -10,7 +10,7 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class FileTypeFileFilterRule implements FileFilterRule {
 	
-	private static final String ruleType = "File type";
+	static final String typeName = "File type";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -56,7 +56,7 @@ public class FileTypeFileFilterRule implements FileFilterRule {
 	}
 
 	public String getRuleType() {
-		return ruleType;
+		return typeName;
 	}
 
 	public int getOperator() {

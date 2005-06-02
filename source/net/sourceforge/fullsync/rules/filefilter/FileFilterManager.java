@@ -3,6 +3,7 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
+import org.apache.commons.vfs.FileName;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -96,40 +97,53 @@ public class FileFilterManager {
 			ruleElement.setAttribute("op", String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute("modificationdate", rule.getValue().toString());
 		}
+
+		if (fileFilterRule instanceof FileAgeFileFilterRule) {
+			FileAgeFileFilterRule rule = (FileAgeFileFilterRule) fileFilterRule;
+			ruleElement.setAttribute("op", String.valueOf(rule.getOperator()));
+			ruleElement.setAttribute("age", rule.getValue().toString());
+		}
+
 	}
 
 	public FileFilterRule unserializeFileFilterRule(Element fileFilterRuleElement) {
 		FileFilterRule rule = null;
 		String ruleType = fileFilterRuleElement.getAttribute("ruletype");
 		
-		if (ruleType.equals("File name")) {
+		if (ruleType.equals(FileNameFileFilterRule.typeName)) {
 			int op = Integer.parseInt(fileFilterRuleElement.getAttribute("op"));
 			String pattern = fileFilterRuleElement.getAttribute("pattern");
 			rule = new FileNameFileFilterRule(pattern, op);
 		}
 
-		if (ruleType.equals("File path")) {
+		if (ruleType.equals(FilePathFileFilterRule.typeName)) {
 			int op = Integer.parseInt(fileFilterRuleElement.getAttribute("op"));
 			String pattern = fileFilterRuleElement.getAttribute("pattern");
 			rule = new FilePathFileFilterRule(pattern, op);
 		}
 
-		if (ruleType.equals("File type")) {
+		if (ruleType.equals(FileTypeFileFilterRule.typeName)) {
 			int op = Integer.parseInt(fileFilterRuleElement.getAttribute("op"));
 			String type = fileFilterRuleElement.getAttribute("type");
 			rule = new FileTypeFileFilterRule(type, op);
 		}
 
-		if (ruleType.equals("File size")) {
+		if (ruleType.equals(FileSizeFileFilterRule.typeName)) {
 			int op = Integer.parseInt(fileFilterRuleElement.getAttribute("op"));
-			int size = Integer.parseInt(fileFilterRuleElement.getAttribute("size"));
+			long size = Long.parseLong(fileFilterRuleElement.getAttribute("size"));
 			rule = new FileSizeFileFilterRule(size, op);
 		}
 
-		if (ruleType.equals("File modification date")) {
+		if (ruleType.equals(FileModificationDateFileFilterRule.typeName)) {
 			int op = Integer.parseInt(fileFilterRuleElement.getAttribute("op"));
-			int millis = Integer.parseInt(fileFilterRuleElement.getAttribute("modificationdate"));
+			long millis = Long.parseLong(fileFilterRuleElement.getAttribute("modificationdate"));
 			rule = new FileModificationDateFileFilterRule(millis , op);
+		}
+
+		if (ruleType.equals(FileAgeFileFilterRule.typeName)) {
+			int op = Integer.parseInt(fileFilterRuleElement.getAttribute("op"));
+			long deltaMillis = Long.parseLong(fileFilterRuleElement.getAttribute("age"));
+			rule = new FileAgeFileFilterRule(deltaMillis, op);
 		}
 
 		return rule;
@@ -138,26 +152,31 @@ public class FileFilterManager {
 	public FileFilterRule createFileFilterRule(String ruleType, int op, String value) {
 		FileFilterRule rule = null;
 		
-		if (ruleType.equals("File name")) {
+		if (ruleType.equals(FileNameFileFilterRule.typeName)) {
 			rule = new FileNameFileFilterRule(value, op);
 		}
 
-		if (ruleType.equals("File path")) {
+		if (ruleType.equals(FilePathFileFilterRule.typeName)) {
 			rule = new FilePathFileFilterRule(value, op);
 		}
 
-		if (ruleType.equals("File type")) {
+		if (ruleType.equals(FileTypeFileFilterRule.typeName)) {
 			rule = new FileTypeFileFilterRule(value, op);
 		}
 
-		if (ruleType.equals("File size")) {
-			int size = Integer.parseInt(value);
+		if (ruleType.equals(FileSizeFileFilterRule.typeName)) {
+			long size = Long.parseLong(value);
 			rule = new FileSizeFileFilterRule(size, op);
 		}
 
-		if (ruleType.equals("File modification date")) {
-			int millis = Integer.parseInt(value);
-			rule = new FileModificationDateFileFilterRule(millis , op);
+		if (ruleType.equals(FileModificationDateFileFilterRule.typeName)) {
+			long millis = Long.parseLong(value);
+			rule = new FileModificationDateFileFilterRule(millis, op);
+		}
+
+		if (ruleType.equals(FileAgeFileFilterRule.typeName)) {
+			long deltaMillis = Long.parseLong(value);
+			rule = new FileAgeFileFilterRule(deltaMillis, op);
 		}
 
 		return rule;
@@ -174,35 +193,44 @@ public class FileFilterManager {
 	}
 	
 	public String[] getAllRuleTypes() {
-		return new String[] {"File name", "File path", "File type", "File size", "File modification date"};
+		return new String[] {FileNameFileFilterRule.typeName, 
+				FilePathFileFilterRule.typeName, 
+				FileTypeFileFilterRule.typeName, 
+				FileSizeFileFilterRule.typeName,
+				FileModificationDateFileFilterRule.typeName,
+				FileAgeFileFilterRule.typeName};
 	}
 	
 	public String[] getOperatorsForRuleType(String ruleType) {
-		if (ruleType.equals("File name")) {
+		if (ruleType.equals(FileNameFileFilterRule.typeName)) {
 			return FileNameFileFilterRule.getAllOperators();
 		}
 		
-		if (ruleType.equals("File path")) {
+		if (ruleType.equals(FilePathFileFilterRule.typeName)) {
 			return FilePathFileFilterRule.getAllOperators();
 		}
 
-		if (ruleType.equals("File type")) {
+		if (ruleType.equals(FileTypeFileFilterRule.typeName)) {
 			return FileTypeFileFilterRule.getAllOperators();
 		}
 
-		if (ruleType.equals("File size")) {
+		if (ruleType.equals(FileSizeFileFilterRule.typeName)) {
 			return FileSizeFileFilterRule.getAllOperators();
 		}
 
-		if (ruleType.equals("File modification date")) {
+		if (ruleType.equals(FileModificationDateFileFilterRule.typeName)) {
 			return FileModificationDateFileFilterRule.getAllOperators();
 		}
-		
+
+		if (ruleType.equals(FileAgeFileFilterRule.typeName)) {
+			return FileAgeFileFilterRule.getAllOperators();
+		}
+
 		return new String[] {"N/A"};
 	}
 
 	public String[] getOperandsForRuleType(String ruleType) {
-		if (ruleType.equals("File type")) {
+		if (ruleType.equals(FileTypeFileFilterRule.typeName)) {
 			return FileTypeFileFilterRule.getAllOperands();
 		}
 		else {
@@ -212,24 +240,29 @@ public class FileFilterManager {
 
 	public String getRuleType(FileFilterRule fileFilterRule) {
 		if (fileFilterRule instanceof FileNameFileFilterRule) {
-			return "File name";
+			return FileNameFileFilterRule.typeName;
 		}
 
 		if (fileFilterRule instanceof FilePathFileFilterRule) {
-			return "File path";
+			return FilePathFileFilterRule.typeName;
 		}
 
 		if (fileFilterRule instanceof FileTypeFileFilterRule) {
-			return "File type";
+			return FileTypeFileFilterRule.typeName;
 		}
 
 		if (fileFilterRule instanceof FileSizeFileFilterRule) {
-			return "File size";
+			return FileSizeFileFilterRule.typeName;
 		}
 		
 		if (fileFilterRule instanceof FileModificationDateFileFilterRule) {
-			return "File modification date";
+			return FileModificationDateFileFilterRule.typeName;
 		}
+		
+		if (fileFilterRule instanceof FileAgeFileFilterRule) {
+			return FileAgeFileFilterRule.typeName;
+		}
+
 		return null;
 	}
 	
