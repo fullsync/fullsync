@@ -20,6 +20,9 @@
 <classPath>..\build\lib\xml-apis.jar</classPath>
 <classPath>..\build\lib\utils.jar</classPath>
 <classPath>..\build\lib\fullsync.jar</classPath>
+<classPath>..\build\lib\commons-vfs.jar</classPath>
+<classPath>..\build\lib\jsch.jar</classPath>
+<classPath>..\build\lib\swtcalendar.jar</classPath>
 <currentDirectory>.</currentDirectory>
 <embeddedJar>false</embeddedJar>
 <executableName>..\build\FullSync.exe</executableName>

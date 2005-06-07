@@ -6,13 +6,15 @@ package net.sourceforge.fullsync.rules.filefilter;
 import java.util.regex.Pattern;
 
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 /**
  * @author Michele Aiello
  */
 public class FileSizeFileFilterRule implements FileFilterRule {
 	
-	static final String typeName = "File size";
+	public static final String typeName = "File size";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -26,7 +28,8 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 			"is less than"
 	};
 
-	private long size;
+	
+	private SizeValue size;
 	private int op;
 		
 	private Pattern regexppattern;
@@ -35,7 +38,11 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 		return allOperators;
 	}
 	
-	public FileSizeFileFilterRule(long size, int operator) {
+	public static String[] getAllUnits() {
+		return SizeValue.getAllUnits();
+	}
+	
+	public FileSizeFileFilterRule(SizeValue size, int operator) {
 		this.size = size;
 		this.op = operator;
 	}
@@ -52,24 +59,24 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 		return allOperators[op];
 	}
 	
-	public Object getValue() {
-		return new Long(size);
+	public OperandValue getValue() {
+		return size;
 	}
 
 	public boolean match(File file) {
 		long filesize = file.getFileAttributes().getLength();
 		switch (op) {
 			case OP_IS:
-				return filesize == size;
+				return filesize == size.getBytes();
 				
 			case OP_ISNT:
-				return filesize != size;
+				return filesize != size.getBytes();
 				
 			case OP_IS_GREATER_THAN:
-				return filesize > size;
+				return filesize > size.getBytes();
 				
 			case OP_IS_LESS_THAN:
-				return filesize < size;
+				return filesize < size.getBytes();
 		}
 		return false;
 	}
@@ -80,8 +87,8 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 		buff.append("file size ");
 		buff.append(allOperators[op]);
 		buff.append(" '");
-		buff.append(size);
-		buff.append("' bytes");
+		buff.append(size.toString());
+		buff.append("'");
 		
 		return buff.toString();
 	}

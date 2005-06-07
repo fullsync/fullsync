@@ -3,8 +3,11 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import net.sourceforge.fullsync.SystemDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import net.sourceforge.fullsync.fs.FileAttributes;
+import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 import junit.framework.TestCase;
 
@@ -13,19 +16,19 @@ import junit.framework.TestCase;
  */
 public class FileModificationDateFileFilterRuleTest extends TestCase {
 
-	public void testOpIs() {
-		long now = SystemDate.getInstance().currentTimeMillis();
-		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(now, FileModificationDateFileFilterRule.OP_IS);
-		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, now);
+	public void testOpIs() throws ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(
+				new DateValue(dateFormat.parse("01/06/2005 06:00:00")), 
+				FileModificationDateFileFilterRule.OP_IS);
 		
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", 
+				true, false, 
+				1000, dateFormat.parse("01/06/2005 10:00:00").getTime());
 		
 		assertTrue(filterRule.match(file));
-		file.setFileAttributes(new FileAttributes(1000, SystemDate.getInstance().currentTimeMillis()));
+		file.setFileAttributes(new FileAttributes(1000, dateFormat.parse("02/06/2005 10:00:00").getTime()));
 
 		assertTrue(!filterRule.match(file));
 	}

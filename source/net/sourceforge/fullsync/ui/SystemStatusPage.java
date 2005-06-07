@@ -1,7 +1,5 @@
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.Preferences;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;

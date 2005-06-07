@@ -1,9 +1,6 @@
 package net.sourceforge.fullsync;
 
-import java.util.Locale;
-
 import net.sourceforge.fullsync.cli.CommandLineInterpreter;
-
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>

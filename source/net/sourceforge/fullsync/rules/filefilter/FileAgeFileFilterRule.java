@@ -5,13 +5,15 @@ package net.sourceforge.fullsync.rules.filefilter;
 
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 /**
  * @author Michele Aiello
  */
 public class FileAgeFileFilterRule implements FileFilterRule {
 
-	static final String typeName = "File age";
+	public static final String typeName = "File age";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -25,15 +27,15 @@ public class FileAgeFileFilterRule implements FileFilterRule {
 			"is less than"
 	};
 
-	private long deltaMillis;
+	private AgeValue age;
 	private int op;
 	
 	public static String[] getAllOperators() {
 		return allOperators;
 	}
 	
-	public FileAgeFileFilterRule(long deltaMillis, int operator) {
-		this.deltaMillis= deltaMillis;
+	public FileAgeFileFilterRule(AgeValue age, int operator) {
+		this.age = age;
 		this.op = operator;
 	}
 	
@@ -49,25 +51,26 @@ public class FileAgeFileFilterRule implements FileFilterRule {
 		return allOperators[op];
 	}
 	
-	public Object getValue() {
-		return new Long(deltaMillis);
+	public OperandValue getValue() {
+		return age;
 	}
 
 	public boolean match(File file) {
 		long lastModified = file.getFileAttributes().getLastModified();
 		long now = SystemDate.getInstance().currentTimeMillis();
+		double delta = (Math.floor(now/1000.0) - Math.floor(lastModified/1000.0));
 		switch (op) {
 			case OP_IS:
-				return (Math.floor(now/1000.0) - Math.floor(lastModified/1000.0)) == (Math.floor(deltaMillis/1000.0));
+				return delta == age.getSeconds();
 				
 			case OP_ISNT:
-				return (Math.floor(now/1000.0) - Math.floor(lastModified/1000.0)) != (Math.floor(deltaMillis/1000.0));
+				return delta != age.getSeconds();
 				
 			case OP_IS_GREATER_THAN:
-				return (Math.floor(now/1000.0) - Math.floor(lastModified/1000.0)) > (Math.floor(deltaMillis/1000.0));
+				return delta > age.getSeconds();
 				
 			case OP_IS_LESS_THAN:
-				return (Math.floor(now/1000.0) - Math.floor(lastModified/1000.0)) < (Math.floor(deltaMillis/1000.0));
+				return delta < age.getSeconds();
 		}
 		return false;
 	}
@@ -78,8 +81,8 @@ public class FileAgeFileFilterRule implements FileFilterRule {
 		buff.append("file age ");
 		buff.append(allOperators[op]);
 		buff.append(" '");
-		buff.append(deltaMillis);
-		buff.append('\'');
+		buff.append(age);
+		buff.append("'");
 		return buff.toString();
 	}
 

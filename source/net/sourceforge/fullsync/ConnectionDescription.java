@@ -1,7 +1,6 @@
 package net.sourceforge.fullsync;
 
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Dictionary;
 import java.util.Hashtable;
 

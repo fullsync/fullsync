@@ -6,13 +6,15 @@ package net.sourceforge.fullsync.rules.filefilter;
 import java.util.regex.Pattern;
 
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
+import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 /**
  * @author Michele Aiello
  */
 public class FileNameFileFilterRule implements FileFilterRule {
 	
-	static final String typeName = "File name";
+	public static final String typeName = "File name";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -36,7 +38,7 @@ public class FileNameFileFilterRule implements FileFilterRule {
 			"matches regexp"
 	};
 	
-	private String pattern;
+	private TextValue pattern;
 	private int op;
 	
 	private Pattern regexppattern;
@@ -45,12 +47,12 @@ public class FileNameFileFilterRule implements FileFilterRule {
 		return allOperators;
 	}
 		
-	public FileNameFileFilterRule(String pattern, int operator) {
+	public FileNameFileFilterRule(TextValue pattern, int operator) {
 		this.pattern = pattern;
 		this.op = operator;
 		
 		if (operator == OP_REGEXP) {
-			this.regexppattern = Pattern.compile(this.pattern);
+			this.regexppattern = Pattern.compile(this.pattern.getValue());
 		}
 	}
 	
@@ -66,7 +68,7 @@ public class FileNameFileFilterRule implements FileFilterRule {
 		return allOperators[op];
 	}
 	
-	public Object getValue() {
+	public OperandValue getValue() {
 		return pattern;
 	}
 
@@ -75,28 +77,28 @@ public class FileNameFileFilterRule implements FileFilterRule {
 		
 		switch(op) {
 		case OP_IS:
-			return name.equals(pattern);
+			return name.equals(pattern.getValue());
 			
 		case OP_ISNT:
-			return !name.equals(pattern);
+			return !name.equals(pattern.getValue());
 			
 		case OP_CONTAINS:
-			return (name.indexOf(pattern) >= 0);
+			return (name.indexOf(pattern.getValue()) >= 0);
 			
 		case OP_DOESNT_CONTAINS:
-			return (name.indexOf(pattern) < 0);
+			return (name.indexOf(pattern.getValue()) < 0);
 			
 		case OP_BEGINS_WITH:
-			return name.startsWith(pattern);
+			return name.startsWith(pattern.getValue());
 			
 		case OP_DOESNT_BEGINS_WITH:
-			return !name.startsWith(pattern);
+			return !name.startsWith(pattern.getValue());
 
 		case OP_ENDS_WITH:
-			return name.endsWith(pattern);
+			return name.endsWith(pattern.getValue());
 			
 		case OP_DOESNT_ENDS_WITH:
-			return !name.endsWith(pattern);
+			return !name.endsWith(pattern.getValue());
 
 		case OP_REGEXP:
 			return regexppattern.matcher(name).matches();
@@ -112,7 +114,7 @@ public class FileNameFileFilterRule implements FileFilterRule {
 		buff.append("file name ");
 		buff.append(allOperators[op]);
 		buff.append(" '");
-		buff.append(pattern);
+		buff.append(pattern.toString());
 		buff.append('\'');
 		
 		return buff.toString();

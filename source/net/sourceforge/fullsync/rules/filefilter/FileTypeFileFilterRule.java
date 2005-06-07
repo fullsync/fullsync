@@ -4,31 +4,25 @@
 package net.sourceforge.fullsync.rules.filefilter;
 
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 /**
  * @author Michele Aiello
  */
 public class FileTypeFileFilterRule implements FileFilterRule {
 	
-	static final String typeName = "File type";
+	public static final String typeName = "File type";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
-
-	public static final int FILE_TYPE = 0;
-	public static final int DIRECTORY_TYPE = 1;
 
 	private static final String[] allOperators = new String[] {
 			"is",
 			"isn't"
 	};
-	
-	private static final String[] allOperands = new String[] {
-		"file",
-		"directory"
-	};
-	
-	private int type;
+		
+	private TypeValue type;
 	private int op;
 		
 	public static String[] getAllOperators() {
@@ -36,21 +30,10 @@ public class FileTypeFileFilterRule implements FileFilterRule {
 	}
 	
 	public static String[] getAllOperands() {
-		return allOperands;
+		return TypeValue.getAllTypes();
 	}
 		
-	public FileTypeFileFilterRule(String typeName, int operator) {
-		this.type = -1;
-		for (int i = 0; i < allOperands.length; i++) {
-			if (allOperands[i].equals(typeName)) {
-				this.type = i;
-				break;
-			}
-		}
-		this.op = operator;		
-	}
-
-	public FileTypeFileFilterRule(int type, int operator) {
+	public FileTypeFileFilterRule(TypeValue type, int operator) {
 		this.type = type;
 		this.op = operator;		
 	}
@@ -67,19 +50,19 @@ public class FileTypeFileFilterRule implements FileFilterRule {
 		return allOperators[op];
 	}
 	
-	public Object getValue() {
-		return allOperands[type];
+	public OperandValue getValue() {
+		return type;
 	}
 
 	public boolean match(File file) {				
 		switch(op) {
 		case OP_IS:
-			return (((type == 0) && file.isFile()) ||
-					((type == 1) && file.isDirectory()));
+			return (((type.isFile()) && file.isFile()) ||
+					((type.isDirectory()) && file.isDirectory()));
 			
 		case OP_ISNT:
-			return !(((type == 0) && file.isFile()) ||
-					((type == 1) && file.isDirectory()));
+			return !(((type.isFile()) && file.isFile()) ||
+					((type.isDirectory()) && file.isDirectory()));
 						
 		default:
 			return false;
@@ -92,7 +75,7 @@ public class FileTypeFileFilterRule implements FileFilterRule {
 		buff.append("file type ");
 		buff.append(allOperators[op]);
 		buff.append(" '");
-		buff.append(allOperands[type]);
+		buff.append(type.toString());
 		buff.append('\'');
 		
 		return buff.toString();

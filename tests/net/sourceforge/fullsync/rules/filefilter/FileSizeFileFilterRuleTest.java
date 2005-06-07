@@ -4,6 +4,7 @@
 package net.sourceforge.fullsync.rules.filefilter;
 
 import net.sourceforge.fullsync.fs.FileAttributes;
+import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 import junit.framework.TestCase;
 
@@ -13,7 +14,8 @@ import junit.framework.TestCase;
 public class FileSizeFileFilterRuleTest extends TestCase {
 
 	public void testOpIs() {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(1000, FileSizeFileFilterRule.OP_IS);
+		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue(1000, SizeValue.BYTES), 
+				FileSizeFileFilterRule.OP_IS);
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, 0);
 		
 		assertTrue(filterRule.match(file));
@@ -23,7 +25,8 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 	}
 
 	public void testOpIsnt() {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(1000, FileSizeFileFilterRule.OP_ISNT);
+		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue(1000, SizeValue.BYTES),
+				FileSizeFileFilterRule.OP_ISNT);
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, 0);
 		assertTrue(!filterRule.match(file));
 		
@@ -32,7 +35,8 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 	}
 
 	public void testOpIsGreaterThan() {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(1000, FileSizeFileFilterRule.OP_IS_GREATER_THAN);
+		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue(1000, SizeValue.BYTES),
+				FileSizeFileFilterRule.OP_IS_GREATER_THAN);
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, 0);
 
 		assertTrue(!filterRule.match(file));
@@ -45,7 +49,8 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 	}
 
 	public void testOpIsLessThan() {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(1000, FileSizeFileFilterRule.OP_IS_LESS_THAN);
+		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue(1000, SizeValue.BYTES),
+				FileSizeFileFilterRule.OP_IS_LESS_THAN);
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, 0);
 
 		assertTrue(!filterRule.match(file));

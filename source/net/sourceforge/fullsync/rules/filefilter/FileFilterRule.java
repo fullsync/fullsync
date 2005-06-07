@@ -6,6 +6,7 @@ package net.sourceforge.fullsync.rules.filefilter;
 import java.io.Serializable;
 
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 /**
  * @author Michele Aiello
@@ -18,7 +19,7 @@ public interface FileFilterRule extends Serializable {
 	
 	public String getOperatorName();
 		
-	public Object getValue();
+	public OperandValue getValue();
 	
 	public boolean match(File file);
 	

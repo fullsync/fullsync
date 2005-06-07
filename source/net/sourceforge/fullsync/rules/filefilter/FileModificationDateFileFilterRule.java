@@ -3,25 +3,22 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 /**
  * @author Michele Aiello
  */
 public class FileModificationDateFileFilterRule implements FileFilterRule {
 
-	static final String typeName = "File modification date";
+	public static final String typeName = "File modification date";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
 	public static final int OP_IS_BEFORE = 2;
 	public static final int OP_IS_AFTER = 3;
-	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-	
+		
 	private static final String[] allOperators = new String[] {
 			"is",
 			"isn't",
@@ -29,15 +26,15 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 			"is after"
 	};
 
-	private long millis;
+	private DateValue date;
 	private int op;
 	
 	public static String[] getAllOperators() {
 		return allOperators;
 	}
 	
-	public FileModificationDateFileFilterRule(long millis, int operator) {
-		this.millis = millis;
+	public FileModificationDateFileFilterRule(DateValue date, int operator) {
+		this.date = date;
 		this.op = operator;
 	}
 	
@@ -53,24 +50,24 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 		return allOperators[op];
 	}
 	
-	public Object getValue() {
-		return new Long(millis);
+	public OperandValue getValue() {
+		return date;
 	}
 
 	public boolean match(File file) {
 		long lastModified = file.getFileAttributes().getLastModified();
 		switch (op) {
 			case OP_IS:
-				return (Math.floor(lastModified/1000.0)) == (Math.floor(millis/1000.0));
+				return date.equals(lastModified);
 				
 			case OP_ISNT:
-				return (Math.floor(lastModified/1000.0)) != (Math.floor(millis/1000.0));
+				return !date.equals(lastModified);
 				
 			case OP_IS_BEFORE:
-				return (Math.floor(lastModified/1000.0)) > (Math.floor(millis/1000.0));
+				return date.isBefore(lastModified);
 				
 			case OP_IS_AFTER:
-				return (Math.floor(lastModified/1000.0)) < (Math.floor(millis/1000.0));
+				return date.isAfter(lastModified);
 		}
 		return false;
 	}
@@ -81,8 +78,8 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 		buff.append("file modification date ");
 		buff.append(allOperators[op]);
 		buff.append(" '");
-		buff.append(dateFormat.format(new Date(millis)));
-		buff.append('\'');
+		buff.append(date);
+		buff.append("'");
 		return buff.toString();
 	}
 
