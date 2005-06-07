@@ -7,6 +7,9 @@ import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.FileFilterManager;
+import net.sourceforge.fullsync.rules.filefilter.FileFilterRule;
+import net.sourceforge.fullsync.rules.filefilter.FileNameFileFilterRule;
+import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,7 +19,7 @@ import org.w3c.dom.NodeList;
  * @author Michele Aiello
  */
 public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
-
+	
 	private boolean syncSubDirs = false;
 	private String ignorePattern;
 	private String takePattern;
@@ -54,14 +57,14 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	 */
 	public Element serialize(Document document) {
 		Element simpleRuleSetElement = document.createElement("SimpleRuleSet");
-
+		
 		simpleRuleSetElement.setAttribute("syncSubs", String.valueOf(isSyncSubDirs()));		
 		simpleRuleSetElement.setAttribute("patternsType", getPatternsType());
 		simpleRuleSetElement.setAttribute("ignorePattern", getIgnorePattern());
 		simpleRuleSetElement.setAttribute("takePattern", getTakePattern());
 		simpleRuleSetElement.setAttribute("filterSelectsFiles", String.valueOf(isFilterSelectsFiles()));
 		simpleRuleSetElement.setAttribute("useFilter", String.valueOf(isUseFilter()));
-
+		
 		if (fileFilter != null) {
 			FileFilterManager filterManager = new FileFilterManager();
 			Element fileFilterElement = filterManager.serializeFileFilter(getFileFilter(), document, "FileFilter");
@@ -103,10 +106,44 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 			}
 			else {
 				fileFilter = null;
+				if (patternsType.equals("RegExp")) {
+					if (!ignorePattern.equals("") && (takePattern.equals(""))){
+						filterSelectsFiles = false;
+						fileFilter = new FileFilter();
+						fileFilter.setMatchType(FileFilter.MATCH_ALL);
+						FileFilterRule[] rules = new FileFilterRule[] {new FileNameFileFilterRule(new TextValue(ignorePattern),
+								FileNameFileFilterRule.OP_MATCHES_REGEXP)};
+						fileFilter.setFileFilterRules(rules);
+						useFilter = true;
+					}
+					if (ignorePattern.equals("") && (!takePattern.equals(""))){
+						filterSelectsFiles = true;
+						fileFilter = new FileFilter();
+						fileFilter.setMatchType(FileFilter.MATCH_ALL);
+						FileFilterRule[] rules = new FileFilterRule[] {new FileNameFileFilterRule(new TextValue(takePattern),
+								FileNameFileFilterRule.OP_MATCHES_REGEXP)};
+						fileFilter.setFileFilterRules(rules);
+						useFilter = true;
+					}
+					if (!ignorePattern.equals("") && (!takePattern.equals(""))) {
+						filterSelectsFiles = false;
+						fileFilter = new FileFilter();
+						fileFilter.setMatchType(FileFilter.MATCH_ALL);
+						FileFilterRule[] rules = new FileFilterRule[] {
+								new FileNameFileFilterRule(new TextValue(ignorePattern), FileNameFileFilterRule.OP_MATCHES_REGEXP),
+								new FileNameFileFilterRule(new TextValue(takePattern), FileNameFileFilterRule.OP_DOESNT_MATCHES_REGEXP)
+								};
+						fileFilter.setFileFilterRules(rules);
+						useFilter = true;
+					}
+				}
+				else {
+					//TODO Wildcard translation
+				}
 			}
 		}
 	}
-		
+	
 	/**
 	 * @return Returns the syncSubDirs.
 	 */
@@ -174,11 +211,11 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	public boolean isFilterSelectsFiles() {
 		return filterSelectsFiles;
 	}
-
+	
 	public boolean isUseFilter() {
 		return useFilter;
 	}
-
+	
 	/**
 	 * @see net.sourceforge.fullsync.RuleSetDescriptor#createRuleSet()
 	 */
@@ -200,5 +237,5 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		
 		return ruleSet;
 	}
-
+	
 }

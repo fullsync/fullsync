@@ -192,14 +192,6 @@ public class FileFilterManager {
 		
 	}
 	
-	private int getOperatorIndex(String[] operators, String opName) {
-		for (int i = 0; i < operators.length; i++) {
-			if (operators[i].equals(opName)) {
-				return i;
-			}
-		}
-		return -1;
-	}
 	
 	public String[] getOperatorsForRuleType(String ruleType) {
 		if (ruleType.equals(FileNameFileFilterRule.typeName)) {
@@ -229,25 +221,8 @@ public class FileFilterManager {
 		return new String[] {"N/A"};
 	}
 
-	public String[] getOperandsForRuleType(String ruleType) {
-		if (ruleType.equals(FileTypeFileFilterRule.typeName)) {
-			return FileTypeFileFilterRule.getAllOperands();
-		}
-		else {
-			return null;
-		}
-	}
 
-	public String[] getUnitsForRuleType(String ruleType) {
-		if (ruleType.equals(FileSizeFileFilterRule.typeName)) {
-			return FileSizeFileFilterRule.getAllUnits();
-		}
-		else {
-			return null;
-		}
-	}
-
-	public String getRuleType(FileFilterRule fileFilterRule) {
+	private String getRuleType(FileFilterRule fileFilterRule) {
 		if (fileFilterRule instanceof FileNameFileFilterRule) {
 			return FileNameFileFilterRule.typeName;
 		}

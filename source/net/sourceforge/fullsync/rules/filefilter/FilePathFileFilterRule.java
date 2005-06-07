@@ -4,7 +4,9 @@
 package net.sourceforge.fullsync.rules.filefilter;
 
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
@@ -24,7 +26,8 @@ public class FilePathFileFilterRule implements FileFilterRule {
 	public static final int OP_DOESNT_BEGINS_WITH = 5;
 	public static final int OP_ENDS_WITH = 6;
 	public static final int OP_DOESNT_ENDS_WITH = 7;
-	public static final int OP_REGEXP = 8;
+	public static final int OP_MATCHES_REGEXP = 8;
+	public static final int OP_DOESNT_MATCHES_REGEXP = 9;
 
 	private static final String[] allOperators = new String[] {
 			"is",
@@ -35,7 +38,8 @@ public class FilePathFileFilterRule implements FileFilterRule {
 			"doesn't begins with",
 			"ends with",
 			"doesn't ends with",
-			"matches regexp"
+			"matches regexp",
+			"doesn't matches regexp"
 	};
 	
 	private TextValue pattern;
@@ -51,8 +55,13 @@ public class FilePathFileFilterRule implements FileFilterRule {
 		this.pattern = pattern;
 		this.op = operator;
 		
-		if (operator == OP_REGEXP) {
-			this.regexppattern = Pattern.compile(this.pattern.getValue());
+		if ((operator == OP_MATCHES_REGEXP) || (operator == OP_DOESNT_MATCHES_REGEXP)) {
+			try {
+				this.regexppattern = Pattern.compile(this.pattern.getValue());
+			} catch (PatternSyntaxException e) {
+				this.pattern.setValue("");
+				ExceptionHandler.reportException(e);
+			}
 		}
 	}
 	
@@ -100,9 +109,12 @@ public class FilePathFileFilterRule implements FileFilterRule {
 		case OP_DOESNT_ENDS_WITH:
 			return !name.endsWith(pattern.getValue());
 
-		case OP_REGEXP:
+		case OP_MATCHES_REGEXP:
 			return regexppattern.matcher(name).matches();
-			
+
+		case OP_DOESNT_MATCHES_REGEXP:
+			return !regexppattern.matcher(name).matches();
+
 		default:
 			return false;
 		}

@@ -140,7 +140,7 @@ public class FileNameFileFilterRuleTest extends TestCase {
 	}
 
 	public void testOpRegExp() {
-		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue(".+\\.gif"), FileNameFileFilterRule.OP_REGEXP);
+		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue(".+\\.gif"), FileNameFileFilterRule.OP_MATCHES_REGEXP);
 		assertTrue(filterRule.match(new TestNode("foobar.gif", "/root/foobar.gif", true, false, 0, 0)));
 		assertTrue(filterRule.match(new TestNode("foobara.gif", "/root/foobara.gif", true, false, 0, 0)));
 		assertTrue(!filterRule.match(new TestNode("gif", "/root/gif", true, false, 0, 0)));
