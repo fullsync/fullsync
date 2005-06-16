@@ -159,15 +159,21 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 			ExceptionHandler.reportException( e );
 		}
 	}
-	public static void show( final GuiController guiController, final Profile profile, final TaskTree task )
+	public static void show( final GuiController guiController, final Profile profile, final TaskTree task, final boolean interactive )
 	{
 		final Display display = Display.getDefault();
 		display.asyncExec( new Runnable() {
-		    public void run()
-            {
+		    public void run() {
 		        try {
 		            WizardDialog dialog = new WizardDialog( guiController.getMainShell(), SWT.RESIZE );
-				    TaskDecisionPage page = new TaskDecisionPage( dialog, guiController, profile, task );
+				    final TaskDecisionPage page = new TaskDecisionPage( dialog, guiController, profile, task );
+				    if (!interactive) {
+				    	dialog.addWizardDialogListener(new WizardDialogAdapter() {
+				    		public void dialogOpened(WizardDialog dialog) {
+				    			page.performActions();
+				    		}
+				    	});
+				    }
 				    dialog.show();
 		        } catch( Exception ex ) {
 		            ExceptionHandler.reportException( ex );

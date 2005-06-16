@@ -191,8 +191,7 @@ public class TaskDecisionPage implements WizardPage, Serializable
         
     }
 
-    protected void performActions()
-    {
+    void performActions() {
         Thread worker = new Thread( new Runnable() {
 			public void run() {
 	            guiController.showBusyCursor( true );
@@ -209,6 +208,12 @@ public class TaskDecisionPage implements WizardPage, Serializable
 		            final Color colorFinishedSuccessful = new Color( null, 150, 255, 150 );
 		            final Color colorFinishedUnsuccessful = new Color( null, 255, 150, 150 );
 		            
+		            display.syncExec(new Runnable() {
+		            	public void run() {
+		            		buttonGo.setEnabled(false);
+		            	}	
+		            });
+
 		            synchronizer.performActions(taskTree, new TaskFinishedListener() {
 		            	public void taskFinished( final TaskFinishedEvent event ) 
 		            	{
@@ -218,6 +223,8 @@ public class TaskDecisionPage implements WizardPage, Serializable
 		            				labelProgress.setText( tasksFinished+" "+Messages.getString("TaskDecisionPage.of")+" "+tasksTotal+" "+Messages.getString("TaskDecisionPage.tasksFinished") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		            				Task task = event.getTask();
 		            				TableItem item = list.getTableItemForTask(task);
+		            				// TODO This doesn't seams to work. Even if there is an exception in the sync of one item
+		            				// the item is colored with the "successful" color.
 		            				if (item != null) {
 		            					if(event.isSuccessful()) {
 		            						item.setBackground(colorFinishedSuccessful);
@@ -234,13 +241,12 @@ public class TaskDecisionPage implements WizardPage, Serializable
 		            
 			        dialog.getDisplay().asyncExec( new Runnable() {
 						public void run() {
-			            	// Notification Window before disposal.
+			            	// Notification Window.
 							MessageBox mb = new MessageBox( dialog.getShell(), SWT.ICON_INFORMATION | SWT.OK );
 							mb.setText( Messages.getString("TaskDecisionPage.Finished") ); //$NON-NLS-1$
 						    mb.setMessage( Messages.getString("TaskDecisionPage.ProfileFinished")); //$NON-NLS-1$
 						    mb.open();
-						    
-						    dialog.getShell().dispose();
+//						    dialog.getShell().dispose();
 						}
 			        } );
 				} catch( Exception e ) {

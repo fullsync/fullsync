@@ -1,5 +1,7 @@
 package net.sourceforge.fullsync.ui;
 
+import java.util.Vector;
+
 import net.sourceforge.fullsync.ExceptionHandler;
 
 import org.eclipse.swt.SWT;
@@ -49,12 +51,15 @@ public class WizardDialog {
 	private int style;
 	private Font captionFont;
 	
+	private Vector dialogListeners;
+	
 	private WizardPage wizardPage;
 
 	public WizardDialog( Shell parent, int style ) 
 	{
 	    this.parent = parent;
 	    this.style = SWT.DIALOG_TRIM | style;
+	    this.dialogListeners = new Vector();
 	}
 	
 	public void setPage( WizardPage page )
@@ -177,6 +182,7 @@ public class WizardDialog {
             
             dialogShell.setSize( size );
 			dialogShell.open();
+			dialogOpened();
 			while( !dialogShell.isDisposed() ) {
 				if (!display.readAndDispatch())
 					display.sleep();
@@ -185,6 +191,13 @@ public class WizardDialog {
 			ExceptionHandler.reportException( e );
 		}
 	}
+	
+	protected void dialogOpened() {
+        for( int i = 0; i < dialogListeners.size(); i++ )
+            ((WizardDialogListener)dialogListeners.get( i )).dialogOpened( this );
+
+	}
+	
 	public void dispose()
 	{
         Control[] controls = compositeContent.getChildren();
@@ -230,5 +243,15 @@ public class WizardDialog {
         labelCaption.setText( wizardPage.getCaption() );
         labelDescription.setText( wizardPage.getDescription() );
         labelImage.setImage( wizardPage.getImage() );
+	}
+	
+	public void addWizardDialogListener(WizardDialogListener listener) {
+		if ((listener != null) && (!dialogListeners.contains(listener))) {
+			dialogListeners.add(listener);
+		}
+	}
+
+	public void removeWizardDialogListener(WizardDialogListener listener) {
+		dialogListeners.remove(listener);
 	}
 }

@@ -10,7 +10,7 @@ import net.sourceforge.fullsync.Profile;
 public interface ProfileListControlHandler extends EventListener
 {
     public void createNewProfile();
-    public void runProfile( Profile profile );
+    public void runProfile( Profile profile, boolean interactive );
     public void editProfile( Profile profile );
     public void deleteProfile( Profile profile );
 }

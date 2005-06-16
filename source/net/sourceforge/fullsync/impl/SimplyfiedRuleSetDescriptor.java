@@ -58,7 +58,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	public Element serialize(Document document) {
 		Element simpleRuleSetElement = document.createElement("SimpleRuleSet");
 		
-		simpleRuleSetElement.setAttribute("syncSubs", String.valueOf(isSyncSubDirs()));		
+		simpleRuleSetElement.setAttribute("syncSubs", String.valueOf(isSyncSubDirs()));
 		simpleRuleSetElement.setAttribute("patternsType", getPatternsType());
 		simpleRuleSetElement.setAttribute("ignorePattern", getIgnorePattern());
 		simpleRuleSetElement.setAttribute("takePattern", getTakePattern());
@@ -82,6 +82,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		
 		if (ruleSetConfigNodeList.getLength() == 0) {
 			syncSubDirs = true;
+			useFilter = false;
 			ignorePattern = "";
 			takePattern = "";
 		}

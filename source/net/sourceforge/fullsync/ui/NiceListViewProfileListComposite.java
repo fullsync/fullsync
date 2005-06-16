@@ -66,7 +66,16 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 			t.addSelectionListener( new SelectionAdapter() {
 			    public void widgetSelected( SelectionEvent e )
 	            {
-	                handler.runProfile( profile );
+	                handler.runProfile( profile, true );
+	            }
+			});
+			
+			t = new ToolItem( toolbar, SWT.PUSH );
+			t.setImage( imageRunNonInter );
+			t.addSelectionListener( new SelectionAdapter() {
+			    public void widgetSelected( SelectionEvent e )
+	            {
+	                handler.runProfile( profile, false );
 	            }
 			});
 	
@@ -130,6 +139,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
     private Image imageProfileError;
     private Image imageProfileErrorScheduled;
     private Image imageRun;
+    private Image imageRunNonInter;
     private Image imageEdit;
     private Image imageDelete;
 
@@ -162,6 +172,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
         imageProfileErrorScheduled = GuiController.getInstance().getImage( "Profile_Default_Error_Scheduled.png" ); //$NON-NLS-1$
         
         imageRun = GuiController.getInstance().getImage( "Profile_Run.png" ); //$NON-NLS-1$
+        imageRunNonInter = GuiController.getInstance().getImage( "Profile_Run_Non_Inter.png" ); //$NON-NLS-1$
         imageEdit = GuiController.getInstance().getImage( "Profile_Edit.png" ); //$NON-NLS-1$
         imageDelete = GuiController.getInstance().getImage( "Profile_Delete.png" ); //$NON-NLS-1$
     }

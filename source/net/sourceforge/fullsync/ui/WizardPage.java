@@ -15,5 +15,5 @@ public interface WizardPage
     public Image getImage();
     
     public void createContent( Composite content );
-    public void createBottom( Composite bottom );
+    public void createBottom( Composite bottom );    
 }

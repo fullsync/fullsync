@@ -52,7 +52,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	private Combo comboFilterType;
 	private Label label18;
 	private Button buttonFileFilter;
-	private Combo comboPatternsType;
+//	private Combo comboPatternsType;
 	private Button buttonResetError;
 	private Button buttonEnabled;
 	private Button buttonScheduling;
@@ -65,9 +65,9 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	private Text textRuleSet;
 	private Label label4;
 	private Group advancedRuleOptionsGroup;
-	private Text textAcceptPattern;
-	private Label label14;
-	private Text textIgnorePattern;
+//	private Text textAcceptPattern;
+//	private Label label14;
+//	private Text textIgnorePattern;
 	private Group groupDestination;
 	private Label labelSourceUrl;
 	private TreeItem treeItemFilters;
@@ -84,7 +84,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	private SashForm sashForm;
 	private Button buttonUseFileFilter;
 	private Label labelFilterDescription;
-	private Label label13;
+//	private Label label13;
 	private Button syncSubsButton;
 	private Group simplyfiedOptionsGroup;
 	private Button rbAdvancedRuleSet;
@@ -598,61 +598,61 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                     syncSubsButton
                                         .setLayoutData(syncSubsButtonLData);
                                 }
-                                {
-                                    label13 = new Label(
-                                        simplyfiedOptionsGroup,
-                                        SWT.NONE);
-                                    label13
-                                        .setText(Messages
-                                            .getString("ProfileDetails.Ingore_Pattern")); //$NON-NLS-1$
-                                }
-                                {
-                                    textIgnorePattern = new Text(
-                                        simplyfiedOptionsGroup,
-                                        SWT.BORDER);
-                                    GridData textIgnorePatterLData = new GridData();
-                                    textIgnorePattern
-                                        .setToolTipText(Messages
-                                            .getString("ProfileDetails.Ignore_ToolTip")); //$NON-NLS-1$
-                                    textIgnorePatterLData.heightHint = 13;
-                                    //textIgnorePatterLData.widthHint = 100;
-                                    textIgnorePatterLData.grabExcessHorizontalSpace = true;
-                                    textIgnorePatterLData.horizontalAlignment = GridData.FILL;
-                                    textIgnorePattern
-                                        .setLayoutData(textIgnorePatterLData);
-                                }
-                                {
-                                    comboPatternsType = new Combo(
-                                        simplyfiedOptionsGroup,
-                                        SWT.DROP_DOWN | SWT.READ_ONLY);
-                                    GridData comboPatternsTypeLData = new GridData();
-                                    comboPatternsTypeLData.verticalSpan = 2;
-                                    comboPatternsType
-                                        .setLayoutData(comboPatternsTypeLData);
-                                }
-                                {
-                                    label14 = new Label(
-                                        simplyfiedOptionsGroup,
-                                        SWT.NONE);
-                                    label14
-                                        .setText(Messages
-                                            .getString("ProfileDetails.Accept_Pattern")); //$NON-NLS-1$
-                                }
-                                {
-                                    textAcceptPattern = new Text(
-                                        simplyfiedOptionsGroup,
-                                        SWT.BORDER);
-                                    GridData textAcceptPatternLData = new GridData();
-                                    textAcceptPattern
-                                        .setToolTipText(Messages
-                                            .getString("ProfileDetails.Accept_ToolTip")); //$NON-NLS-1$
-                                    textAcceptPatternLData.heightHint = 13;
-                                    //textAcceptPatternLData.widthHint = 100;
-                                    textAcceptPatternLData.grabExcessHorizontalSpace = true;
-                                    textAcceptPatternLData.horizontalAlignment = GridData.FILL;
-                                    textAcceptPattern
-                                        .setLayoutData(textAcceptPatternLData);
-                                }
+//                                {
+//                                    label13 = new Label(
+//                                        simplyfiedOptionsGroup,
+//                                        SWT.NONE);
+//                                    label13
+//                                        .setText(Messages
+//                                            .getString("ProfileDetails.Ingore_Pattern")); //$NON-NLS-1$
+//                                }
+//                                {
+//                                    textIgnorePattern = new Text(
+//                                        simplyfiedOptionsGroup,
+//                                        SWT.BORDER);
+//                                    GridData textIgnorePatterLData = new GridData();
+//                                    textIgnorePattern
+//                                        .setToolTipText(Messages
+//                                            .getString("ProfileDetails.Ignore_ToolTip")); //$NON-NLS-1$
+//                                    textIgnorePatterLData.heightHint = 13;
+//                                    //textIgnorePatterLData.widthHint = 100;
+//                                    textIgnorePatterLData.grabExcessHorizontalSpace = true;
+//                                    textIgnorePatterLData.horizontalAlignment = GridData.FILL;
+//                                    textIgnorePattern
+//                                        .setLayoutData(textIgnorePatterLData);
+//                                }
+//                                {
+//                                    comboPatternsType = new Combo(
+//                                        simplyfiedOptionsGroup,
+//                                        SWT.DROP_DOWN | SWT.READ_ONLY);
+//                                    GridData comboPatternsTypeLData = new GridData();
+//                                    comboPatternsTypeLData.verticalSpan = 2;
+//                                    comboPatternsType
+//                                        .setLayoutData(comboPatternsTypeLData);
+//                                }
+//                                {
+//                                    label14 = new Label(
+//                                        simplyfiedOptionsGroup,
+//                                        SWT.NONE);
+//                                    label14
+//                                        .setText(Messages
+//                                            .getString("ProfileDetails.Accept_Pattern")); //$NON-NLS-1$
+//                                }
+//                                {
+//                                    textAcceptPattern = new Text(
+//                                        simplyfiedOptionsGroup,
+//                                        SWT.BORDER);
+//                                    GridData textAcceptPatternLData = new GridData();
+//                                    textAcceptPattern
+//                                        .setToolTipText(Messages
+//                                            .getString("ProfileDetails.Accept_ToolTip")); //$NON-NLS-1$
+//                                    textAcceptPatternLData.heightHint = 13;
+//                                    //textAcceptPatternLData.widthHint = 100;
+//                                    textAcceptPatternLData.grabExcessHorizontalSpace = true;
+//                                    textAcceptPatternLData.horizontalAlignment = GridData.FILL;
+//                                    textAcceptPattern
+//                                        .setLayoutData(textAcceptPatternLData);
+//                                }
                                 {
                                     buttonUseFileFilter = new Button(
                                         simplyfiedOptionsGroup,
@@ -715,41 +715,32 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                     buttonFileFilter.setText("Set Filter...");
                                     buttonFileFilter
                                         .addSelectionListener(new SelectionAdapter() {
-                                            public void widgetSelected(
-                                                SelectionEvent evt) {
+                                            public void widgetSelected(SelectionEvent evt) {
                                                 try {
-                                                    WizardDialog dialog = new WizardDialog(
-                                                        getShell(),
-                                                        SWT.APPLICATION_MODAL);
-                                                    FileFilterPage page = new FileFilterPage(
-                                                        dialog,
-                                                        filter);
+                                                    WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
+                                                    FileFilterPage page = new FileFilterPage(dialog, filter);
                                                     dialog.show();
-                                                    FileFilter newfilter = page
-                                                        .getFileFilter();
+                                                    FileFilter newfilter = page.getFileFilter();
                                                     if (newfilter != null) {
                                                         filter = newfilter;
-                                                        labelFilterDescription
-                                                            .setText(filter
-                                                                .toString());
+                                                        labelFilterDescription.setText(filter.toString());
                                                     }
                                                 } catch (Exception e) {
-                                                    ExceptionHandler
-                                                        .reportException(e);
+                                                    ExceptionHandler.reportException(e);
                                                 }
                                             }
                                         });
                                 }
                                 {
-                                    labelFilterDescription = new Label(
-                                        simplyfiedOptionsGroup,
+                                    labelFilterDescription = new Label(simplyfiedOptionsGroup,
                                         SWT.SHADOW_NONE | SWT.WRAP | SWT.BORDER);
                                     GridData labelFilterDescriptionLData = new GridData();
                                     labelFilterDescriptionLData.horizontalSpan = 3;
                                     labelFilterDescriptionLData.horizontalAlignment = GridData.FILL;
                                     labelFilterDescriptionLData.heightHint = 48;
-                                    labelFilterDescription
-                                        .setLayoutData(labelFilterDescriptionLData);
+                                    labelFilterDescriptionLData.widthHint = 300;
+                                    labelFilterDescriptionLData.grabExcessHorizontalSpace = true;
+                                    labelFilterDescription.setLayoutData(labelFilterDescriptionLData);
                                     labelFilterDescription.setText("");
                                 }
                             }
@@ -823,8 +814,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
             comboType.add( "Exact Copy" ); //$NON-NLS-1$
             comboType.add( "Two Way Sync" ); //$NON-NLS-1$
 
-            comboPatternsType.add("RegExp");
-			comboPatternsType.add("Wildcard");
+//            comboPatternsType.add("RegExp");
+//			comboPatternsType.add("Wildcard");
 
 			this.layout();
 			this.setSize(609, 533);
@@ -845,7 +836,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	    textDestinationPassword.setEchoChar( '*' );
 	    
 	    comboType.select(0);
-	    comboPatternsType.select(0);
+//	    comboPatternsType.select(0);
 	}
 
 	public void setProfileManager( ProfileManager manager )
@@ -894,9 +885,9 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
         	rbAdvancedRuleSet.setSelection(false);
         	SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor)ruleSetDescriptor;
         	syncSubsButton.setSelection(simpleDesc.isSyncSubDirs());
-        	textIgnorePattern.setText(simpleDesc.getIgnorePattern());
-        	textAcceptPattern.setText(simpleDesc.getTakePattern());
-        	comboPatternsType.setText(simpleDesc.getPatternsType());
+//        	textIgnorePattern.setText(simpleDesc.getIgnorePattern());
+//        	textAcceptPattern.setText(simpleDesc.getTakePattern());
+//        	comboPatternsType.setText(simpleDesc.getPatternsType());
         	FileFilter fileFilter = simpleDesc.getFileFilter();
         	filter = fileFilter;
         	if (fileFilter != null) {
@@ -986,9 +977,9 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 		RuleSetDescriptor ruleSetDescriptor = null;
     	if (rbSimplyfiedRuleSet.getSelection()) {
 			ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), 
-					textIgnorePattern.getText(),
-					textAcceptPattern.getText(),
-					comboPatternsType.getText(),
+					"",
+					"",
+					"",
 					filter,
 					comboFilterType.getSelectionIndex() == 0,
 					buttonUseFileFilter.getSelection());
@@ -1059,11 +1050,11 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			textRuleSet.setEnabled(false);
 			simplyfiedOptionsGroup.setEnabled(true);
 			syncSubsButton.setEnabled(true);
-			label13.setEnabled(true);
-			label14.setEnabled(true);
-			textAcceptPattern.setEnabled(true);
-			textIgnorePattern.setEnabled(true);
-			comboPatternsType.setEnabled(true);
+//			label13.setEnabled(true);
+//			label14.setEnabled(true);
+//			textAcceptPattern.setEnabled(true);
+//			textIgnorePattern.setEnabled(true);
+//			comboPatternsType.setEnabled(true);
 		}
 		else {
 			advancedRuleOptionsGroup.setEnabled(true);
@@ -1071,11 +1062,11 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			textRuleSet.setEnabled(true);
 			simplyfiedOptionsGroup.setEnabled(false);
 			syncSubsButton.setEnabled(false);
-			label13.setEnabled(false);
-			label14.setEnabled(false);
-			textAcceptPattern.setEnabled(false);
-			textIgnorePattern.setEnabled(false);
-			comboPatternsType.setEnabled(false);
+//			label13.setEnabled(false);
+//			label14.setEnabled(false);
+//			textAcceptPattern.setEnabled(false);
+//			textIgnorePattern.setEnabled(false);
+//			comboPatternsType.setEnabled(false);
 		}
 		
 	}

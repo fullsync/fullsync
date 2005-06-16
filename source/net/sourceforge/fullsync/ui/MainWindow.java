@@ -59,6 +59,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
     private CoolItem coolItem1;
     private ToolBar toolBar1;
     private ToolItem toolItemRun;
+    private ToolItem toolItemRunNonIter;
     private ToolItem toolItemDelete;
     private ToolItem toolItemEdit;
     private CoolItem coolItem2;
@@ -174,10 +175,22 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
                             toolItemRun
                                 .addSelectionListener(new SelectionAdapter() {
                                     public void widgetSelected(SelectionEvent evt) {
-                                        runProfile( profileList.getSelectedProfile() );
+                                        runProfile( profileList.getSelectedProfile(), true );
                                     }
                                 });
                         }
+                        {
+                            toolItemRunNonIter = new ToolItem(toolBar1, SWT.PUSH);
+                            toolItemRunNonIter.setImage( guiController.getImage( "Button_Run_Non_Inter.png" ) ); //$NON-NLS-1$
+                            toolItemRunNonIter.setToolTipText("Run Profile - Non Interactive mode");
+                            toolItemRunNonIter
+                                .addSelectionListener(new SelectionAdapter() {
+                                    public void widgetSelected(SelectionEvent evt) {
+                                        runProfile( profileList.getSelectedProfile(), false );
+                                    }
+                                });
+                        }
+
                         toolBar1.pack();
                     }
                     coolItem1.setControl(toolBar1);
@@ -297,11 +310,21 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		menuItemRunProfile.setImage( guiController.getImage( "Button_Run.png" ) ); //$NON-NLS-1$
 		menuItemRunProfile.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
-					runProfile( profileList.getSelectedProfile() );
+					runProfile( profileList.getSelectedProfile(), true );
 				}
 			}
 		);
-		
+
+		MenuItem menuItemRunProfileNonInter = new MenuItem(menuFile, SWT.PUSH);
+		menuItemRunProfileNonInter.setText("Run Profile - Non Interactive mode");
+		menuItemRunProfileNonInter.setImage( guiController.getImage( "Button_Run_Non_Inter.png" ) ); //$NON-NLS-1$
+		menuItemRunProfileNonInter.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					runProfile( profileList.getSelectedProfile(), false );
+				}
+			}
+		);
+
 		MenuItem separatorItem4 = new MenuItem(menuFile, SWT.SEPARATOR);
 
 		MenuItem menuItemDeleteProfile = new MenuItem(menuFile, SWT.PUSH);
@@ -466,7 +489,17 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		runItem.setImage( guiController.getImage( "Button_Run.png" ) ); //$NON-NLS-1$
 		runItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
-					runProfile( profileList.getSelectedProfile() );
+					runProfile( profileList.getSelectedProfile(), true );
+				}
+			}
+		);
+
+		MenuItem runNonInterItem = new MenuItem(profilePopupMenu, SWT.PUSH);
+		runNonInterItem.setText("Run Profile - Non Interactive mode");
+		runNonInterItem.setImage( guiController.getImage( "Button_Run_Non_Inter.png" ) ); //$NON-NLS-1$
+		runNonInterItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					runProfile( profileList.getSelectedProfile(), false );
 				}
 			}
 		);
@@ -592,8 +625,8 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	{
 		ProfileDetails.showProfile( getShell(), guiController.getProfileManager(), null );
 	}
-
-	public void runProfile( final Profile p )
+	
+	public void runProfile( final Profile p, final boolean interactive)
 	{
 		if( p == null )
 			return;
@@ -601,12 +634,12 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 		Thread worker = new Thread( new Runnable() {
 			public void run()
 			{
-				_doRunProfile(p);
+				_doRunProfile(p, interactive);
 			}
 		});
 		worker.start();
 	}
-	private synchronized void _doRunProfile( Profile p )
+	private synchronized void _doRunProfile( Profile p, boolean interactive )
 	{
 	    TaskTree t = null;
         try {
@@ -638,7 +671,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
             	guiController.showBusyCursor( false );
 			}
 			if( t != null )
-			    TaskDecisionList.show( guiController, p, t );
+			    TaskDecisionList.show( guiController, p, t, interactive );
             
         } catch( Exception e ) {
             ExceptionHandler.reportException( e );
