@@ -10,7 +10,7 @@ import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
 import net.sourceforge.fullsync.fs.buffering.syncfiles.SyncFilesBufferingProvider;
-import net.sourceforge.fullsync.fs.filesystems.FtpFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.CommonsVfsFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SftpFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
@@ -27,8 +27,8 @@ public class FileSystemManager
     {
         schemes = new Hashtable();
         schemes.put( "file", new LocalFileSystem() );
-        schemes.put( "ftp", new FtpFileSystem() );
-        schemes.put( "sftp", new SftpFileSystem() );
+        schemes.put( "ftp", new CommonsVfsFileSystem() );
+        schemes.put( "sftp", new CommonsVfsFileSystem() );
         schemes.put( "smb", new SmbFileSystem() );
         
         buffering = new Hashtable();

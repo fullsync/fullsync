@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><umlet_diagram><element><type>com.umlet.element.base.Class</type><coordinates><x>330</x><y>320</y><w>250</w><h>70</h></coordinates><panel_attributes>Element
+--
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.base.Class</type><coordinates><x>330</x><y>20</y><w>250</w><h>270</h></coordinates><panel_attributes>Phase
+--
+--
++getName()
++getState()
++addStateChangedListener()
++removeStateChangedListener()
++start()
++cancel()
++pause()
++resume()
++getExpectedElementCount() 
+// only the generator can REALLY
+// expect a count
++getProcessedElementCount()
++getRunningTime()
++getExpectedRunningTime()</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.base.Class</type><coordinates><x>30</x><y>20</y><w>220</w><h>270</h></coordinates><panel_attributes>Process
+--
+--
++getName()
++getState()
++addStateChangedListener()
++removeStateChangedListener()
++start()
++cancel()
++pause() // or suspend
++resume()
++getRunningTime()
++getExpectedRunningTime()
++getLogger()</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>230</x><y>160</y><w>120</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+m1=1
+m2=*</panel_attributes><additional_attributes>20;20;100;20</additional_attributes></element></umlet_diagram>

@@ -1,7 +1,9 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.File;
+import java.net.URLEncoder;
 
+import net.full.fs.ui.FileObjectChooser;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
@@ -12,6 +14,10 @@ import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.schedule.Schedule;
 
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemOptions;
+import org.apache.commons.vfs.VFS;
+import org.apache.commons.vfs.provider.ftp.FtpFileSystemConfigBuilder;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
@@ -1025,21 +1031,48 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 
 	/** Auto-generated event handler method */
 	protected void buttonBrowseSrcWidgetSelected(SelectionEvent evt){
+        /*
 		DirectoryDialog dd = new DirectoryDialog( getShell() );
 		dd.setMessage( Messages.getString("ProfileDetails.Choose_source_dir") ); //$NON-NLS-1$
 		String str = dd.open();
 		if( str != null )
 		    textSource.setText( new File( str ).toURI().toString() );
+        */
+        try {
+            FileObjectChooser foc = new FileObjectChooser( getShell(), SWT.NULL );
+            String userinfo = URLEncoder.encode( textSourceUsername.getText() ) + ":" + URLEncoder.encode( textSourcePassword.getText() );
+            foc.setBaseFileObject( VFS.getManager().resolveFile( textSource.getText().replaceFirst("//", "//"+userinfo) ) );
+            if( foc.open() == 1 )
+            {
+                textSource.setText( foc.getSelectedFileObject().getName().getURI() );
+            }
+        } catch( FileSystemException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 	}
 
 	/** Auto-generated event handler method */
 	protected void buttonBrowseDstWidgetSelected(SelectionEvent evt){
+        /*
 		DirectoryDialog dd = new DirectoryDialog( getShell() );
 		dd.setMessage( Messages.getString("ProfileDetails.Choose_source_dir") ); //$NON-NLS-1$
 		String str = dd.open();
 		if( str != null )
 		    textDestination.setText( new File( str ).toURI().toString() );
-
+            */
+        try {
+            FileObjectChooser foc = new FileObjectChooser( getShell(), SWT.NULL );
+            String userinfo = URLEncoder.encode( textDestinationUsername.getText() ) + ":" + URLEncoder.encode( textDestinationPassword.getText() );
+            foc.setBaseFileObject( VFS.getManager().resolveFile( textDestination.getText().replaceFirst("//", "//"+userinfo+"@") ) );
+            if( foc.open() == 1 )
+            {
+                textSource.setText( foc.getSelectedFileObject().getName().getURI() );
+            }
+        } catch( FileSystemException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 	}
 	
 	protected void selectRuleSetButton(Button button) {

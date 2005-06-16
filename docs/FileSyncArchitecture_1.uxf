@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><umlet_diagram><element><type>com.umlet.element.base.Class</type><coordinates><x>370</x><y>10</y><w>230</w><h>320</h></coordinates><panel_attributes>FileSyncElement
+                   Element
+--
+-relativePath: String
+-sourceFile: File // lazy loaded
+-destinationFile: File // lazy loaded
+// what about buffering?
+-actions: Action[]
+-currentAction: int
+--
++getSourceFile(): File
++getDestinationFile(): File
++getRelativePath(): String
++getCurrentAction(): Action
++getActions(): Action[]
++setActions( Action[] )
+// using lists?
+// what about states?
+</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>240</x><y>80</y><w>150</w><h>40</h></coordinates><panel_attributes>lt=&lt;-
+m1=1</panel_attributes><additional_attributes>20;20;130;20</additional_attributes></element><element><type>com.umlet.element.base.Class</type><coordinates><x>20</x><y>10</y><w>240</w><h>140</h></coordinates><panel_attributes>FileSyncInputElement
+--
+-source: Site
+-destination: Site
+-rulesProvider: RulesProvider
+--
++getSource(): Site
++getDestination(): Site
++getRulesProvider(): RulesProvider</panel_attributes><additional_attributes></additional_attributes></element></umlet_diagram>
