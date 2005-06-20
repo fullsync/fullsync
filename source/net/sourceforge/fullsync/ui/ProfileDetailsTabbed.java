@@ -2,6 +2,7 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 import java.net.URISyntaxException;
@@ -126,10 +127,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	private Text textName;
 	
 	private Tree directoryTree;
-//	private Vector includedDirs = new Vector();
-//	private Vector excludedDirs = new Vector();
-//	private Vector filterDirs = new Vector();
-	private Vector filteredItems = new Vector();
+	private Vector treeItemsWithFilter = new Vector();
+	private HashMap itemsMap;
 	private Site sourceSite;
 	private FileSystemManager fsm = new FileSystemManager();
 	
@@ -412,7 +411,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 										.getString("ProfileDetails.Source.ToolTip")); //$NON-NLS-1$
 								textSource.addModifyListener(new ModifyListener() {
 									public void modifyText(ModifyEvent arg0) {
-										closeSourceSite();									}
+										closeSourceSite();									
+									}
 								});
 							}
 							{
@@ -665,16 +665,12 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 											if (buttonUseFileFilter
 													.getSelection()) {
 												label18.setEnabled(true);
-//												comboFilterType
-//												.setEnabled(true);
 												buttonFileFilter
 												.setEnabled(true);
 												labelFilterDescription
 												.setEnabled(true);
 											} else {
 												label18.setEnabled(false);
-//												comboFilterType
-//												.setEnabled(false);
 												buttonFileFilter
 												.setEnabled(false);
 												labelFilterDescription
@@ -843,7 +839,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 								{
 									Button buttonFilter = new Button(compositeButtons, SWT.PUSH
 											| SWT.CENTER);
-									buttonFilter.setText("Add Filter Override...");
+									buttonFilter.setText("Set Filter...");
 									
 									buttonFilter.addSelectionListener(new SelectionAdapter() {
 										public void widgetSelected(SelectionEvent arg0) {
@@ -862,11 +858,10 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 											FileFilter newfilter = page.getFileFilter();
 											if (newfilter != null) {
 												selectedItem.setData(FILTER_KEY, newfilter);
-												filteredItems.add(selectedItem);
-												String text = selectedItem.getText();
-												if (text.charAt(0) != '*') {
-													selectedItem.setText('*'+text);
-												}
+												treeItemsWithFilter.add(selectedItem);
+												File file = (File)selectedItem.getData();
+												itemsMap.put(file.getPath(), newfilter);
+												markItem(selectedItem);
 											}
 										}
 									});
@@ -874,7 +869,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 								{
 									Button buttonRemoveFilter = new Button(compositeButtons, SWT.PUSH
 											| SWT.CENTER);
-									buttonRemoveFilter.setText("Remove Filter Override");
+									buttonRemoveFilter.setText("Remove Filter");
 									
 									buttonRemoveFilter.addSelectionListener(new SelectionAdapter() {
 										public void widgetSelected(SelectionEvent arg0) {
@@ -885,11 +880,10 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 											}
 											
 											TreeItem selectedItem = selectedItems[0];
-											filteredItems.remove(selectedItem);
-											String text = selectedItem.getText();
-											if (text.charAt(0) == '*') {
-												selectedItem.setText(text.substring(1));
-											}
+											treeItemsWithFilter.remove(selectedItem);
+											File file = (File)selectedItem.getData();
+											itemsMap.remove(file.getPath());
+											unmarkItem(selectedItem);
 										}
 									});
 								}
@@ -997,7 +991,10 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			}
 			FileFilterTree fileFilterTree = simpleDesc.getFileFilterTree();
 			if (fileFilterTree != null) {
-//				TODO Continue @@@@
+				itemsMap = fileFilterTree.getItemsMap();
+			}
+			else {
+				itemsMap = new HashMap();
 			}
 		} else {
 			selectRuleSetButton(rbAdvancedRuleSet);
@@ -1023,6 +1020,11 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 					item.setText(file.getName());
 					item.setImage(GuiController.getInstance().getImage("Node_Directory.png"));
 					item.setData(file);
+					if (itemsMap.containsKey(file.getPath())) {
+						markItem(item);
+						treeItemsWithFilter.add(item);
+						item.setData(FILTER_KEY, itemsMap.get(file.getPath()));
+					}
 					addChildren(file, item);
 					item.setData(EXPANDED_KEY, new Object());
 				}
@@ -1044,10 +1046,30 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 				childrenItem.setText(file.getName());
 				childrenItem.setImage(GuiController.getInstance().getImage("Node_Directory.png"));
 				childrenItem.setData(file);
+				if (itemsMap.containsKey(file.getPath())) {
+					markItem(childrenItem);
+					treeItemsWithFilter.add(childrenItem);
+					childrenItem.setData(FILTER_KEY, itemsMap.get(file.getPath()));
+				}
 			}
 		}
 	}
 
+	private void markItem(TreeItem item) {
+		String text = item.getText();
+		if (text.charAt(0) != '*') {
+			item.setText('*'+text);
+		}
+	}
+
+	private void unmarkItem(TreeItem item) {
+		String text = item.getText();
+		if (text.charAt(0) == '*') {
+			item.setText(text.substring(1));
+		}
+	}
+	
+	
 //	private void updateDirectoryTree(TreeItem rootItem, Color defaultColor) {
 //		Color theColor = defaultColor;
 //		if (rootItem != null) {
@@ -1100,6 +1122,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	
 	public void apply()
 	{
+		closeSourceSite();
+		
 		ConnectionDescription src, dst;
 		try {
 			src = getSourceConnection();
@@ -1193,6 +1217,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 
 	/** Auto-generated event handler method */
 	protected void buttonCancelWidgetSelected(SelectionEvent evt){
+		closeSourceSite();
 		getShell().dispose();
 	}
 	
@@ -1319,10 +1344,10 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	}
 
 	private FileFilterTree getFileFilterTree() {
-		int numOfNodes = filteredItems.size();
+		int numOfNodes = treeItemsWithFilter.size();
 		FileFilterTree fileFilterTree = new FileFilterTree();
 		for (int i = 0; i < numOfNodes; i++) {
-			TreeItem item = (TreeItem)filteredItems.get(i);
+			TreeItem item = (TreeItem)treeItemsWithFilter.get(i);
 			FileFilter itemFilter = (FileFilter)item.getData(FILTER_KEY);
 			File itemFile = (File)item.getData();
 			fileFilterTree.addFileFilter(itemFile.getPath(), itemFilter);

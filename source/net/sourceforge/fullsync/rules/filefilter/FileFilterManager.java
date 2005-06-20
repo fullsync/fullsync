@@ -13,7 +13,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
 /**
  * @author Michele Aiello
@@ -32,7 +31,7 @@ public class FileFilterManager {
 			Element ruleElement = serializeRule(rules[i], document);
 			filterElement.appendChild(ruleElement);
 		}
-		
+				
 		return filterElement;
 	}
 
@@ -43,11 +42,11 @@ public class FileFilterManager {
 		ruleElement.setAttribute("ruletype", ruleType);
 		serializeRuleAttributes(fileFilterRule, ruleElement);
 		
-		String desc = fileFilterRule.toString();
-		Element descriptionElement = document.createElement("Description");
-		Text descNode = document.createTextNode(desc);
-		descriptionElement.appendChild(descNode);
-		ruleElement.appendChild(descriptionElement);
+//		String desc = fileFilterRule.toString();
+//		Element descriptionElement = document.createElement("Description");
+//		Text descNode = document.createTextNode(desc);
+//		descriptionElement.appendChild(descNode);
+//		ruleElement.appendChild(descriptionElement);
 		
 		return ruleElement;
 	}
@@ -70,6 +69,7 @@ public class FileFilterManager {
 		fileFilter.setFilterType(filter_type);
 		
 		boolean applies = Boolean.valueOf(fileFilterElement.getAttribute("appliestodir")).booleanValue();
+		fileFilter.setAppliesToDirectories(applies);
 		
 		NodeList ruleList = fileFilterElement.getElementsByTagName("FileFilterRule");
 		int numOfRules = ruleList.getLength();

@@ -3,6 +3,7 @@
  */
 package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
 
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -13,15 +14,19 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 public class FileFilterTree {
 		
 	private FileFilterTreeItem root;
+	private HashMap itemsMap;
+	
 	// TODO is this the correct path separator?
 	private String separator = "/";
 	
 	public FileFilterTree() {
 		this.root = new FileFilterTreeItem();
+		this.itemsMap = new HashMap();
 	}
 
 	public FileFilterTree(String separator) {
 		this.root = new FileFilterTreeItem();
+		this.itemsMap = new HashMap();
 		this.separator = separator;
 	}
 		
@@ -38,6 +43,7 @@ public class FileFilterTree {
 			item = children;
 		}
 		item.setFilter(filter);
+		itemsMap.put(key, filter);
 	}
 	
 	public FileFilter getFilter(String key) {
@@ -64,7 +70,9 @@ public class FileFilterTree {
 		return parentFilter;
 	}
 	
-	
+	public HashMap getItemsMap() {
+		return itemsMap;
+	}
 	
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();

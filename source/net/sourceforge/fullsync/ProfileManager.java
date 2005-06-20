@@ -554,8 +554,9 @@ public class ProfileManager
     		try {
     			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
     			Document doc = docBuilder.newDocument();
-	
+	    			
     			Element e = doc.createElement( "Profiles" );
+    			e.setAttribute("version", "1.0");
     			Enumeration en = profiles.elements();
     			while( en.hasMoreElements() )
     			{

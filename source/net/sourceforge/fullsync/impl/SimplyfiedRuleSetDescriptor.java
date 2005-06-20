@@ -3,6 +3,11 @@
  */
 package net.sourceforge.fullsync.impl;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -75,10 +80,27 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		simpleRuleSetElement.setAttribute("takePattern", getTakePattern());
 		simpleRuleSetElement.setAttribute("useFilter", String.valueOf(isUseFilter()));
 		
+		FileFilterManager filterManager = new FileFilterManager();
+
 		if (fileFilter != null) {
-			FileFilterManager filterManager = new FileFilterManager();
 			Element fileFilterElement = filterManager.serializeFileFilter(getFileFilter(), document, "FileFilter");
 			simpleRuleSetElement.appendChild(fileFilterElement);
+		}
+		
+		if (fileFilterTree != null) {
+			HashMap itemsMap = fileFilterTree.getItemsMap();
+			Set entrySet = itemsMap.entrySet();
+			Iterator it = entrySet.iterator();
+			while (it.hasNext()) {
+				Map.Entry entry = (Map.Entry)it.next();
+				String path = (String)entry.getKey();
+				FileFilter filter = (FileFilter)entry.getValue();
+				Element subdirFilterElement = document.createElement("SubdirectoryFileFilter");
+				subdirFilterElement.setAttribute("path", path);
+				Element fileFilterElement = filterManager.serializeFileFilter(filter, document, "FileFilter");
+				subdirFilterElement.appendChild(fileFilterElement);
+				simpleRuleSetElement.appendChild(subdirFilterElement);
+			}
 		}
 		
 		return simpleRuleSetElement;
@@ -95,6 +117,8 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 			useFilter = false;
 			ignorePattern = "";
 			takePattern = "";
+			fileFilter = null;
+			fileFilterTree = null;
 		}
 		else {
 			Element simpleRuleSetConfigElement = (Element)ruleSetConfigNodeList.item(0);
@@ -109,7 +133,23 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 			NodeList fileFilterNodeList = simpleRuleSetConfigElement.getElementsByTagName("FileFilter");
 			if (fileFilterNodeList.getLength() > 0) {
 				FileFilterManager filterManager = new FileFilterManager();
-				fileFilter = filterManager.unserializeFileFilter((Element)fileFilterNodeList.item(0));
+				Element fileFilterElement = (Element)fileFilterNodeList.item(0);
+				fileFilter = filterManager.unserializeFileFilter(fileFilterElement);
+				
+				NodeList subdirFiltersNodeList = simpleRuleSetConfigElement.getElementsByTagName("SubdirectoryFileFilter");
+				int numOfDirs = subdirFiltersNodeList.getLength();
+				fileFilterTree = new FileFilterTree();
+				for (int i = 0; i < numOfDirs; i++) {
+					Element subDirElement = (Element)subdirFiltersNodeList.item(i);
+					String path = subDirElement.getAttribute("path");
+					fileFilterNodeList = subDirElement.getElementsByTagName("FileFilter");
+					if (fileFilterNodeList.getLength() > 0) {
+						Element subDirFileFilterElement = (Element)fileFilterNodeList.item(0);
+						FileFilter subDirFileFilter = filterManager.unserializeFileFilter(subDirFileFilterElement);
+
+						fileFilterTree.addFileFilter(path, subDirFileFilter);
+					}
+				}
 			}
 			else {
 				fileFilter = null;
