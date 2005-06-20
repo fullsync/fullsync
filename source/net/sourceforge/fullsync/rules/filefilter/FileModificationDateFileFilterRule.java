@@ -4,6 +4,7 @@
 package net.sourceforge.fullsync.rules.filefilter;
 
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
@@ -54,8 +55,13 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 		return date;
 	}
 
-	public boolean match(File file) {
-		long lastModified = file.getFileAttributes().getLastModified();
+	public boolean match(File file) throws FilterRuleNotAppliableException {
+		FileAttributes attrs = file.getFileAttributes();
+		if (attrs == null) {
+			throw new FilterRuleNotAppliableException("The file doesn't have any size attribute");
+		}
+
+		long lastModified = attrs.getLastModified();
 		switch (op) {
 			case OP_IS:
 				return date.equals(lastModified);

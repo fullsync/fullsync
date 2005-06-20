@@ -630,7 +630,16 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 	{
 		if( p == null )
 			return;
-		
+
+		if (!interactive) {
+    		MessageBox mb = new MessageBox( getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO );
+    		mb.setText( Messages.getString("MainWindow.Confirmation") ); //$NON-NLS-1$
+    		mb.setMessage("You're about to start the profile in non-interactive mode.\n Are you sure?");
+    		if( mb.open() != SWT.YES ) {
+    			return;
+    		}
+    	}
+
 		Thread worker = new Thread( new Runnable() {
 			public void run()
 			{

@@ -42,6 +42,7 @@ import org.eclipse.swt.SWT;
  */
 public class FileFilterDetails extends Composite {
 		
+	private Combo comboFilterType;
 	private Label label1;
 	private Combo comboMatchType;
 	private Label label2;
@@ -49,6 +50,7 @@ public class FileFilterDetails extends Composite {
 	private Composite compositeRuleList;
 	private Button buttonFewer;
 	private Button buttonMore;
+	private Button buttonAppliesToDir;
 	
 	private Color whiteColor = new Color(null, 255, 255, 255);
 	
@@ -99,12 +101,26 @@ public class FileFilterDetails extends Composite {
 	private void initGUI() {
 		try {
 			GridLayout thisLayout = new GridLayout();
+			thisLayout.makeColumnsEqualWidth = false;
 			this.setLayout(thisLayout);
-			thisLayout.numColumns = 3;
+			thisLayout.numColumns = 4;
 			this.setSize(459, 433);
 			{
+				GridData comboFilterTypeLData = new GridData();
+				comboFilterTypeLData.widthHint = 60;
+				comboFilterTypeLData.heightHint = 21;
+				comboFilterType = new Combo(
+						this,
+						SWT.DROP_DOWN | SWT.READ_ONLY);
+				comboFilterType
+				.setLayoutData(comboFilterTypeLData);
+				comboFilterType.add("Include");
+				comboFilterType.add("Exclude");
+			}
+
+			{
 				label1 = new Label(this, SWT.NONE);
-				label1.setText("Match");
+				label1.setText(" any file that matches ");
 			}
 			{
 				comboMatchType = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -117,7 +133,7 @@ public class FileFilterDetails extends Composite {
 			}
 			{
 				GridData scrolledComposite1LData = new GridData();
-				scrolledComposite1LData.horizontalSpan = 3;
+				scrolledComposite1LData.horizontalSpan = 4;
 				scrolledComposite1LData.heightHint = 298;
 				scrolledComposite1LData.horizontalAlignment = GridData.FILL;
 				scrolledComposite1LData.grabExcessVerticalSpace = true;
@@ -135,31 +151,55 @@ public class FileFilterDetails extends Composite {
 				scrolledComposite1.setAlwaysShowScrollBars(false);
 			}
 			{
-				buttonMore = new Button(this, SWT.PUSH | SWT.CENTER);
-				buttonMore.setText("More");
-				buttonMore.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent evt) {
-						addRuleRow();
-						buttonFewer.setEnabled(ruleItems.size() > 1);
-					}
-				});
-			}
-			{
-				buttonFewer = new Button(this, SWT.PUSH | SWT.CENTER);
-				GridData buttonFewerLData = new GridData();
-				buttonFewerLData.horizontalSpan = 2;
-				buttonFewer.setLayoutData(buttonFewerLData);
-				buttonFewer.setText("Fewer");
-				buttonFewer.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent evt) {
-						removeRuleRow();
-						buttonFewer.setEnabled(ruleItems.size() > 1);
-					}
-				});
+				Composite buttonsComposite = new Composite(this, SWT.NULL);
+				GridLayout buttonsCompositeLayout = new GridLayout();
+				buttonsCompositeLayout.numColumns = 3;
+				GridData buttonsCompositeLData = new GridData();
+				buttonsCompositeLData.horizontalSpan = 4;
+				buttonsCompositeLData.grabExcessHorizontalSpace = true;
+				buttonsCompositeLData.horizontalAlignment = GridData.FILL;
+				buttonsComposite.setLayoutData(buttonsCompositeLData);
+				buttonsComposite.setLayout(buttonsCompositeLayout);
+				{
+					buttonMore = new Button(buttonsComposite, SWT.PUSH | SWT.CENTER);
+					buttonMore.setText("More");
+					buttonMore.addSelectionListener(new SelectionAdapter() {
+						public void widgetSelected(SelectionEvent evt) {
+							addRuleRow();
+							buttonFewer.setEnabled(ruleItems.size() > 1);
+						}
+					});
+					GridData buttonMoreLData = new GridData();
+					buttonMoreLData.horizontalAlignment = GridData.BEGINNING;
+					buttonMore.setLayoutData(buttonMoreLData);
+				}
+				{
+					buttonFewer = new Button(buttonsComposite, SWT.PUSH | SWT.CENTER);
+					buttonFewer.setText("Fewer");
+					buttonFewer.addSelectionListener(new SelectionAdapter() {
+						public void widgetSelected(SelectionEvent evt) {
+							removeRuleRow();
+							buttonFewer.setEnabled(ruleItems.size() > 1);
+						}
+					});
+					GridData buttonFewerLData = new GridData();
+					buttonFewerLData.horizontalAlignment = GridData.BEGINNING;
+					buttonFewer.setLayoutData(buttonFewerLData);
+				}
+				{
+					buttonAppliesToDir = new Button(buttonsComposite, SWT.CHECK | SWT.LEFT);
+					buttonAppliesToDir.setText("Applies to directories");
+					GridData buttonAppliesToDirLData = new GridData();
+					buttonAppliesToDirLData.horizontalAlignment = GridData.END;
+					buttonAppliesToDirLData.grabExcessHorizontalSpace = true;
+					buttonAppliesToDir.setLayoutData(buttonAppliesToDirLData);
+				}
 			}
 			
 			if (fileFilter != null) {
 				comboMatchType.select(fileFilter.getMatchType());
+				comboFilterType.select(fileFilter.getFilterType());
+				buttonAppliesToDir.setSelection(fileFilter.appliesToDirectories());
 				FileFilterRule[] rules = fileFilter.getFileFiltersRules();
 				for (int i = 0; i < rules.length; i++) {
 					addRuleRow(rules[i].getRuleType(), rules[i].getOperator(), rules[i].getValue());
@@ -167,6 +207,8 @@ public class FileFilterDetails extends Composite {
 			}
 			else {
 				comboMatchType.select(0);
+				comboFilterType.select(0);
+				buttonAppliesToDir.setSelection(true);
 				addRuleRow();
 			}
 			buttonFewer.setEnabled(ruleItems.size() > 1);			
@@ -199,7 +241,13 @@ public class FileFilterDetails extends Composite {
 			FilterRuleListItem ruleItem = (FilterRuleListItem)ruleItems.elementAt(i);
 			ruleItem.init(compositeRuleList);
 		}
-		compositeRuleList.pack();		
+		compositeRuleList.pack();
+		buttonFewer.setEnabled(ruleItems.size() > 1);
+	}
+	
+	public void deleteRule(FilterRuleListItem item) {
+		ruleItems.remove(item);
+		recreateRuleList();
 	}
 	
 	protected void createCompositeRuleList() {
@@ -207,17 +255,20 @@ public class FileFilterDetails extends Composite {
 		scrolledComposite1.setContent(compositeRuleList);
         
 		GridLayout compositeRuleListLayout = new GridLayout();
-		compositeRuleListLayout.numColumns = 3;
+		compositeRuleListLayout.numColumns = 4;
 		compositeRuleListLayout.makeColumnsEqualWidth = false;
 		
 		compositeRuleList.setLayout(compositeRuleListLayout);
 		compositeRuleList.setBackground(whiteColor);
-        compositeRuleList.pack();
+//        compositeRuleList.pack();
 	}
 	
 	public FileFilter getFileFilter() {
 		fileFilter = new FileFilter();
+		
 		fileFilter.setMatchType(comboMatchType.getSelectionIndex());
+		fileFilter.setFilterType(comboFilterType.getSelectionIndex());
+		fileFilter.setAppliesToDirectories(buttonAppliesToDir.getSelection());
 		
 		FileFilterRule[] rules = new FileFilterRule[ruleItems.size()];
 		for (int i = 0; i < rules.length; i++) {
@@ -230,4 +281,7 @@ public class FileFilterDetails extends Composite {
 		fileFilter.setFileFilterRules(rules);
 		return fileFilter;
 	}
+
 }
+
+

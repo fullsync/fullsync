@@ -394,7 +394,10 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
         
         tableLogLinesFillIndex = 0;
         tableLogLinesFillCount = tableLogLines.getItemCount();
+        
+        setRedraw(false);
         addTaskChildren( taskTree.getRoot() );
+        setRedraw(true);
         
         // index is always pointing at the next free slot
         if( tableLogLinesFillIndex < tableLogLinesFillCount )

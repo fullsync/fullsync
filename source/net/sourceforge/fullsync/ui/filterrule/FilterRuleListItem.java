@@ -20,8 +20,10 @@ import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 import net.sourceforge.fullsync.ui.FileFilterDetails;
+import net.sourceforge.fullsync.ui.GuiController;
 
 import org.eclipse.swt.SWT;
+
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -30,6 +32,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * @author Michele Aiello
@@ -80,13 +84,16 @@ public class FilterRuleListItem implements ValueChangedListener {
 	}
 	
 	public void init(final Composite composite) {
+		final FilterRuleListItem ruleItem = this;
+		
 		final Combo comboRuleTypes = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		final Combo comboOperators = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		
 		comboRuleTypes.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent evt) {
 				ruleType = comboRuleTypes.getText();
-				// TODO should I dispose all the widgets created here or are they disposed automatically because the parent is disposed?
+				// TODO should I dispose all the widgets created here or are they disposed 
+				// automatically because the parent is disposed?
 				root.recreateRuleList();
 			}
 		});
@@ -191,9 +198,19 @@ public class FilterRuleListItem implements ValueChangedListener {
 			
 			textValue.setEditable(false);
 			textValue.setBackground(whiteColor);
+		}		
+		{
+            ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
+            toolBar.setBackground(whiteColor);
+            ToolItem toolItemDelete = new ToolItem(toolBar, SWT.PUSH);
+            toolItemDelete.setImage(GuiController.getInstance().getImage("Rule_Delete.png")); //$NON-NLS-1$
+            toolItemDelete.setToolTipText("Delete");
+            toolItemDelete.addSelectionListener(new SelectionAdapter() {
+            	public void widgetSelected(SelectionEvent evt) {
+            		root.deleteRule(ruleItem);
+            	}
+            });
 		}
-		
-		//		valueComposite.pack();
 	}
 	
 }

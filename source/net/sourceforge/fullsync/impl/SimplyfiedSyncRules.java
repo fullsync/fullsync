@@ -13,6 +13,7 @@ import net.sourceforge.fullsync.rules.PatternRule;
 import net.sourceforge.fullsync.rules.Rule;
 import net.sourceforge.fullsync.rules.WildcardRule;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
+import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 
 /**
  * @author Michele Aiello
@@ -34,7 +35,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	private Rule takeRule;
 	
 	private FileFilter fileFilter;
-	private boolean filterSelectsFiles;
+	private FileFilterTree fileFilterTree;
 	
 	private boolean useFilter;
 	
@@ -125,16 +126,16 @@ public class SimplyfiedSyncRules implements RuleSet {
 		this.fileFilter = fileFilter;
 	}
 	
-	public boolean getFilterSelectsFiles() {
-		return filterSelectsFiles;
-	}
-	
-	public void setFilterSelectsFiles(boolean bool) {
-		this.filterSelectsFiles = bool;
-	}
-	
 	public void setUseFilter(boolean bool) {
 		this.useFilter = bool;
+	}
+	
+	public void setFileFilterTree(FileFilterTree fileFilterTree) {
+		this.fileFilterTree = fileFilterTree;
+	}
+	
+	public FileFilterTree getFileFilterTree() {
+		return fileFilterTree;
 	}
 	
 	/**
@@ -159,35 +160,22 @@ public class SimplyfiedSyncRules implements RuleSet {
 			return false;
 		}
 		
+		FileFilter filterToUse = fileFilter;
+		
+		if (fileFilterTree != null) {
+			FileFilter subFilter = fileFilterTree.getFilter(node.getPath());
+			if (subFilter != null) {
+				filterToUse = subFilter;
+			}
+		}
+		
 		boolean take = true;
 		
-		if (fileFilter != null) {
-			take = fileFilter.match(node);
-		}
-		if (!filterSelectsFiles) {
-			take = !take;
+		if (filterToUse != null) {
+			take = filterToUse.match(node);
 		}
 		
 		return !take;
-//		boolean take = true;
-//		
-//		if (take) {
-//			if (ignoreRule != null) {
-//				take = !ignoreRule.accepts(node);
-//			}
-//			else {
-//				if (takeRule != null)
-//					take = false;
-//			}
-//		}
-//		
-//		if (!take) {
-//			if (takeRule != null) {
-//				take = takeRule.accepts(node);
-//			}
-//		}
-//		
-//		return !take;
 	}
 	
 	/**

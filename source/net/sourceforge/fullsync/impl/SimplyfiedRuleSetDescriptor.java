@@ -9,6 +9,7 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.FileFilterManager;
 import net.sourceforge.fullsync.rules.filefilter.FileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FileNameFileFilterRule;
+import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 import org.w3c.dom.Document;
@@ -25,26 +26,36 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	private String takePattern;
 	private String patternsType;
 	private FileFilter fileFilter;
-	private boolean filterSelectsFiles;
 	private boolean useFilter;
+	private FileFilterTree fileFilterTree;
 	
 	public SimplyfiedRuleSetDescriptor() {
 		
 	}
 	
 	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, String ignorePatter, String acceptPatter, 
-			String patternsType, FileFilter fileFilter, 
-			boolean filterSelectsFiles, boolean useFilter) 
+			String patternsType, FileFilter fileFilter, boolean useFilter, FileFilterTree fileFilterTree) 
 	{
 		this.syncSubDirs = syncSubDirs;
 		this.ignorePattern = ignorePatter;
 		this.takePattern = acceptPatter;
 		this.patternsType = patternsType;
 		this.fileFilter = fileFilter;
-		this.filterSelectsFiles = filterSelectsFiles;
 		this.useFilter = useFilter;
+		this.fileFilterTree = fileFilterTree;
 	}
-	
+
+	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, FileFilter fileFilter, boolean useFilter, FileFilterTree fileFilterTree) 
+	{
+		this.syncSubDirs = syncSubDirs;
+		this.ignorePattern = "";
+		this.takePattern = "";
+		this.patternsType = "";
+		this.fileFilter = fileFilter;
+		this.useFilter = useFilter;
+		this.fileFilterTree = fileFilterTree;
+	}
+
 	/**
 	 * @see net.sourceforge.fullsync.RuleSetDescriptor#getType()
 	 */
@@ -62,7 +73,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		simpleRuleSetElement.setAttribute("patternsType", getPatternsType());
 		simpleRuleSetElement.setAttribute("ignorePattern", getIgnorePattern());
 		simpleRuleSetElement.setAttribute("takePattern", getTakePattern());
-		simpleRuleSetElement.setAttribute("filterSelectsFiles", String.valueOf(isFilterSelectsFiles()));
 		simpleRuleSetElement.setAttribute("useFilter", String.valueOf(isUseFilter()));
 		
 		if (fileFilter != null) {
@@ -92,10 +102,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 			patternsType = simpleRuleSetConfigElement.getAttribute("patternsType");
 			ignorePattern = simpleRuleSetConfigElement.getAttribute("ignorePattern");
 			takePattern = simpleRuleSetConfigElement.getAttribute("takePattern");
-			String filterSelectsStr = simpleRuleSetConfigElement.getAttribute("filterSelectsFiles");
-			if ((filterSelectsStr != null) && (!filterSelectsStr.equals(""))) {
-				filterSelectsFiles = Boolean.valueOf(filterSelectsStr).booleanValue();
-			}
 			String useFilterStr = simpleRuleSetConfigElement.getAttribute("useFilter");
 			if ((useFilterStr != null) && (!useFilterStr.equals(""))) {
 				useFilter = Boolean.valueOf(useFilterStr).booleanValue();
@@ -109,27 +115,27 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 				fileFilter = null;
 				if (patternsType.equals("RegExp")) {
 					if (!ignorePattern.equals("") && (takePattern.equals(""))){
-						filterSelectsFiles = false;
 						fileFilter = new FileFilter();
 						fileFilter.setMatchType(FileFilter.MATCH_ALL);
+						fileFilter.setFilterType(FileFilter.EXCLUDE);
 						FileFilterRule[] rules = new FileFilterRule[] {new FileNameFileFilterRule(new TextValue(ignorePattern),
 								FileNameFileFilterRule.OP_MATCHES_REGEXP)};
 						fileFilter.setFileFilterRules(rules);
 						useFilter = true;
 					}
 					if (ignorePattern.equals("") && (!takePattern.equals(""))){
-						filterSelectsFiles = true;
 						fileFilter = new FileFilter();
 						fileFilter.setMatchType(FileFilter.MATCH_ALL);
+						fileFilter.setFilterType(FileFilter.INCLUDE);
 						FileFilterRule[] rules = new FileFilterRule[] {new FileNameFileFilterRule(new TextValue(takePattern),
 								FileNameFileFilterRule.OP_MATCHES_REGEXP)};
 						fileFilter.setFileFilterRules(rules);
 						useFilter = true;
 					}
 					if (!ignorePattern.equals("") && (!takePattern.equals(""))) {
-						filterSelectsFiles = false;
 						fileFilter = new FileFilter();
 						fileFilter.setMatchType(FileFilter.MATCH_ALL);
+						fileFilter.setFilterType(FileFilter.EXCLUDE);
 						FileFilterRule[] rules = new FileFilterRule[] {
 								new FileNameFileFilterRule(new TextValue(ignorePattern), FileNameFileFilterRule.OP_MATCHES_REGEXP),
 								new FileNameFileFilterRule(new TextValue(takePattern), FileNameFileFilterRule.OP_DOESNT_MATCHES_REGEXP)
@@ -209,12 +215,16 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		this.fileFilter = filter;
 	}
 	
-	public boolean isFilterSelectsFiles() {
-		return filterSelectsFiles;
-	}
-	
 	public boolean isUseFilter() {
 		return useFilter;
+	}
+	
+	public FileFilterTree getFileFilterTree() {
+		return fileFilterTree;
+	}
+	
+	public void setFileFilterTree(FileFilterTree fileFilterTree) {
+		this.fileFilterTree = fileFilterTree;
 	}
 	
 	/**
@@ -233,8 +243,8 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		ruleSet.setIgnorePattern(ignorePattern);
 		ruleSet.setTakePattern(takePattern);
 		ruleSet.setFileFilter(fileFilter);
-		ruleSet.setFilterSelectsFiles(filterSelectsFiles);
 		ruleSet.setUseFilter(useFilter);
+		ruleSet.setFileFilterTree(fileFilterTree);
 		
 		return ruleSet;
 	}

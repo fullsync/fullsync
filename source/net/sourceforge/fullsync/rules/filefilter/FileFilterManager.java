@@ -24,6 +24,8 @@ public class FileFilterManager {
 		Element filterElement = document.createElement(elementName);
 		document.appendChild(filterElement);
 		filterElement.setAttribute("matchtype", String.valueOf(fileFilter.getMatchType()));
+		filterElement.setAttribute("filtertype", String.valueOf(fileFilter.getFilterType()));
+		filterElement.setAttribute("appliestodir", String.valueOf(fileFilter.appliesToDirectories()));
 
 		FileFilterRule[] rules = fileFilter.getFileFiltersRules();
 		for (int i = 0; i < rules.length; i++) {
@@ -52,13 +54,22 @@ public class FileFilterManager {
 	
 	public FileFilter unserializeFileFilter(Element fileFilterElement) {
 		FileFilter fileFilter = new FileFilter();
-		int match_type = -1;
+		int match_type = 0;
 
 		try {
 			match_type = Integer.parseInt(fileFilterElement.getAttribute("matchtype"));
 		} catch (NumberFormatException e) {
 		}
 		fileFilter.setMatchType(match_type);
+		
+		int filter_type = 0;
+		try {
+			filter_type = Integer.parseInt(fileFilterElement.getAttribute("filtertype"));
+		} catch (NumberFormatException e) {
+		}
+		fileFilter.setFilterType(filter_type);
+		
+		boolean applies = Boolean.valueOf(fileFilterElement.getAttribute("appliestodir")).booleanValue();
 		
 		NodeList ruleList = fileFilterElement.getElementsByTagName("FileFilterRule");
 		int numOfRules = ruleList.getLength();

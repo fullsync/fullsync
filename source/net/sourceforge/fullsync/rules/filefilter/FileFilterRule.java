@@ -21,7 +21,7 @@ public interface FileFilterRule extends Serializable {
 		
 	public OperandValue getValue();
 	
-	public boolean match(File file);
+	public boolean match(File file) throws FilterRuleNotAppliableException;
 	
 	public abstract String toString();
 

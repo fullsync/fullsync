@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.Text;
 public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 
 	private ProfileManager profileManager;
-	private Combo comboFilterType;
 	private Label label18;
 	private Button buttonFileFilter;
 	private Combo comboPatternsType;
@@ -437,13 +436,11 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 							public void widgetSelected(SelectionEvent evt) {
 								if (buttonUseFileFilter.getSelection()) {
 									label18.setEnabled(true);
-									comboFilterType.setEnabled(true);
 									buttonFileFilter.setEnabled(true);
 									labelFilterDescription.setEnabled(true);
 								}
 								else {
 									label18.setEnabled(false);
-									comboFilterType.setEnabled(false);
 									buttonFileFilter.setEnabled(false);
 									labelFilterDescription.setEnabled(false);
 								}
@@ -453,18 +450,6 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 					{
 						label18 = new Label(simplyfiedOptionsGroup, SWT.NONE);
 						label18.setText("Files Filter: ");
-					}
-					{
-						GridData comboFilterTypeLData = new GridData();
-						comboFilterTypeLData.widthHint = 60;
-						comboFilterTypeLData.heightHint = 21;
-						comboFilterType = new Combo(
-							simplyfiedOptionsGroup,
-							SWT.DROP_DOWN | SWT.READ_ONLY);
-						comboFilterType.setLayoutData(comboFilterTypeLData);
-						comboFilterType.add("Include");
-						comboFilterType.add("Exclude");
-						comboFilterType.select(0);
 					}
 					{
 						buttonFileFilter = new Button(
@@ -616,23 +601,15 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
         	else {
         		labelFilterDescription.setText("");
         	}
-        	if (simpleDesc.isFilterSelectsFiles()) {
-        		comboFilterType.select(0);
-        	}
-        	else {
-        		comboFilterType.select(1);
-        	}
         	boolean useFilter = simpleDesc.isUseFilter();
         	buttonUseFileFilter.setSelection(useFilter);
         	if (useFilter) {
 				label18.setEnabled(true);
-				comboFilterType.setEnabled(true);
 				buttonFileFilter.setEnabled(true);
 				labelFilterDescription.setEnabled(true);
         	}
         	else {
 				label18.setEnabled(false);
-				comboFilterType.setEnabled(false);
 				buttonFileFilter.setEnabled(false);
 				labelFilterDescription.setEnabled(false);
         	}
@@ -702,8 +679,8 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 					textAcceptPattern.getText(),
 					comboPatternsType.getText(),
 					filter,
-					comboFilterType.getSelectionIndex() == 0,
-					buttonUseFileFilter.getSelection());
+					buttonUseFileFilter.getSelection(),
+					null);
     	}
     	if (rbAdvancedRuleSet.getSelection()) {
     		String ruleSetName = textRuleSet.getText();

@@ -165,6 +165,9 @@ public class TaskDecisionPage implements WizardPage, Serializable
             labelProgressLData.grabExcessHorizontalSpace = true;
             labelProgress.setLayoutData(labelProgressLData);
             labelProgress.setSize(new org.eclipse.swt.graphics.Point( 42, 13));
+            Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
+            IoStatistics stats = synchronizer.getIoStatistics(taskTree);
+            labelProgress.setText("Totals: "+stats.getCountActions()+" tasks, "+stats.getBytesTransferred()+" bytes");
         }
         {
             buttonGo = new Button(compositeBottom, SWT.PUSH

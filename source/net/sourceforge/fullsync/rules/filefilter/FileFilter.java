@@ -14,12 +14,21 @@ public class FileFilter implements Serializable {
 	
 	public static final int MATCH_ALL = 0;
 	public static final int MATCH_ANY = 1;
-		
+
+	public static final int INCLUDE = 0;
+	public static final int EXCLUDE = 1;
+
 	private int match_type;
+	private int filter_type;
+	
+	private boolean appliesToDir;
+	
 	private FileFilterRule[] rules;
 	
 	public FileFilter() {
-		match_type = -1;
+		match_type = 0;
+		filter_type = 0;
+		appliesToDir = true;
 		rules = new FileFilterRule[0];
 	}
 	
@@ -31,39 +40,74 @@ public class FileFilter implements Serializable {
 		return match_type;
 	}
 	
+	public void setFilterType(int filter_type) {
+		this.filter_type = filter_type;
+	}
+	
+	public int getFilterType() {
+		return this.filter_type;
+	}
+	
 	public void setFileFilterRules(FileFilterRule[] rules) {
 		this.rules = rules;
+	}
+	
+	public void setAppliesToDirectories(boolean appliesToDir) {
+		this.appliesToDir = appliesToDir;
+	}
+	
+	public boolean appliesToDirectories() {
+		return appliesToDir;
 	}
 	
 	public FileFilterRule[] getFileFiltersRules() {
 		return this.rules;
 	}
-	
+
 	public boolean match(File file) {
+		boolean result = _match(file);
+		return (filter_type == INCLUDE)?result:!result;
+	}
+	
+	private boolean _match(File file) {
 		if (rules.length == 0) {
 			return true;
 		}
-
+				
 		switch (match_type) {
 			case MATCH_ALL: {
 				for (int i = 0; i < rules.length; i++) {
-					boolean res = rules[i].match(file);
-					if (!res) {
-						return false;
+					if ((!appliesToDir) && (file.isDirectory())) {
+						continue;
+					}
+					try {
+						boolean res = rules[i].match(file);
+						if (!res) {
+							return false;
+						}
+					} catch (FilterRuleNotAppliableException e) {
 					}
 				}
 				return true;
 			}
 		
 			case MATCH_ANY: {
-				boolean b = false;
+				int applyedRules = 0;
+
 				for (int i = 0; i < rules.length; i++) {
-					boolean res = rules[i].match(file);
-					if (res) {
-						return true;
+					if ((!appliesToDir) && (file.isDirectory())) {
+						continue;
+					}
+					try {
+						boolean res = rules[i].match(file);
+						if (res) {
+							return true;
+						}
+						applyedRules++;
+					} catch (FilterRuleNotAppliableException e) {
 					}
 				}
-				return false;
+				return (applyedRules == 0);
 			}
 			default:
 				return true;
@@ -74,7 +118,18 @@ public class FileFilter implements Serializable {
 		if (rules.length == 0) {
 			return "Empty filter";
 		}
-		StringBuffer buff = new StringBuffer(30*rules.length);
+		StringBuffer buff = new StringBuffer(25+30*rules.length);
+		
+		switch (filter_type) {
+			case INCLUDE:
+				buff.append("Include");
+				break;
+			case EXCLUDE:
+				buff.append("Exclude");
+				break;
+		}
+		
+		buff.append(" any file where ");
 		
 		for (int i = 0; i < rules.length-1; i++) {
 			buff.append(rules[i].toString());
