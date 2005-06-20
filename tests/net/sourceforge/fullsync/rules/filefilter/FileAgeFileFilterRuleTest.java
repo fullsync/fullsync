@@ -22,7 +22,7 @@ public class FileAgeFileFilterRuleTest extends TestCase {
 		SystemDate.getInstance().setUseSystemTime();
 	}
 	
-	public void testOpIs() throws ParseException {
+	public void testOpIs() throws FilterRuleNotAppliableException, ParseException {
 		SystemDate.getInstance().setTimeSpeed(0);
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:01").getTime());
 		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.SECONDS), FileAgeFileFilterRule.OP_IS);
@@ -32,7 +32,7 @@ public class FileAgeFileFilterRuleTest extends TestCase {
 		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, dateFormat.parse("01/02/2005 10:00:00").getTime())));
 	}
 
-	public void testOpIsnt() throws ParseException {
+	public void testOpIsnt() throws FilterRuleNotAppliableException, ParseException {
 		SystemDate.getInstance().setTimeSpeed(0);
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:01").getTime());
 		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.SECONDS), FileAgeFileFilterRule.OP_ISNT);
@@ -42,7 +42,7 @@ public class FileAgeFileFilterRuleTest extends TestCase {
 		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, dateFormat.parse("01/02/2005 10:00:00").getTime())));
 	}
 
-	public void testOpIsGreaterThan() throws ParseException {
+	public void testOpIsGreaterThan() throws FilterRuleNotAppliableException, ParseException {
 		SystemDate.getInstance().setTimeSpeed(0);
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:00").getTime());
 		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.SECONDS), FileAgeFileFilterRule.OP_IS_GREATER_THAN);
@@ -58,7 +58,7 @@ public class FileAgeFileFilterRuleTest extends TestCase {
 		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, dateFormat.parse("01/01/2005 09:59:58").getTime())));
 	}
 
-	public void testOpIsLessThan() throws ParseException {
+	public void testOpIsLessThan() throws FilterRuleNotAppliableException, ParseException {
 		SystemDate.getInstance().setTimeSpeed(0);
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:00").getTime());
 		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(10, AgeValue.SECONDS), FileAgeFileFilterRule.OP_IS_LESS_THAN);

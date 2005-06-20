@@ -16,7 +16,7 @@ import junit.framework.TestCase;
  */
 public class FileModificationDateFileFilterRuleTest extends TestCase {
 
-	public void testOpIs() throws ParseException {
+	public void testOpIs() throws ParseException, FilterRuleNotAppliableException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(
