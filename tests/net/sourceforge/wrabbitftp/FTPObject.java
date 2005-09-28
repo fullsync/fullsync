@@ -1,6 +1,12 @@
 package net.sourceforge.wrabbitftp;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 /**
 *	The FTPObject class abstracts all files, directories, virtual roots, and drives

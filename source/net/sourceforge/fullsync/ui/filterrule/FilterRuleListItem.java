@@ -23,7 +23,6 @@ import net.sourceforge.fullsync.ui.FileFilterDetails;
 import net.sourceforge.fullsync.ui.GuiController;
 
 import org.eclipse.swt.SWT;
-
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;

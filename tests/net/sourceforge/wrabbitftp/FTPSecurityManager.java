@@ -1,5 +1,5 @@
 package net.sourceforge.wrabbitftp;
-import java.util.*;
+import java.util.Vector;
 
 /**
 *	The FTPSecurityManager is a helper class which validates permissions (since they

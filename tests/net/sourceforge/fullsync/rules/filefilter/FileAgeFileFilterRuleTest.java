@@ -6,9 +6,9 @@ package net.sourceforge.fullsync.rules.filefilter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import junit.framework.TestCase;
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
-import junit.framework.TestCase;
 
 /**
  * @author Michele Aiello

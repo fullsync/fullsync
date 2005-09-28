@@ -3,11 +3,11 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
+import junit.framework.TestCase;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
-import junit.framework.TestCase;
 
 /**
  * @author Michele Aiello

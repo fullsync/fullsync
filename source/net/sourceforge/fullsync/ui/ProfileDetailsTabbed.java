@@ -1,12 +1,12 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 
 import net.full.fs.ui.FileObjectChooser;
 import net.sourceforge.fullsync.ConnectionDescription;

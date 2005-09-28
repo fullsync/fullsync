@@ -4,8 +4,8 @@
 package net.sourceforge.fullsync.rules.filefilter;
 
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
+import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 /**
  * @author Michele Aiello

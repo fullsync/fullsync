@@ -285,11 +285,6 @@ public class NiceListViewItem extends Canvas implements Listener
 		    children[i].addListener( SWT.MouseDown, this );
 		}
 	}
-	/*
-	public boolean isFocusControl()
-    {
-        return true;
-    }*/
     public ProfileListControlHandler getHandler()
     {
         return handler;

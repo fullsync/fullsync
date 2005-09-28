@@ -6,6 +6,9 @@ package net.sourceforge.fullsync.ui;
 /**
  * @author Michele Aiello
  */
-public abstract class WizardDialogAdapter implements WizardDialogListener {
-	
+public class WizardDialogAdapter implements WizardDialogListener 
+{
+    public void dialogOpened( WizardDialog dialog )
+    {
+    }
 }

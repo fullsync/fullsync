@@ -3,9 +3,9 @@
  */
 package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
 
+import junit.framework.TestCase;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.TestNode;
-import junit.framework.TestCase;
 
 /**
  * @author Michele Aiello

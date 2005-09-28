@@ -5,17 +5,17 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.Action;
-import net.sourceforge.fullsync.TaskExecutor;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskExecutor;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.buffer.ExecutionBuffer;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.buffer.EntryFinishedListener;
+import net.sourceforge.fullsync.buffer.ExecutionBuffer;
 import net.sourceforge.fullsync.fs.File;
 
 /**

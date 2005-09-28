@@ -7,8 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 import junit.framework.TestCase;
+import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 /**
  * @author Michele Aiello

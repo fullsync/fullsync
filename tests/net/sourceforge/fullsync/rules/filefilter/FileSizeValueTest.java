@@ -3,8 +3,8 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import junit.framework.TestCase;
+import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 /**
  * @author Michele Aiello

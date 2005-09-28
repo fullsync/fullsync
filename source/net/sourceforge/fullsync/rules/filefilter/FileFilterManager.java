@@ -5,10 +5,10 @@ package net.sourceforge.fullsync.rules.filefilter;
 
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
-import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
-import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
+import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
+import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

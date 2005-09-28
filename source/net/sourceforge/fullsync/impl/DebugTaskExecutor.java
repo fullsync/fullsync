@@ -1,8 +1,8 @@
 package net.sourceforge.fullsync.impl;
 
-import net.sourceforge.fullsync.TaskExecutor;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskExecutor;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 

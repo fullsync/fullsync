@@ -1,6 +1,10 @@
 package net.sourceforge.wrabbitftp;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 /**
 *	The FTPUser class abstracts all users either logged into the server or

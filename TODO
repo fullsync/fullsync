@@ -251,6 +251,7 @@ User reports:
 		public key and host based auth implemented (pretty badly)
 	[ ] smb copies all files always
 	[ ] make exception window resizeable
+	[ ] preferences dialog does not set "autostart scheduler" checkbox
 	
 ---===[ to 0.10 Tasks ]====-------------------------------------------------
 
@@ -508,3 +509,9 @@ Directories handled as structure instead of file-like:
 	  to copy single changed files to the other side we need to make
 	  sure the dirs are created as well
 	- correct deletion of dirs
+
+
+---===[ Requests ]====------------------------------------------------------
+
+ [ ] Better backup, espec create date dir in destination like "/usr/local/foo/$DATE/..."
+		(Wolfgang)

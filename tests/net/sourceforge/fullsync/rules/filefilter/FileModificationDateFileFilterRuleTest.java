@@ -6,10 +6,9 @@ package net.sourceforge.fullsync.rules.filefilter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import junit.framework.TestCase;
 import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
-
-import junit.framework.TestCase;
 
 /**
  * @author Michele Aiello

@@ -12,7 +12,6 @@ import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
 import net.sourceforge.fullsync.fs.buffering.syncfiles.SyncFilesBufferingProvider;
 import net.sourceforge.fullsync.fs.filesystems.CommonsVfsFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.SftpFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 
 /**

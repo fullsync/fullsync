@@ -103,9 +103,12 @@ public class CommonsVfsConnection implements FileSystemConnection
             Hashtable children = new Hashtable();
             
             FileObject obj = base.resolveFile( dir.getPath() );
-            FileObject[] list = obj.getChildren();
-            for( int i = 0; i < list.length; i++ )
-                children.put( list[i].getName().getBaseName(), buildNode( dir, list[i] ) );
+            if( obj.exists() && obj.getType() == FileType.FOLDER )
+            {
+                FileObject[] list = obj.getChildren();
+                for( int i = 0; i < list.length; i++ )
+                    children.put( list[i].getName().getBaseName(), buildNode( dir, list[i] ) );
+            }
             return children;
         } catch( FileSystemException fse ) {
             throw new IOException( fse.getMessage() );
