@@ -83,6 +83,8 @@ public abstract class AbstractTaskGenerator implements TaskGenerator
         ActionDecider actionDecider;
         if( profile.getSynchronizationType().equals( "Publish/Update" ) )
             actionDecider = new PublishActionDecider();
+        else if( profile.getSynchronizationType().equals( "Publish/Update Overwrite" ) )
+            actionDecider = new PublishOverwriteActionDecider();
         else if( profile.getSynchronizationType().equals( "Backup Copy" ) )
             actionDecider = new BackupActionDecider();
         else if( profile.getSynchronizationType().equals( "Exact Copy" ) )

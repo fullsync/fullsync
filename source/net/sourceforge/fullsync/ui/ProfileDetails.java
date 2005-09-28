@@ -271,6 +271,11 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                             labelTypeDescription.setText( Messages.getString("ProfileDetails.ProfileDescription.Publish") ); //$NON-NLS-1$
                             buttonSourceBuffered.setSelection( false );
                             buttonDestinationBuffered.setSelection( true );
+                        } else if( comboType.getText().equals( "Publish/Update Overwrite" ) ) //$NON-NLS-1$
+                        {
+                            labelTypeDescription.setText( Messages.getString("ProfileDetails.ProfileDescription.Publish") ); //$NON-NLS-1$
+                            buttonSourceBuffered.setSelection( false );
+                            buttonDestinationBuffered.setSelection( true );
                         } else if( comboType.getText().equals( "Backup Copy" ) ) { //$NON-NLS-1$
                             labelTypeDescription.setText( Messages.getString("ProfileDetails.ProfileDescription.BackupCopy") ); //$NON-NLS-1$
 	                        buttonSourceBuffered.setSelection( false );
@@ -515,6 +520,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 }
             }
             comboType.add( "Publish/Update" ); //$NON-NLS-1$
+            comboType.add( "Publish/Update Overwrite" ); //$NON-NLS-1$
             comboType.add( "Backup Copy" ); //$NON-NLS-1$
             comboType.add( "Exact Copy" ); //$NON-NLS-1$
             comboType.add( "Two Way Sync" ); //$NON-NLS-1$
