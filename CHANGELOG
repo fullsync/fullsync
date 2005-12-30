@@ -1,3 +1,4 @@
+* new commons-vfs source and destination browser should work now, certainly not fine, but it works
 * added a file filter for simplyfied ruleset. The filter is a replacement for the ignore/accept patterns and
 old profiles with regexp patterns are automatically converted to this new file filter.
 * added wildcards as ignore/accept patterns (regexp was default till now) in simplyfied syncrules.

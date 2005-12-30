@@ -2,13 +2,13 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import net.full.fs.ui.FileObjectChooser;
+import net.full.fs.ui.ConnectionConfiguration;
+import net.full.fs.ui.LocationDescription;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemManager;
@@ -24,7 +24,6 @@ import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.VFS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
@@ -85,7 +84,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	private Label label4;
 	private Group advancedRuleOptionsGroup;
 	private Group groupDestination;
-	private Label labelSourceUrl;
+	private ConnectionConfiguration connectionConfigurationDestination;
+	private ConnectionConfiguration connectionConfigurationSource;
 	private TreeItem treeItemSubDirs;
 	private TreeItem treeItemFilters;
 	private TreeItem treeItemLocations;
@@ -108,22 +108,13 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	private Button rbSimplyfiedRuleSet;
 	private Group ruleSetGroup;
 	private Label label12;
-	private Text textDestinationPassword;
 	private Label label11;
-	private Text textDestinationUsername;
 	private Label label10;
 	private Button buttonDestinationBuffered;
-	private Button buttonBrowseDst;
-	private Text textDestination;
-	private Label labelDestinationUrl;
 	private Label label8;
-	private Text textSourcePassword;
 	private Label label6;
-	private Text textSourceUsername;
 	private Label label5;
 	private Button buttonSourceBuffered;
-	private Button buttonBrowseSrc;
-	private Text textSource;
 	private Text textName;
 	
 	private Tree directoryTree;
@@ -194,706 +185,697 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 						treeItemSubDirs.setText("Subdirectories");
 					}
 				}
-				{
-					compositeMain = new Composite(sashForm, SWT.NONE);
-					StackLayout compositeMainLayout = new StackLayout();
-					compositeMain.setLayout(compositeMainLayout);
-					{
-						compositeTabGeneral = new Composite(
-								compositeMain,
-								SWT.NONE);
-						treeItemGeneral.setData(compositeTabGeneral);
-						GridLayout compositeTabGeneralLayout = new GridLayout();
-						compositeTabGeneral.setLayout(compositeTabGeneralLayout);
-						{
-							groupGeneral = new Group(
-									compositeTabGeneral,
-									SWT.NONE);
-							GridLayout groupGeneralLayout = new GridLayout();
-							groupGeneralLayout.numColumns = 2;
-							groupGeneral.setLayout(groupGeneralLayout);
-							GridData groupGeneralLData = new GridData();
-							groupGeneralLData.grabExcessHorizontalSpace = true;
-							groupGeneralLData.horizontalAlignment = GridData.FILL;
-							groupGeneral.setLayoutData(groupGeneralLData);
-							groupGeneral.setText("General");
-							{
-								label1 = new Label(groupGeneral, SWT.NONE);
-								label1
-								.setText(Messages
-										.getString("ProfileDetails.Name.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-							}
-							{
-								GridData textNameLData = new GridData();
-								textNameLData.grabExcessHorizontalSpace = true;
-								textNameLData.horizontalAlignment = GridData.FILL;
-								textName = new Text(groupGeneral, SWT.BORDER);
-								textName.setLayoutData(textNameLData);
-								textName.setToolTipText(Messages
-										.getString("ProfileDetails.Name.ToolTip")); //$NON-NLS-1$
-							}
-							{
-								label15 = new Label(groupGeneral, SWT.NONE);
-								label15
-								.setText(Messages
-										.getString("ProfileDetails.Description.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-							}
-							{
-								GridData textDescriptionLData = new GridData();
-								textDescriptionLData.horizontalAlignment = GridData.FILL;
-								textDescription = new Text(
-										groupGeneral,
-										SWT.BORDER);
-								textDescription.setLayoutData(textDescriptionLData);
-							}
-							{
-								label16 = new Label(groupGeneral, SWT.NONE);
-								label16.setText(Messages
-										.getString("ProfileDetails.Type.Label")); //$NON-NLS-1$
-							}
-							{
-								comboType = new Combo(
-										groupGeneral,
-										SWT.DROP_DOWN | SWT.READ_ONLY);
-								comboType
-								.addModifyListener(new ModifyListener() {
-									public void modifyText(ModifyEvent evt) {
-										if (comboType.getText().equals(
-										"Publish/Update")) //$NON-NLS-1$
-										{
-											labelTypeDescription
-											.setText(Messages
-													.getString("ProfileDetails.ProfileDescription.Publish")); //$NON-NLS-1$
-											buttonSourceBuffered
-											.setSelection(false);
-											buttonDestinationBuffered
-											.setSelection(true);
-										} else if (comboType.getText()
-												.equals("Backup Copy")) { //$NON-NLS-1$
-											labelTypeDescription
-											.setText(Messages
-													.getString("ProfileDetails.ProfileDescription.BackupCopy")); //$NON-NLS-1$
-											buttonSourceBuffered
-											.setSelection(false);
-											buttonDestinationBuffered
-											.setSelection(false);
-										} else if (comboType.getText()
-												.equals("Exact Copy")) { //$NON-NLS-1$
-											labelTypeDescription
-											.setText(Messages
-													.getString("ProfileDetails.ProfileDescription.ExactCopy")); //$NON-NLS-1$
-											buttonSourceBuffered
-											.setSelection(false);
-											buttonDestinationBuffered
-											.setSelection(false);
-										} else if (comboType.getText()
-												.equals("Two Way Sync")) { //$NON-NLS-1$
-											labelTypeDescription
-											.setText(Messages
-													.getString("ProfileDetails.ProfileDescription.TwoWaySync")); //$NON-NLS-1$
-											buttonSourceBuffered
-											.setSelection(false);
-											buttonDestinationBuffered
-											.setSelection(false);
-										}
-									}
-								});
-							}
-							{
-								GridData labelTypeDescriptionLData = new GridData();
-								labelTypeDescriptionLData.horizontalSpan = 2;
-								labelTypeDescriptionLData.horizontalAlignment = GridData.FILL;
-								labelTypeDescription = new Label(
-										groupGeneral,
-										SWT.WRAP);
-								labelTypeDescription.setLayoutData(labelTypeDescriptionLData);
-								labelTypeDescription
-								.setText(Messages
-										.getString("ProfileDetails.Description.Label")); //$NON-NLS-1$
-							}
-						}
-						{
-							groupAutomated = new Group(
-									compositeTabGeneral,
-									SWT.NONE);
-							GridLayout groupAutomatedLayout = new GridLayout();
-							groupAutomatedLayout.makeColumnsEqualWidth = true;
-							groupAutomatedLayout.numColumns = 2;
-							groupAutomated.setLayout(groupAutomatedLayout);
-							GridData groupAutomatedLData = new GridData();
-							groupAutomatedLData.horizontalAlignment = GridData.FILL;
-							groupAutomated.setLayoutData(groupAutomatedLData);
-							groupAutomated.setText("Automated execution");
-							{
-								buttonScheduling = new Button(
-										groupAutomated,
-										SWT.PUSH | SWT.CENTER);
-								buttonScheduling
-								.setText(Messages
-										.getString("ProfileDetails.Edit_Scheduling")); //$NON-NLS-1$
-								buttonScheduling
-								.addSelectionListener(new SelectionAdapter() {
-									public void widgetSelected(
-											SelectionEvent evt) {
-										ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(
-												getShell(),
-												SWT.NULL);
-										dialog
-										.setSchedule((Schedule) buttonScheduling
-												.getData());
-										dialog.open();
-										
-										buttonScheduling.setData(dialog
-												.getSchedule());
-									}
-								});
-							}
-							{
-								GridData buttonResetErrorLData = new GridData();
-								buttonResetErrorLData.horizontalSpan = 2;
-								buttonResetError = new Button(
-										groupAutomated,
-										SWT.CHECK | SWT.RIGHT);
-								buttonResetError.setLayoutData(buttonResetErrorLData);
-								buttonResetError
-								.setText(Messages
-										.getString("ProfileDetails.Reset_ErrorFlag")); //$NON-NLS-1$
-							}
-							{
-								GridData buttonEnabledLData = new GridData();
-								buttonEnabledLData.horizontalSpan = 2;
-								buttonEnabled = new Button(
-										groupAutomated,
-										SWT.CHECK | SWT.RIGHT);
-								buttonEnabled.setLayoutData(buttonEnabledLData);
-								buttonEnabled.setText(Messages
-										.getString("ProfileDetails.Enabled")); //$NON-NLS-1$
-							}
-						}
-					}
-					{
-						compositeTabLocations = new Composite(
-								compositeMain,
-								SWT.NONE);
-						treeItemLocations.setData(compositeTabLocations);
-						GridLayout compositeTabLocationsLayout = new GridLayout();
-						GridData compositeTabLocationsLData = new GridData();
-						compositeTabLocations.setLayoutData(compositeTabLocationsLData);
-						compositeTabLocations.setLayout(compositeTabLocationsLayout);
-						{
-							groupSource = new Group(
-									compositeTabLocations,
-									SWT.NONE);
-							GridLayout groupSourceLayout = new GridLayout();
-							groupSourceLayout.numColumns = 3;
-							groupSource.setLayout(groupSourceLayout);
-							GridData groupSourceLData = new GridData();
-							groupSourceLData.grabExcessHorizontalSpace = true;
-							groupSourceLData.horizontalAlignment = GridData.FILL;
-							groupSourceLData.grabExcessVerticalSpace = true;
-							groupSourceLData.verticalAlignment = GridData.FILL;
-							groupSource.setLayoutData(groupSourceLData);
-							{
-								labelSourceUrl = new Label(
-										groupSource,
-										SWT.NONE);
-								labelSourceUrl.setText("Url:");
-							}
-							groupSource.setText(Messages.getString("ProfileDetails.Source.Label")); //$NON-NLS-1$ 
-							{
-								GridData textSourceLData = new GridData();
-								textSourceLData.horizontalAlignment = GridData.FILL;
-								textSourceLData.grabExcessHorizontalSpace = true;
-								textSource = new Text(groupSource, SWT.BORDER);
-								textSource.setLayoutData(textSourceLData);
-								textSource
-								.setToolTipText(Messages
-										.getString("ProfileDetails.Source.ToolTip")); //$NON-NLS-1$
-								textSource.addModifyListener(new ModifyListener() {
-									public void modifyText(ModifyEvent arg0) {
-										closeSourceSite();									
-									}
-								});
-							}
-							{
-								buttonBrowseSrc = new Button(
-										groupSource,
-										SWT.PUSH | SWT.CENTER);
-								buttonBrowseSrc.setText("..."); //$NON-NLS-1$
-								buttonBrowseSrc
-								.addSelectionListener(new SelectionAdapter() {
-									public void widgetSelected(
-											SelectionEvent evt) {
-										buttonBrowseSrcWidgetSelected(evt);
-									}
-								});
-							}
-							{
-								buttonSourceBuffered = new Button(
-										groupSource,
-										SWT.CHECK | SWT.LEFT);
-								buttonSourceBuffered
-								.setText(Messages
-										.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
-								GridData buttonSourceBufferedLData = new GridData();
-								buttonSourceBufferedLData.horizontalSpan = 3;
-								buttonSourceBuffered.setLayoutData(buttonSourceBufferedLData);
-								buttonSourceBuffered.setEnabled(false);
-							}
-							{
-								label5 = new Label(groupSource, SWT.NONE);
-								label5
-								.setText(Messages
-										.getString("ProfileDetails.Username.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-							}
-							{
-								GridData textSourceUsernameLData = new GridData();
-								textSourceUsernameLData.horizontalAlignment = GridData.FILL;
-								textSourceUsernameLData.horizontalSpan = 2;
-								textSourceUsername = new Text(
-										groupSource,
-										SWT.BORDER);
-								textSourceUsername.setLayoutData(textSourceUsernameLData);
-								textSourceUsername.addModifyListener(new ModifyListener() {
-									public void modifyText(ModifyEvent arg0) {
-										closeSourceSite();									}
-								});
-							}
-							{
-								label6 = new Label(groupSource, SWT.NONE);
-								label6
-								.setText(Messages
-										.getString("ProfileDetails.Password.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-							}
-							{
-								GridData textSourcePasswordLData = new GridData();
-								textSourcePasswordLData.horizontalAlignment = GridData.FILL;
-								textSourcePasswordLData.horizontalSpan = 2;
-								textSourcePassword = new Text(
-										groupSource,
-										SWT.BORDER);
-								textSourcePassword.setLayoutData(textSourcePasswordLData);
-								textSourcePassword.addModifyListener(new ModifyListener() {
-									public void modifyText(ModifyEvent arg0) {
-										closeSourceSite();
-									}	
-								});
-							}
-							{
-								label8 = new Label(groupSource, SWT.NONE);
-							}
-						}
-						{
-							groupDestination = new Group(
-									compositeTabLocations,
-									SWT.NONE);
-							GridLayout groupDestinationLayout = new GridLayout();
-							groupDestinationLayout.numColumns = 3;
-							groupDestination.setLayout(groupDestinationLayout);
-							GridData groupDestinationLData = new GridData();
-							groupDestinationLData.horizontalAlignment = GridData.FILL;
-							groupDestinationLData.grabExcessHorizontalSpace = true;
-							groupDestinationLData.grabExcessVerticalSpace = true;
-							groupDestinationLData.verticalAlignment = GridData.FILL;
-							groupDestination.setLayoutData(groupDestinationLData);
-							groupDestination.setText(Messages.getString("ProfileDetails.Destination.Label")); //$NON-NLS-1$
-							{
-								labelDestinationUrl = new Label(groupDestination, SWT.NONE);
-								labelDestinationUrl.setText("Url:");
-							}
-							{
-								GridData textDestinationLData = new GridData();
-								textDestinationLData.horizontalAlignment = GridData.FILL;
-								textDestinationLData.grabExcessHorizontalSpace = true;
-								textDestination = new Text(
-										groupDestination,
-										SWT.BORDER);
-								textDestination.setLayoutData(textDestinationLData);
-								textDestination
-								.setToolTipText(Messages
-										.getString("ProfileDetails.Destination.ToolTip")); //$NON-NLS-1$
-							}
-							{
-								buttonBrowseDst = new Button(
-										groupDestination,
-										SWT.PUSH | SWT.CENTER);
-								buttonBrowseDst.setText("..."); //$NON-NLS-1$
-								buttonBrowseDst
-								.addSelectionListener(new SelectionAdapter() {
-									public void widgetSelected(
-											SelectionEvent evt) {
-										buttonBrowseDstWidgetSelected(evt);
-									}
-								});
-							}
-							{
-								GridData buttonDestinationBufferedLData = new GridData();
-								buttonDestinationBufferedLData.horizontalSpan = 3;
-								buttonDestinationBuffered = new Button(
-										groupDestination,
-										SWT.CHECK | SWT.LEFT);
-								buttonDestinationBuffered.setLayoutData(buttonDestinationBufferedLData);
-								buttonDestinationBuffered
-								.setText(Messages
-										.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
-								//buttonDestinationBuffered.setEnabled( false );
-							}
-							{
-								label10 = new Label(groupDestination, SWT.NONE);
-								label10
-								.setText(Messages
-										.getString("ProfileDetails.Username.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-							}
-							{
-								GridData textDestinationUsernameLData = new GridData();
-								textDestinationUsernameLData.horizontalAlignment = GridData.FILL;
-								textDestinationUsernameLData.horizontalSpan = 2;
-								textDestinationUsername = new Text(
-										groupDestination,
-										SWT.BORDER);
-								textDestinationUsername.setLayoutData(textDestinationUsernameLData);
-							}
-							{
-								label11 = new Label(groupDestination, SWT.NONE);
-								label11
-								.setText(Messages
-										.getString("ProfileDetails.Password.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-							}
-							{
-								GridData textDestinationPasswordLData = new GridData();
-								textDestinationPasswordLData.horizontalAlignment = GridData.FILL;
-								textDestinationPasswordLData.horizontalSpan = 2;
-								textDestinationPassword = new Text(
-										groupDestination,
-										SWT.BORDER);
-								textDestinationPassword.setLayoutData(textDestinationPasswordLData);
-							}
-							{
-								label12 = new Label(groupDestination, SWT.NONE);
-							}
-						}
-					}
-					{
-						compositeTabFilters = new Composite(
-								compositeMain,
-								SWT.NONE);
-						treeItemFilters.setData(compositeTabFilters);
-						GridLayout compositeTabFiltersLayout = new GridLayout();
-						compositeTabFiltersLayout.makeColumnsEqualWidth = true;
-						compositeTabFilters.setLayout(compositeTabFiltersLayout);
-						{
-							ruleSetGroup = new Group(
-									compositeTabFilters,
-									SWT.NONE);
-							GridLayout ruleSetGroupLayout = new GridLayout();
-							ruleSetGroupLayout.makeColumnsEqualWidth = true;
-							ruleSetGroupLayout.horizontalSpacing = 20;
-							GridData ruleSetGroupLData = new GridData();
-							ruleSetGroupLData.horizontalAlignment = GridData.FILL;
-							ruleSetGroupLData.grabExcessHorizontalSpace = true;
-							ruleSetGroup.setLayoutData(ruleSetGroupLData);
-							ruleSetGroup.setLayout(ruleSetGroupLayout);
-							ruleSetGroup.setText(Messages
-									.getString("ProfileDetails.RuleSet")); //$NON-NLS-1$
-							{
-								rbSimplyfiedRuleSet = new Button(
-										ruleSetGroup,
-										SWT.RADIO | SWT.LEFT);
-								rbSimplyfiedRuleSet
-								.setText(Messages
-										.getString("ProfileDetails.Simple_Rule_Set")); //$NON-NLS-1$
-								rbSimplyfiedRuleSet.setSelection(true);
-								GridData rbSimplyfiedRuleSetLData = new GridData();
-								rbSimplyfiedRuleSetLData.grabExcessHorizontalSpace = true;
-								rbSimplyfiedRuleSetLData.horizontalAlignment = GridData.FILL;
-								rbSimplyfiedRuleSet
-								.setLayoutData(rbSimplyfiedRuleSetLData);
-								rbSimplyfiedRuleSet
-								.addSelectionListener(new SelectionAdapter() {
-									public void widgetSelected(
-											SelectionEvent evt) {
-										selectRuleSetButton(rbSimplyfiedRuleSet);
-									}
-								});
-							}
-							{
-								simplyfiedOptionsGroup = new Group(
-										ruleSetGroup,
-										SWT.NONE);
-								GridLayout simplyfiedOptionsGroupLayout = new GridLayout();
-								GridData simplyfiedOptionsGroupLData = new GridData();
-								simplyfiedOptionsGroupLData.verticalAlignment = GridData.BEGINNING;
-								simplyfiedOptionsGroupLData.grabExcessHorizontalSpace = true;
-								simplyfiedOptionsGroupLData.horizontalAlignment = GridData.FILL;
-								simplyfiedOptionsGroup
-								.setLayoutData(simplyfiedOptionsGroupLData);
-								simplyfiedOptionsGroupLayout.numColumns = 3;
-								simplyfiedOptionsGroup
-								.setLayout(simplyfiedOptionsGroupLayout);
-								simplyfiedOptionsGroup
-								.setText(Messages
-										.getString("ProfileDetails.Simple_Rule_Options")); //$NON-NLS-1$
-								{
-									syncSubsButton = new Button(
-											simplyfiedOptionsGroup,
-											SWT.CHECK | SWT.LEFT);
-									syncSubsButton
-									.setText(Messages
-											.getString("ProfileDetails.Sync_SubDirs")); //$NON-NLS-1$
-									GridData syncSubsButtonLData = new GridData();
-									syncSubsButton.setToolTipText(Messages
-											.getString("ProfileDetails.Rucurre")); //$NON-NLS-1$
-									syncSubsButtonLData.horizontalSpan = 3;
-									syncSubsButton
-									.setLayoutData(syncSubsButtonLData);
-								}
-								{
-									buttonUseFileFilter = new Button(
-											simplyfiedOptionsGroup,
-											SWT.CHECK | SWT.LEFT);
-									GridData buttonUseFileFilterLData = new GridData();
-									buttonUseFileFilterLData.horizontalSpan = 3;
-									buttonUseFileFilter
-									.setLayoutData(buttonUseFileFilterLData);
-									buttonUseFileFilter
-									.setText("Use file filter");
-									buttonUseFileFilter.setSelection(true);
-									buttonUseFileFilter
-									.addSelectionListener(new SelectionAdapter() {
-										public void widgetSelected(
-												SelectionEvent evt) {
-											if (buttonUseFileFilter
-													.getSelection()) {
-												label18.setEnabled(true);
-												buttonFileFilter
-												.setEnabled(true);
-												labelFilterDescription
-												.setEnabled(true);
-											} else {
-												label18.setEnabled(false);
-												buttonFileFilter
-												.setEnabled(false);
-												labelFilterDescription
-												.setEnabled(false);
-											}
-										}
-									});
-								}
-								{
-									label18 = new Label(
-											simplyfiedOptionsGroup,
-											SWT.NONE);
-									label18.setText("Files Filter: ");
-								}
-								{
-									buttonFileFilter = new Button(
-											simplyfiedOptionsGroup,
-											SWT.PUSH | SWT.CENTER);
-									buttonFileFilter.setText("Set Filter...");
-									GridData buttonFileFilterLData = new GridData();
-									buttonFileFilterLData.horizontalSpan = 2;
-									buttonFileFilter
-									.setLayoutData(buttonFileFilterLData);
-									buttonFileFilter
-									.addSelectionListener(new SelectionAdapter() {
-										public void widgetSelected(SelectionEvent evt) {
-											try {
-												WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
-												FileFilterPage page = new FileFilterPage(dialog, filter);
-												dialog.show();
-												FileFilter newfilter = page.getFileFilter();
-												if (newfilter != null) {
-													filter = newfilter;
-													labelFilterDescription.setText(filter.toString());
-												}
-											} catch (Exception e) {
-												ExceptionHandler.reportException(e);
-											}
-										}
-									});
-								}
-								{
-									labelFilterDescription = new Label(simplyfiedOptionsGroup,
-											SWT.SHADOW_NONE | SWT.WRAP | SWT.BORDER);
-									GridData labelFilterDescriptionLData = new GridData();
-									labelFilterDescriptionLData.horizontalSpan = 3;
-									labelFilterDescriptionLData.horizontalAlignment = GridData.FILL;
-									labelFilterDescriptionLData.heightHint = 48;
-									labelFilterDescriptionLData.widthHint = 300;
-									labelFilterDescriptionLData.grabExcessHorizontalSpace = true;
-									labelFilterDescription.setLayoutData(labelFilterDescriptionLData);
-									labelFilterDescription.setText("");
-								}
-							}
-							{
-								rbAdvancedRuleSet = new Button(
-										ruleSetGroup,
-										SWT.RADIO | SWT.LEFT);
-								rbAdvancedRuleSet
-								.setText(Messages
-										.getString("ProfileDetails.Advanced_Rule_Set")); //$NON-NLS-1$
-								GridData rbAdvancedRuleSetLData = new GridData();
-								rbAdvancedRuleSetLData.grabExcessHorizontalSpace = true;
-								rbAdvancedRuleSetLData.horizontalAlignment = GridData.FILL;
-								rbAdvancedRuleSet
-								.setLayoutData(rbAdvancedRuleSetLData);
-								rbAdvancedRuleSet
-								.addSelectionListener(new SelectionAdapter() {
-									public void widgetSelected(
-											SelectionEvent evt) {
-										selectRuleSetButton(rbAdvancedRuleSet);
-									}
-								});
-							}
-							{
-								advancedRuleOptionsGroup = new Group(
-										ruleSetGroup,
-										SWT.NONE);
-								GridLayout advancedRuleOptionsGroupLayout = new GridLayout();
-								GridData advancedRuleOptionsGroupLData = new GridData();
-								advancedRuleOptionsGroup.setEnabled(false);
-								advancedRuleOptionsGroupLData.heightHint = 31;
-								advancedRuleOptionsGroupLData.verticalAlignment = GridData.BEGINNING;
-								advancedRuleOptionsGroupLData.grabExcessHorizontalSpace = true;
-								advancedRuleOptionsGroupLData.horizontalAlignment = GridData.FILL;
-								advancedRuleOptionsGroup
-								.setLayoutData(advancedRuleOptionsGroupLData);
-								advancedRuleOptionsGroupLayout.numColumns = 2;
-								advancedRuleOptionsGroup
-								.setLayout(advancedRuleOptionsGroupLayout);
-								advancedRuleOptionsGroup
-								.setText(Messages
-										.getString("ProfileDetails.Advanced_Rule_Options")); //$NON-NLS-1$
-								{
-									label4 = new Label(
-											advancedRuleOptionsGroup,
-											SWT.NONE);
-									GridData label4LData = new GridData();
-									label4.setEnabled(false);
-									label4.setLayoutData(label4LData);
-									label4.setText(Messages
-											.getString("ProfileDetails.RuleSet_2")); //$NON-NLS-1$
-								}
-								{
-									textRuleSet = new Text(
-											advancedRuleOptionsGroup,
-											SWT.BORDER);
-									GridData textRuleSetLData = new GridData();
-									textRuleSet.setEnabled(false);
-									textRuleSetLData.widthHint = 100;
-									textRuleSetLData.heightHint = 13;
-									textRuleSet.setLayoutData(textRuleSetLData);
-								}
-							}
-						}
-					}
-					{
-						compositeTabSubdirs = new Composite(
-								compositeMain,
-								SWT.NONE);
-						treeItemSubDirs.setData(compositeTabSubdirs);
-						GridData compositeTabSubdirsLData = new GridData();
-						compositeTabSubdirs.setLayoutData(compositeTabSubdirsLData);
-						GridLayout compositeTabSubdirsLayout = new GridLayout();
-						compositeTabSubdirsLayout.numColumns = 2;
-						compositeTabSubdirsLayout.makeColumnsEqualWidth = false;
-						compositeTabSubdirs.setLayout(compositeTabSubdirsLayout);
-						{
-							{
-								GridData directoryTreeLData = new GridData();
-								directoryTreeLData.grabExcessHorizontalSpace = true;
-								directoryTreeLData.grabExcessVerticalSpace = true;
-								directoryTreeLData.horizontalAlignment = GridData.FILL;
-								directoryTreeLData.verticalAlignment = GridData.FILL;
-								directoryTree = new Tree(compositeTabSubdirs, SWT.BORDER | SWT.SINGLE);
-								directoryTree.setSize(100, 100);
-								directoryTree.setLayoutData(directoryTreeLData);
-								directoryTree.addTreeListener(new TreeAdapter() {
-									public void treeExpanded(TreeEvent evt) {
-										TreeItem item = (TreeItem) evt.item;
-										TreeItem[] childrens = item.getItems();
-										for (int i = 0; i < childrens.length; i++) {
-											if (childrens[i].getData(EXPANDED_KEY) == null) {
-												File file = (File) childrens[i].getData();
-												try {
-													addChildren(file, childrens[i]);
-												} catch (IOException e) {
-													ExceptionHandler.reportException(e);
-												}
-												childrens[i].setData(EXPANDED_KEY, new Object());
-//												updateDirectoryTree(childrens[i], item.getForeground());
-											}
-										}
-									}
-								});
-							}
-							{
-								Composite compositeButtons = new Composite(compositeTabSubdirs, SWT.NONE);
-								GridLayout compositeButtonsLayout = new GridLayout();
-								compositeButtonsLayout.makeColumnsEqualWidth = true;
-								GridData compositeButtonsLData = new GridData();
-								compositeButtonsLData.grabExcessVerticalSpace = true;
-								compositeButtonsLData.verticalAlignment = GridData.FILL;
-								compositeButtons.setLayoutData(compositeButtonsLData);
-								compositeButtons.setLayout(compositeButtonsLayout);
-								{
-									Button buttonFilter = new Button(compositeButtons, SWT.PUSH
-											| SWT.CENTER);
-									buttonFilter.setText("Set Filter...");
-									
-									buttonFilter.addSelectionListener(new SelectionAdapter() {
-										public void widgetSelected(SelectionEvent arg0) {
-											TreeItem[] selectedItems = directoryTree.getSelection();
-											
-											if (selectedItems.length <= 0) {
-												return;
-											}
-											
-											TreeItem selectedItem = selectedItems[0];
-											FileFilter currentItemFilter = (FileFilter)selectedItem.getData(FILTER_KEY);
-											
-											WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
-											FileFilterPage page = new FileFilterPage(dialog, currentItemFilter);
-											dialog.show();
-											FileFilter newfilter = page.getFileFilter();
-											if (newfilter != null) {
-												selectedItem.setData(FILTER_KEY, newfilter);
-												treeItemsWithFilter.add(selectedItem);
-												File file = (File)selectedItem.getData();
-												itemsMap.put(file.getPath(), newfilter);
-												markItem(selectedItem);
-											}
-										}
-									});
-								}
-								{
-									Button buttonRemoveFilter = new Button(compositeButtons, SWT.PUSH
-											| SWT.CENTER);
-									buttonRemoveFilter.setText("Remove Filter");
-									
-									buttonRemoveFilter.addSelectionListener(new SelectionAdapter() {
-										public void widgetSelected(SelectionEvent arg0) {
-											TreeItem[] selectedItems = directoryTree.getSelection();
+                {
+                    compositeMain = new Composite( sashForm, SWT.NONE);
+                    StackLayout compositeMainLayout2 = new StackLayout();
+                    compositeMain.setLayout(compositeMainLayout2);
+                    {
+                        compositeTabGeneral = new Composite(
+                            compositeMain,
+                            SWT.NONE);
+                        treeItemGeneral.setData(compositeTabGeneral);
+                        GridLayout compositeTabGeneralLayout = new GridLayout();
+                        compositeTabGeneral
+                            .setLayout(compositeTabGeneralLayout);
+                        {
+                            groupGeneral = new Group(
+                                compositeTabGeneral,
+                                SWT.NONE);
+                            GridLayout groupGeneralLayout = new GridLayout();
+                            groupGeneralLayout.numColumns = 2;
+                            groupGeneral.setLayout(groupGeneralLayout);
+                            GridData groupGeneralLData = new GridData();
+                            groupGeneralLData.grabExcessHorizontalSpace = true;
+                            groupGeneralLData.horizontalAlignment = GridData.FILL;
+                            groupGeneral.setLayoutData(groupGeneralLData);
+                            groupGeneral.setText("General");
+                            {
+                                label1 = new Label(groupGeneral, SWT.NONE);
+                                label1
+                                    .setText(Messages
+                                        .getString("ProfileDetails.Name.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+                            }
+                            {
+                                GridData textNameLData = new GridData();
+                                textNameLData.grabExcessHorizontalSpace = true;
+                                textNameLData.horizontalAlignment = GridData.FILL;
+                                textName = new Text(
+                                    groupGeneral,
+                                    SWT.BORDER);
+                                textName.setLayoutData(textNameLData);
+                                textName
+                                    .setToolTipText(Messages
+                                        .getString("ProfileDetails.Name.ToolTip")); //$NON-NLS-1$
+                            }
+                            {
+                                label15 = new Label(groupGeneral, SWT.NONE);
+                                label15
+                                    .setText(Messages
+                                        .getString("ProfileDetails.Description.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+                            }
+                            {
+                                GridData textDescriptionLData = new GridData();
+                                textDescriptionLData.horizontalAlignment = GridData.FILL;
+                                textDescription = new Text(
+                                    groupGeneral,
+                                    SWT.BORDER);
+                                textDescription
+                                    .setLayoutData(textDescriptionLData);
+                            }
+                            {
+                                label16 = new Label(groupGeneral, SWT.NONE);
+                                label16
+                                    .setText(Messages
+                                        .getString("ProfileDetails.Type.Label")); //$NON-NLS-1$
+                            }
+                            {
+                                comboType = new Combo(
+                                    groupGeneral,
+                                    SWT.DROP_DOWN | SWT.READ_ONLY);
+                                comboType
+                                    .addModifyListener(new ModifyListener() {
+                                        public void modifyText(
+                                            ModifyEvent evt) {
+                                            if (comboType.getText().equals(
+                                                "Publish/Update")) //$NON-NLS-1$
+                                            {
+                                                labelTypeDescription
+                                                    .setText(Messages
+                                                        .getString("ProfileDetails.ProfileDescription.Publish")); //$NON-NLS-1$
+                                                buttonSourceBuffered
+                                                    .setSelection(false);
+                                                buttonDestinationBuffered
+                                                    .setSelection(true);
+                                            } else if (comboType.getText()
+                                                .equals("Backup Copy")) { //$NON-NLS-1$
+                                                labelTypeDescription
+                                                    .setText(Messages
+                                                        .getString("ProfileDetails.ProfileDescription.BackupCopy")); //$NON-NLS-1$
+                                                buttonSourceBuffered
+                                                    .setSelection(false);
+                                                buttonDestinationBuffered
+                                                    .setSelection(false);
+                                            } else if (comboType.getText()
+                                                .equals("Exact Copy")) { //$NON-NLS-1$
+                                                labelTypeDescription
+                                                    .setText(Messages
+                                                        .getString("ProfileDetails.ProfileDescription.ExactCopy")); //$NON-NLS-1$
+                                                buttonSourceBuffered
+                                                    .setSelection(false);
+                                                buttonDestinationBuffered
+                                                    .setSelection(false);
+                                            } else if (comboType.getText()
+                                                .equals("Two Way Sync")) { //$NON-NLS-1$
+                                                labelTypeDescription
+                                                    .setText(Messages
+                                                        .getString("ProfileDetails.ProfileDescription.TwoWaySync")); //$NON-NLS-1$
+                                                buttonSourceBuffered
+                                                    .setSelection(false);
+                                                buttonDestinationBuffered
+                                                    .setSelection(false);
+                                            }
+                                        }
+                                    });
+                            }
+                            {
+                                GridData labelTypeDescriptionLData = new GridData();
+                                labelTypeDescriptionLData.horizontalSpan = 2;
+                                labelTypeDescriptionLData.horizontalAlignment = GridData.FILL;
+                                labelTypeDescription = new Label(
+                                    groupGeneral,
+                                    SWT.WRAP);
+                                labelTypeDescription
+                                    .setLayoutData(labelTypeDescriptionLData);
+                                labelTypeDescription
+                                    .setText(Messages
+                                        .getString("ProfileDetails.Description.Label")); //$NON-NLS-1$
+                            }
+                        }
+                        {
+                            groupAutomated = new Group(
+                                compositeTabGeneral,
+                                SWT.NONE);
+                            GridLayout groupAutomatedLayout = new GridLayout();
+                            groupAutomatedLayout.makeColumnsEqualWidth = true;
+                            groupAutomatedLayout.numColumns = 2;
+                            groupAutomated.setLayout(groupAutomatedLayout);
+                            GridData groupAutomatedLData = new GridData();
+                            groupAutomatedLData.horizontalAlignment = GridData.FILL;
+                            groupAutomated
+                                .setLayoutData(groupAutomatedLData);
+                            groupAutomated.setText("Automated execution");
+                            {
+                                buttonScheduling = new Button(
+                                    groupAutomated,
+                                    SWT.PUSH | SWT.CENTER);
+                                buttonScheduling
+                                    .setText(Messages
+                                        .getString("ProfileDetails.Edit_Scheduling")); //$NON-NLS-1$
+                                buttonScheduling
+                                    .addSelectionListener(new SelectionAdapter() {
+                                        public void widgetSelected(
+                                            SelectionEvent evt) {
+                                            ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(
+                                                getShell(),
+                                                SWT.NULL);
+                                            dialog
+                                                .setSchedule((Schedule) buttonScheduling
+                                                    .getData());
+                                            dialog.open();
 
-											if (selectedItems.length <= 0) {
-												return;
-											}
-											
-											TreeItem selectedItem = selectedItems[0];
-											treeItemsWithFilter.remove(selectedItem);
-											File file = (File)selectedItem.getData();
-											itemsMap.remove(file.getPath());
-											unmarkItem(selectedItem);
-										}
-									});
-								}
+                                            buttonScheduling.setData(dialog
+                                                .getSchedule());
+                                        }
+                                    });
+                            }
+                            {
+                                GridData buttonResetErrorLData = new GridData();
+                                buttonResetErrorLData.horizontalSpan = 2;
+                                buttonResetError = new Button(
+                                    groupAutomated,
+                                    SWT.CHECK | SWT.RIGHT);
+                                buttonResetError
+                                    .setLayoutData(buttonResetErrorLData);
+                                buttonResetError
+                                    .setText(Messages
+                                        .getString("ProfileDetails.Reset_ErrorFlag")); //$NON-NLS-1$
+                            }
+                            {
+                                GridData buttonEnabledLData = new GridData();
+                                buttonEnabledLData.horizontalSpan = 2;
+                                buttonEnabled = new Button(
+                                    groupAutomated,
+                                    SWT.CHECK | SWT.RIGHT);
+                                buttonEnabled
+                                    .setLayoutData(buttonEnabledLData);
+                                buttonEnabled.setText(Messages
+                                    .getString("ProfileDetails.Enabled")); //$NON-NLS-1$
+                            }
+                        }
+                    }
+                    {
+                        compositeTabLocations = new Composite(
+                            compositeMain,
+                            SWT.NONE);
+                        treeItemLocations.setData(compositeTabLocations);
+                        GridLayout compositeTabLocationsLayout = new GridLayout();
+                        GridData compositeTabLocationsLData = new GridData();
+                        compositeTabLocations
+                            .setLayoutData(compositeTabLocationsLData);
+                        compositeTabLocations
+                            .setLayout(compositeTabLocationsLayout);
+                        {
+                            groupSource = new Group(
+                                compositeTabLocations,
+                                SWT.NONE);
+                            GridLayout groupSourceLayout = new GridLayout();
+                            groupSource.setLayout(groupSourceLayout);
+                            GridData groupSourceLData = new GridData();
+                            groupSourceLData.grabExcessHorizontalSpace = true;
+                            groupSourceLData.horizontalAlignment = GridData.FILL;
+                            groupSourceLData.grabExcessVerticalSpace = true;
+                            groupSourceLData.verticalAlignment = GridData.FILL;
+                            groupSource.setLayoutData(groupSourceLData);
+                            groupSource.setText(Messages
+                                .getString("ProfileDetails.Source.Label")); //$NON-NLS-1$ 
+                            {
+                                GridData connectionConfigurationSourceLData = new GridData();
+                                connectionConfigurationSourceLData.horizontalAlignment = GridData.FILL;
+                                connectionConfigurationSourceLData.verticalAlignment = GridData.FILL;
+                                connectionConfigurationSourceLData.grabExcessHorizontalSpace = true;
+                                connectionConfigurationSource = new ConnectionConfiguration(
+                                    groupSource,
+                                    SWT.NONE);
+                                connectionConfigurationSource
+                                    .setLayoutData(connectionConfigurationSourceLData);
+                                /*
+                                connectionConfigurationSource
+                                    .addControlListener(new ControlAdapter() {
+                                    public void controlResized(
+                                        ControlEvent evt) {
+                                        if( ((StackLayout)compositeMain.getLayout()).topControl == compositeTabLocations )
+                                        {
+                                            compositeMain.pack();
+                                            scrolledComposite.layout();
+                                        }
+                                    }
+                                    });
+                                    */
+                            }
+                            {
+                                buttonSourceBuffered = new Button(
+                                    groupSource,
+                                    SWT.CHECK | SWT.LEFT);
+                                buttonSourceBuffered
+                                    .setText(Messages
+                                        .getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
+                                GridData buttonSourceBufferedLData = new GridData();
+                                buttonSourceBufferedLData.horizontalSpan = 3;
+                                buttonSourceBuffered
+                                    .setLayoutData(buttonSourceBufferedLData);
+                                buttonSourceBuffered.setEnabled(false);
+                            }
 
-							}
-						}
-						
-					}
-					
-				}
+                        }
+                        {
+                            groupDestination = new Group(
+                                compositeTabLocations,
+                                SWT.NONE);
+                            GridLayout groupDestinationLayout = new GridLayout();
+                            groupDestination
+                                .setLayout(groupDestinationLayout);
+                            GridData groupDestinationLData = new GridData();
+                            groupDestinationLData.horizontalAlignment = GridData.FILL;
+                            groupDestinationLData.grabExcessHorizontalSpace = true;
+                            groupDestinationLData.grabExcessVerticalSpace = true;
+                            groupDestinationLData.verticalAlignment = GridData.FILL;
+                            groupDestination
+                                .setLayoutData(groupDestinationLData);
+                            groupDestination
+                                .setText(Messages
+                                    .getString("ProfileDetails.Destination.Label")); //$NON-NLS-1$
+                            {
+                                connectionConfigurationDestination = new ConnectionConfiguration(
+                                    groupDestination,
+                                    SWT.NONE);
+                                GridData connectionConfiguration1LData = new GridData();
+                                connectionConfiguration1LData.verticalAlignment = GridData.FILL;
+                                connectionConfiguration1LData.horizontalAlignment = GridData.FILL;
+                                connectionConfiguration1LData.grabExcessHorizontalSpace = true;
+                                connectionConfigurationDestination
+                                    .setLayoutData(connectionConfiguration1LData);
+                                /*
+                                connectionConfigurationDestination
+                                    .addControlListener(new ControlAdapter() {
+                                    public void controlResized(
+                                        ControlEvent evt) {
+                                        if( ((StackLayout)compositeMain.getLayout()).topControl == compositeTabLocations )
+                                        {
+                                            compositeMain.pack();
+                                            scrolledComposite.layout();
+                                        }
+                                    }
+                                    });*/
+                            }
+                            {
+                                GridData buttonDestinationBufferedLData = new GridData();
+                                buttonDestinationBufferedLData.horizontalSpan = 3;
+                                buttonDestinationBuffered = new Button(
+                                    groupDestination,
+                                    SWT.CHECK | SWT.LEFT);
+                                buttonDestinationBuffered
+                                    .setLayoutData(buttonDestinationBufferedLData);
+                                buttonDestinationBuffered
+                                    .setText(Messages
+                                        .getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
+                                //buttonDestinationBuffered.setEnabled( false );
+                            }
+                        }
+                    }
+                    {
+                        compositeTabFilters = new Composite(
+                            compositeMain,
+                            SWT.NONE);
+                        treeItemFilters.setData(compositeTabFilters);
+                        GridLayout compositeTabFiltersLayout = new GridLayout();
+                        compositeTabFiltersLayout.makeColumnsEqualWidth = true;
+                        compositeTabFilters
+                            .setLayout(compositeTabFiltersLayout);
+                        {
+                            ruleSetGroup = new Group(
+                                compositeTabFilters,
+                                SWT.NONE);
+                            GridLayout ruleSetGroupLayout = new GridLayout();
+                            ruleSetGroupLayout.makeColumnsEqualWidth = true;
+                            ruleSetGroupLayout.horizontalSpacing = 20;
+                            GridData ruleSetGroupLData = new GridData();
+                            ruleSetGroupLData.horizontalAlignment = GridData.FILL;
+                            ruleSetGroupLData.grabExcessHorizontalSpace = true;
+                            ruleSetGroup.setLayoutData(ruleSetGroupLData);
+                            ruleSetGroup.setLayout(ruleSetGroupLayout);
+                            ruleSetGroup.setText(Messages
+                                .getString("ProfileDetails.RuleSet")); //$NON-NLS-1$
+                            {
+                                rbSimplyfiedRuleSet = new Button(
+                                    ruleSetGroup,
+                                    SWT.RADIO | SWT.LEFT);
+                                rbSimplyfiedRuleSet
+                                    .setText(Messages
+                                        .getString("ProfileDetails.Simple_Rule_Set")); //$NON-NLS-1$
+                                rbSimplyfiedRuleSet.setSelection(true);
+                                GridData rbSimplyfiedRuleSetLData = new GridData();
+                                rbSimplyfiedRuleSetLData.grabExcessHorizontalSpace = true;
+                                rbSimplyfiedRuleSetLData.horizontalAlignment = GridData.FILL;
+                                rbSimplyfiedRuleSet
+                                    .setLayoutData(rbSimplyfiedRuleSetLData);
+                                rbSimplyfiedRuleSet
+                                    .addSelectionListener(new SelectionAdapter() {
+                                        public void widgetSelected(
+                                            SelectionEvent evt) {
+                                            selectRuleSetButton(rbSimplyfiedRuleSet);
+                                        }
+                                    });
+                            }
+                            {
+                                simplyfiedOptionsGroup = new Group(
+                                    ruleSetGroup,
+                                    SWT.NONE);
+                                GridLayout simplyfiedOptionsGroupLayout = new GridLayout();
+                                GridData simplyfiedOptionsGroupLData = new GridData();
+                                simplyfiedOptionsGroupLData.verticalAlignment = GridData.BEGINNING;
+                                simplyfiedOptionsGroupLData.grabExcessHorizontalSpace = true;
+                                simplyfiedOptionsGroupLData.horizontalAlignment = GridData.FILL;
+                                simplyfiedOptionsGroup
+                                    .setLayoutData(simplyfiedOptionsGroupLData);
+                                simplyfiedOptionsGroupLayout.numColumns = 3;
+                                simplyfiedOptionsGroup
+                                    .setLayout(simplyfiedOptionsGroupLayout);
+                                simplyfiedOptionsGroup
+                                    .setText(Messages
+                                        .getString("ProfileDetails.Simple_Rule_Options")); //$NON-NLS-1$
+                                {
+                                    syncSubsButton = new Button(
+                                        simplyfiedOptionsGroup,
+                                        SWT.CHECK | SWT.LEFT);
+                                    syncSubsButton
+                                        .setText(Messages
+                                            .getString("ProfileDetails.Sync_SubDirs")); //$NON-NLS-1$
+                                    GridData syncSubsButtonLData = new GridData();
+                                    syncSubsButton
+                                        .setToolTipText(Messages
+                                            .getString("ProfileDetails.Rucurre")); //$NON-NLS-1$
+                                    syncSubsButtonLData.horizontalSpan = 3;
+                                    syncSubsButton
+                                        .setLayoutData(syncSubsButtonLData);
+                                }
+                                {
+                                    buttonUseFileFilter = new Button(
+                                        simplyfiedOptionsGroup,
+                                        SWT.CHECK | SWT.LEFT);
+                                    GridData buttonUseFileFilterLData = new GridData();
+                                    buttonUseFileFilterLData.horizontalSpan = 3;
+                                    buttonUseFileFilter
+                                        .setLayoutData(buttonUseFileFilterLData);
+                                    buttonUseFileFilter
+                                        .setText("Use file filter");
+                                    buttonUseFileFilter.setSelection(true);
+                                    buttonUseFileFilter
+                                        .addSelectionListener(new SelectionAdapter() {
+                                            public void widgetSelected(
+                                                SelectionEvent evt) {
+                                                if (buttonUseFileFilter
+                                                    .getSelection()) {
+                                                    label18
+                                                        .setEnabled(true);
+                                                    buttonFileFilter
+                                                        .setEnabled(true);
+                                                    labelFilterDescription
+                                                        .setEnabled(true);
+                                                } else {
+                                                    label18
+                                                        .setEnabled(false);
+                                                    buttonFileFilter
+                                                        .setEnabled(false);
+                                                    labelFilterDescription
+                                                        .setEnabled(false);
+                                                }
+                                            }
+                                        });
+                                }
+                                {
+                                    label18 = new Label(
+                                        simplyfiedOptionsGroup,
+                                        SWT.NONE);
+                                    label18.setText("Files Filter: ");
+                                }
+                                {
+                                    buttonFileFilter = new Button(
+                                        simplyfiedOptionsGroup,
+                                        SWT.PUSH | SWT.CENTER);
+                                    buttonFileFilter
+                                        .setText("Set Filter...");
+                                    GridData buttonFileFilterLData = new GridData();
+                                    buttonFileFilterLData.horizontalSpan = 2;
+                                    buttonFileFilter
+                                        .setLayoutData(buttonFileFilterLData);
+                                    buttonFileFilter
+                                        .addSelectionListener(new SelectionAdapter() {
+                                            public void widgetSelected(
+                                                SelectionEvent evt) {
+                                                try {
+                                                    WizardDialog dialog = new WizardDialog(
+                                                        getShell(),
+                                                        SWT.APPLICATION_MODAL);
+                                                    FileFilterPage page = new FileFilterPage(
+                                                        dialog,
+                                                        filter);
+                                                    dialog.show();
+                                                    FileFilter newfilter = page
+                                                        .getFileFilter();
+                                                    if (newfilter != null) {
+                                                        filter = newfilter;
+                                                        labelFilterDescription
+                                                            .setText(filter
+                                                                .toString());
+                                                    }
+                                                } catch (Exception e) {
+                                                    ExceptionHandler
+                                                        .reportException(e);
+                                                }
+                                            }
+                                        });
+                                }
+                                {
+                                    labelFilterDescription = new Label(
+                                        simplyfiedOptionsGroup,
+                                        SWT.SHADOW_NONE
+                                            | SWT.WRAP
+                                            | SWT.BORDER);
+                                    GridData labelFilterDescriptionLData = new GridData();
+                                    labelFilterDescriptionLData.horizontalSpan = 3;
+                                    labelFilterDescriptionLData.horizontalAlignment = GridData.FILL;
+                                    labelFilterDescriptionLData.heightHint = 48;
+                                    labelFilterDescriptionLData.widthHint = 300;
+                                    labelFilterDescriptionLData.grabExcessHorizontalSpace = true;
+                                    labelFilterDescription
+                                        .setLayoutData(labelFilterDescriptionLData);
+                                    labelFilterDescription.setText("");
+                                }
+                            }
+                            {
+                                rbAdvancedRuleSet = new Button(
+                                    ruleSetGroup,
+                                    SWT.RADIO | SWT.LEFT);
+                                rbAdvancedRuleSet
+                                    .setText(Messages
+                                        .getString("ProfileDetails.Advanced_Rule_Set")); //$NON-NLS-1$
+                                GridData rbAdvancedRuleSetLData = new GridData();
+                                rbAdvancedRuleSetLData.grabExcessHorizontalSpace = true;
+                                rbAdvancedRuleSetLData.horizontalAlignment = GridData.FILL;
+                                rbAdvancedRuleSet
+                                    .setLayoutData(rbAdvancedRuleSetLData);
+                                rbAdvancedRuleSet
+                                    .addSelectionListener(new SelectionAdapter() {
+                                        public void widgetSelected(
+                                            SelectionEvent evt) {
+                                            selectRuleSetButton(rbAdvancedRuleSet);
+                                        }
+                                    });
+                            }
+                            {
+                                advancedRuleOptionsGroup = new Group(
+                                    ruleSetGroup,
+                                    SWT.NONE);
+                                GridLayout advancedRuleOptionsGroupLayout = new GridLayout();
+                                GridData advancedRuleOptionsGroupLData = new GridData();
+                                advancedRuleOptionsGroup.setEnabled(false);
+                                advancedRuleOptionsGroupLData.heightHint = 31;
+                                advancedRuleOptionsGroupLData.verticalAlignment = GridData.BEGINNING;
+                                advancedRuleOptionsGroupLData.grabExcessHorizontalSpace = true;
+                                advancedRuleOptionsGroupLData.horizontalAlignment = GridData.FILL;
+                                advancedRuleOptionsGroup
+                                    .setLayoutData(advancedRuleOptionsGroupLData);
+                                advancedRuleOptionsGroupLayout.numColumns = 2;
+                                advancedRuleOptionsGroup
+                                    .setLayout(advancedRuleOptionsGroupLayout);
+                                advancedRuleOptionsGroup
+                                    .setText(Messages
+                                        .getString("ProfileDetails.Advanced_Rule_Options")); //$NON-NLS-1$
+                                {
+                                    label4 = new Label(
+                                        advancedRuleOptionsGroup,
+                                        SWT.NONE);
+                                    GridData label4LData = new GridData();
+                                    label4.setEnabled(false);
+                                    label4.setLayoutData(label4LData);
+                                    label4
+                                        .setText(Messages
+                                            .getString("ProfileDetails.RuleSet_2")); //$NON-NLS-1$
+                                }
+                                {
+                                    textRuleSet = new Text(
+                                        advancedRuleOptionsGroup,
+                                        SWT.BORDER);
+                                    GridData textRuleSetLData = new GridData();
+                                    textRuleSet.setEnabled(false);
+                                    textRuleSetLData.widthHint = 100;
+                                    textRuleSetLData.heightHint = 13;
+                                    textRuleSet
+                                        .setLayoutData(textRuleSetLData);
+                                }
+                            }
+                        }
+                    }
+                    {
+                        compositeTabSubdirs = new Composite(
+                            compositeMain,
+                            SWT.NONE);
+                        treeItemSubDirs.setData(compositeTabSubdirs);
+                        GridData compositeTabSubdirsLData = new GridData();
+                        compositeTabSubdirs
+                            .setLayoutData(compositeTabSubdirsLData);
+                        GridLayout compositeTabSubdirsLayout = new GridLayout();
+                        compositeTabSubdirsLayout.numColumns = 2;
+                        compositeTabSubdirsLayout.makeColumnsEqualWidth = false;
+                        compositeTabSubdirs
+                            .setLayout(compositeTabSubdirsLayout);
+                        {
+                            {
+                                GridData directoryTreeLData = new GridData();
+                                directoryTreeLData.grabExcessHorizontalSpace = true;
+                                directoryTreeLData.grabExcessVerticalSpace = true;
+                                directoryTreeLData.horizontalAlignment = GridData.FILL;
+                                directoryTreeLData.verticalAlignment = GridData.FILL;
+                                directoryTree = new Tree(
+                                    compositeTabSubdirs,
+                                    SWT.BORDER | SWT.SINGLE);
+                                directoryTree.setSize(100, 100);
+                                directoryTree
+                                    .setLayoutData(directoryTreeLData);
+                                directoryTree
+                                    .addTreeListener(new TreeAdapter() {
+                                        public void treeExpanded(
+                                            TreeEvent evt) {
+                                            TreeItem item = (TreeItem) evt.item;
+                                            TreeItem[] childrens = item
+                                                .getItems();
+                                            for (int i = 0; i < childrens.length; i++) {
+                                                if (childrens[i]
+                                                    .getData(EXPANDED_KEY) == null) {
+                                                    File file = (File) childrens[i]
+                                                        .getData();
+                                                    try {
+                                                        addChildren(
+                                                            file,
+                                                            childrens[i]);
+                                                    } catch (IOException e) {
+                                                        ExceptionHandler
+                                                            .reportException(e);
+                                                    }
+                                                    childrens[i].setData(
+                                                        EXPANDED_KEY,
+                                                        new Object());
+                                                    //												updateDirectoryTree(childrens[i], item.getForeground());
+                                                }
+                                            }
+                                        }
+                                    });
+                            }
+                            {
+                                Composite compositeButtons = new Composite(
+                                    compositeTabSubdirs,
+                                    SWT.NONE);
+                                GridLayout compositeButtonsLayout = new GridLayout();
+                                compositeButtonsLayout.makeColumnsEqualWidth = true;
+                                GridData compositeButtonsLData = new GridData();
+                                compositeButtonsLData.grabExcessVerticalSpace = true;
+                                compositeButtonsLData.verticalAlignment = GridData.FILL;
+                                compositeButtons
+                                    .setLayoutData(compositeButtonsLData);
+                                compositeButtons
+                                    .setLayout(compositeButtonsLayout);
+                                {
+                                    Button buttonFilter = new Button(
+                                        compositeButtons,
+                                        SWT.PUSH | SWT.CENTER);
+                                    buttonFilter.setText("Set Filter...");
+
+                                    buttonFilter
+                                        .addSelectionListener(new SelectionAdapter() {
+                                            public void widgetSelected(
+                                                SelectionEvent arg0) {
+                                                TreeItem[] selectedItems = directoryTree
+                                                    .getSelection();
+
+                                                if (selectedItems.length <= 0) {
+                                                    return;
+                                                }
+
+                                                TreeItem selectedItem = selectedItems[0];
+                                                FileFilter currentItemFilter = (FileFilter) selectedItem
+                                                    .getData(FILTER_KEY);
+
+                                                WizardDialog dialog = new WizardDialog(
+                                                    getShell(),
+                                                    SWT.APPLICATION_MODAL);
+                                                FileFilterPage page = new FileFilterPage(
+                                                    dialog,
+                                                    currentItemFilter);
+                                                dialog.show();
+                                                FileFilter newfilter = page
+                                                    .getFileFilter();
+                                                if (newfilter != null) {
+                                                    selectedItem.setData(
+                                                        FILTER_KEY,
+                                                        newfilter);
+                                                    treeItemsWithFilter
+                                                        .add(selectedItem);
+                                                    File file = (File) selectedItem
+                                                        .getData();
+                                                    itemsMap.put(
+                                                        file.getPath(),
+                                                        newfilter);
+                                                    markItem(selectedItem);
+                                                }
+                                            }
+                                        });
+                                }
+                                {
+                                    Button buttonRemoveFilter = new Button(
+                                        compositeButtons,
+                                        SWT.PUSH | SWT.CENTER);
+                                    buttonRemoveFilter
+                                        .setText("Remove Filter");
+
+                                    buttonRemoveFilter
+                                        .addSelectionListener(new SelectionAdapter() {
+                                            public void widgetSelected(
+                                                SelectionEvent arg0) {
+                                                TreeItem[] selectedItems = directoryTree
+                                                    .getSelection();
+
+                                                if (selectedItems.length <= 0) {
+                                                    return;
+                                                }
+
+                                                TreeItem selectedItem = selectedItems[0];
+                                                treeItemsWithFilter
+                                                    .remove(selectedItem);
+                                                File file = (File) selectedItem
+                                                    .getData();
+                                                itemsMap.remove(file
+                                                    .getPath());
+                                                unmarkItem(selectedItem);
+                                            }
+                                        });
+                                }
+
+                            }
+                        }
+
+                    }
+
+                }
 				sashForm.setWeights(new int[] {2,5});
 			}
 			comboType.add( "Publish/Update" ); //$NON-NLS-1$
@@ -916,9 +898,6 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	/** Add your post-init code in here 	*/
 	public void postInitGUI()
 	{
-		textSourcePassword.setEchoChar( '*' );
-		textDestinationPassword.setEchoChar( '*' );
-		
 		comboType.select(0);
 		//	    comboPatternsType.select(0);
 	}
@@ -940,18 +919,20 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 		
 		textName.setText( p.getName() );
 		textDescription.setText( p.getDescription() );
-		textSource.setText( p.getSource().getUri().toString() );
+		try {
+            connectionConfigurationSource.setLocationDescription( new LocationDescription( p.getSource() ) );
+        } catch( URISyntaxException e1 ) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
 		buttonSourceBuffered.setSelection( "syncfiles".equals( p.getSource().getBufferStrategy() ) ); //$NON-NLS-1$
-		if( p.getSource().getUsername() != null )
-			textSourceUsername.setText( p.getSource().getUsername() );
-		if( p.getSource().getPassword() != null )
-			textSourcePassword.setText( p.getSource().getPassword() );
-		textDestination.setText( p.getDestination().getUri().toString() );
+        try {
+            connectionConfigurationDestination.setLocationDescription( new LocationDescription( p.getDestination() ) );
+        } catch( URISyntaxException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 		buttonDestinationBuffered.setSelection( "syncfiles".equals( p.getDestination().getBufferStrategy() ) ); //$NON-NLS-1$
-		if( p.getDestination().getUsername() != null )
-			textDestinationUsername.setText( p.getDestination().getUsername() );
-		if( p.getDestination().getPassword() != null )
-			textDestinationPassword.setText( p.getDestination().getPassword() );
 		
 		if( p.getSynchronizationType() != null && p.getSynchronizationType().length() > 0 )
 			comboType.setText( p.getSynchronizationType() );
@@ -1191,28 +1172,26 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	
 	private ConnectionDescription getDestinationConnection() {
 		ConnectionDescription dst;
-		dst = new ConnectionDescription( textDestination.getText(), "" ); //$NON-NLS-1$
+        try {
+            dst = connectionConfigurationDestination.getLocationDescription().toConnectionDescription();
+        } catch( URISyntaxException e ) {
+            return null;
+        }
 		if( buttonDestinationBuffered.getSelection() )
 			dst.setBufferStrategy( "syncfiles" ); //$NON-NLS-1$
-		if( textDestinationUsername.getText().length() > 0 )
-		{
-			dst.setUsername( textDestinationUsername.getText() );
-			dst.setPassword( textDestinationPassword.getText() );
-		}
 		return dst;
 	}
 
 	private ConnectionDescription getSourceConnection() {
-		ConnectionDescription src;
-		src = new ConnectionDescription( textSource.getText(), "" ); //$NON-NLS-1$
-		if( buttonSourceBuffered.getSelection() )
-			src.setBufferStrategy( "syncfiles" ); //$NON-NLS-1$
-		if( textSourceUsername.getText().length() > 0 )
-		{
-			src.setUsername( textSourceUsername.getText() );
-			src.setPassword( textSourcePassword.getText() );
-		}
-		return src;
+        ConnectionDescription dst = null;
+        try {
+            dst = connectionConfigurationSource.getLocationDescription().toConnectionDescription();
+        } catch( URISyntaxException e ) {
+            return null;
+        }
+        if( buttonSourceBuffered.getSelection() )
+            dst.setBufferStrategy( "syncfiles" ); //$NON-NLS-1$
+        return dst;
 	}
 
 	/** Auto-generated event handler method */
@@ -1221,54 +1200,6 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 		getShell().dispose();
 	}
 	
-	/** Auto-generated event handler method */
-	protected void buttonBrowseSrcWidgetSelected(SelectionEvent evt){
-        /*
-		DirectoryDialog dd = new DirectoryDialog( getShell() );
-		dd.setMessage( Messages.getString("ProfileDetails.Choose_source_dir") ); //$NON-NLS-1$
-		String str = dd.open();
-		if( str != null )
-			textSource.setText( new java.io.File( str ).toURI().toString() );
-		    textSource.setText( new File( str ).toURI().toString() );
-        */
-        try {
-            FileObjectChooser foc = new FileObjectChooser( getShell(), SWT.NULL );
-            String userinfo = URLEncoder.encode( textSourceUsername.getText() ) + ":" + URLEncoder.encode( textSourcePassword.getText() );
-            foc.setBaseFileObject( VFS.getManager().resolveFile( textSource.getText().replaceFirst("//", "//"+userinfo) ) );
-            if( foc.open() == 1 )
-            {
-                textSource.setText( foc.getSelectedFileObject().getName().getURI() );
-            }
-        } catch( FileSystemException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-	}
-	
-	/** Auto-generated event handler method */
-	protected void buttonBrowseDstWidgetSelected(SelectionEvent evt){
-        /*
-		DirectoryDialog dd = new DirectoryDialog( getShell() );
-		dd.setMessage( Messages.getString("ProfileDetails.Choose_source_dir") ); //$NON-NLS-1$
-		String str = dd.open();
-		if( str != null )
-			textDestination.setText( new java.io.File( str ).toURI().toString() );
-		
-		    textDestination.setText( new File( str ).toURI().toString() );
-            */
-        try {
-            FileObjectChooser foc = new FileObjectChooser( getShell(), SWT.NULL );
-            String userinfo = URLEncoder.encode( textDestinationUsername.getText() ) + ":" + URLEncoder.encode( textDestinationPassword.getText() );
-            foc.setBaseFileObject( VFS.getManager().resolveFile( textDestination.getText().replaceFirst("//", "//"+userinfo+"@") ) );
-            if( foc.open() == 1 )
-            {
-                textSource.setText( foc.getSelectedFileObject().getName().getURI() );
-            }
-        } catch( FileSystemException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-	}
 	
 	protected void selectRuleSetButton(Button button) {
 		
