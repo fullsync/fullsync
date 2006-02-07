@@ -7,14 +7,17 @@ import java.text.SimpleDateFormat;
 
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.rules.filefilter.FileAgeFileFilterRule;
+import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.FileFilterManager;
 import net.sourceforge.fullsync.rules.filefilter.FileModificationDateFileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FileNameFileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FilePathFileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FileSizeFileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FileTypeFileFilterRule;
+import net.sourceforge.fullsync.rules.filefilter.SubfilterFileFilerRule;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
+import net.sourceforge.fullsync.rules.filefilter.values.FilterValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
@@ -111,6 +114,7 @@ public class FilterRuleListItem implements ValueChangedListener {
 		comboRuleTypes.add(FileSizeFileFilterRule.typeName);
 		comboRuleTypes.add(FileModificationDateFileFilterRule.typeName);
 		comboRuleTypes.add(FileAgeFileFilterRule.typeName);
+		comboRuleTypes.add(SubfilterFileFilerRule.typeName);
 		
 		if ((ruleType == null) || (ruleType.equals(""))) {
 			comboRuleTypes.select(0);
@@ -129,6 +133,9 @@ public class FilterRuleListItem implements ValueChangedListener {
 			op = 0;
 		}
 		comboOperators.select(op);
+		if (ops.length == 0) {
+			comboOperators.setVisible(false);
+		}
 				
 		if ((ruleType.equals(FileNameFileFilterRule.typeName)) ||
 				(ruleType.equals(FilePathFileFilterRule.typeName)))
@@ -170,6 +177,13 @@ public class FilterRuleListItem implements ValueChangedListener {
 			}
 
 			ruleComposite = new DateValueRuleComposite(composite, SWT.NULL, (DateValue)value);
+			ruleComposite.addValueChangedListener(this);
+		}
+		else if (ruleType.equals(SubfilterFileFilerRule.typeName)) {
+			if (!(value instanceof FilterValue)) {
+				value = new FilterValue(new FileFilter());
+			}
+			ruleComposite = new SubfilterRuleComposite(composite, SWT.NULL, (FilterValue)value);
 			ruleComposite.addValueChangedListener(this);
 		}
 		else {
