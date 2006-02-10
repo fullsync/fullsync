@@ -5,6 +5,7 @@ package net.sourceforge.fullsync.rules.filefilter;
 
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
+import net.sourceforge.fullsync.rules.filefilter.values.FilterValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
@@ -19,39 +20,33 @@ import org.w3c.dom.NodeList;
  */
 public class FileFilterManager {
 	
-	public Element serializeFileFilter(FileFilter fileFilter, Document document, String elementName) {
+	public Element serializeFileFilter(FileFilter fileFilter, Document document, String elementName, String ruleElementName) {
 		Element filterElement = document.createElement(elementName);
-		document.appendChild(filterElement);
+//		document.appendChild(filterElement);
 		filterElement.setAttribute("matchtype", String.valueOf(fileFilter.getMatchType()));
 		filterElement.setAttribute("filtertype", String.valueOf(fileFilter.getFilterType()));
 		filterElement.setAttribute("appliestodir", String.valueOf(fileFilter.appliesToDirectories()));
 
 		FileFilterRule[] rules = fileFilter.getFileFiltersRules();
 		for (int i = 0; i < rules.length; i++) {
-			Element ruleElement = serializeRule(rules[i], document);
+			Element ruleElement = serializeRule(rules[i], document, ruleElementName);
 			filterElement.appendChild(ruleElement);
 		}
 				
 		return filterElement;
 	}
 
-	public Element serializeRule(FileFilterRule fileFilterRule, Document document) {
-		Element ruleElement = document.createElement("FileFilterRule");
+	public Element serializeRule(FileFilterRule fileFilterRule, Document document, String elementName) {
+		Element ruleElement = document.createElement(elementName);
 		String ruleType = getRuleType(fileFilterRule);
 		
 		ruleElement.setAttribute("ruletype", ruleType);
 		serializeRuleAttributes(fileFilterRule, ruleElement);
-		
-//		String desc = fileFilterRule.toString();
-//		Element descriptionElement = document.createElement("Description");
-//		Text descNode = document.createTextNode(desc);
-//		descriptionElement.appendChild(descNode);
-//		ruleElement.appendChild(descriptionElement);
-		
+				
 		return ruleElement;
 	}
 	
-	public FileFilter unserializeFileFilter(Element fileFilterElement) {
+	public FileFilter unserializeFileFilter(Element fileFilterElement, String ruleElementName) {
 		FileFilter fileFilter = new FileFilter();
 		int match_type = 0;
 
@@ -71,7 +66,7 @@ public class FileFilterManager {
 		boolean applies = Boolean.valueOf(fileFilterElement.getAttribute("appliestodir")).booleanValue();
 		fileFilter.setAppliesToDirectories(applies);
 		
-		NodeList ruleList = fileFilterElement.getElementsByTagName("FileFilterRule");
+		NodeList ruleList = fileFilterElement.getElementsByTagName(ruleElementName);
 		int numOfRules = ruleList.getLength();
 		FileFilterRule[] rules = new FileFilterRule[numOfRules];
 		
@@ -121,6 +116,14 @@ public class FileFilterManager {
 			ruleElement.setAttribute("age", rule.getValue().toString());
 		}
 
+		if (fileFilterRule instanceof SubfilterFileFilerRule) {
+			SubfilterFileFilerRule rule = (SubfilterFileFilerRule) fileFilterRule;
+			FileFilter subfilter = ((FilterValue) rule.getValue()).getValue();
+			Element subfilterElement = serializeFileFilter(subfilter, ruleElement.getOwnerDocument(), 
+					"NestedFileFilter", "NestedFileFilterRule");
+			ruleElement.appendChild(subfilterElement);
+		}
+
 	}
 
 	public FileFilterRule unserializeFileFilterRule(Element fileFilterRuleElement) {
@@ -163,6 +166,13 @@ public class FileFilterManager {
 			rule = new FileAgeFileFilterRule(new AgeValue(age), op);
 		}
 
+		if (ruleType.equals(SubfilterFileFilerRule.typeName)) {
+			NodeList filterList = fileFilterRuleElement.getElementsByTagName("NestedFileFilter");
+			Element subfileFilerElement = (Element)filterList.item(0);
+			FileFilter fileFiler = unserializeFileFilter(subfileFilerElement, "NestedFileFilterRule");
+			rule = new SubfilterFileFilerRule(fileFiler);
+		}
+
 		return rule;
 	}
 	
@@ -197,6 +207,11 @@ public class FileFilterManager {
 		if (ruleType.equals(FileAgeFileFilterRule.typeName)) {
 			AgeValue age = (AgeValue)value;
 			rule = new FileAgeFileFilterRule(age, op);
+		}
+
+		if (ruleType.equals(SubfilterFileFilerRule.typeName)) {
+			FilterValue filterValue = (FilterValue)value;
+			rule = new SubfilterFileFilerRule(filterValue.getValue());
 		}
 
 		return rule;
@@ -260,6 +275,10 @@ public class FileFilterManager {
 		
 		if (fileFilterRule instanceof FileAgeFileFilterRule) {
 			return FileAgeFileFilterRule.typeName;
+		}
+
+		if (fileFilterRule instanceof SubfilterFileFilerRule) {
+			return SubfilterFileFilerRule.typeName;
 		}
 
 		return null;

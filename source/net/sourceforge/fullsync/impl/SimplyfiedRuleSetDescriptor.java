@@ -83,7 +83,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		FileFilterManager filterManager = new FileFilterManager();
 
 		if (fileFilter != null) {
-			Element fileFilterElement = filterManager.serializeFileFilter(getFileFilter(), document, "FileFilter");
+			Element fileFilterElement = filterManager.serializeFileFilter(getFileFilter(), document, "FileFilter", "FileFilterRule");
 			simpleRuleSetElement.appendChild(fileFilterElement);
 		}
 		
@@ -97,7 +97,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 				FileFilter filter = (FileFilter)entry.getValue();
 				Element subdirFilterElement = document.createElement("SubdirectoryFileFilter");
 				subdirFilterElement.setAttribute("path", path);
-				Element fileFilterElement = filterManager.serializeFileFilter(filter, document, "FileFilter");
+				Element fileFilterElement = filterManager.serializeFileFilter(filter, document, "FileFilter", "FileFilterRule");
 				subdirFilterElement.appendChild(fileFilterElement);
 				simpleRuleSetElement.appendChild(subdirFilterElement);
 			}
@@ -134,7 +134,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 			if (fileFilterNodeList.getLength() > 0) {
 				FileFilterManager filterManager = new FileFilterManager();
 				Element fileFilterElement = (Element)fileFilterNodeList.item(0);
-				fileFilter = filterManager.unserializeFileFilter(fileFilterElement);
+				fileFilter = filterManager.unserializeFileFilter(fileFilterElement, "FileFilterRule");
 				
 				NodeList subdirFiltersNodeList = simpleRuleSetConfigElement.getElementsByTagName("SubdirectoryFileFilter");
 				int numOfDirs = subdirFiltersNodeList.getLength();
@@ -145,7 +145,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 					fileFilterNodeList = subDirElement.getElementsByTagName("FileFilter");
 					if (fileFilterNodeList.getLength() > 0) {
 						Element subDirFileFilterElement = (Element)fileFilterNodeList.item(0);
-						FileFilter subDirFileFilter = filterManager.unserializeFileFilter(subDirFileFilterElement);
+						FileFilter subDirFileFilter = filterManager.unserializeFileFilter(subDirFileFilterElement, "FileFilterRule");
 
 						fileFilterTree.addFileFilter(path, subDirFileFilter);
 					}

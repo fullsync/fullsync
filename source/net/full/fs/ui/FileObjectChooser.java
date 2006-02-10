@@ -3,6 +3,7 @@ package net.full.fs.ui;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 
 import org.apache.commons.vfs.FileContent;
 import org.apache.commons.vfs.FileObject;
@@ -329,7 +330,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                 if( contentType != null )
                     type += " ("+contentType+")";
                 item.setText( 1, String.valueOf( content.getSize() ) );
-                item.setText( 3, df.format( content.getLastModifiedTime() ) );
+                item.setText( 3, df.format( new Date(content.getLastModifiedTime()) ) );
             } else {
                 item.setText( 1, "" );
                 item.setText( 3, "" );
