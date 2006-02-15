@@ -1,11 +1,12 @@
 package net.full.fs.ui;
 
-import java.net.URLEncoder;
-
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemOptions;
 import org.apache.commons.vfs.VFS;
-import org.eclipse.swt.SWT;
+import org.apache.commons.vfs.provider.ftp.FtpFileSystemConfigBuilder;
+import org.apache.commons.vfs.provider.sftp.SftpFileSystemConfigBuilder;
+import org.apache.commons.vfs.provider.smb.SmbFileSystemConfigBuilder;
 import org.eclipse.swt.widgets.Composite;
 
 public class FileSystemUiManager
@@ -47,17 +48,29 @@ public class FileSystemUiManager
     {
         String uri = location.getUri().toString();
         
-        String username = location.getProperty( "username" );
-        String password = location.getProperty( "password" );
-        String userinfo = null;
+        FileSystemOptions fileSystemOptions = new FileSystemOptions();
         
-        if( username != null ) {
-            userinfo = URLEncoder.encode( username );
-            if( password != null )
-                userinfo += ":" + URLEncoder.encode( password );
+        if( uri.startsWith( "ftp" ) )
+        {
+            String username = location.getProperty( "username" );
+            String password = location.getProperty( "password" );
             
-            uri = uri.replaceFirst("//", "//"+userinfo+"@");
+            FtpFileSystemConfigBuilder.getInstance().setUsername( fileSystemOptions, username );
+            FtpFileSystemConfigBuilder.getInstance().setPassword( fileSystemOptions, password );
+        } else if( uri.startsWith( "sftp" ) ) {
+            final String username = location.getProperty( "username" );
+            final String password = location.getProperty( "password" );
+            
+            SftpFileSystemConfigBuilder.getInstance().setUsername( fileSystemOptions, username );
+            SftpFileSystemConfigBuilder.getInstance().setPassword( fileSystemOptions, password );
+        } else if( uri.startsWith( "smb" ) ) {
+            final String username = location.getProperty( "username" );
+            final String password = location.getProperty( "password" );
+            
+            SmbFileSystemConfigBuilder.getInstance().setUsername( fileSystemOptions, username );
+            SmbFileSystemConfigBuilder.getInstance().setPassword( fileSystemOptions, password );
         }
-        return VFS.getManager().resolveFile( uri );
+
+        return VFS.getManager().resolveFile( uri, fileSystemOptions );
     }
 }

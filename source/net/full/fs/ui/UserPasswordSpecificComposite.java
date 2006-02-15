@@ -63,6 +63,7 @@ public class UserPasswordSpecificComposite extends ProtocolSpecificComposite
         labelPassword.setText("Password:");
         textPassword = new Text(this, SWT.BORDER);
         textPassword.setLayoutData(gridData1);
+        textPassword.setEchoChar( '*' );
         labelPath = new Label(this, SWT.NONE);
         labelPath.setText("Path:");
         textPath = new Text(this, SWT.BORDER);
