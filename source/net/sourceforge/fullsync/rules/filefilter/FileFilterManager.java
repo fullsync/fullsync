@@ -22,7 +22,7 @@ public class FileFilterManager {
 	
 	public Element serializeFileFilter(FileFilter fileFilter, Document document, String elementName, String ruleElementName) {
 		Element filterElement = document.createElement(elementName);
-//		document.appendChild(filterElement);
+
 		filterElement.setAttribute("matchtype", String.valueOf(fileFilter.getMatchType()));
 		filterElement.setAttribute("filtertype", String.valueOf(fileFilter.getFilterType()));
 		filterElement.setAttribute("appliestodir", String.valueOf(fileFilter.appliesToDirectories()));
@@ -123,7 +123,6 @@ public class FileFilterManager {
 					"NestedFileFilter", "NestedFileFilterRule");
 			ruleElement.appendChild(subfilterElement);
 		}
-
 	}
 
 	public FileFilterRule unserializeFileFilterRule(Element fileFilterRuleElement) {
@@ -215,9 +214,7 @@ public class FileFilterManager {
 		}
 
 		return rule;
-		
 	}
-	
 	
 	public String[] getOperatorsForRuleType(String ruleType) {
 		if (ruleType.equals(FileNameFileFilterRule.typeName)) {
@@ -250,7 +247,6 @@ public class FileFilterManager {
 
 		return new String[] {"N/A"};
 	}
-
 
 	private String getRuleType(FileFilterRule fileFilterRule) {
 		if (fileFilterRule instanceof FileNameFileFilterRule) {

@@ -13,9 +13,9 @@ import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 /**
  * @author Michele Aiello
  */
-public class FileSizeFileFilterRule implements FileFilterRule {
+public class FileSizeFileFilterRule extends FileFilterRule {
 	
-	public static final String typeName = "File size";
+	public static String typeName = "File size";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -35,6 +35,10 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 		
 	private Pattern regexppattern;
 	
+	public String getRuleType() {
+		return typeName;
+	}
+
 	public static String[] getAllOperators() {
 		return allOperators;
 	}
@@ -46,10 +50,6 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 	public FileSizeFileFilterRule(SizeValue size, int operator) {
 		this.size = size;
 		this.op = operator;
-	}
-	
-	public String getRuleType() {
-		return typeName;
 	}
 
 	public int getOperator() {

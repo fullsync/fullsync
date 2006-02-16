@@ -10,9 +10,9 @@ import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 /**
  * @author Michele Aiello
  */
-public class FileTypeFileFilterRule implements FileFilterRule {
+public class FileTypeFileFilterRule extends FileFilterRule {
 	
-	public static final String typeName = "File type";
+	public static String typeName = "File type";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -25,6 +25,10 @@ public class FileTypeFileFilterRule implements FileFilterRule {
 	private TypeValue type;
 	private int op;
 		
+	public String getRuleType() {
+		return typeName;
+	}
+
 	public static String[] getAllOperators() {
 		return allOperators;
 	}
@@ -36,10 +40,6 @@ public class FileTypeFileFilterRule implements FileFilterRule {
 	public FileTypeFileFilterRule(TypeValue type, int operator) {
 		this.type = type;
 		this.op = operator;		
-	}
-
-	public String getRuleType() {
-		return typeName;
 	}
 
 	public int getOperator() {
