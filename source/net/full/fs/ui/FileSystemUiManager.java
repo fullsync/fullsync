@@ -1,12 +1,33 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.full.fs.ui;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemOptions;
-import org.apache.commons.vfs.VFS;
-import org.apache.commons.vfs.provider.ftp.FtpFileSystemConfigBuilder;
-import org.apache.commons.vfs.provider.sftp.SftpFileSystemConfigBuilder;
-import org.apache.commons.vfs.provider.smb.SmbFileSystemConfigBuilder;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.UserAuthenticator;
+import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
+import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.eclipse.swt.widgets.Composite;
 
 public class FileSystemUiManager
@@ -18,11 +39,11 @@ public class FileSystemUiManager
             instance = new FileSystemUiManager();
         return instance;
     }
-    
+
     public ProtocolSpecificComposite createProtocolSpecificComposite( Composite parent, int style, String protocol )
     {
         ProtocolSpecificComposite composite = null;
-        
+
         if( protocol.equals( "file" ) )
             composite = new FileSpecificComposite( parent, style );
         else if( protocol.equals( "ftp" ) )
@@ -31,46 +52,32 @@ public class FileSystemUiManager
             composite = new UserPasswordSpecificComposite( parent, style );
         else if( protocol.equals( "smb" ) )
             composite = new UserPasswordSpecificComposite( parent, style );
-        
+
         if( composite != null )
         {
             composite.reset( protocol );
         }
         return composite;
     }
-    
+
     public String[] getSchemes()
     {
         return new String[] { "file", "ftp", "sftp", "smb" };
     }
-    
+
     public FileObject resolveFile( LocationDescription location ) throws FileSystemException
     {
-        String uri = location.getUri().toString();
-        
+        String uri = location.getUri().getScheme();
+
         FileSystemOptions fileSystemOptions = new FileSystemOptions();
-        
-        if( uri.startsWith( "ftp" ) )
+
+        if( uri.startsWith( "ftp" ) || uri.startsWith( "sftp" ) || uri.startsWith( "smb" ) )
         {
             String username = location.getProperty( "username" );
             String password = location.getProperty( "password" );
-            
-            FtpFileSystemConfigBuilder.getInstance().setUsername( fileSystemOptions, username );
-            FtpFileSystemConfigBuilder.getInstance().setPassword( fileSystemOptions, password );
-        } else if( uri.startsWith( "sftp" ) ) {
-            final String username = location.getProperty( "username" );
-            final String password = location.getProperty( "password" );
-            
-            SftpFileSystemConfigBuilder.getInstance().setUsername( fileSystemOptions, username );
-            SftpFileSystemConfigBuilder.getInstance().setPassword( fileSystemOptions, password );
-        } else if( uri.startsWith( "smb" ) ) {
-            final String username = location.getProperty( "username" );
-            final String password = location.getProperty( "password" );
-            
-            SmbFileSystemConfigBuilder.getInstance().setUsername( fileSystemOptions, username );
-            SmbFileSystemConfigBuilder.getInstance().setPassword( fileSystemOptions, password );
+            UserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
+            DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(fileSystemOptions, auth);
         }
-
         return VFS.getManager().resolveFile( uri, fileSystemOptions );
     }
 }

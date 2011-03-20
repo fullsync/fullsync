@@ -19,15 +19,3 @@
  *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
  *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
  */
-package net.sourceforge.fullsync.buffer;
-
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
-public final class Segment
-{
-	public final static int First  = 1;
-	public final static int Middle = 2;
-	public final static int Last   = 4;
-	public final static int Only   = 7;
-}

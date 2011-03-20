@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.sourceforge.fullsync.fs.connection;
 
 import java.io.IOException;
@@ -177,20 +198,20 @@ public class SftpConnection extends InstableConnection
         return n;
     }
     
-    public Hashtable _getChildren( File dir ) throws IOException
+    public Hashtable<String, File> _getChildren( File dir ) throws IOException
     {
         SftpFile f = null;
         try {
             f = sftpClient.openDirectory( basePath+"/"+dir.getPath() );
         } catch( IOException ioe ) {
             if( ioe.getMessage().equals( "No such file") )
-                 return new Hashtable(0);
+                 return new Hashtable<String, File>(); //TODO: was return new Hashtable(0);
             else throw ioe;
         }
-        ArrayList files = new ArrayList();
+        ArrayList<File> files = new ArrayList<File>();
         sftpClient.listChildren( f, files );
         
-        Hashtable table = new Hashtable();
+        Hashtable<String, File> table = new Hashtable<String, File>();
         for( Iterator i = files.iterator(); i.hasNext(); )
         {
             SftpFile file = (SftpFile)i.next();

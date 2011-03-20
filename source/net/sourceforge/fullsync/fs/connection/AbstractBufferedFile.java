@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.sourceforge.fullsync.fs.connection;
 
 import java.io.IOException;
@@ -26,7 +47,7 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
         super( bc, name, path, parent, directory, exists );
         this.dirty = false;
         this.unbuffered = null;
-        children = new Hashtable();
+        children = new Hashtable<String, File>();
     }
     
     public AbstractBufferedFile( BufferedConnection bc, File unbuffered, File parent, boolean directory, boolean exists )
@@ -34,7 +55,7 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
         super( bc, unbuffered.getName(), unbuffered.getPath(), parent, directory, exists );
         this.dirty = false;
         this.unbuffered = unbuffered;
-        children = new Hashtable();
+        children = new Hashtable<String, File>();
     }
 
     public boolean isDirty()
@@ -46,17 +67,19 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
     {
         dirty = true;
     }
+    @Override
     public boolean isBuffered()
     {
         return true;
     }
-
+    @Override
     public File getUnbuffered() throws IOException
     {
         if( unbuffered == null )
             refreshReference();
         return unbuffered;
     }
+    @Override
     public boolean makeDirectory() throws IOException
     {
         return getUnbuffered().makeDirectory();
@@ -69,6 +92,7 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
     {
         return fsAttributes;
     }
+    @Override
     public FileAttributes getFileAttributes()
     {
         // in case we are requesting file attributes that 
@@ -82,11 +106,12 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
     {
         setFileAttributes( getFsFileAttributes() );
     }
+    @Override
     public InputStream getInputStream() throws IOException
     {
         return getUnbuffered().getInputStream();
     }
-
+    @Override
     public OutputStream getOutputStream() throws IOException
     {
         return getUnbuffered().getOutputStream();
@@ -100,13 +125,14 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
         children.remove( name );
     }
     
-	
+	@Override
     public void refresh() throws IOException
     {
         // FIXME a dir refresh must be performed on the underlaying layer pretty carefully 
         getUnbuffered().refresh();
         refreshReference();
     }
+	@Override
     public void refreshBuffer() throws IOException
     {
         directory = getUnbuffered().isDirectory();
@@ -115,7 +141,6 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile
         if( exists && !directory )
             setFsFileAttributes( getUnbuffered().getFileAttributes() );
     }
-    
     public void refreshReference() throws IOException
     {
         unbuffered = getParent().getUnbuffered().getChild( getName() );

@@ -1,4 +1,13 @@
 Version 0.10.0
+(xx Xxxx 2011)
+* changed updated all bundled libraries to their latest version
+* added 64-bit support
+* initial attempt at mac support (needs testers!)
+* changed don't ask for exit confirmation if there are no tasks scheduled
+* added FullSync Launcher, since FullSync now uses the current SWT implementation it needs to have a launcher to select the correct SWT implementation at runtime
+
+
+Version 0.10.0
 (xx Xxxx 2006)
 
 * new commons-vfs source and destination browser should work now, certainly not fine, but it works

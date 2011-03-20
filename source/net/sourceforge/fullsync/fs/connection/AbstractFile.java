@@ -1,10 +1,30 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.sourceforge.fullsync.fs.connection;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.fs.File;
@@ -25,7 +45,7 @@ public class AbstractFile implements File
     protected boolean filtered;
     protected boolean directory;
     protected FileAttributes attributes;
-    protected Hashtable children;
+    protected Hashtable<String, File> children;
     
     public AbstractFile( FileSystemConnection fs, String name, String path, File parent, boolean directory, boolean exists )
     {
@@ -121,7 +141,8 @@ public class AbstractFile implements File
             refresh();
         return (File)children.get( name );
     }
-    public Collection getChildren() throws IOException
+    @Override
+    public Collection<File> getChildren() throws IOException
     {
         if( children == null )
             refresh();
@@ -178,17 +199,18 @@ public class AbstractFile implements File
         if( isDirectory() )
         {
             // FIXME be aware of deleting entries that may be referenced by overlaying buffer
-            Hashtable newChildren = getConnection().getChildren( this );
-            if( children != null )
-            for( Enumeration e = children.elements(); e.hasMoreElements(); )
-            {
-                File n = (File)e.nextElement();
-                if( !newChildren.containsKey( n.getName() ) )
-                {
-                    if( n.exists() )
-                         newChildren.put( n.getName(), new AbstractFile( getConnection(), n.getName(), null, n.getParent(), n.isDirectory(), false ) );
-                    else newChildren.put( n.getName(), n );
-                }
+            Hashtable<String, File> newChildren = getConnection().getChildren( this );
+            if (children != null) {
+	            for (File n : children.values()) {
+	            	if (!newChildren.containsKey(n.getName())) {
+	            		if (n.exists()) {
+	            			newChildren.put(n.getName(), new AbstractFile(getConnection(), n.getName(), null, n.getParent(), n.isDirectory(), false));
+	            		}
+	            		else {
+	            			newChildren.put(n.getName(), n);
+	            		}
+	            	}
+	            }
             }
             children = newChildren;
         } else {

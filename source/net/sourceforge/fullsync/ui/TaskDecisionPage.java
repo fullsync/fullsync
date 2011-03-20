@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
@@ -21,7 +42,6 @@ import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -52,64 +72,72 @@ import org.eclipse.swt.widgets.TableItem;
  */
 public class TaskDecisionPage implements WizardPage, Serializable
 {
-    private transient WizardDialog dialog;
+	private static final long serialVersionUID = 1L;
+	private transient WizardDialog dialog;
     private transient GuiController guiController;
     private transient Profile profile;
     private transient TaskTree taskTree;
     private transient boolean processing;
 	private transient int tasksFinished;
 	private transient int tasksTotal;
-    
+
     private transient TaskDecisionList list;
     private transient Combo comboFilter;
     private transient Label labelProgress;
     private transient Button buttonGo;
-    
+
     public TaskDecisionPage( WizardDialog dialog, GuiController guiController, Profile profile, TaskTree taskTree )
     {
         this.dialog = dialog;
         this.guiController = guiController;
         this.profile = profile;
         this.taskTree = taskTree;
-        
+
         dialog.setPage( this );
     }
-    
-    public String getTitle()
+
+    @Override
+	public String getTitle()
     {
         return Messages.getString("TaskDecisionPage.TaskDecision"); //$NON-NLS-1$
     }
 
-    public String getCaption()
+    @Override
+	public String getCaption()
     {
         return Messages.getString("TaskDecisionPage.ChooseTheActions"); //$NON-NLS-1$
     }
 
-    public String getDescription()
+    @Override
+	public String getDescription()
     {
         return Messages.getString("TaskDecisionPage.Source")+": "+taskTree.getSource().getUri()+"\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         	 + Messages.getString("TaskDecisionPage.Destination")+": "+taskTree.getDestination().getUri(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    public Image getIcon()
+    @Override
+	public Image getIcon()
     {
         return GuiController.getInstance().getImage( "Tasklist_Icon.png" ); //$NON-NLS-1$
     }
 
-    public Image getImage()
+    @Override
+	public Image getImage()
     {
         return GuiController.getInstance().getImage( "Tasklist_Wizard.png" ); //$NON-NLS-1$
     }
 
-    public void createContent( Composite content )
+    @Override
+	public void createContent( Composite content )
     {
         list = new TaskDecisionList( content, SWT.NULL );
         list.setTaskTree( taskTree );
         list.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-        content.setLayout( new FillLayout() );
-        
+        content.setLayout( new GridLayout() );
+
         dialog.getShell().addShellListener(new ShellAdapter() {
-		    public void shellClosed(ShellEvent event) {
+		    @Override
+			public void shellClosed(ShellEvent event) {
 		    	if (processing) {
 					MessageBox mb = new MessageBox(dialog.getShell(), SWT.ICON_ERROR | SWT.OK);
 					mb.setText(Messages.getString("TaskDecisionPage.Error")); //$NON-NLS-1$
@@ -129,7 +157,8 @@ public class TaskDecisionPage implements WizardPage, Serializable
 		} );
     }
 
-    public void createBottom( Composite compositeBottom )
+    @Override
+	public void createBottom( Composite compositeBottom )
     {
         GridLayout compositeBottomLayout = new GridLayout();
         GridData compositeBottomLData = new GridData();
@@ -146,7 +175,8 @@ public class TaskDecisionPage implements WizardPage, Serializable
             comboFilterLData.heightHint = 21;
             comboFilter.setLayoutData(comboFilterLData);
             comboFilter.addModifyListener(new ModifyListener() {
-                public void modifyText(ModifyEvent evt) {
+                @Override
+				public void modifyText(ModifyEvent evt) {
                     if( !processing )
             	    {
             	        list.setOnlyChanges( comboFilter.getSelectionIndex() == 1 );
@@ -179,7 +209,8 @@ public class TaskDecisionPage implements WizardPage, Serializable
             buttonGo.setLayoutData(buttonGoLData);
             buttonGo.setText(Messages.getString("TaskDecisionPage.Go")); //$NON-NLS-1$
             buttonGo.addSelectionListener(new SelectionAdapter() {
-                public void widgetSelected(SelectionEvent evt) {
+                @Override
+				public void widgetSelected(SelectionEvent evt) {
                     if( !processing )
             	    {
             			performActions();
@@ -191,37 +222,41 @@ public class TaskDecisionPage implements WizardPage, Serializable
 	    comboFilter.add( Messages.getString("TaskDecisionPage.Everything") ); //$NON-NLS-1$
 	    comboFilter.add( Messages.getString("TaskDecisionPage.ChangesOnly") ); //$NON-NLS-1$
 	    comboFilter.select(1);
-        
+
     }
 
     void performActions() {
         Thread worker = new Thread( new Runnable() {
+			@Override
 			public void run() {
 	            guiController.showBusyCursor( true );
 				try {
-				    final Display display = dialog.getDisplay(); 
+				    final Display display = dialog.getDisplay();
 		            processing = true;
 		            list.setChangeAllowed( false );
-		            
+
 		            Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
-		            IoStatistics stats = synchronizer.getIoStatistics(taskTree);		            
+		            IoStatistics stats = synchronizer.getIoStatistics(taskTree);
 		            tasksTotal = stats.getCountActions();
 				    tasksFinished = 0;
 
 		            final Color colorFinishedSuccessful = new Color( null, 150, 255, 150 );
 		            final Color colorFinishedUnsuccessful = new Color( null, 255, 150, 150 );
-		            
+
 		            display.syncExec(new Runnable() {
-		            	public void run() {
+		            	@Override
+						public void run() {
 		            		buttonGo.setEnabled(false);
-		            	}	
+		            	}
 		            });
 
 		            synchronizer.performActions(taskTree, new TaskFinishedListener() {
-		            	public void taskFinished( final TaskFinishedEvent event ) 
+		            	@Override
+						public void taskFinished( final TaskFinishedEvent event )
 		            	{
 		            		display.asyncExec( new Runnable() {
-		            			public void run() {
+		            			@Override
+								public void run() {
 		            				tasksFinished++;
 		            				labelProgress.setText( tasksFinished+" "+Messages.getString("TaskDecisionPage.of")+" "+tasksTotal+" "+Messages.getString("TaskDecisionPage.tasksFinished") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		            				Task task = event.getTask();
@@ -235,14 +270,15 @@ public class TaskDecisionPage implements WizardPage, Serializable
 		            					else {
 		            						item.setBackground(colorFinishedUnsuccessful);
 		            					}
-		            					list.showItem(item);		            					
+		            					list.showItem(item);
 		            				}
 		            			}
 		            		});
 		            	}
 		            });
-		            
+
 			        dialog.getDisplay().asyncExec( new Runnable() {
+						@Override
 						public void run() {
 			            	// Notification Window.
 							MessageBox mb = new MessageBox( dialog.getShell(), SWT.ICON_INFORMATION | SWT.OK );

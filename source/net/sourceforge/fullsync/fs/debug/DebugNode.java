@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.sourceforge.fullsync.fs.debug;
 
 import java.io.IOException;
@@ -14,16 +35,16 @@ import net.sourceforge.fullsync.fs.FileAttributes;
 public class DebugNode implements File
 {
 	private static final long serialVersionUID = 1;
-	
+
     private String name;
     private String path;
     private boolean directory;
     private boolean exists;
     private boolean filtered;
-    
+
     private long length;
     private long lastModified;
-    
+
     public DebugNode( boolean exists, boolean directory, long length, long lm )
     {
         this.name = "debug";
@@ -54,27 +75,32 @@ public class DebugNode implements File
         this.lastModified = lm;
     }
 
-    public InputStream getInputStream() throws IOException
+    @Override
+	public InputStream getInputStream() throws IOException
     {
         return null;
     }
 
-    public OutputStream getOutputStream() throws IOException
+    @Override
+	public OutputStream getOutputStream() throws IOException
     {
         return null;
     }
 
-    public File getParent()
+    @Override
+	public File getParent()
     {
         return null;
     }
 
-    public Collection getChildren()
+    @Override
+	public Collection<File> getChildren()
     {
         return null;
     }
 
-    public File getChild( String name )
+    @Override
+	public File getChild( String name )
     {
         return null;
     }
@@ -89,78 +115,95 @@ public class DebugNode implements File
         return null;
     }
 
-    public boolean makeDirectory()
+    @Override
+	public boolean makeDirectory()
     {
         return true;
     }
 
-    public String getName()
+    @Override
+	public String getName()
     {
         return name;
     }
 
-    public String getPath()
+    @Override
+	public String getPath()
     {
         return path;
     }
 
-    public boolean isDirectory()
+    @Override
+	public boolean isDirectory()
     {
         return directory;
     }
 
-    public boolean exists()
+    @Override
+	public boolean exists()
     {
         return exists;
     }
 
-    public boolean isBuffered()
+    @Override
+	public boolean isBuffered()
     {
         return false;
     }
 
-    public File getUnbuffered()
+    @Override
+	public File getUnbuffered()
     {
         return null;
     }
 
-    public boolean delete()
+    @Override
+	public boolean delete()
     {
         return false;
     }
 
-    public void refresh()
+    @Override
+	public void refresh()
     {
 
     }
 
-    public void refreshBuffer()
+    @Override
+	public void refreshBuffer()
     {
     }
-    public File createChild( String name, boolean directory )
-    {
-        return null;
-    }
-    public FileAttributes getFileAttributes()
+    @Override
+	public File createChild( String name, boolean directory )
     {
         return null;
     }
-    public boolean isFile()
+    @Override
+	public FileAttributes getFileAttributes()
+    {
+        return null;
+    }
+    @Override
+	public boolean isFile()
     {
         return false;
     }
-    public boolean isFiltered()
+    @Override
+	public boolean isFiltered()
     {
         return filtered;
     }
-    public void setFiltered( boolean filtered )
+    @Override
+	public void setFiltered( boolean filtered )
     {
         this.filtered = filtered;
     }
-    public void setFileAttributes( FileAttributes att )
+    @Override
+	public void setFileAttributes( FileAttributes att )
     {
     }
-    public void writeFileAttributes() throws IOException
+    @Override
+	public void writeFileAttributes() throws IOException
     {
 
     }
@@ -184,7 +227,8 @@ public class DebugNode implements File
     {
         this.path = path;
     }
-    public String toString()
+    @Override
+	public String toString()
     {
         if( !exists )
             return "not exists";

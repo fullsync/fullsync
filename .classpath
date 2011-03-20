@@ -2,10 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="source"/>
 	<classpathentry kind="src" path="images"/>
-	<classpathentry kind="src" path="utils"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli.jar"/>
 	<classpathentry kind="lib" path="lib/commons-configuration.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
@@ -17,8 +15,12 @@
 	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib/jcifs.jar"/>
 	<classpathentry kind="lib" path="lib/swtcalendar.jar"/>
-	<classpathentry kind="lib" path="lib/commons-vfs.jar"/>
 	<classpathentry kind="lib" path="lib/jsch.jar"/>
-	<classpathentry kind="lib" path="lib/swt.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/swt-gtk-linux-x86_64.jar" sourcepath="/home/cobexer/Downloads/FullSync/swt-3.6.1-gtk-linux-x86_64/src.zip"/>
+	<classpathentry kind="lib" path="lib/commons-collections.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang.jar"/>
+	<classpathentry kind="lib" path="lib/commons-vfs2-sandbox.jar" sourcepath="/home/cobexer/Source/org.apache.commons.vfs/trunk"/>
+	<classpathentry kind="lib" path="lib/commons-vfs2.jar" sourcepath="/windows/D/Christoph/Source/org.apache.commons.vfs/trunk/core/src/main/java"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

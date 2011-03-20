@@ -1,18 +1,36 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.full.fs.ui;
 
 import java.net.URISyntaxException;
 
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.VFS;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
+import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 public class ConnectionConfiguration extends Composite
 {
@@ -20,18 +38,18 @@ public class ConnectionConfiguration extends Composite
     private Combo comboProtocol = null;
     private Composite compositeProtocolSpecific = null;
     private ProtocolSpecificComposite compositeSpecific;
-    
+
     public ConnectionConfiguration( Composite parent, int style )
     {
         super( parent, style );
 		initialize();
         updateComponent();
     }
-    
+
     /**
      * This method initializes this
-     * @throws FileSystemException 
-     * 
+     * @throws FileSystemException
+     *
      */
     private void initialize() {
         GridLayout gridLayout = new GridLayout();
@@ -42,33 +60,34 @@ public class ConnectionConfiguration extends Composite
         this.setLayout(gridLayout);
         createCompositeProtocolSpecific();
     }
-    
+
     /**
-     * This method initializes comboProtocol	
-     * @throws FileSystemException 
+     * This method initializes comboProtocol
+     * @throws FileSystemException
      *
      */
     private void createComboProtocol()
     {
         comboProtocol = new Combo(this, SWT.READ_ONLY);
         comboProtocol.addModifyListener( new org.eclipse.swt.events.ModifyListener() {
-            public void modifyText( org.eclipse.swt.events.ModifyEvent e )
+            @Override
+			public void modifyText( org.eclipse.swt.events.ModifyEvent e )
             {
-                if( compositeSpecific != null ) 
+                if( compositeSpecific != null )
                     compositeSpecific.dispose();
 
-                compositeSpecific = 
+                compositeSpecific =
                     FileSystemUiManager.getInstance()
                         .createProtocolSpecificComposite( compositeProtocolSpecific, SWT.NULL, comboProtocol.getText() );
-                
+
                 compositeProtocolSpecific.layout();
                 setSize( computeSize( getSize().x, SWT.DEFAULT ) );
             }
         } );
     }
-    
+
     /**
-     * This method initializes compositeProtocolSpecific    
+     * This method initializes compositeProtocolSpecific
      *
      */
     private void createCompositeProtocolSpecific()
