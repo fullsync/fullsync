@@ -13,7 +13,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
  */
 public class SubfilterFileFilerRule implements FileFilterRule {
 
-	public static final String typeName = "Subfilter";
+	public static final String typeName = "Nested Filter";
 
 	private FileFilter fileFilter;
 	
@@ -30,7 +30,7 @@ public class SubfilterFileFilerRule implements FileFilterRule {
 	}
 
 	public String getOperatorName() {
-		return null;
+		return "";
 	}
 
 	public OperandValue getValue() {
@@ -39,6 +39,10 @@ public class SubfilterFileFilerRule implements FileFilterRule {
 
 	public boolean match(File file) throws FilterRuleNotAppliableException {
 		return fileFilter.match(file);
+	}
+	
+	public String toString() {
+		return "("+fileFilter.toString()+")";
 	}
 
 }
