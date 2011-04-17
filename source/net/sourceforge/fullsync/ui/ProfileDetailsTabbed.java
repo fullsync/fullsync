@@ -117,6 +117,9 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	private Button buttonSourceBuffered;
 	private Text textName;
 	
+	private Button buttonFilter;
+	private Button buttonRemoveFilter;
+	
 	private Tree directoryTree;
 	private Vector treeItemsWithFilter = new Vector();
 	private HashMap itemsMap;
@@ -780,6 +783,19 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                             }
                                         }
                                     });
+                                directoryTree.addSelectionListener(new SelectionAdapter() {
+									public void widgetSelected(SelectionEvent evt) {
+										buttonFilter.setEnabled(true);
+										TreeItem item = (TreeItem) evt.item;
+										FileFilter currentItemFilter = (FileFilter)item.getData(FILTER_KEY);
+										if (currentItemFilter != null) {
+											buttonRemoveFilter.setEnabled(true);
+										}
+										else {
+											buttonRemoveFilter.setEnabled(false);
+										}
+									}
+								});
                             }
                             {
                                 Composite compositeButtons = new Composite(
@@ -795,7 +811,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                 compositeButtons
                                     .setLayout(compositeButtonsLayout);
                                 {
-                                    Button buttonFilter = new Button(
+                                    buttonFilter = new Button(
                                         compositeButtons,
                                         SWT.PUSH | SWT.CENTER);
                                     buttonFilter.setText("Set Filter...");
@@ -836,16 +852,18 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                                         file.getPath(),
                                                         newfilter);
                                                     markItem(selectedItem);
+                                                    buttonRemoveFilter.setEnabled(true);
                                                 }
                                             }
                                         });
                                 }
                                 {
-                                    Button buttonRemoveFilter = new Button(
+                                    buttonRemoveFilter = new Button(
                                         compositeButtons,
                                         SWT.PUSH | SWT.CENTER);
                                     buttonRemoveFilter
                                         .setText("Remove Filter");
+                                    buttonRemoveFilter.setEnabled(false);
 
                                     buttonRemoveFilter
                                         .addSelectionListener(new SelectionAdapter() {
