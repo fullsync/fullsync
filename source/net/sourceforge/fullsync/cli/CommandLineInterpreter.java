@@ -37,28 +37,28 @@ import org.eclipse.swt.program.Program;
 public class CommandLineInterpreter
 {
     private static Options options;
-    
+
     private static void initOptions()
     {
 		options = new Options();
 		options.addOption( "h", "help", false, "this help" );
 		options.addOption( "v", "verbose", false, "verbose output to stdout" );
 		options.addOption( "m", "minimized", false, "starts fullsync gui in system tray " );
-		
+
 		OptionBuilder.withLongOpt( "profiles-file" );
 		OptionBuilder.withDescription( "uses the specified file instead of profiles.xml" );
 		OptionBuilder.hasArg();
 		OptionBuilder.withArgName("filename");
-		options.addOption( OptionBuilder.create("P") ); 
-		
+		options.addOption( OptionBuilder.create("P") );
+
 		OptionBuilder.withLongOpt( "run" );
 		OptionBuilder.withDescription( "run the specified profile" );
 		OptionBuilder.hasArg();
 		OptionBuilder.withArgName("profile");
-		options.addOption( OptionBuilder.create("r") ); 
-		
+		options.addOption( OptionBuilder.create("r") );
+
 		options.addOption( "d", "daemon", false, "disables the gui and runs in daemon mode with scheduler" );
-		
+
 		// REVISIT somehow i don't like -p so much, but it's the standard for specifying ports.
 		// the problem is that it implies "enable remote connection" in our case what
 		// i consider more important, espec because the port is optional.
@@ -66,22 +66,22 @@ public class CommandLineInterpreter
 		OptionBuilder.withDescription( "accept incoming connection on the specified port or 10000" );
 		OptionBuilder.hasOptionalArg();
 		OptionBuilder.withArgName("port");
-		options.addOption( OptionBuilder.create("p") ); 
-		
+		options.addOption( OptionBuilder.create("p") );
+
 		OptionBuilder.withLongOpt( "password" );
 		OptionBuilder.withDescription( "password for incoming connections" );
 		OptionBuilder.hasOptionalArg();
 		OptionBuilder.withArgName("passwd");
-		options.addOption( OptionBuilder.create("a") ); 
+		options.addOption( OptionBuilder.create("a") );
 		// + interactive mode
     }
-    
+
     private static void printHelp()
     {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp( "fullsync [-hvrdp]", options );
     }
-    
+
     public static void parse( String[] args )
     {
         initOptions();
@@ -92,15 +92,15 @@ public class CommandLineInterpreter
 
 		    CommandLineParser parser = new PosixParser();
 		    CommandLine line = null;
-		    
+
 		    try {
 		    	line = parser.parse( options, args );
 		    } catch (ParseException pe) {
 		    	System.err.println(pe.getMessage());
 		        printHelp();
-		        return;		    	
+		        return;
 		    }
-		    
+
 		    if( line.hasOption( "h" ) )
 		    {
 		        printHelp();
@@ -111,23 +111,24 @@ public class CommandLineInterpreter
 		    // Initialize basic facilities
 		    DOMConfigurator.configure( "logging.xml" );
 		    Preferences preferences = new ConfigurationPreferences("preferences.properties");
-		    
+
 		    String profilesFile = "profiles.xml";
-		    if( line.hasOption( "P" ) ) 
-		        profilesFile = line.getOptionValue("P");
+		    if( line.hasOption( "P" ) ) {
+				profilesFile = line.getOptionValue("P");
+			}
 		    ProfileManager profileManager = new ProfileManager( profilesFile );
 
 		    final Synchronizer sync = new Synchronizer();
-		    
+
 		    // Apply modifying options
 		    if( line.hasOption( "v" ) )
 		    {
-		        ConsoleAppender appender = 
-		            new ConsoleAppender( 
+		        ConsoleAppender appender =
+		            new ConsoleAppender(
 		                new PatternLayout("[%p] %c %x - %m%n"),
                         "System.out" );
 		        appender.setName("Verbose");
-		        
+
 		        Logger logger = Logger.getLogger( "FullSync" );
 		        logger.addAppender( appender );
 		    }
@@ -156,7 +157,7 @@ public class CommandLineInterpreter
 	    	int port = 10000;
 	    	String password = "admin";
 	    	RemoteException listenerStarupException = null;
-	    	
+
 		    if (line.hasOption("p")) {
 		        activateRemote = true;
 		    	try {
@@ -186,7 +187,8 @@ public class CommandLineInterpreter
 
 		    if (line.hasOption("d")) {
 		        profileManager.addSchedulerListener( new ProfileSchedulerListener() {
-		            public void profileExecutionScheduled( Profile profile )
+		            @Override
+					public void profileExecutionScheduled( Profile profile )
                     {
                         TaskTree tree = sync.executeProfile( profile );
                         if( tree == null )
@@ -194,9 +196,12 @@ public class CommandLineInterpreter
                             profile.setLastError( 1, "An error occured while comparing filesystems." );
                         } else {
                             int errorLevel = sync.performActions( tree );
-                            if( errorLevel > 0 )
-                                 profile.setLastError( errorLevel, "An error occured while copying files." );
-                            else profile.setLastUpdate( new Date() );
+                            if( errorLevel > 0 ) {
+								profile.setLastError( errorLevel, "An error occured while copying files." );
+							}
+							else {
+								profile.setLastUpdate( new Date() );
+							}
                         }
                     }
 		        } );
@@ -207,24 +212,27 @@ public class CommandLineInterpreter
 		    		mutex.wait();
 		    	}*/
 		    } else {
-		    	try {
-		    	    if( !line.hasOption('P') && !(new File( profilesFile )).exists() )
-		    	    {
-		    	        try {
-		    	            File f = new File( "docs/manual/Getting_Started.html" );
-		    	            if( f.exists() )
-		    	                Program.launch( f.toURL().toString() );
-		    	        } catch( Error ex ) { }
-		    	    }
-		    		GuiController guiController = new GuiController( preferences, profileManager, sync );
-		    		guiController.startGui( line.hasOption('m') );
-		    		
+				try {
+					if (!line.hasOption('P') && !(new File(profilesFile)).exists()) {
+						try {
+							File f = new File("docs/manual/Getting_Started.html");
+							if (f.exists()) {
+								Program.launch(f.getAbsolutePath());
+							}
+						}
+						catch (Error ex) {
+						}
+					}
+					GuiController guiController = new GuiController(preferences, profileManager, sync);
+					guiController.startGui(line.hasOption('m'));
+
 		    	    if (listenerStarupException != null) {
 		    			ExceptionHandler.reportException( "Unable to start incoming connections listener.", listenerStarupException );
 		    		}
 
-		    	    if( preferences.autostartScheduler() )
-		    	        profileManager.startScheduler();
+		    	    if( preferences.autostartScheduler() ) {
+						profileManager.startScheduler();
+					}
 
 		    	    if (splash != null) {
 		    			long elapsed = System.currentTimeMillis() - startMillis;
@@ -237,7 +245,7 @@ public class CommandLineInterpreter
 		    			splash.hide();
 		    			splash = null;
 		    		}
-		    		
+
 		    		guiController.run();
 		    		guiController.disposeGui();
 		    	} catch( Exception ex ) {
@@ -254,7 +262,7 @@ public class CommandLineInterpreter
 	            RemoteController.getInstance().stopServer();
 	            System.exit(-1);
 		    }
-		    
+
         } catch( Exception exp ) {
 		    ExceptionHandler.reportException( exp );
         }
