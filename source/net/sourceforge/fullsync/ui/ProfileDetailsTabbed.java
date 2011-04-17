@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
@@ -23,7 +44,7 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 import net.sourceforge.fullsync.schedule.Schedule;
 
-import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
@@ -64,10 +85,10 @@ import org.eclipse.swt.widgets.TreeItem;
  * *************************************
  */
 public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
-	
+
 	private static final String EXPANDED_KEY = "Expanded";
 	private static final String FILTER_KEY = "Filter";
-	
+
 	private ProfileManager profileManager;
 	private Label label18;
 	private Button buttonFileFilter;
@@ -116,33 +137,34 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	private Label label5;
 	private Button buttonSourceBuffered;
 	private Text textName;
-	
+
 	private Button buttonFilter;
 	private Button buttonRemoveFilter;
-	
+
 	private Tree directoryTree;
-	private Vector treeItemsWithFilter = new Vector();
+	private final Vector treeItemsWithFilter = new Vector();
 	private HashMap itemsMap;
 	private Site sourceSite;
-	private FileSystemManager fsm = new FileSystemManager();
-	
-	private Color selectedColor = new Color(null, 0, 0, 255);
-	private Color unselectedColor = new Color(null, 200, 200, 200);
-	private Color othersColor = new Color(null, 0, 0, 0);
+	private final FileSystemManager fsm = new FileSystemManager();
+
+	private final Color selectedColor = new Color(null, 0, 0, 255);
+	private final Color unselectedColor = new Color(null, 200, 200, 200);
+	private final Color othersColor = new Color(null, 0, 0, 0);
 
 	private String profileName;
-	
+
 	private FileFilter filter;
-		
+
 	public ProfileDetailsTabbed(Composite parent, int style) {
 		super(parent, style);
 		initGUI();
 		this.addDisposeListener(new DisposeListener(){
+			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
-				closeSourceSite();			}	
+				closeSourceSite();			}
 		});
 	}
-	
+
 	/**
 	 * Initializes the GUI.
 	 * Auto-generated code - any changes you make will disappear.
@@ -150,7 +172,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	public void initGUI(){
 		try {
 			preInitGUI();
-			
+
 			GridLayout thisLayout = new GridLayout();
 			thisLayout.marginWidth = 0;
 			thisLayout.marginHeight = 0;
@@ -167,6 +189,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 				{
 					treeTabs = new Tree(sashForm, SWT.NONE);
 					treeTabs.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent evt) {
 							treeTabsWidgetSelected(evt);
 						}
@@ -257,7 +280,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                     SWT.DROP_DOWN | SWT.READ_ONLY);
                                 comboType
                                     .addModifyListener(new ModifyListener() {
-                                        public void modifyText(
+                                        @Override
+										public void modifyText(
                                             ModifyEvent evt) {
                                             if (comboType.getText().equals(
                                                 "Publish/Update")) //$NON-NLS-1$
@@ -336,7 +360,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                         .getString("ProfileDetails.Edit_Scheduling")); //$NON-NLS-1$
                                 buttonScheduling
                                     .addSelectionListener(new SelectionAdapter() {
-                                        public void widgetSelected(
+                                        @Override
+										public void widgetSelected(
                                             SelectionEvent evt) {
                                             ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(
                                                 getShell(),
@@ -400,7 +425,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                             groupSourceLData.verticalAlignment = GridData.FILL;
                             groupSource.setLayoutData(groupSourceLData);
                             groupSource.setText(Messages
-                                .getString("ProfileDetails.Source.Label")); //$NON-NLS-1$ 
+                                .getString("ProfileDetails.Source.Label")); //$NON-NLS-1$
                             {
                                 GridData connectionConfigurationSourceLData = new GridData();
                                 connectionConfigurationSourceLData.horizontalAlignment = GridData.FILL;
@@ -533,7 +558,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                     .setLayoutData(rbSimplyfiedRuleSetLData);
                                 rbSimplyfiedRuleSet
                                     .addSelectionListener(new SelectionAdapter() {
-                                        public void widgetSelected(
+                                        @Override
+										public void widgetSelected(
                                             SelectionEvent evt) {
                                             selectRuleSetButton(rbSimplyfiedRuleSet);
                                         }
@@ -584,7 +610,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                     buttonUseFileFilter.setSelection(true);
                                     buttonUseFileFilter
                                         .addSelectionListener(new SelectionAdapter() {
-                                            public void widgetSelected(
+                                            @Override
+											public void widgetSelected(
                                                 SelectionEvent evt) {
                                                 if (buttonUseFileFilter
                                                     .getSelection()) {
@@ -623,7 +650,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                         .setLayoutData(buttonFileFilterLData);
                                     buttonFileFilter
                                         .addSelectionListener(new SelectionAdapter() {
-                                            public void widgetSelected(
+                                            @Override
+											public void widgetSelected(
                                                 SelectionEvent evt) {
                                                 try {
                                                     WizardDialog dialog = new WizardDialog(
@@ -677,7 +705,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                     .setLayoutData(rbAdvancedRuleSetLData);
                                 rbAdvancedRuleSet
                                     .addSelectionListener(new SelectionAdapter() {
-                                        public void widgetSelected(
+                                        @Override
+										public void widgetSelected(
                                             SelectionEvent evt) {
                                             selectRuleSetButton(rbAdvancedRuleSet);
                                         }
@@ -755,7 +784,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                     .setLayoutData(directoryTreeLData);
                                 directoryTree
                                     .addTreeListener(new TreeAdapter() {
-                                        public void treeExpanded(
+                                        @Override
+										public void treeExpanded(
                                             TreeEvent evt) {
                                             TreeItem item = (TreeItem) evt.item;
                                             TreeItem[] childrens = item
@@ -782,6 +812,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                         }
                                     });
                                 directoryTree.addSelectionListener(new SelectionAdapter() {
+									@Override
 									public void widgetSelected(SelectionEvent evt) {
 										buttonFilter.setEnabled(true);
 										TreeItem item = (TreeItem) evt.item;
@@ -816,7 +847,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 
                                     buttonFilter
                                         .addSelectionListener(new SelectionAdapter() {
-                                            public void widgetSelected(
+                                            @Override
+											public void widgetSelected(
                                                 SelectionEvent arg0) {
                                                 TreeItem[] selectedItems = directoryTree
                                                     .getSelection();
@@ -865,7 +897,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 
                                     buttonRemoveFilter
                                         .addSelectionListener(new SelectionAdapter() {
-                                            public void widgetSelected(
+                                            @Override
+											public void widgetSelected(
                                                 SelectionEvent arg0) {
                                                 TreeItem[] selectedItems = directoryTree
                                                     .getSelection();
@@ -898,10 +931,10 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			comboType.add( "Backup Copy" ); //$NON-NLS-1$
 			comboType.add( "Exact Copy" ); //$NON-NLS-1$
 			comboType.add( "Two Way Sync" ); //$NON-NLS-1$
-			
+
 			this.layout();
 			this.setSize(609, 533);
-			
+
 			postInitGUI();
 		} catch (Exception e) {
 			ExceptionHandler.reportException( e );
@@ -910,14 +943,14 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	/** Add your pre-init code in here 	*/
 	public void preInitGUI(){
 	}
-	
+
 	/** Add your post-init code in here 	*/
 	public void postInitGUI()
 	{
 		comboType.select(0);
 		//	    comboPatternsType.select(0);
 	}
-	
+
 	public void setProfileManager( ProfileManager manager )
 	{
 		this.profileManager = manager;
@@ -925,14 +958,14 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	public void setProfileName( String name )
 	{
 		this.profileName = name;
-		
+
 		if( profileName == null )
 			return;
-		
+
 		Profile p = profileManager.getProfile( profileName );
 		if( p == null )
 			throw new IllegalArgumentException( Messages.getString("ProfileDetails.profile_does_not_exist") ); //$NON-NLS-1$
-		
+
 		textName.setText( p.getName() );
 		textDescription.setText( p.getDescription() );
 		try {
@@ -949,17 +982,17 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
             e.printStackTrace();
         }
 		buttonDestinationBuffered.setSelection( "syncfiles".equals( p.getDestination().getBufferStrategy() ) ); //$NON-NLS-1$
-		
+
 		if( p.getSynchronizationType() != null && p.getSynchronizationType().length() > 0 )
 			comboType.setText( p.getSynchronizationType() );
 		else comboType.select( 0 );
-		
+
 		buttonScheduling.setData( p.getSchedule() );
 		buttonEnabled.setSelection( p.isEnabled() );
-		
+
 		RuleSetDescriptor ruleSetDescriptor = p.getRuleSet();
 		filter = null;
-		
+
 		if (ruleSetDescriptor instanceof SimplyfiedRuleSetDescriptor) {
 			selectRuleSetButton(rbSimplyfiedRuleSet);
 			rbSimplyfiedRuleSet.setSelection(true);
@@ -1001,9 +1034,9 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			textRuleSet.setText(advDesc.getRuleSetName());
 		}
 	}
-	
+
 	private void drawDirectoryTree() {
-		directoryTree.setRedraw(false);		
+		directoryTree.setRedraw(false);
 		directoryTree.removeAll();
 
 		try {
@@ -1029,10 +1062,10 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 		} catch (IOException e) {
 			ExceptionHandler.reportException(e);
 		}
-		
+
 		directoryTree.setRedraw(true);
 	}
-	
+
 	private void addChildren(File rootFile, TreeItem item) throws IOException {
 		Collection children = rootFile.getChildren();
 		Iterator it = children.iterator();
@@ -1065,8 +1098,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			item.setText(text.substring(1));
 		}
 	}
-	
-	
+
+
 //	private void updateDirectoryTree(TreeItem rootItem, Color defaultColor) {
 //		Color theColor = defaultColor;
 //		if (rootItem != null) {
@@ -1080,7 +1113,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 //				theColor = defaultColor;
 //			}
 //			rootItem.setForeground(theColor);
-//			
+//
 //			String text = rootItem.getText();
 //			if (filterDirs.contains(rootItem.getData())) {
 //				if (text.charAt(0) != '*') {
@@ -1092,10 +1125,10 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 //					rootItem.setText(text.substring(1));
 //				}
 //			}
-//			
+//
 //			TreeItem[] childrens = rootItem.getItems();
 //			for (int i = 0; i < childrens.length; i++) {
-//				updateDirectoryTree(childrens[i], theColor);				
+//				updateDirectoryTree(childrens[i], theColor);
 //			}
 //		}
 //		else {
@@ -1104,9 +1137,9 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 //				updateDirectoryTree(childrens[i], defaultColor);
 //			}
 //		}
-//		
+//
 //	}
-		
+
 	public static void showProfile( Shell parent, ProfileManager manager, String name ){
 		try {
 			WizardDialog dialog = new WizardDialog( parent, SWT.APPLICATION_MODAL );
@@ -1116,11 +1149,11 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			ExceptionHandler.reportException( e );
 		}
 	}
-	
+
 	public void apply()
 	{
 		closeSourceSite();
-		
+
 		ConnectionDescription src, dst;
 		try {
 			src = getSourceConnection();
@@ -1129,7 +1162,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			ExceptionHandler.reportException( e );
 			return;
 		}
-		
+
 		if( profileName == null || !textName.getText().equals( profileName ) )
 		{
 			Profile pr = profileManager.getProfile( textName.getText() );
@@ -1142,12 +1175,12 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 				return;
 			}
 		}
-		
+
 		Profile p;
-		
+
 		RuleSetDescriptor ruleSetDescriptor = null;
 		if (rbSimplyfiedRuleSet.getSelection()) {
-			ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), 
+			ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(),
 					filter,
 					buttonUseFileFilter.getSelection(),
 					getFileFilterTree());
@@ -1156,7 +1189,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			String ruleSetName = textRuleSet.getText();
 			ruleSetDescriptor = new AdvancedRuleSetDescriptor(ruleSetName);
 		}
-		
+
 		if( profileName == null )
 		{
 			p = new Profile( textName.getText(), src, dst, ruleSetDescriptor );
@@ -1177,7 +1210,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			p.setDestination( dst );
 			p.setSchedule( (Schedule)buttonScheduling.getData() );
 			p.setEnabled( buttonEnabled.getSelection() );
-			
+
 			p.setRuleSet( ruleSetDescriptor );
 			if( buttonResetError.getSelection() )
 				p.setLastError( 0, null );
@@ -1185,7 +1218,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 		}
 		profileManager.save();
 	}
-	
+
 	private ConnectionDescription getDestinationConnection() {
 		ConnectionDescription dst;
         try {
@@ -1215,10 +1248,10 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 		closeSourceSite();
 		getShell().dispose();
 	}
-	
-	
+
+
 	protected void selectRuleSetButton(Button button) {
-		
+
 		if (button.equals(rbSimplyfiedRuleSet)) {
 			advancedRuleOptionsGroup.setEnabled(false);
 			label4.setEnabled(false);
@@ -1233,23 +1266,24 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			simplyfiedOptionsGroup.setEnabled(false);
 			syncSubsButton.setEnabled(false);
 		}
-		
+
 	}
-	
+
 	private void treeTabsWidgetSelected(SelectionEvent evt) {
-		((StackLayout)compositeMain.getLayout()).topControl = 
+		((StackLayout)compositeMain.getLayout()).topControl =
 			(Composite)treeTabs.getSelection()[0].getData();
 		compositeMain.layout();
-		
+
 		if (treeTabs.getSelection()[0] == treeItemSubDirs) {
 			if (sourceSite == null) {
 				directoryTree.removeAll();
 				TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
 				loadingIem.setText("Loading source dir...");
 				loadingIem.setImage(GuiController.getInstance().getImage("Node_Directory.png"));
-				
+
 				Display display = Display.getCurrent();
 				display.asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						ConnectionDescription src = getSourceConnection();
 						try {
@@ -1282,10 +1316,10 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 							loadingIem.setText("Unable to load source dir");
 							loadingIem.setImage(GuiController.getInstance().getImage("Error.png"));
 						}
-					}	
+					}
 				});
 			}
-			
+
 		}
 
 	}
@@ -1299,10 +1333,10 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			File itemFile = (File)item.getData();
 			fileFilterTree.addFileFilter(itemFile.getPath(), itemFilter);
 		}
-		
+
 		return fileFilterTree;
 	}
-	
+
 	private void closeSourceSite() {
 		if (sourceSite != null) {
 			try {

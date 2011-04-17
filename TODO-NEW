@@ -1,0 +1,23 @@
+Roadmap:
+	[ ] in what state is the codebase compared to the last release?
+	[ ] finish started work
+	[ ] GUI cleanup
+	[ ] check state of translations
+	[ ] check all contained onfiguration files
+	[ ] get some communication going, motivate others to join
+	[ ] replace embedded net.sourceforge.wrabbitftp server with eg MockFtpServer
+	[ ] extend automatted testsuite
+	[ ] add embedded SMB, FTP, SFTP servers
+	[ ] find SWT GUI test framework
+	[ ] get code coverage > 70% -> Alpha release
+	[ ] get code coverage > 80% -> Beta Release
+	[ ] fix all bugs along the way
+	[ ] check all reported bugs, comment / close as apropriate
+	[ ] re-add the installer (windows/linux/(mac?))
+	[ ] windows/linux/(mac?) shortcuts
+	[ ] no writes to the installation directory, only to some $HOME/.fullsync/ directory (lookup location in FHS, windows doc, mac?)
+	[ ] configuration migration?
+	[ ] improve sync speed
+	[ ] setup tests(windows xp/7, x86, x86_64; Linux x86, x86_64; mac?)
+	[ ] ask for mac testers
+	[ ] --> Stable Release

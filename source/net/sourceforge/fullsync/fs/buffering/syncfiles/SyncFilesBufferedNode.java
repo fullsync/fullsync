@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 /*
  * Created on 18.07.2004
  */
@@ -34,7 +55,7 @@ public class SyncFilesBufferedNode implements BufferedFile
     protected File unbuff;
     protected boolean dirty;
     protected String name;
-    protected Hashtable children;
+    protected Hashtable<String, File> children;
     protected String syncBufferFilename;
     protected boolean directory;
     protected boolean exists;
@@ -87,7 +108,7 @@ public class SyncFilesBufferedNode implements BufferedFile
     {
         dirty = true;
     }
-    
+    @Override
     public String toString()
     {
         return "Buffered: "+unbuff.toString();
@@ -160,13 +181,13 @@ public class SyncFilesBufferedNode implements BufferedFile
             {
                 node = unbuff.createChild( syncBufferFilename, false );
             } else if( node.isDirectory() ) {
-                return;  // TODO throw exception, log error, whatever
+                return;  // FIXME throw exception, log error, whatever
             }
             // TODO avoid writing empty files
 
-            String line;
 	        File f = (File)node;
 	        BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( f.getOutputStream() ) );
+	        //TODO: move to generic
 	        Collection items = getChildren();
 	        for( Iterator i = items.iterator(); i.hasNext(); )
 	        {
@@ -192,7 +213,7 @@ public class SyncFilesBufferedNode implements BufferedFile
         {
             BufferedFile n = (BufferedFile)e.nextElement();
             if( n.exists() );
-                //n.flushDirty();
+                //n.flushDirty(); //FIXME!
         }
     }
 
@@ -255,7 +276,7 @@ public class SyncFilesBufferedNode implements BufferedFile
              return null;
         else return (File)obj;
     }
-    public Collection getChildren()
+    public Collection<File> getChildren()
     {
         return children.values();
     }

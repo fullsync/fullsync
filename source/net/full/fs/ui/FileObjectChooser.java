@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.full.fs.ui;
 
 import java.text.DateFormat;
@@ -5,10 +26,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 
-import org.apache.commons.vfs.FileContent;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileType;
+import org.apache.commons.vfs2.FileContent;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -69,17 +90,17 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 	private Label labelBaseUrl;
 	private Label label1;
 	private Table tableItems;
-    
+
     private Image imageFile;
     private Image imageFolder;
-    
+
     private int result;
     private FileObject baseFileObject;
     private FileObject activeFileObject;
     private FileObject selectedFileObject;
 
 	/**
-	* Auto-generated main method to display this 
+	* Auto-generated main method to display this
 	* org.eclipse.swt.widgets.Dialog inside a new Shell.
 	*/
 	public static void main(String[] args) {
@@ -109,7 +130,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
             dialogShell.setText( "Choose File..." );
             imageFile = new Image( parent.getDisplay(), "images/FS_File_text_plain.gif" );
             imageFolder = new Image( parent.getDisplay(), "images/FS_Folder_Collapsed.gif" );
-            
+
 			dialogShell.setLayout(new GridLayout());
 			dialogShell.layout();
 			dialogShell.pack();
@@ -145,7 +166,8 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                         toolItemParent.setImage( new Image( parent.getDisplay(), "images/FS_LevelUp.gif" ) );
                         toolItemParent
                             .addSelectionListener(new SelectionAdapter() {
-                            public void widgetSelected(SelectionEvent evt) {
+                            @Override
+							public void widgetSelected(SelectionEvent evt) {
                                 toolItemParentWidgetSelected(evt);
                             }
                             });
@@ -157,7 +179,8 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                         toolItemNewFolder.setImage( new Image( parent.getDisplay(), "images/FS_Folder_New.gif" ) );
                         toolItemNewFolder.setDisabledImage( new Image( parent.getDisplay(), "images/FS_Folder_New_disabled.gif" ) );
                         toolItemNewFolder.addSelectionListener(new SelectionAdapter() {
-                            public void widgetSelected(SelectionEvent evt) {
+                            @Override
+							public void widgetSelected(SelectionEvent evt) {
                                 toolItemNewFolderWidgetSelected(evt);
                             }
                         });
@@ -181,10 +204,12 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                 tableItems.setHeaderVisible( true );
                 tableItems.setLayoutData(tableItemsLData);
                 tableItems.addMouseListener(new MouseAdapter() {
-                    public void mouseDown(MouseEvent evt) {
+                    @Override
+					public void mouseDown(MouseEvent evt) {
                         tableItemsMouseDown(evt);
                     }
-                    public void mouseDoubleClick(MouseEvent evt) {
+                    @Override
+					public void mouseDoubleClick(MouseEvent evt) {
                         tableItemsMouseDoubleClick(evt);
                     }
                 });
@@ -240,7 +265,8 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                     buttonOk.setLayoutData(buttonOkLData);
                     buttonOk.setText("Open");
                     buttonOk.addSelectionListener(new SelectionAdapter() {
-                        public void widgetSelected(SelectionEvent evt) {
+                        @Override
+						public void widgetSelected(SelectionEvent evt) {
                             buttonOkWidgetSelected(evt);
                         }
                     });
@@ -265,7 +291,8 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                     buttonCancel.setLayoutData(buttonCancelLData);
                     buttonCancel.setText("Cancel");
                     buttonCancel.addSelectionListener(new SelectionAdapter() {
-                        public void widgetSelected(SelectionEvent evt) {
+                        @Override
+						public void widgetSelected(SelectionEvent evt) {
                             buttonCancelWidgetSelected(evt);
                         }
                     });
@@ -290,8 +317,9 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
     protected void populateList() throws FileSystemException
     {
         FileObject[] children = activeFileObject.getChildren();
-        Arrays.sort( children, new Comparator() { 
-            public int compare(Object arg0,Object arg1)
+        Arrays.sort( children, new Comparator() {
+            @Override
+			public int compare(Object arg0,Object arg1)
             {
                 FileObject o1 = (FileObject)arg0;
                 FileObject o2 = (FileObject)arg1;
@@ -310,21 +338,21 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                 }
             }
         } );
-        
+
         DateFormat df = DateFormat.getDateTimeInstance();
-        
+
         for( int i = 0; i < children.length; i++ )
         {
             FileObject data = children[i];
-            
+
             TableItem item;
             if( tableItems.getItemCount() <= i )
                  item = new TableItem( tableItems, SWT.NULL );
             else item = tableItems.getItem( i );
-            
+
             item.setText( 0, data.getName().getBaseName() );
             String type = data.getType().getName();
-            
+
             if( data.getType().hasContent() )
             {
                 FileContent content = data.getContent();
@@ -338,28 +366,28 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                 item.setText( 3, "" );
             }
             item.setText( 2, type );
-            
+
             if( data.getType() == FileType.FOLDER )
                  item.setImage( imageFolder );
             else item.setImage( imageFile );
-            
+
             item.setData( data );
         }
         tableItems.setItemCount( children.length );
     }
-    
+
     protected void updateBaseFileObject()
     {
         labelBaseUrl.setText( baseFileObject.getName().toString() );
     }
-    
+
     protected void updateActiveFileObject() throws FileSystemException
     {
         tableItems.deselectAll();
         populateList();
         textUrlExtension.setText( baseFileObject.getName().getRelativeName( activeFileObject.getName() ) );
     }
-    
+
     protected void updateSelectedFileObject() throws FileSystemException
     {
         if( selectedFileObject != null )
@@ -369,7 +397,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
             textFilename.setText( "" );
         }
     }
-    
+
     public void setBaseFileObject( FileObject baseFileObject )
     {
         this.baseFileObject = baseFileObject;
@@ -380,7 +408,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
     {
         return baseFileObject;
     }
-    
+
     public void setActiveFileObject( FileObject active ) throws FileSystemException
     {
         this.activeFileObject = active;
@@ -391,7 +419,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
     {
         return activeFileObject;
     }
-    
+
     public void setSelectedFileObject( FileObject selected ) throws FileSystemException
     {
         this.selectedFileObject = selected;
@@ -402,8 +430,8 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
     {
         return selectedFileObject;
     }
-    
-    private void toolItemParentWidgetSelected(SelectionEvent evt) 
+
+    private void toolItemParentWidgetSelected(SelectionEvent evt)
     {
         try {
             FileObject parent = activeFileObject.getParent();
@@ -413,17 +441,17 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
             e.printStackTrace();
         }
 	}
-	
+
 	private void toolItemNewFolderWidgetSelected(SelectionEvent evt) {
 	    System.out.println("toolItemNewFolder.widgetSelected, event="+evt);
 	    //TODO add your code for toolItemNewFolder.widgetSelected
 	}
-	
+
 	private void tableItemsMouseDoubleClick(MouseEvent evt) {
         TableItem[] items = tableItems.getSelection();
         if( items.length == 0 )
             return;
-        
+
         try {
             TableItem item = items[0];
             FileObject file = (FileObject)item.getData();
@@ -435,28 +463,28 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
             fse.printStackTrace();
         }
 	}
-	
+
 	private void tableItemsMouseDown(MouseEvent evt) {
         TableItem[] items = tableItems.getSelection();
         if( items.length == 0 )
             return;
-        
+
         try {
             TableItem item = items[0];
             FileObject file = (FileObject)item.getData();
-            
+
             // TODO if we are looking for files, just take files, otherwise just take dirs
             setSelectedFileObject( file );
         } catch( FileSystemException fse ) {
             fse.printStackTrace();
         }
 	}
-	
+
 	private void buttonOkWidgetSelected(SelectionEvent evt) {
         result = 1;
         dialogShell.dispose();
 	}
-	
+
 	private void buttonCancelWidgetSelected(SelectionEvent evt) {
         result = 0;
         dialogShell.dispose();

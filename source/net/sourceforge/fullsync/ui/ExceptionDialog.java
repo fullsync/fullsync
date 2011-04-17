@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.sourceforge.fullsync.ui;
 
 import java.io.PrintWriter;
@@ -34,7 +55,7 @@ import org.eclipse.swt.widgets.Text;
 * for any corporate or commercial purpose.
 * *************************************
 */
-public class ExceptionDialog extends Dialog 
+public class ExceptionDialog extends Dialog
 {
 	private Shell dialogShell;
 	private Label labelImage;
@@ -44,17 +65,17 @@ public class ExceptionDialog extends Dialog
 	private Composite compositeBase;
 	private Button buttonDetails;
 	private Label labelMessage;
-	
+
 	private boolean expanded;
-	
-	private String message;
-	private Throwable throwable;
+
+	private final String message;
+	private final Throwable throwable;
 
 	/**
-	* Auto-generated main method to display this 
+	* Auto-generated main method to display this
 	* org.eclipse.swt.widgets.Dialog inside a new Shell.
 	*/
-	public ExceptionDialog( Shell parent, String message, Throwable throwable ) 
+	public ExceptionDialog( Shell parent, String message, Throwable throwable )
 	{
 		super( parent, SWT.NULL );
 		this.message = message;
@@ -65,17 +86,17 @@ public class ExceptionDialog extends Dialog
 		try {
 		    Shell parent = getParent();
 			Display display = parent.getDisplay();
-			
-			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+
+			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
 			dialogShell.setText( Messages.getString("ExceptionDialog.Exception") ); //$NON-NLS-1$
-			
+
 			GridLayout dialogShellLayout = new GridLayout();
 			dialogShellLayout.marginHeight = 0;
 			dialogShellLayout.marginWidth = 0;
 			dialogShellLayout.horizontalSpacing = 0;
 			dialogShellLayout.verticalSpacing = 0;
 			dialogShell.setLayout(dialogShellLayout);
-			dialogShell.setSize(466, 324);
+			dialogShell.setSize(650, 350);
             {
                 compositeBase = new Composite(dialogShell, SWT.NONE);
                 GridLayout compositeBaseLayout = new GridLayout();
@@ -114,7 +135,8 @@ public class ExceptionDialog extends Dialog
                     buttonOk.setText(Messages.getString("ExceptionDialog.Ok")); //$NON-NLS-1$
                     GridData buttonOkLData = new GridData();
                     buttonOk.addSelectionListener(new SelectionAdapter() {
-                        public void widgetSelected(SelectionEvent evt) {
+                        @Override
+						public void widgetSelected(SelectionEvent evt) {
                             dialogShell.dispose();
                         }
                     });
@@ -131,7 +153,8 @@ public class ExceptionDialog extends Dialog
                     buttonDetails.setText(Messages.getString("ExceptionDialog.Details")); //$NON-NLS-1$
                     GridData buttonDetailsLData = new GridData();
                     buttonDetails.addSelectionListener(new SelectionAdapter() {
-                        public void widgetSelected(SelectionEvent evt) {
+                        @Override
+						public void widgetSelected(SelectionEvent evt) {
                             toggleExpansion();
                         }
                     });
@@ -162,7 +185,7 @@ public class ExceptionDialog extends Dialog
                     textLogLData.horizontalAlignment = GridData.FILL;
                     textLogLData.verticalAlignment = GridData.FILL;
                     textLog.setLayoutData(textLogLData);
-                    
+
                     StringWriter writer = new StringWriter();
                     throwable.printStackTrace( new PrintWriter( writer ) );
                     textLog.setText( writer.getBuffer().toString() );

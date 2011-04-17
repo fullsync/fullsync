@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.sourceforge.fullsync.ui;
 
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -16,31 +37,31 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- * 
+ *
  * TODO this class should also handle images
  */
 public class GuiController implements Runnable
 {
     private static GuiController singleton;
-    
-    private Preferences preferences;
-    private ProfileManager profileManager;
-    private Synchronizer synchronizer;
-    
+
+    private final Preferences preferences;
+    private final ProfileManager profileManager;
+    private final Synchronizer synchronizer;
+
     private Display display;
     private ImageRepository imageRepository;
     private Shell mainShell;
     private MainWindow mainWindow;
     private SystemTrayItem systemTrayItem;
-    
+
     private boolean active;
-    
+
     public GuiController( Preferences preferences, ProfileManager profileManager, Synchronizer synchronizer )
     {
         this.preferences = preferences;
         this.profileManager = profileManager;
         this.synchronizer = synchronizer;
-        
+
         singleton = this;
     }
     protected void createMainShell( boolean minimized )
@@ -106,14 +127,16 @@ public class GuiController implements Runnable
 		imageRepository = new ImageRepository( display );
 		createMainShell( minimized );
 	    systemTrayItem = new SystemTrayItem( this );
-		ExceptionHandler.registerExceptionHandler( 
+		ExceptionHandler.registerExceptionHandler(
 		        new ExceptionHandler() {
-		            protected void doReportException( final String message, final Throwable exception )
+		            @Override
+					protected void doReportException( final String message, final Throwable exception )
 		            {
 		                exception.printStackTrace();
-		                
+
 		                display.syncExec( new Runnable() {
-		                    public void run()
+		                    @Override
+							public void run()
                             {
 				                ExceptionDialog ed = new ExceptionDialog( mainShell, message, exception );
 				                ed.open();
@@ -123,7 +146,8 @@ public class GuiController implements Runnable
 		        });
 		active = true;
     }
-    public void run()
+    @Override
+	public void run()
     {
 		while( active ) {
 			if (!display.readAndDispatch())
@@ -134,10 +158,10 @@ public class GuiController implements Runnable
     {
         // TODO before closing anything we need to find out whether there are operations
         //      currently running / windows open that should/may not be closed
-        
-	    // Close the application, but give him a chance to 
+
+	    // Close the application, but give him a chance to
 	    // confirm his action first
-		if (preferences.confirmExit()) 
+		if (profileManager.getNextScheduleTask() != null && preferences.confirmExit())
 		{
 			MessageBox mb = new MessageBox(mainShell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
@@ -145,13 +169,13 @@ public class GuiController implements Runnable
 			        	 +Messages.getString("GuiController.Schedule_is_stopped")); //$NON-NLS-1$
 
 			// check whether the user really wants to close
-			if (mb.open() != SWT.YES) 
+			if (mb.open() != SWT.YES)
 			    return;
 		}
-		
-    	GuiController.getInstance().getProfileManager().disconnectRemote();		            	
+
+    	GuiController.getInstance().getProfileManager().disconnectRemote();
     	GuiController.getInstance().getSynchronizer().disconnectRemote();
-		
+
 		disposeGui();
 		active = false;
     }
@@ -172,12 +196,13 @@ public class GuiController implements Runnable
     public void showBusyCursor( final boolean show )
 	{
 		display.asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				try {
 				    Cursor cursor = show?display.getSystemCursor(SWT.CURSOR_WAIT):null;
 					Shell[] shells = display.getShells();
 
-					for (int i = 0; i < shells.length; i++) 
+					for (int i = 0; i < shells.length; i++)
 					{
 						shells[i].setCursor(cursor);
 					}
@@ -186,7 +211,7 @@ public class GuiController implements Runnable
 				}
 			}
 		});
-	}    
+	}
     public static GuiController getInstance()
     {
         return singleton;

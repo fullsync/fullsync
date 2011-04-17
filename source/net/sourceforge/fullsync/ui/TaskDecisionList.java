@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.sourceforge.fullsync.ui;
 
 import java.util.Enumeration;
@@ -48,7 +69,7 @@ import org.eclipse.swt.widgets.TableItem;
 * for any corporate or commercial purpose.
 * *************************************
 */
-public class TaskDecisionList extends org.eclipse.swt.widgets.Composite 
+public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 {
 	private TableColumn tableColumn1;
 	private TableColumn tableColumnExplanation;
@@ -58,7 +79,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	private Table tableLogLines;
 	private int tableLogLinesFillIndex;
 	private int tableLogLinesFillCount;
-	
+
 	private Hashtable actionImages;
 	private Hashtable taskImages;
 	private Image locationSource;
@@ -67,22 +88,22 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	private Image nodeFile;
 	private Image nodeDirectory;
 	private Image nodeUndefined;
-	
+
 	//private GuiController guiController;
 	private TaskTree taskTree;
-	private HashMap taskItemMap;
-	
+	private final HashMap taskItemMap;
+
 	private boolean onlyChanges;
 	private boolean changeAllowed;
-	private Object mutex = new Object();
-	
-	
-	public TaskDecisionList(Composite parent, int style) 
+	private final Object mutex = new Object();
+
+
+	public TaskDecisionList(Composite parent, int style)
 	{
 		super(parent, style);
-		
+
 		this.taskItemMap = new HashMap();
-		
+
 		initGUI();
 		initializeImages();
 		onlyChanges = true;
@@ -143,6 +164,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
                 tableColumnExplanation.setWidth(154);
             }
 			tableLogLines.addMouseListener( new MouseAdapter() {
+				@Override
 				public void mouseUp(MouseEvent evt) {
 					tableLogLinesMouseUp(evt);
 				}
@@ -163,13 +185,15 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	{
 		final Display display = Display.getDefault();
 		display.asyncExec( new Runnable() {
-		    public void run() {
+		    @Override
+			public void run() {
 		        try {
 		            WizardDialog dialog = new WizardDialog( guiController.getMainShell(), SWT.RESIZE );
 				    final TaskDecisionPage page = new TaskDecisionPage( dialog, guiController, profile, task );
 				    if (!interactive) {
 				    	dialog.addWizardDialogListener(new WizardDialogAdapter() {
-				    		public void dialogOpened(WizardDialog dialog) {
+				    		@Override
+							public void dialogOpened(WizardDialog dialog) {
 				    			page.performActions();
 				    		}
 				    	});
@@ -194,7 +218,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	    locationSource = gui.getImage( "Location_Source.png" ); //$NON-NLS-1$
 	    locationDestination = gui.getImage( "Location_Destination.png" ); //$NON-NLS-1$
 	    locationBoth = gui.getImage( "Location_Both.png" ); //$NON-NLS-1$
-	    	    
+
 	    actionImages = new Hashtable();
 	    for( int i = 0; i < Action.names.length; i++ )
 	    {
@@ -204,9 +228,10 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	    {
 	        actionImages.put( new Integer( i+10 ), gui.getImage( "Action_"+Action.errorNames[i]+".png" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 	    }
-	    
+
 	    taskImages = new Hashtable();
 	}
+	@Override
 	public void dispose()
 	{
 	    nodeFile.dispose();
@@ -215,7 +240,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	    locationSource.dispose();
 	    locationDestination.dispose();
 	    locationBoth.dispose();
-	    
+
 	    Enumeration e;
 	    e = actionImages.elements();
 	    while( e.hasMoreElements() )
@@ -227,7 +252,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	    {
 	        ((Image)e.nextElement()).dispose();
 	    }
-	    
+
 	    super.dispose();
 	}
 	protected void drawSide( GC g, Task t, Action a, int location )
@@ -235,12 +260,12 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	    File n;
 	    if( t == null ) {
 	        n = null;
-	    } else if( location==Location.Source ) { 
+	    } else if( location==Location.Source ) {
 	        n = t.getSource();
-	    } else { 
+	    } else {
 	        n = t.getDestination();
 	    }
-	    
+
 	    int  x = location==Location.Source?2:2*16+2;
 
 	    if( n == null )
@@ -252,7 +277,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	        else g.drawImage( nodeFile, x, 0 );
 	    }
 	    // TODO draw some not-existing image ?
-	    
+
 	    if( (a.getLocation() & location) > 0 )
 	    {
 	        Image actionImage = (Image)actionImages.get( new Integer( a.getType() ) );
@@ -281,7 +306,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	protected Object calcTaskImageHash( Task t, Action a )
 	{
 	    int hash = 0;
-	    
+
 	    // using 5 bits for files
 	    if( t == null )
 	    {
@@ -302,18 +327,18 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	                hash |= 16;
 	        }
 	    }
-	    
+
 	    // using 2+ bits for action
 	    hash |= (a.getLocation() << 6);
 	    hash |= (a.getType() << 8);
-	    
+
 	    return new Integer( hash );
 	}
 	protected Image buildTaskImage( Task t, Action a )
 	{
 	    ImageData data = new ImageData( 16*3+2, 16, 8, new PaletteData( 255, 255, 255 ) );
 	    data.transparentPixel = data.palette.getPixel( new RGB( 0, 0, 0 ) );
-	    
+
 	    Image image = new Image( null, data );
 	    GC g = new GC(image);
         drawSide( g, t, a, Location.Source );
@@ -354,7 +379,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
         if( !onlyChanges || t.getCurrentAction().getType() != Action.Nothing )
         {
 	        Image image = getTaskImage( t );
-	        
+
 	        TableItem item;
 	        if( tableLogLinesFillIndex < tableLogLinesFillCount ) {
 	            item = tableLogLines.getItem( tableLogLinesFillIndex );
@@ -370,10 +395,10 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	            t.getSource().getPath(),
 	            Long.toString(t.getSource().getFileAttributes()!=null?t.getSource().getFileAttributes().getLength():0L)+" bytes", //$NON-NLS-1$
 	            "", //$NON-NLS-1$
-	            t.getCurrentAction().getExplanation() 
+	            t.getCurrentAction().getExplanation()
 	        } );
 	        item.setData( t );
-	        
+
 	        // putting the tableitem in the data slot of the task.
 //	        t.setData(item);
 	        taskItemMap.put(t, item);
@@ -385,20 +410,20 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
         Task t = (Task)item.getData();
         Image image = getTaskImage( t );
         item.setImage( 3, image );
-        item.setText( 4, t.getCurrentAction().getExplanation() ); 
+        item.setText( 4, t.getCurrentAction().getExplanation() );
     }
     public void rebuildActionList()
     {
         //tableLogLines.clearAll();
         //tableLogLines.setItemCount(0);
-        
+
         tableLogLinesFillIndex = 0;
         tableLogLinesFillCount = tableLogLines.getItemCount();
-        
+
         setRedraw(false);
         addTaskChildren( taskTree.getRoot() );
         setRedraw(true);
-        
+
         // index is always pointing at the next free slot
         if( tableLogLinesFillIndex < tableLogLinesFillCount )
         {
@@ -412,19 +437,20 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
         // TODO investigate whether there is a way to change the list selection
         //      while the context menu is open
         //      -> it would allow strange action changes
-        
+
         // TODO impl some kind of ActionList supporting "containsAction"
         //		and "indexOfAction" using own comparison rules
-        
+
         SelectionListener selListener = new SelectionAdapter() {
-            public void widgetSelected( SelectionEvent e )
+            @Override
+			public void widgetSelected( SelectionEvent e )
             {
                 TableItem[] tableItemList = tableLogLines.getSelection();
                 if( tableItemList.length == 0 )
                     return;
-                
+
                 Action targetAction = (Action)e.widget.getData();
-                
+
                 for( int iTask = 0; iTask < tableItemList.length; iTask++ )
                 {
                     TableItem item = tableItemList[iTask];
@@ -434,7 +460,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
     	            for( int iAction = 0; iAction < actions.length; iAction++ )
     	            {
     	                Action a = actions[iAction];
-    	                if( a.getType() == targetAction.getType() 
+    	                if( a.getType() == targetAction.getType()
     	                        && a.getLocation() == targetAction.getLocation()
     	                        && a.getExplanation().equals( targetAction.getExplanation() ) )
     	                {
@@ -447,39 +473,39 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
                 }
             }
         };
-        
+
         TableItem[] items = tableLogLines.getSelection();
         if( items.length == 0 )
             return;
-        
+
         Task[] taskList = new Task[items.length];
         for( int i = 0; i < items.length; i++ )
             taskList[i] = (Task)items[i].getData();
-        
+
         Menu m = new Menu( this );
         MenuItem mi;
 
         // load initial actions of first task
-        Action[] possibleActions = (Action[])taskList[0].getActions().clone();
-        
+        Action[] possibleActions = taskList[0].getActions().clone();
+
         for( int iTask = 1; iTask < taskList.length; iTask++ )
         {
             // invalidate all possible actions we dont find in this actionlist
 	        Action[] actions = taskList[iTask].getActions();
-	        
+
 	        for( int iPosAction = 0; iPosAction < possibleActions.length; iPosAction++ )
 	        {
 	            Action action = possibleActions[iPosAction];
 	            boolean found = false;
-	            
+
 	            if( action == null )
 	                continue;
-	            
+
 	            // check whether action is also supported by this task
 	            for( int iAction = 0; iAction < actions.length; iAction++ )
 	            {
 	                Action a = actions[iAction];
-	                if( a.getType() == action.getType() 
+	                if( a.getType() == action.getType()
 	                        && a.getLocation() == action.getLocation()
 	                        && a.getExplanation().equals( action.getExplanation() ) )
 	                {
@@ -488,7 +514,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	                    break;
 	                }
 	            }
-	            
+
 	            if( !found )
 	            {
 	                // invalidate action that is not supported by all selected tasks
@@ -496,15 +522,15 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
 	            }
 	        }
         }
-        
+
         Task referenceTask = taskList.length==1?taskList[0]:null;
         for( int i = 0; i < possibleActions.length; i++ )
         {
             Action action = possibleActions[i];
-            
+
             if( action == null )
                 continue;
-            
+
 		    Image image = getTaskImage( referenceTask, action );
 	        mi = new MenuItem( m, SWT.NULL );
 	        mi.setImage( image );
@@ -516,7 +542,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
         m.setLocation( tableLogLines.toDisplay( x, y ) );
         m.setVisible( true );
     }
-    
+
     public void setOnlyChanges( boolean onlyChanges )
     {
         this.onlyChanges = onlyChanges;
@@ -533,7 +559,7 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite
     {
         tableLogLines.showItem( item );
     }
-    
+
 	/** Auto-generated event handler method */
 	protected void tableLogLinesMouseUp(MouseEvent evt)
 	{

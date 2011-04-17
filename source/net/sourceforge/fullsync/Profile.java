@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.sourceforge.fullsync;
 
 import java.io.IOException;
@@ -5,7 +26,6 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 
 import net.sourceforge.fullsync.schedule.Schedule;
 
@@ -31,11 +51,11 @@ public class Profile implements Serializable
     //private int status;
 
     private transient boolean eventsAllowed;
-    private transient ArrayList listeners;
+    private transient ArrayList<ProfileChangeListener> listeners;
     
     public Profile()
     {
-        this.listeners = new ArrayList();
+        this.listeners = new ArrayList<ProfileChangeListener>();
         this.enabled = true;
     }
     public Profile( String name, ConnectionDescription source, ConnectionDescription destination, RuleSetDescriptor ruleSet )
@@ -50,7 +70,7 @@ public class Profile implements Serializable
         this.destination = destination;
         this.ruleSet = ruleSet;
         this.lastUpdate = lastUpdate;
-        this.listeners = new ArrayList();
+        this.listeners = new ArrayList<ProfileChangeListener>();
         this.enabled = true;
     }
     public String getName()
@@ -178,11 +198,9 @@ public class Profile implements Serializable
 	}
 	protected void notifyProfileChangeListeners()
 	{
-	    Iterator i = listeners.iterator();
-	    while( i.hasNext() )
-	    {
-	        ((ProfileChangeListener)i.next()).profileChanged( this );
-	    }
+		for (ProfileChangeListener listener : listeners) {
+			listener.profileChanged(this);
+		}
 	}
 	public void beginUpdate()
 	{
@@ -225,6 +243,6 @@ public class Profile implements Serializable
 	    lastErrorLevel = in.readInt();
 	    lastErrorString = (String) in.readObject();
 		
-        this.listeners = new ArrayList();
+        this.listeners = new ArrayList<ProfileChangeListener>();
 	}
 }

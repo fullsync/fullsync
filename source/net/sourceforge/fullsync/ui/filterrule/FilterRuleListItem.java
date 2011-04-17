@@ -1,10 +1,30 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Michele Aiello
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 /*
  * Created on Jun 4, 2005
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
 import java.text.SimpleDateFormat;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.SystemDate;
@@ -44,41 +64,41 @@ import org.eclipse.swt.widgets.ToolItem;
  * @author Michele Aiello
  */
 public class FilterRuleListItem implements ValueChangedListener {
-	
-	private SimpleDateFormat dateFormat = new SimpleDateFormat(Messages.getString("FilterRuleListItem.DateFormat")); //$NON-NLS-1$
-	
-	private Color whiteColor = new Color(null, 255, 255, 255);
-	private Color redColor = new Color(null, 255, 0, 0);
-	
+
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat(Messages.getString("FilterRuleListItem.DateFormat")); //$NON-NLS-1$
+
+	private final Color whiteColor = new Color(null, 255, 255, 255);
+	private final Color redColor = new Color(null, 255, 0, 0);
+
 	private String ruleType;
 	private int op;
 	private OperandValue value;
-	
+
 	private RuleComposite ruleComposite;
-	
-	private FileFilterDetails root;
-	
-	private FileFilterManager fileFilterManager;
-	
+
+	private final FileFilterDetails root;
+
+	private final FileFilterManager fileFilterManager;
+
 	private Hashtable rulesTable;
 	private Hashtable ruleNamesConversionTable;
 	private Hashtable reverseRuleNamesConversionTable;
 	private String[] ruleTypeNames;
-	
-	public FilterRuleListItem(FileFilterDetails root, Composite composite, 
-			FileFilterManager fileFilterManager, String ruleType, 
-			int op, OperandValue value) 
+
+	public FilterRuleListItem(FileFilterDetails root, Composite composite,
+			FileFilterManager fileFilterManager, String ruleType,
+			int op, OperandValue value)
 	{
 		this.fileFilterManager = fileFilterManager;
 		this.ruleType = ruleType;
 		this.op = op;
 		this.root = root;
 		this.value = value;
-		
+
 		initConversionTables();
 		init(composite);
 	}
-	
+
 	private void initConversionTables() {
 		ruleTypeNames = new String[] {
 				Messages.getString("FilterRuleListItem.FileNameFilter"),
@@ -89,7 +109,7 @@ public class FilterRuleListItem implements ValueChangedListener {
 				Messages.getString("FilterRuleListItem.FileAgeFilter"),
 				Messages.getString("FilterRuleListItem.NestedFilter")
 		};
-		
+
 		rulesTable = new Hashtable(15, 0.75f);
 		rulesTable.put(Messages.getString("FilterRuleListItem.FileNameFilter"), FileNameFileFilterRule.class); //$NON-NLS-1$
 		rulesTable.put(Messages.getString("FilterRuleListItem.FilePathFilter"), FilePathFileFilterRule.class);  //$NON-NLS-1$
@@ -98,7 +118,7 @@ public class FilterRuleListItem implements ValueChangedListener {
 		rulesTable.put(Messages.getString("FilterRuleListItem.FileModificationDateFilter"), FileModificationDateFileFilterRule.class); //$NON-NLS-1$
 		rulesTable.put(Messages.getString("FilterRuleListItem.FileAgeFilter"), FileAgeFileFilterRule.class); //$NON-NLS-1$
 		rulesTable.put(Messages.getString("FilterRuleListItem.NestedFilter"), SubfilterFileFilerRule.class); //$NON-NLS-1$
-	
+
 		ruleNamesConversionTable = new Hashtable(15, 0.75f);
 		ruleNamesConversionTable.put(FileNameFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileNameFilter")); //$NON-NLS-1$
 		ruleNamesConversionTable.put(FilePathFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FilePathFilter")); //$NON-NLS-1$
@@ -117,52 +137,54 @@ public class FilterRuleListItem implements ValueChangedListener {
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileAgeFilter"), FileAgeFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.NestedFilter"), SubfilterFileFilerRule.typeName); //$NON-NLS-1$
 	}
-	
+
 	private Class getRuleClass(String typeName) {
 		return (Class) rulesTable.get(ruleNamesConversionTable.get(typeName));
 	}
-	
+
 	private String getRuleTypeName(String guiName) {
 		return (String) reverseRuleNamesConversionTable.get(guiName);
 	}
-	
+
 	private String getRuleGUIName(String typeName) {
 		return (String) ruleNamesConversionTable.get(typeName);
 	}
-	
+
 	public String getRuleType() {
 		return ruleType;
 	}
-	
+
 	public int getOperator() {
 		return op;
 	}
-	
+
 	public OperandValue getValue() {
 		return value;
 	}
-	
+
+	@Override
 	public void onValueChanged(ValueChangedEvent evt) {
 		value = evt.getValue();
 	}
-	
+
 	public void init(final Composite composite) {
 		final FilterRuleListItem ruleItem = this;
-		
+
 		final Combo comboRuleTypes = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 
 		comboRuleTypes.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent evt) {
 				ruleType = getRuleTypeName(comboRuleTypes.getText());
 				root.recreateRuleList();
 			}
 		});
-				
+
 		comboRuleTypes.removeAll();
 		for (int i = 0; i < ruleTypeNames.length; i++) {
 			comboRuleTypes.add(ruleTypeNames[i]);
 		}
-		
+
 		if ((ruleType == null) || (ruleType.equals(""))) { //$NON-NLS-1$
 			comboRuleTypes.select(0);
 			ruleType = getRuleTypeName(comboRuleTypes.getText());
@@ -170,18 +192,19 @@ public class FilterRuleListItem implements ValueChangedListener {
 		else {
 			comboRuleTypes.setText(getRuleGUIName(ruleType));
 		}
-		
+
 		Combo comboOperators = null;
 		if (!getRuleClass(ruleType).equals(SubfilterFileFilerRule.class)) {
 			comboOperators = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 			final Combo comboOp = comboOperators;
 			comboOperators.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent evt) {
 					op = comboOp.getSelectionIndex();
 					comboOp.getParent().layout();
 				}
 			});
-		}		
+		}
 
 		if (!getRuleClass(ruleType).equals(SubfilterFileFilerRule.class)) {
 			String[] ops = fileFilterManager.getOperatorsForRuleType(ruleType);
@@ -197,14 +220,14 @@ public class FilterRuleListItem implements ValueChangedListener {
 				comboOperators.setVisible(false);
 			}
 		}
-				
+
 		if ((getRuleClass(ruleType).equals(FileNameFileFilterRule.class)) ||
 				(getRuleClass(ruleType).equals(FilePathFileFilterRule.class)))
 		{
 			if (!(value instanceof TextValue)) {
 				value = new TextValue();
 			}
-			
+
 			ruleComposite = new TextValueRuleComposite(composite, SWT.NULL, (TextValue)value);
 			ruleComposite.addValueChangedListener(this);
 		}
@@ -260,12 +283,12 @@ public class FilterRuleListItem implements ValueChangedListener {
 			GridLayout compositeLayout = new GridLayout();
 			compositeLayout.numColumns = 2;
 			compositeLayout.makeColumnsEqualWidth = false;
-			
+
 			valueComposite.setLayout(compositeLayout);
 			valueComposite.setBackground(whiteColor);
 
 			Text textValue = new Text(valueComposite, SWT.BORDER);
-			
+
 			GridData text1LData = new GridData();
 			text1LData.widthHint = 120;
 			text1LData.heightHint = 13;
@@ -274,13 +297,13 @@ public class FilterRuleListItem implements ValueChangedListener {
 			text1LData.grabExcessHorizontalSpace = false;
 			text1LData.horizontalAlignment = GridData.BEGINNING;
 			textValue.setLayoutData(text1LData);
-			
+
 			textValue.setText("Missing Rule Composite"); //$NON-NLS-1$
 			textValue.setForeground(redColor);
-			
+
 			textValue.setEditable(false);
 			textValue.setBackground(whiteColor);
-		}		
+		}
 		{
             ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
             toolBar.setBackground(whiteColor);
@@ -288,11 +311,12 @@ public class FilterRuleListItem implements ValueChangedListener {
             toolItemDelete.setImage(GuiController.getInstance().getImage("Rule_Delete.png")); //$NON-NLS-1$
             toolItemDelete.setToolTipText(Messages.getString("FilterRuleListItem.Delete")); //$NON-NLS-1$
             toolItemDelete.addSelectionListener(new SelectionAdapter() {
-            	public void widgetSelected(SelectionEvent evt) {
+            	@Override
+				public void widgetSelected(SelectionEvent evt) {
             		root.deleteRule(ruleItem);
             	}
             });
 		}
 	}
-	
+
 }

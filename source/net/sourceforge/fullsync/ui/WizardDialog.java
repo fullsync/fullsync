@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.sourceforge.fullsync.ui;
 
 import java.util.Vector;
@@ -8,7 +29,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -31,22 +51,22 @@ public class WizardDialog {
 	private Label labelDescription;
 	private Label labelCaption;
 	private Composite compositeContent;
-	
-	private Shell parent;
-	private int style;
+
+	private final Shell parent;
+	private final int style;
 	private Font captionFont;
-	
-	private Vector dialogListeners;
-	
+
+	private final Vector dialogListeners;
+
 	private WizardPage wizardPage;
 
-	public WizardDialog( Shell parent, int style ) 
+	public WizardDialog( Shell parent, int style )
 	{
 	    this.parent = parent;
 	    this.style = SWT.DIALOG_TRIM | style;
 	    this.dialogListeners = new Vector();
 	}
-	
+
 	public void setPage( WizardPage page )
 	{
 	    this.wizardPage = page;
@@ -127,7 +147,7 @@ public class WizardDialog {
                 compositeContentLData.grabExcessVerticalSpace = true;
                 compositeContent.setLayoutData(compositeContentLData);
                 //compositeContentLayout.makeColumnsEqualWidth = true;
-                compositeContent.setLayout(new FillLayout());
+                compositeContent.setLayout(new GridLayout());
             }
             {
                 labelSeparatorBottom = new Label(dialogShell, SWT.SEPARATOR
@@ -146,7 +166,7 @@ public class WizardDialog {
                 compositeBottomLayout.makeColumnsEqualWidth = true;
                 compositeBottom.setLayout(compositeBottomLayout);
             }
-            
+
             updateTop();
             wizardPage.createContent( compositeContent );
             wizardPage.createBottom( compositeBottom );
@@ -157,14 +177,14 @@ public class WizardDialog {
                 size.x = 500;
             if( size.y < 400 )
                 size.y = 400;
-            
+
             if (size.x > display.getBounds().width - dialogShell.getBounds().x) {
             	size.x = display.getBounds().width - dialogShell.getBounds().x - 50;
             }
             if (size.y > display.getBounds().height - dialogShell.getBounds().y) {
             	size.y = display.getBounds().height - dialogShell.getBounds().y - 50;
             }
-            
+
             dialogShell.setSize( size );
 			dialogShell.open();
 			dialogOpened();
@@ -176,22 +196,22 @@ public class WizardDialog {
 			ExceptionHandler.reportException( e );
 		}
 	}
-	
+
 	protected void dialogOpened() {
         for( int i = 0; i < dialogListeners.size(); i++ )
             ((WizardDialogListener)dialogListeners.get( i )).dialogOpened( this );
 
 	}
-	
+
 	public void dispose()
 	{
         Control[] controls = compositeContent.getChildren();
         for( int i = 0; i < controls.length; i++ )
             controls[i].dispose();
-        
+
 	    dialogShell.dispose();
 	    captionFont.dispose();
-	    
+
 	    // TODO dispose images ?
         // TODO dispose wizard page stuff
 	}
@@ -229,7 +249,7 @@ public class WizardDialog {
         labelDescription.setText( wizardPage.getDescription() );
         labelImage.setImage( wizardPage.getImage() );
 	}
-	
+
 	public void addWizardDialogListener(WizardDialogListener listener) {
 		if ((listener != null) && (!dialogListeners.contains(listener))) {
 			dialogListeners.add(listener);

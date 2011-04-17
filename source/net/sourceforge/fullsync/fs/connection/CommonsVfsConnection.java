@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.sourceforge.fullsync.fs.connection;
 
 import java.io.IOException;
@@ -5,28 +26,27 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
 
-import org.apache.commons.vfs.FileContent;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystem;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemOptions;
-import org.apache.commons.vfs.FileType;
-import org.apache.commons.vfs.VFS;
-import org.apache.commons.vfs.provider.sftp.SftpFileSystemConfigBuilder;
-import org.apache.commons.vfs.provider.sftp.TrustEveryoneUserInfo;
-
-import com.jcraft.jsch.UserInfo;
+import org.apache.commons.vfs2.FileContent;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystem;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.FileType;
+import org.apache.commons.vfs2.UserAuthenticator;
+import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
+import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 
 public class CommonsVfsConnection implements FileSystemConnection
 {
-    private ConnectionDescription desc;
+	private static final long serialVersionUID = 7979169940946997175L;
+	private ConnectionDescription desc;
     private FileObject base;
     private FileSystem fileSystem;
     private File root;
@@ -38,33 +58,36 @@ public class CommonsVfsConnection implements FileSystemConnection
             this.desc = desc;
 
             FileSystemOptions options = new FileSystemOptions();
-            UserInfo userInfo = new TrustEveryoneUserInfo();
-            SftpFileSystemConfigBuilder.getInstance().setUserInfo( options, userInfo );
-            
-            String uriString;
-            String userinfo = desc.getUsername();
+//            UserInfo userInfo = new TrustEveryoneUserInfo();
+//            SftpFileSystemConfigBuilder.getInstance().setUserInfo( options, userInfo );
+
+            String uriString = desc.getUri();
+            //FIXME: fix authentication here!
+/*            String userinfo = desc.getUsername();
             if( userinfo != null )
             {
                 String[] parts = userinfo.split("@");
-                
+
                 if( parts.length == 2 )
                 {
                     userinfo = parts[0];
                     String publickeyfile = parts[1];
                     SftpFileSystemConfigBuilder.getInstance().setIdentities( options, new java.io.File[]{ new java.io.File(publickeyfile) } );
                 }
-                
-                userinfo = URLEncoder.encode( userinfo ); 
+
+                userinfo = URLEncoder.encode( userinfo );
                 if( desc.getPassword() != null )
                     userinfo += ":" + URLEncoder.encode( desc.getPassword() );
-                
+
                 uriString = desc.getUri().replaceFirst( "//", "//"+userinfo+"@" );
             } else {
                 uriString = desc.getUri();
             }
-
+*/
             URI uri = new URI( uriString );
             String baseUri = uriString.substring( 0, uriString.length()-(uri.getPath().length()));
+            UserAuthenticator auth = new StaticUserAuthenticator(null, desc.getUsername(), desc.getPassword());
+            DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
             base = VFS.getManager().resolveFile( baseUri, options );
             base = base.resolveFile( uri.getPath() );
             fileSystem = base.getFileSystem();
@@ -75,20 +98,21 @@ public class CommonsVfsConnection implements FileSystemConnection
             throw new net.sourceforge.fullsync.FileSystemException( e );
         }
     }
-    
-    public File createChild( File parent, String name, boolean directory )
+
+    @Override
+	public File createChild( File parent, String name, boolean directory )
             throws IOException
     {
         return new AbstractFile( this, name, null, parent, directory, false );
-        
+
     }
-    
+
     public File buildNode( File parent, FileObject file )
         throws FileSystemException
     {
         String name = file.getName().getBaseName();
         //String path = parent.getPath()+"/"+name;
-        
+
         File n = new AbstractFile( this, name, null, parent, file.getType() == FileType.FOLDER, true );
         if( file.getType() == FileType.FILE ) {
             FileContent content = file.getContent();
@@ -97,11 +121,12 @@ public class CommonsVfsConnection implements FileSystemConnection
         return n;
     }
 
-    public Hashtable getChildren( File dir ) throws IOException
+    @Override
+	public Hashtable getChildren( File dir ) throws IOException
     {
         try {
             Hashtable children = new Hashtable();
-            
+
             FileObject obj = base.resolveFile( dir.getPath() );
             if( obj.exists() && obj.getType() == FileType.FOLDER )
             {
@@ -115,14 +140,16 @@ public class CommonsVfsConnection implements FileSystemConnection
         }
     }
 
-    public boolean makeDirectory( File dir ) throws IOException
+    @Override
+	public boolean makeDirectory( File dir ) throws IOException
     {
         FileObject obj = base.resolveFile( dir.getPath() );
         obj.createFolder();
         return true;
     }
 
-    public boolean writeFileAttributes( File file, FileAttributes att )
+    @Override
+	public boolean writeFileAttributes( File file, FileAttributes att )
             throws IOException
     {
         FileObject obj = base.resolveFile( file.getPath() );
@@ -131,50 +158,59 @@ public class CommonsVfsConnection implements FileSystemConnection
         return true;
     }
 
-    public InputStream readFile( File file ) throws IOException
+    @Override
+	public InputStream readFile( File file ) throws IOException
     {
         FileObject obj = base.resolveFile( file.getPath() );
         return obj.getContent().getInputStream();
     }
 
-    public OutputStream writeFile( File file ) throws IOException
+    @Override
+	public OutputStream writeFile( File file ) throws IOException
     {
         FileObject obj = base.resolveFile( file.getPath() );
         return obj.getContent().getOutputStream();
     }
 
-    public boolean delete( File node ) throws IOException
+    @Override
+	public boolean delete( File node ) throws IOException
     {
         FileObject obj = base.resolveFile( node.getPath() );
         return obj.delete();
     }
 
-    public File getRoot()
+    @Override
+	public File getRoot()
     {
         return root;
     }
 
-    public void flush() throws IOException
+    @Override
+	public void flush() throws IOException
     {
-        
+
     }
 
-    public void close() throws IOException
+    @Override
+	public void close() throws IOException
     {
     }
 
-    public String getUri()
+    @Override
+	public String getUri()
     {
         return desc.getUri();
     }
 
-    public boolean isCaseSensitive()
+    @Override
+	public boolean isCaseSensitive()
     {
         // TODO Auto-generated method stub
         return false;
     }
 
-    public boolean isAvailable()
+    @Override
+	public boolean isAvailable()
     {
         // TODO Auto-generated method stub
         return true;

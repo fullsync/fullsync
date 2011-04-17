@@ -1,3 +1,24 @@
+/**
+ *	@license
+ *	This program is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU General Public License
+ *	as published by the Free Software Foundation; either version 2
+ *	of the License, or (at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *	Boston, MA  02110-1301, USA.
+ *
+ *	---
+ *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
+ *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ */
 package net.full.fs.ui;
 
 import java.net.URI;
@@ -5,7 +26,7 @@ import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -15,9 +36,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 public class UserPasswordSpecificComposite extends ProtocolSpecificComposite
-{ 
+{
     private String scheme;
-    
+
     private Label labelPath = null;
     private Text textPath = null;
     private Button buttonBrowse = null;
@@ -32,7 +53,7 @@ public class UserPasswordSpecificComposite extends ProtocolSpecificComposite
         super( parent, style );
         initialize();
     }
-    
+
     public void initialize()
     {
         GridData gridData3 = new org.eclipse.swt.layout.GridData();
@@ -72,11 +93,12 @@ public class UserPasswordSpecificComposite extends ProtocolSpecificComposite
         buttonBrowse.setText("...");
         buttonBrowse
                 .addSelectionListener( new org.eclipse.swt.events.SelectionAdapter() {
-                    public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
+                    @Override
+					public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
                     {
                         try {
                             LocationDescription desc = getLocationDescription();
-                            
+
                             FileObject base = FileSystemUiManager.getInstance().resolveFile( desc );
                             FileObjectChooser foc = new FileObjectChooser( getShell(), SWT.NULL );
                             foc.setBaseFileObject( base );
@@ -95,10 +117,11 @@ public class UserPasswordSpecificComposite extends ProtocolSpecificComposite
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 3;
         this.setLayout(gridLayout);
-        
+
     }
-    
-    public LocationDescription getLocationDescription() throws URISyntaxException
+
+    @Override
+	public LocationDescription getLocationDescription() throws URISyntaxException
     {
         URI uri = new URI( scheme, textHost.getText(), textPath.getText(), null );
         LocationDescription loc = new LocationDescription( uri );
@@ -107,7 +130,8 @@ public class UserPasswordSpecificComposite extends ProtocolSpecificComposite
         return loc;
     }
 
-    public void setLocationDescription( LocationDescription location )
+    @Override
+	public void setLocationDescription( LocationDescription location )
     {
         URI uri = location.getUri();
         textHost.setText( uri.getHost() );
@@ -115,8 +139,9 @@ public class UserPasswordSpecificComposite extends ProtocolSpecificComposite
         textUsername.setText( location.getProperty( "username" ) );
         textPassword.setText( location.getProperty( "password" ) );
     }
-    
-    public void reset( String scheme )
+
+    @Override
+	public void reset( String scheme )
     {
         this.scheme = scheme;
         textHost.setText( "" );

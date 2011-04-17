@@ -1,0 +1,21 @@
+# root directory
+/classes
+/build
+/dist
+/logs
+/archive
+/art in process
+/notes.txt
+/profiles.xml
+/profiles.mine.xml
+/preferences.xml
+/preferences.properties
+/.externalToolBuilders
+/.settings
+/build.properties
+/CHANGED
+/testing
+
+# everywhere
+.directory
+*~
