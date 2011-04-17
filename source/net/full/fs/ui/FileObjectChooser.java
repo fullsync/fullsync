@@ -1,5 +1,6 @@
 package net.full.fs.ui;
 
+import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -7,13 +8,13 @@ import org.apache.commons.vfs.FileContent;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileType;
-import org.apache.commons.vfs.VFS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -84,14 +85,12 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 		try {
 			Display display = Display.getDefault();
 			Shell shell = new Shell(display);
-			FileObjectChooser inst = new FileObjectChooser(shell, SWT.NULL);
-            inst.setBaseFileObject( VFS.getManager().resolveFile( "E:/" ) );
-			if( inst.open() == 1 ) {
-                System.out.println( inst.getSelectedFileObject().getName() );
-                System.out.println( inst.getActiveFileObject().getName() );
-            } else {
-                System.out.println( "cancelled" );
-            }
+            shell.setLayout( new FillLayout() );
+            ConnectionConfiguration inst = new ConnectionConfiguration(shell, SWT.NULL);
+            shell.open();
+            while( !shell.isDisposed() )
+                if( !display.readAndDispatch() )
+                    display.sleep();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -200,7 +199,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                 {
                     tableColumnType = new TableColumn(tableItems, SWT.NONE);
                     tableColumnType.setText("Type");
-                    tableColumnType.setWidth(150);
+                    tableColumnType.setWidth(100);
                 }
                 {
                     tableColumnDateModified = new TableColumn(
@@ -309,6 +308,8 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
             }
         } );
         
+        DateFormat df = DateFormat.getDateTimeInstance();
+        
         for( int i = 0; i < children.length; i++ )
         {
             FileObject data = children[i];
@@ -328,7 +329,10 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                 if( contentType != null )
                     type += " ("+contentType+")";
                 item.setText( 1, String.valueOf( content.getSize() ) );
-                item.setText( 3, String.valueOf( content.getLastModifiedTime() ) );
+                item.setText( 3, df.format( content.getLastModifiedTime() ) );
+            } else {
+                item.setText( 1, "" );
+                item.setText( 3, "" );
             }
             item.setText( 2, type );
             
@@ -408,8 +412,8 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 	}
 	
 	private void toolItemNewFolderWidgetSelected(SelectionEvent evt) {
-System.out.println("toolItemNewFolder.widgetSelected, event="+evt);
-//TODO add your code for toolItemNewFolder.widgetSelected
+	    System.out.println("toolItemNewFolder.widgetSelected, event="+evt);
+	    //TODO add your code for toolItemNewFolder.widgetSelected
 	}
 	
 	private void tableItemsMouseDoubleClick(MouseEvent evt) {

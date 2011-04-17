@@ -630,7 +630,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	
 	public static void showProfile( Shell parent, ProfileManager manager, String name ){
 		try {
-		    WizardDialog dialog = new WizardDialog( parent, SWT.APPLICATION_MODAL );
+		    WizardDialog dialog = new WizardDialog( parent, SWT.APPLICATION_MODAL | SWT.RESIZE );
 		    //ProfileDetailsPage page = new ProfileDetailsPage( dialog, manager, name );
             ProfileDetailsTabbedPage page = new ProfileDetailsTabbedPage( dialog, manager, name );
 		    dialog.show();

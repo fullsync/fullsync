@@ -401,6 +401,12 @@ Gui:
 
 ---===[ to 1.0 Tasks ]====-------------------------------------------------
 
+Multitarget buffering:
+	[ ] nice name ;)... its just that the fact that you are not able
+		to use a buffered target in two different profiles is quite
+		annoying. it would be nice to be able to name the buffer
+		file differently or sth.
+
 FTP:
 	[ ] there must be a way to set times using UTIME command
 
