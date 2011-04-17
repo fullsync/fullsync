@@ -250,7 +250,7 @@ User reports:
 		actually there seem to be other sftp auth mechanism
 		public key and host based auth implemented (pretty badly)
 	[ ] smb copies all files always
-	[ ] make exception window resizeable
+	[X] make exception window resizeable
 	[ ] preferences dialog does not set "autostart scheduler" checkbox
 	
 ---===[ to 0.10 Tasks ]====-------------------------------------------------
