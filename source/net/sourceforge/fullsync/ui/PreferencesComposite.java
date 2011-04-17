@@ -3,8 +3,6 @@ package net.sourceforge.fullsync.ui;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
@@ -39,58 +37,48 @@ import org.eclipse.swt.widgets.Text;
 public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 
 	private static class LanguageCodes {
-		
-		private HashMap languageCodes = new HashMap();
-		private HashMap languageNames = new HashMap();
-		
+
+		private HashMap<String, String> languageCodes = new HashMap<String, String>();
+		private HashMap<String, String> languageNames = new HashMap<String, String>();
+
 		private static LanguageCodes _instance;
-		
+
 		private LanguageCodes() {
 			languageNames.put("en", "English"); //$NON-NLS-1$ //$NON-NLS-2$
 			languageNames.put("it", "Italiano"); //$NON-NLS-1$ //$NON-NLS-2$
 			languageNames.put("de", "Deutsch"); //$NON-NLS-1$ //$NON-NLS-2$
-            languageNames.put("fr", "Français");  //$NON-NLS-1$ //$NON-NLS-2$
-			languageNames.put("es", "Español");  //$NON-NLS-1$ //$NON-NLS-2$
-            languageNames.put("ar", "Arabic");  //$NON-NLS-1$ //$NON-NLS-2$
-			
+			languageNames.put("fr", "FranÃ§ais");  //$NON-NLS-1$ //$NON-NLS-2$
+			languageNames.put("es", "EspaÃ±ol");  //$NON-NLS-1$ //$NON-NLS-2$
+			languageNames.put("ar", "Arabic");  //$NON-NLS-1$ //$NON-NLS-2$
 
 			languageCodes.put("English", "en"); //$NON-NLS-1$ //$NON-NLS-2$
 			languageCodes.put("Italiano", "it"); //$NON-NLS-1$ //$NON-NLS-2$
 			languageCodes.put("Deutsch", "de"); //$NON-NLS-1$ //$NON-NLS-2$
-			languageCodes.put("Français", "fr");  //$NON-NLS-1$ //$NON-NLS-2$
-            languageCodes.put("Español", "es");  //$NON-NLS-1$ //$NON-NLS-2$
-            languageCodes.put("Arabic", "ar");  //$NON-NLS-1$ //$NON-NLS-2$
+			languageCodes.put("FranÃ§ais", "fr");  //$NON-NLS-1$ //$NON-NLS-2$
+			languageCodes.put("EspaÃ±ol", "es");  //$NON-NLS-1$ //$NON-NLS-2$
+			languageCodes.put("Arabic", "ar");  //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		
+
 		private static LanguageCodes getInstance() {
 			if (_instance == null) {
 				_instance = new LanguageCodes();
 			}
 			return _instance;
 		}
-		
+
 		private static String getLanguageCode(String name) {
-			return (String) getInstance().languageCodes.get(name);
+			return getInstance().languageCodes.get(name);
 		}
-		
+
 		private static String getLanguageName(String code) {
-			return (String) getInstance().languageNames.get(code);			
+			return getInstance().languageNames.get(code);
 		}
-		
+
 		private static String[] getAllLanguages() {
-			Set keySet = getInstance().languageCodes.keySet();
-			String[] retValue = new String[getInstance().languageCodes.size()];
-			
-			Iterator it = keySet.iterator();
-			int i = 0;
-			while (it.hasNext()) {
-				retValue[i++] = (String)it.next();
-			}
-			
-			return retValue;
+			return (String[]) getInstance().languageCodes.keySet().toArray();
 		}
 	}
-	
+
 	private Group groupInterface;
 	private Button cbConfirmExit;
 	private Button cbCloseMinimizesToSystemTray;
@@ -112,7 +100,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 
 	private Preferences preferences;
 
-	public PreferencesComposite(Composite parent, int style, Preferences preferences) 
+	public PreferencesComposite(Composite parent, int style, Preferences preferences)
 	{
 		super(parent, style);
 		this.preferences = preferences;
@@ -236,8 +224,8 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 					comboLanguage.setLayoutData(comboLanguageLData);
 					String[] languages = LanguageCodes.getAllLanguages();
 					Arrays.sort(languages);
-					for (int i = 0; i < languages.length; i++) {
-						comboLanguage.add(languages[i]);
+					for (String language : languages) {
+						comboLanguage.add(language);
 					}
 				}
 				{
@@ -265,7 +253,8 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                     GridData cbListenForIncommingLData = new GridData();
                     cbListenForIncomming
                         .addSelectionListener(new SelectionAdapter() {
-                            public void widgetSelected(SelectionEvent evt) {
+                            @Override
+							public void widgetSelected(SelectionEvent evt) {
                                 updateRemoteConnectionGroup();
                             }
                         });
@@ -311,11 +300,11 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 			ExceptionHandler.reportException( e );
 		}
 	}
-	
-	public void updateComponent() 
+
+	public void updateComponent()
 	{
 		textPassword.setEchoChar('*');
-		
+
 		cbConfirmExit.setSelection(preferences.confirmExit());
 		cbCloseMinimizesToSystemTray.setSelection(preferences.closeMinimizesToSystemTray());
 		cbMinimizeMinimizesToSystemTray.setSelection(preferences.minimizeMinimizesToSystemTray());
@@ -328,7 +317,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		cbShowSplashScreen.setSelection(preferences.showSplashScreen());
 		updateRemoteConnectionGroup();
 	}
-	
+
 	private void updateRemoteConnectionGroup() {
 		if (cbListenForIncomming.getSelection()) {
 			label2.setEnabled(true);
@@ -336,7 +325,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 			label3.setEnabled(true);
 			textPassword.setEnabled(true);
 		}
-		else {			
+		else {
 			label2.setEnabled(false);
 			textListeningPort.setEnabled(false);
 			label3.setEnabled(false);
@@ -344,7 +333,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		}
 
 	}
-	
+
 	public void apply()
 	{
 		preferences.setConfirmExit(cbConfirmExit.getSelection());
@@ -365,36 +354,36 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		preferences.setListeningForRemoteConnections(listenForIncoming);
 		int port = -1;
 		String password = null;
-		
+
 		if (listenForIncoming) {
 			try {
 				port = Integer.parseInt(textListeningPort.getText());
 			} catch (NumberFormatException e) {
 				ExceptionHandler.reportException( e );
 			}
-		
+
 			preferences.setRemoteConnectionsPort(port);
-			
+
 			password = textPassword.getText();
 			preferences.setRemoteConnectionsPassword(password);
-			
+
 			if (RemoteController.getInstance().isActive()) {
 				int oldPort = RemoteController.getInstance().getPort();
-				
+
 				RemoteController.getInstance().setPassword(password);
-				
+
 				if (oldPort != port) {
 					MessageBox mb = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
 					mb.setText(Messages.getString("PreferencesComposite.Warning")); //$NON-NLS-1$
 					mb.setMessage(Messages.getString("PreferencesComposite.RequiresRestart")); //$NON-NLS-1$
 					mb.open();
 				}
-				
+
 			}
 			else {
 				if (port > 0) {
 					try {
-						RemoteController.getInstance().startServer(port, password, 
+						RemoteController.getInstance().startServer(port, password,
 								GuiController.getInstance().getProfileManager(),
 								GuiController.getInstance().getSynchronizer());
 					} catch (RemoteException e) {
@@ -403,8 +392,8 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 						mb.setText(Messages.getString("PreferencesComposite.ConnectionError")); //$NON-NLS-1$
 						mb.setMessage(Messages.getString("PreferencesComposite.UnableToStart")+".\n("+e.getMessage()+")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						mb.open();
-					}				
-				}				
+					}
+				}
 			}
 		} else {
 			try {

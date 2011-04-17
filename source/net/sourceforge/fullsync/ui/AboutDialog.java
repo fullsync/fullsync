@@ -11,6 +11,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
@@ -46,12 +47,12 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 	private Button buttonOk;
 	private Button buttonWebsite;
 
-	private static final String[] specialThanks = {"", "", "", "Credits", 
-			"", 
+	private static final String[] specialThanks = {"", "", "", "Credits",
+			"",
 			"Localizations",
 			"Deutsch: Jan Kopcsek",
-			"Español: Angela Verastegui Desouza",
-			"Français: Pascal Conil-lacoste",
+			"EspaÃ±ol: Angela Verastegui Desouza",
+			"FranÃ§ais: Pascal Conil-lacoste",
 			"Italiano: Michele Aiello",
 			"",
 			"Testing",
@@ -59,13 +60,13 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 			"",
 			"",
 			""};
-	
+
 	private static final long delay = 750;
-	
+
 	private int stIndex = 0;
 	private Timer stTimer;
-	
-	public AboutDialog(Shell parent, int style) 
+
+	public AboutDialog(Shell parent, int style)
 	{
 		super(parent, style);
 	}
@@ -76,13 +77,14 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 
 			dialogShell.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent arg0) {
 					if (stTimer != null) {
 						stTimer.cancel();
 					}
 				}
 			});
-			
+
 			GridLayout dialogShellLayout = new GridLayout();
 			dialogShell.setLayout(dialogShellLayout);
 			dialogShellLayout.verticalSpacing = 0;
@@ -111,12 +113,14 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
             }
 			{
 				composite1 = new Composite(dialogShell, SWT.NONE);
+				composite1.setLayout(new FillLayout());
 				GridLayout composite1Layout = new GridLayout();
 				composite1Layout.makeColumnsEqualWidth = true;
 				GridData composite1LData = new GridData();
-				composite1LData.horizontalSpan = 2;
+				composite1LData.horizontalSpan = 3;
 				composite1LData.horizontalAlignment = GridData.FILL;
 				composite1LData.heightHint = 50;
+				composite1LData.widthHint = 300;
 				composite1.setLayoutData(composite1LData);
 				composite1.setLayout(composite1Layout);
 				composite1.setBackground(new Color(null, 255, 255, 255));
@@ -127,26 +131,30 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 					labelThanksLData.horizontalAlignment = GridData.FILL;
 					labelThanksLData.verticalAlignment = GridData.FILL;
 					labelThanksLData.grabExcessVerticalSpace = true;
+					//labelThanks.setSize(300, 50);
+					labelThanks.setBackground(new Color(null, 255, 0, 0));
 					labelThanks.setLayoutData(labelThanksLData);
-					labelThanks.setBackground(new Color(null, 255, 255, 255));
+					//labelThanks.setBackground(new Color(null, 255, 255, 255));
 					labelThanks.setText("");
 					labelThanks.setAlignment(SWT.CENTER);
 					stTimer = new Timer(false);
 					stTimer.scheduleAtFixedRate(new TimerTask() {
+						@Override
 						public void run() {
 							Display display = Display.getDefault();
 							display.syncExec(new Runnable() {
+								@Override
 								public void run() {
 									int firstLine = (stIndex) % specialThanks.length;
-									int secondLine = (stIndex+1) % specialThanks.length;
-									int thirdLine = (stIndex+2) % specialThanks.length;
+									int secondLine = (stIndex + 1) % specialThanks.length;
+									int thirdLine = (stIndex + 2) % specialThanks.length;
 
-									labelThanks.setText(specialThanks[firstLine]+'\n'+
-											specialThanks[secondLine]+'\n'+
-											specialThanks[thirdLine]);
+									labelThanks.setText(specialThanks[firstLine] + '\n'
+											+ specialThanks[secondLine] + '\n'
+											+ specialThanks[thirdLine]);
 									stIndex++;
 									stIndex %= specialThanks.length;
-								}	
+								}
 							});
 						}
 					}, delay, delay);
@@ -176,7 +184,8 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
                     buttonWebsite.setText(Messages.getString("AboutDialog.WebSite")); //$NON-NLS-1$
                     GridData buttonWebsiteLData = new GridData();
                     buttonWebsite.addSelectionListener(new SelectionAdapter() {
-                        public void widgetSelected(SelectionEvent evt) {
+                        @Override
+						public void widgetSelected(SelectionEvent evt) {
                             Program.launch( "http://fullsync.sourceforge.net" ); //$NON-NLS-1$
                         }
                     });
@@ -191,7 +200,8 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
                     buttonOk.setText("Ok"); //$NON-NLS-1$
                     GridData buttonOkLData = new GridData();
                     buttonOk.addSelectionListener(new SelectionAdapter() {
-                        public void widgetSelected(SelectionEvent evt) {
+                        @Override
+						public void widgetSelected(SelectionEvent evt) {
                             dialogShell.close();
                         }
                     });
@@ -206,12 +216,13 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog {
 			dialogShell.open();
 			Display display = dialogShell.getDisplay();
 			while (!dialogShell.isDisposed()) {
-				if (!display.readAndDispatch())
+				if (!display.readAndDispatch()) {
 					display.sleep();
+				}
 			}
 		} catch (Exception e) {
 			ExceptionHandler.reportException( e );
 		}
 	}
-	
+
 }
