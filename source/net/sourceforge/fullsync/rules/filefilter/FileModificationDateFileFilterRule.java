@@ -11,9 +11,9 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 /**
  * @author Michele Aiello
  */
-public class FileModificationDateFileFilterRule implements FileFilterRule {
+public class FileModificationDateFileFilterRule extends FileFilterRule {
 
-	public static final String typeName = "File modification date";
+	public static String typeName = "File modification date";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -30,6 +30,10 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 	private DateValue date;
 	private int op;
 	
+	public String getRuleType() {
+		return typeName;
+	}
+
 	public static String[] getAllOperators() {
 		return allOperators;
 	}
@@ -37,10 +41,6 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 	public FileModificationDateFileFilterRule(DateValue date, int operator) {
 		this.date = date;
 		this.op = operator;
-	}
-	
-	public String getRuleType() {
-		return typeName;
 	}
 
 	public int getOperator() {

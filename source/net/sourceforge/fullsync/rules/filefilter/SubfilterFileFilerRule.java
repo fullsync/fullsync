@@ -11,16 +11,16 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 /**
  * @author Michele Aiello
  */
-public class SubfilterFileFilerRule implements FileFilterRule {
+public class SubfilterFileFilerRule extends FileFilterRule {
 
-	public static final String typeName = "Nested Filter";
+	public static String typeName = "Nested Filter";
 
 	private FileFilter fileFilter;
 	
 	public SubfilterFileFilerRule(FileFilter fileFilter) {
 		this.fileFilter = fileFilter;
 	}
-	
+
 	public String getRuleType() {
 		return typeName;
 	}

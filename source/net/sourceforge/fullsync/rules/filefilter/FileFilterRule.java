@@ -11,18 +11,18 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 /**
  * @author Michele Aiello
  */
-public interface FileFilterRule extends Serializable {
-
-	public String getRuleType();
-	
-	public int getOperator();
-	
-	public String getOperatorName();
+public abstract class FileFilterRule implements Serializable {
 		
-	public OperandValue getValue();
+	public abstract int getOperator();
 	
-	public boolean match(File file) throws FilterRuleNotAppliableException;
+	public abstract String getOperatorName();
+		
+	public abstract OperandValue getValue();
+	
+	public abstract boolean match(File file) throws FilterRuleNotAppliableException;
 	
 	public abstract String toString();
+
+	public abstract String getRuleType();
 
 }

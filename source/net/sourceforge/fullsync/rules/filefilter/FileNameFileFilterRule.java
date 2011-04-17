@@ -14,9 +14,9 @@ import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 /**
  * @author Michele Aiello
  */
-public class FileNameFileFilterRule implements FileFilterRule {
+public class FileNameFileFilterRule extends FileFilterRule {
 	
-	public static final String typeName = "File name";
+	public static String typeName = "File name";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -47,6 +47,10 @@ public class FileNameFileFilterRule implements FileFilterRule {
 	
 	private Pattern regexppattern;
 	
+	public String getRuleType() {
+		return typeName;
+	}
+
 	public static String[] getAllOperators() {
 		return allOperators;
 	}
@@ -65,10 +69,6 @@ public class FileNameFileFilterRule implements FileFilterRule {
 		}
 	}
 	
-	public String getRuleType() {
-		return typeName;
-	}
-
 	public int getOperator() {
 		return op;
 	}

@@ -14,7 +14,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
  */
 public class FileFilterTest extends TestCase {
 	
-	private static class AlwaysTrueFileFilterRule implements FileFilterRule {
+	private static class AlwaysTrueFileFilterRule extends FileFilterRule {
 		public boolean match(File file) {
 			return true;
 		}
@@ -35,7 +35,7 @@ public class FileFilterTest extends TestCase {
 		}
 	}
 
-	private static class AlwaysFalseFileFilterRule implements FileFilterRule {
+	private static class AlwaysFalseFileFilterRule extends FileFilterRule {
 		public boolean match(File file) {
 			return false;
 		}

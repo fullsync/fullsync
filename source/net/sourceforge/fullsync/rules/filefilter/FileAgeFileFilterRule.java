@@ -12,9 +12,9 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 /**
  * @author Michele Aiello
  */
-public class FileAgeFileFilterRule implements FileFilterRule {
+public class FileAgeFileFilterRule extends FileFilterRule {
 
-	public static final String typeName = "File age";
+	public static String typeName = "File age";
 	
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -31,6 +31,10 @@ public class FileAgeFileFilterRule implements FileFilterRule {
 	private AgeValue age;
 	private int op;
 	
+	public String getRuleType() {
+		return typeName;
+	}
+
 	public static String[] getAllOperators() {
 		return allOperators;
 	}
@@ -38,10 +42,6 @@ public class FileAgeFileFilterRule implements FileFilterRule {
 	public FileAgeFileFilterRule(AgeValue age, int operator) {
 		this.age = age;
 		this.op = operator;
-	}
-	
-	public String getRuleType() {
-		return typeName;
 	}
 
 	public int getOperator() {

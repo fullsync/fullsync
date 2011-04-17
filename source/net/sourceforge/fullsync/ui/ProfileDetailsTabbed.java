@@ -101,7 +101,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	private Tree treeTabs;
 	private SashForm sashForm;
 	private Button buttonUseFileFilter;
-	private Label labelFilterDescription;
+	private Text textFilterDescription;
 	private Button syncSubsButton;
 	private Group simplyfiedOptionsGroup;
 	private Button rbAdvancedRuleSet;
@@ -592,14 +592,14 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                                         .setEnabled(true);
                                                     buttonFileFilter
                                                         .setEnabled(true);
-                                                    labelFilterDescription
+                                                    textFilterDescription
                                                         .setEnabled(true);
                                                 } else {
                                                     label18
                                                         .setEnabled(false);
                                                     buttonFileFilter
                                                         .setEnabled(false);
-                                                    labelFilterDescription
+                                                    textFilterDescription
                                                         .setEnabled(false);
                                                 }
                                             }
@@ -637,7 +637,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                                         .getFileFilter();
                                                     if (newfilter != null) {
                                                         filter = newfilter;
-                                                        labelFilterDescription
+                                                        textFilterDescription
                                                             .setText(filter
                                                                 .toString());
                                                     }
@@ -649,20 +649,18 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
                                         });
                                 }
                                 {
-                                    labelFilterDescription = new Label(
+                                    textFilterDescription = new Text(
                                         simplyfiedOptionsGroup,
-                                        SWT.SHADOW_NONE
-                                            | SWT.WRAP
-                                            | SWT.BORDER);
+										SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
                                     GridData labelFilterDescriptionLData = new GridData();
                                     labelFilterDescriptionLData.horizontalSpan = 3;
                                     labelFilterDescriptionLData.horizontalAlignment = GridData.FILL;
                                     labelFilterDescriptionLData.heightHint = 48;
                                     labelFilterDescriptionLData.widthHint = 300;
                                     labelFilterDescriptionLData.grabExcessHorizontalSpace = true;
-                                    labelFilterDescription
+                                    textFilterDescription
                                         .setLayoutData(labelFilterDescriptionLData);
-                                    labelFilterDescription.setText("");
+                                    textFilterDescription.setText("");
                                 }
                             }
                             {
@@ -971,22 +969,22 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			FileFilter fileFilter = simpleDesc.getFileFilter();
 			filter = fileFilter;
 			if (fileFilter != null) {
-				labelFilterDescription.setText(fileFilter.toString());
+				textFilterDescription.setText(fileFilter.toString());
 			}
 			else {
-				labelFilterDescription.setText("");
+				textFilterDescription.setText("");
 			}
 			boolean useFilter = simpleDesc.isUseFilter();
 			buttonUseFileFilter.setSelection(useFilter);
 			if (useFilter) {
 				label18.setEnabled(true);
 				buttonFileFilter.setEnabled(true);
-				labelFilterDescription.setEnabled(true);
+				textFilterDescription.setEnabled(true);
 			}
 			else {
 				label18.setEnabled(false);
 				buttonFileFilter.setEnabled(false);
-				labelFilterDescription.setEnabled(false);
+				textFilterDescription.setEnabled(false);
 			}
 			FileFilterTree fileFilterTree = simpleDesc.getFileFilterTree();
 			if (fileFilterTree != null) {
