@@ -15,7 +15,6 @@
  *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
  *	Boston, MA  02110-1301, USA.
  *
- *	---
- *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
- *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ *	For information about the authors of this project Have a look
+ *	at the AUTHORS file in the root of this project.
  */
