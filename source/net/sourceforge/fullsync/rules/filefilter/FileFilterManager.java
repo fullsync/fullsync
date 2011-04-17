@@ -228,6 +228,10 @@ public class FileFilterManager {
 		if (ruleType.equals(FileAgeFileFilterRule.typeName)) {
 			return FileAgeFileFilterRule.getAllOperators();
 		}
+		
+		if (ruleType.equals(SubfilterFileFilerRule.typeName)) {
+			return new String[0];
+		}
 
 		return new String[] {"N/A"};
 	}
