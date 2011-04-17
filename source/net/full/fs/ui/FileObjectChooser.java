@@ -155,12 +155,13 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                             toolBarActions,
                             SWT.NONE);
                         toolItemNewFolder.setImage( new Image( parent.getDisplay(), "images/FS_Folder_New.gif" ) );
-                        toolItemNewFolder
-                            .addSelectionListener(new SelectionAdapter() {
+                        toolItemNewFolder.setDisabledImage( new Image( parent.getDisplay(), "images/FS_Folder_New_disabled.gif" ) );
+                        toolItemNewFolder.addSelectionListener(new SelectionAdapter() {
                             public void widgetSelected(SelectionEvent evt) {
                                 toolItemNewFolderWidgetSelected(evt);
                             }
-                            });
+                        });
+                        toolItemNewFolder.setEnabled( false );
                     }
                     /*
                     {
@@ -195,7 +196,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                 {
                     tableColumnSize = new TableColumn(tableItems, SWT.NONE);
                     tableColumnSize.setText("Size");
-                    tableColumnSize.setWidth(100);
+                    tableColumnSize.setWidth(60);
                 }
                 {
                     tableColumnType = new TableColumn(tableItems, SWT.NONE);
@@ -207,7 +208,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                         tableItems,
                         SWT.NONE);
                     tableColumnDateModified.setText("Date Modified");
-                    tableColumnDateModified.setWidth(150);
+                    tableColumnDateModified.setWidth(145);
                 }
             }
             {
@@ -253,7 +254,8 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
                     GridData comboFileFilterLData = new GridData();
                     comboFileFilterLData.horizontalAlignment = GridData.FILL;
                     comboFileFilter.setLayoutData(comboFileFilterLData);
-                    comboFileFilter.setText("<file filter>");
+                    comboFileFilter.setText("all files");
+                    comboFileFilter.setEnabled( false );
                 }
                 {
                     buttonCancel = new Button(compositeBottom, SWT.PUSH
