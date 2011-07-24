@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public class AboutDialog extends Dialog implements DisposeListener {
+class AboutDialog extends Dialog implements DisposeListener {
 
 	private Shell dialogShell;
 	private Label labelPicture;
@@ -64,13 +64,9 @@ public class AboutDialog extends Dialog implements DisposeListener {
 	private int stIndex = 0;
 	private Timer stTimer;
 
-	public AboutDialog(Shell parent, int style) {
+	AboutDialog(Shell parent, int style) {
 		super(parent, style);
-	}
-
-	public void open() {
 		try {
-			Shell parent = getParent();
 			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 			dialogShell.setBackground(UISettings.COLOR_WHITE);
 			dialogShell.setBackgroundMode(SWT.INHERIT_DEFAULT);

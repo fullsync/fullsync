@@ -36,7 +36,8 @@ import com.sshtools.j2ssh.transport.publickey.SshPublicKey;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class DialogKnownHostsKeyVerification extends AbstractKnownHostsKeyVerification {
+// FIXME: ssh connections must not auto accept an unknown / changed host key!
+public class DialogKnownHostsKeyVerification extends AbstractKnownHostsKeyVerification { // NO_UCD
 	private Shell parent;
 	private boolean verificationEnabled = true;
 
@@ -141,7 +142,6 @@ public class DialogKnownHostsKeyVerification extends AbstractKnownHostsKeyVerifi
 							}
 						}
 						catch (InvalidHostFileException e) {
-							// showExceptionMessage(e);
 							ExceptionHandler.reportException(e);
 						}
 					}

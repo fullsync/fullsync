@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * for any corporate or commercial purpose.
  * *************************************
  */
-public class MainWindow extends org.eclipse.swt.widgets.Composite implements ProfileSchedulerListener, ProfileListControlHandler,
+class MainWindow extends org.eclipse.swt.widgets.Composite implements ProfileSchedulerListener, ProfileListControlHandler,
 		TaskGenerationListener, SchedulerChangeListener {
 	private ToolItem toolItemNew;
 	private Menu menuBarMainWindow;
@@ -95,7 +95,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	private String statusDelayString;
 	private Timer statusDelayTimer;
 
-	public MainWindow(Composite parent, int style, GuiController initGuiController) {
+	MainWindow(Composite parent, int style, GuiController initGuiController) {
 		super(parent, style);
 		this.guiController = initGuiController;
 		initGUI();
@@ -138,7 +138,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 	 * Initializes the GUI.
 	 * Auto-generated code - any changes you make will disappear.
 	 */
-	protected void initGUI() {
+	private void initGUI() {
 		try {
 			this.setSize(600, 300);
 
@@ -294,7 +294,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		}
 	}
 
-	protected void createMenu() {
+	private void createMenu() {
 		// toolBar1.layout();
 
 		// Menu Bar
@@ -496,13 +496,12 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		menuItemAbout.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				AboutDialog aboutDialog = new AboutDialog(getShell(), SWT.NULL);
-				aboutDialog.open();
+				new AboutDialog(getShell(), SWT.NULL);
 			}
 		});
 	}
 
-	protected void createPopupMenu() {
+	private void createPopupMenu() {
 		// PopUp Menu for the Profile list.
 		profilePopupMenu = new Menu(getShell(), SWT.POP_UP);
 
@@ -559,7 +558,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		});
 	}
 
-	public void createProfileList() {
+	void createProfileList() {
 		if (profileList != null) {
 			// take away our menu so it's not disposed
 			profileList.setMenu(null);
@@ -587,7 +586,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		return guiController;
 	}
 
-	protected void minimizeToTray() {
+	private void minimizeToTray() {
 		// on OSX use this:
 		// mainWindow.setMinimized(true);
 		getShell().setMinimized(true);

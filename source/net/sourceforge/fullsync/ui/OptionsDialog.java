@@ -25,11 +25,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -48,7 +50,7 @@ import org.eclipse.swt.widgets.Shell;
  * for any corporate or commercial purpose.
  * *************************************
  */
-public class OptionsDialog extends org.eclipse.swt.widgets.Dialog implements SelectionListener {
+public class OptionsDialog extends Dialog implements SelectionListener {
 	private Composite compositeButtons;
 	private Label labelImage;
 	private Label labelMessage;
@@ -77,7 +79,7 @@ public class OptionsDialog extends org.eclipse.swt.widgets.Dialog implements Sel
 			labelMessage = new Label(dialogShell, SWT.NULL);
 			compositeButtons = new Composite(dialogShell, SWT.NULL);
 
-			dialogShell.setSize(new org.eclipse.swt.graphics.Point(418, 139));
+			dialogShell.setSize(new Point(418, 139));
 
 			Image i = parent.getDisplay().getSystemImage(getStyle());
 			labelImage.setImage(i);
