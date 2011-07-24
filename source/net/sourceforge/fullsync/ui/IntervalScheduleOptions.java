@@ -32,16 +32,18 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 public class IntervalScheduleOptions extends ScheduleOptions {
+	// TODO sadly we can't support "days","months" as the interval is starting with program startup
+	private static SchedulingIntervalItem[] schedulingIntervals = new SchedulingIntervalItem[] {
+		new SchedulingIntervalItem("seconds", Messages.getString("IntervalScheduleOptions.seconds"), 1000),
+		new SchedulingIntervalItem("minutes", Messages.getString("IntervalScheduleOptions.minutes"), 60*1000),
+		new SchedulingIntervalItem("hours", Messages.getString("IntervalScheduleOptions.hours"), 60*60*1000),
+	};
+
 	private Text textCount;
 	private Combo cbUnit;
 
 	public IntervalScheduleOptions(Composite parent, int style) {
 		super(parent, style);
-		initGUI();
-		cbUnit.select(0);
-	}
-
-	private void initGUI() {
 		try {
 			GridLayout thisLayout = new GridLayout(3, false);
 			this.setLayout(thisLayout);
@@ -59,14 +61,14 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 			textCount.setLayoutData(textCountLData);
 
 			cbUnit = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
-			// TODO sadly we can't support "days","months" as the interval is starting with program startup
-			cbUnit.setItems(new java.lang.String[] {
-				Messages.getString("IntervalScheduleOptions.seconds"),
-				Messages.getString("IntervalScheduleOptions.minutes"),
-				Messages.getString("IntervalScheduleOptions.hours"),
-			});
-
+			String[] names = new String[schedulingIntervals.length];
+			int idx = 0;
+			for (SchedulingIntervalItem item : schedulingIntervals) {
+				names[idx++] = item.name;
+			}
+			cbUnit.setItems(names);
 			this.layout();
+			cbUnit.select(0);
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
@@ -87,23 +89,33 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 	public void setSchedule(final Schedule sched) {
 		if (sched instanceof IntervalSchedule) {
 			IntervalSchedule is = (IntervalSchedule) sched;
-			textCount.setText(String.valueOf(is.getInterval() / 1000));
-			cbUnit.select(0);
+			int index = 0;
+			for (SchedulingIntervalItem item : schedulingIntervals) {
+				if (item.unit.equals(is.getIntervalDisplayUnit())) {
+					textCount.setText(String.valueOf(is.getInterval() / item.factor));
+					break;
+				}
+				++index;
+			}
+			cbUnit.select(index);
 		}
 	}
 
 	@Override
 	public Schedule getSchedule() {
-		long multi = 1;
-		switch (cbUnit.getSelectionIndex()) {
-			case 2:
-				multi *= 60;
-			case 1:
-				multi *= 60;
-			case 0:
-				multi *= 1000;
-		}
-		long interval = Long.parseLong(textCount.getText()) * multi;
-		return new IntervalSchedule(interval, interval);
+		SchedulingIntervalItem item = schedulingIntervals[cbUnit.getSelectionIndex()];
+		long interval = Long.parseLong(textCount.getText()) * item.factor;
+		return new IntervalSchedule(interval, interval, item.unit);
+	}
+}
+
+class SchedulingIntervalItem {
+	public String unit;
+	public String name;
+	public long factor;
+	public SchedulingIntervalItem(String unit, String name, long factor) {
+		this.unit = unit;
+		this.name = name;
+		this.factor = factor;
 	}
 }

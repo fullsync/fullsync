@@ -453,18 +453,16 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		}
 		Schedule schedule = null;
 		String type = element.getAttribute("type");
-		if ("interval".equals(type)) {
-			long firstSpan = element.hasAttribute("firstinterval") ? Long.parseLong(element.getAttribute("firstinterval")) : 0;
-			long span = Long.parseLong(element.getAttribute("interval"));
-			schedule = new IntervalSchedule(firstSpan, span);
+		try {
+			if (IntervalSchedule.SCHEDULE_TYPE.equals(type)) {
+				schedule = IntervalSchedule.unserialize(element);
+			}
+			else if (CrontabSchedule.SCHEDULE_TYPE.equals(type)) {
+				schedule = CrontabSchedule.unserialize(element);
+			}
 		}
-		else if ("crontab".equals(type)) {
-			try {
-				schedule = new CrontabSchedule(element.getAttribute("pattern"));
-			}
-			catch (Exception ex) {
-				ExceptionHandler.reportException(ex);
-			}
+		catch (Exception ex) {
+			ExceptionHandler.reportException(ex);
 		}
 		return schedule;
 	}
@@ -562,7 +560,10 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		elem.setAttribute("lastUpdate", DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(p.getLastUpdate()));
 
 		elem.appendChild(serialize(p.getRuleSet(), "RuleSetDescriptor", doc));
-		elem.appendChild(serialize(p.getSchedule(), "Schedule", doc));
+		Schedule s = p.getSchedule();
+		if (null != s) {
+			elem.appendChild(s.serialize(doc));
+		}
 		elem.appendChild(serialize(p.getSource(), "Source", doc));
 		elem.appendChild(serialize(p.getDestination(), "Destination", doc));
 
@@ -587,10 +588,9 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 				Document doc = docBuilder.newDocument();
 
 				Element e = doc.createElement("Profiles");
-				e.setAttribute("version", "1.0");
-				Enumeration<Profile> en = profiles.elements();
-				while (en.hasMoreElements()) {
-					e.appendChild(serialize(en.nextElement(), doc));
+				e.setAttribute("version", "1.1");
+				for (Profile p : profiles) {
+					e.appendChild(serialize(p, doc));
 				}
 				doc.appendChild(e);
 

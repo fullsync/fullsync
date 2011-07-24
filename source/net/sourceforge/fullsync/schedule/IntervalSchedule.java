@@ -22,19 +22,53 @@
  */
 package net.sourceforge.fullsync.schedule;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class IntervalSchedule implements Schedule {
+	public static String SCHEDULE_TYPE = "interval";
+
 	private static final long serialVersionUID = 2L;
 
 	long firstInterval;
 	long interval;
 	long next;
+	String displayUnit;
 
-	public IntervalSchedule(long firstInterval, long interval) {
+
+	public static IntervalSchedule unserialize(final Element element) {
+		long firstInterval = 0;
+		long interval = 1;
+		String displayUnit = "seconds";
+		if (element.hasAttribute("firstinterval")) {
+			firstInterval = Long.parseLong(element.getAttribute("firstinterval"));
+		}
+		if (element.hasAttribute("interval")) {
+			interval = Long.parseLong(element.getAttribute("interval"));
+		}
+		if (element.hasAttribute("displayUnit")) {
+			displayUnit = element.getAttribute("displayUnit");
+		}
+		return new IntervalSchedule(firstInterval, interval, displayUnit);
+	}
+
+	@Override
+	public final Element serialize(final Document doc) {
+		Element element = doc.createElement(Schedule.ELEMENT_NAME);
+		element.setAttribute("type", SCHEDULE_TYPE);
+		element.setAttribute("firstinterval", "" + this.firstInterval);
+		element.setAttribute("interval", "" + this.interval);
+		element.setAttribute("displayUnit", this.displayUnit);
+		return element;
+	}
+
+	public IntervalSchedule(long firstInterval, long interval, String displayUnit) {
 		this.firstInterval = firstInterval;
 		this.interval = interval;
+		this.displayUnit = displayUnit;
 
 		this.next = System.currentTimeMillis() + firstInterval;
 	}
@@ -55,5 +89,9 @@ public class IntervalSchedule implements Schedule {
 
 	public long getInterval() {
 		return interval;
+	}
+
+	public String getIntervalDisplayUnit() {
+		return displayUnit;
 	}
 }

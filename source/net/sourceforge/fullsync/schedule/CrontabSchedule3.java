@@ -24,10 +24,15 @@ import java.util.StringTokenizer;
 
 import net.sourceforge.fullsync.DataParseException;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class CrontabSchedule3 implements Schedule {
+	public static String SCHEDULE_TYPE = "crontab3";
+
 	private static final long serialVersionUID = 2L;
 
 	private String origPattern;
@@ -43,6 +48,23 @@ public class CrontabSchedule3 implements Schedule {
 	private boolean allDaysOfMonth;
 	private boolean allMonths;
 	private boolean allDaysOfWeek;
+
+	public static CrontabSchedule3 unserialize(final Element element) throws DataParseException {
+		String pattern = "* * * * *";
+		if (element.hasAttribute("pattern")) {
+			pattern = element.getAttribute("pattern");
+		}
+		return new CrontabSchedule3(pattern);
+	}
+
+	@Override
+	public final Element serialize(final Document doc) {
+		Element element = doc.createElement(Schedule.ELEMENT_NAME);
+		element.setAttribute("type", SCHEDULE_TYPE);
+		element.setAttribute("pattern", origPattern);
+		return element;
+	}
+
 
 	public CrontabSchedule3(String pattern) throws DataParseException {
 		read(pattern);

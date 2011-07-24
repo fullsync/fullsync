@@ -24,11 +24,18 @@ package net.sourceforge.fullsync.schedule;
 
 import java.io.Serializable;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public interface Schedule extends Serializable {
+	public static String ELEMENT_NAME = "Schedule";
+
 	public long getNextOccurrence(long now);
 
 	public void setLastOccurrence(long now);
+
+	public Element serialize(Document doc);
 }
