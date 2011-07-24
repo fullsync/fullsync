@@ -481,7 +481,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		menuItemSystem.setText("System Information");
 		menuItemSystem.addListener(SWT.Selection, new Listener() {
 			@Override
-			public void handleEvent(Event e) {
+			public void handleEvent(final Event e) {
 				WizardDialog dialog = new WizardDialog(getShell(), SWT.NULL);
 				new SystemStatusPage(dialog);
 				dialog.show();
@@ -650,7 +650,15 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 
 	@Override
 	public void createNewProfile() {
-		ProfileDetails.showProfile(getShell(), guiController.getProfileManager(), null);
+		try {
+			WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL | SWT.RESIZE);
+			new ProfileDetailsTabbedPage(dialog, guiController.getProfileManager(), null);
+			dialog.show();
+		}
+		catch (Exception e) {
+			ExceptionHandler.reportException(e);
+		}
+
 	}
 
 	@Override
@@ -724,8 +732,14 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 		if (p == null) {
 			return;
 		}
-
-		ProfileDetails.showProfile(getShell(), guiController.getProfileManager(), p.getName());
+		try {
+			WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL | SWT.RESIZE);
+			new ProfileDetailsTabbedPage(dialog, guiController.getProfileManager(), p.getName());
+			dialog.show();
+		}
+		catch (Exception e) {
+			ExceptionHandler.reportException(e);
+		}
 	}
 
 	@Override

@@ -681,17 +681,6 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		}
 	}
 
-	public static void showProfile(Shell parent, ProfileManager manager, String name) {
-		try {
-			WizardDialog dialog = new WizardDialog(parent, SWT.APPLICATION_MODAL);
-			new ProfileDetailsPage(dialog, manager, name);
-			dialog.show();
-		}
-		catch (Exception e) {
-			ExceptionHandler.reportException(e);
-		}
-	}
-
 	public void apply() {
 		closeSourceSite();
 
