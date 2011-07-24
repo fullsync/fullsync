@@ -45,7 +45,6 @@ public class Profile implements Serializable {
 	private boolean enabled;
 	private int lastErrorLevel;
 	private String lastErrorString;
-	// private int status;
 
 	private transient boolean eventsAllowed;
 	private transient ArrayList<ProfileChangeListener> listeners;
@@ -134,6 +133,7 @@ public class Profile implements Serializable {
 		}
 	}
 
+	//FIXME: this needs updates!
 	public String getNextUpdateText() {
 		// TODO this doesnt belong here (l18n)
 		if (schedule == null) {

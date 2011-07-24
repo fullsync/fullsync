@@ -53,6 +53,7 @@ import org.eclipse.swt.program.Program;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
+@SuppressWarnings("deprecation")
 public class CommandLineInterpreter {
 	private static Options options;
 
@@ -98,7 +99,7 @@ public class CommandLineInterpreter {
 		formatter.printHelp("fullsync [-hvrdp]", options);
 	}
 
-	public static void parse(String[] args) {
+	public static void parse(final String[] args) {
 		initOptions();
 
 		try {

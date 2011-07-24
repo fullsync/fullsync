@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
  * for any corporate or commercial purpose.
  * *************************************
  */
-public class ChooseDstBufferInitWindow extends org.eclipse.swt.widgets.Composite {
+public class ChooseDstBufferInitWindow extends Composite {
 
 	private Button buttonAbort;
 	private Button buttonOk;

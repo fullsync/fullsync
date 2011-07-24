@@ -145,6 +145,7 @@ public class Task implements Serializable {
 		out.writeObject(children);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
 		this.source = (File) in.readObject();
 		this.destination = (File) in.readObject();
