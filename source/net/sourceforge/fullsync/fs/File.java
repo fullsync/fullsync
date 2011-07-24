@@ -1,23 +1,21 @@
-/**
- *	@license
- *	This program is free software; you can redistribute it and/or
- *	modify it under the terms of the GNU General Public License
- *	as published by the Free Software Foundation; either version 2
- *	of the License, or (at your option) any later version.
- *
- *	This program is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *	GNU General Public License for more details.
- *
- *	You should have received a copy of the GNU General Public License
- *	along with this program; if not, write to the Free Software
- *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
- *	Boston, MA  02110-1301, USA.
- *
- *	---
- *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
- *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
  */
 /*
  * Created on 18.07.2004
@@ -33,41 +31,53 @@ import java.util.Collection;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public interface File extends Serializable
-{
-    public String getName();
-    public String getPath();
-    public File getParent();
-    public boolean isDirectory();
-    public boolean isFile();
-    public boolean exists();
-    public boolean isFiltered();
-    public void setFiltered( boolean filtered );
+public interface File extends Serializable {
+	public String getName();
 
-    public boolean isBuffered();
-    public File getUnbuffered() throws IOException;
-    public void refreshBuffer() throws IOException;
+	public String getPath();
 
-    public void writeFileAttributes() throws IOException;
-    public void setFileAttributes( FileAttributes att );
-    public FileAttributes getFileAttributes();
+	public File getParent();
 
-    public Collection<File> getChildren() throws IOException;
-    public File getChild( String name ) throws IOException;
+	public boolean isDirectory();
 
-    // TODO currently, 'create' isnt the right word
-    //		they do not exist before and may not exists after sync
-    public File createChild( String name, boolean directory ) throws IOException;
+	public boolean isFile();
 
-    public void refresh() throws IOException;
+	public boolean exists();
 
-    public boolean makeDirectory()  throws IOException;
+	public boolean isFiltered();
 
-    public InputStream getInputStream() throws IOException;
-    public OutputStream getOutputStream() throws IOException;
+	public void setFiltered(boolean filtered);
 
-    public boolean delete() throws IOException;
+	public boolean isBuffered();
 
-    @Override
+	public File getUnbuffered() throws IOException;
+
+	public void refreshBuffer() throws IOException;
+
+	public void writeFileAttributes() throws IOException;
+
+	public void setFileAttributes(FileAttributes att);
+
+	public FileAttributes getFileAttributes();
+
+	public Collection<File> getChildren() throws IOException;
+
+	public File getChild(String name) throws IOException;
+
+	// TODO currently, 'create' isnt the right word
+	// they do not exist before and may not exists after sync
+	public File createChild(String name, boolean directory) throws IOException;
+
+	public void refresh() throws IOException;
+
+	public boolean makeDirectory() throws IOException;
+
+	public InputStream getInputStream() throws IOException;
+
+	public OutputStream getOutputStream() throws IOException;
+
+	public boolean delete() throws IOException;
+
+	@Override
 	public String toString();
 }

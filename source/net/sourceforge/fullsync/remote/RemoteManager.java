@@ -1,4 +1,23 @@
 /*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
+/*
  * Created on Nov 18, 2004
  */
 package net.sourceforge.fullsync.remote;
@@ -26,21 +45,20 @@ public class RemoteManager {
 	private HashMap listenersMap = new HashMap();
 	private boolean useRemoteListener = false;
 
-	public RemoteManager(String host, int port, String password) 
-		throws MalformedURLException, RemoteException, NotBoundException 
-	{
-		remoteInterface = (RemoteInterface) Naming.lookup("rmi://"+host+":"+port+"/FullSync");
+	public RemoteManager(String host, int port, String password) throws MalformedURLException, RemoteException, NotBoundException {
+		remoteInterface = (RemoteInterface) Naming.lookup("rmi://" + host + ":" + port + "/FullSync");
 		if (!remoteInterface.checkPassword(password)) {
 			throw new RemoteException("Wrong password");
 		}
 	}
-	
+
 	public Profile getProfile(String name) {
 		try {
 			Profile remoteprofile = remoteInterface.getProfile(name);
 			return remoteprofile;
-		} catch (RemoteException e) {
-			ExceptionHandler.reportException( e );
+		}
+		catch (RemoteException e) {
+			ExceptionHandler.reportException(e);
 			return null;
 		}
 	}
@@ -49,46 +67,39 @@ public class RemoteManager {
 		try {
 			Profile[] remoteprofiles = remoteInterface.getProfiles();
 			return remoteprofiles;
-		} catch (RemoteException e) {
-			ExceptionHandler.reportException( e );
+		}
+		catch (RemoteException e) {
+			ExceptionHandler.reportException(e);
 		}
 		return null;
 	}
 
-	public void addProfileListChangeListener(ProfileListChangeListener listener)
-		throws RemoteException
-	{
+	public void addProfileListChangeListener(ProfileListChangeListener listener) throws RemoteException {
 		if (listener != null) {
 			RemoteProfileListChangeListener remoteListener = new RemoteProfileListChangeListener(listener);
 			remoteInterface.addProfileListChangeListener(remoteListener);
 			listenersMap.put(listener, remoteListener);
 		}
 	}
-	
-	public void removeProfileListChangeListener (ProfileListChangeListener listener)
-		throws RemoteException
-	{
+
+	public void removeProfileListChangeListener(ProfileListChangeListener listener) throws RemoteException {
 		if (listener != null) {
 			RemoteProfileListChangeListener remoteListener = (RemoteProfileListChangeListener) listenersMap.remove(listener);
 			remoteInterface.removeProfileListChangeListener(remoteListener);
 		}
 	}
-	
-	public void addSchedulerChangeListener(SchedulerChangeListener listener)
-		throws RemoteException
-	{
+
+	public void addSchedulerChangeListener(SchedulerChangeListener listener) throws RemoteException {
 		RemoteSchedulerChangeListener remoteListener = new RemoteSchedulerChangeListener(listener);
 		remoteInterface.addSchedulerChangeListener(remoteListener);
 		listenersMap.put(listener, remoteListener);
 	}
-	
-	public void removeSchedulerChangeListener (SchedulerChangeListener listener)
-		throws RemoteException
-	{
+
+	public void removeSchedulerChangeListener(SchedulerChangeListener listener) throws RemoteException {
 		RemoteSchedulerChangeListener remoteListener = (RemoteSchedulerChangeListener) listenersMap.remove(listener);
 		remoteInterface.removeSchedulerChangeListener(remoteListener);
 	}
-	
+
 	public void runProfile(String name) throws RemoteException {
 		remoteInterface.runProfile(name);
 	}
@@ -96,36 +107,39 @@ public class RemoteManager {
 	public void startTimer() {
 		try {
 			remoteInterface.startTimer();
-		} catch (RemoteException e) {
-			ExceptionHandler.reportException( e );
+		}
+		catch (RemoteException e) {
+			ExceptionHandler.reportException(e);
 		}
 	}
-	
+
 	public void stopTimer() {
 		try {
 			remoteInterface.stopTimer();
-		} catch (RemoteException e) {
-			ExceptionHandler.reportException( e );
+		}
+		catch (RemoteException e) {
+			ExceptionHandler.reportException(e);
 		}
 	}
-	
+
 	public boolean isSchedulerEnabled() {
-	    try {
-	        return remoteInterface.isSchedulerEnabled();
-	    } catch( RemoteException e ) {
-	        ExceptionHandler.reportException( e );
-	        return false;
-	    }
+		try {
+			return remoteInterface.isSchedulerEnabled();
+		}
+		catch (RemoteException e) {
+			ExceptionHandler.reportException(e);
+			return false;
+		}
 	}
-	
+
 	public TaskTree executeProfile(String name) throws RemoteException {
 		return remoteInterface.executeProfile(name);
 	}
-	
+
 	public IoStatistics getIoStatistics(TaskTree taskTree) throws RemoteException {
 		return remoteInterface.getIoStatistics(taskTree);
 	}
-		
+
 	public void performActions(TaskTree taskTree, TaskFinishedListener listener) throws RemoteException {
 		RemoteTaskFinishedListener remoteListener = null;
 		if (useRemoteListener) {
@@ -133,11 +147,11 @@ public class RemoteManager {
 		}
 		remoteInterface.performActions(taskTree, remoteListener);
 	}
-	
+
 	public void setUseRemoteListener(boolean bool) {
 		this.useRemoteListener = bool;
 	}
-	
+
 	public boolean getUseRemoteListener() {
 		return this.useRemoteListener;
 	}

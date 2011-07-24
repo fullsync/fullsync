@@ -1,3 +1,22 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
 package net.sourceforge.fullsync.ui;
 
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -16,56 +35,53 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
-* This code was generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* *************************************
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
-* for this machine, so Jigloo or this code cannot be used legally
-* for any corporate or commercial purpose.
-* *************************************
-*/
-public class OptionsDialog extends org.eclipse.swt.widgets.Dialog implements SelectionListener
-{
+ * This code was generated using CloudGarden's Jigloo
+ * SWT/Swing GUI Builder, which is free for non-commercial
+ * use. If Jigloo is being used commercially (ie, by a corporation,
+ * company or business for any purpose whatever) then you
+ * should purchase a license for each developer using Jigloo.
+ * Please visit www.cloudgarden.com for details.
+ * Use of Jigloo implies acceptance of these licensing terms.
+ * *************************************
+ * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
+ * for this machine, so Jigloo or this code cannot be used legally
+ * for any corporate or commercial purpose.
+ * *************************************
+ */
+public class OptionsDialog extends org.eclipse.swt.widgets.Dialog implements SelectionListener {
 	private Composite compositeButtons;
 	private Label labelImage;
 	private Label labelMessage;
 	private Shell dialogShell;
-	
+
 	private String message;
 	private String[] options;
 	private String result;
 
-	public OptionsDialog(Shell parent, int style) 
-	{
-		super(parent,style);
+	public OptionsDialog(Shell parent, int style) {
+		super(parent, style);
 	}
 
 	/**
-	* Opens the Dialog Shell.
-	* Auto-generated code - any changes you make will disappear.
-	*/
-	public String open()
-	{
+	 * Opens the Dialog Shell.
+	 * Auto-generated code - any changes you make will disappear.
+	 */
+	public String open() {
 		try {
-		    result = null;
-		    
+			result = null;
+
 			Shell parent = getParent();
 			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 			dialogShell.setText(getText());
-			labelImage = new Label(dialogShell,SWT.NULL);
-			labelMessage = new Label(dialogShell,SWT.NULL);
-			compositeButtons = new Composite(dialogShell,SWT.NULL);
-	
-			dialogShell.setSize(new org.eclipse.swt.graphics.Point(418,139));
-	
-			Image i = parent.getDisplay().getSystemImage( getStyle() );
-			labelImage.setImage( i );
-	
+			labelImage = new Label(dialogShell, SWT.NULL);
+			labelMessage = new Label(dialogShell, SWT.NULL);
+			compositeButtons = new Composite(dialogShell, SWT.NULL);
+
+			dialogShell.setSize(new org.eclipse.swt.graphics.Point(418, 139));
+
+			Image i = parent.getDisplay().getSystemImage(getStyle());
+			labelImage.setImage(i);
+
 			GridData labelMessageLData = new GridData();
 			labelMessageLData.verticalAlignment = GridData.CENTER;
 			labelMessageLData.horizontalAlignment = GridData.FILL;
@@ -78,7 +94,7 @@ public class OptionsDialog extends org.eclipse.swt.widgets.Dialog implements Sel
 			labelMessageLData.grabExcessVerticalSpace = false;
 			labelMessage.setLayoutData(labelMessageLData);
 			labelMessage.setText(getMessage());
-	
+
 			GridData compositeButtonsLData = new GridData();
 			compositeButtonsLData.verticalAlignment = GridData.CENTER;
 			compositeButtonsLData.horizontalAlignment = GridData.CENTER;
@@ -104,12 +120,11 @@ public class OptionsDialog extends org.eclipse.swt.widgets.Dialog implements Sel
 			compositeButtonsLayout.marginTop = 3;
 			compositeButtonsLayout.marginRight = 3;
 			compositeButtonsLayout.marginBottom = 3;
-			for( int c = 0; c < options.length; c++ )
-		    {
-		        Button b = new Button( compositeButtons, SWT.PUSH );
-		        b.setText( options[c] );
-		        b.addSelectionListener( this );
-		    }
+			for (int c = 0; c < options.length; c++) {
+				Button b = new Button(compositeButtons, SWT.PUSH);
+				b.setText(options[c]);
+				b.addSelectionListener(this);
+			}
 			compositeButtons.layout();
 			GridLayout dialogShellLayout = new GridLayout(2, true);
 			dialogShell.setLayout(dialogShellLayout);
@@ -127,40 +142,38 @@ public class OptionsDialog extends org.eclipse.swt.widgets.Dialog implements Sel
 				if (!display.readAndDispatch())
 					display.sleep();
 			}
-		} catch (Exception e) {
-			ExceptionHandler.reportException( e );
+		}
+		catch (Exception e) {
+			ExceptionHandler.reportException(e);
 		}
 		return result;
 	}
-	
-	public void setMessage( String message )
-	{
-	    this.message = message;
-	}
-	public String getMessage()
-	{
-	    return message;
-	}
-	public void setOptions( String[] newOptions )
-	{
-	    this.options = newOptions;
-	}
-	public String[] getOptions()
-	{
-	    return options;
-	}
-	
 
-    public void widgetDefaultSelected( SelectionEvent arg0 )
-    {
-        result = options[0];
-        dialogShell.close();
-        dialogShell.dispose();
-    }
-    public void widgetSelected( SelectionEvent arg0 )
-    {
-        result = ((Button)arg0.widget).getText();
-        dialogShell.close();
-        dialogShell.dispose();
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setOptions(String[] newOptions) {
+		this.options = newOptions;
+	}
+
+	public String[] getOptions() {
+		return options;
+	}
+
+	public void widgetDefaultSelected(SelectionEvent arg0) {
+		result = options[0];
+		dialogShell.close();
+		dialogShell.dispose();
+	}
+
+	public void widgetSelected(SelectionEvent arg0) {
+		result = ((Button) arg0.widget).getText();
+		dialogShell.close();
+		dialogShell.dispose();
+	}
 }

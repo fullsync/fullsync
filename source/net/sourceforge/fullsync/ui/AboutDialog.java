@@ -1,20 +1,19 @@
-/**
- * @license
+/*
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA  02110-1301, USA.
- *
+ * Boston, MA 02110-1301, USA.
+ * 
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -51,19 +50,19 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
-* This code was generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* *************************************
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
-* for this machine, so Jigloo or this code cannot be used legally
-* for any corporate or commercial purpose.
-* *************************************
-*/
+ * This code was generated using CloudGarden's Jigloo
+ * SWT/Swing GUI Builder, which is free for non-commercial
+ * use. If Jigloo is being used commercially (ie, by a corporation,
+ * company or business for any purpose whatever) then you
+ * should purchase a license for each developer using Jigloo.
+ * Please visit www.cloudgarden.com for details.
+ * Use of Jigloo implies acceptance of these licensing terms.
+ * *************************************
+ * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
+ * for this machine, so Jigloo or this code cannot be used legally
+ * for any corporate or commercial purpose.
+ * *************************************
+ */
 public class AboutDialog extends org.eclipse.swt.widgets.Dialog implements DisposeListener {
 
 	private Shell dialogShell;
@@ -81,8 +80,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog implements Dispo
 	private int stIndex = 0;
 	private Timer stTimer;
 
-	public AboutDialog(Shell parent, int style)
-	{
+	public AboutDialog(Shell parent, int style) {
 		super(parent, style);
 	}
 
@@ -134,7 +132,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog implements Dispo
 			}
 			catch (Exception e) {
 				/* this will happen during debugging, might happen at runtime too; ignore */
-				//FIXME: log this exception to some warn log
+				// FIXME: log this exception to some warn log
 			}
 			String copyright = "<unable to read copyright of jar file>";
 			InputStream copyrightIS = AboutDialog.class.getResourceAsStream("/jar-copyright.txt");
@@ -186,11 +184,11 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog implements Dispo
 					specialThanks = res;
 				}
 				else {
-					specialThanks = new String[] {"", "", ""};
+					specialThanks = new String[] { "", "", "" };
 				}
 			}
 			else {
-				specialThanks = new String[] {"", "", ""};
+				specialThanks = new String[] { "", "", "" };
 			}
 			stTimer.scheduleAtFixedRate(new TimerTask() {
 				@Override
@@ -203,8 +201,7 @@ public class AboutDialog extends org.eclipse.swt.widgets.Dialog implements Dispo
 							int secondLine = (stIndex + 1) % specialThanks.length;
 							int thirdLine = (stIndex + 2) % specialThanks.length;
 
-							labelThanks.setText(specialThanks[firstLine] + '\n'
-									+ specialThanks[secondLine] + '\n'
+							labelThanks.setText(specialThanks[firstLine] + '\n' + specialThanks[secondLine] + '\n'
 									+ specialThanks[thirdLine]);
 							dialogShell.layout(true);
 							composite1.layout(true);

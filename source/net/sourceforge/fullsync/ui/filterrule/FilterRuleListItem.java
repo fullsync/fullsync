@@ -1,23 +1,21 @@
-/**
- *	@license
- *	This program is free software; you can redistribute it and/or
- *	modify it under the terms of the GNU General Public License
- *	as published by the Free Software Foundation; either version 2
- *	of the License, or (at your option) any later version.
- *
- *	This program is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *	GNU General Public License for more details.
- *
- *	You should have received a copy of the GNU General Public License
- *	along with this program; if not, write to the Free Software
- *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
- *	Boston, MA  02110-1301, USA.
- *
- *	---
- *	@copyright Copyright (C) 2005, Michele Aiello
- *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
  */
 /*
  * Created on Jun 4, 2005
@@ -85,10 +83,8 @@ public class FilterRuleListItem implements ValueChangedListener {
 	private Hashtable reverseRuleNamesConversionTable;
 	private String[] ruleTypeNames;
 
-	public FilterRuleListItem(FileFilterDetails root, Composite composite,
-			FileFilterManager fileFilterManager, String ruleType,
-			int op, OperandValue value)
-	{
+	public FilterRuleListItem(FileFilterDetails root, Composite composite, FileFilterManager fileFilterManager, String ruleType, int op,
+			OperandValue value) {
 		this.fileFilterManager = fileFilterManager;
 		this.ruleType = ruleType;
 		this.op = op;
@@ -100,19 +96,15 @@ public class FilterRuleListItem implements ValueChangedListener {
 	}
 
 	private void initConversionTables() {
-		ruleTypeNames = new String[] {
-				Messages.getString("FilterRuleListItem.FileNameFilter"),
-				Messages.getString("FilterRuleListItem.FilePathFilter"),
-				Messages.getString("FilterRuleListItem.FileTypeFilter"),
+		ruleTypeNames = new String[] { Messages.getString("FilterRuleListItem.FileNameFilter"),
+				Messages.getString("FilterRuleListItem.FilePathFilter"), Messages.getString("FilterRuleListItem.FileTypeFilter"),
 				Messages.getString("FilterRuleListItem.FilSizeFilter"),
 				Messages.getString("FilterRuleListItem.FileModificationDateFilter"),
-				Messages.getString("FilterRuleListItem.FileAgeFilter"),
-				Messages.getString("FilterRuleListItem.NestedFilter")
-		};
+				Messages.getString("FilterRuleListItem.FileAgeFilter"), Messages.getString("FilterRuleListItem.NestedFilter") };
 
 		rulesTable = new Hashtable(15, 0.75f);
 		rulesTable.put(Messages.getString("FilterRuleListItem.FileNameFilter"), FileNameFileFilterRule.class); //$NON-NLS-1$
-		rulesTable.put(Messages.getString("FilterRuleListItem.FilePathFilter"), FilePathFileFilterRule.class);  //$NON-NLS-1$
+		rulesTable.put(Messages.getString("FilterRuleListItem.FilePathFilter"), FilePathFileFilterRule.class); //$NON-NLS-1$
 		rulesTable.put(Messages.getString("FilterRuleListItem.FileTypeFilter"), FileTypeFileFilterRule.class); //$NON-NLS-1$
 		rulesTable.put(Messages.getString("FilterRuleListItem.FilSizeFilter"), FileSizeFileFilterRule.class); //$NON-NLS-1$
 		rulesTable.put(Messages.getString("FilterRuleListItem.FileModificationDateFilter"), FileModificationDateFileFilterRule.class); //$NON-NLS-1$
@@ -124,7 +116,8 @@ public class FilterRuleListItem implements ValueChangedListener {
 		ruleNamesConversionTable.put(FilePathFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FilePathFilter")); //$NON-NLS-1$
 		ruleNamesConversionTable.put(FileTypeFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileTypeFilter")); //$NON-NLS-1$
 		ruleNamesConversionTable.put(FileSizeFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FilSizeFilter")); //$NON-NLS-1$
-		ruleNamesConversionTable.put(FileModificationDateFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileModificationDateFilter")); //$NON-NLS-1$
+		ruleNamesConversionTable.put(FileModificationDateFileFilterRule.typeName,
+				Messages.getString("FilterRuleListItem.FileModificationDateFilter")); //$NON-NLS-1$
 		ruleNamesConversionTable.put(FileAgeFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileAgeFilter")); //$NON-NLS-1$
 		ruleNamesConversionTable.put(SubfilterFileFilerRule.typeName, Messages.getString("FilterRuleListItem.NestedFilter")); //$NON-NLS-1$
 
@@ -133,7 +126,8 @@ public class FilterRuleListItem implements ValueChangedListener {
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FilePathFilter"), FilePathFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileTypeFilter"), FileTypeFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FilSizeFilter"), FileSizeFileFilterRule.typeName); //$NON-NLS-1$
-		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileModificationDateFilter"), FileModificationDateFileFilterRule.typeName); //$NON-NLS-1$
+		reverseRuleNamesConversionTable.put(
+				Messages.getString("FilterRuleListItem.FileModificationDateFilter"), FileModificationDateFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileAgeFilter"), FileAgeFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.NestedFilter"), SubfilterFileFilerRule.typeName); //$NON-NLS-1$
 	}
@@ -221,14 +215,12 @@ public class FilterRuleListItem implements ValueChangedListener {
 			}
 		}
 
-		if ((getRuleClass(ruleType).equals(FileNameFileFilterRule.class)) ||
-				(getRuleClass(ruleType).equals(FilePathFileFilterRule.class)))
-		{
+		if ((getRuleClass(ruleType).equals(FileNameFileFilterRule.class)) || (getRuleClass(ruleType).equals(FilePathFileFilterRule.class))) {
 			if (!(value instanceof TextValue)) {
 				value = new TextValue();
 			}
 
-			ruleComposite = new TextValueRuleComposite(composite, SWT.NULL, (TextValue)value);
+			ruleComposite = new TextValueRuleComposite(composite, SWT.NULL, (TextValue) value);
 			ruleComposite.addValueChangedListener(this);
 		}
 		else if (getRuleClass(ruleType).equals(FileTypeFileFilterRule.class)) {
@@ -236,7 +228,7 @@ public class FilterRuleListItem implements ValueChangedListener {
 				value = new TypeValue();
 			}
 
-			ruleComposite = new TypeValueRuleComposite(composite, SWT.NULL, (TypeValue)value);
+			ruleComposite = new TypeValueRuleComposite(composite, SWT.NULL, (TypeValue) value);
 			ruleComposite.addValueChangedListener(this);
 		}
 		else if (getRuleClass(ruleType).equals(FileSizeFileFilterRule.class)) {
@@ -244,7 +236,7 @@ public class FilterRuleListItem implements ValueChangedListener {
 				value = new SizeValue();
 			}
 
-			ruleComposite = new SizeValueRuleComposite(composite, SWT.NULL, (SizeValue)value);
+			ruleComposite = new SizeValueRuleComposite(composite, SWT.NULL, (SizeValue) value);
 			ruleComposite.addValueChangedListener(this);
 		}
 		else if (getRuleClass(ruleType).equals(FileAgeFileFilterRule.class)) {
@@ -252,7 +244,7 @@ public class FilterRuleListItem implements ValueChangedListener {
 				value = new AgeValue();
 			}
 
-			ruleComposite = new AgeValueRuleComposite(composite, SWT.NULL, (AgeValue)value);
+			ruleComposite = new AgeValueRuleComposite(composite, SWT.NULL, (AgeValue) value);
 			ruleComposite.addValueChangedListener(this);
 		}
 		else if (getRuleClass(ruleType).equals(FileModificationDateFileFilterRule.class)) {
@@ -260,14 +252,14 @@ public class FilterRuleListItem implements ValueChangedListener {
 				value = new DateValue(SystemDate.getInstance().currentTimeMillis());
 			}
 
-			ruleComposite = new DateValueRuleComposite(composite, SWT.NULL, (DateValue)value);
+			ruleComposite = new DateValueRuleComposite(composite, SWT.NULL, (DateValue) value);
 			ruleComposite.addValueChangedListener(this);
 		}
 		else if (getRuleClass(ruleType).equals(SubfilterFileFilerRule.class)) {
 			if (!(value instanceof FilterValue)) {
 				value = new FilterValue(new FileFilter());
 			}
-			ruleComposite = new SubfilterRuleComposite(composite, SWT.NULL, (FilterValue)value);
+			ruleComposite = new SubfilterRuleComposite(composite, SWT.NULL, (FilterValue) value);
 			ruleComposite.addValueChangedListener(this);
 
 			GridData ruleCompositeLData = new GridData();
@@ -305,17 +297,17 @@ public class FilterRuleListItem implements ValueChangedListener {
 			textValue.setBackground(whiteColor);
 		}
 		{
-            ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
-            toolBar.setBackground(whiteColor);
-            ToolItem toolItemDelete = new ToolItem(toolBar, SWT.PUSH);
-            toolItemDelete.setImage(GuiController.getInstance().getImage("Rule_Delete.png")); //$NON-NLS-1$
-            toolItemDelete.setToolTipText(Messages.getString("FilterRuleListItem.Delete")); //$NON-NLS-1$
-            toolItemDelete.addSelectionListener(new SelectionAdapter() {
-            	@Override
+			ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
+			toolBar.setBackground(whiteColor);
+			ToolItem toolItemDelete = new ToolItem(toolBar, SWT.PUSH);
+			toolItemDelete.setImage(GuiController.getInstance().getImage("Rule_Delete.png")); //$NON-NLS-1$
+			toolItemDelete.setToolTipText(Messages.getString("FilterRuleListItem.Delete")); //$NON-NLS-1$
+			toolItemDelete.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent evt) {
-            		root.deleteRule(ruleItem);
-            	}
-            });
+					root.deleteRule(ruleItem);
+				}
+			});
 		}
 	}
 

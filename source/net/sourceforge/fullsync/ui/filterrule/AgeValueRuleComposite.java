@@ -1,4 +1,23 @@
 /*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
+/*
  * Created on Jun 5, 2005
  */
 package net.sourceforge.fullsync.ui.filterrule;
@@ -29,21 +48,21 @@ public class AgeValueRuleComposite extends RuleComposite {
 	private Text textValue;
 	private Combo comboUnits;
 	private AgeValue value;
-	
+
 	public AgeValueRuleComposite(Composite parent, int style, AgeValue value) {
 		super(parent, style);
 		this.value = value;
 		initGUI();
 	}
-	
+
 	private void initGUI() {
 		GridLayout compositeLayout = new GridLayout();
 		compositeLayout.numColumns = 2;
 		compositeLayout.makeColumnsEqualWidth = false;
-		
+
 		this.setLayout(compositeLayout);
 		this.setBackground(whiteColor);
-		
+
 		textValue = new Text(this, SWT.BORDER);
 		comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
 
@@ -57,45 +76,34 @@ public class AgeValueRuleComposite extends RuleComposite {
 		textValue.setLayoutData(text1LData);
 
 		if (value != null) {
-			textValue.setText(String.valueOf(((AgeValue)value).getValue()));
+			textValue.setText(String.valueOf(((AgeValue) value).getValue()));
 		}
-		
+
 		textValue.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent arg0) {
-				((AgeValue)value).fromString(textValue.getText()+" "+comboUnits.getText());
+				((AgeValue) value).fromString(textValue.getText() + " " + comboUnits.getText());
 				valueChanged(new ValueChangedEvent(value));
 			}
 		});
-		
+
 		textValue.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent arg0) {
-				if (((arg0.character < '0' ) || (arg0.character > '9')) &&
-						(arg0.character != '.') &&
-						(arg0.keyCode != SWT.DEL) && 
-						(arg0.keyCode != SWT.BS) &&
-						(arg0.keyCode != SWT.ARROW_LEFT) && 
-						(arg0.keyCode != SWT.ARROW_UP) && 
-						(arg0.keyCode != SWT.ARROW_DOWN) && 
-						(arg0.keyCode != SWT.ARROW_RIGHT))
-				{
+				if (((arg0.character < '0') || (arg0.character > '9')) && (arg0.character != '.') && (arg0.keyCode != SWT.DEL)
+						&& (arg0.keyCode != SWT.BS) && (arg0.keyCode != SWT.ARROW_LEFT) && (arg0.keyCode != SWT.ARROW_UP)
+						&& (arg0.keyCode != SWT.ARROW_DOWN) && (arg0.keyCode != SWT.ARROW_RIGHT)) {
 					arg0.doit = false;
 				}
 			}
+
 			public void keyReleased(KeyEvent arg0) {
-				if (((arg0.character < '0' ) || (arg0.character > '9')) &&
-						(arg0.character != '.') &&
-						(arg0.keyCode != SWT.DEL) && 
-						(arg0.keyCode != SWT.BS) &&
-						(arg0.keyCode != SWT.ARROW_LEFT) && 
-						(arg0.keyCode != SWT.ARROW_UP) && 
-						(arg0.keyCode != SWT.ARROW_DOWN) && 
-						(arg0.keyCode != SWT.ARROW_RIGHT))
-				{
+				if (((arg0.character < '0') || (arg0.character > '9')) && (arg0.character != '.') && (arg0.keyCode != SWT.DEL)
+						&& (arg0.keyCode != SWT.BS) && (arg0.keyCode != SWT.ARROW_LEFT) && (arg0.keyCode != SWT.ARROW_UP)
+						&& (arg0.keyCode != SWT.ARROW_DOWN) && (arg0.keyCode != SWT.ARROW_RIGHT)) {
 					arg0.doit = false;
 				}
 			}
 		});
-				
+
 		GridData comboUnitsLData = new GridData();
 		comboUnitsLData.horizontalSpan = 1;
 		comboUnitsLData.horizontalAlignment = GridData.FILL;
@@ -104,21 +112,21 @@ public class AgeValueRuleComposite extends RuleComposite {
 		comboUnits.setLayoutData(comboUnitsLData);
 		String[] units = AgeValue.getAllUnits();
 		for (int i = 0; i < units.length; i++) {
-			comboUnits.add(units[i]);				
+			comboUnits.add(units[i]);
 		}
-		comboUnits.select(((AgeValue)value).getUnit());
-		
+		comboUnits.select(((AgeValue) value).getUnit());
+
 		comboUnits.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
-				((AgeValue)value).setUnit(comboUnits.getSelectionIndex());
+				((AgeValue) value).setUnit(comboUnits.getSelectionIndex());
 				valueChanged(new ValueChangedEvent(value));
 			}
+
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				((AgeValue)value).setUnit(comboUnits.getSelectionIndex());
+				((AgeValue) value).setUnit(comboUnits.getSelectionIndex());
 				valueChanged(new ValueChangedEvent(value));
 			}
 		});
-		
 
 	}
 }

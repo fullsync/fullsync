@@ -1,4 +1,23 @@
 /*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
+/*
  * Created on 18.07.2004
  */
 package net.sourceforge.fullsync.buffer;
@@ -15,206 +34,195 @@ import org.apache.log4j.Logger;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class BlockBuffer implements ExecutionBuffer
-{
-    Logger logger;
-    
+public class BlockBuffer implements ExecutionBuffer {
+	Logger logger;
+
 	int maxSize;
 	int maxEntries;
-	
+
 	int freeBytes;
 	int numberBytes;
 	int numberEntries;
 	byte[] buffer;
 	Entry[] entries;
-	
+
 	int flushes;
-	
+
 	Vector finishedListeners;
-	
-	public BlockBuffer( Logger logger )
-	{
-	    this.logger = logger;
-	    
-		maxSize = 1024*1024*10;
+
+	public BlockBuffer(Logger logger) {
+		this.logger = logger;
+
+		maxSize = 1024 * 1024 * 10;
 		maxEntries = 5000;
 		numberBytes = 0;
 		numberEntries = 0;
 		freeBytes = maxSize;
-		
+
 		buffer = null;
 		entries = null;
-		
+
 		flushes = 0;
-		
+
 		finishedListeners = new Vector();
 	}
-	public int getCapacity()
-	{
+
+	public int getCapacity() {
 		return maxSize;
 	}
-	public void clearStatus()
-	{
+
+	public void clearStatus() {
 		flushes = 0;
 	}
+
 	/*
-	public void updateStatus( BackupProcessStatus status )
-	{
-		status.BufferFileCapacity = maxEntries;
-		status.BufferByteCapacity = maxSize;
-		status.BufferBytesLoaded = numberBytes;
-		status.BufferFilesLoaded = numberEntries;
-		status.BufferFlushes = flushes;
-	}
-	*/
-	public void load()
-	{
-		if( buffer == null )
-		{
-			buffer  = new byte[maxSize];
+	 * public void updateStatus( BackupProcessStatus status )
+	 * {
+	 * status.BufferFileCapacity = maxEntries;
+	 * status.BufferByteCapacity = maxSize;
+	 * status.BufferBytesLoaded = numberBytes;
+	 * status.BufferFilesLoaded = numberEntries;
+	 * status.BufferFlushes = flushes;
+	 * }
+	 */
+	public void load() {
+		if (buffer == null) {
+			buffer = new byte[maxSize];
 			entries = new Entry[maxEntries];
 		}
 	}
-	public void unload()
-	{
+
+	public void unload() {
 		buffer = null;
 		entries = null;
 	}
-	public void flush()
-		throws IOException
-	{
-		for( int i = 0; i < numberEntries; i++ )
-		{
-		    try {
-				Entry e  = entries[i];
-				EntryDescriptor desc = (EntryDescriptor)e.descriptor;
-				//desc.flush( this, e );
+
+	public void flush() throws IOException {
+		for (int i = 0; i < numberEntries; i++) {
+			try {
+				Entry e = entries[i];
+				EntryDescriptor desc = (EntryDescriptor) e.descriptor;
+				// desc.flush( this, e );
 				OutputStream out = desc.getOutputStream();
-				if( out != null )
-				{
-				    out.write( buffer, e.start, e.length );
-				    //if( (e.internalSegment & Segment.Last) > 0 )
-				    //    out.close();
+				if (out != null) {
+					out.write(buffer, e.start, e.length);
+					// if( (e.internalSegment & Segment.Last) > 0 )
+					// out.close();
 				}
-			    if( (e.internalSegment & Segment.Last) > 0 )
-			    {
+				if ((e.internalSegment & Segment.Last) > 0) {
 					desc.finishWrite();
 					String opDesc = desc.getOperationDescription();
-					if( opDesc != null )
-					    logger.info( opDesc );
-					
+					if (opDesc != null)
+						logger.info(opDesc);
+
 					Enumeration en = finishedListeners.elements();
-					while( en.hasMoreElements() )
-					{
-						((EntryFinishedListener)en.nextElement()).entryFinished( desc );
+					while (en.hasMoreElements()) {
+						((EntryFinishedListener) en.nextElement()).entryFinished(desc);
 					}
-			    }
-		    } catch( IOException ioe ) {
-		        logger.error( "Exception", ioe );
-		    }
+				}
+			}
+			catch (IOException ioe) {
+				logger.error("Exception", ioe);
+			}
 		}
-		Arrays.fill( entries, null );
+		Arrays.fill(entries, null);
 		numberBytes = 0;
 		numberEntries = 0;
 		freeBytes = maxSize;
-		
+
 		flushes++;
 	}
+
 	// Length must be the correct length (there must be enough free bytes and so on)
 	/*
-	long Load( Stream inStream, FileInfo dst, int length, bool lastSegment )
-	{
-		long offset = inStream.Position;
-		int start   = numberBytes;
-		int read    = inStream.Read( buffer, start, length );
-		
-		Segment s;
-		if( offset == 0 )
-			s += s.First;
-		if( inStream.E
-		entries[numberEntries] = new BufferEntry( dst, start, read, offset, lastSegment );
+	 * long Load( Stream inStream, FileInfo dst, int length, bool lastSegment )
+	 * {
+	 * long offset = inStream.Position;
+	 * int start = numberBytes;
+	 * int read = inStream.Read( buffer, start, length );
+	 * 
+	 * Segment s;
+	 * if( offset == 0 )
+	 * s += s.First;
+	 * if( inStream.E
+	 * entries[numberEntries] = new BufferEntry( dst, start, read, offset, lastSegment );
+	 * 
+	 * numberBytes += read;
+	 * numberEntries++;
+	 * freeBytes -= read;
+	 * 
+	 * return read;
+	 * }
+	 */
+	// may not read as much as length says
+	protected Entry storeBytes(InputStream inStream, long length) throws IOException {
+		if (length > freeBytes)
+			length = freeBytes;
+
+		int start = numberBytes;
+		int read = inStream.read(buffer, start, (int) length);
 
 		numberBytes += read;
-		numberEntries++;
 		freeBytes -= read;
-		
-		return read;
-	}*/
-	// may not read as much as length says
-	protected Entry storeBytes( InputStream inStream, long length )
-		throws IOException
-	{
-		if( length > freeBytes ) length = freeBytes;
-		
-		int start = numberBytes;
-		int read  = inStream.read( buffer, start, (int)length );
-		
-		numberBytes += read;
-		freeBytes -= read;
-		
-		Entry entry = new Entry( start, read );
-		entries[numberEntries]  = entry;
+
+		Entry entry = new Entry(start, read);
+		entries[numberEntries] = entry;
 		numberEntries++;
-		
+
 		return entry;
 	}
-	
-	private int store( InputStream inStream, long alreadyRead, long lengthLeft, EntryDescriptor descriptor )
-		throws IOException
-	{
-		Entry entry = storeBytes( inStream, lengthLeft );
-		
+
+	private int store(InputStream inStream, long alreadyRead, long lengthLeft, EntryDescriptor descriptor) throws IOException {
+		Entry entry = storeBytes(inStream, lengthLeft);
+
 		int s = Segment.Middle;
-		if( alreadyRead == 0 )
+		if (alreadyRead == 0)
 			s |= Segment.First;
-		if( entry.length == lengthLeft )
+		if (entry.length == lengthLeft)
 			s |= Segment.Last;
-		
-		entry.internalOffset = alreadyRead; 
+
+		entry.internalOffset = alreadyRead;
 		entry.internalSegment = s;
 		entry.descriptor = descriptor;
 
 		return entry.length;
 	}
-	private void storeEntry( InputStream data, long size, EntryDescriptor descriptor )
-		throws IOException
-    {
-        long alreadyRead = 0;
+
+	private void storeEntry(InputStream data, long size, EntryDescriptor descriptor) throws IOException {
+		long alreadyRead = 0;
 		long lengthLeft = size;
-		
+
 		do {
-			if( lengthLeft > freeBytes || numberEntries == maxEntries )
+			if (lengthLeft > freeBytes || numberEntries == maxEntries)
 				flush();
-			int read = store( data, alreadyRead, lengthLeft, descriptor );
+			int read = store(data, alreadyRead, lengthLeft, descriptor);
 			alreadyRead += read;
-			lengthLeft  -= read;
-		} while( lengthLeft > 0 );
-		//data.close();
-    }
-    public void storeEntry( EntryDescriptor descriptor )
-    	throws IOException
-    {
-        Entry entry;
-        if( descriptor.getLength() == 0 )
-        {
-            if( numberEntries == maxEntries )
+			lengthLeft -= read;
+		} while (lengthLeft > 0);
+		// data.close();
+	}
+
+	public void storeEntry(EntryDescriptor descriptor) throws IOException {
+		Entry entry;
+		if (descriptor.getLength() == 0) {
+			if (numberEntries == maxEntries)
 				flush();
-            entry = new Entry( numberBytes, 0 );
-            entry.descriptor = descriptor;
-            entries[numberEntries] = entry;
-            numberEntries++;
-        } else {
-            storeEntry( descriptor.getInputStream(), descriptor.getLength(), descriptor );
-        }
-        descriptor.finishStore();
-    }
-    
-    public void addEntryFinishedListener( EntryFinishedListener listener )
-    {
-    	finishedListeners.add( listener );
-    }
-    public void removeEntryFinishedListener( EntryFinishedListener listener )
-    {
-    	finishedListeners.remove( listener );
-    }
+			entry = new Entry(numberBytes, 0);
+			entry.descriptor = descriptor;
+			entries[numberEntries] = entry;
+			numberEntries++;
+		}
+		else {
+			storeEntry(descriptor.getInputStream(), descriptor.getLength(), descriptor);
+		}
+		descriptor.finishStore();
+	}
+
+	public void addEntryFinishedListener(EntryFinishedListener listener) {
+		finishedListeners.add(listener);
+	}
+
+	public void removeEntryFinishedListener(EntryFinishedListener listener) {
+		finishedListeners.remove(listener);
+	}
 }

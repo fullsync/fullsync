@@ -1,4 +1,23 @@
 /*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
+/*
  * Created on Nov 7, 2004
  */
 package net.sourceforge.fullsync.remote;
@@ -31,24 +50,24 @@ import org.apache.log4j.Logger;
  * @author Michele Aiello
  */
 public class RemoteServer extends UnicastRemoteObject implements RemoteInterface {
-	
+
 	private ProfileManager profileManager;
 	private Synchronizer synchronizer;
 	private String password;
-	
+
 	private HashMap listenersMap = new HashMap();
 
-    Logger logger = Logger.getLogger( "FullSync" );
-	
+	Logger logger = Logger.getLogger("FullSync");
+
 	public RemoteServer(ProfileManager profileManager, Synchronizer synchronizer) throws RemoteException {
 		this.profileManager = profileManager;
 		this.synchronizer = synchronizer;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public boolean checkPassword(String passwd) throws RemoteException {
 		boolean check = password.equals(passwd);
 		if (check) {
@@ -59,108 +78,100 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 		}
 		return check;
 	}
-	
+
 	public Profile getProfile(String name) throws RemoteException {
 		return profileManager.getProfile(name);
 	}
-	
+
 	public Profile[] getProfiles() throws RemoteException {
 		Enumeration e = profileManager.getProfiles();
 		Vector profilesVector = new Vector();
 		while (e.hasMoreElements()) {
 			profilesVector.add(e.nextElement());
 		}
-		
+
 		return (Profile[]) profilesVector.toArray(new Profile[] {});
 	}
 
-	public void addProfileListChangeListener(final RemoteProfileListChangeListenerInterface remotelistener)
-		throws RemoteException 
-	{
+	public void addProfileListChangeListener(final RemoteProfileListChangeListenerInterface remotelistener) throws RemoteException {
 		ProfileListChangeListener listener = new ProfileListChangeListener() {
 			public void profileChanged(Profile profile) {
 				try {
 					remotelistener.profileChanged(profile);
-				} catch (RemoteException e) {
-//					ExceptionHandler.reportException(e);
+				}
+				catch (RemoteException e) {
+					// ExceptionHandler.reportException(e);
 				}
 			}
-			
+
 			public void profileListChanged() {
 				try {
 					remotelistener.profileListChanged();
-				} catch (RemoteException e) {
-//					ExceptionHandler.reportException(e);
+				}
+				catch (RemoteException e) {
+					// ExceptionHandler.reportException(e);
 				}
 			}
 		};
 		profileManager.addProfilesChangeListener(listener);
 		listenersMap.put(remotelistener, listener);
 	}
-	
-	public void removeProfileListChangeListener (RemoteProfileListChangeListenerInterface remoteListener) 
-		throws RemoteException
-	{
+
+	public void removeProfileListChangeListener(RemoteProfileListChangeListenerInterface remoteListener) throws RemoteException {
 		ProfileListChangeListener listener = (ProfileListChangeListener) listenersMap.remove(remoteListener);
 		profileManager.removeProfilesChangeListener(listener);
 	}
-	
-	public void addSchedulerChangeListener(final RemoteSchedulerChangeListenerInterface remotelistener)
-		throws RemoteException 
-	{
-	    SchedulerChangeListener listener = new SchedulerChangeListener() {
-	        public void schedulerStatusChanged( boolean status )
-            {
-	            try {
-					remotelistener.schedulerStatusChanged( status );
-				} catch (RemoteException e) {
-	//				ExceptionHandler.reportException(e);
+
+	public void addSchedulerChangeListener(final RemoteSchedulerChangeListenerInterface remotelistener) throws RemoteException {
+		SchedulerChangeListener listener = new SchedulerChangeListener() {
+			public void schedulerStatusChanged(boolean status) {
+				try {
+					remotelistener.schedulerStatusChanged(status);
+				}
+				catch (RemoteException e) {
+					// ExceptionHandler.reportException(e);
 				}
 			}
 		};
 		profileManager.addSchedulerChangeListener(listener);
 		listenersMap.put(remotelistener, listener);
 	}
-	
-	public void removeSchedulerChangeListener (RemoteSchedulerChangeListenerInterface remoteListener) 
-		throws RemoteException
-	{
-	    SchedulerChangeListener listener = (SchedulerChangeListener) listenersMap.remove(remoteListener);
+
+	public void removeSchedulerChangeListener(RemoteSchedulerChangeListenerInterface remoteListener) throws RemoteException {
+		SchedulerChangeListener listener = (SchedulerChangeListener) listenersMap.remove(remoteListener);
 		profileManager.removeSchedulerChangeListener(listener);
 	}
-	
-	
+
 	public void runProfile(String name) throws RemoteException {
 		Profile p = profileManager.getProfile(name);
 		TaskTree tree = synchronizer.executeProfile(p);
 		synchronizer.performActions(tree);
-	    p.setLastUpdate(new Date());
-	    profileManager.save();
+		p.setLastUpdate(new Date());
+		profileManager.save();
 	}
-	
+
 	public void startTimer() throws RemoteException {
 		profileManager.startScheduler();
 	}
-	
+
 	public void stopTimer() throws RemoteException {
 		profileManager.stopScheduler();
 	}
-	
-	public boolean isSchedulerEnabled() throws RemoteException
-    {
-        return profileManager.isSchedulerEnabled();
-    }
-	
+
+	public boolean isSchedulerEnabled() throws RemoteException {
+		return profileManager.isSchedulerEnabled();
+	}
+
 	public TaskTree executeProfile(String name) throws RemoteException {
 		Profile p = profileManager.getProfile(name);
 		TaskTree tree = synchronizer.executeProfile(p);
 		return tree;
 	}
-	
+
 	public IoStatistics getIoStatistics(TaskTree taskTree) throws RemoteException {
 		return synchronizer.getIoStatistics(taskTree);
 	}
-	
+
 	public void performActions(TaskTree tree, final RemoteTaskFinishedListenerInterface remoteListener) throws RemoteException {
 		TaskFinishedListener listener = null;
 		if (remoteListener != null) {
@@ -168,7 +179,8 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 				public void taskFinished(TaskFinishedEvent event) {
 					try {
 						remoteListener.taskFinished(event);
-					} catch (RemoteException e) {
+					}
+					catch (RemoteException e) {
 						ExceptionHandler.reportException(e);
 					}
 				}
@@ -179,7 +191,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 			throw new RemoteException("Exception while performing actions");
 		}
 	}
-	
+
 	public void save(Profile[] profiles) throws RemoteException {
 		// Check for deleted profiles
 		Enumeration e = profileManager.getProfiles();
@@ -196,7 +208,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 				profileManager.removeProfile(p);
 			}
 		}
-		
+
 		// Check for added and modified profiles
 		for (int i = 0; i < profiles.length; i++) {
 			Profile p = profileManager.getProfile(profiles[i].getName());
@@ -212,7 +224,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 				p.setRuleSet(profiles[i].getRuleSet());
 				p.setSchedule(profiles[i].getSchedule());
 				p.setEnabled(profiles[i].isEnabled());
-				
+
 				profileManager.profileChanged(p);
 			}
 		}

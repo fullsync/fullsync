@@ -1,4 +1,23 @@
 /*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
+/*
  * Created on Jun 20, 2005
  */
 package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
@@ -12,13 +31,13 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
  * @author Michele Aiello
  */
 public class FileFilterTree {
-		
+
 	private FileFilterTreeItem root;
 	private HashMap<String, FileFilter> itemsMap;
-	
+
 	// TODO is this the correct path separator?
 	private String separator = "/";
-	
+
 	public FileFilterTree() {
 		this.root = new FileFilterTreeItem();
 		this.itemsMap = new HashMap<String, FileFilter>();
@@ -29,7 +48,7 @@ public class FileFilterTree {
 		this.itemsMap = new HashMap<String, FileFilter>();
 		this.separator = separator;
 	}
-		
+
 	public void addFileFilter(String key, FileFilter filter) {
 		StringTokenizer tokenizer = new StringTokenizer(key, separator);
 		FileFilterTreeItem item = root;
@@ -45,7 +64,7 @@ public class FileFilterTree {
 		item.setFilter(filter);
 		itemsMap.put(key, filter);
 	}
-	
+
 	public FileFilter getFilter(String key) {
 		FileFilter filter = null;
 		FileFilter parentFilter = null;
@@ -66,20 +85,20 @@ public class FileFilterTree {
 			}
 			item = children;
 		}
-				
+
 		return parentFilter;
 	}
-	
+
 	public HashMap<String, FileFilter> getItemsMap() {
 		return itemsMap;
 	}
-	
+
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		
+
 		buffer.append(root.toString());
-		
+
 		return buffer.toString();
 	}
-	
+
 }

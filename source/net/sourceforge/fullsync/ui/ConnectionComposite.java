@@ -1,3 +1,22 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
 package net.sourceforge.fullsync.ui;
 
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -14,20 +33,21 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
 /**
-* This code was generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* *************************************
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
-* for this machine, so Jigloo or this code cannot be used legally
-* for any corporate or commercial purpose.
-* *************************************
-*/
+ * This code was generated using CloudGarden's Jigloo
+ * SWT/Swing GUI Builder, which is free for non-commercial
+ * use. If Jigloo is being used commercially (ie, by a corporation,
+ * company or business for any purpose whatever) then you
+ * should purchase a license for each developer using Jigloo.
+ * Please visit www.cloudgarden.com for details.
+ * Use of Jigloo implies acceptance of these licensing terms.
+ * *************************************
+ * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
+ * for this machine, so Jigloo or this code cannot be used legally
+ * for any corporate or commercial purpose.
+ * *************************************
+ */
 public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 	private Label label1;
 	private Label label2;
@@ -38,17 +58,17 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 	private Text textFieldHostname;
 
 	/**
-	* Auto-generated main method to display this 
-	* org.eclipse.swt.widgets.Composite inside a new Shell.
-	*/
+	 * Auto-generated main method to display this
+	 * org.eclipse.swt.widgets.Composite inside a new Shell.
+	 */
 	public static void main(String[] args) {
 		showGUI();
 	}
-		
+
 	/**
-	* Auto-generated method to display this 
-	* org.eclipse.swt.widgets.Composite inside a new Shell.
-	*/
+	 * Auto-generated method to display this
+	 * org.eclipse.swt.widgets.Composite inside a new Shell.
+	 */
 	public static void showGUI() {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
@@ -56,10 +76,11 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
 		shell.layout();
-		if(size.x == 0 && size.y == 0) {
+		if (size.x == 0 && size.y == 0) {
 			inst.pack();
 			shell.pack();
-		} else {
+		}
+		else {
 			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
 			int MENU_HEIGHT = 22;
 			if (shell.getMenuBar() != null)
@@ -87,7 +108,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			this.setSize(274, 139);
 			{
 				label1 = new Label(this, SWT.NONE);
-				label1.setText(Messages.getString("ConnectionComposite.Hostname")+":"); //$NON-NLS-1$ //$NON-NLS-2$
+				label1.setText(Messages.getString("ConnectionComposite.Hostname") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			{
 				textFieldHostname = new Text(this, SWT.BORDER);
@@ -100,7 +121,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			}
 			{
 				label2 = new Label(this, SWT.NONE);
-				label2.setText(Messages.getString("ConnectionComposite.Port")+":"); //$NON-NLS-1$ //$NON-NLS-2$
+				label2.setText(Messages.getString("ConnectionComposite.Port") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			{
 				textFieldPort = new Text(this, SWT.BORDER);
@@ -112,7 +133,7 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			}
 			{
 				label3 = new Label(this, SWT.NONE);
-				label3.setText(Messages.getString("ConnectionComposite.Password")+":"); //$NON-NLS-1$ //$NON-NLS-2$
+				label3.setText(Messages.getString("ConnectionComposite.Password") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			{
 				textPassword = new Text(this, SWT.BORDER);
@@ -124,42 +145,44 @@ public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
 			}
 			{
 				cbDisableRemoteListener = new Button(this, SWT.CHECK | SWT.LEFT);
-				cbDisableRemoteListener
-					.setText(Messages.getString("ConnectionComposite.Disable_Indicator")); //$NON-NLS-1$
+				cbDisableRemoteListener.setText(Messages.getString("ConnectionComposite.Disable_Indicator")); //$NON-NLS-1$
 				GridData cbDisableRemoteListenerLData = new GridData();
 				cbDisableRemoteListenerLData.horizontalSpan = 2;
 				cbDisableRemoteListener.setLayoutData(cbDisableRemoteListenerLData);
 			}
 			this.layout();
-		} catch (Exception e) {
-			ExceptionHandler.reportException( e );
+		}
+		catch (Exception e) {
+			ExceptionHandler.reportException(e);
 		}
 	}
 
 	private void postInitGUI() {
 		textPassword.setEchoChar('*');
 	}
-	
+
 	public void apply() {
 		String hostname = textFieldHostname.getText();
 		int port = 0;
 		try {
 			port = Integer.parseInt(textFieldPort.getText());
-		} catch (NumberFormatException e) {
 		}
-		
+		catch (NumberFormatException e) {
+		}
+
 		String password = textPassword.getText();
-		
+
 		boolean useRemoteListener = !cbDisableRemoteListener.getSelection();
-		
+
 		try {
-		    GuiController.getInstance().getProfileManager().stopScheduler();
+			GuiController.getInstance().getProfileManager().stopScheduler();
 			RemoteManager remoteManager = new RemoteManager(hostname, port, password);
 			remoteManager.setUseRemoteListener(useRemoteListener);
 			GuiController.getInstance().getProfileManager().setRemoteConnection(remoteManager);
 			GuiController.getInstance().getSynchronizer().setRemoteConnection(remoteManager);
-		} catch (Exception e1) {
-			ExceptionHandler.reportException( Messages.getString("ConnectionComposite.Unable_To_Connect"), e1 ); //$NON-NLS-1$
+		}
+		catch (Exception e1) {
+			ExceptionHandler.reportException(Messages.getString("ConnectionComposite.Unable_To_Connect"), e1); //$NON-NLS-1$
 		}
 	}
 }

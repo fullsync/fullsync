@@ -1,3 +1,22 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
 package net.sourceforge.fullsync.ui;
 
 import java.util.Vector;
@@ -25,7 +44,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-
 /**
  * This code was generated using CloudGarden's Jigloo
  * SWT/Swing GUI Builder, which is free for non-commercial
@@ -41,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
  * *************************************
  */
 public class FileFilterDetails extends Composite {
-		
+
 	private Combo comboFilterType;
 	private Label label1;
 	private Combo comboMatchType;
@@ -51,24 +69,24 @@ public class FileFilterDetails extends Composite {
 	private Button buttonFewer;
 	private Button buttonMore;
 	private Button buttonAppliesToDir;
-	
+
 	private Color whiteColor = new Color(null, 255, 255, 255);
-	
+
 	private FileFilterManager fileFilterManager = new FileFilterManager();
 	private FileFilter fileFilter;
-	
+
 	private Vector ruleItems = new Vector();
-	
+
 	/**
-	 * Auto-generated main method to display this 
+	 * Auto-generated main method to display this
 	 * org.eclipse.swt.widgets.Composite inside a new Shell.
 	 */
 	public static void main(String[] args) {
 		showGUI();
 	}
-	
+
 	/**
-	 * Auto-generated method to display this 
+	 * Auto-generated method to display this
 	 * org.eclipse.swt.widgets.Composite inside a new Shell.
 	 */
 	public static void showGUI() {
@@ -78,10 +96,11 @@ public class FileFilterDetails extends Composite {
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
 		shell.layout();
-		if(size.x == 0 && size.y == 0) {
+		if (size.x == 0 && size.y == 0) {
 			inst.pack();
 			shell.pack();
-		} else {
+		}
+		else {
 			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
 			shell.setSize(shellBounds.width, shellBounds.height);
 		}
@@ -91,13 +110,13 @@ public class FileFilterDetails extends Composite {
 				display.sleep();
 		}
 	}
-	
+
 	public FileFilterDetails(Composite parent, int style, FileFilter fileFilter) {
 		super(parent, style);
 		this.fileFilter = fileFilter;
 		initGUI();
 	}
-	
+
 	private void initGUI() {
 		try {
 			GridLayout thisLayout = new GridLayout();
@@ -109,11 +128,8 @@ public class FileFilterDetails extends Composite {
 				GridData comboFilterTypeLData = new GridData();
 				comboFilterTypeLData.widthHint = 60;
 				comboFilterTypeLData.heightHint = 21;
-				comboFilterType = new Combo(
-						this,
-						SWT.DROP_DOWN | SWT.READ_ONLY);
-				comboFilterType
-				.setLayoutData(comboFilterTypeLData);
+				comboFilterType = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
+				comboFilterType.setLayoutData(comboFilterTypeLData);
 				comboFilterType.add("Include");
 				comboFilterType.add("Exclude");
 			}
@@ -138,9 +154,8 @@ public class FileFilterDetails extends Composite {
 				scrolledComposite1LData.horizontalAlignment = GridData.FILL;
 				scrolledComposite1LData.grabExcessVerticalSpace = true;
 				scrolledComposite1LData.grabExcessHorizontalSpace = true;
-				scrolledComposite1 = new ScrolledComposite(this, SWT.V_SCROLL
-						| SWT.BORDER);
-                createCompositeRuleList();
+				scrolledComposite1 = new ScrolledComposite(this, SWT.V_SCROLL | SWT.BORDER);
+				createCompositeRuleList();
 				scrolledComposite1.setLayout(null);
 				scrolledComposite1.setLayoutData(scrolledComposite1LData);
 				scrolledComposite1.setExpandHorizontal(true);
@@ -195,7 +210,7 @@ public class FileFilterDetails extends Composite {
 					buttonAppliesToDir.setLayoutData(buttonAppliesToDirLData);
 				}
 			}
-			
+
 			if (fileFilter != null) {
 				comboMatchType.select(fileFilter.getMatchType());
 				comboFilterType.select(fileFilter.getFilterType());
@@ -211,14 +226,15 @@ public class FileFilterDetails extends Composite {
 				buttonAppliesToDir.setSelection(true);
 				addRuleRow();
 			}
-			buttonFewer.setEnabled(ruleItems.size() > 1);			
-			
+			buttonFewer.setEnabled(ruleItems.size() > 1);
+
 			this.layout();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void addRuleRow() {
 		addRuleRow(null, -1, null);
 	}
@@ -230,58 +246,54 @@ public class FileFilterDetails extends Composite {
 	}
 
 	protected void removeRuleRow() {
-		ruleItems.removeElementAt(ruleItems.size()-1);
+		ruleItems.removeElementAt(ruleItems.size() - 1);
 		recreateRuleList();
 	}
-	
+
 	public void recreateRuleList() {
 		compositeRuleList.dispose();
 		createCompositeRuleList();
 		for (int i = 0; i < ruleItems.size(); i++) {
-			FilterRuleListItem ruleItem = (FilterRuleListItem)ruleItems.elementAt(i);
+			FilterRuleListItem ruleItem = (FilterRuleListItem) ruleItems.elementAt(i);
 			ruleItem.init(compositeRuleList);
 		}
 		compositeRuleList.pack();
 		buttonFewer.setEnabled(ruleItems.size() > 1);
 	}
-	
+
 	public void deleteRule(FilterRuleListItem item) {
 		ruleItems.remove(item);
 		recreateRuleList();
 	}
-	
+
 	protected void createCompositeRuleList() {
 		compositeRuleList = new Composite(scrolledComposite1, SWT.NONE);
 		scrolledComposite1.setContent(compositeRuleList);
-        
+
 		GridLayout compositeRuleListLayout = new GridLayout();
 		compositeRuleListLayout.numColumns = 4;
 		compositeRuleListLayout.makeColumnsEqualWidth = false;
-		
+
 		compositeRuleList.setLayout(compositeRuleListLayout);
 		compositeRuleList.setBackground(whiteColor);
-//        compositeRuleList.pack();
+		// compositeRuleList.pack();
 	}
-	
+
 	public FileFilter getFileFilter() {
 		fileFilter = new FileFilter();
-		
+
 		fileFilter.setMatchType(comboMatchType.getSelectionIndex());
 		fileFilter.setFilterType(comboFilterType.getSelectionIndex());
 		fileFilter.setAppliesToDirectories(buttonAppliesToDir.getSelection());
-		
+
 		FileFilterRule[] rules = new FileFilterRule[ruleItems.size()];
 		for (int i = 0; i < rules.length; i++) {
-			FilterRuleListItem ruleItem = (FilterRuleListItem)ruleItems.get(i);
-			rules[i] = fileFilterManager.createFileFilterRule(ruleItem.getRuleType(), 
-					ruleItem.getOperator(),
-					ruleItem.getValue());
+			FilterRuleListItem ruleItem = (FilterRuleListItem) ruleItems.get(i);
+			rules[i] = fileFilterManager.createFileFilterRule(ruleItem.getRuleType(), ruleItem.getOperator(), ruleItem.getValue());
 		}
-		
+
 		fileFilter.setFileFilterRules(rules);
 		return fileFilter;
 	}
 
 }
-
-

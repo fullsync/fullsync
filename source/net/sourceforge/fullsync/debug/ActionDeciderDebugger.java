@@ -1,3 +1,22 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
 package net.sourceforge.fullsync.debug;
 
 import java.io.IOException;
@@ -15,90 +34,79 @@ import net.sourceforge.fullsync.fs.debug.DebugNode;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class ActionDeciderDebugger
-{
-    public void debugTask( ActionDecider ad, File src, File dst, StateDecider sd, BufferStateDecider bsd )
-    	throws DataParseException, IOException
-    {
-        Task task = ad.getTask( src, dst, sd, bsd );
-        System.out.println( src+" <-> "+dst+" : "+task.toString() );
-    }
-    
-    public BufferedDebugNode[] generatePossibleBufferedNodes()
-    {
-        BufferedDebugNode[] node = new BufferedDebugNode[6];
-        int i = 0;
-        
-        node[i++] = null;
-        node[i++] = new BufferedDebugNode( false, true, 0, 0 );
-        //node[i++] = new BufferedDebugNode( false, false, 0, 0 );
+public class ActionDeciderDebugger {
+	public void debugTask(ActionDecider ad, File src, File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException,
+			IOException {
+		Task task = ad.getTask(src, dst, sd, bsd);
+		System.out.println(src + " <-> " + dst + " : " + task.toString());
+	}
 
-        node[i++] = new BufferedDebugNode( true, true, 0, 0 );
-        
-        node[i++] = new BufferedDebugNode( true, false, 100, 100 );
-        node[i++] = new BufferedDebugNode( true, false, 100, 200 );
-        node[i++] = new BufferedDebugNode( true, false, 200, 100 );
-        return node;
-    }
-    
-    public DebugNode[] generatePossibleNodes()
-    {
-        DebugNode[] node = new DebugNode[5];
-        int i = 0;
-        
-        node[i++] = new DebugNode( false, true, 0, 0 );
-        //node[i++] = new DebugNode( false, false, 0, 0 );
+	public BufferedDebugNode[] generatePossibleBufferedNodes() {
+		BufferedDebugNode[] node = new BufferedDebugNode[6];
+		int i = 0;
 
-        node[i++] = new DebugNode( true, true, 0, 0 );
-        
-        node[i++] = new DebugNode( true, false, 100, 100 );
-        node[i++] = new DebugNode( true, false, 100, 200 );
-        node[i++] = new DebugNode( true, false, 200, 100 );
-        return node;
-    }
-    public void debugActionDecider( ActionDecider ac, boolean srcBuffering, boolean dstBuffering )
-    	throws DataParseException, IOException
-    {
-        FileComparer fc = new DebugFileComparer();
-        StateDecider sd = new net.sourceforge.fullsync.impl.StateDecider( fc );
-        BufferStateDecider bsd = new net.sourceforge.fullsync.impl.BufferStateDecider( fc );
-        
-        DebugNode[] srcFileSystem = generatePossibleNodes();
-        DebugNode[] dstFileSystem = generatePossibleNodes();
-        BufferedDebugNode[] srcBuffer = srcBuffering?generatePossibleBufferedNodes():new BufferedDebugNode[] { null };
-        BufferedDebugNode[] dstBuffer = dstBuffering?generatePossibleBufferedNodes():new BufferedDebugNode[] { null };
-        
-        int srcFs, srcB, dstB, dstFs;
-        
-        DebugNode src, dst;
-        
-        for( srcFs = 0; srcFs < srcFileSystem.length; srcFs++ )
-        {
-            for( srcB = 0; srcB < srcBuffer.length; srcB++ )
-            {
-                src = srcFileSystem[srcFs];
-                if( srcBuffer[srcB] != null )
-                {
-                    srcBuffer[srcB].setUnbuffered( src );
-                    src = srcBuffer[srcB];
-                }
-                
-                for( dstFs = 0; dstFs < dstFileSystem.length; dstFs++ )
-                {
-                    for( dstB = 0; dstB < dstBuffer.length; dstB++ )
-                    {
-                        dst = dstFileSystem[dstFs];
-                        if( dstBuffer[dstB] != null )
-                        {
-                            dstBuffer[dstB].setUnbuffered( dst );
-                            dst = dstBuffer[dstB];
-                        }
-                        
-                        debugTask( ac, src, dst, sd, bsd );
-                    }
-                }
+		node[i++] = null;
+		node[i++] = new BufferedDebugNode(false, true, 0, 0);
+		// node[i++] = new BufferedDebugNode( false, false, 0, 0 );
 
-            }
-        }
-    }
+		node[i++] = new BufferedDebugNode(true, true, 0, 0);
+
+		node[i++] = new BufferedDebugNode(true, false, 100, 100);
+		node[i++] = new BufferedDebugNode(true, false, 100, 200);
+		node[i++] = new BufferedDebugNode(true, false, 200, 100);
+		return node;
+	}
+
+	public DebugNode[] generatePossibleNodes() {
+		DebugNode[] node = new DebugNode[5];
+		int i = 0;
+
+		node[i++] = new DebugNode(false, true, 0, 0);
+		// node[i++] = new DebugNode( false, false, 0, 0 );
+
+		node[i++] = new DebugNode(true, true, 0, 0);
+
+		node[i++] = new DebugNode(true, false, 100, 100);
+		node[i++] = new DebugNode(true, false, 100, 200);
+		node[i++] = new DebugNode(true, false, 200, 100);
+		return node;
+	}
+
+	public void debugActionDecider(ActionDecider ac, boolean srcBuffering, boolean dstBuffering) throws DataParseException, IOException {
+		FileComparer fc = new DebugFileComparer();
+		StateDecider sd = new net.sourceforge.fullsync.impl.StateDecider(fc);
+		BufferStateDecider bsd = new net.sourceforge.fullsync.impl.BufferStateDecider(fc);
+
+		DebugNode[] srcFileSystem = generatePossibleNodes();
+		DebugNode[] dstFileSystem = generatePossibleNodes();
+		BufferedDebugNode[] srcBuffer = srcBuffering ? generatePossibleBufferedNodes() : new BufferedDebugNode[] { null };
+		BufferedDebugNode[] dstBuffer = dstBuffering ? generatePossibleBufferedNodes() : new BufferedDebugNode[] { null };
+
+		int srcFs, srcB, dstB, dstFs;
+
+		DebugNode src, dst;
+
+		for (srcFs = 0; srcFs < srcFileSystem.length; srcFs++) {
+			for (srcB = 0; srcB < srcBuffer.length; srcB++) {
+				src = srcFileSystem[srcFs];
+				if (srcBuffer[srcB] != null) {
+					srcBuffer[srcB].setUnbuffered(src);
+					src = srcBuffer[srcB];
+				}
+
+				for (dstFs = 0; dstFs < dstFileSystem.length; dstFs++) {
+					for (dstB = 0; dstB < dstBuffer.length; dstB++) {
+						dst = dstFileSystem[dstFs];
+						if (dstBuffer[dstB] != null) {
+							dstBuffer[dstB].setUnbuffered(dst);
+							dst = dstBuffer[dstB];
+						}
+
+						debugTask(ac, src, dst, sd, bsd);
+					}
+				}
+
+			}
+		}
+	}
 }

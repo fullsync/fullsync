@@ -1,24 +1,22 @@
-/**
- * @license
+/*
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA  02110-1301, USA.
- *
+ * Boston, MA 02110-1301, USA.
+ * 
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-
 package net.sourceforge.fullsync.impl;
 
 import java.io.File;
@@ -34,7 +32,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
  * @author Michele Aiello
- *
+ * 
  */
 public class ConfigurationPreferences implements Preferences {
 	/**
@@ -44,7 +42,9 @@ public class ConfigurationPreferences implements Preferences {
 
 	/**
 	 * constructor.
-	 * @param configFile config file name
+	 * 
+	 * @param configFile
+	 *            config file name
 	 */
 	public ConfigurationPreferences(final String configFile) {
 		this.config = new PropertiesConfiguration();
@@ -99,6 +99,7 @@ public class ConfigurationPreferences implements Preferences {
 	public boolean minimizeMinimizesToSystemTray() {
 		return config.getBoolean("Interface.MinimizeMinimizesToSystemTray", false);
 	}
+
 	@Override
 	public void setMinimizeMinimizesToSystemTray(final boolean bool) {
 		config.setProperty("Interface.MinimizeMinimizesToSystemTray", new Boolean(bool));

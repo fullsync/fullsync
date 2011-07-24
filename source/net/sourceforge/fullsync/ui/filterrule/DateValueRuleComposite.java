@@ -1,4 +1,23 @@
 /*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
+/*
  * Created on Jun 5, 2005
  */
 package net.sourceforge.fullsync.ui.filterrule;
@@ -19,31 +38,31 @@ import org.eclipse.swt.widgets.Text;
  * @author Michele Aiello
  */
 public class DateValueRuleComposite extends RuleComposite {
-	
+
 	private Color whiteColor = new Color(null, 255, 255, 255);
-	
+
 	private Text textValue;
 	private Button buttonCalendar;
-	
+
 	private DateValue value;
-	
+
 	public DateValueRuleComposite(Composite parent, int style, DateValue value) {
 		super(parent, style);
 		this.value = value;
 		initGUI();
 	}
-	
+
 	private void initGUI() {
 		GridLayout compositeLayout = new GridLayout();
 		compositeLayout.numColumns = 2;
 		compositeLayout.makeColumnsEqualWidth = false;
-		
+
 		this.setLayout(compositeLayout);
 		this.setBackground(whiteColor);
-		
+
 		textValue = new Text(this, SWT.BORDER);
 		buttonCalendar = new Button(this, SWT.PUSH | SWT.CENTER);
-		
+
 		GridData text1LData = new GridData();
 		text1LData.widthHint = 60;
 		text1LData.heightHint = 13;
@@ -52,20 +71,20 @@ public class DateValueRuleComposite extends RuleComposite {
 		text1LData.grabExcessHorizontalSpace = false;
 		text1LData.horizontalAlignment = GridData.BEGINNING;
 		textValue.setLayoutData(text1LData);
-		
+
 		if (value != null) {
 			textValue.setText(value.toString());
 		}
-		
+
 		textValue.setEditable(false);
 		textValue.setBackground(whiteColor);
-//		textValue.addModifyListener(new ModifyListener() {
-//			public void modifyText(ModifyEvent arg0) {
-//				((DateValue)value).fromString(textValue.getText());
-//				valueChanged(new ValueChangedEvent(value));
-//			}
-//		});
-		
+		// textValue.addModifyListener(new ModifyListener() {
+		// public void modifyText(ModifyEvent arg0) {
+		// ((DateValue)value).fromString(textValue.getText());
+		// valueChanged(new ValueChangedEvent(value));
+		// }
+		// });
+
 		GridData buttonCalendarLData = new GridData();
 		buttonCalendarLData.horizontalSpan = 1;
 		buttonCalendar.setLayoutData(buttonCalendarLData);
@@ -80,6 +99,6 @@ public class DateValueRuleComposite extends RuleComposite {
 				valueChanged(new ValueChangedEvent(value));
 			}
 		});
-		
+
 	}
 }

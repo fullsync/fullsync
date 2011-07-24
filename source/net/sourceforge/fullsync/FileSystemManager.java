@@ -1,3 +1,22 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
 package net.sourceforge.fullsync;
 
 import java.io.File;
@@ -17,67 +36,58 @@ import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class FileSystemManager
-{
-    private Hashtable schemes;
-    private Hashtable buffering;
-    
-    public FileSystemManager()
-    {
-        schemes = new Hashtable();
-        schemes.put( "file", new LocalFileSystem() );
-        schemes.put( "ftp", new CommonsVfsFileSystem() );
-        schemes.put( "sftp", new CommonsVfsFileSystem() );
-        schemes.put( "smb", new SmbFileSystem() );
-        
-        buffering = new Hashtable();
-        buffering.put( "syncfiles", new SyncFilesBufferingProvider() );
-    }
-    
-    public Site createConnection( ConnectionDescription desc )
-    	throws FileSystemException, IOException, URISyntaxException
-    {
-        FileSystem fs = null;
-        
-        URI url = new URI( desc.getUri() );
-        String scheme = url.getScheme();
-        
-        if( scheme != null )
-        {
-            fs = (FileSystem)schemes.get( scheme );
-        }
-        if( fs == null )
-        {
-            // TODO maybe we should test and correct this in profile dialog !?
-            // no fs found, test for native path
-            File f = new File( url.toString() ); // ignore query as local won't need query
-            if( f.exists() )
-            {
-                fs = (FileSystem)schemes.get( "file" );
-                url = f.toURI();
-                desc.setUri( url.toString() );
-            } else {
-                throw new URISyntaxException( url.toString(), "Not a valid uri or unknown scheme" );
-            }
-        }
-        
-        Site s = fs.createConnection( desc );
-        
-        if( desc.getBufferStrategy() != null && !desc.getBufferStrategy().equals( "" ) )
-            s = resolveBuffering( s, desc.getBufferStrategy() );
-        
-        return s;
-    }
-    
-    public Site resolveBuffering( Site dir, String bufferStrategy )
-		throws FileSystemException, IOException
-    {
-        BufferingProvider p = (BufferingProvider)buffering.get( bufferStrategy );
-        
-        if( p == null )
-            throw new FileSystemException( "BufferStrategy '"+bufferStrategy+"' not found");
-        
-        return p.createBufferedSite( dir );
-    }
-}
+public class FileSystemManager {
+	private Hashtable schemes;
+	private Hashtable buffering;
 
+	public FileSystemManager() {
+		schemes = new Hashtable();
+		schemes.put("file", new LocalFileSystem());
+		schemes.put("ftp", new CommonsVfsFileSystem());
+		schemes.put("sftp", new CommonsVfsFileSystem());
+		schemes.put("smb", new SmbFileSystem());
+
+		buffering = new Hashtable();
+		buffering.put("syncfiles", new SyncFilesBufferingProvider());
+	}
+
+	public Site createConnection(ConnectionDescription desc) throws FileSystemException, IOException, URISyntaxException {
+		FileSystem fs = null;
+
+		URI url = new URI(desc.getUri());
+		String scheme = url.getScheme();
+
+		if (scheme != null) {
+			fs = (FileSystem) schemes.get(scheme);
+		}
+		if (fs == null) {
+			// TODO maybe we should test and correct this in profile dialog !?
+			// no fs found, test for native path
+			File f = new File(url.toString()); // ignore query as local won't need query
+			if (f.exists()) {
+				fs = (FileSystem) schemes.get("file");
+				url = f.toURI();
+				desc.setUri(url.toString());
+			}
+			else {
+				throw new URISyntaxException(url.toString(), "Not a valid uri or unknown scheme");
+			}
+		}
+
+		Site s = fs.createConnection(desc);
+
+		if (desc.getBufferStrategy() != null && !desc.getBufferStrategy().equals(""))
+			s = resolveBuffering(s, desc.getBufferStrategy());
+
+		return s;
+	}
+
+	public Site resolveBuffering(Site dir, String bufferStrategy) throws FileSystemException, IOException {
+		BufferingProvider p = (BufferingProvider) buffering.get(bufferStrategy);
+
+		if (p == null)
+			throw new FileSystemException("BufferStrategy '" + bufferStrategy + "' not found");
+
+		return p.createBufferedSite(dir);
+	}
+}

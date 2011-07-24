@@ -1,3 +1,22 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
 package net.sourceforge.fullsync.impl;
 
 import java.io.IOException;
@@ -12,57 +31,51 @@ import net.sourceforge.fullsync.fs.File;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class BufferUpdateEntryDescriptor implements EntryDescriptor
-{
-    private int bufferUpdate;
-    private File src;
-    private File dst;
-    
-    public BufferUpdateEntryDescriptor( File src, File dst, int bufferUpdate )
-    {
-        this.bufferUpdate = bufferUpdate;
-        this.src = src;
-        this.dst = dst;
-    }
-    public Object getReferenceObject()
-    {
-        return null;
-    }
-    public long getLength()
-    {
-        return 0;
-    }
+public class BufferUpdateEntryDescriptor implements EntryDescriptor {
+	private int bufferUpdate;
+	private File src;
+	private File dst;
 
-    public InputStream getInputStream() throws IOException
-    {
-        return null;
-    }
+	public BufferUpdateEntryDescriptor(File src, File dst, int bufferUpdate) {
+		this.bufferUpdate = bufferUpdate;
+		this.src = src;
+		this.dst = dst;
+	}
 
-    public OutputStream getOutputStream() throws IOException
-    {
-        return null;
-    }
+	public Object getReferenceObject() {
+		return null;
+	}
 
-    public void finishStore()
-    {
-        
-    }
+	public long getLength() {
+		return 0;
+	}
 
-    public void finishWrite()
-    {
-        try {
-	        if( (bufferUpdate & BufferUpdate.Source) > 0 )
-	            src.refreshBuffer();
-	        if( (bufferUpdate & BufferUpdate.Destination) > 0 )
-	            dst.refreshBuffer();
-        } catch( IOException ioe ) {
-            ExceptionHandler.reportException( ioe );
-        }
-    }
-    
-    public String getOperationDescription()
-    {
-        return null;
-    }
+	public InputStream getInputStream() throws IOException {
+		return null;
+	}
+
+	public OutputStream getOutputStream() throws IOException {
+		return null;
+	}
+
+	public void finishStore() {
+
+	}
+
+	public void finishWrite() {
+		try {
+			if ((bufferUpdate & BufferUpdate.Source) > 0)
+				src.refreshBuffer();
+			if ((bufferUpdate & BufferUpdate.Destination) > 0)
+				dst.refreshBuffer();
+		}
+		catch (IOException ioe) {
+			ExceptionHandler.reportException(ioe);
+		}
+	}
+
+	public String getOperationDescription() {
+		return null;
+	}
 
 }
