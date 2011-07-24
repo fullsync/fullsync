@@ -179,7 +179,7 @@ public class UserPasswordSpecificComposite implements ProtocolSpecificComposite 
 
 	@Override
 	public boolean getBuffered() {
-		return buttonBuffered.getSelection();
+		return buttonBuffered.getEnabled() && buttonBuffered.getSelection();
 	}
 
 	@Override
