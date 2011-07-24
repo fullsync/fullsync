@@ -39,5 +39,7 @@ public interface WizardPage {
 
 	public void createContent(Composite content);
 
-	public void createBottom(Composite bottom);
+	public boolean apply();
+	
+	public boolean cancel();
 }

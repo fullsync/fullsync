@@ -24,18 +24,21 @@ import java.util.Vector;
 import net.sourceforge.fullsync.ExceptionHandler;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public class WizardDialog {
+public class WizardDialog extends SelectionAdapter {
 
 	private Shell dialogShell;
 	private Composite compositeTop;
@@ -44,6 +47,8 @@ public class WizardDialog {
 	private Label labelDescription;
 	private Label labelCaption;
 	private Composite compositeContent;
+	private Button okButton;
+	private Button cancelButton;
 
 	private final Shell parent;
 	private final int style;
@@ -165,7 +170,26 @@ public class WizardDialog {
 			// fill in wizard page
 			updateTop();
 			wizardPage.createContent(compositeContent);
-			wizardPage.createBottom(compositeBottom);
+			
+			// bottom area
+			compositeBottom.setLayout(new GridLayout(2, false));
+			okButton = new Button(compositeBottom, SWT.PUSH);
+			okButton.setText(Messages.getString("ProfileDetailsPage.Ok")); //$NON-NLS-1$
+			okButton.addSelectionListener(this);
+			GridData okButtonLayoutData = new GridData(SWT.END, SWT.CENTER, true, true);
+			okButtonLayoutData.widthHint = UISettings.BUTTON_WIDTH;
+			okButtonLayoutData.heightHint = UISettings.BUTTON_HEIGHT;
+			okButton.setLayoutData(okButtonLayoutData);
+
+			cancelButton = new Button(compositeBottom, SWT.PUSH);
+			cancelButton.setText(Messages.getString("ProfileDetailsPage.Cancel")); //$NON-NLS-1$
+			cancelButton.addSelectionListener(this);
+			GridData cancelButtonLayoutData = new GridData(SWT.END, SWT.CENTER, false, true);
+			cancelButtonLayoutData.widthHint = UISettings.BUTTON_WIDTH;
+			cancelButtonLayoutData.heightHint = UISettings.BUTTON_HEIGHT;
+			cancelButton.setLayoutData(cancelButtonLayoutData);
+			dialogShell.setDefaultButton(okButton);
+
 			compositeContent.pack();
 			dialogShell.layout();
 
@@ -234,5 +258,35 @@ public class WizardDialog {
 
 	public void removeWizardDialogListener(WizardDialogListener listener) {
 		dialogListeners.remove(listener);
+	}
+
+	@Override
+	public void widgetSelected(final SelectionEvent e) {
+		if (e.widget == okButton) {
+			if (wizardPage.apply()) {
+				dialogShell.dispose();
+			}
+		}
+		else {
+			if (wizardPage.cancel()) {
+				dialogShell.dispose();
+			}
+		}
+	}
+	
+	/**
+	 * enable or disable the ok button.
+	 * @param enabled
+	 */
+	public final void setOkButtonEnabled(final boolean enabled) {
+		okButton.setEnabled(enabled);
+	}
+
+	/**
+	 * enable or disable the cancel button.
+	 * @param enabled
+	 */
+	public final void setCancelButtonEnabled(final boolean enabled) {
+		cancelButton.setEnabled(enabled);
 	}
 }

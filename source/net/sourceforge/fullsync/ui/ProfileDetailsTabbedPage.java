@@ -23,18 +23,14 @@ package net.sourceforge.fullsync.ui;
 import net.sourceforge.fullsync.ProfileManager;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class ProfileDetailsTabbedPage extends SelectionAdapter implements WizardPage {
+public class ProfileDetailsTabbedPage implements WizardPage {
 	private WizardDialog dialog;
 	private ProfileManager profileManager;
 	private String profileName;
@@ -84,35 +80,15 @@ public class ProfileDetailsTabbedPage extends SelectionAdapter implements Wizard
 		details.setProfileManager(profileManager);
 		details.setProfileName(profileName);
 	}
-
+	
 	@Override
-	public void createBottom(final Composite bottom) {
-		bottom.setLayout(new GridLayout(2, false));
-
-		okButton = new Button(bottom, SWT.PUSH);
-		okButton.setText(Messages.getString("ProfileDetailsPage.Ok")); //$NON-NLS-1$
-		okButton.addSelectionListener(this);
-		GridData okButtonLayoutData = new GridData(SWT.END, SWT.CENTER, true, true);
-		okButtonLayoutData.widthHint = UISettings.BUTTON_WIDTH;
-		okButtonLayoutData.heightHint = UISettings.BUTTON_HEIGHT;
-		okButton.setLayoutData(okButtonLayoutData);
-
-		Button cancelButton = new Button(bottom, SWT.PUSH);
-		cancelButton.setText(Messages.getString("ProfileDetailsPage.Cancel")); //$NON-NLS-1$
-		cancelButton.addSelectionListener(this);
-		GridData cancelButtonLayoutData = new GridData(SWT.END, SWT.CENTER, false, true);
-		cancelButtonLayoutData.widthHint = UISettings.BUTTON_WIDTH;
-		cancelButtonLayoutData.heightHint = UISettings.BUTTON_HEIGHT;
-		cancelButton.setLayoutData(cancelButtonLayoutData);
-
-		bottom.getShell().setDefaultButton(okButton);
+	public boolean apply() {
+		details.apply();
+		return true; //FIXME: return false if failed
 	}
-
+	
 	@Override
-	public void widgetSelected(final SelectionEvent e) {
-		if (e.widget == okButton) {
-			details.apply();
-		}
-		dialog.dispose();
+	public boolean cancel() {
+		return true;
 	}
 }

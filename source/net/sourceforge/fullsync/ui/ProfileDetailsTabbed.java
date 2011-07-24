@@ -58,7 +58,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -93,9 +92,8 @@ public class ProfileDetailsTabbed implements DisposeListener {
 	private Button syncSubsButton;
 	private Button rbAdvancedRuleSet;
 	private Button rbSimplyfiedRuleSet;
-	private Button buttonDestinationBuffered;
-	private Button buttonSourceBuffered;
 
+	private TabItem tabSubDirs;
 	private Button buttonSetFilter;
 	private Button buttonRemoveFilter;
 
@@ -128,15 +126,19 @@ public class ProfileDetailsTabbed implements DisposeListener {
 			tabGeneral.setText("General"); // FIXME: move text to translation file
 			tabGeneral.setControl(initGeneralTab(tabs));
 
-			TabItem tabLocations = new TabItem(tabs, SWT.NULL);
-			tabLocations.setText("Locations"); // FIXME: move text to translation file
-			tabLocations.setControl(initLocationsTab(tabs));
+			TabItem tabSource = new TabItem(tabs, SWT.NULL);
+			tabSource.setText(Messages.getString("ProfileDetails.Source.Label")); //$NON-NLS-1$
+			tabSource.setControl(initSourceTab(tabs));
+
+			TabItem tabDestination = new TabItem(tabs, SWT.NULL);
+			tabDestination.setText(Messages.getString("ProfileDetails.Destination.Label")); //$NON-NLS-1$
+			tabDestination.setControl(initDestinationTab(tabs));
 
 			TabItem tabFilters = new TabItem(tabs, SWT.NULL);
 			tabFilters.setText("Filters"); // FIXME: move text to translation file
 			tabFilters.setControl(initFiltersTab(tabs));
 
-			TabItem tabSubDirs = new TabItem(tabs, SWT.NULL);
+			tabSubDirs = new TabItem(tabs, SWT.NULL);
 			tabSubDirs.setText("Subdirectories"); // FIXME: move text to translation file
 			tabSubDirs.setControl(initSubDirsTab(tabs));
 
@@ -194,11 +196,11 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		comboType.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(final ModifyEvent evt) {
-				buttonSourceBuffered.setSelection(false);
-				buttonDestinationBuffered.setSelection(false);
+				srcConnectionConfiguration.setBuffered(false);
+				dstConnectionConfiguration.setBuffered(false);
 				if (comboType.getText().equals("Publish/Update")) {
 					labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.Publish")); //$NON-NLS-1$
-					buttonDestinationBuffered.setSelection(true);
+					srcConnectionConfiguration.setBuffered(true);
 				}
 				else if (comboType.getText().equals("Backup Copy")) {
 					labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.BackupCopy")); //$NON-NLS-1$
@@ -247,63 +249,48 @@ public class ProfileDetailsTabbed implements DisposeListener {
 	}
 
 	/**
-	 * initLocationsTab creates all controls of the second tab.
+	 * initSourceTab creates all controls of the second tab.
 	 *
 	 * @param parent
 	 *            parent element for the control
-	 * @return composite to be placed inside the locations tab
+	 * @return composite to be placed inside the source tab
 	 */
-	private Composite initLocationsTab(final Composite parent) {
+	private Composite initSourceTab(final Composite parent) {
 		Composite c = new Composite(parent, SWT.NONE);
 		c.setLayout(new GridLayout());
+		GridData cData = new GridData();
+		cData.grabExcessHorizontalSpace = true;
+		cData.grabExcessVerticalSpace = false;
+		cData.horizontalAlignment = SWT.FILL;
+		cData.verticalAlignment = SWT.FILL;
+		c.setLayoutData(cData);
 
 		// source
-		Group groupSource = new Group(c, SWT.NONE);
-		groupSource.setLayout(new GridLayout());
-		GridData groupSourceData = new GridData();
-		groupSourceData.grabExcessHorizontalSpace = true;
-		groupSourceData.horizontalAlignment = SWT.FILL;
-		groupSourceData.grabExcessVerticalSpace = true;
-		groupSourceData.verticalAlignment = SWT.FILL;
-		groupSource.setLayoutData(groupSourceData);
-		groupSource.setText(Messages.getString("ProfileDetails.Source.Label")); //$NON-NLS-1$
+		srcConnectionConfiguration = new ConnectionConfiguration(c);
+		srcConnectionConfiguration.setBufferedEnabled(false);
 
-		srcConnectionConfiguration = new ConnectionConfiguration(groupSource, SWT.NONE);
-		GridData connectionConfigurationSourceData = new GridData();
-		connectionConfigurationSourceData.horizontalAlignment = SWT.FILL;
-		connectionConfigurationSourceData.verticalAlignment = SWT.FILL;
-		connectionConfigurationSourceData.grabExcessHorizontalSpace = true;
-		srcConnectionConfiguration.setLayoutData(connectionConfigurationSourceData);
+		return c;
+	}
 
-		buttonSourceBuffered = new Button(groupSource, SWT.CHECK | SWT.LEFT);
-		buttonSourceBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
-		GridData buttonSourceBufferedData = new GridData();
-		buttonSourceBufferedData.horizontalSpan = 3;
-		buttonSourceBuffered.setLayoutData(buttonSourceBufferedData);
-		buttonSourceBuffered.setEnabled(false);
+	/**
+	 * initDestinationTab creates all controls of the tab.
+	 *
+	 * @param parent
+	 *            parent element for the control
+	 * @return composite to be placed inside the destination tab
+	 */
+	private Composite initDestinationTab(final Composite parent) {
+		Composite c = new Composite(parent, SWT.NONE);
+		c.setLayout(new GridLayout());
+		GridData cData = new GridData();
+		cData.grabExcessHorizontalSpace = true;
+		cData.grabExcessVerticalSpace = false;
+		cData.horizontalAlignment = SWT.FILL;
+		cData.verticalAlignment = SWT.FILL;
+		c.setLayoutData(cData);
 
 		// destination
-		Group groupDestination = new Group(c, SWT.FILL);
-		groupDestination.setLayout(new GridLayout());
-		GridData groupDestinationData = new GridData();
-		groupDestinationData.horizontalAlignment = SWT.FILL;
-		groupDestinationData.grabExcessHorizontalSpace = true;
-		groupDestinationData.grabExcessVerticalSpace = true;
-		groupDestinationData.verticalAlignment = SWT.FILL;
-		groupDestination.setLayoutData(groupDestinationData);
-		groupDestination.setText(Messages.getString("ProfileDetails.Destination.Label")); //$NON-NLS-1$
-		dstConnectionConfiguration = new ConnectionConfiguration(groupDestination, SWT.NONE);
-		GridData connectionConfiguration1Data = new GridData();
-		connectionConfiguration1Data.verticalAlignment = SWT.FILL;
-		connectionConfiguration1Data.horizontalAlignment = SWT.FILL;
-		connectionConfiguration1Data.grabExcessHorizontalSpace = true;
-		dstConnectionConfiguration.setLayoutData(connectionConfiguration1Data);
-
-		buttonDestinationBuffered = new Button(groupDestination, SWT.CHECK | SWT.LEFT);
-		GridData buttonDestinationBufferedData = new GridData();
-		buttonDestinationBufferedData.horizontalSpan = 3;
-		buttonDestinationBuffered.setLayoutData(buttonDestinationBufferedData);
-		buttonDestinationBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
+		dstConnectionConfiguration = new ConnectionConfiguration(c);
 
 		return c;
 	}
@@ -573,7 +560,9 @@ public class ProfileDetailsTabbed implements DisposeListener {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		buttonSourceBuffered.setSelection("syncfiles".equals(p.getSource().getBufferStrategy())); //$NON-NLS-1$
+		if (null != srcConnectionConfiguration) {
+			srcConnectionConfiguration.setBuffered("syncfiles".equals(p.getSource().getBufferStrategy())); //$NON-NLS-1$
+		}
 		try {
 			dstConnectionConfiguration.setLocationDescription(new LocationDescription(p.getDestination()));
 		}
@@ -581,7 +570,9 @@ public class ProfileDetailsTabbed implements DisposeListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		buttonDestinationBuffered.setSelection("syncfiles".equals(p.getDestination().getBufferStrategy())); //$NON-NLS-1$
+		if (null != dstConnectionConfiguration) {
+			dstConnectionConfiguration.setBuffered("syncfiles".equals(p.getDestination().getBufferStrategy())); //$NON-NLS-1$
+		}
 
 		if ((p.getSynchronizationType() != null) && (p.getSynchronizationType().length() > 0)) {
 			comboType.setText(p.getSynchronizationType());
@@ -774,7 +765,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		catch (URISyntaxException e) {
 			return null;
 		}
-		if (buttonDestinationBuffered.getSelection()) {
+		if (dstConnectionConfiguration.getBuffered()) {
 			dst.setBufferStrategy("syncfiles"); //$NON-NLS-1$
 		}
 		return dst;
@@ -788,7 +779,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		catch (URISyntaxException e) {
 			return null;
 		}
-		if (buttonSourceBuffered.getSelection()) {
+		if (srcConnectionConfiguration.getBuffered()) {
 			dst.setBufferStrategy("syncfiles"); //$NON-NLS-1$
 		}
 		return dst;
@@ -824,7 +815,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 	}
 
 	private void treeTabsWidgetSelected(SelectionEvent evt) {
-		if (evt.item == tabs.getItem(3)) {
+		if (evt.item == tabSubDirs) {
 			if (sourceSite == null) {
 				directoryTree.removeAll();
 				TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
@@ -837,8 +828,15 @@ public class ProfileDetailsTabbed implements DisposeListener {
 					public void run() {
 						ConnectionDescription src = getSourceConnection();
 						try {
-							sourceSite = fsm.createConnection(src);
-							drawDirectoryTree();
+							if (null != src) {
+								sourceSite = fsm.createConnection(src);
+								drawDirectoryTree();
+							}
+							else {
+								TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
+								loadingIem.setText("Unable to load source dir");
+								loadingIem.setImage(GuiController.getInstance().getImage("Error.png"));
+							}
 						}
 						catch (FileSystemException e) {
 							ExceptionHandler.reportException(e);

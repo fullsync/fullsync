@@ -34,15 +34,12 @@ import net.sourceforge.fullsync.TaskTree;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -80,7 +77,6 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 	private transient TaskDecisionList list;
 	private transient Combo comboFilter;
 	private transient Label labelProgress;
-	private transient Button buttonGo;
 
 	public TaskDecisionPage(WizardDialog dialog, GuiController guiController, Profile profile, TaskTree taskTree) {
 		this.dialog = dialog;
@@ -146,10 +142,8 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 				}
 			}
 		});
-	}
-
-	@Override
-	public void createBottom(Composite compositeBottom) {
+		
+		Composite compositeBottom = new Composite(content, SWT.FILL);
 		GridLayout compositeBottomLayout = new GridLayout();
 		GridData compositeBottomLData = new GridData();
 		compositeBottomLData.grabExcessHorizontalSpace = true;
@@ -188,23 +182,6 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 			IoStatistics stats = synchronizer.getIoStatistics(taskTree);
 			labelProgress.setText("Totals: " + stats.getCountActions() + " tasks, " + stats.getBytesTransferred() + " bytes");
 		}
-		{
-			buttonGo = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
-			GridData buttonGoLData = new GridData();
-			buttonGoLData.horizontalAlignment = GridData.END;
-			buttonGoLData.widthHint = 25;
-			buttonGoLData.heightHint = 23;
-			buttonGo.setLayoutData(buttonGoLData);
-			buttonGo.setText(Messages.getString("TaskDecisionPage.Go")); //$NON-NLS-1$
-			buttonGo.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent evt) {
-					if (!processing) {
-						performActions();
-					}
-				}
-			});
-		}
 
 		comboFilter.add(Messages.getString("TaskDecisionPage.Everything")); //$NON-NLS-1$
 		comboFilter.add(Messages.getString("TaskDecisionPage.ChangesOnly")); //$NON-NLS-1$
@@ -212,6 +189,24 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 
 	}
 
+	@Override
+	public boolean apply() {
+		if (!processing) {
+			dialog.setCancelButtonEnabled(false);
+			performActions();
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean cancel() {
+		if (!processing) {
+			return true;
+		}
+		//FIXME: tell the user this can't be canceled currently, or implement that
+		return false;
+	}
+	
 	void performActions() {
 		Thread worker = new Thread(new Runnable() {
 			@Override
@@ -233,7 +228,7 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 					display.syncExec(new Runnable() {
 						@Override
 						public void run() {
-							buttonGo.setEnabled(false);
+							dialog.setOkButtonEnabled(false);
 						}
 					});
 

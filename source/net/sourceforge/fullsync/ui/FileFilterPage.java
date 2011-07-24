@@ -25,12 +25,7 @@ package net.sourceforge.fullsync.ui;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -92,37 +87,20 @@ public class FileFilterPage implements WizardPage {
 		details = new FileFilterDetails(content, SWT.NULL, filter);
 	}
 
-	@Override
-	public void createBottom(Composite bottom) {
-		bottom.setLayout(new GridLayout(2, false));
-
-		Button okButton = new Button(bottom, SWT.PUSH);
-		okButton.setText("OK");
-		okButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				filter = details.getFileFilter();
-				dialog.dispose();
-			}
-		});
-		okButton.setLayoutData(new GridData(GridData.END, GridData.CENTER, true, true));
-
-		Button cancelButton = new Button(bottom, SWT.PUSH);
-		cancelButton.setText("Cancel");
-		cancelButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				dialog.dispose();
-				filter = null;
-			}
-		});
-		cancelButton.setLayoutData(new GridData(GridData.END, GridData.CENTER, false, true));
-
-		bottom.getShell().setDefaultButton(okButton);
-	}
-
 	public FileFilter getFileFilter() {
 		return filter;
+	}
+	
+	@Override
+	public boolean apply() {
+		filter = details.getFileFilter();
+		return true; //FIXME: return false if failed
+	}
+	
+	@Override
+	public boolean cancel() {
+		filter = null;
+		return true;
 	}
 
 }

@@ -39,21 +39,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
-/**
- * This code was generated using CloudGarden's Jigloo
- * SWT/Swing GUI Builder, which is free for non-commercial
- * use. If Jigloo is being used commercially (ie, by a corporation,
- * company or business for any purpose whatever) then you
- * should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details.
- * Use of Jigloo implies acceptance of these licensing terms.
- * *************************************
- * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
- * for this machine, so Jigloo or this code cannot be used legally
- * for any corporate or commercial purpose.
- * *************************************
- */
-public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
+public class PreferencesComposite extends Composite {
 
 	/**
 	 * supported language codes.
@@ -112,17 +98,14 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 	private Button cbConfirmExit;
 	private Button cbCloseMinimizesToSystemTray;
 	private Button cbMinimizeMinimizesToSystemTray;
-	private Label label5;
 	private Combo comboLanguage;
-	private Label label4;
 	private Button cbAutostartScheduler;
 	private Text textPassword;
-	private Label label3;
+	private Label labelPassword;
 	private Group groupRemoteConnection;
 	private Text textListeningPort;
-	private Label label2;
+	private Label labelPort;
 	private Button cbListenForIncomming;
-	private Label label1;
 	private Combo comboProfileList;
 	// private Button cbEnableSystemTray;
 
@@ -131,179 +114,156 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 	public PreferencesComposite(Composite parent, int style, Preferences preferences) {
 		super(parent, style);
 		this.preferences = preferences;
-		initGui();
+		this.setLayout(new GridLayout());
+		GridData thisLData = new GridData();
+		thisLData.horizontalAlignment = SWT.FILL;
+		thisLData.grabExcessHorizontalSpace = true;
+		thisLData.grabExcessVerticalSpace = true;
+		this.setLayoutData(thisLData);
+
+		groupInterface = new Group(this, SWT.FILL);
+		GridLayout generalPreferencesGroupLayout = new GridLayout(2, false);
+		GridData generalPreferencesGroupLData = new GridData();
+		generalPreferencesGroupLData.grabExcessHorizontalSpace = true;
+		generalPreferencesGroupLData.grabExcessVerticalSpace = true;
+		generalPreferencesGroupLData.horizontalAlignment = SWT.FILL;
+		generalPreferencesGroupLData.verticalAlignment = SWT.FILL;
+		groupInterface.setLayoutData(generalPreferencesGroupLData);
+		groupInterface.setLayout(generalPreferencesGroupLayout);
+		groupInterface.setText(Messages.getString("PreferencesComposite.Interface")); //$NON-NLS-1$
+
+		// confirm exit
+		cbConfirmExit = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
+		cbConfirmExit.setText(Messages.getString("PreferencesComposite.ConfirmExit")); //$NON-NLS-1$
+		GridData askOnClosingCheckBoxLData = new GridData();
+		askOnClosingCheckBoxLData.horizontalAlignment = SWT.FILL;
+		askOnClosingCheckBoxLData.horizontalSpan = 2;
+		askOnClosingCheckBoxLData.grabExcessHorizontalSpace = true;
+		cbConfirmExit.setLayoutData(askOnClosingCheckBoxLData);
+
+		// close minimizes to systray
+		cbCloseMinimizesToSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
+		cbCloseMinimizesToSystemTray.setText(Messages.getString("PreferencesComposite.CloseMinimizes")); //$NON-NLS-1$
+		GridData closeButtonMinimizesCheckBoxLData = new GridData();
+		closeButtonMinimizesCheckBoxLData.horizontalAlignment = SWT.FILL;
+		closeButtonMinimizesCheckBoxLData.horizontalSpan = 2;
+		cbCloseMinimizesToSystemTray.setLayoutData(closeButtonMinimizesCheckBoxLData);
+
+		// minimize minimizes to systray
+		cbMinimizeMinimizesToSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
+		cbMinimizeMinimizesToSystemTray.setText(Messages.getString("PreferencesComposite.MinimizeMinimizes")); //$NON-NLS-1$
+		GridData cbMinimizeMinimizesToSystemTrayLData = new GridData();
+		cbMinimizeMinimizesToSystemTrayLData.horizontalAlignment = SWT.FILL;
+		cbMinimizeMinimizesToSystemTrayLData.horizontalSpan = 2;
+		cbMinimizeMinimizesToSystemTray.setLayoutData(cbMinimizeMinimizesToSystemTrayLData);
+
+		// auto start scheduler
+		cbAutostartScheduler = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
+		cbAutostartScheduler.setText(Messages.getString("PreferencesComposite.AutostartScheduler")); //$NON-NLS-1$
+		GridData cbAutostartSchedulerLData = new GridData();
+		cbAutostartSchedulerLData.horizontalAlignment = SWT.FILL;
+		cbAutostartSchedulerLData.horizontalSpan = 2;
+		cbAutostartScheduler.setLayoutData(cbAutostartSchedulerLData);
+
+		// system tray enabled
+//		cbEnableSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
+//		cbEnableSystemTray.setText("Enable System Tray Icon");
+//		GridData cbEnableSystemTrayLData = new GridData();
+//		cbEnableSystemTrayLData.horizontalAlignment = SWT.FILL;
+//		cbEnableSystemTrayLData.horizontalSpan = 2;
+//		cbEnableSystemTray.setLayoutData(cbEnableSystemTrayLData);
+
+		// profile list style
+		Label labelProfileListStyle = new Label(groupInterface, SWT.NONE);
+		labelProfileListStyle.setText(Messages.getString("PreferencesComposite.ProfileListStyle") + ": "); //$NON-NLS-1$ //$NON-NLS-2$
+
+		comboProfileList = new Combo(groupInterface, SWT.DROP_DOWN | SWT.READ_ONLY);
+		GridData comboProfileListLData = new GridData();
+		comboProfileListLData.horizontalAlignment = SWT.FILL;
+		comboProfileList.setLayoutData(comboProfileListLData);
+		comboProfileList.add(Messages.getString("PreferencesComposite.Table")); //$NON-NLS-1$
+		comboProfileList.add(Messages.getString("PreferencesComposite.NiceListView")); //$NON-NLS-1$
+
+		// language
+		Label labelLanguage = new Label(groupInterface, SWT.NONE);
+		labelLanguage.setText(Messages.getString("PreferencesComposite.Language") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+
+		comboLanguage = new Combo(groupInterface, SWT.DROP_DOWN | SWT.READ_ONLY);
+		GridData comboLanguageLData = new GridData();
+		comboLanguageLData.horizontalAlignment = SWT.FILL;
+		comboLanguage.setLayoutData(comboLanguageLData);
+		String[] languages = new String[languageNames.length];
+		System.arraycopy(languageNames, 0, languages, 0, languageNames.length);
+		Arrays.sort(languages);
+		for (String language : languages) {
+			comboLanguage.add(language);
+		}
+
+		// line below the language combo telling you that a change needs a restart
+		new Label(groupInterface, SWT.NONE);
+		Label labelNeedsRestart = new Label(groupInterface, SWT.NONE);
+		labelNeedsRestart.setText(Messages.getString("PreferencesComposite.NeedsRestart")); //$NON-NLS-1$
+		GridData labelNeedsRestartLData =  new GridData();
+		labelNeedsRestartLData.horizontalAlignment = SWT.FILL;
+		labelNeedsRestart.setLayoutData(labelNeedsRestartLData);
+
+		
+		groupRemoteConnection = new Group(this, SWT.NONE);
+		GridLayout groupRemoteConnectionLayout = new GridLayout();
+		GridData groupRemoteConnectionLData = new GridData();
+		groupRemoteConnectionLData.horizontalAlignment = SWT.FILL;
+		groupRemoteConnectionLData.grabExcessVerticalSpace = true;
+		groupRemoteConnectionLData.verticalAlignment = SWT.FILL;
+		groupRemoteConnection.setLayoutData(groupRemoteConnectionLData);
+		groupRemoteConnectionLayout.numColumns = 2;
+		groupRemoteConnection.setLayout(groupRemoteConnectionLayout);
+		groupRemoteConnection.setText(Messages.getString("PreferencesComposite.RemoteConnection")); //$NON-NLS-1$
+
+		// enable remote connections
+		cbListenForIncomming = new Button(groupRemoteConnection, SWT.CHECK | SWT.LEFT);
+		cbListenForIncomming.setText(Messages.getString("PreferencesComposite.EnableRemoteConnections")); //$NON-NLS-1$
+		GridData cbListenForIncommingLData = new GridData();
+		cbListenForIncomming.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent evt) {
+				updateRemoteConnectionGroup();
+			}
+		});
+		cbListenForIncommingLData.horizontalSpan = 2;
+		cbListenForIncomming.setLayoutData(cbListenForIncommingLData);
+
+		// remote listen port
+		labelPort = new Label(groupRemoteConnection, SWT.NONE);
+		labelPort.setText(Messages.getString("PreferencesComposite.IncomingPort") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		labelPort.setEnabled(false);
+
+		textListeningPort = new Text(groupRemoteConnection, SWT.BORDER);
+		textListeningPort.setText("10000"); //$NON-NLS-1$
+		GridData textListeningPortLData = new GridData();
+		textListeningPortLData.horizontalAlignment = SWT.FILL;
+		textListeningPortLData.grabExcessHorizontalSpace = true;
+		textListeningPort.setLayoutData(textListeningPortLData);
+		textListeningPort.setEnabled(false);
+		
+		// remote password
+		labelPassword = new Label(groupRemoteConnection, SWT.NONE);
+		labelPassword.setText(Messages.getString("PreferencesComposite.IncomingPassword") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		labelPassword.setEnabled(false);
+
+		textPassword = new Text(groupRemoteConnection, SWT.BORDER);
+		GridData textPasswordLData = new GridData();
+		textPassword.setEnabled(false);
+		textPasswordLData.horizontalAlignment = SWT.FILL;
+		textPasswordLData.grabExcessHorizontalSpace = true;
+		textPassword.setLayoutData(textPasswordLData);
+
+		updateComponent();
+		this.layout();
 	}
 
-	public void initGui() {
-		try {
-			GridLayout thisLayout = new GridLayout();
-			thisLayout.numColumns = 2;
-			thisLayout.horizontalSpacing = 20;
-			thisLayout.makeColumnsEqualWidth = true;
-			this.setLayout(thisLayout);
-			this.setSize(500, 350);
-			{
-				groupInterface = new Group(this, SWT.NONE);
-				GridLayout GeneralPreferencesGroupLayout = new GridLayout();
-				GeneralPreferencesGroupLayout.numColumns = 3;
-				GridData GeneralPreferencesGroupLData = new GridData();
-				GeneralPreferencesGroupLData.horizontalSpan = 2;
-				GeneralPreferencesGroupLData.grabExcessHorizontalSpace = true;
-				GeneralPreferencesGroupLData.grabExcessVerticalSpace = true;
-				GeneralPreferencesGroupLData.horizontalAlignment = GridData.FILL;
-				GeneralPreferencesGroupLData.verticalAlignment = GridData.FILL;
-				groupInterface.setLayoutData(GeneralPreferencesGroupLData);
-				groupInterface.setLayout(GeneralPreferencesGroupLayout);
-				groupInterface.setText(Messages.getString("PreferencesComposite.Interface")); //$NON-NLS-1$
-				{
-					cbConfirmExit = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
-					cbConfirmExit.setText(Messages.getString("PreferencesComposite.ConfirmExit")); //$NON-NLS-1$
-					GridData askOnClosingCheckBoxLData = new GridData();
-					askOnClosingCheckBoxLData.widthHint = 246;
-					askOnClosingCheckBoxLData.heightHint = 19;
-					askOnClosingCheckBoxLData.horizontalSpan = 3;
-					cbConfirmExit.setLayoutData(askOnClosingCheckBoxLData);
-				}
-				{
-					cbCloseMinimizesToSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
-					cbCloseMinimizesToSystemTray.setText(Messages.getString("PreferencesComposite.CloseMinimizes")); //$NON-NLS-1$
-					GridData closeButtonMinimizesCheckBoxLData = new GridData();
-					closeButtonMinimizesCheckBoxLData.widthHint = 246;
-					closeButtonMinimizesCheckBoxLData.heightHint = 18;
-					closeButtonMinimizesCheckBoxLData.horizontalSpan = 3;
-					cbCloseMinimizesToSystemTray.setLayoutData(closeButtonMinimizesCheckBoxLData);
-				}
-				{
-					cbMinimizeMinimizesToSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
-					cbMinimizeMinimizesToSystemTray.setText(Messages.getString("PreferencesComposite.MinimizeMinimizes")); //$NON-NLS-1$
-					GridData cbMinimizeMinimizesToSystemTrayLData = new GridData();
-					cbMinimizeMinimizesToSystemTrayLData.widthHint = 246;
-					cbMinimizeMinimizesToSystemTrayLData.heightHint = 18;
-					cbMinimizeMinimizesToSystemTrayLData.horizontalSpan = 3;
-					cbMinimizeMinimizesToSystemTray.setLayoutData(cbMinimizeMinimizesToSystemTrayLData);
-				}
-				{
-					cbAutostartScheduler = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
-					cbAutostartScheduler.setText(Messages.getString("PreferencesComposite.AutostartScheduler")); //$NON-NLS-1$
-					GridData cbAutostartSchedulerLData = new GridData();
-					cbAutostartSchedulerLData.horizontalSpan = 3;
-					cbAutostartSchedulerLData.widthHint = 171;
-					cbAutostartSchedulerLData.heightHint = 16;
-					cbAutostartScheduler.setLayoutData(cbAutostartSchedulerLData);
-				}
-				/*
-				 * {
-				 * cbEnableSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
-				 * cbEnableSystemTray.setText("Enable System Tray Icon");
-				 * GridData cbEnableSystemTrayLData = new GridData();
-				 * cbEnableSystemTrayLData.widthHint = 188;
-				 * cbEnableSystemTrayLData.heightHint = 18;
-				 * cbEnableSystemTrayLData.horizontalSpan = 2;
-				 * cbEnableSystemTray.setLayoutData(cbEnableSystemTrayLData);
-				 * }
-				 */
-				{
-					label1 = new Label(groupInterface, SWT.NONE);
-					label1.setText(Messages.getString("PreferencesComposite.ProfileListStyle") + ": "); //$NON-NLS-1$ //$NON-NLS-2$
-					GridData label1LData = new GridData();
-					label1LData.heightHint = 15;
-					label1.setLayoutData(label1LData);
-				}
-				{
-					comboProfileList = new Combo(groupInterface, SWT.DROP_DOWN | SWT.READ_ONLY);
-					GridData comboProfileListLData = new GridData();
-					comboProfileListLData.widthHint = 105;
-					comboProfileListLData.heightHint = 21;
-					comboProfileListLData.horizontalSpan = 2;
-					comboProfileList.setLayoutData(comboProfileListLData);
-					comboProfileList.add(Messages.getString("PreferencesComposite.Table")); //$NON-NLS-1$
-					comboProfileList.add(Messages.getString("PreferencesComposite.NiceListView")); //$NON-NLS-1$
-				}
-				{
-					label4 = new Label(groupInterface, SWT.NONE);
-					label4.setText(Messages.getString("PreferencesComposite.Language") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-				}
-				{
-					comboLanguage = new Combo(groupInterface, SWT.DROP_DOWN | SWT.READ_ONLY);
-					GridData comboLanguageLData = new GridData();
-					comboLanguageLData.widthHint = 97;
-					comboLanguageLData.heightHint = 21;
-					comboLanguage.setLayoutData(comboLanguageLData);
-					String[] languages = new String[languageNames.length];
-					System.arraycopy(languageNames, 0, languages, 0, languageNames.length);
-					Arrays.sort(languages);
-					for (String language : languages) {
-						comboLanguage.add(language);
-					}
-				}
-				{
-					label5 = new Label(groupInterface, SWT.NONE);
-					label5.setText(Messages.getString("PreferencesComposite.NeedsRestart")); //$NON-NLS-1$
-				}
-			}
-			{
-				groupRemoteConnection = new Group(this, SWT.NONE);
-				GridLayout groupRemoteConnectionLayout = new GridLayout();
-				GridData groupRemoteConnectionLData = new GridData();
-				groupRemoteConnectionLData.horizontalSpan = 2;
-				groupRemoteConnectionLData.horizontalAlignment = GridData.FILL;
-				groupRemoteConnectionLData.grabExcessVerticalSpace = true;
-				groupRemoteConnectionLData.verticalAlignment = GridData.FILL;
-				groupRemoteConnection.setLayoutData(groupRemoteConnectionLData);
-				groupRemoteConnectionLayout.numColumns = 2;
-				groupRemoteConnection.setLayout(groupRemoteConnectionLayout);
-				groupRemoteConnection.setText(Messages.getString("PreferencesComposite.RemoteConnection")); //$NON-NLS-1$
-				{
-					cbListenForIncomming = new Button(groupRemoteConnection, SWT.CHECK | SWT.LEFT);
-					cbListenForIncomming.setText(Messages.getString("PreferencesComposite.EnableRemoteConnections")); //$NON-NLS-1$
-					GridData cbListenForIncommingLData = new GridData();
-					cbListenForIncomming.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent evt) {
-							updateRemoteConnectionGroup();
-						}
-					});
-					cbListenForIncommingLData.horizontalSpan = 2;
-					cbListenForIncomming.setLayoutData(cbListenForIncommingLData);
-				}
-				{
-					label2 = new Label(groupRemoteConnection, SWT.NONE);
-					label2.setText(Messages.getString("PreferencesComposite.IncomingPort") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-					label2.setEnabled(false);
-				}
-				{
-					textListeningPort = new Text(groupRemoteConnection, SWT.BORDER);
-					textListeningPort.setText("10000"); //$NON-NLS-1$
-					GridData textListeningPortLData = new GridData();
-					textListeningPort.setEnabled(false);
-					textListeningPortLData.widthHint = 39;
-					textListeningPortLData.heightHint = 12;
-					textListeningPort.setLayoutData(textListeningPortLData);
-				}
-				{
-					label3 = new Label(groupRemoteConnection, SWT.NONE);
-					label3.setText(Messages.getString("PreferencesComposite.IncomingPassword") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-					label3.setEnabled(false);
-				}
-				{
-					textPassword = new Text(groupRemoteConnection, SWT.BORDER);
-					GridData textPasswordLData = new GridData();
-					textPassword.setEnabled(false);
-					textPasswordLData.widthHint = 118;
-					textPasswordLData.heightHint = 13;
-					textPasswordLData.grabExcessHorizontalSpace = true;
-					textPassword.setLayoutData(textPasswordLData);
-				}
-			}
-
-			updateComponent();
-			this.layout();
-		}
-		catch (Exception e) {
-			ExceptionHandler.reportException(e);
-		}
-	}
-
+	/**
+	 * update all controls with the settings from the preferences object.
+	 */
 	public void updateComponent() {
 		textPassword.setEchoChar('*');
 
@@ -320,17 +280,20 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		updateRemoteConnectionGroup();
 	}
 
+	/**
+	 * enable / disable the controls for remote connections according to the checkbox.
+	 */
 	private void updateRemoteConnectionGroup() {
 		if (cbListenForIncomming.getSelection()) {
-			label2.setEnabled(true);
+			labelPort.setEnabled(true);
 			textListeningPort.setEnabled(true);
-			label3.setEnabled(true);
+			labelPassword.setEnabled(true);
 			textPassword.setEnabled(true);
 		}
 		else {
-			label2.setEnabled(false);
+			labelPort.setEnabled(false);
 			textListeningPort.setEnabled(false);
-			label3.setEnabled(false);
+			labelPassword.setEnabled(false);
 			textPassword.setEnabled(false);
 		}
 

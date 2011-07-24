@@ -20,12 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -66,22 +61,17 @@ public class SystemStatusPage implements WizardPage {
 	}
 
 	@Override
-	public void createBottom(Composite bottom) {
-		bottom.setLayout(new GridLayout(1, false));
-
-		Button okButton = new Button(bottom, SWT.PUSH);
-		okButton.setText("Ok");
-		okButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				dialog.dispose();
-			}
-		});
-		okButton.setLayoutData(new GridData(GridData.END, GridData.CENTER, true, true));
-	}
-
-	@Override
 	public void createContent(Composite content) {
 		systemStatusComposite = new SystemStatusComposite(content, SWT.NULL);
+	}
+	
+	@Override
+	public boolean apply() {
+		return true;
+	}
+	
+	@Override
+	public boolean cancel() {
+		return true;
 	}
 }

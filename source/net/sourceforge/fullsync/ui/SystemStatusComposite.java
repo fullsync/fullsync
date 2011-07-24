@@ -28,6 +28,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -142,7 +143,12 @@ public class SystemStatusComposite extends org.eclipse.swt.widgets.Composite {
 	}
 
 	public void updateView() {
-		getDisplay().syncExec(new Runnable() {
+		Display display = getDisplay();
+		if (display.isDisposed()) {
+			timer.cancel();
+			return;
+		}
+		display.syncExec(new Runnable() {
 			@Override
 			public void run() {
 				Runtime rt = Runtime.getRuntime();
@@ -150,7 +156,7 @@ public class SystemStatusComposite extends org.eclipse.swt.widgets.Composite {
 				long totalMemory = rt.totalMemory();
 				long maxMemory = rt.maxMemory();
 				long freeMemory = rt.freeMemory();
-
+				
 				labelMemoryTotal.setText(String.valueOf(totalMemory));
 				labelMemoryMax.setText(String.valueOf(maxMemory));
 				labelMemoryFree.setText(String.valueOf(freeMemory));
