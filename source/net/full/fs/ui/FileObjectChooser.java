@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 
+import net.sourceforge.fullsync.ui.UISettings;
+
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -34,12 +36,12 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -50,27 +52,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-/**
- * This code was generated using CloudGarden's Jigloo
- * SWT/Swing GUI Builder, which is free for non-commercial
- * use. If Jigloo is being used commercially (ie, by a corporation,
- * company or business for any purpose whatever) then you
- * should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details.
- * Use of Jigloo implies acceptance of these licensing terms.
- * *************************************
- * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
- * for this machine, so Jigloo or this code cannot be used legally
- * for any corporate or commercial purpose.
- * *************************************
- */
-public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
+public class FileObjectChooser extends Dialog {
 
 	private Shell dialogShell;
 	private Text textUrlExtension;
-	private Label labelFileFilter;
 	private Text textFilename;
-	private Label labelFilename;
 	private ToolItem toolItemNewFolder;
 	private Composite compositeBottom;
 	private TableColumn tableColumnName;
@@ -83,47 +69,23 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 	private Combo comboFileFilter;
 	private ToolBar toolBarActions;
 	private Composite compositeTop;
-	private Label labelBaseUrl;
-	private Label label1;
 	private Table tableItems;
 
 	private Image imageFile;
 	private Image imageFolder;
 
-	private int result;
+	private boolean result;
 	private FileObject baseFileObject;
 	private FileObject activeFileObject;
 	private FileObject selectedFileObject;
-
-	/**
-	 * Auto-generated main method to display this
-	 * org.eclipse.swt.widgets.Dialog inside a new Shell.
-	 */
-	public static void main(String[] args) {
-		try {
-			Display display = Display.getDefault();
-			Shell shell = new Shell(display);
-			shell.setLayout(new FillLayout());
-			new ConnectionConfiguration(shell);
-			shell.open();
-			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch()) {
-					display.sleep();
-				}
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public FileObjectChooser(Shell parent, int style) {
 		super(parent, style);
 	}
 
-	public int open() {
+	public boolean open() {
 		try {
-			result = 0;
+			result = false;
 			Shell parent = getParent();
 			dialogShell = new Shell(parent, SWT.BORDER | SWT.TITLE | SWT.RESIZE | SWT.APPLICATION_MODAL);
 			dialogShell.setText("Choose File...");
@@ -133,159 +95,145 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 			dialogShell.setLayout(new GridLayout());
 			dialogShell.layout();
 			dialogShell.pack();
-			dialogShell.setSize(546, 396);
-			{
-				compositeTop = new Composite(dialogShell, SWT.NONE);
-				GridLayout composite1Layout = new GridLayout();
-				composite1Layout.numColumns = 4;
-				GridData compositeTopLData = new GridData();
-				compositeTopLData.horizontalAlignment = GridData.FILL;
-				compositeTop.setLayoutData(compositeTopLData);
-				compositeTop.setLayout(composite1Layout);
-				{
-					label1 = new Label(compositeTop, SWT.NONE);
-					label1.setText("Url:");
-				}
-				{
-					labelBaseUrl = new Label(compositeTop, SWT.NONE);
-					labelBaseUrl.setText("<base url>");
-				}
-				{
-					textUrlExtension = new Text(compositeTop, SWT.BORDER);
-					GridData textUrlExtensionLData = new GridData();
-					textUrlExtensionLData.grabExcessHorizontalSpace = true;
-					textUrlExtensionLData.horizontalAlignment = GridData.FILL;
-					textUrlExtension.setLayoutData(textUrlExtensionLData);
-					textUrlExtension.setText("<url extension>");
-				}
-				{
-					toolBarActions = new ToolBar(compositeTop, SWT.NONE);
-					{
-						toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
-						toolItemParent.setImage(new Image(parent.getDisplay(), "images/FS_LevelUp.gif"));
-						toolItemParent.addSelectionListener(new SelectionAdapter() {
-							@Override
-							public void widgetSelected(SelectionEvent evt) {
-								toolItemParentWidgetSelected(evt);
-							}
-						});
-					}
-					{
-						toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
-						toolItemNewFolder.setImage(new Image(parent.getDisplay(), "images/FS_Folder_New.gif"));
-						toolItemNewFolder.setDisabledImage(new Image(parent.getDisplay(), "images/FS_Folder_New_disabled.gif"));
-						toolItemNewFolder.addSelectionListener(new SelectionAdapter() {
-							@Override
-							public void widgetSelected(SelectionEvent evt) {
-								toolItemNewFolderWidgetSelected(evt);
-							}
-						});
-						toolItemNewFolder.setEnabled(false);
-					}
-				}
-			}
-			{
-				GridData tableItemsLData = new GridData();
-				tableItemsLData.grabExcessHorizontalSpace = true;
-				tableItemsLData.grabExcessVerticalSpace = true;
-				tableItemsLData.horizontalAlignment = GridData.FILL;
-				tableItemsLData.verticalAlignment = GridData.FILL;
-				tableItems = new Table(dialogShell, SWT.SINGLE | SWT.BORDER);
-				tableItems.setHeaderVisible(true);
-				tableItems.setLayoutData(tableItemsLData);
-				tableItems.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseDown(MouseEvent evt) {
-						tableItemsMouseDown(evt);
-					}
+			dialogShell.setSize(550, 400);
 
-					@Override
-					public void mouseDoubleClick(MouseEvent evt) {
-						tableItemsMouseDoubleClick(evt);
-					}
-				});
-				{
-					tableColumnName = new TableColumn(tableItems, SWT.NONE);
-					tableColumnName.setText("File name");
-					tableColumnName.setWidth(200);
+			// top area
+			compositeTop = new Composite(dialogShell, SWT.NONE);
+			GridLayout composite1Layout = new GridLayout(4, false);
+			GridData compositeTopLData = new GridData();
+			compositeTopLData.horizontalAlignment = SWT.FILL;
+			compositeTop.setLayoutData(compositeTopLData);
+			compositeTop.setLayout(composite1Layout);
+
+			Label labelUrl = new Label(compositeTop, SWT.NONE);
+			labelUrl.setText("Url:");
+
+			Label labelBaseUrl = new Label(compositeTop, SWT.NONE);
+			labelBaseUrl.setText(baseFileObject.getName().toString());
+
+			textUrlExtension = new Text(compositeTop, SWT.BORDER);
+			GridData textUrlExtensionLData = new GridData();
+			textUrlExtensionLData.grabExcessHorizontalSpace = true;
+			textUrlExtensionLData.horizontalAlignment = GridData.FILL;
+			textUrlExtension.setLayoutData(textUrlExtensionLData);
+			textUrlExtension.setText("<url extension>");
+
+			// toolbar: folder up, create new folder
+			toolBarActions = new ToolBar(compositeTop, SWT.NONE);
+			// folder up
+			toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
+			toolItemParent.setImage(new Image(parent.getDisplay(), "images/FS_LevelUp.gif"));
+			toolItemParent.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent evt) {
+					toolItemParentWidgetSelected(evt);
 				}
-				{
-					tableColumnSize = new TableColumn(tableItems, SWT.NONE);
-					tableColumnSize.setText("Size");
-					tableColumnSize.setWidth(60);
+			});
+			// new folder
+			toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
+			toolItemNewFolder.setImage(new Image(parent.getDisplay(), "images/FS_Folder_New.gif"));
+			toolItemNewFolder.setDisabledImage(new Image(parent.getDisplay(), "images/FS_Folder_New_disabled.gif"));
+			toolItemNewFolder.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent evt) {
+					toolItemNewFolderWidgetSelected(evt);
 				}
-				{
-					tableColumnType = new TableColumn(tableItems, SWT.NONE);
-					tableColumnType.setText("Type");
-					tableColumnType.setWidth(100);
+			});
+			toolItemNewFolder.setEnabled(false);
+
+			// table showing files and folders
+			GridData tableItemsLData = new GridData();
+			tableItemsLData.grabExcessHorizontalSpace = true;
+			tableItemsLData.grabExcessVerticalSpace = true;
+			tableItemsLData.horizontalAlignment = SWT.FILL;
+			tableItemsLData.verticalAlignment = SWT.FILL;
+			tableItems = new Table(dialogShell, SWT.SINGLE | SWT.BORDER);
+			tableItems.setHeaderVisible(true);
+			tableItems.setLayoutData(tableItemsLData);
+			tableItems.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDown(final MouseEvent evt) {
+					tableItemsMouseDown(evt);
 				}
-				{
-					tableColumnDateModified = new TableColumn(tableItems, SWT.NONE);
-					tableColumnDateModified.setText("Date Modified");
-					tableColumnDateModified.setWidth(145);
+				@Override
+				public void mouseDoubleClick(final MouseEvent evt) {
+					tableItemsMouseDoubleClick(evt);
 				}
-			}
-			{
-				compositeBottom = new Composite(dialogShell, SWT.NONE);
-				GridLayout compositeBottomLayout = new GridLayout();
-				compositeBottomLayout.numColumns = 3;
-				compositeBottomLayout.horizontalSpacing = 15;
-				GridData compositeBottomLData = new GridData();
-				compositeBottomLData.horizontalAlignment = GridData.FILL;
-				compositeBottom.setLayoutData(compositeBottomLData);
-				compositeBottom.setLayout(compositeBottomLayout);
-				{
-					labelFilename = new Label(compositeBottom, SWT.NONE);
-					labelFilename.setText("File name:");
+			});
+
+			tableColumnName = new TableColumn(tableItems, SWT.NONE);
+			tableColumnName.setText("File name");
+			tableColumnName.setWidth(200);
+
+			tableColumnSize = new TableColumn(tableItems, SWT.NONE);
+			tableColumnSize.setText("Size");
+			tableColumnSize.setWidth(60);
+
+			tableColumnType = new TableColumn(tableItems, SWT.NONE);
+			tableColumnType.setText("Type");
+			tableColumnType.setWidth(100);
+
+			tableColumnDateModified = new TableColumn(tableItems, SWT.NONE);
+			tableColumnDateModified.setText("Date Modified");
+			tableColumnDateModified.setWidth(145);
+
+			// bottom area
+			compositeBottom = new Composite(dialogShell, SWT.NONE);
+			GridLayout compositeBottomLayout = new GridLayout();
+			compositeBottomLayout.numColumns = 3;
+//			compositeBottomLayout.horizontalSpacing = 15;
+			GridData compositeBottomLData = new GridData();
+			compositeBottomLData.horizontalAlignment = SWT.FILL;
+			compositeBottom.setLayoutData(compositeBottomLData);
+			compositeBottom.setLayout(compositeBottomLayout);
+
+			Label labelFilename = new Label(compositeBottom, SWT.NONE);
+			labelFilename.setText("File name:");
+
+			GridData textFilenameLData = new GridData();
+			textFilenameLData.horizontalAlignment = SWT.FILL;
+			textFilenameLData.grabExcessHorizontalSpace = true;
+			textFilename = new Text(compositeBottom, SWT.BORDER);
+			textFilename.setLayoutData(textFilenameLData);
+
+			buttonOk = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
+			GridData buttonOkLData = new GridData();
+			buttonOkLData.horizontalAlignment = GridData.CENTER;
+			buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
+			buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
+			buttonOk.setLayoutData(buttonOkLData);
+			buttonOk.setText("Open");
+			buttonOk.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent evt) {
+					buttonOkWidgetSelected(evt);
 				}
-				{
-					GridData textFilenameLData = new GridData();
-					textFilenameLData.horizontalAlignment = GridData.FILL;
-					textFilenameLData.grabExcessHorizontalSpace = true;
-					textFilename = new Text(compositeBottom, SWT.BORDER);
-					textFilename.setLayoutData(textFilenameLData);
+			});
+
+			// file filter
+			Label labelFileFilter = new Label(compositeBottom, SWT.NONE);
+			labelFileFilter.setText("Files of type:");
+
+			comboFileFilter = new Combo(compositeBottom, SWT.NONE);
+			GridData comboFileFilterLData = new GridData();
+			comboFileFilterLData.horizontalAlignment = SWT.FILL;
+			comboFileFilter.setLayoutData(comboFileFilterLData);
+			comboFileFilter.setText("all files");
+			comboFileFilter.setEnabled(false);
+
+			buttonCancel = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
+			GridData buttonCancelLData = new GridData();
+			buttonCancelLData.widthHint = UISettings.BUTTON_WIDTH;
+			buttonCancelLData.heightHint = UISettings.BUTTON_HEIGHT;
+			buttonCancel.setLayoutData(buttonCancelLData);
+			buttonCancel.setText("Cancel");
+			buttonCancel.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent evt) {
+					buttonCancelWidgetSelected(evt);
 				}
-				{
-					buttonOk = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
-					GridData buttonOkLData = new GridData();
-					buttonOkLData.horizontalAlignment = GridData.CENTER;
-					buttonOkLData.widthHint = 80;
-					buttonOk.setLayoutData(buttonOkLData);
-					buttonOk.setText("Open");
-					buttonOk.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent evt) {
-							buttonOkWidgetSelected(evt);
-						}
-					});
-				}
-				{
-					labelFileFilter = new Label(compositeBottom, SWT.NONE);
-					labelFileFilter.setText("Files of type:");
-				}
-				{
-					comboFileFilter = new Combo(compositeBottom, SWT.NONE);
-					GridData comboFileFilterLData = new GridData();
-					comboFileFilterLData.horizontalAlignment = GridData.FILL;
-					comboFileFilter.setLayoutData(comboFileFilterLData);
-					comboFileFilter.setText("all files");
-					comboFileFilter.setEnabled(false);
-				}
-				{
-					buttonCancel = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
-					GridData buttonCancelLData = new GridData();
-					buttonCancelLData.horizontalAlignment = GridData.FILL;
-					buttonCancel.setLayoutData(buttonCancelLData);
-					buttonCancel.setText("Cancel");
-					buttonCancel.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent evt) {
-							buttonCancelWidgetSelected(evt);
-						}
-					});
-				}
-			}
-			updateBaseFileObject();
+			});
+
 			updateActiveFileObject();
 			updateSelectedFileObject();
 			dialogShell.open();
@@ -299,15 +247,15 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			return 0;
+			return false;
 		}
 	}
 
-	protected void populateList() throws FileSystemException {
+	private void populateList() throws FileSystemException {
 		FileObject[] children = activeFileObject.getChildren();
 		Arrays.sort(children, new Comparator<FileObject>() {
 			@Override
-			public int compare(FileObject o1, FileObject o2) {
+			public int compare(final FileObject o1, final FileObject o2) {
 				try {
 					if ((o1.getType() == FileType.FOLDER) && (o2.getType() == FileType.FILE)) {
 						return -1;
@@ -315,9 +263,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 					else if ((o1.getType() == FileType.FILE) && (o2.getType() == FileType.FOLDER)) {
 						return 1;
 					}
-					else {
-						return o1.getName().getBaseName().compareTo(o2.getName().getBaseName());
-					}
+					return o1.getName().getBaseName().compareTo(o2.getName().getBaseName());
 				}
 				catch (FileSystemException fse) {
 					fse.printStackTrace();
@@ -369,17 +315,13 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 		tableItems.setItemCount(children.length);
 	}
 
-	protected void updateBaseFileObject() {
-		labelBaseUrl.setText(baseFileObject.getName().toString());
-	}
-
-	protected void updateActiveFileObject() throws FileSystemException {
+	private void updateActiveFileObject() throws FileSystemException {
 		tableItems.deselectAll();
 		populateList();
 		textUrlExtension.setText(baseFileObject.getName().getRelativeName(activeFileObject.getName()));
 	}
 
-	protected void updateSelectedFileObject() throws FileSystemException {
+	private void updateSelectedFileObject() throws FileSystemException {
 		if (selectedFileObject != null) {
 			textFilename.setText(selectedFileObject.getName().getBaseName());
 		}
@@ -388,7 +330,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 		}
 	}
 
-	public void setBaseFileObject(FileObject baseFileObject) {
+	public void setBaseFileObject(final FileObject baseFileObject) {
 		this.baseFileObject = baseFileObject;
 		if (activeFileObject == null) {
 			activeFileObject = baseFileObject;
@@ -399,7 +341,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 		return baseFileObject;
 	}
 
-	public void setActiveFileObject(FileObject active) throws FileSystemException {
+	public void setActiveFileObject(final FileObject active) throws FileSystemException {
 		this.activeFileObject = active;
 		if (dialogShell != null) {
 			updateActiveFileObject();
@@ -410,7 +352,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 		return activeFileObject;
 	}
 
-	public void setSelectedFileObject(FileObject selected) throws FileSystemException {
+	public void setSelectedFileObject(final FileObject selected) throws FileSystemException {
 		this.selectedFileObject = selected;
 		if (dialogShell != null) {
 			updateSelectedFileObject();
@@ -421,7 +363,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 		return selectedFileObject;
 	}
 
-	private void toolItemParentWidgetSelected(SelectionEvent evt) {
+	private void toolItemParentWidgetSelected(final SelectionEvent evt) {
 		try {
 			FileObject parent = activeFileObject.getParent();
 			if (parent != null) {
@@ -433,54 +375,49 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 		}
 	}
 
-	private void toolItemNewFolderWidgetSelected(SelectionEvent evt) {
-		System.out.println("toolItemNewFolder.widgetSelected, event=" + evt);
-		// TODO add your code for toolItemNewFolder.widgetSelected
+	private void toolItemNewFolderWidgetSelected(final SelectionEvent evt) {
+		//FIXME: create new folder
 	}
 
-	private void tableItemsMouseDoubleClick(MouseEvent evt) {
+	private void tableItemsMouseDoubleClick(final MouseEvent evt) {
 		TableItem[] items = tableItems.getSelection();
-		if (items.length == 0) {
-			return;
-		}
-
-		try {
-			TableItem item = items[0];
-			FileObject file = (FileObject) item.getData();
-			if (file.getType().hasChildren()) {
-				setActiveFileObject(file);
+		if (items.length > 0) {
+			try {
+				TableItem item = items[0];
+				FileObject file = (FileObject) item.getData();
+				if (file.getType().hasChildren()) {
+					setActiveFileObject(file);
+				}
+			}
+			catch (FileSystemException fse) {
+				fse.printStackTrace();
 			}
 		}
-		catch (FileSystemException fse) {
-			fse.printStackTrace();
-		}
 	}
 
-	private void tableItemsMouseDown(MouseEvent evt) {
+	private void tableItemsMouseDown(final MouseEvent evt) {
 		TableItem[] items = tableItems.getSelection();
-		if (items.length == 0) {
-			return;
-		}
+		if (items.length > 0) {
+			try {
+				TableItem item = items[0];
+				FileObject file = (FileObject) item.getData();
 
-		try {
-			TableItem item = items[0];
-			FileObject file = (FileObject) item.getData();
-
-			// TODO if we are looking for files, just take files, otherwise just take dirs
-			setSelectedFileObject(file);
-		}
-		catch (FileSystemException fse) {
-			fse.printStackTrace();
+				// FIXME if we are looking for files, just take files, otherwise just take dirs
+				setSelectedFileObject(file);
+			}
+			catch (FileSystemException fse) {
+				fse.printStackTrace();
+			}
 		}
 	}
 
-	private void buttonOkWidgetSelected(SelectionEvent evt) {
-		result = 1;
+	private void buttonOkWidgetSelected(final SelectionEvent evt) {
+		result = true;
 		dialogShell.dispose();
 	}
 
-	private void buttonCancelWidgetSelected(SelectionEvent evt) {
-		result = 0;
+	private void buttonCancelWidgetSelected(final SelectionEvent evt) {
+		result = false;
 		dialogShell.dispose();
 	}
 }
