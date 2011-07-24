@@ -21,13 +21,15 @@ Roadmap:
 	[ ] setup tests(windows xp/7, x86, x86_64; Linux x86, x86_64; mac?)
 	[ ] ask for mac testers
 	[ ] --> Stable Release
+	[ ] move all images, xml's, config files into the fullsync jar, into some resource package to make loading them easier
+	[ ] exception handling: look up ways to minimize exception handling code, should also allow to specify that we don't want to handle them and just rethrow them (debugging)
 
 Bugs:
 	[ ] Exception if starting sync on a readonly FS
 	[ ] if folder creation fails on a ro FS the task is being marked as succeeded
 	[ ] SMB/CIFS connection broken
 	[ ] Update Task Count based on decisions made(correct?), 1337 of 7331; 42 incoming, .. outgoing
-	[ ] file:/ URL's do not show contents in the Subdirectories Profile details tab
+	[X] file:/ URL's do not show contents in the Subdirectories Profile details tab
 	[ ] Profile can be stored without name
 	[ ] the buttons in the main list view need tooltips
 	[ ] the task decision dialog should not show ./ at the start either / or nothing at all(2)

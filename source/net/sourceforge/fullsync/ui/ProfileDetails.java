@@ -1,3 +1,23 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
+
 package net.sourceforge.fullsync.ui;
 
 import java.io.File;
@@ -93,11 +113,11 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	private Text textSource;
 	private Label label2;
 	private Text textName;
-	
+
 	private String profileName;
-	
+
 	private FileFilter filter;
-	
+
 	public ProfileDetails(Composite parent, int style) {
 		super(parent, style);
 		initGUI();
@@ -163,7 +183,8 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 buttonBrowseSrc = new Button(this, SWT.PUSH | SWT.CENTER);
                 buttonBrowseSrc.setText("..."); //$NON-NLS-1$
                 buttonBrowseSrc.addSelectionListener(new SelectionAdapter() {
-                    public void widgetSelected(SelectionEvent evt) {
+                    @Override
+					public void widgetSelected(SelectionEvent evt) {
                         buttonBrowseSrcWidgetSelected(evt);
                     }
                 });
@@ -222,7 +243,8 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 GridData buttonBrowseDstLData = new GridData();
                 buttonBrowseDst.setLayoutData(buttonBrowseDstLData);
                 buttonBrowseDst.addSelectionListener(new SelectionAdapter() {
-                    public void widgetSelected(SelectionEvent evt) {
+                    @Override
+					public void widgetSelected(SelectionEvent evt) {
                         buttonBrowseDstWidgetSelected(evt);
                     }
                 });
@@ -265,7 +287,8 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             {
                 comboType = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
                 comboType.addModifyListener(new ModifyListener() {
-                    public void modifyText(ModifyEvent evt) {
+                    @Override
+					public void modifyText(ModifyEvent evt) {
                         if( comboType.getText().equals( "Publish/Update" ) ) //$NON-NLS-1$
                         {
                             labelTypeDescription.setText( Messages.getString("ProfileDetails.ProfileDescription.Publish") ); //$NON-NLS-1$
@@ -309,11 +332,12 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                 buttonScheduling = new Button(this, SWT.PUSH | SWT.CENTER);
                 buttonScheduling.setText(Messages.getString("ProfileDetails.Edit_Scheduling")); //$NON-NLS-1$
                 buttonScheduling.addSelectionListener(new SelectionAdapter() {
-                    public void widgetSelected(SelectionEvent evt) {
+                    @Override
+					public void widgetSelected(SelectionEvent evt) {
                         ScheduleSelectionDialog dialog = new ScheduleSelectionDialog( getShell(), SWT.NULL );
                         dialog.setSchedule( (Schedule)buttonScheduling.getData() );
                         dialog.open();
-                        
+
                         buttonScheduling.setData( dialog.getSchedule() );
                     }
                 });
@@ -353,7 +377,8 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     rbSimplyfiedRuleSet.setLayoutData(rbSimplyfiedRuleSetLData);
                     rbSimplyfiedRuleSet
                         .addSelectionListener(new SelectionAdapter() {
-                            public void widgetSelected(SelectionEvent evt) {
+                            @Override
+							public void widgetSelected(SelectionEvent evt) {
                                 selectRuleSetButton(rbSimplyfiedRuleSet);
                             }
                         });
@@ -368,7 +393,8 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
                     rbAdvancedRuleSet.setLayoutData(rbAdvancedRuleSetLData);
                     rbAdvancedRuleSet
                         .addSelectionListener(new SelectionAdapter() {
-                            public void widgetSelected(SelectionEvent evt) {
+                            @Override
+							public void widgetSelected(SelectionEvent evt) {
                                 selectRuleSetButton(rbAdvancedRuleSet);
                             }
                         });
@@ -438,6 +464,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 						buttonUseFileFilter.setSelection(true);
 						buttonUseFileFilter
 							.addSelectionListener(new SelectionAdapter() {
+							@Override
 							public void widgetSelected(SelectionEvent evt) {
 								if (buttonUseFileFilter.getSelection()) {
 									label18.setEnabled(true);
@@ -463,6 +490,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 						buttonFileFilter.setText("Set Filter...");
 						buttonFileFilter
 							.addSelectionListener(new SelectionAdapter() {
+							@Override
 							public void widgetSelected(SelectionEvent evt) {
 								try {
 									WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
@@ -471,7 +499,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 									FileFilter newfilter = page.getFileFilter();
 									if (newfilter != null) {
 										filter = newfilter;
-										labelFilterDescription.setText(filter.toString());										
+										labelFilterDescription.setText(filter.toString());
 									}
 								} catch (Exception e) {
 									ExceptionHandler.reportException( e );
@@ -530,7 +558,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 
 			this.layout();
 			this.setSize(504, 533);
-	
+
 			postInitGUI();
 		} catch (Exception e) {
 			ExceptionHandler.reportException( e );
@@ -545,7 +573,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	{
 	    textSourcePassword.setEchoChar( '*' );
 	    textDestinationPassword.setEchoChar( '*' );
-	    
+
 	    comboType.select(0);
 	    comboPatternsType.select(0);
 	}
@@ -557,39 +585,49 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	public void setProfileName( String name )
 	{
 	    this.profileName = name;
-	    
-	    if( profileName == null )
-	        return;
-	    
+
+	    if( profileName == null ) {
+			return;
+		}
+
 	    Profile p = profileManager.getProfile( profileName );
 	    if( p == null )
-	        throw new IllegalArgumentException( Messages.getString("ProfileDetails.profile_does_not_exist") ); //$NON-NLS-1$
-	        
+		 {
+			throw new IllegalArgumentException( Messages.getString("ProfileDetails.profile_does_not_exist") ); //$NON-NLS-1$
+		}
+
         textName.setText( p.getName() );
         textDescription.setText( p.getDescription() );
         textSource.setText( p.getSource().getUri().toString() );
         buttonSourceBuffered.setSelection( "syncfiles".equals( p.getSource().getBufferStrategy() ) ); //$NON-NLS-1$
-        if( p.getSource().getUsername() != null )
-            textSourceUsername.setText( p.getSource().getUsername() );
-        if( p.getSource().getPassword() != null )
-            textSourcePassword.setText( p.getSource().getPassword() );
+        if( p.getSource().getUsername() != null ) {
+			textSourceUsername.setText( p.getSource().getUsername() );
+		}
+        if( p.getSource().getPassword() != null ) {
+			textSourcePassword.setText( p.getSource().getPassword() );
+		}
         textDestination.setText( p.getDestination().getUri().toString() );
         buttonDestinationBuffered.setSelection( "syncfiles".equals( p.getDestination().getBufferStrategy() ) ); //$NON-NLS-1$
-        if( p.getDestination().getUsername() != null )
-            textDestinationUsername.setText( p.getDestination().getUsername() );
-        if( p.getDestination().getPassword() != null )
-            textDestinationPassword.setText( p.getDestination().getPassword() );
-        
-        if( p.getSynchronizationType() != null && p.getSynchronizationType().length() > 0 )
-             comboType.setText( p.getSynchronizationType() );
-        else comboType.select( 0 );
-        
+        if( p.getDestination().getUsername() != null ) {
+			textDestinationUsername.setText( p.getDestination().getUsername() );
+		}
+        if( p.getDestination().getPassword() != null ) {
+			textDestinationPassword.setText( p.getDestination().getPassword() );
+		}
+
+        if( (p.getSynchronizationType() != null) && (p.getSynchronizationType().length() > 0) ) {
+			comboType.setText( p.getSynchronizationType() );
+		}
+		else {
+			comboType.select( 0 );
+		}
+
         buttonScheduling.setData( p.getSchedule() );
         buttonEnabled.setSelection( p.isEnabled() );
-        
+
         RuleSetDescriptor ruleSetDescriptor = p.getRuleSet();
         filter = null;
-        
+
         if (ruleSetDescriptor instanceof SimplyfiedRuleSetDescriptor) {
         	selectRuleSetButton(rbSimplyfiedRuleSet);
         	rbSimplyfiedRuleSet.setSelection(true);
@@ -627,14 +665,14 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
         	textRuleSet.setText(advDesc.getRuleSetName());
         }
 	}
-	
+
 	public static void showProfile( Shell parent, ProfileManager manager, String name ){
 		try {
-		    WizardDialog dialog = new WizardDialog( parent, SWT.APPLICATION_MODAL | SWT.RESIZE );
-		    //ProfileDetailsPage page = new ProfileDetailsPage( dialog, manager, name );
-            ProfileDetailsTabbedPage page = new ProfileDetailsTabbedPage( dialog, manager, name );
-		    dialog.show();
-		} catch (Exception e) {
+			WizardDialog dialog = new WizardDialog( parent, SWT.APPLICATION_MODAL | SWT.RESIZE );
+			new ProfileDetailsTabbedPage( dialog, manager, name );
+			dialog.show();
+		}
+		catch (Exception e) {
 			ExceptionHandler.reportException( e );
 		}
 	}
@@ -644,7 +682,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	    try {
 	        src = new ConnectionDescription( textSource.getText(), "" ); //$NON-NLS-1$
 	        if( buttonSourceBuffered.getSelection() )
-	            src.setBufferStrategy( "syncfiles" ); //$NON-NLS-1$
+			 {
+				src.setBufferStrategy( "syncfiles" ); //$NON-NLS-1$
+			}
 	        if( textSourceUsername.getText().length() > 0 )
 	        {
 	            src.setUsername( textSourceUsername.getText() );
@@ -652,7 +692,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	        }
 	        dst = new ConnectionDescription( textDestination.getText(), "" ); //$NON-NLS-1$
 	        if( buttonDestinationBuffered.getSelection() )
-	            dst.setBufferStrategy( "syncfiles" ); //$NON-NLS-1$
+			 {
+				dst.setBufferStrategy( "syncfiles" ); //$NON-NLS-1$
+			}
 	        if( textDestinationUsername.getText().length() > 0 )
 	        {
 	            dst.setUsername( textDestinationUsername.getText() );
@@ -663,7 +705,7 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             return;
 	    }
 
-	    if( profileName == null || !textName.getText().equals( profileName ) )
+	    if( (profileName == null) || !textName.getText().equals( profileName ) )
 	    {
 	        Profile pr = profileManager.getProfile( textName.getText() );
 	        if( pr != null )
@@ -675,12 +717,12 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 	            return;
 	        }
 	    }
-	    
+
 	    Profile p;
-	    
+
 		RuleSetDescriptor ruleSetDescriptor = null;
     	if (rbSimplyfiedRuleSet.getSelection()) {
-			ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), 
+			ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(),
 					textIgnorePattern.getText(),
 					textAcceptPattern.getText(),
 					comboPatternsType.getText(),
@@ -700,8 +742,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             p.setDescription( textDescription.getText() );
             p.setSchedule( (Schedule)buttonScheduling.getData() );
             p.setEnabled( buttonEnabled.getSelection() );
-            if( buttonResetError.getSelection() )
-                p.setLastError( 0, null );
+            if( buttonResetError.getSelection() ) {
+				p.setLastError( 0, null );
+			}
             profileManager.addProfile( p );
         } else {
             p = profileManager.getProfile( profileName );
@@ -713,10 +756,11 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
             p.setDestination( dst );
             p.setSchedule( (Schedule)buttonScheduling.getData() );
             p.setEnabled( buttonEnabled.getSelection() );
-    		
+
             p.setRuleSet( ruleSetDescriptor );
-            if( buttonResetError.getSelection() )
-                p.setLastError( 0, null );
+            if( buttonResetError.getSelection() ) {
+				p.setLastError( 0, null );
+			}
             p.endUpdate();
         }
         profileManager.save();
@@ -732,8 +776,9 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 		DirectoryDialog dd = new DirectoryDialog( getShell() );
 		dd.setMessage( Messages.getString("ProfileDetails.Choose_source_dir") ); //$NON-NLS-1$
 		String str = dd.open();
-		if( str != null )
-		    textSource.setText( new File( str ).toURI().toString() );
+		if( str != null ) {
+			textSource.setText( new File( str ).toURI().toString() );
+		}
 	}
 
 	/** Auto-generated event handler method */
@@ -741,13 +786,14 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 		DirectoryDialog dd = new DirectoryDialog( getShell() );
 		dd.setMessage( Messages.getString("ProfileDetails.Choose_source_dir") ); //$NON-NLS-1$
 		String str = dd.open();
-		if( str != null )
-		    textDestination.setText( new File( str ).toURI().toString() );
+		if( str != null ) {
+			textDestination.setText( new File( str ).toURI().toString() );
+		}
 
 	}
-	
+
 	protected void selectRuleSetButton(Button button) {
-		
+
 		if (button.equals(rbSimplyfiedRuleSet)) {
 			advancedRuleOptionsGroup.setEnabled(false);
 			label4.setEnabled(false);
@@ -772,6 +818,6 @@ public class ProfileDetails extends org.eclipse.swt.widgets.Composite {
 			textIgnorePattern.setEnabled(false);
 			comboPatternsType.setEnabled(false);
 		}
-		
+
 	}
 }

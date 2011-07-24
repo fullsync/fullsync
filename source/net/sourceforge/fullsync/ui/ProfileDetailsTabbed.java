@@ -1,31 +1,28 @@
-/**
- *	@license
- *	This program is free software; you can redistribute it and/or
- *	modify it under the terms of the GNU General Public License
- *	as published by the Free Software Foundation; either version 2
- *	of the License, or (at your option) any later version.
- *
- *	This program is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *	GNU General Public License for more details.
- *
- *	You should have received a copy of the GNU General Public License
- *	along with this program; if not, write to the Free Software
- *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
- *	Boston, MA  02110-1301, USA.
- *
- *	---
- *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
- *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
  */
+
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Vector;
 
 import net.full.fs.ui.ConnectionConfiguration;
@@ -46,17 +43,15 @@ import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -67,89 +62,48 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-/**
- * This code was generated using CloudGarden's Jigloo
- * SWT/Swing GUI Builder, which is free for non-commercial
- * use. If Jigloo is being used commercially (ie, by a corporation,
- * company or business for any purpose whatever) then you
- * should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details.
- * Use of Jigloo implies acceptance of these licensing terms.
- * *************************************
- * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
- * for this machine, so Jigloo or this code cannot be used legally
- * for any corporate or commercial purpose.
- * *************************************
- */
-public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
+
+public class ProfileDetailsTabbed extends Composite implements DisposeListener {
+
+	private TabFolder tabs;
+	private Text textProfileName;
+	private Text textProfileDescription;
 
 	private static final String EXPANDED_KEY = "Expanded";
 	private static final String FILTER_KEY = "Filter";
-
 	private ProfileManager profileManager;
-	private Label label18;
+	private Label labelFilesFilter;
 	private Button buttonFileFilter;
 	private Button buttonResetError;
 	private Button buttonEnabled;
 	private Button buttonScheduling;
 	private Label labelTypeDescription;
 	private Combo comboType;
-	private Label label16;
-	private Text textDescription;
-	private Label label15;
-	private Label label1;
 	private Text textRuleSet;
-	private Label label4;
-	private Group advancedRuleOptionsGroup;
-	private Group groupDestination;
-	private ConnectionConfiguration connectionConfigurationDestination;
-	private ConnectionConfiguration connectionConfigurationSource;
-	private TreeItem treeItemSubDirs;
-	private TreeItem treeItemFilters;
-	private TreeItem treeItemLocations;
-	private TreeItem treeItemGeneral;
-	private Group groupAutomated;
-	private Group groupGeneral;
-	private Group groupSource;
-	private Composite compositeTabSubdirs;
-	private Composite compositeTabFilters;
-	private Composite compositeTabLocations;
-	private Composite compositeTabGeneral;
-	private Composite compositeMain;
-	private Tree treeTabs;
-	private SashForm sashForm;
+	private Label labelRuleName;
+	private ConnectionConfiguration dstConnectionConfiguration;
+	private ConnectionConfiguration srcConnectionConfiguration;
 	private Button buttonUseFileFilter;
 	private Text textFilterDescription;
 	private Button syncSubsButton;
-	private Group simplyfiedOptionsGroup;
 	private Button rbAdvancedRuleSet;
 	private Button rbSimplyfiedRuleSet;
-	private Group ruleSetGroup;
-	private Label label12;
-	private Label label11;
-	private Label label10;
 	private Button buttonDestinationBuffered;
-	private Label label8;
-	private Label label6;
-	private Label label5;
 	private Button buttonSourceBuffered;
-	private Text textName;
 
-	private Button buttonFilter;
+	private Button buttonSetFilter;
 	private Button buttonRemoveFilter;
 
 	private Tree directoryTree;
-	private final Vector treeItemsWithFilter = new Vector();
-	private HashMap itemsMap;
+	private final Vector<TreeItem> treeItemsWithFilter = new Vector<TreeItem>();
+	private HashMap<String, FileFilter> itemsMap = new HashMap<String, FileFilter>();
 	private Site sourceSite;
 	private final FileSystemManager fsm = new FileSystemManager();
-
-	private final Color selectedColor = new Color(null, 0, 0, 255);
-	private final Color unselectedColor = new Color(null, 200, 200, 200);
-	private final Color othersColor = new Color(null, 0, 0, 0);
 
 	private String profileName;
 
@@ -158,837 +112,479 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	public ProfileDetailsTabbed(Composite parent, int style) {
 		super(parent, style);
 		initGUI();
-		this.addDisposeListener(new DisposeListener(){
-			@Override
-			public void widgetDisposed(DisposeEvent arg0) {
-				closeSourceSite();			}
-		});
+		this.addDisposeListener(this);
+	}
+
+	public void initGUI() {
+		try {
+			tabs = new TabFolder(getParent(), SWT.NULL);
+			GridData tabsData = new GridData(SWT.FILL, SWT.FILL, true, true);
+			tabs.setLayoutData(tabsData);
+			TabItem tabGeneral = new TabItem(tabs, SWT.NULL);
+			tabGeneral.setText("General"); // FIXME: move text to translation file
+			tabGeneral.setControl(initGeneralTab(tabs));
+
+			TabItem tabLocations = new TabItem(tabs, SWT.NULL);
+			tabLocations.setText("Locations"); // FIXME: move text to translation file
+			tabLocations.setControl(initLocationsTab(tabs));
+
+			TabItem tabFilters = new TabItem(tabs, SWT.NULL);
+			tabFilters.setText("Filters"); // FIXME: move text to translation file
+			tabFilters.setControl(initFiltersTab(tabs));
+
+			TabItem tabSubDirs = new TabItem(tabs, SWT.NULL);
+			tabSubDirs.setText("Subdirectories"); // FIXME: move text to translation file
+			tabSubDirs.setControl(initSubDirsTab(tabs));
+
+			tabs.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(final SelectionEvent e) {
+					treeTabsWidgetSelected(e);
+				}
+
+				@Override
+				public void widgetDefaultSelected(final SelectionEvent e) {
+					treeTabsWidgetSelected(e);
+				}
+			});
+		}
+		catch (Exception e) {
+			ExceptionHandler.reportException(e);
+		}
 	}
 
 	/**
-	 * Initializes the GUI.
-	 * Auto-generated code - any changes you make will disappear.
+	 * initGenralTab creates all controls of the first tab.
+	 * 
+	 * @param parent
+	 *            parent element for the control
+	 * @return composite to be placed inside the general tab
 	 */
-	public void initGUI(){
-		try {
-			preInitGUI();
+	private Composite initGeneralTab(final Composite parent) {
+		Composite c = new Composite(parent, SWT.NONE);
+		c.setLayout(new GridLayout(2, false));
 
-			GridLayout thisLayout = new GridLayout();
-			thisLayout.marginWidth = 0;
-			thisLayout.marginHeight = 0;
-			this.setLayout(thisLayout);
-			{
-				sashForm = new SashForm(this, SWT.NONE);
-				GridData sashFormLData = new GridData();
-				sashFormLData.grabExcessHorizontalSpace = true;
-				sashFormLData.grabExcessVerticalSpace = true;
-				sashFormLData.horizontalAlignment = GridData.FILL;
-				sashFormLData.verticalAlignment = GridData.FILL;
-				sashForm.setLayoutData(sashFormLData);
-				sashForm.setSize(60, 30);
-				{
-					treeTabs = new Tree(sashForm, SWT.NONE);
-					treeTabs.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent evt) {
-							treeTabsWidgetSelected(evt);
-						}
-					});
-					{
-						treeItemGeneral = new TreeItem(treeTabs, SWT.NONE);
-						treeItemGeneral.setText("General");
-					}
-					{
-						treeItemLocations = new TreeItem(treeTabs, SWT.NONE);
-						treeItemLocations.setText("Locations");
-					}
-					{
-						treeItemFilters = new TreeItem(treeTabs, SWT.NONE);
-						treeItemFilters.setText("Filters");
-					}
-					{
-						treeItemSubDirs = new TreeItem(treeTabs, SWT.NONE);
-						treeItemSubDirs.setText("Subdirectories");
+		// profile name
+		Label nameLabel = new Label(c, SWT.NONE);
+		nameLabel.setText(Messages.getString("ProfileDetails.Name.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		GridData textNameData = new GridData();
+		textNameData.grabExcessHorizontalSpace = true;
+		textNameData.horizontalAlignment = SWT.FILL;
+		textProfileName = new Text(c, SWT.BORDER);
+		textProfileName.setLayoutData(textNameData);
+		textProfileName.setToolTipText(Messages.getString("ProfileDetails.Name.ToolTip")); //$NON-NLS-1$
+		// profile description
+		Label descriptionLabel = new Label(c, SWT.NONE);
+		descriptionLabel.setText(Messages.getString("ProfileDetails.Description.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		GridData textDescriptionData = new GridData();
+		textDescriptionData.horizontalAlignment = SWT.FILL;
+		textProfileDescription = new Text(c, SWT.BORDER);
+		textProfileDescription.setLayoutData(textDescriptionData);
+		// sync type
+		Label typeLabel = new Label(c, SWT.NONE);
+		typeLabel.setText(Messages.getString("ProfileDetails.Type.Label")); //$NON-NLS-1$
+		comboType = new Combo(c, SWT.DROP_DOWN | SWT.READ_ONLY);
+		GridData comboTypeData = new GridData(SWT.FILL);
+		comboTypeData.horizontalAlignment = SWT.FILL;
+		comboType.setLayoutData(comboTypeData);
+		comboType.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(final ModifyEvent evt) {
+				buttonSourceBuffered.setSelection(false);
+				buttonDestinationBuffered.setSelection(false);
+				if (comboType.getText().equals("Publish/Update")) {
+					labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.Publish")); //$NON-NLS-1$
+					buttonDestinationBuffered.setSelection(true);
+				}
+				else if (comboType.getText().equals("Backup Copy")) {
+					labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.BackupCopy")); //$NON-NLS-1$
+				}
+				else if (comboType.getText().equals("Exact Copy")) {
+					labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.ExactCopy")); //$NON-NLS-1$
+				}
+				else if (comboType.getText().equals("Two Way Sync")) {
+					labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.TwoWaySync")); //$NON-NLS-1$
+				}
+			}
+		});
+		comboType.add("Publish/Update");
+		comboType.add("Backup Copy");
+		comboType.add("Exact Copy");
+		comboType.add("Two Way Sync");
+
+		new Label(c, SWT.NONE); // area below the type label should be empty
+		GridData labelTypeDescriptionData = new GridData();
+		labelTypeDescriptionData.horizontalAlignment = SWT.FILL;
+		labelTypeDescription = new Label(c, SWT.WRAP);
+		labelTypeDescription.setLayoutData(labelTypeDescriptionData);
+		labelTypeDescription.setText(Messages.getString("ProfileDetails.Description.Label")); //$NON-NLS-1$
+		// automated execution
+		Label labelAutomattedExecution = new Label(c, SWT.NONE);
+		labelAutomattedExecution.setText("Automatted Execution");
+		buttonEnabled = new Button(c, SWT.CHECK | SWT.RIGHT);
+		buttonEnabled.setText(Messages.getString("ProfileDetails.Enabled")); //$NON-NLS-1$
+		new Label(c, SWT.NONE); // area below the automated execution label should be empty
+		buttonScheduling = new Button(c, SWT.PUSH | SWT.CENTER);
+		buttonScheduling.setText(Messages.getString("ProfileDetails.Edit_Scheduling")); //$NON-NLS-1$
+		buttonScheduling.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent evt) {
+				ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(getShell(), SWT.NULL);
+				dialog.setSchedule((Schedule) buttonScheduling.getData());
+				dialog.open();
+				buttonScheduling.setData(dialog.getSchedule());
+			}
+		});
+		new Label(c, SWT.NONE); // area below the automated execution label should be empty
+		buttonResetError = new Button(c, SWT.CHECK | SWT.RIGHT); // TODO: make this a button?
+		buttonResetError.setText(Messages.getString("ProfileDetails.Reset_ErrorFlag")); //$NON-NLS-1$
+
+		return c;
+	}
+
+	/**
+	 * initLocationsTab creates all controls of the second tab.
+	 * 
+	 * @param parent
+	 *            parent element for the control
+	 * @return composite to be placed inside the locations tab
+	 */
+	private Composite initLocationsTab(final Composite parent) {
+		Composite c = new Composite(parent, SWT.NONE);
+		c.setLayout(new GridLayout());
+
+		// source
+		Group groupSource = new Group(c, SWT.NONE);
+		groupSource.setLayout(new GridLayout());
+		GridData groupSourceData = new GridData();
+		groupSourceData.grabExcessHorizontalSpace = true;
+		groupSourceData.horizontalAlignment = SWT.FILL;
+		groupSourceData.grabExcessVerticalSpace = true;
+		groupSourceData.verticalAlignment = SWT.FILL;
+		groupSource.setLayoutData(groupSourceData);
+		groupSource.setText(Messages.getString("ProfileDetails.Source.Label")); //$NON-NLS-1$
+
+		srcConnectionConfiguration = new ConnectionConfiguration(groupSource, SWT.NONE);
+		GridData connectionConfigurationSourceData = new GridData();
+		connectionConfigurationSourceData.horizontalAlignment = SWT.FILL;
+		connectionConfigurationSourceData.verticalAlignment = SWT.FILL;
+		connectionConfigurationSourceData.grabExcessHorizontalSpace = true;
+		srcConnectionConfiguration.setLayoutData(connectionConfigurationSourceData);
+
+		buttonSourceBuffered = new Button(groupSource, SWT.CHECK | SWT.LEFT);
+		buttonSourceBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
+		GridData buttonSourceBufferedData = new GridData();
+		buttonSourceBufferedData.horizontalSpan = 3;
+		buttonSourceBuffered.setLayoutData(buttonSourceBufferedData);
+		buttonSourceBuffered.setEnabled(false);
+
+		// destination
+		Group groupDestination = new Group(c, SWT.FILL);
+		groupDestination.setLayout(new GridLayout());
+		GridData groupDestinationData = new GridData();
+		groupDestinationData.horizontalAlignment = SWT.FILL;
+		groupDestinationData.grabExcessHorizontalSpace = true;
+		groupDestinationData.grabExcessVerticalSpace = true;
+		groupDestinationData.verticalAlignment = SWT.FILL;
+		groupDestination.setLayoutData(groupDestinationData);
+		groupDestination.setText(Messages.getString("ProfileDetails.Destination.Label")); //$NON-NLS-1$
+		dstConnectionConfiguration = new ConnectionConfiguration(groupDestination, SWT.NONE);
+		GridData connectionConfiguration1Data = new GridData();
+		connectionConfiguration1Data.verticalAlignment = SWT.FILL;
+		connectionConfiguration1Data.horizontalAlignment = SWT.FILL;
+		connectionConfiguration1Data.grabExcessHorizontalSpace = true;
+		dstConnectionConfiguration.setLayoutData(connectionConfiguration1Data);
+
+		buttonDestinationBuffered = new Button(groupDestination, SWT.CHECK | SWT.LEFT);
+		GridData buttonDestinationBufferedData = new GridData();
+		buttonDestinationBufferedData.horizontalSpan = 3;
+		buttonDestinationBuffered.setLayoutData(buttonDestinationBufferedData);
+		buttonDestinationBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
+
+		return c;
+	}
+
+	/**
+	 * initFiltersTab creates all controls of the third tab.
+	 * 
+	 * @param parent
+	 *            parent element for the control
+	 * @return composite to be placed inside the filters tab
+	 */
+	private Composite initFiltersTab(final Composite parent) {
+		Composite c = new Composite(parent, SWT.NONE);
+		c.setLayout(new GridLayout(2, false));
+
+		// simple rule-set
+		rbSimplyfiedRuleSet = new Button(c, SWT.RADIO | SWT.LEFT);
+		rbSimplyfiedRuleSet.setText(Messages.getString("ProfileDetails.Simple_Rule_Set")); //$NON-NLS-1$
+		rbSimplyfiedRuleSet.setSelection(true);
+		GridData rbSimplyfiedRuleSetData = new GridData();
+		rbSimplyfiedRuleSetData.grabExcessHorizontalSpace = true;
+		rbSimplyfiedRuleSetData.horizontalSpan = 2;
+		rbSimplyfiedRuleSetData.horizontalAlignment = SWT.FILL;
+		rbSimplyfiedRuleSet.setLayoutData(rbSimplyfiedRuleSetData);
+		rbSimplyfiedRuleSet.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent evt) {
+				selectRuleSetButton(rbSimplyfiedRuleSet);
+			}
+		});
+		// sync subdirectories
+		syncSubsButton = new Button(c, SWT.CHECK | SWT.LEFT);
+		syncSubsButton.setText(Messages.getString("ProfileDetails.Sync_SubDirs")); //$NON-NLS-1$
+		syncSubsButton.setToolTipText(Messages.getString("ProfileDetails.Rucurre")); //$NON-NLS-1$
+		GridData syncSubsButtonData = new GridData();
+		syncSubsButtonData.horizontalSpan = 2;
+		syncSubsButton.setLayoutData(syncSubsButtonData);
+		// use file filter
+		buttonUseFileFilter = new Button(c, SWT.CHECK | SWT.LEFT);
+		GridData buttonUseFileFilterData = new GridData();
+		buttonUseFileFilterData.horizontalSpan = 2;
+		buttonUseFileFilter.setLayoutData(buttonUseFileFilterData);
+		buttonUseFileFilter.setText("Use file filter");
+		buttonUseFileFilter.setSelection(true);
+		buttonUseFileFilter.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent evt) {
+				if (buttonUseFileFilter.getSelection()) {
+					labelFilesFilter.setEnabled(true);
+					buttonFileFilter.setEnabled(true);
+					textFilterDescription.setEnabled(true);
+				}
+				else {
+					labelFilesFilter.setEnabled(false);
+					buttonFileFilter.setEnabled(false);
+					textFilterDescription.setEnabled(false);
+				}
+			}
+		});
+
+		labelFilesFilter = new Label(c, SWT.NONE);
+		labelFilesFilter.setText("Files Filter: ");
+		buttonFileFilter = new Button(c, SWT.PUSH | SWT.CENTER);
+		buttonFileFilter.setText("Set Filter...");
+		GridData buttonFileFilterData = new GridData();
+		buttonFileFilterData.grabExcessHorizontalSpace = true;
+		buttonFileFilterData.widthHint = UISettings.BUTTON_WIDTH;
+		buttonFileFilter.setLayoutData(buttonFileFilterData);
+		buttonFileFilter.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent evt) {
+				try {
+					WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
+					FileFilterPage page = new FileFilterPage(dialog, filter);
+					dialog.show();
+					FileFilter newfilter = page.getFileFilter();
+					if (newfilter != null) {
+						filter = newfilter;
+						textFilterDescription.setText(filter.toString());
 					}
 				}
-                {
-                    compositeMain = new Composite( sashForm, SWT.NONE);
-                    StackLayout compositeMainLayout2 = new StackLayout();
-                    compositeMain.setLayout(compositeMainLayout2);
-                    {
-                        compositeTabGeneral = new Composite(
-                            compositeMain,
-                            SWT.NONE);
-                        treeItemGeneral.setData(compositeTabGeneral);
-                        GridLayout compositeTabGeneralLayout = new GridLayout();
-                        compositeTabGeneral
-                            .setLayout(compositeTabGeneralLayout);
-                        {
-                            groupGeneral = new Group(
-                                compositeTabGeneral,
-                                SWT.NONE);
-                            GridLayout groupGeneralLayout = new GridLayout();
-                            groupGeneralLayout.numColumns = 2;
-                            groupGeneral.setLayout(groupGeneralLayout);
-                            GridData groupGeneralLData = new GridData();
-                            groupGeneralLData.grabExcessHorizontalSpace = true;
-                            groupGeneralLData.horizontalAlignment = GridData.FILL;
-                            groupGeneral.setLayoutData(groupGeneralLData);
-                            groupGeneral.setText("General");
-                            {
-                                label1 = new Label(groupGeneral, SWT.NONE);
-                                label1
-                                    .setText(Messages
-                                        .getString("ProfileDetails.Name.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-                            }
-                            {
-                                GridData textNameLData = new GridData();
-                                textNameLData.grabExcessHorizontalSpace = true;
-                                textNameLData.horizontalAlignment = GridData.FILL;
-                                textName = new Text(
-                                    groupGeneral,
-                                    SWT.BORDER);
-                                textName.setLayoutData(textNameLData);
-                                textName
-                                    .setToolTipText(Messages
-                                        .getString("ProfileDetails.Name.ToolTip")); //$NON-NLS-1$
-                            }
-                            {
-                                label15 = new Label(groupGeneral, SWT.NONE);
-                                label15
-                                    .setText(Messages
-                                        .getString("ProfileDetails.Description.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-                            }
-                            {
-                                GridData textDescriptionLData = new GridData();
-                                textDescriptionLData.horizontalAlignment = GridData.FILL;
-                                textDescription = new Text(
-                                    groupGeneral,
-                                    SWT.BORDER);
-                                textDescription
-                                    .setLayoutData(textDescriptionLData);
-                            }
-                            {
-                                label16 = new Label(groupGeneral, SWT.NONE);
-                                label16
-                                    .setText(Messages
-                                        .getString("ProfileDetails.Type.Label")); //$NON-NLS-1$
-                            }
-                            {
-                                comboType = new Combo(
-                                    groupGeneral,
-                                    SWT.DROP_DOWN | SWT.READ_ONLY);
-                                comboType
-                                    .addModifyListener(new ModifyListener() {
-                                        @Override
-										public void modifyText(
-                                            ModifyEvent evt) {
-                                            if (comboType.getText().equals(
-                                                "Publish/Update")) //$NON-NLS-1$
-                                            {
-                                                labelTypeDescription
-                                                    .setText(Messages
-                                                        .getString("ProfileDetails.ProfileDescription.Publish")); //$NON-NLS-1$
-                                                buttonSourceBuffered
-                                                    .setSelection(false);
-                                                buttonDestinationBuffered
-                                                    .setSelection(true);
-                                            } else if (comboType.getText()
-                                                .equals("Backup Copy")) { //$NON-NLS-1$
-                                                labelTypeDescription
-                                                    .setText(Messages
-                                                        .getString("ProfileDetails.ProfileDescription.BackupCopy")); //$NON-NLS-1$
-                                                buttonSourceBuffered
-                                                    .setSelection(false);
-                                                buttonDestinationBuffered
-                                                    .setSelection(false);
-                                            } else if (comboType.getText()
-                                                .equals("Exact Copy")) { //$NON-NLS-1$
-                                                labelTypeDescription
-                                                    .setText(Messages
-                                                        .getString("ProfileDetails.ProfileDescription.ExactCopy")); //$NON-NLS-1$
-                                                buttonSourceBuffered
-                                                    .setSelection(false);
-                                                buttonDestinationBuffered
-                                                    .setSelection(false);
-                                            } else if (comboType.getText()
-                                                .equals("Two Way Sync")) { //$NON-NLS-1$
-                                                labelTypeDescription
-                                                    .setText(Messages
-                                                        .getString("ProfileDetails.ProfileDescription.TwoWaySync")); //$NON-NLS-1$
-                                                buttonSourceBuffered
-                                                    .setSelection(false);
-                                                buttonDestinationBuffered
-                                                    .setSelection(false);
-                                            }
-                                        }
-                                    });
-                            }
-                            {
-                                GridData labelTypeDescriptionLData = new GridData();
-                                labelTypeDescriptionLData.horizontalSpan = 2;
-                                labelTypeDescriptionLData.horizontalAlignment = GridData.FILL;
-                                labelTypeDescription = new Label(
-                                    groupGeneral,
-                                    SWT.WRAP);
-                                labelTypeDescription
-                                    .setLayoutData(labelTypeDescriptionLData);
-                                labelTypeDescription
-                                    .setText(Messages
-                                        .getString("ProfileDetails.Description.Label")); //$NON-NLS-1$
-                            }
-                        }
-                        {
-                            groupAutomated = new Group(
-                                compositeTabGeneral,
-                                SWT.NONE);
-                            GridLayout groupAutomatedLayout = new GridLayout();
-                            groupAutomatedLayout.makeColumnsEqualWidth = true;
-                            groupAutomatedLayout.numColumns = 2;
-                            groupAutomated.setLayout(groupAutomatedLayout);
-                            GridData groupAutomatedLData = new GridData();
-                            groupAutomatedLData.horizontalAlignment = GridData.FILL;
-                            groupAutomated
-                                .setLayoutData(groupAutomatedLData);
-                            groupAutomated.setText("Automated execution");
-                            {
-                                buttonScheduling = new Button(
-                                    groupAutomated,
-                                    SWT.PUSH | SWT.CENTER);
-                                buttonScheduling
-                                    .setText(Messages
-                                        .getString("ProfileDetails.Edit_Scheduling")); //$NON-NLS-1$
-                                buttonScheduling
-                                    .addSelectionListener(new SelectionAdapter() {
-                                        @Override
-										public void widgetSelected(
-                                            SelectionEvent evt) {
-                                            ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(
-                                                getShell(),
-                                                SWT.NULL);
-                                            dialog
-                                                .setSchedule((Schedule) buttonScheduling
-                                                    .getData());
-                                            dialog.open();
-
-                                            buttonScheduling.setData(dialog
-                                                .getSchedule());
-                                        }
-                                    });
-                            }
-                            {
-                                GridData buttonResetErrorLData = new GridData();
-                                buttonResetErrorLData.horizontalSpan = 2;
-                                buttonResetError = new Button(
-                                    groupAutomated,
-                                    SWT.CHECK | SWT.RIGHT);
-                                buttonResetError
-                                    .setLayoutData(buttonResetErrorLData);
-                                buttonResetError
-                                    .setText(Messages
-                                        .getString("ProfileDetails.Reset_ErrorFlag")); //$NON-NLS-1$
-                            }
-                            {
-                                GridData buttonEnabledLData = new GridData();
-                                buttonEnabledLData.horizontalSpan = 2;
-                                buttonEnabled = new Button(
-                                    groupAutomated,
-                                    SWT.CHECK | SWT.RIGHT);
-                                buttonEnabled
-                                    .setLayoutData(buttonEnabledLData);
-                                buttonEnabled.setText(Messages
-                                    .getString("ProfileDetails.Enabled")); //$NON-NLS-1$
-                            }
-                        }
-                    }
-                    {
-                        compositeTabLocations = new Composite(
-                            compositeMain,
-                            SWT.NONE);
-                        treeItemLocations.setData(compositeTabLocations);
-                        GridLayout compositeTabLocationsLayout = new GridLayout();
-                        GridData compositeTabLocationsLData = new GridData();
-                        compositeTabLocations
-                            .setLayoutData(compositeTabLocationsLData);
-                        compositeTabLocations
-                            .setLayout(compositeTabLocationsLayout);
-                        {
-                            groupSource = new Group(
-                                compositeTabLocations,
-                                SWT.NONE);
-                            GridLayout groupSourceLayout = new GridLayout();
-                            groupSource.setLayout(groupSourceLayout);
-                            GridData groupSourceLData = new GridData();
-                            groupSourceLData.grabExcessHorizontalSpace = true;
-                            groupSourceLData.horizontalAlignment = GridData.FILL;
-                            groupSourceLData.grabExcessVerticalSpace = true;
-                            groupSourceLData.verticalAlignment = GridData.FILL;
-                            groupSource.setLayoutData(groupSourceLData);
-                            groupSource.setText(Messages
-                                .getString("ProfileDetails.Source.Label")); //$NON-NLS-1$
-                            {
-                                GridData connectionConfigurationSourceLData = new GridData();
-                                connectionConfigurationSourceLData.horizontalAlignment = GridData.FILL;
-                                connectionConfigurationSourceLData.verticalAlignment = GridData.FILL;
-                                connectionConfigurationSourceLData.grabExcessHorizontalSpace = true;
-                                connectionConfigurationSource = new ConnectionConfiguration(
-                                    groupSource,
-                                    SWT.NONE);
-                                connectionConfigurationSource
-                                    .setLayoutData(connectionConfigurationSourceLData);
-                                /*
-                                connectionConfigurationSource
-                                    .addControlListener(new ControlAdapter() {
-                                    public void controlResized(
-                                        ControlEvent evt) {
-                                        if( ((StackLayout)compositeMain.getLayout()).topControl == compositeTabLocations )
-                                        {
-                                            compositeMain.pack();
-                                            scrolledComposite.layout();
-                                        }
-                                    }
-                                    });
-                                    */
-                            }
-                            {
-                                buttonSourceBuffered = new Button(
-                                    groupSource,
-                                    SWT.CHECK | SWT.LEFT);
-                                buttonSourceBuffered
-                                    .setText(Messages
-                                        .getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
-                                GridData buttonSourceBufferedLData = new GridData();
-                                buttonSourceBufferedLData.horizontalSpan = 3;
-                                buttonSourceBuffered
-                                    .setLayoutData(buttonSourceBufferedLData);
-                                buttonSourceBuffered.setEnabled(false);
-                            }
-
-                        }
-                        {
-                            groupDestination = new Group(
-                                compositeTabLocations,
-                                SWT.NONE);
-                            GridLayout groupDestinationLayout = new GridLayout();
-                            groupDestination
-                                .setLayout(groupDestinationLayout);
-                            GridData groupDestinationLData = new GridData();
-                            groupDestinationLData.horizontalAlignment = GridData.FILL;
-                            groupDestinationLData.grabExcessHorizontalSpace = true;
-                            groupDestinationLData.grabExcessVerticalSpace = true;
-                            groupDestinationLData.verticalAlignment = GridData.FILL;
-                            groupDestination
-                                .setLayoutData(groupDestinationLData);
-                            groupDestination
-                                .setText(Messages
-                                    .getString("ProfileDetails.Destination.Label")); //$NON-NLS-1$
-                            {
-                                connectionConfigurationDestination = new ConnectionConfiguration(
-                                    groupDestination,
-                                    SWT.NONE);
-                                GridData connectionConfiguration1LData = new GridData();
-                                connectionConfiguration1LData.verticalAlignment = GridData.FILL;
-                                connectionConfiguration1LData.horizontalAlignment = GridData.FILL;
-                                connectionConfiguration1LData.grabExcessHorizontalSpace = true;
-                                connectionConfigurationDestination
-                                    .setLayoutData(connectionConfiguration1LData);
-                                /*
-                                connectionConfigurationDestination
-                                    .addControlListener(new ControlAdapter() {
-                                    public void controlResized(
-                                        ControlEvent evt) {
-                                        if( ((StackLayout)compositeMain.getLayout()).topControl == compositeTabLocations )
-                                        {
-                                            compositeMain.pack();
-                                            scrolledComposite.layout();
-                                        }
-                                    }
-                                    });*/
-                            }
-                            {
-                                GridData buttonDestinationBufferedLData = new GridData();
-                                buttonDestinationBufferedLData.horizontalSpan = 3;
-                                buttonDestinationBuffered = new Button(
-                                    groupDestination,
-                                    SWT.CHECK | SWT.LEFT);
-                                buttonDestinationBuffered
-                                    .setLayoutData(buttonDestinationBufferedLData);
-                                buttonDestinationBuffered
-                                    .setText(Messages
-                                        .getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
-                                //buttonDestinationBuffered.setEnabled( false );
-                            }
-                        }
-                    }
-                    {
-                        compositeTabFilters = new Composite(
-                            compositeMain,
-                            SWT.NONE);
-                        treeItemFilters.setData(compositeTabFilters);
-                        GridLayout compositeTabFiltersLayout = new GridLayout();
-                        compositeTabFiltersLayout.makeColumnsEqualWidth = true;
-                        compositeTabFilters
-                            .setLayout(compositeTabFiltersLayout);
-                        {
-                            ruleSetGroup = new Group(
-                                compositeTabFilters,
-                                SWT.NONE);
-                            GridLayout ruleSetGroupLayout = new GridLayout();
-                            ruleSetGroupLayout.makeColumnsEqualWidth = true;
-                            ruleSetGroupLayout.horizontalSpacing = 20;
-                            GridData ruleSetGroupLData = new GridData();
-                            ruleSetGroupLData.horizontalAlignment = GridData.FILL;
-                            ruleSetGroupLData.grabExcessHorizontalSpace = true;
-                            ruleSetGroup.setLayoutData(ruleSetGroupLData);
-                            ruleSetGroup.setLayout(ruleSetGroupLayout);
-                            ruleSetGroup.setText(Messages
-                                .getString("ProfileDetails.RuleSet")); //$NON-NLS-1$
-                            {
-                                rbSimplyfiedRuleSet = new Button(
-                                    ruleSetGroup,
-                                    SWT.RADIO | SWT.LEFT);
-                                rbSimplyfiedRuleSet
-                                    .setText(Messages
-                                        .getString("ProfileDetails.Simple_Rule_Set")); //$NON-NLS-1$
-                                rbSimplyfiedRuleSet.setSelection(true);
-                                GridData rbSimplyfiedRuleSetLData = new GridData();
-                                rbSimplyfiedRuleSetLData.grabExcessHorizontalSpace = true;
-                                rbSimplyfiedRuleSetLData.horizontalAlignment = GridData.FILL;
-                                rbSimplyfiedRuleSet
-                                    .setLayoutData(rbSimplyfiedRuleSetLData);
-                                rbSimplyfiedRuleSet
-                                    .addSelectionListener(new SelectionAdapter() {
-                                        @Override
-										public void widgetSelected(
-                                            SelectionEvent evt) {
-                                            selectRuleSetButton(rbSimplyfiedRuleSet);
-                                        }
-                                    });
-                            }
-                            {
-                                simplyfiedOptionsGroup = new Group(
-                                    ruleSetGroup,
-                                    SWT.NONE);
-                                GridLayout simplyfiedOptionsGroupLayout = new GridLayout();
-                                GridData simplyfiedOptionsGroupLData = new GridData();
-                                simplyfiedOptionsGroupLData.verticalAlignment = GridData.BEGINNING;
-                                simplyfiedOptionsGroupLData.grabExcessHorizontalSpace = true;
-                                simplyfiedOptionsGroupLData.horizontalAlignment = GridData.FILL;
-                                simplyfiedOptionsGroup
-                                    .setLayoutData(simplyfiedOptionsGroupLData);
-                                simplyfiedOptionsGroupLayout.numColumns = 3;
-                                simplyfiedOptionsGroup
-                                    .setLayout(simplyfiedOptionsGroupLayout);
-                                simplyfiedOptionsGroup
-                                    .setText(Messages
-                                        .getString("ProfileDetails.Simple_Rule_Options")); //$NON-NLS-1$
-                                {
-                                    syncSubsButton = new Button(
-                                        simplyfiedOptionsGroup,
-                                        SWT.CHECK | SWT.LEFT);
-                                    syncSubsButton
-                                        .setText(Messages
-                                            .getString("ProfileDetails.Sync_SubDirs")); //$NON-NLS-1$
-                                    GridData syncSubsButtonLData = new GridData();
-                                    syncSubsButton
-                                        .setToolTipText(Messages
-                                            .getString("ProfileDetails.Rucurre")); //$NON-NLS-1$
-                                    syncSubsButtonLData.horizontalSpan = 3;
-                                    syncSubsButton
-                                        .setLayoutData(syncSubsButtonLData);
-                                }
-                                {
-                                    buttonUseFileFilter = new Button(
-                                        simplyfiedOptionsGroup,
-                                        SWT.CHECK | SWT.LEFT);
-                                    GridData buttonUseFileFilterLData = new GridData();
-                                    buttonUseFileFilterLData.horizontalSpan = 3;
-                                    buttonUseFileFilter
-                                        .setLayoutData(buttonUseFileFilterLData);
-                                    buttonUseFileFilter
-                                        .setText("Use file filter");
-                                    buttonUseFileFilter.setSelection(true);
-                                    buttonUseFileFilter
-                                        .addSelectionListener(new SelectionAdapter() {
-                                            @Override
-											public void widgetSelected(
-                                                SelectionEvent evt) {
-                                                if (buttonUseFileFilter
-                                                    .getSelection()) {
-                                                    label18
-                                                        .setEnabled(true);
-                                                    buttonFileFilter
-                                                        .setEnabled(true);
-                                                    textFilterDescription
-                                                        .setEnabled(true);
-                                                } else {
-                                                    label18
-                                                        .setEnabled(false);
-                                                    buttonFileFilter
-                                                        .setEnabled(false);
-                                                    textFilterDescription
-                                                        .setEnabled(false);
-                                                }
-                                            }
-                                        });
-                                }
-                                {
-                                    label18 = new Label(
-                                        simplyfiedOptionsGroup,
-                                        SWT.NONE);
-                                    label18.setText("Files Filter: ");
-                                }
-                                {
-                                    buttonFileFilter = new Button(
-                                        simplyfiedOptionsGroup,
-                                        SWT.PUSH | SWT.CENTER);
-                                    buttonFileFilter
-                                        .setText("Set Filter...");
-                                    GridData buttonFileFilterLData = new GridData();
-                                    buttonFileFilterLData.horizontalSpan = 2;
-                                    buttonFileFilter
-                                        .setLayoutData(buttonFileFilterLData);
-                                    buttonFileFilter
-                                        .addSelectionListener(new SelectionAdapter() {
-                                            @Override
-											public void widgetSelected(
-                                                SelectionEvent evt) {
-                                                try {
-                                                    WizardDialog dialog = new WizardDialog(
-                                                        getShell(),
-                                                        SWT.APPLICATION_MODAL);
-                                                    FileFilterPage page = new FileFilterPage(
-                                                        dialog,
-                                                        filter);
-                                                    dialog.show();
-                                                    FileFilter newfilter = page
-                                                        .getFileFilter();
-                                                    if (newfilter != null) {
-                                                        filter = newfilter;
-                                                        textFilterDescription
-                                                            .setText(filter
-                                                                .toString());
-                                                    }
-                                                } catch (Exception e) {
-                                                    ExceptionHandler
-                                                        .reportException(e);
-                                                }
-                                            }
-                                        });
-                                }
-                                {
-                                    textFilterDescription = new Text(
-                                        simplyfiedOptionsGroup,
-										SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-                                    GridData labelFilterDescriptionLData = new GridData();
-                                    labelFilterDescriptionLData.horizontalSpan = 3;
-                                    labelFilterDescriptionLData.horizontalAlignment = GridData.FILL;
-                                    labelFilterDescriptionLData.heightHint = 48;
-                                    labelFilterDescriptionLData.widthHint = 300;
-                                    labelFilterDescriptionLData.grabExcessHorizontalSpace = true;
-                                    textFilterDescription
-                                        .setLayoutData(labelFilterDescriptionLData);
-                                    textFilterDescription.setText("");
-                                }
-                            }
-                            {
-                                rbAdvancedRuleSet = new Button(
-                                    ruleSetGroup,
-                                    SWT.RADIO | SWT.LEFT);
-                                rbAdvancedRuleSet
-                                    .setText(Messages
-                                        .getString("ProfileDetails.Advanced_Rule_Set")); //$NON-NLS-1$
-                                GridData rbAdvancedRuleSetLData = new GridData();
-                                rbAdvancedRuleSetLData.grabExcessHorizontalSpace = true;
-                                rbAdvancedRuleSetLData.horizontalAlignment = GridData.FILL;
-                                rbAdvancedRuleSet
-                                    .setLayoutData(rbAdvancedRuleSetLData);
-                                rbAdvancedRuleSet
-                                    .addSelectionListener(new SelectionAdapter() {
-                                        @Override
-										public void widgetSelected(
-                                            SelectionEvent evt) {
-                                            selectRuleSetButton(rbAdvancedRuleSet);
-                                        }
-                                    });
-                            }
-                            {
-                                advancedRuleOptionsGroup = new Group(
-                                    ruleSetGroup,
-                                    SWT.NONE);
-                                GridLayout advancedRuleOptionsGroupLayout = new GridLayout();
-                                GridData advancedRuleOptionsGroupLData = new GridData();
-                                advancedRuleOptionsGroup.setEnabled(false);
-                                advancedRuleOptionsGroupLData.heightHint = 31;
-                                advancedRuleOptionsGroupLData.verticalAlignment = GridData.BEGINNING;
-                                advancedRuleOptionsGroupLData.grabExcessHorizontalSpace = true;
-                                advancedRuleOptionsGroupLData.horizontalAlignment = GridData.FILL;
-                                advancedRuleOptionsGroup
-                                    .setLayoutData(advancedRuleOptionsGroupLData);
-                                advancedRuleOptionsGroupLayout.numColumns = 2;
-                                advancedRuleOptionsGroup
-                                    .setLayout(advancedRuleOptionsGroupLayout);
-                                advancedRuleOptionsGroup
-                                    .setText(Messages
-                                        .getString("ProfileDetails.Advanced_Rule_Options")); //$NON-NLS-1$
-                                {
-                                    label4 = new Label(
-                                        advancedRuleOptionsGroup,
-                                        SWT.NONE);
-                                    GridData label4LData = new GridData();
-                                    label4.setEnabled(false);
-                                    label4.setLayoutData(label4LData);
-                                    label4
-                                        .setText(Messages
-                                            .getString("ProfileDetails.RuleSet_2")); //$NON-NLS-1$
-                                }
-                                {
-                                    textRuleSet = new Text(
-                                        advancedRuleOptionsGroup,
-                                        SWT.BORDER);
-                                    GridData textRuleSetLData = new GridData();
-                                    textRuleSet.setEnabled(false);
-                                    textRuleSetLData.widthHint = 100;
-                                    textRuleSetLData.heightHint = 13;
-                                    textRuleSet
-                                        .setLayoutData(textRuleSetLData);
-                                }
-                            }
-                        }
-                    }
-                    {
-                        compositeTabSubdirs = new Composite(
-                            compositeMain,
-                            SWT.NONE);
-                        treeItemSubDirs.setData(compositeTabSubdirs);
-                        GridData compositeTabSubdirsLData = new GridData();
-                        compositeTabSubdirs
-                            .setLayoutData(compositeTabSubdirsLData);
-                        GridLayout compositeTabSubdirsLayout = new GridLayout();
-                        compositeTabSubdirsLayout.numColumns = 2;
-                        compositeTabSubdirsLayout.makeColumnsEqualWidth = false;
-                        compositeTabSubdirs
-                            .setLayout(compositeTabSubdirsLayout);
-                        {
-                            {
-                                GridData directoryTreeLData = new GridData();
-                                directoryTreeLData.grabExcessHorizontalSpace = true;
-                                directoryTreeLData.grabExcessVerticalSpace = true;
-                                directoryTreeLData.horizontalAlignment = GridData.FILL;
-                                directoryTreeLData.verticalAlignment = GridData.FILL;
-                                directoryTree = new Tree(
-                                    compositeTabSubdirs,
-                                    SWT.BORDER | SWT.SINGLE);
-                                directoryTree.setSize(100, 100);
-                                directoryTree
-                                    .setLayoutData(directoryTreeLData);
-                                directoryTree
-                                    .addTreeListener(new TreeAdapter() {
-                                        @Override
-										public void treeExpanded(
-                                            TreeEvent evt) {
-                                            TreeItem item = (TreeItem) evt.item;
-                                            TreeItem[] childrens = item
-                                                .getItems();
-                                            for (int i = 0; i < childrens.length; i++) {
-                                                if (childrens[i]
-                                                    .getData(EXPANDED_KEY) == null) {
-                                                    File file = (File) childrens[i]
-                                                        .getData();
-                                                    try {
-                                                        addChildren(
-                                                            file,
-                                                            childrens[i]);
-                                                    } catch (IOException e) {
-                                                        ExceptionHandler
-                                                            .reportException(e);
-                                                    }
-                                                    childrens[i].setData(
-                                                        EXPANDED_KEY,
-                                                        new Object());
-                                                    //												updateDirectoryTree(childrens[i], item.getForeground());
-                                                }
-                                            }
-                                        }
-                                    });
-                                directoryTree.addSelectionListener(new SelectionAdapter() {
-									@Override
-									public void widgetSelected(SelectionEvent evt) {
-										buttonFilter.setEnabled(true);
-										TreeItem item = (TreeItem) evt.item;
-										FileFilter currentItemFilter = (FileFilter)item.getData(FILTER_KEY);
-										if (currentItemFilter != null) {
-											buttonRemoveFilter.setEnabled(true);
-										}
-										else {
-											buttonRemoveFilter.setEnabled(false);
-										}
-									}
-								});
-                            }
-                            {
-                                Composite compositeButtons = new Composite(
-                                    compositeTabSubdirs,
-                                    SWT.NONE);
-                                GridLayout compositeButtonsLayout = new GridLayout();
-                                compositeButtonsLayout.makeColumnsEqualWidth = true;
-                                GridData compositeButtonsLData = new GridData();
-                                compositeButtonsLData.grabExcessVerticalSpace = true;
-                                compositeButtonsLData.verticalAlignment = GridData.FILL;
-                                compositeButtons
-                                    .setLayoutData(compositeButtonsLData);
-                                compositeButtons
-                                    .setLayout(compositeButtonsLayout);
-                                {
-                                    buttonFilter = new Button(
-                                        compositeButtons,
-                                        SWT.PUSH | SWT.CENTER);
-                                    buttonFilter.setText("Set Filter...");
-
-                                    buttonFilter
-                                        .addSelectionListener(new SelectionAdapter() {
-                                            @Override
-											public void widgetSelected(
-                                                SelectionEvent arg0) {
-                                                TreeItem[] selectedItems = directoryTree
-                                                    .getSelection();
-
-                                                if (selectedItems.length <= 0) {
-                                                    return;
-                                                }
-
-                                                TreeItem selectedItem = selectedItems[0];
-                                                FileFilter currentItemFilter = (FileFilter) selectedItem
-                                                    .getData(FILTER_KEY);
-
-                                                WizardDialog dialog = new WizardDialog(
-                                                    getShell(),
-                                                    SWT.APPLICATION_MODAL);
-                                                FileFilterPage page = new FileFilterPage(
-                                                    dialog,
-                                                    currentItemFilter);
-                                                dialog.show();
-                                                FileFilter newfilter = page
-                                                    .getFileFilter();
-                                                if (newfilter != null) {
-                                                    selectedItem.setData(
-                                                        FILTER_KEY,
-                                                        newfilter);
-                                                    treeItemsWithFilter
-                                                        .add(selectedItem);
-                                                    File file = (File) selectedItem
-                                                        .getData();
-                                                    itemsMap.put(
-                                                        file.getPath(),
-                                                        newfilter);
-                                                    markItem(selectedItem);
-                                                    buttonRemoveFilter.setEnabled(true);
-                                                }
-                                            }
-                                        });
-                                }
-                                {
-                                    buttonRemoveFilter = new Button(
-                                        compositeButtons,
-                                        SWT.PUSH | SWT.CENTER);
-                                    buttonRemoveFilter
-                                        .setText("Remove Filter");
-                                    buttonRemoveFilter.setEnabled(false);
-
-                                    buttonRemoveFilter
-                                        .addSelectionListener(new SelectionAdapter() {
-                                            @Override
-											public void widgetSelected(
-                                                SelectionEvent arg0) {
-                                                TreeItem[] selectedItems = directoryTree
-                                                    .getSelection();
-
-                                                if (selectedItems.length <= 0) {
-                                                    return;
-                                                }
-
-                                                TreeItem selectedItem = selectedItems[0];
-                                                treeItemsWithFilter
-                                                    .remove(selectedItem);
-                                                File file = (File) selectedItem
-                                                    .getData();
-                                                itemsMap.remove(file
-                                                    .getPath());
-                                                unmarkItem(selectedItem);
-                                            }
-                                        });
-                                }
-
-                            }
-                        }
-
-                    }
-
-                }
-				sashForm.setWeights(new int[] {2,5});
+				catch (Exception e) {
+					ExceptionHandler.reportException(e);
+				}
 			}
-			comboType.add( "Publish/Update" ); //$NON-NLS-1$
-			comboType.add( "Backup Copy" ); //$NON-NLS-1$
-			comboType.add( "Exact Copy" ); //$NON-NLS-1$
-			comboType.add( "Two Way Sync" ); //$NON-NLS-1$
+		});
 
-			this.layout();
-			this.setSize(609, 533);
+		textFilterDescription = new Text(c, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		GridData labelFilterDescriptionData = new GridData();
+		labelFilterDescriptionData.horizontalSpan = 2;
+		labelFilterDescriptionData.horizontalAlignment = SWT.FILL;
+		labelFilterDescriptionData.heightHint = 48;
+		labelFilterDescriptionData.grabExcessHorizontalSpace = true;
+		textFilterDescription.setLayoutData(labelFilterDescriptionData);
+		textFilterDescription.setText("");
+		textFilterDescription.setEditable(false);
 
-			postInitGUI();
-		} catch (Exception e) {
-			ExceptionHandler.reportException( e );
-		}
+		rbAdvancedRuleSet = new Button(c, SWT.RADIO | SWT.LEFT);
+		rbAdvancedRuleSet.setText(Messages.getString("ProfileDetails.Advanced_Rule_Set")); //$NON-NLS-1$
+		GridData rbAdvancedRuleSetData = new GridData();
+		rbAdvancedRuleSetData.grabExcessHorizontalSpace = true;
+		rbAdvancedRuleSetData.horizontalSpan = 2;
+		rbAdvancedRuleSetData.horizontalAlignment = SWT.FILL;
+		rbAdvancedRuleSet.setLayoutData(rbAdvancedRuleSetData);
+		rbAdvancedRuleSet.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent evt) {
+				selectRuleSetButton(rbAdvancedRuleSet);
+			}
+		});
+
+		labelRuleName = new Label(c, SWT.NONE);
+		GridData label4LData = new GridData();
+		labelRuleName.setEnabled(false);
+		labelRuleName.setLayoutData(label4LData);
+		labelRuleName.setText(Messages.getString("ProfileDetails.RuleSet_2")); //$NON-NLS-1$
+		textRuleSet = new Text(c, SWT.BORDER);
+		GridData textRuleSetData = new GridData(SWT.FILL);
+		textRuleSet.setEnabled(false);
+		textRuleSetData.heightHint = 13;
+		textRuleSetData.grabExcessHorizontalSpace = true;
+		textRuleSetData.horizontalAlignment = SWT.FILL;
+		textRuleSet.setLayoutData(textRuleSetData);
+
+		return c;
 	}
-	/** Add your pre-init code in here 	*/
-	public void preInitGUI(){
+
+	/**
+	 * initSubDirsTab creates all controls of the fourth tab.
+	 * 
+	 * @param parent
+	 *            parent element for the control
+	 * @return composite to be placed inside the subdirectories tab
+	 */
+	private Composite initSubDirsTab(final Composite parent) {
+		Composite c = new Composite(parent, SWT.NONE);
+		c.setLayout(new GridLayout(2, false));
+
+		// tree
+		directoryTree = new Tree(c, SWT.BORDER | SWT.SINGLE);
+		GridData directoryTreeData = new GridData();
+		directoryTreeData.grabExcessHorizontalSpace = true;
+		directoryTreeData.grabExcessVerticalSpace = true;
+		directoryTreeData.horizontalAlignment = SWT.FILL;
+		directoryTreeData.verticalAlignment = SWT.FILL;
+		directoryTree.setLayoutData(directoryTreeData);
+		directoryTree.addTreeListener(new TreeAdapter() {
+			@Override
+			public void treeExpanded(final TreeEvent evt) {
+				TreeItem item = (TreeItem) evt.item;
+				TreeItem[] childrens = item.getItems();
+				for (TreeItem children : childrens) {
+					if (children.getData(EXPANDED_KEY) == null) {
+						File file = (File) children.getData();
+						try {
+							addChildren(file, children);
+						}
+						catch (IOException e) {
+							ExceptionHandler.reportException(e);
+						}
+						children.setData(EXPANDED_KEY, new Object());
+					}
+				}
+			}
+		});
+		directoryTree.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent evt) {
+				buttonSetFilter.setEnabled(true);
+				TreeItem item = (TreeItem) evt.item;
+				FileFilter currentItemFilter = (FileFilter) item.getData(FILTER_KEY);
+				if (currentItemFilter != null) {
+					buttonRemoveFilter.setEnabled(true);
+				}
+				else {
+					buttonRemoveFilter.setEnabled(false);
+				}
+			}
+		});
+		// buttons next to the tree
+		Composite compositeButtons = new Composite(c, SWT.NONE);
+		GridLayout compositeButtonsLayout = new GridLayout();
+		compositeButtonsLayout.makeColumnsEqualWidth = true;
+		GridData compositeButtonsData = new GridData();
+		compositeButtonsData.grabExcessVerticalSpace = true;
+		compositeButtonsData.verticalAlignment = SWT.FILL;
+		compositeButtons.setLayoutData(compositeButtonsData);
+		compositeButtons.setLayout(compositeButtonsLayout);
+
+		// add filter button
+		buttonSetFilter = new Button(compositeButtons, SWT.PUSH | SWT.CENTER);
+		GridData buttonSetFilterData = new GridData();
+		buttonSetFilterData.widthHint = UISettings.BUTTON_WIDTH;
+		buttonSetFilter.setLayoutData(buttonSetFilterData);
+		buttonSetFilter.setText("Set Filter...");
+		buttonSetFilter.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent evt) {
+				TreeItem[] selectedItems = directoryTree.getSelection();
+				if (selectedItems.length > 0) {
+					TreeItem selectedItem = selectedItems[0];
+					FileFilter currentItemFilter = (FileFilter) selectedItem.getData(FILTER_KEY);
+					WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
+					FileFilterPage page = new FileFilterPage(dialog, currentItemFilter);
+					dialog.show();
+					FileFilter newfilter = page.getFileFilter();
+					if (newfilter != null) {
+						selectedItem.setData(FILTER_KEY, newfilter);
+						treeItemsWithFilter.add(selectedItem);
+						File file = (File) selectedItem.getData();
+						itemsMap.put(file.getPath(), newfilter);
+						markItem(selectedItem);
+						buttonRemoveFilter.setEnabled(true);
+					}
+				}
+			}
+		});
+
+		// remove filter button
+		buttonRemoveFilter = new Button(compositeButtons, SWT.PUSH | SWT.CENTER);
+		GridData buttonRemoveFilterData = new GridData();
+		buttonRemoveFilterData.widthHint = UISettings.BUTTON_WIDTH;
+		buttonRemoveFilter.setLayoutData(buttonRemoveFilterData);
+		buttonRemoveFilter.setText("Remove Filter");
+		buttonRemoveFilter.setEnabled(false);
+		buttonRemoveFilter.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent evt) {
+				TreeItem[] selectedItems = directoryTree.getSelection();
+				if (selectedItems.length > 0) {
+					TreeItem selectedItem = selectedItems[0];
+					treeItemsWithFilter.remove(selectedItem);
+					File file = (File) selectedItem.getData();
+					itemsMap.remove(file.getPath());
+					unmarkItem(selectedItem);
+				}
+			}
+		});
+
+		return c;
 	}
 
-	/** Add your post-init code in here 	*/
-	public void postInitGUI()
-	{
-		comboType.select(0);
-		//	    comboPatternsType.select(0);
-	}
-
-	public void setProfileManager( ProfileManager manager )
-	{
+	public void setProfileManager(final ProfileManager manager) {
 		this.profileManager = manager;
 	}
-	public void setProfileName( String name )
-	{
+
+	public void setProfileName(final String name) {
 		this.profileName = name;
 
-		if( profileName == null )
+		comboType.select(0);
+
+		if (this.profileName == null) {
 			return;
+		}
 
-		Profile p = profileManager.getProfile( profileName );
-		if( p == null )
-			throw new IllegalArgumentException( Messages.getString("ProfileDetails.profile_does_not_exist") ); //$NON-NLS-1$
+		Profile p = profileManager.getProfile(profileName);
+		if (p == null) {
+			throw new IllegalArgumentException(Messages.getString("ProfileDetails.profile_does_not_exist")); //$NON-NLS-1$
+		}
 
-		textName.setText( p.getName() );
-		textDescription.setText( p.getDescription() );
+		textProfileName.setText(p.getName());
+		textProfileDescription.setText(p.getDescription());
 		try {
-            connectionConfigurationSource.setLocationDescription( new LocationDescription( p.getSource() ) );
-        } catch( URISyntaxException e1 ) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-		buttonSourceBuffered.setSelection( "syncfiles".equals( p.getSource().getBufferStrategy() ) ); //$NON-NLS-1$
-        try {
-            connectionConfigurationDestination.setLocationDescription( new LocationDescription( p.getDestination() ) );
-        } catch( URISyntaxException e ) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-		buttonDestinationBuffered.setSelection( "syncfiles".equals( p.getDestination().getBufferStrategy() ) ); //$NON-NLS-1$
+			srcConnectionConfiguration.setLocationDescription(new LocationDescription(p.getSource()));
+		}
+		catch (URISyntaxException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		buttonSourceBuffered.setSelection("syncfiles".equals(p.getSource().getBufferStrategy())); //$NON-NLS-1$
+		try {
+			dstConnectionConfiguration.setLocationDescription(new LocationDescription(p.getDestination()));
+		}
+		catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		buttonDestinationBuffered.setSelection("syncfiles".equals(p.getDestination().getBufferStrategy())); //$NON-NLS-1$
 
-		if( p.getSynchronizationType() != null && p.getSynchronizationType().length() > 0 )
-			comboType.setText( p.getSynchronizationType() );
-		else comboType.select( 0 );
+		if ((p.getSynchronizationType() != null) && (p.getSynchronizationType().length() > 0)) {
+			comboType.setText(p.getSynchronizationType());
+		}
 
-		buttonScheduling.setData( p.getSchedule() );
-		buttonEnabled.setSelection( p.isEnabled() );
+		buttonScheduling.setData(p.getSchedule());
+		buttonEnabled.setSelection(p.isEnabled());
 
 		RuleSetDescriptor ruleSetDescriptor = p.getRuleSet();
 		filter = null;
@@ -997,7 +593,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			selectRuleSetButton(rbSimplyfiedRuleSet);
 			rbSimplyfiedRuleSet.setSelection(true);
 			rbAdvancedRuleSet.setSelection(false);
-			SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor)ruleSetDescriptor;
+			SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor) ruleSetDescriptor;
 			syncSubsButton.setSelection(simpleDesc.isSyncSubDirs());
 			FileFilter fileFilter = simpleDesc.getFileFilter();
 			filter = fileFilter;
@@ -1010,12 +606,12 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			boolean useFilter = simpleDesc.isUseFilter();
 			buttonUseFileFilter.setSelection(useFilter);
 			if (useFilter) {
-				label18.setEnabled(true);
+				labelFilesFilter.setEnabled(true);
 				buttonFileFilter.setEnabled(true);
 				textFilterDescription.setEnabled(true);
 			}
 			else {
-				label18.setEnabled(false);
+				labelFilesFilter.setEnabled(false);
 				buttonFileFilter.setEnabled(false);
 				textFilterDescription.setEnabled(false);
 			}
@@ -1023,10 +619,8 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			if (fileFilterTree != null) {
 				itemsMap = fileFilterTree.getItemsMap();
 			}
-			else {
-				itemsMap = new HashMap();
-			}
-		} else {
+		}
+		else {
 			selectRuleSetButton(rbAdvancedRuleSet);
 			rbSimplyfiedRuleSet.setSelection(false);
 			rbAdvancedRuleSet.setSelection(true);
@@ -1038,13 +632,9 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	private void drawDirectoryTree() {
 		directoryTree.setRedraw(false);
 		directoryTree.removeAll();
-
 		try {
 			File rootFile = sourceSite.getRoot();
-			Collection children = rootFile.getChildren();
-			Iterator it = children.iterator();
-			while (it.hasNext()) {
-				File file = (File)it.next();
+			for (File file : rootFile.getChildren()) {
 				if (file.isDirectory()) {
 					TreeItem item = new TreeItem(directoryTree, SWT.NULL);
 					item.setText(file.getName());
@@ -1059,18 +649,15 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 					item.setData(EXPANDED_KEY, new Object());
 				}
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			ExceptionHandler.reportException(e);
 		}
-
 		directoryTree.setRedraw(true);
 	}
 
 	private void addChildren(File rootFile, TreeItem item) throws IOException {
-		Collection children = rootFile.getChildren();
-		Iterator it = children.iterator();
-		while (it.hasNext()) {
-			File file = (File)it.next();
+		for (File file : rootFile.getChildren()) {
 			if (file.isDirectory()) {
 				TreeItem childrenItem = new TreeItem(item, SWT.NULL);
 				childrenItem.setText(file.getName());
@@ -1088,7 +675,7 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 	private void markItem(TreeItem item) {
 		String text = item.getText();
 		if (text.charAt(0) != '*') {
-			item.setText('*'+text);
+			item.setText('*' + text);
 		}
 	}
 
@@ -1099,90 +686,44 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 		}
 	}
 
-
-//	private void updateDirectoryTree(TreeItem rootItem, Color defaultColor) {
-//		Color theColor = defaultColor;
-//		if (rootItem != null) {
-//			if (includedDirs.contains(rootItem.getData())) {
-//				theColor = selectedColor;
-//			}
-//			else if (excludedDirs.contains(rootItem.getData())) {
-//				theColor = unselectedColor;
-//			}
-//			else {
-//				theColor = defaultColor;
-//			}
-//			rootItem.setForeground(theColor);
-//
-//			String text = rootItem.getText();
-//			if (filterDirs.contains(rootItem.getData())) {
-//				if (text.charAt(0) != '*') {
-//					rootItem.setText('*'+text);
-//				}
-//			}
-//			else {
-//				if (text.charAt(0) == '*') {
-//					rootItem.setText(text.substring(1));
-//				}
-//			}
-//
-//			TreeItem[] childrens = rootItem.getItems();
-//			for (int i = 0; i < childrens.length; i++) {
-//				updateDirectoryTree(childrens[i], theColor);
-//			}
-//		}
-//		else {
-//			TreeItem[] childrens = directoryTree.getItems();
-//			for (int i = 0; i < childrens.length; i++) {
-//				updateDirectoryTree(childrens[i], defaultColor);
-//			}
-//		}
-//
-//	}
-
-	public static void showProfile( Shell parent, ProfileManager manager, String name ){
+	public static void showProfile(Shell parent, ProfileManager manager, String name) {
 		try {
-			WizardDialog dialog = new WizardDialog( parent, SWT.APPLICATION_MODAL );
-			ProfileDetailsPage page = new ProfileDetailsPage( dialog, manager, name );
+			WizardDialog dialog = new WizardDialog(parent, SWT.APPLICATION_MODAL);
+			new ProfileDetailsPage(dialog, manager, name);
 			dialog.show();
-		} catch (Exception e) {
-			ExceptionHandler.reportException( e );
+		}
+		catch (Exception e) {
+			ExceptionHandler.reportException(e);
 		}
 	}
 
-	public void apply()
-	{
+	public void apply() {
 		closeSourceSite();
 
 		ConnectionDescription src, dst;
 		try {
 			src = getSourceConnection();
 			dst = getDestinationConnection();
-		} catch( Exception e ) {
-			ExceptionHandler.reportException( e );
+		}
+		catch (Exception e) {
+			ExceptionHandler.reportException(e);
 			return;
 		}
 
-		if( profileName == null || !textName.getText().equals( profileName ) )
-		{
-			Profile pr = profileManager.getProfile( textName.getText() );
-			if( pr != null )
-			{
-				MessageBox mb = new MessageBox( this.getShell(), SWT.ICON_ERROR );
-				mb.setText( Messages.getString("ProfileDetails.Duplicate_Entry") ); //$NON-NLS-1$
-				mb.setMessage( Messages.getString("ProfileDetails.Profile_already_exists") ); //$NON-NLS-1$
+		if ((profileName == null) || !textProfileName.getText().equals(profileName)) {
+			Profile pr = profileManager.getProfile(textProfileName.getText());
+			if (pr != null) {
+				MessageBox mb = new MessageBox(this.getShell(), SWT.ICON_ERROR);
+				mb.setText(Messages.getString("ProfileDetails.Duplicate_Entry")); //$NON-NLS-1$
+				mb.setMessage(Messages.getString("ProfileDetails.Profile_already_exists")); //$NON-NLS-1$
 				mb.open();
 				return;
 			}
 		}
-
 		Profile p;
-
 		RuleSetDescriptor ruleSetDescriptor = null;
 		if (rbSimplyfiedRuleSet.getSelection()) {
-			ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(),
-					filter,
-					buttonUseFileFilter.getSelection(),
+			ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), filter, buttonUseFileFilter.getSelection(),
 					getFileFilterTree());
 		}
 		if (rbAdvancedRuleSet.getSelection()) {
@@ -1190,30 +731,32 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			ruleSetDescriptor = new AdvancedRuleSetDescriptor(ruleSetName);
 		}
 
-		if( profileName == null )
-		{
-			p = new Profile( textName.getText(), src, dst, ruleSetDescriptor );
-			p.setSynchronizationType( comboType.getText() );
-			p.setDescription( textDescription.getText() );
-			p.setSchedule( (Schedule)buttonScheduling.getData() );
-			p.setEnabled( buttonEnabled.getSelection() );
-			if( buttonResetError.getSelection() )
-				p.setLastError( 0, null );
-			profileManager.addProfile( p );
-		} else {
-			p = profileManager.getProfile( profileName );
+		if (profileName == null) {
+			p = new Profile(textProfileName.getText(), src, dst, ruleSetDescriptor);
+			p.setSynchronizationType(comboType.getText());
+			p.setDescription(textProfileDescription.getText());
+			p.setSchedule((Schedule) buttonScheduling.getData());
+			p.setEnabled(buttonEnabled.getSelection());
+			if (buttonResetError.getSelection()) {
+				p.setLastError(0, null);
+			}
+			profileManager.addProfile(p);
+		}
+		else {
+			p = profileManager.getProfile(profileName);
 			p.beginUpdate();
-			p.setName( textName.getText() );
-			p.setDescription( textDescription.getText() );
-			p.setSynchronizationType( comboType.getText() );
-			p.setSource( src );
-			p.setDestination( dst );
-			p.setSchedule( (Schedule)buttonScheduling.getData() );
-			p.setEnabled( buttonEnabled.getSelection() );
+			p.setName(textProfileName.getText());
+			p.setDescription(textProfileDescription.getText());
+			p.setSynchronizationType(comboType.getText());
+			p.setSource(src);
+			p.setDestination(dst);
+			p.setSchedule((Schedule) buttonScheduling.getData());
+			p.setEnabled(buttonEnabled.getSelection());
 
-			p.setRuleSet( ruleSetDescriptor );
-			if( buttonResetError.getSelection() )
-				p.setLastError( 0, null );
+			p.setRuleSet(ruleSetDescriptor);
+			if (buttonResetError.getSelection()) {
+				p.setLastError(0, null);
+			}
 			p.endUpdate();
 		}
 		profileManager.save();
@@ -1221,60 +764,63 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 
 	private ConnectionDescription getDestinationConnection() {
 		ConnectionDescription dst;
-        try {
-            dst = connectionConfigurationDestination.getLocationDescription().toConnectionDescription();
-        } catch( URISyntaxException e ) {
-            return null;
-        }
-		if( buttonDestinationBuffered.getSelection() )
-			dst.setBufferStrategy( "syncfiles" ); //$NON-NLS-1$
+		try {
+			dst = dstConnectionConfiguration.getLocationDescription().toConnectionDescription();
+		}
+		catch (URISyntaxException e) {
+			return null;
+		}
+		if (buttonDestinationBuffered.getSelection()) {
+			dst.setBufferStrategy("syncfiles"); //$NON-NLS-1$
+		}
 		return dst;
 	}
 
 	private ConnectionDescription getSourceConnection() {
-        ConnectionDescription dst = null;
-        try {
-            dst = connectionConfigurationSource.getLocationDescription().toConnectionDescription();
-        } catch( URISyntaxException e ) {
-            return null;
-        }
-        if( buttonSourceBuffered.getSelection() )
-            dst.setBufferStrategy( "syncfiles" ); //$NON-NLS-1$
-        return dst;
+		ConnectionDescription dst = null;
+		try {
+			dst = srcConnectionConfiguration.getLocationDescription().toConnectionDescription();
+		}
+		catch (URISyntaxException e) {
+			return null;
+		}
+		if (buttonSourceBuffered.getSelection()) {
+			dst.setBufferStrategy("syncfiles"); //$NON-NLS-1$
+		}
+		return dst;
 	}
 
-	/** Auto-generated event handler method */
-	protected void buttonCancelWidgetSelected(SelectionEvent evt){
+	protected void buttonCancelWidgetSelected(SelectionEvent evt) {
 		closeSourceSite();
 		getShell().dispose();
 	}
 
-
 	protected void selectRuleSetButton(Button button) {
-
 		if (button.equals(rbSimplyfiedRuleSet)) {
-			advancedRuleOptionsGroup.setEnabled(false);
-			label4.setEnabled(false);
+			labelRuleName.setEnabled(false);
 			textRuleSet.setEnabled(false);
-			simplyfiedOptionsGroup.setEnabled(true);
 			syncSubsButton.setEnabled(true);
+			buttonUseFileFilter.setEnabled(true);
+			if (buttonUseFileFilter.getSelection()) {
+				labelFilesFilter.setEnabled(true);
+				buttonFileFilter.setEnabled(true);
+				textFilterDescription.setEnabled(true);
+			}
 		}
 		else {
-			advancedRuleOptionsGroup.setEnabled(true);
-			label4.setEnabled(true);
+			labelRuleName.setEnabled(true);
 			textRuleSet.setEnabled(true);
-			simplyfiedOptionsGroup.setEnabled(false);
 			syncSubsButton.setEnabled(false);
+			buttonUseFileFilter.setEnabled(false);
+			labelFilesFilter.setEnabled(false);
+			buttonFileFilter.setEnabled(false);
+			textFilterDescription.setEnabled(false);
 		}
 
 	}
 
 	private void treeTabsWidgetSelected(SelectionEvent evt) {
-		((StackLayout)compositeMain.getLayout()).topControl =
-			(Composite)treeTabs.getSelection()[0].getData();
-		compositeMain.layout();
-
-		if (treeTabs.getSelection()[0] == treeItemSubDirs) {
+		if (evt.item == tabs.getItem(3)) {
 			if (sourceSite == null) {
 				directoryTree.removeAll();
 				TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
@@ -1289,25 +835,29 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 						try {
 							sourceSite = fsm.createConnection(src);
 							drawDirectoryTree();
-						} catch (FileSystemException e) {
+						}
+						catch (FileSystemException e) {
 							ExceptionHandler.reportException(e);
 							directoryTree.removeAll();
 							TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
 							loadingIem.setText("Unable to load source dir");
 							loadingIem.setImage(GuiController.getInstance().getImage("Error.png"));
-						} catch (IOException e) {
+						}
+						catch (IOException e) {
 							ExceptionHandler.reportException(e);
 							directoryTree.removeAll();
 							TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
 							loadingIem.setText("Unable to load source dir");
 							loadingIem.setImage(GuiController.getInstance().getImage("Error.png"));
-						} catch (URISyntaxException e) {
+						}
+						catch (URISyntaxException e) {
 							ExceptionHandler.reportException(e);
 							directoryTree.removeAll();
 							TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
 							loadingIem.setText("Unable to load source dir");
 							loadingIem.setImage(GuiController.getInstance().getImage("Error.png"));
-						} catch (net.sourceforge.fullsync.FileSystemException e) {
+						}
+						catch (net.sourceforge.fullsync.FileSystemException e) {
 							// FIXME Jan can you check this? I had to add it after an update. I have probably
 							// made a mess with the merge.
 							ExceptionHandler.reportException(e);
@@ -1319,21 +869,18 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 					}
 				});
 			}
-
 		}
-
 	}
 
 	private FileFilterTree getFileFilterTree() {
 		int numOfNodes = treeItemsWithFilter.size();
 		FileFilterTree fileFilterTree = new FileFilterTree();
 		for (int i = 0; i < numOfNodes; i++) {
-			TreeItem item = (TreeItem)treeItemsWithFilter.get(i);
-			FileFilter itemFilter = (FileFilter)item.getData(FILTER_KEY);
-			File itemFile = (File)item.getData();
+			TreeItem item = (TreeItem) treeItemsWithFilter.get(i);
+			FileFilter itemFilter = (FileFilter) item.getData(FILTER_KEY);
+			File itemFile = (File) item.getData();
 			fileFilterTree.addFileFilter(itemFile.getPath(), itemFilter);
 		}
-
 		return fileFilterTree;
 	}
 
@@ -1342,8 +889,14 @@ public class ProfileDetailsTabbed extends org.eclipse.swt.widgets.Composite {
 			try {
 				sourceSite.close();
 				sourceSite = null;
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 			}
 		}
+	}
+
+	@Override
+	public final void widgetDisposed(final DisposeEvent e) {
+		closeSourceSite();
 	}
 }

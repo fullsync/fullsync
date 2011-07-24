@@ -660,8 +660,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite
 
 
 	@Override
-	public void createNewProfile()
-	{
+	public void createNewProfile() {
 		ProfileDetails.showProfile( getShell(), guiController.getProfileManager(), null );
 	}
 

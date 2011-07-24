@@ -14,19 +14,19 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 public class FileFilterTree {
 		
 	private FileFilterTreeItem root;
-	private HashMap itemsMap;
+	private HashMap<String, FileFilter> itemsMap;
 	
 	// TODO is this the correct path separator?
 	private String separator = "/";
 	
 	public FileFilterTree() {
 		this.root = new FileFilterTreeItem();
-		this.itemsMap = new HashMap();
+		this.itemsMap = new HashMap<String, FileFilter>();
 	}
 
 	public FileFilterTree(String separator) {
 		this.root = new FileFilterTreeItem();
-		this.itemsMap = new HashMap();
+		this.itemsMap = new HashMap<String, FileFilter>();
 		this.separator = separator;
 	}
 		
@@ -70,7 +70,7 @@ public class FileFilterTree {
 		return parentFilter;
 	}
 	
-	public HashMap getItemsMap() {
+	public HashMap<String, FileFilter> getItemsMap() {
 		return itemsMap;
 	}
 	

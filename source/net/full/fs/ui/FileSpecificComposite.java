@@ -1,3 +1,23 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ * 
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
+
 package net.full.fs.ui;
 
 import java.io.File;
@@ -24,7 +44,7 @@ public class FileSpecificComposite extends ProtocolSpecificComposite
         super( parent, style );
         initialize();
     }
-    
+
     public void initialize()
     {
         GridData gridData = new org.eclipse.swt.layout.GridData();
@@ -39,7 +59,8 @@ public class FileSpecificComposite extends ProtocolSpecificComposite
         buttonBrowse.setText("...");
         buttonBrowse
                 .addSelectionListener( new org.eclipse.swt.events.SelectionAdapter() {
-                    public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
+                    @Override
+					public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
                     {
                         DirectoryDialog d = new DirectoryDialog( getShell() );
                         String dir = d.open();
@@ -52,21 +73,24 @@ public class FileSpecificComposite extends ProtocolSpecificComposite
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 3;
         this.setLayout(gridLayout);
-        
+
     }
-    
-    public LocationDescription getLocationDescription() throws URISyntaxException
+
+    @Override
+	public LocationDescription getLocationDescription() throws URISyntaxException
     {
         return new LocationDescription( new URI( textPath.getText() ) );
     }
 
-    public void setLocationDescription( LocationDescription location )
+    @Override
+	public void setLocationDescription( LocationDescription location )
     {
         textPath.setText( location.getUri().toString() );
     }
-    
-    public void reset( String scheme )
+
+    @Override
+	public void reset( String scheme )
     {
-        textPath.setText( "file:///C:/" );
+        textPath.setText("");
     }
 }
