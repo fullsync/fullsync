@@ -57,17 +57,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 
 	}
 
-	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, String ignorePatter, String acceptPatter, String patternsType,
-			FileFilter fileFilter, boolean useFilter, FileFilterTree fileFilterTree) {
-		this.syncSubDirs = syncSubDirs;
-		this.ignorePattern = ignorePatter;
-		this.takePattern = acceptPatter;
-		this.patternsType = patternsType;
-		this.fileFilter = fileFilter;
-		this.useFilter = useFilter;
-		this.fileFilterTree = fileFilterTree;
-	}
-
 	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, FileFilter fileFilter, boolean useFilter, FileFilterTree fileFilterTree) {
 		this.syncSubDirs = syncSubDirs;
 		this.ignorePattern = "";

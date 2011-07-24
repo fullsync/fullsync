@@ -50,7 +50,7 @@ public class SizeValue implements OperandValue {
 
 	public SizeValue(String size) {
 		this.value = 0;
-		this.unit = 0;
+		this.unit = BYTES;
 
 		fromString(size);
 	}

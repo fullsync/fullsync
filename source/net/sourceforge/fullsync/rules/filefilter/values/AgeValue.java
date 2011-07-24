@@ -44,7 +44,7 @@ public class AgeValue implements OperandValue {
 
 	public AgeValue() {
 		this.value = 0;
-		this.unit = 0;
+		this.unit = SECONDS;
 	}
 
 	public AgeValue(String age) {

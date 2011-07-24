@@ -47,10 +47,6 @@ public class DateValue implements OperandValue {
 		this.millis = millis;
 	}
 
-	public DateValue(Date date) {
-		this.millis = date.getTime();
-	}
-
 	public DateValue(String date) {
 		fromString(date);
 	}

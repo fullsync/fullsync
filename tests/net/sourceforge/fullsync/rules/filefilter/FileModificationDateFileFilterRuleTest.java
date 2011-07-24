@@ -38,7 +38,7 @@ public class FileModificationDateFileFilterRuleTest extends TestCase {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(new DateValue(
-				dateFormat.parse("01/06/2005 06:00:00")), FileModificationDateFileFilterRule.OP_IS);
+				dateFormat.parse("01/06/2005 06:00:00").getTime()), FileModificationDateFileFilterRule.OP_IS);
 
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, dateFormat.parse("01/06/2005 10:00:00").getTime());
 

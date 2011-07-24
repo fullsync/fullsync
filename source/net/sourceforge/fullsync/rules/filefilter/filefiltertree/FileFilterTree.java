@@ -45,12 +45,6 @@ public class FileFilterTree implements Serializable {
 		this.itemsMap = new HashMap<String, FileFilter>();
 	}
 
-	public FileFilterTree(String separator) {
-		this.root = new FileFilterTreeItem();
-		this.itemsMap = new HashMap<String, FileFilter>();
-		this.separator = separator;
-	}
-
 	public void addFileFilter(String key, FileFilter filter) {
 		StringTokenizer tokenizer = new StringTokenizer(key, separator);
 		FileFilterTreeItem item = root;

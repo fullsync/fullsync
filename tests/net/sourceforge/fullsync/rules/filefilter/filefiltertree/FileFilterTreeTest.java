@@ -32,7 +32,7 @@ import net.sourceforge.fullsync.rules.filefilter.TestNode;
 public class FileFilterTreeTest extends TestCase {
 
 	public void testBasic() {
-		FileFilterTree tree = new FileFilterTree("/");
+		FileFilterTree tree = new FileFilterTree();
 
 		new TestNode("a", "./a", true, true, 0, 0);
 		new TestNode("b", "./b", true, true, 0, 0);
