@@ -23,18 +23,28 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.ui.Messages;
 
 import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.UserAuthenticator;
+import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
+import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
-	private String scheme;
+public class UserPasswordSpecificComposite implements ProtocolSpecificComposite {
+	private String m_scheme;
+
+	private Composite m_parent;
 
 	private Label labelPath = null;
 	private Text textPath = null;
@@ -45,56 +55,53 @@ public class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	private Text textUsername = null;
 	private Label labelPassword = null;
 	private Text textPassword = null;
+	private Button buttonBuffered = null;
 
-	public UserPasswordSpecificComposite(Composite parent, int style) {
-		super(parent, style);
-		initialize();
-	}
-
-	public void initialize() {
-		GridData gridData3 = new org.eclipse.swt.layout.GridData();
-		gridData3.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+	public UserPasswordSpecificComposite(Composite parent) {
+		m_parent = parent;
+		GridData gridData3 = new GridData();
+		gridData3.horizontalAlignment = SWT.FILL;
 		gridData3.horizontalSpan = 2;
-		gridData3.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		GridData gridData2 = new org.eclipse.swt.layout.GridData();
-		gridData2.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData3.verticalAlignment = SWT.CENTER;
+		GridData gridData2 = new GridData();
+		gridData2.horizontalAlignment = SWT.FILL;
 		gridData2.horizontalSpan = 2;
-		gridData2.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		GridData gridData1 = new org.eclipse.swt.layout.GridData();
-		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData2.verticalAlignment = SWT.CENTER;
+		GridData gridData1 = new GridData();
+		gridData1.horizontalAlignment = SWT.FILL;
 		gridData1.horizontalSpan = 2;
-		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		labelHost = new Label(this, SWT.NONE);
+		gridData1.verticalAlignment = SWT.CENTER;
+		labelHost = new Label(m_parent, SWT.NONE);
 		labelHost.setText("Host:");
-		GridData gridData = new org.eclipse.swt.layout.GridData();
-		gridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
-		gridData.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		textHost = new Text(this, SWT.BORDER);
+		gridData.verticalAlignment = SWT.CENTER;
+		textHost = new Text(m_parent, SWT.BORDER);
 		textHost.setLayoutData(gridData3);
-		labelUsername = new Label(this, SWT.NONE);
+		labelUsername = new Label(m_parent, SWT.NONE);
 		labelUsername.setText("Username:");
-		textUsername = new Text(this, SWT.BORDER);
+		textUsername = new Text(m_parent, SWT.BORDER);
 		textUsername.setLayoutData(gridData2);
-		labelPassword = new Label(this, SWT.NONE);
+		labelPassword = new Label(m_parent, SWT.NONE);
 		labelPassword.setText("Password:");
-		textPassword = new Text(this, SWT.BORDER);
+		textPassword = new Text(m_parent, SWT.BORDER);
 		textPassword.setLayoutData(gridData1);
 		textPassword.setEchoChar('*');
-		labelPath = new Label(this, SWT.NONE);
+		labelPath = new Label(m_parent, SWT.NONE);
 		labelPath.setText("Path:");
-		textPath = new Text(this, SWT.BORDER);
+		textPath = new Text(m_parent, SWT.BORDER);
 		textPath.setLayoutData(gridData);
-		buttonBrowse = new Button(this, SWT.NONE);
+		buttonBrowse = new Button(m_parent, SWT.NONE);
 		buttonBrowse.setText("...");
-		buttonBrowse.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		buttonBrowse.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				try {
 					LocationDescription desc = getLocationDescription();
 
-					FileObject base = FileSystemUiManager.getInstance().resolveFile(desc);
-					FileObjectChooser foc = new FileObjectChooser(getShell(), SWT.NULL);
+					FileObject base = resolveFile(desc);
+					FileObjectChooser foc = new FileObjectChooser(m_parent.getShell(), SWT.NULL);
 					foc.setBaseFileObject(base);
 					foc.setSelectedFileObject(base);
 					if (foc.open() == 1) {
@@ -108,15 +115,16 @@ public class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 				}
 			}
 		});
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 3;
-		this.setLayout(gridLayout);
-
+		buttonBuffered = new Button(m_parent, SWT.CHECK | SWT.LEFT);
+		GridData buttonDestinationBufferedData = new GridData();
+		buttonDestinationBufferedData.horizontalSpan = 3;
+		buttonBuffered.setLayoutData(buttonDestinationBufferedData);
+		buttonBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
 	}
 
 	@Override
 	public LocationDescription getLocationDescription() throws URISyntaxException {
-		URI uri = new URI(scheme, textHost.getText(), textPath.getText(), null);
+		URI uri = new URI(m_scheme, textHost.getText(), textPath.getText(), null);
 		LocationDescription loc = new LocationDescription(uri);
 		loc.setProperty("username", textUsername.getText());
 		loc.setProperty("password", textPassword.getText());
@@ -133,11 +141,55 @@ public class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	}
 
 	@Override
-	public void reset(String scheme) {
-		this.scheme = scheme;
+	public void reset(final String scheme) {
+		m_scheme = scheme;
 		textHost.setText("");
 		textPath.setText("");
 		textUsername.setText("");
 		textPassword.setText("");
 	}
+
+	public FileObject resolveFile(LocationDescription location) throws FileSystemException {
+		String uri = location.getUri().getScheme();
+
+		FileSystemOptions fileSystemOptions = new FileSystemOptions();
+
+		if (uri.startsWith("ftp") || uri.startsWith("sftp") || uri.startsWith("smb")) {
+			String username = location.getProperty("username");
+			String password = location.getProperty("password");
+			UserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
+			DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(fileSystemOptions, auth);
+		}
+		return VFS.getManager().resolveFile(uri, fileSystemOptions);
+	}
+
+	@Override
+	public void dispose() {
+		labelPath.dispose();
+		textPath.dispose();
+		buttonBrowse.dispose();
+		labelHost.dispose();
+		textHost.dispose();
+		labelUsername.dispose();
+		textUsername.dispose();
+		labelPassword.dispose();
+		textPassword.dispose();
+		buttonBuffered.dispose();
+	}
+
+	@Override
+	public boolean getBuffered() {
+		return buttonBuffered.getSelection();
+	}
+
+	@Override
+	public void setBuffered(boolean buffered) {
+		buttonBuffered.setSelection(buffered);
+	}
+
+	@Override
+	public void setBufferedEnabled(boolean enabled) {
+		buttonBuffered.setEnabled(enabled);
+	}
+
 }

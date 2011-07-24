@@ -21,16 +21,19 @@ package net.full.fs.ui;
 
 import java.net.URISyntaxException;
 
-import org.eclipse.swt.widgets.Composite;
+public interface ProtocolSpecificComposite {
 
-public abstract class ProtocolSpecificComposite extends Composite {
-	public ProtocolSpecificComposite(Composite parent, int style) {
-		super(parent, style);
-	}
+	public void reset(String scheme);
 
-	public abstract void reset(String scheme);
+	public void setLocationDescription(LocationDescription location);
 
-	public abstract void setLocationDescription(LocationDescription location);
+	public LocationDescription getLocationDescription() throws URISyntaxException;
 
-	public abstract LocationDescription getLocationDescription() throws URISyntaxException;
+	public void dispose();
+
+	public boolean getBuffered();
+
+	public void setBuffered(boolean buffered);
+
+	public void setBufferedEnabled(boolean enabled);
 }

@@ -24,40 +24,41 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import net.sourceforge.fullsync.ui.Messages;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class FileSpecificComposite extends ProtocolSpecificComposite {
+public class FileSpecificComposite implements ProtocolSpecificComposite {
+	private Composite m_parent;
 	private Label labelPath = null;
 	private Text textPath = null;
 	private Button buttonBrowse = null;
+	private Button buttonBuffered = null;
 
-	public FileSpecificComposite(Composite parent, int style) {
-		super(parent, style);
-		initialize();
-	}
-
-	public void initialize() {
-		GridData gridData = new org.eclipse.swt.layout.GridData();
-		gridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+	public FileSpecificComposite(Composite parent) {
+		m_parent = parent;
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
-		gridData.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		labelPath = new Label(this, SWT.NONE);
+		gridData.verticalAlignment = SWT.CENTER;
+		labelPath = new Label(m_parent, SWT.NONE);
 		labelPath.setText("Path:");
-		textPath = new Text(this, SWT.BORDER);
+		textPath = new Text(m_parent, SWT.BORDER);
 		textPath.setLayoutData(gridData);
-		buttonBrowse = new Button(this, SWT.NONE);
+		buttonBrowse = new Button(m_parent, SWT.NONE);
 		buttonBrowse.setText("...");
-		buttonBrowse.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		buttonBrowse.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				DirectoryDialog d = new DirectoryDialog(getShell());
+			public void widgetSelected(final SelectionEvent e) {
+				DirectoryDialog d = new DirectoryDialog(m_parent.getShell());
 				String dir = d.open();
 				if (dir != null) {
 					File f = new File(dir);
@@ -65,10 +66,11 @@ public class FileSpecificComposite extends ProtocolSpecificComposite {
 				}
 			}
 		});
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 3;
-		this.setLayout(gridLayout);
-
+		buttonBuffered = new Button(m_parent, SWT.CHECK | SWT.LEFT);
+		GridData buttonDestinationBufferedData = new GridData();
+		buttonDestinationBufferedData.horizontalSpan = 3;
+		buttonBuffered.setLayoutData(buttonDestinationBufferedData);
+		buttonBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -84,5 +86,28 @@ public class FileSpecificComposite extends ProtocolSpecificComposite {
 	@Override
 	public void reset(String scheme) {
 		textPath.setText("");
+	}
+
+	@Override
+	public void dispose() {
+		labelPath.dispose();
+		textPath.dispose();
+		buttonBrowse.dispose();
+		buttonBuffered.dispose();
+	}
+
+	@Override
+	public boolean getBuffered() {
+		return buttonBuffered.getSelection();
+	}
+
+	@Override
+	public void setBuffered(boolean buffered) {
+		buttonBuffered.setSelection(buffered);
+	}
+
+	@Override
+	public void setBufferedEnabled(boolean enabled) {
+		buttonBuffered.setEnabled(enabled);
 	}
 }

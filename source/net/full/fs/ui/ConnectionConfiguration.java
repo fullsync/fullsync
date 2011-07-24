@@ -21,91 +21,79 @@ package net.full.fs.ui;
 
 import java.net.URISyntaxException;
 
-import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-public class ConnectionConfiguration extends Composite {
+public class ConnectionConfiguration implements ModifyListener {
+	private Composite m_parent; // the tabs content
+	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" };
 	private Label labelProtocol = null;
 	private Combo comboProtocol = null;
 	private Composite compositeProtocolSpecific = null;
 	private ProtocolSpecificComposite compositeSpecific;
+	private String selectedScheme;
 
-	public ConnectionConfiguration(Composite parent, int style) {
-		super(parent, style);
+	public ConnectionConfiguration(Composite parent) {
+		m_parent = parent;
 		initialize();
-		updateComponent();
+		comboProtocol.select(comboProtocol.getSelectionIndex());
 	}
 
-	/**
-	 * This method initializes this
-	 *
-	 * @throws FileSystemException
-	 *
-	 */
 	private void initialize() {
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		labelProtocol = new Label(this, SWT.NONE);
-		labelProtocol.setText("Protocol:");
-		createComboProtocol();
-		this.setLayout(gridLayout);
-		createCompositeProtocolSpecific();
-	}
+		GridData gridData = new GridData();
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		gridData.horizontalAlignment = SWT.FILL;
+		compositeProtocolSpecific = new Composite(m_parent, SWT.NONE);
+		compositeProtocolSpecific.setLayout(new GridLayout(3, false));
+		compositeProtocolSpecific.setLayoutData(gridData);
 
-	/**
-	 * This method initializes comboProtocol
-	 *
-	 * @throws FileSystemException
-	 *
-	 */
-	private void createComboProtocol() {
-		comboProtocol = new Combo(this, SWT.READ_ONLY);
-		comboProtocol.addModifyListener(new org.eclipse.swt.events.ModifyListener() {
-			@Override
-			public void modifyText(org.eclipse.swt.events.ModifyEvent e) {
-				if (compositeSpecific != null) {
-					compositeSpecific.dispose();
-				}
-
-				compositeSpecific = FileSystemUiManager.getInstance().createProtocolSpecificComposite(compositeProtocolSpecific, SWT.NULL,
-						comboProtocol.getText());
-
-				compositeProtocolSpecific.layout();
-				setSize(computeSize(getSize().x, SWT.DEFAULT));
-			}
-		});
-	}
-
-	/**
-	 * This method initializes compositeProtocolSpecific
-	 *
-	 */
-	private void createCompositeProtocolSpecific() {
-		GridData gridData1 = new org.eclipse.swt.layout.GridData();
-		gridData1.horizontalSpan = 2;
-		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		gridData1.grabExcessHorizontalSpace = true;
-		gridData1.grabExcessVerticalSpace = true;
-		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		compositeProtocolSpecific = new Composite(this, SWT.NONE);
-		compositeProtocolSpecific.setLayout(new FillLayout());
-		compositeProtocolSpecific.setLayoutData(gridData1);
-	}
-
-	public void updateComponent() {
+		// protcol combo box
+		labelProtocol = new Label(compositeProtocolSpecific, SWT.NONE);
+		labelProtocol.setText("Protocol:"); //FIXME: externalize
+		comboProtocol = new Combo(compositeProtocolSpecific, SWT.READ_ONLY);
+		GridData protocolData = new GridData();
+		protocolData.horizontalSpan = 2;
+		protocolData.horizontalAlignment = SWT.FILL;
+		comboProtocol.setLayoutData(protocolData);
 		comboProtocol.removeAll();
-		String[] schemes = FileSystemUiManager.getInstance().getSchemes();
+		int selectedIndex = 0, i = 0;
 		for (String scheme : schemes) {
 			comboProtocol.add(scheme);
+			if (scheme.equals(selectedScheme)) {
+				selectedIndex = i;
+			}
+			++i;
 		}
-		comboProtocol.select(0);
+		comboProtocol.select(selectedIndex);
+		comboProtocol.addModifyListener(this);
 	}
+
+	private void dispose() {
+		compositeProtocolSpecific.dispose();
+	}
+
+	@Override
+	public void modifyText(final ModifyEvent e) {
+		if (compositeSpecific != null) {
+			compositeSpecific.dispose();
+		}
+
+		selectedScheme = comboProtocol.getText();
+		dispose();
+		initialize();
+		compositeSpecific = createProtocolSpecificComposite();
+
+		m_parent.layout(true);
+	}
+
 
 	public void setLocationDescription(LocationDescription location) {
 		comboProtocol.setText(location.getUri().getScheme());
@@ -116,4 +104,31 @@ public class ConnectionConfiguration extends Composite {
 		return compositeSpecific.getLocationDescription();
 	}
 
-} // @jve:decl-index=0:visual-constraint="10,10"
+	private ProtocolSpecificComposite createProtocolSpecificComposite() {
+		ProtocolSpecificComposite composite = null;
+
+		if ("file".equals(selectedScheme)) {
+			composite = new FileSpecificComposite(compositeProtocolSpecific);
+		}
+		else if ("ftp".equals(selectedScheme) || "sftp".equals(selectedScheme) || "smb".equals(selectedScheme)) {
+			composite = new UserPasswordSpecificComposite(compositeProtocolSpecific);
+		}
+
+		if (composite != null) {
+			composite.reset(selectedScheme);
+		}
+		return composite;
+	}
+
+	public boolean getBuffered() {
+		return compositeSpecific.getBuffered();
+	}
+
+	public void setBuffered(boolean buffered) {
+		compositeSpecific.setBuffered(buffered);
+	}
+	
+	public void setBufferedEnabled(boolean enabled) {
+		compositeSpecific.setBufferedEnabled(enabled);
+	}
+}

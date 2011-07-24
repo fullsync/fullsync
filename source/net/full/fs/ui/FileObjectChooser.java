@@ -104,7 +104,7 @@ public class FileObjectChooser extends org.eclipse.swt.widgets.Dialog {
 			Display display = Display.getDefault();
 			Shell shell = new Shell(display);
 			shell.setLayout(new FillLayout());
-			new ConnectionConfiguration(shell, SWT.NULL);
+			new ConnectionConfiguration(shell);
 			shell.open();
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch()) {
