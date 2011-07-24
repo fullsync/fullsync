@@ -22,5 +22,6 @@
 	<classpathentry kind="lib" path="lib/commons-vfs2-sandbox.jar" sourcepath="/home/cobexer/Source/org.apache.commons.vfs/trunk"/>
 	<classpathentry kind="lib" path="lib/commons-vfs2.jar" sourcepath="/windows/D/Christoph/Source/org.apache.commons.vfs/trunk/core/src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/debug-SWT"/>
+	<classpathentry kind="lib" path="lib/MockFtpServer-2.2.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

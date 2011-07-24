@@ -1,23 +1,22 @@
 /**
- *	@license
- *	This program is free software; you can redistribute it and/or
- *	modify it under the terms of the GNU General Public License
- *	as published by the Free Software Foundation; either version 2
- *	of the License, or (at your option) any later version.
+ * @license
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- *	This program is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *	GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *	You should have received a copy of the GNU General Public License
- *	along with this program; if not, write to the Free Software
- *	Foundation, Inc., 51 Franklin Street, Fifth Floor,
- *	Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  *
- *	---
- *	@copyright Copyright (C) 2005, Jan Kopcsek <codewright@gmx.net>
- *	@copyright Copyright (C) 2011, Obexer Christoph <cobexer@gmail.com>
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
  */
 package net.sourceforge.fullsync;
 
@@ -25,89 +24,83 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.InetAddress;
 import java.util.Date;
 import java.util.Hashtable;
 
 import junit.framework.TestCase;
 import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
-import net.sourceforge.wrabbitftp.FTPServer;
 
+import org.mockftpserver.fake.FakeFtpServer;
+import org.mockftpserver.fake.UserAccount;
+import org.mockftpserver.fake.filesystem.DirectoryEntry;
+import org.mockftpserver.fake.filesystem.FileEntry;
+import org.mockftpserver.fake.filesystem.FileSystem;
+import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class FtpConnectionTest extends TestCase
-{
-    private File testingDir;
-    private File testingSource;
-    private File testingDestination;
+public class FtpConnectionTest extends TestCase {
+	private static final int TEST_FTP_PORT = 16131;
+	private File testingDir;
+	private File testingSource;
+	private Synchronizer synchronizer;
+	private Profile profile;
+	private FakeFtpServer m_fakeServer;
 
-    private Synchronizer synchronizer;
-    private Profile profile;
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
 
-    private FTPServer ftpServer;
+		testingDir = new File("testing");
+		testingSource = new File(testingDir, "source");
+		testingDir.mkdirs();
+		testingSource.mkdir();
 
-    @Override
-	protected void setUp() throws Exception
-    {
-        testingDir = new File( "testing" );
-        testingSource = new File( testingDir, "source" );
-        testingDestination = new File( testingDir, "destination" );
+		synchronizer = new Synchronizer();
+		profile = new Profile();
+		profile.setName("TestProfile");
+		profile.setSource(new ConnectionDescription(testingSource.toURI().toString(), ""));
+		profile.setDestination(new ConnectionDescription("ftp://127.0.0.1:" + TEST_FTP_PORT + "/", "syncfiles"));
+		profile.getDestination().setUsername("SampleUser");
+		profile.getDestination().setPassword("Sample");
+		profile.setRuleSet(new AdvancedRuleSetDescriptor("UPLOAD"));
+		profile.setSynchronizationType("Publish/Update");
 
-        testingDir.mkdirs();
-        testingSource.mkdir();
-        testingDestination.mkdir();
+		m_fakeServer = new FakeFtpServer();
+		m_fakeServer.setServerControlPort(TEST_FTP_PORT);
 
-        synchronizer = new Synchronizer();
-        profile = new Profile();
-        profile.setName( "TestProfile" );
-        profile.setSource( new ConnectionDescription( testingSource.toURI().toString(), "" ) );
-        profile.setDestination( new ConnectionDescription( "ftp://"+(InetAddress.getLocalHost().getHostAddress())+":16131/", "syncfiles" ) );
-        profile.getDestination().setUsername( "SampleUser" );
-        profile.getDestination().setPassword( "Sample" );
-        profile.setRuleSet( new AdvancedRuleSetDescriptor( "UPLOAD" ) );
-        profile.setSynchronizationType( "Publish/Update" );
+		FileSystem fs = new UnixFakeFileSystem();
+		fs.add(new DirectoryEntry("/sampleuser"));
 
-        ftpServer = new FTPServer( 16131 );
-        ftpServer.setRoot( "", testingDestination );
-        ftpServer.start();
+		m_fakeServer.addUserAccount(new UserAccount("SampleUser", "Sample", "/sampleuser"));
+		m_fakeServer.setFileSystem(fs);
+		m_fakeServer.start();
 
-        clearUp();
+		clearDirectory(testingSource);
+	}
 
-        super.setUp();
-    }
+	@Override
+	protected void tearDown() throws Exception {
+		m_fakeServer.stop();
+		clearDirectory( testingSource );
+		testingSource.delete();
+		testingDir.delete();
+		super.tearDown();
+	}
 
-    @Override
-	protected void tearDown() throws Exception
-    {
-        ftpServer.stopRunning();
-        ftpServer.interrupt();
-        ftpServer.join();
+	/**
+	 * recursively delete directory and all contained files.
+	 * @param dir directory to clear
+	 */
+	protected void clearDirectory(final File dir) {
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				clearDirectory(file);
+			}
+			file.delete();
+		}
+	}
 
-        clearUp();
-        testingSource.delete();
-        testingDestination.delete();
-        testingDir.delete();
-
-        super.tearDown();
-    }
-
-    protected void clearDirectory( File dir )
-    {
-        File[] files = dir.listFiles();
-        for( int i = 0; i < files.length; i++ )
-        {
-            if( files[i].isDirectory() )
-                clearDirectory( files[i] );
-            files[i].delete();
-        }
-    }
-    protected void clearUp()
-    	throws IOException
-    {
-        clearDirectory( testingSource );
-        clearDirectory( testingDestination );
-    }
     protected void createRuleFile()
     	throws IOException
     {
@@ -155,10 +148,10 @@ public class FtpConnectionTest extends TestCase
             @Override
 			public void taskGenerationFinished( Task task )
             {
-                Object ex = expectation.get( task.getSource().getName() );
+                Object ex = expectation.get(task.getSource().getName());
                 assertNotNull( "Unexpected generated Task for file: "+task.getSource().getName(), ex );
                 assertTrue( "Action was "+task.getCurrentAction()+", expected: "+ex+" for File "+task.getSource().getName(),
-                        task.getCurrentAction().equalsExceptExplanation((Action)ex) );
+                        task.getCurrentAction().equalsExceptExplanation((Action) ex) );
             }
             @Override
 			public void taskGenerationStarted(
@@ -182,11 +175,14 @@ public class FtpConnectionTest extends TestCase
     	throws Exception
     {
         createRuleFile();
-        long lm = new Date().getTime();
+        Date d = new Date();
+        long lm = d.getTime();
 
-        createNewFileWithContents( testingSource, "sourceFile1.txt", lm, "this is a test\ncontent1" );
-        createNewFileWithContents( testingSource, "sourceFile2.txt", lm, "this is a test\ncontent2" );
-        createNewFileWithContents( testingDestination, "sourceFile1.txt", lm, "this is a test\ncontent1" );
+        createNewFileWithContents(testingSource, "sourceFile1.txt", lm, "this is a test\ncontent1");
+        createNewFileWithContents(testingSource, "sourceFile2.txt", lm, "this is a test\ncontent2");
+        FileEntry file = new FileEntry("/sourceFile1.txt", "this is a test\ncontent1");
+        file.setLastModified(d);
+        m_fakeServer.getFileSystem().add(file);
 
         Hashtable expectation = new Hashtable();
         expectation.put( "sourceFile1.txt", new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, "" ) );
@@ -200,8 +196,7 @@ public class FtpConnectionTest extends TestCase
     public void testSingleSpaceMinus()
         throws Exception
     {
-    	//FIXME: fails cause org.apache.commons.vfs2? sends a MKD for a subsub directory
-/* * /        createRuleFile();
+        createRuleFile();
         long lm = new Date().getTime();
 
         new File( testingSource, "sub - folder" ).mkdir();
@@ -217,6 +212,6 @@ public class FtpConnectionTest extends TestCase
         // Phase One:
         TaskTree tree = assertPhaseOneActions( expectation );
         // Phase Three:
-        synchronizer.performActions( tree ); // TODO assert task finished events ? */
+        synchronizer.performActions( tree ); // TODO assert task finished events ?
     }
 }

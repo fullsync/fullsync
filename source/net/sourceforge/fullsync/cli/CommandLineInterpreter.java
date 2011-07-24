@@ -86,8 +86,10 @@ public class CommandLineInterpreter
         initOptions();
 
 		try {
-		    System.setErr( new PrintStream( new FileOutputStream( "logs/stderr.log" ) ) );
-		    // System.setOut( new PrintStream( new FileOutputStream( "logs/stdout.log" ) ) );
+			if (null == System.getProperty("net.sourceforge.fullsync.noredirectstderr")) {
+				System.setErr( new PrintStream( new FileOutputStream( "logs/stderr.log" ) ) );
+				// System.setOut( new PrintStream( new FileOutputStream( "logs/stdout.log" ) ) );
+			}
 
 		    CommandLineParser parser = new PosixParser();
 		    CommandLine line = null;
