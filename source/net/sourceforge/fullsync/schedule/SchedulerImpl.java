@@ -135,13 +135,12 @@ public class SchedulerImpl implements Scheduler, Runnable {
 				logger.debug("searching for next task after " + now);
 			}
 			ScheduleTask task = scheduleSource.getNextScheduleTask();
+			if (task == null) {
+				logger.info("could not find a scheduled task, aborting");
+				break;
+			}
 			if (logger.isDebugEnabled()) {
 				logger.debug("found: " + task.toString() + " at " + task.getExecutionTime());
-			}
-
-			if (task == null) {
-				// TODO log sth here ?
-				break;
 			}
 
 			long nextTime = task.getExecutionTime();
