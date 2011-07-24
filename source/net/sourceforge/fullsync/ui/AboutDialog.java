@@ -34,7 +34,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -54,9 +53,7 @@ public class AboutDialog extends Dialog implements DisposeListener {
 
 	private Shell dialogShell;
 	private Label labelPicture;
-	private Label labelSeparator;
 	private Composite compositeBottom;
-	private Label label2;
 	private Label labelThanks;
 	private Composite composite1;
 	private Button buttonOk;
@@ -75,7 +72,8 @@ public class AboutDialog extends Dialog implements DisposeListener {
 		try {
 			Shell parent = getParent();
 			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-			dialogShell.setBackground(new Color(null, 255, 255, 255));
+			dialogShell.setBackground(UISettings.COLOR_WHITE);
+			dialogShell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
 			dialogShell.addDisposeListener(this);
 
@@ -101,7 +99,6 @@ public class AboutDialog extends Dialog implements DisposeListener {
 			// version label
 			Font smallfont = new Font(null, new FontData("Sans Serif", 7, SWT.ITALIC));
 			Label labelVersion = new Label(dialogShell, SWT.FILL);
-			labelVersion.setBackground(UISettings.COLOR_WHITE);
 			labelVersion.setForeground(UISettings.COLOR_LIGHT_GREY);
 			labelVersion.setFont(smallfont);
 			labelVersion.setText("Version: <unknown devel version>");
@@ -128,7 +125,6 @@ public class AboutDialog extends Dialog implements DisposeListener {
 			}
 			// copyright text
 			Label labelCopyright = new Label(dialogShell, SWT.FILL);
-			labelCopyright.setBackground(UISettings.COLOR_WHITE);
 			labelCopyright.setForeground(UISettings.COLOR_LIGHT_GREY);
 			labelCopyright.setFont(smallfont);
 			labelCopyright.setText(copyright);
@@ -137,11 +133,11 @@ public class AboutDialog extends Dialog implements DisposeListener {
 			lcd.horizontalIndent = 17;
 			labelCopyright.setLayoutData(lcd);
 			// separator
-			labelSeparator = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
+			Label labelSeparator1 = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
 			GridData labelSeparatorLData = new GridData();
 			labelSeparatorLData.horizontalAlignment = GridData.FILL;
 			labelSeparatorLData.grabExcessHorizontalSpace = true;
-			labelSeparator.setLayoutData(labelSeparatorLData);
+			labelSeparator1.setLayoutData(labelSeparatorLData);
 			// credits background
 			composite1 = new Composite(dialogShell, SWT.NONE);
 			composite1.setLayout(new FillLayout());
@@ -199,12 +195,11 @@ public class AboutDialog extends Dialog implements DisposeListener {
 				}
 			}, delay, delay);
 			// separator
-			label2 = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
-			GridData label2LData = new GridData();
-			label2LData.grabExcessHorizontalSpace = true;
-			label2LData.horizontalAlignment = GridData.FILL;
-			label2.setLayoutData(label2LData);
-			label2.setText("label2");
+			Label labelSeparator2 = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
+			GridData labelSeparator2LData = new GridData();
+			labelSeparator2LData.grabExcessHorizontalSpace = true;
+			labelSeparator2LData.horizontalAlignment = GridData.FILL;
+			labelSeparator2.setLayoutData(labelSeparator2LData);
 			// buttons composite
 			compositeBottom = new Composite(dialogShell, SWT.NONE);
 			GridLayout compositeBottomLayout = new GridLayout();
