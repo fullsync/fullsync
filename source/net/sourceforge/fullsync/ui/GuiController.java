@@ -72,7 +72,7 @@ public class GuiController implements Runnable
 			mainShell.setLayout(new org.eclipse.swt.layout.FillLayout());
 			Rectangle shellBounds = mainShell.computeTrim(0,0,mainWindow.getSize().x,mainWindow.getSize().y);
 			mainShell.setSize(shellBounds.width, shellBounds.height);
-			mainShell.setText( "FullSync 0.9" );  //$NON-NLS-1$
+			mainShell.setText( "FullSync" );  //$NON-NLS-1$
 			mainShell.setImage( getImage( "FullSync.png" ) ); //$NON-NLS-1$
 			if( !minimized )
 			    mainShell.setVisible( true );
