@@ -166,20 +166,4 @@ public class PhaseOneTest extends TestCase {
 		expectation.put("sourceFile2.txt", new Action(Action.Update, Location.Destination, BufferUpdate.Destination, ""));
 		assertPhaseOneActions(expectation);
 	}
-
-	public void testSingleFileChangeLm() {
-		/*
-		 * createNewFileWithContents( testingSource, "sourceFile3.txt", "this is a test\ncontent2" );
-		 * createNewFileWithContents( testingSource, "sourceFile3.txt", "this is a test\ncontent2" );
-		 *
-		 * createNewFileWithContents( testingSource, "sourceFile4.txt", "this is a test\ncontent2" );
-		 * createNewFileWithContents( testingSource, "sourceFile4.txt", "this is a test\ncontent2" );
-		 *
-		 * TaskTree tree = processor.execute( profile );
-		 *
-		 * assertEquals( tree.getTaskCount(), 2 );
-		 * assertEquals( tree.getSource(), profile.getSource() );
-		 * assertEquals( tree.getDestination(), profile.getDestination() );
-		 */
-	}
 }
