@@ -59,7 +59,7 @@ public interface Preferences {
 
 	void setRemoteConnectionsPassword(String password);
 
-	boolean autostartScheduler();
+	boolean getAutostartScheduler();
 
 	void setAutostartScheduler(boolean bool);
 

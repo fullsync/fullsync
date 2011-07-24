@@ -158,7 +158,7 @@ public class ConfigurationPreferences implements Preferences {
 	}
 
 	@Override
-	public boolean autostartScheduler() {
+	public boolean getAutostartScheduler() {
 		return config.getBoolean("Interface.AutostartScheduler", false);
 	}
 

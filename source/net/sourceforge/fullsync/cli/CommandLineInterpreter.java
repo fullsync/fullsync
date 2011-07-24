@@ -222,7 +222,7 @@ public class CommandLineInterpreter
 		    			ExceptionHandler.reportException( "Unable to start incoming connections listener.", listenerStarupException );
 		    		}
 
-		    	    if( preferences.autostartScheduler() ) {
+		    	    if( preferences.getAutostartScheduler() ) {
 						profileManager.startScheduler();
 					}
 

@@ -1,11 +1,11 @@
 Roadmap:
-	[ ] in what state is the codebase compared to the last release?
+	[X] in what state is the codebase compared to the last release?
 	[ ] finish started work
 	[ ] GUI cleanup
-	[ ] check state of translations
-	[ ] check all contained onfiguration files
+	[X] check state of translations
+	[ ] check all contained configuration files
 	[ ] get some communication going, motivate others to join
-	[ ] replace embedded net.sourceforge.wrabbitftp server with eg MockFtpServer
+	[X] replace embedded net.sourceforge.wrabbitftp server with eg MockFtpServer
 	[ ] extend automatted testsuite
 	[ ] add embedded SMB, FTP, SFTP servers
 	[ ] find SWT GUI test framework
@@ -33,6 +33,7 @@ Bugs:
 	[ ] the task decision dialog should not show ./ at the start either / or nothing at all(2)
 	[ ] task decision dialog Action, Size columns are too narrow
 	[ ] task decision dialog needs a lot of love
+	[ ] Ctrl+Q does not exit FullSync
 
 Features:
 	[ ] TaskDecisionDialog:

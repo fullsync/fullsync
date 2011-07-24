@@ -251,7 +251,7 @@ User reports:
 		public key and host based auth implemented (pretty badly)
 	[ ] smb copies all files always
 	[X] make exception window resizeable
-	[ ] preferences dialog does not set "autostart scheduler" checkbox
+	[X] preferences dialog does not set "autostart scheduler" checkbox
 	
 ---===[ to 0.10 Tasks ]====-------------------------------------------------
 
