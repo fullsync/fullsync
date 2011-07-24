@@ -104,7 +104,7 @@ public class UserPasswordSpecificComposite implements ProtocolSpecificComposite 
 					FileObjectChooser foc = new FileObjectChooser(m_parent.getShell(), SWT.NULL);
 					foc.setBaseFileObject(base);
 					foc.setSelectedFileObject(base);
-					if (foc.open() == 1) {
+					if (foc.open()) {
 						URI uri;
 						uri = new URI(foc.getActiveFileObject().getName().getURI());
 						textPath.setText(uri.getPath());
@@ -150,7 +150,7 @@ public class UserPasswordSpecificComposite implements ProtocolSpecificComposite 
 	}
 
 	public FileObject resolveFile(LocationDescription location) throws FileSystemException {
-		String uri = location.getUri().getScheme();
+		String uri = location.getUri().toString();
 
 		FileSystemOptions fileSystemOptions = new FileSystemOptions();
 
