@@ -16,7 +16,6 @@ import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 import net.sourceforge.fullsync.ui.GuiController;
-import net.sourceforge.fullsync.ui.SplashScreen;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -144,15 +143,6 @@ public class CommandLineInterpreter
 				    return;
 		    }
 
-	        SplashScreen splash = null;
-		    // FIXME [Michele] I'm using (!line.hasOption("d") to decide if the GUI is enabled or not.
-		    // We really need to decide a better command line style.
-		    long startMillis = System.currentTimeMillis();
-		    if ((!line.hasOption("d")) && (preferences.showSplashScreen())) {
-		    	splash = SplashScreen.createSplashScreenSWT("./images/About.png");
-	    		splash.setHideOnClick();
-	    		splash.show();
-		    }
 		    boolean activateRemote = false;
 	    	int port = 10000;
 	    	String password = "admin";
@@ -234,27 +224,11 @@ public class CommandLineInterpreter
 						profileManager.startScheduler();
 					}
 
-		    	    if (splash != null) {
-		    			long elapsed = System.currentTimeMillis() - startMillis;
-		    			if (elapsed < 1500) {
-		    				try {
-		    					Thread.sleep(1500 - elapsed);
-		    				} catch (InterruptedException e) {
-		    				}
-		    			}
-		    			splash.hide();
-		    			splash = null;
-		    		}
-
 		    		guiController.run();
 		    		guiController.disposeGui();
 		    	} catch( Exception ex ) {
 		    		ExceptionHandler.reportException( ex );
 		    	} finally {
-		        	if (splash != null) {
-		        		splash.hide();
-		        		splash = null;
-		        	}
 		    		profileManager.save();
 		    	}
 
