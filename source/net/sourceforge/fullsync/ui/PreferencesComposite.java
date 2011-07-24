@@ -2,7 +2,6 @@ package net.sourceforge.fullsync.ui;
 
 import java.rmi.RemoteException;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
@@ -36,47 +35,49 @@ import org.eclipse.swt.widgets.Text;
 */
 public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 
-	private static class LanguageCodes {
+	/**
+	 * supported language codes.
+	 */
+	private static String[] languageCodes = { "en", "it", "de", "fr", "es", "ar" };
+	/**
+	 * supported language names.
+	 */
+	private static String[] languageNames = { "English", "Italiano", "Deutsch", "Français", "Español", "Arabic" };
 
-		private HashMap<String, String> languageCodes = new HashMap<String, String>();
-		private HashMap<String, String> languageNames = new HashMap<String, String>();
-
-		private static LanguageCodes _instance;
-
-		private LanguageCodes() {
-			languageNames.put("en", "English"); //$NON-NLS-1$ //$NON-NLS-2$
-			languageNames.put("it", "Italiano"); //$NON-NLS-1$ //$NON-NLS-2$
-			languageNames.put("de", "Deutsch"); //$NON-NLS-1$ //$NON-NLS-2$
-			languageNames.put("fr", "Français");  //$NON-NLS-1$ //$NON-NLS-2$
-			languageNames.put("es", "Español");  //$NON-NLS-1$ //$NON-NLS-2$
-			languageNames.put("ar", "Arabic");  //$NON-NLS-1$ //$NON-NLS-2$
-
-			languageCodes.put("English", "en"); //$NON-NLS-1$ //$NON-NLS-2$
-			languageCodes.put("Italiano", "it"); //$NON-NLS-1$ //$NON-NLS-2$
-			languageCodes.put("Deutsch", "de"); //$NON-NLS-1$ //$NON-NLS-2$
-			languageCodes.put("Français", "fr");  //$NON-NLS-1$ //$NON-NLS-2$
-			languageCodes.put("Español", "es");  //$NON-NLS-1$ //$NON-NLS-2$
-			languageCodes.put("Arabic", "ar");  //$NON-NLS-1$ //$NON-NLS-2$
-		}
-
-		private static LanguageCodes getInstance() {
-			if (_instance == null) {
-				_instance = new LanguageCodes();
+	/**
+	 * search an element in an array and get the result from another array at the same index.
+	 * @param in array to search in
+	 * @param result array to take the result from
+	 * @param key key to search
+	 * @return the element in the result array on the same index as the key in the in array
+	 */
+	private static String arraySearch(final String[] in, final String[] result, final String key) {
+		int i = 0;
+		for (String s : in) {
+			if (s.equals(key)) {
+				return result[i];
 			}
-			return _instance;
+			++i;
 		}
+		return "";
+	}
 
-		private static String getLanguageCode(String name) {
-			return getInstance().languageCodes.get(name);
-		}
+	/**
+	 * map language name to code.
+	 * @param name language name
+	 * @return language code
+	 */
+	private static String getLanguageCode(final String name) {
+		return arraySearch(languageNames, languageCodes, name);
+	}
 
-		private static String getLanguageName(String code) {
-			return getInstance().languageNames.get(code);
-		}
-
-		private static String[] getAllLanguages() {
-			return (String[]) getInstance().languageCodes.keySet().toArray();
-		}
+	/**
+	 * map language code to name.
+	 * @param code language code
+	 * @return language name
+	 */
+	private static String getLanguageName(final String code) {
+		return arraySearch(languageCodes, languageNames, code);
 	}
 
 	private Group groupInterface;
@@ -87,7 +88,6 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 	private Combo comboLanguage;
 	private Label label4;
 	private Button cbAutostartScheduler;
-	private Button cbShowSplashScreen;
 	private Text textPassword;
 	private Label label3;
 	private Group groupRemoteConnection;
@@ -163,16 +163,6 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
                     cbMinimizeMinimizesToSystemTray.setLayoutData(cbMinimizeMinimizesToSystemTrayLData);
                 }
                 {
-                    cbShowSplashScreen = new Button(groupInterface, SWT.CHECK
-                        | SWT.LEFT);
-                    cbShowSplashScreen.setText(Messages.getString("PreferencesComposite.ShowSplash")); //$NON-NLS-1$
-                    GridData cbShowSplashScreenLData = new GridData();
-                    cbShowSplashScreenLData.horizontalSpan = 3;
-                    cbShowSplashScreenLData.widthHint = 176;
-                    cbShowSplashScreenLData.heightHint = 16;
-                    cbShowSplashScreen.setLayoutData(cbShowSplashScreenLData);
-                }
-                {
                     cbAutostartScheduler = new Button(
                         groupInterface,
                         SWT.CHECK | SWT.LEFT);
@@ -222,7 +212,8 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 					comboLanguageLData.widthHint = 97;
 					comboLanguageLData.heightHint = 21;
 					comboLanguage.setLayoutData(comboLanguageLData);
-					String[] languages = LanguageCodes.getAllLanguages();
+					String[] languages = new String[languageNames.length];
+					System.arraycopy(languageNames, 0, languages, 0, languageNames.length);
 					Arrays.sort(languages);
 					for (String language : languages) {
 						comboLanguage.add(language);
@@ -310,11 +301,10 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		cbMinimizeMinimizesToSystemTray.setSelection(preferences.minimizeMinimizesToSystemTray());
 		//cbEnableSystemTray.setSelection(preferences.systemTrayEnabled());
 		comboProfileList.setText( preferences.getProfileListStyle() );
-		comboLanguage.setText(LanguageCodes.getLanguageName(preferences.getLanguageCode()));
+		comboLanguage.setText(getLanguageName(preferences.getLanguageCode()));
 		cbListenForIncomming.setSelection(preferences.listeningForRemoteConnections());
 		textListeningPort.setText(String.valueOf(preferences.getRemoteConnectionsPort()));
 		textPassword.setText(preferences.getRemoteConnectionsPassword());
-		cbShowSplashScreen.setSelection(preferences.showSplashScreen());
 		updateRemoteConnectionGroup();
 	}
 
@@ -342,8 +332,7 @@ public class PreferencesComposite extends org.eclipse.swt.widgets.Composite {
 		//preferences.setSystemTrayEnabled(cbEnableSystemTray.getSelection());
 		boolean profileListStyleChanged = (!preferences.getProfileListStyle().equals(comboProfileList.getText()));
 		preferences.setProfileListStyle(comboProfileList.getText());
-		preferences.setLanguageCode(LanguageCodes.getLanguageCode(comboLanguage.getText()));
-		preferences.setShowSplashScreen(cbShowSplashScreen.getSelection());
+		preferences.setLanguageCode(getLanguageCode(comboLanguage.getText()));
 		preferences.setAutostartScheduler(cbAutostartScheduler.getSelection());
 
 		if (profileListStyleChanged) {
