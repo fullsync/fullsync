@@ -60,7 +60,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -109,6 +108,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 
 	private Composite m_parent;
 	private int m_style;
+	private String lastSourceLoaded = null;
 
 	public ProfileDetailsTabbed(Composite parent, int style) {
 		m_parent = parent;
@@ -805,7 +805,16 @@ public class ProfileDetailsTabbed implements DisposeListener {
 
 	private void treeTabsWidgetSelected(SelectionEvent evt) {
 		if (evt.item == tabSubDirs) {
-			if (sourceSite == null) {
+			ConnectionDescription src = getSourceConnection();
+			if (null != sourceSite) {
+				try {
+					sourceSite.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if ((sourceSite == null) || (src == null) || !src.getUri().toString().equals(lastSourceLoaded)) {
 				directoryTree.removeAll();
 				TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
 				loadingIem.setText("Loading source dir...");
@@ -820,6 +829,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 							if (null != src) {
 								sourceSite = fsm.createConnection(src);
 								drawDirectoryTree();
+								lastSourceLoaded = src.getUri().toString();
 							}
 							else {
 								TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
@@ -856,6 +866,9 @@ public class ProfileDetailsTabbed implements DisposeListener {
 							TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
 							loadingIem.setText("Unable to load source dir");
 							loadingIem.setImage(GuiController.getInstance().getImage("Error.png"));
+						}
+						catch (Exception ex) {
+							ex.printStackTrace();
 						}
 					}
 				});
