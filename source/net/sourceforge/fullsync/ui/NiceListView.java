@@ -24,45 +24,22 @@ import java.util.Arrays;
 import net.sourceforge.fullsync.ExceptionHandler;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-/**
- * This code was generated using CloudGarden's Jigloo
- * SWT/Swing GUI Builder, which is free for non-commercial
- * use. If Jigloo is being used commercially (ie, by a corporation,
- * company or business for any purpose whatever) then you
- * should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details.
- * Use of Jigloo implies acceptance of these licensing terms.
- * *************************************
- * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
- * for this machine, so Jigloo or this code cannot be used legally
- * for any corporate or commercial purpose.
- * *************************************
- */
 public class NiceListView extends Composite implements Listener {
 	private NiceListViewItem selected;
 
-	public NiceListView(org.eclipse.swt.widgets.Composite parent, int style) {
+	public NiceListView(Composite parent, int style) {
 		super(parent, style);
-		addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-
-			}
-		});
 		addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyPressed(final KeyEvent e) {
 				try {
 					Control[] children = getChildren();
 					int index = Arrays.asList(children).indexOf(selected);
@@ -82,7 +59,7 @@ public class NiceListView extends Composite implements Listener {
 	}
 
 	@Override
-	public void handleEvent(Event event) {
+	public void handleEvent(final Event event) {
 		switch (event.type) {
 			case SWT.KeyDown:
 				switch (event.keyCode) {
@@ -97,7 +74,11 @@ public class NiceListView extends Composite implements Listener {
 							setSelected((NiceListViewItem) children[index + 1]);
 						}
 						break;
+					default:
+						break;
 				}
+			default:
+				break;
 		}
 	}
 
@@ -107,7 +88,7 @@ public class NiceListView extends Composite implements Listener {
 			thisLayout.horizontalSpacing = 2;
 			thisLayout.verticalSpacing = 0;
 			this.setLayout(thisLayout);
-			this.setBackground(new Color(getDisplay(), 255, 255, 255));
+			this.setBackground(UISettings.COLOR_WHITE);
 			this.layout();
 		}
 		catch (Exception e) {
@@ -145,22 +126,11 @@ public class NiceListView extends Composite implements Listener {
 			return true;
 		}
 		Control[] cs = getChildren();
-		/*
-		 * for (int i= 0; i < cs.length; i++) {
-		 * NiceListViewItem ji= (NiceListViewItem) cs[i];
-		 * if( ji.isSelected() ) {
-		 * ji.forceFocus();
-		 * return;
-		 * }
-		 * }
-		 */
 		if (cs.length > 0) {
 			cs[0].forceFocus();
 			return true;
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 
 	public void clear() {

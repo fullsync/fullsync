@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.util.Date;
 import java.util.HashMap;
 
 import net.sourceforge.fullsync.Profile;
@@ -48,39 +47,81 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	class ContentComposite extends Composite {
 		private Profile profile;
 
-		private Label labelSource;
-		private Label labelDestination;
-		private Label labelLastUpdate;
-		private Label labelNextUpdate;
-		private ToolBar toolbar;
+		private Label lSource;
+		private Label lDestination;
+		private Label lLastUpdate;
+		private Label lNextUpdate;
 
 		public ContentComposite(Composite parent, int style) {
 			super(parent, style);
-			initGui();
-		}
-
-		public void initGui() {
 			GridLayout layout = new GridLayout(2, false);
 			layout.marginHeight = 1;
 			layout.marginWidth = 1;
 			layout.verticalSpacing = 2;
-			layout.horizontalSpacing = 20;
+			layout.horizontalSpacing = 2;
 			this.setLayout(layout);
 
-			labelSource = new Label(this, SWT.NULL);
-			labelSource.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false));
-			labelSource.setSize(300, 16);
+			Composite cSourceDestination = new Composite(this, SWT.FILL);
+			GridLayout sourceDestinationLayout = new GridLayout(2, false);
+			sourceDestinationLayout.marginHeight = 0;
+			sourceDestinationLayout.marginWidth = 0;
+			cSourceDestination.setLayout(sourceDestinationLayout);
+			GridData cSourceDestinationData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+			cSourceDestinationData.horizontalSpan = 2;
+			cSourceDestination.setLayoutData(cSourceDestinationData);
+			cSourceDestination.setBackgroundMode(SWT.INHERIT_DEFAULT);
+			cSourceDestination.setEnabled(false); // passes any events up to the parent
 
-			toolbar = new ToolBar(this, SWT.FLAT);
-			GridData d = new GridData(GridData.END, GridData.CENTER, true, false);
-			d.verticalSpan = 4;
+			// source label
+			Label labelSource = new Label(cSourceDestination, SWT.NULL);
+			labelSource.setText(Messages.getString("NiceListViewProfileListComposite.Source") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+			lSource = new Label(cSourceDestination, SWT.NULL);
+			GridData lSourceData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+			lSource.setLayoutData(lSourceData);
+
+			// destination label
+			Label labelDestination = new Label(cSourceDestination, SWT.NULL);
+			labelDestination.setText(Messages.getString("NiceListViewProfileListComposite.Destination") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+			lDestination = new Label(cSourceDestination, SWT.NULL);
+			GridData lDestinationData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+			lDestination.setLayoutData(lDestinationData);
+
+			// last / next update
+			Composite cUpdate = new Composite(this, SWT.FILL);
+			GridLayout updateLayout = new GridLayout(2, false);
+			updateLayout.marginHeight = 0;
+			updateLayout.marginWidth = 0;
+			cUpdate.setLayout(updateLayout);
+			GridData cUpdateData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+			cUpdateData.grabExcessHorizontalSpace = true;
+			cUpdateData.horizontalAlignment = SWT.FILL;
+			cUpdate.setLayoutData(cUpdateData);
+			cUpdate.setBackgroundMode(SWT.INHERIT_DEFAULT);
+			cUpdate.setEnabled(false); // passes any events up to the parent
+
+			// last update
+			Label labelLastUpdate = new Label(cUpdate, SWT.NULL);
+			labelLastUpdate.setText(Messages.getString("NiceListViewProfileListComposite.LastUpdate") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+			lLastUpdate = new Label(cUpdate, SWT.NULL);
+			lLastUpdate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+			// next update
+			Label labelNextUpdate = new Label(cUpdate, SWT.NULL);
+			labelNextUpdate.setText(Messages.getString("NiceListViewProfileListComposite.NextUpdate") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+			lNextUpdate = new Label(cUpdate, SWT.NULL);
+			lNextUpdate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+			// buttons
+			ToolBar toolbar = new ToolBar(this, SWT.FLAT);
+			GridData d = new GridData(SWT.END, SWT.CENTER, true, false);
+			d.verticalSpan = 2;
 			toolbar.setLayoutData(d);
 
 			ToolItem t = new ToolItem(toolbar, SWT.PUSH);
 			t.setImage(imageRun);
 			t.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e) {
+				public void widgetSelected(final SelectionEvent e) {
 					handler.runProfile(profile, true);
 				}
 			});
@@ -89,7 +130,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 			t.setImage(imageRunNonInter);
 			t.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e) {
+				public void widgetSelected(final SelectionEvent e) {
 					handler.runProfile(profile, false);
 				}
 			});
@@ -98,7 +139,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 			t.setImage(imageEdit);
 			t.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e) {
+				public void widgetSelected(final SelectionEvent e) {
 					handler.editProfile(profile);
 				}
 			});
@@ -107,28 +148,17 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 			t.setImage(imageDelete);
 			t.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e) {
+				public void widgetSelected(final SelectionEvent e) {
 					handler.deleteProfile(profile);
 				}
 			});
-
-			labelDestination = new Label(this, SWT.NULL);
-			labelDestination.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false));
-			labelDestination.setSize(200, 16);
-			labelLastUpdate = new Label(this, SWT.NULL);
-			labelLastUpdate.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false));
-			labelLastUpdate.setSize(300, 16);
-			labelNextUpdate = new Label(this, SWT.NULL);
-			labelNextUpdate.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false));
-			labelNextUpdate.setSize(200, 16);
 		}
 
 		public void updateComponent() {
-			new Date().getTime();
-			labelSource.setText(Messages.getString("NiceListViewProfileListComposite.Source") + ": " + profile.getSource()); //$NON-NLS-1$ //$NON-NLS-2$
-			labelDestination.setText(Messages.getString("NiceListViewProfileListComposite.Destination") + ": " + profile.getDestination()); //$NON-NLS-1$ //$NON-NLS-2$
-			labelLastUpdate.setText(Messages.getString("NiceListViewProfileListComposite.LastUpdate") + ": " + profile.getLastUpdateText()); //$NON-NLS-1$ //$NON-NLS-2$
-			labelNextUpdate.setText(Messages.getString("NiceListViewProfileListComposite.NextUpdate") + ": " + profile.getNextUpdateText()); //$NON-NLS-1$ //$NON-NLS-2$
+			lSource.setText(profile.getSource().toString());
+			lDestination.setText(profile.getDestination().toString());
+			lLastUpdate.setText(profile.getLastUpdateText());
+			lNextUpdate.setText(profile.getNextUpdateText());
 			layout();
 		}
 
@@ -161,10 +191,6 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	public NiceListViewProfileListComposite(Composite parent, int style) {
 		super(parent, style);
 		loadImages();
-		initGui();
-	}
-
-	private void initGui() {
 		scrollPane = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
 		profileList = new NiceListView(scrollPane, SWT.NULL);
 		scrollPane.setExpandHorizontal(true);
@@ -179,15 +205,16 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	}
 
 	private void loadImages() {
-		imageProfileDefault = GuiController.getInstance().getImage("Profile_Default.png"); //$NON-NLS-1$
-		imageProfileScheduled = GuiController.getInstance().getImage("Profile_Default_Scheduled.png"); //$NON-NLS-1$
-		imageProfileError = GuiController.getInstance().getImage("Profile_Default_Error.png"); //$NON-NLS-1$
-		imageProfileErrorScheduled = GuiController.getInstance().getImage("Profile_Default_Error_Scheduled.png"); //$NON-NLS-1$
+		GuiController gc = GuiController.getInstance();
+		imageProfileDefault = gc.getImage("Profile_Default.png"); //$NON-NLS-1$
+		imageProfileScheduled = gc.getImage("Profile_Default_Scheduled.png"); //$NON-NLS-1$
+		imageProfileError = gc.getImage("Profile_Default_Error.png"); //$NON-NLS-1$
+		imageProfileErrorScheduled = gc.getImage("Profile_Default_Error_Scheduled.png"); //$NON-NLS-1$
 
-		imageRun = GuiController.getInstance().getImage("Profile_Run.png"); //$NON-NLS-1$
-		imageRunNonInter = GuiController.getInstance().getImage("Profile_Run_Non_Inter.png"); //$NON-NLS-1$
-		imageEdit = GuiController.getInstance().getImage("Profile_Edit.png"); //$NON-NLS-1$
-		imageDelete = GuiController.getInstance().getImage("Profile_Delete.png"); //$NON-NLS-1$
+		imageRun = gc.getImage("Profile_Run.png"); //$NON-NLS-1$
+		imageRunNonInter = gc.getImage("Profile_Run_Non_Inter.png"); //$NON-NLS-1$
+		imageEdit = gc.getImage("Profile_Edit.png"); //$NON-NLS-1$
+		imageDelete = gc.getImage("Profile_Delete.png"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -227,7 +254,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		}
 		else {
 			String desc = profile.getDescription();
-			if ((desc != null) && !desc.equals("")) {
+			if ((desc != null) && !"".equals(desc)) {
 				item.setStatusText(desc);
 			}
 			else if (profile.isEnabled() && (profile.getSchedule() != null)) {
@@ -300,8 +327,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	}
 
 	public void setItemsMenu(Menu menu) {
-		Control[] items = profileList.getChildren();
-		for (Control item : items) {
+		for (Control item : profileList.getChildren()) {
 			item.setMenu(menu);
 		}
 	}

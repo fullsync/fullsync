@@ -65,10 +65,6 @@ public class NiceListViewItem extends Canvas implements Listener {
 		colorSelectedDefault = new Color(getDisplay(), 236, 233, 216);
 		colorSelectedFocus = new Color(getDisplay(), 230, 240, 255);
 
-		initGUI();
-	}
-
-	private void initGUI() {
 		try {
 			GridData layoutData = new GridData();
 			layoutData.grabExcessHorizontalSpace = true;
@@ -89,65 +85,46 @@ public class NiceListViewItem extends Canvas implements Listener {
 			thisLayout.marginHeight = 3;
 			thisLayout.marginWidth = 3;
 
-			{
-				labelIcon = new Label(this, SWT.NULL);
-				labelIcon.setSize(16, 16);
-				GridData labelIconLData = new GridData();
-				labelIconLData.grabExcessVerticalSpace = true;
-				labelIconLData.verticalAlignment = GridData.BEGINNING;
-				labelIconLData.verticalSpan = 2;
-				labelIconLData.widthHint = 16;
-				labelIconLData.heightHint = 16;
-				labelIcon.setLayoutData(labelIconLData);
-				labelIcon.addListener(SWT.MouseEnter, this);
-				labelIcon.addListener(SWT.MouseExit, this);
-				labelIcon.addListener(SWT.MouseUp, this);
-				labelIcon.addListener(SWT.MouseDown, this);
-				labelIcon.addListener(SWT.MouseDoubleClick, this);
-			}
-			{
-				labelCaption = new Label(this, SWT.NULL);
-				labelCaption.setFont(new Font(getDisplay(), "Tahoma", 9, 1)); //$NON-NLS-1$
-				labelCaption.setSize(200, 14);
-				GridData labelCaptionLData = new GridData();
-				labelCaptionLData.widthHint = -1;
-				labelCaptionLData.heightHint = 14;
-				labelCaption.setLayoutData(labelCaptionLData);
-				labelCaption.addListener(SWT.MouseEnter, this);
-				labelCaption.addListener(SWT.MouseExit, this);
-				labelCaption.addListener(SWT.MouseUp, this);
-				labelCaption.addListener(SWT.MouseDown, this);
-				labelCaption.addListener(SWT.MouseDoubleClick, this);
-			}
-			{
-				labelStatus = new Label(this, SWT.NONE);
-				GridData labelStatusLData = new GridData();
-				labelStatusLData.grabExcessHorizontalSpace = true;
-				labelStatusLData.horizontalAlignment = GridData.FILL;
-				labelStatusLData.horizontalIndent = 10;
-				labelStatus.setLayoutData(labelStatusLData);
-				labelStatus.addListener(SWT.MouseEnter, this);
-				labelStatus.addListener(SWT.MouseExit, this);
-				labelStatus.addListener(SWT.MouseUp, this);
-				labelStatus.addListener(SWT.MouseDown, this);
-				labelStatus.addListener(SWT.MouseDoubleClick, this);
-			}
-			/*
-			 * {
-			 * compositeContent = new Composite( this, SWT.NULL );
-			 * compositeContent.setVisible( false );
-			 * compositeContent.setSize( 200, 40 );
-			 * GridData compositeContentLData = new GridData();
-			 * compositeContentLData.horizontalSpan = 2;
-			 * compositeContentLData.grabExcessHorizontalSpace = true;
-			 * compositeContentLData.horizontalAlignment = GridData.FILL;
-			 * compositeContentLData.heightHint = 1;
-			 * compositeContentLData.widthHint = 1;
-			 * compositeContent.setLayoutData(compositeContentLData);
-			 * compositeContent.addMouseTrackListener( mouseTrackListener );
-			 * compositeContent.addMouseListener( mouseListener );
-			 * }
-			 */
+			// icon
+			labelIcon = new Label(this, SWT.NULL);
+			labelIcon.setSize(16, 16);
+			GridData labelIconLData = new GridData();
+			labelIconLData.grabExcessVerticalSpace = true;
+			labelIconLData.verticalAlignment = GridData.BEGINNING;
+			labelIconLData.verticalSpan = 2;
+			labelIconLData.widthHint = 16;
+			labelIconLData.heightHint = 16;
+			labelIcon.setLayoutData(labelIconLData);
+			labelIcon.addListener(SWT.MouseEnter, this);
+			labelIcon.addListener(SWT.MouseExit, this);
+			labelIcon.addListener(SWT.MouseUp, this);
+			labelIcon.addListener(SWT.MouseDown, this);
+			labelIcon.addListener(SWT.MouseDoubleClick, this);
+
+			// profile name
+			labelCaption = new Label(this, SWT.NULL);
+			labelCaption.setFont(new Font(getDisplay(), "Tahoma", 9, 1)); //$NON-NLS-1$
+			GridData labelCaptionLData = new GridData();
+			labelCaptionLData.widthHint = -1;
+			labelCaption.setLayoutData(labelCaptionLData);
+			labelCaption.addListener(SWT.MouseEnter, this);
+			labelCaption.addListener(SWT.MouseExit, this);
+			labelCaption.addListener(SWT.MouseUp, this);
+			labelCaption.addListener(SWT.MouseDown, this);
+			labelCaption.addListener(SWT.MouseDoubleClick, this);
+
+
+			labelStatus = new Label(this, SWT.NONE);
+			GridData labelStatusLData = new GridData();
+			labelStatusLData.grabExcessHorizontalSpace = true;
+			labelStatusLData.horizontalAlignment = SWT.FILL;
+			labelStatusLData.horizontalIndent = 10;
+			labelStatus.setLayoutData(labelStatusLData);
+			labelStatus.addListener(SWT.MouseEnter, this);
+			labelStatus.addListener(SWT.MouseExit, this);
+			labelStatus.addListener(SWT.MouseUp, this);
+			labelStatus.addListener(SWT.MouseDown, this);
+			labelStatus.addListener(SWT.MouseDoubleClick, this);
 
 			this.setBackground(colorDefault);
 			this.layout();
@@ -158,7 +135,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 	}
 
 	@Override
-	public void handleEvent(Event event) {
+	public void handleEvent(final Event event) {
 		switch (event.type) {
 			case SWT.MouseEnter:
 				mouseOver = true;
@@ -189,6 +166,8 @@ public class NiceListViewItem extends Canvas implements Listener {
 			case SWT.FocusOut:
 				hasFocus = false;
 				updateBackground();
+				break;
+			default:
 				break;
 		}
 		;
@@ -265,8 +244,6 @@ public class NiceListViewItem extends Canvas implements Listener {
 			Point size = compositeContent.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			((GridData) compositeContent.getLayoutData()).widthHint = size.x;
 			((GridData) compositeContent.getLayoutData()).heightHint = size.y;
-			// labelCaption.setFocus();
-			// this.setFocus();
 		}
 		else {
 			compositeContent.setVisible(false);
@@ -295,7 +272,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 		GridData compositeContentLData = new GridData();
 		compositeContentLData.horizontalSpan = 2;
 		compositeContentLData.grabExcessHorizontalSpace = true;
-		compositeContentLData.horizontalAlignment = GridData.FILL;
+		compositeContentLData.horizontalAlignment = SWT.FILL;
 		compositeContentLData.heightHint = 0;
 		compositeContentLData.widthHint = 0;
 		compositeContent.setLayoutData(compositeContentLData);
