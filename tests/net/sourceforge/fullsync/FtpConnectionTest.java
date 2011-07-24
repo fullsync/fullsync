@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -90,7 +90,7 @@ public class FtpConnectionTest extends TestCase {
 
 	/**
 	 * recursively delete directory and all contained files.
-	 * 
+	 *
 	 * @param dir
 	 *            directory to clear
 	 */
@@ -126,7 +126,7 @@ public class FtpConnectionTest extends TestCase {
 		new File(dir, filename).setLastModified(lm);
 	}
 
-	protected TaskTree assertPhaseOneActions(final Hashtable expectation) throws Exception {
+	protected TaskTree assertPhaseOneActions(final Hashtable<String, Action> expectation) throws Exception {
 		TaskGenerationListener list = new TaskGenerationListener() {
 			@Override
 			public void taskGenerationFinished(Task task) {
@@ -167,7 +167,7 @@ public class FtpConnectionTest extends TestCase {
 		file.setLastModified(d);
 		m_fakeServer.getFileSystem().add(file);
 
-		Hashtable expectation = new Hashtable();
+		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
 		expectation.put("sourceFile1.txt", new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, ""));
 		expectation.put("sourceFile2.txt", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
 		// Phase One:
@@ -185,7 +185,7 @@ public class FtpConnectionTest extends TestCase {
 		createNewFileWithContents(testingSource, "sub - folder/sub2 - folder/sourceFile1.txt", lm, "this is a test\ncontent1");
 		createNewFileWithContents(testingSource, "sub - folder/sourceFile2.txt", lm, "this is a test\ncontent2");
 
-		Hashtable expectation = new Hashtable();
+		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
 		expectation.put("sub - folder", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
 		expectation.put("sub2 - folder", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
 		expectation.put("sourceFile1.txt", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));

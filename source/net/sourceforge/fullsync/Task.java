@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -21,8 +21,6 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.fs.File;
@@ -31,7 +29,7 @@ import net.sourceforge.fullsync.fs.File;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class Task implements Serializable {
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2L;
 
 	private File source;
 	private File destination;
@@ -39,7 +37,7 @@ public class Task implements Serializable {
 	private Action[] actions;
 	private int currentAction;
 
-	private Vector children;
+	private Vector<Task> children;
 
 	public Task(File source, File destination, State state, Action[] actions) {
 		this.source = source;
@@ -95,40 +93,45 @@ public class Task implements Serializable {
 	}
 
 	public void addChild(Task child) {
-		if (children == null)
-			children = new Vector(5);
+		if (children == null) {
+			children = new Vector<Task>(5);
+		}
 		this.children.add(child);
 	}
 
-	public Enumeration getChildren() {
-		if (children == null)
-			return Collections.enumeration(Collections.EMPTY_LIST);
-		return children.elements();
+	public Vector<Task> getChildren() {
+		if (children == null) {
+			return new Vector<Task>();
+		}
+		return children;
 	}
 
+	@Override
 	public String toString() {
 		return getCurrentAction().toString();
 	}
 
 	public int getTaskCount() {
-		int count = 0;
-		Enumeration e = getChildren();
-		while (e.hasMoreElements()) {
-			count += ((Task) e.nextElement()).getTaskCount();
+		int count = 1;
+		for (Task t : getChildren()) {
+			count += t.getTaskCount();
 		}
-		return count + 1;
+		return count;
 	}
 
 	// HACK equals and hashCode should use more fields!!! Moreover some of the fields can be null.
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Task) {
 			Task t = (Task) o;
-			if ((source.getName().equals(t.source.getName())))
+			if ((source.getName().equals(t.source.getName()))) {
 				return true;
+			}
 		}
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		return source.getPath().hashCode();
 	}
@@ -148,7 +151,7 @@ public class Task implements Serializable {
 		this.state = (State) in.readObject();
 		this.actions = (Action[]) in.readObject();
 		this.currentAction = in.readInt();
-		this.children = (Vector) in.readObject();
+		this.children = (Vector<Task>) in.readObject();
 	}
 
 }

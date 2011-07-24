@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -31,6 +31,7 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class FileFilter implements Serializable {
 
+	private static final long serialVersionUID = 2L;
 	public static final int MATCH_ALL = 0;
 	public static final int MATCH_ANY = 1;
 
@@ -95,12 +96,12 @@ public class FileFilter implements Serializable {
 
 		switch (match_type) {
 			case MATCH_ALL: {
-				for (int i = 0; i < rules.length; i++) {
+				for (FileFilterRule rule : rules) {
 					if ((!appliesToDir) && (file.isDirectory())) {
 						continue;
 					}
 					try {
-						boolean res = rules[i].match(file);
+						boolean res = rule.match(file);
 						if (!res) {
 							return false;
 						}
@@ -114,12 +115,12 @@ public class FileFilter implements Serializable {
 			case MATCH_ANY: {
 				int applyedRules = 0;
 
-				for (int i = 0; i < rules.length; i++) {
+				for (FileFilterRule rule : rules) {
 					if ((!appliesToDir) && (file.isDirectory())) {
 						continue;
 					}
 					try {
-						boolean res = rules[i].match(file);
+						boolean res = rule.match(file);
 						if (res) {
 							return true;
 						}
@@ -135,6 +136,7 @@ public class FileFilter implements Serializable {
 		}
 	}
 
+	@Override
 	public String toString() {
 		if (rules.length == 0) {
 			return "Empty filter";

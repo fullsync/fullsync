@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -45,6 +45,7 @@ public class UpdateCheckerImpl implements UpdateChecker {
 		server = new URL("http://fullsync.sourceforge.net/modules.php");
 	}
 
+	@Override
 	public Version getLatestVersion(UpdatableModule module) throws IOException {
 		if (versions == null) {
 			versions = new Properties();
@@ -53,10 +54,11 @@ public class UpdateCheckerImpl implements UpdateChecker {
 		return new Version(versions.getProperty(module.getName()));
 	}
 
+	@Override
 	public File downloadUpdate(UpdatableModule module) throws IOException {
 		URL query = new URL(server + "?module=" + module.getName());
 		BufferedReader conn = new BufferedReader(new InputStreamReader(query.openStream()));
-		Vector mirrors = new Vector();
+		Vector<String> mirrors = new Vector<String>();
 		String line;
 		while ((line = conn.readLine()) != null) {
 			mirrors.add(line);
@@ -66,13 +68,14 @@ public class UpdateCheckerImpl implements UpdateChecker {
 		File tmpFile = new File("__update.zip");
 		for (int i = 0; i < mirrors.size(); i++) {
 			try {
-				URL url = new URL((String) mirrors.get(i));
+				URL url = new URL(mirrors.get(i));
 				InputStream in = url.openStream();
 				OutputStream out = new FileOutputStream(tmpFile);
 
 				int b = 0;
-				while ((b = in.read()) >= 0)
+				while ((b = in.read()) >= 0) {
 					out.write(b);
+				}
 
 				out.close();
 				in.close();
@@ -85,22 +88,25 @@ public class UpdateCheckerImpl implements UpdateChecker {
 		return tmpFile;
 	}
 
+	@Override
 	public boolean installUpdate(File file) throws IOException {
-		File basedir = new File(".");
+		new File(".");
 		ZipFile zip = new ZipFile(file);
-		Enumeration e = zip.entries();
+		Enumeration<? extends ZipEntry> e = zip.entries();
 		while (e.hasMoreElements()) {
-			ZipEntry entry = (ZipEntry) e.nextElement();
+			ZipEntry entry = e.nextElement();
 			File f = new File(entry.getName());
 			if (!entry.isDirectory()) {
-				if (f.getParentFile() != null)
+				if (f.getParentFile() != null) {
 					f.getParentFile().mkdirs();
+				}
 				InputStream in = zip.getInputStream(entry);
 				OutputStream out = new FileOutputStream(f);
 
 				int b = 0;
-				while ((b = in.read()) >= 0)
+				while ((b = in.read()) >= 0) {
 					out.write(b);
+				}
 
 				out.close();
 				in.close();
@@ -112,10 +118,12 @@ public class UpdateCheckerImpl implements UpdateChecker {
 
 	public static void main(String[] args) throws Exception {
 		UpdatableModule m = new UpdatableModule() {
+			@Override
 			public String getName() {
 				return "FullSync";
 			}
 
+			@Override
 			public Version getVersion() {
 				return null;
 			}

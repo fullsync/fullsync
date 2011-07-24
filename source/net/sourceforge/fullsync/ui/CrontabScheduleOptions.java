@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -59,6 +59,7 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 			radioAll.setText(Messages.getString("CrontabScheduleOptions.all")); //$NON-NLS-1$
 			radioAll.setSelection(true);
 			radioAll.addListener(SWT.Selection, new Listener() {
+				@Override
 				public void handleEvent(Event event) {
 					text.setEnabled(!radioAll.getSelection());
 					buttonChoose.setEnabled(!radioAll.getSelection());
@@ -85,6 +86,7 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 			buttonChoose.setText("..."); //$NON-NLS-1$
 			buttonChoose.setEnabled(false);
 			buttonChoose.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent arg0) {
 					final Shell shell = new Shell(getShell(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.TOOL);
 					shell.setLayout(new GridLayout(2, true));
@@ -111,6 +113,7 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 					buttonOk.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL));
 					buttonOk.setText(Messages.getString("CrontabScheduleOptions.Ok")); //$NON-NLS-1$
 					buttonOk.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent e) {
 							text.setText(part.createInstance(table.getSelectionIndices(), -part.low).pattern);
 							shell.dispose();
@@ -121,6 +124,7 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 					buttonClose.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL));
 					buttonClose.setText(Messages.getString("CrontabScheduleOptions.Close")); //$NON-NLS-1$
 					buttonClose.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent e) {
 							shell.dispose();
 						}
@@ -132,8 +136,9 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 					shell.open();
 					Display display = getDisplay();
 					while (!shell.isDisposed()) {
-						if (!display.readAndDispatch())
+						if (!display.readAndDispatch()) {
 							display.sleep();
+						}
 					}
 				}
 			});
@@ -153,10 +158,12 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 		}
 
 		public CrontabPart.Instance getInstance() throws DataParseException {
-			if (radioAll.getSelection())
+			if (radioAll.getSelection()) {
 				return part.createInstance();
-			else
+			}
+			else {
 				return part.createInstance(text.getText());
+			}
 		}
 	}
 
@@ -173,8 +180,9 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 
 			CrontabPart[] cronParts = CrontabPart.ALL_PARTS;
 			parts = new PartContainer[cronParts.length];
-			for (int i = 0; i < parts.length; i++)
+			for (int i = 0; i < parts.length; i++) {
 				parts[i] = new PartContainer(cronParts[i]);
+			}
 
 			this.setSize(390, 260);
 			this.layout();
@@ -184,14 +192,17 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 		}
 	}
 
+	@Override
 	public String getSchedulingName() {
 		return Messages.getString("CrontabScheduleOptions.Crontab"); //$NON-NLS-1$
 	}
 
+	@Override
 	public boolean canHandleSchedule(Schedule schedule) {
 		return schedule instanceof CrontabSchedule;
 	}
 
+	@Override
 	public void setSchedule(Schedule schedule) {
 		if (schedule instanceof CrontabSchedule) {
 			CrontabPart.Instance[] instances = ((CrontabSchedule) schedule).getParts();
@@ -201,6 +212,7 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 		}
 	}
 
+	@Override
 	public Schedule getSchedule() throws DataParseException {
 		return new CrontabSchedule(parts[0].getInstance(), parts[1].getInstance(), parts[2].getInstance(), parts[3].getInstance(),
 				parts[4].getInstance());

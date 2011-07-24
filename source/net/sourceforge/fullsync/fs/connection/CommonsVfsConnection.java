@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -42,7 +42,7 @@ import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 
 public class CommonsVfsConnection implements FileSystemConnection {
-	private static final long serialVersionUID = 7979169940946997175L;
+	private static final long serialVersionUID = 2L;
 	private ConnectionDescription desc;
 	private FileObject base;
 	private FileSystem fileSystem;
@@ -63,18 +63,18 @@ public class CommonsVfsConnection implements FileSystemConnection {
 			 * if( userinfo != null )
 			 * {
 			 * String[] parts = userinfo.split("@");
-			 * 
+			 *
 			 * if( parts.length == 2 )
 			 * {
 			 * userinfo = parts[0];
 			 * String publickeyfile = parts[1];
 			 * SftpFileSystemConfigBuilder.getInstance().setIdentities( options, new java.io.File[]{ new java.io.File(publickeyfile) } );
 			 * }
-			 * 
+			 *
 			 * userinfo = URLEncoder.encode( userinfo );
 			 * if( desc.getPassword() != null )
 			 * userinfo += ":" + URLEncoder.encode( desc.getPassword() );
-			 * 
+			 *
 			 * uriString = desc.getUri().replaceFirst( "//", "//"+userinfo+"@" );
 			 * } else {
 			 * uriString = desc.getUri();
@@ -116,15 +116,16 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public Hashtable getChildren(File dir) throws IOException {
+	public Hashtable<String, File> getChildren(File dir) throws IOException {
 		try {
-			Hashtable children = new Hashtable();
+			Hashtable<String, File> children = new Hashtable<String, File>();
 
 			FileObject obj = base.resolveFile(dir.getPath());
-			if (obj.exists() && obj.getType() == FileType.FOLDER) {
+			if (obj.exists() && (obj.getType() == FileType.FOLDER)) {
 				FileObject[] list = obj.getChildren();
-				for (int i = 0; i < list.length; i++)
-					children.put(list[i].getName().getBaseName(), buildNode(dir, list[i]));
+				for (FileObject element : list) {
+					children.put(element.getName().getBaseName(), buildNode(dir, element));
+				}
 			}
 			return children;
 		}

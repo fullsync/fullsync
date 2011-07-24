@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -41,6 +41,7 @@ public class PhaseOneTest extends TestCase {
 	private TaskGenerator processor;
 	private Profile profile;
 
+	@Override
 	protected void setUp() throws Exception {
 		testingDir = new File("testing");
 		testingSource = new File(testingDir, "source");
@@ -63,6 +64,7 @@ public class PhaseOneTest extends TestCase {
 		super.setUp();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		clearUp();
 		testingSource.delete();
@@ -74,10 +76,11 @@ public class PhaseOneTest extends TestCase {
 
 	protected void clearDirectory(File dir) {
 		File[] files = dir.listFiles();
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].isDirectory())
-				clearDirectory(files[i]);
-			files[i].delete();
+		for (File file : files) {
+			if (file.isDirectory()) {
+				clearDirectory(file);
+			}
+			file.delete();
 		}
 	}
 
@@ -109,8 +112,9 @@ public class PhaseOneTest extends TestCase {
 		new File(dir, filename).setLastModified(lm);
 	}
 
-	protected void assertPhaseOneActions(final Hashtable expectation) throws Exception {
+	protected void assertPhaseOneActions(final Hashtable<String, Action> expectation) throws Exception {
 		TaskGenerationListener list = new TaskGenerationListener() {
+			@Override
 			public void taskGenerationFinished(Task task) {
 				Object ex = expectation.get(task.getSource().getName());
 				assertNotNull("Unexpected generated Task for file: " + task.getSource().getName(), ex);
@@ -118,18 +122,21 @@ public class PhaseOneTest extends TestCase {
 						.getCurrentAction().equalsExceptExplanation((Action) ex));
 			}
 
+			@Override
 			public void taskGenerationStarted(net.sourceforge.fullsync.fs.File source, net.sourceforge.fullsync.fs.File destination) {
 			}
 
+			@Override
 			public void taskTreeFinished(TaskTree tree) {
 			}
 
+			@Override
 			public void taskTreeStarted(TaskTree tree) {
 			}
 		};
 
 		processor.addTaskGenerationListener(list);
-		TaskTree tree = processor.execute(profile);
+		processor.execute(profile);
 		processor.removeTaskGenerationListener(list);
 	}
 
@@ -140,7 +147,7 @@ public class PhaseOneTest extends TestCase {
 		createNewFileWithContents(testingSource, "sourceFile1.txt", lm, "this is a test\ncontent1");
 		createNewFileWithContents(testingDestination, "sourceFile1.txt", lm, "this is a test\ncontent1");
 
-		Hashtable expectation = new Hashtable();
+		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
 		expectation.put("sourceFile1.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
 		assertPhaseOneActions(expectation);
 	}
@@ -154,7 +161,7 @@ public class PhaseOneTest extends TestCase {
 		createNewFileWithContents(testingSource, "sourceFile2.txt", lm + 3600, "this is a test\ncontent2");
 		createNewFileWithContents(testingDestination, "sourceFile2.txt", lm, "this is a test\ncontent2");
 
-		Hashtable expectation = new Hashtable();
+		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
 		expectation.put("sourceFile1.txt", new Action(Action.Update, Location.Destination, BufferUpdate.Destination, ""));
 		expectation.put("sourceFile2.txt", new Action(Action.Update, Location.Destination, BufferUpdate.Destination, ""));
 		assertPhaseOneActions(expectation);
@@ -164,12 +171,12 @@ public class PhaseOneTest extends TestCase {
 		/*
 		 * createNewFileWithContents( testingSource, "sourceFile3.txt", "this is a test\ncontent2" );
 		 * createNewFileWithContents( testingSource, "sourceFile3.txt", "this is a test\ncontent2" );
-		 * 
+		 *
 		 * createNewFileWithContents( testingSource, "sourceFile4.txt", "this is a test\ncontent2" );
 		 * createNewFileWithContents( testingSource, "sourceFile4.txt", "this is a test\ncontent2" );
-		 * 
+		 *
 		 * TaskTree tree = processor.execute( profile );
-		 * 
+		 *
 		 * assertEquals( tree.getTaskCount(), 2 );
 		 * assertEquals( tree.getSource(), profile.getSource() );
 		 * assertEquals( tree.getDestination(), profile.getDestination() );

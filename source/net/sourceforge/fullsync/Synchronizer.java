@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
 /**
  * This class should provide wrappers for most common synchronization tasks
  * like synchronizing a profile or perfoming a task tree.
- * 
+ *
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class Synchronizer {
@@ -87,11 +87,11 @@ public class Synchronizer {
 	 * TODO if we add some listener/feedback receiver here we could
 	 * easily use this for visual action performing as well.
 	 * -- done ?
-	 * 
+	 *
 	 * now we still need the action count info before everything is performed
 	 * and later we'll need to cancel/stop the whole process
 	 * looks like we really need to single thread the whole class !
-	 * 
+	 *
 	 * @return Returns the ErrorLevel
 	 */
 	public int performActions(TaskTree taskTree, TaskFinishedListener listener) {
@@ -121,8 +121,9 @@ public class Synchronizer {
 				BlockBuffer buffer = new BlockBuffer(logger);
 				TaskExecutor queue = new FillBufferTaskExecutor(buffer);
 
-				if (listener != null)
+				if (listener != null) {
 					queue.addTaskFinishedListener(listener);
+				}
 
 				buffer.load();
 				queue.enqueue(taskTree);

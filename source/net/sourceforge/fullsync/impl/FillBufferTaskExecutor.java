@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -41,18 +41,19 @@ import net.sourceforge.fullsync.fs.File;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListener {
-	private Vector listeners;
+	private Vector<TaskFinishedListener> listeners;
 	private boolean statisticsOnly;
 	private IoStatisticsImpl stats;
 	private ExecutionBuffer buffer;
 
 	public FillBufferTaskExecutor(ExecutionBuffer buffer) {
-		this.listeners = new Vector();
+		this.listeners = new Vector<TaskFinishedListener>();
 		this.statisticsOnly = false;
 		this.buffer = buffer;
 		buffer.addEntryFinishedListener(this);
 	}
 
+	@Override
 	public IoStatistics createStatistics(TaskTree tree) {
 		statisticsOnly = true;
 		enqueue(tree);
@@ -64,36 +65,43 @@ public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListen
 		return stats;
 	}
 
+	@Override
 	public void enqueue(TaskTree tree) {
 		stats = new IoStatisticsImpl();
 		enqueue(tree.getRoot());
 	}
 
-	protected void enqueueTaskChildren(Task t) {
-		for (Enumeration e = t.getChildren(); e.hasMoreElements();)
-			enqueue((Task) e.nextElement());
+	protected void enqueueTaskChildren(Task task) {
+		for (Task t : task.getChildren()) {
+			enqueue(t);
+		}
 	}
 
+	@Override
 	public void enqueue(Task task) {
-		if (!task.getCurrentAction().isBeforeRecursion())
+		if (!task.getCurrentAction().isBeforeRecursion()) {
 			enqueueTaskChildren(task);
+		}
 
 		executeTask(task);
 
-		if (task.getCurrentAction().isBeforeRecursion())
+		if (task.getCurrentAction().isBeforeRecursion()) {
 			enqueueTaskChildren(task);
+		}
 	}
 
 	protected void storeDirCreation(Task task, File subject) throws IOException {
-		if (!statisticsOnly)
+		if (!statisticsOnly) {
 			buffer.storeEntry(new DirCreationEntryDescriptor(task, subject));
+		}
 		stats.dirsCreated++;
 	}
 
 	protected void storeFileCopy(Task task, File source, File destination) throws IOException {
 		try {
-			if (!statisticsOnly)
+			if (!statisticsOnly) {
 				buffer.storeEntry(new FileCopyEntryDescriptor(task, source, destination));
+			}
 			stats.filesCopied++;
 			stats.bytesTransferred += source.getFileAttributes().getLength();
 		}
@@ -105,8 +113,9 @@ public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListen
 	}
 
 	protected void storeDeleteNode(Task task, File subject) throws IOException {
-		if (!statisticsOnly)
+		if (!statisticsOnly) {
 			buffer.storeEntry(new DeleteNodeEntryDescriptor(task, subject));
+		}
 		stats.deletions++;
 	}
 
@@ -122,16 +131,20 @@ public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListen
 				case Action.Add:
 				case Action.Update:
 					if (action.getLocation() == Location.Destination) {
-						if (source.isDirectory())
+						if (source.isDirectory()) {
 							storeDirCreation(task, destination);
-						else
+						}
+						else {
 							storeFileCopy(task, source, destination);
+						}
 					}
 					else if (action.getLocation() == Location.Source) {
-						if (destination.isDirectory())
+						if (destination.isDirectory()) {
 							storeDirCreation(task, source);
-						else
+						}
+						else {
 							storeFileCopy(task, destination, source);
+						}
 					}
 					break;
 				case Action.Delete:
@@ -146,53 +159,63 @@ public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListen
 				default:
 					break;
 			}
-			if (action.getBufferUpdate() > 0 && !statisticsOnly)
+			if ((action.getBufferUpdate() > 0) && !statisticsOnly) {
 				buffer.storeEntry(new BufferUpdateEntryDescriptor(source, destination, action.getBufferUpdate()));
+			}
 		}
 		catch (IOException ioe) {
 			ExceptionHandler.reportException(ioe);
 		}
 	}
 
+	@Override
 	public void flush() throws IOException {
 		buffer.flush();
 	}
 
+	@Override
 	public void entryFinished(EntryDescriptor entry) {
 		Object ref = entry.getReferenceObject();
-		if (ref == null)
+		if (ref == null) {
 			return;
+		}
 		fireTaskFinished(new TaskFinishedEvent((Task) ref, 0));
 	}
 
 	protected void fireTaskFinished(TaskFinishedEvent event) {
-		Enumeration e = listeners.elements();
+		Enumeration<TaskFinishedListener> e = listeners.elements();
 		while (e.hasMoreElements()) {
-			((TaskFinishedListener) e.nextElement()).taskFinished(event);
+			e.nextElement().taskFinished(event);
 		}
 	}
 
+	@Override
 	public void addTaskFinishedListener(TaskFinishedListener listener) {
 		listeners.add(listener);
 	}
 
+	@Override
 	public void removeTaskFinishedListener(TaskFinishedListener listener) {
 		listeners.remove(listener);
 	}
 
+	@Override
 	public boolean isActive() {
 		// TODO please impl me !!
 		return true;
 	}
 
+	@Override
 	public void resume() {
 		// TODO please impl me !!
 	}
 
+	@Override
 	public void suspend() {
 		// TODO please impl me !!
 	}
 
+	@Override
 	public void cancel() {
 		// TODO please impl me !!
 	}

@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -22,13 +22,13 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
-import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.rules.filefilter.FileAgeFileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.FileFilterManager;
+import net.sourceforge.fullsync.rules.filefilter.FileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FileModificationDateFileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FileNameFileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FilePathFileFilterRule;
@@ -63,8 +63,6 @@ import org.eclipse.swt.widgets.ToolItem;
  */
 public class FilterRuleListItem implements ValueChangedListener {
 
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat(Messages.getString("FilterRuleListItem.DateFormat")); //$NON-NLS-1$
-
 	private final Color whiteColor = new Color(null, 255, 255, 255);
 	private final Color redColor = new Color(null, 255, 0, 0);
 
@@ -78,9 +76,9 @@ public class FilterRuleListItem implements ValueChangedListener {
 
 	private final FileFilterManager fileFilterManager;
 
-	private Hashtable rulesTable;
-	private Hashtable ruleNamesConversionTable;
-	private Hashtable reverseRuleNamesConversionTable;
+	private Hashtable<String, Class<? extends FileFilterRule>> rulesTable;
+	private Hashtable<String, String> ruleNamesConversionTable;
+	private Hashtable<String, String> reverseRuleNamesConversionTable;
 	private String[] ruleTypeNames;
 
 	public FilterRuleListItem(FileFilterDetails root, Composite composite, FileFilterManager fileFilterManager, String ruleType, int op,
@@ -102,7 +100,7 @@ public class FilterRuleListItem implements ValueChangedListener {
 				Messages.getString("FilterRuleListItem.FileModificationDateFilter"),
 				Messages.getString("FilterRuleListItem.FileAgeFilter"), Messages.getString("FilterRuleListItem.NestedFilter") };
 
-		rulesTable = new Hashtable(15, 0.75f);
+		rulesTable = new Hashtable<String, Class<? extends FileFilterRule>>(15, 0.75f);
 		rulesTable.put(Messages.getString("FilterRuleListItem.FileNameFilter"), FileNameFileFilterRule.class); //$NON-NLS-1$
 		rulesTable.put(Messages.getString("FilterRuleListItem.FilePathFilter"), FilePathFileFilterRule.class); //$NON-NLS-1$
 		rulesTable.put(Messages.getString("FilterRuleListItem.FileTypeFilter"), FileTypeFileFilterRule.class); //$NON-NLS-1$
@@ -111,7 +109,7 @@ public class FilterRuleListItem implements ValueChangedListener {
 		rulesTable.put(Messages.getString("FilterRuleListItem.FileAgeFilter"), FileAgeFileFilterRule.class); //$NON-NLS-1$
 		rulesTable.put(Messages.getString("FilterRuleListItem.NestedFilter"), SubfilterFileFilerRule.class); //$NON-NLS-1$
 
-		ruleNamesConversionTable = new Hashtable(15, 0.75f);
+		ruleNamesConversionTable = new Hashtable<String, String>(15, 0.75f);
 		ruleNamesConversionTable.put(FileNameFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileNameFilter")); //$NON-NLS-1$
 		ruleNamesConversionTable.put(FilePathFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FilePathFilter")); //$NON-NLS-1$
 		ruleNamesConversionTable.put(FileTypeFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileTypeFilter")); //$NON-NLS-1$
@@ -121,7 +119,7 @@ public class FilterRuleListItem implements ValueChangedListener {
 		ruleNamesConversionTable.put(FileAgeFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileAgeFilter")); //$NON-NLS-1$
 		ruleNamesConversionTable.put(SubfilterFileFilerRule.typeName, Messages.getString("FilterRuleListItem.NestedFilter")); //$NON-NLS-1$
 
-		reverseRuleNamesConversionTable = new Hashtable(15, 0.75f);
+		reverseRuleNamesConversionTable = new Hashtable<String, String>(15, 0.75f);
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileNameFilter"), FileNameFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FilePathFilter"), FilePathFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileTypeFilter"), FileTypeFileFilterRule.typeName); //$NON-NLS-1$
@@ -132,16 +130,16 @@ public class FilterRuleListItem implements ValueChangedListener {
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.NestedFilter"), SubfilterFileFilerRule.typeName); //$NON-NLS-1$
 	}
 
-	private Class getRuleClass(String typeName) {
-		return (Class) rulesTable.get(ruleNamesConversionTable.get(typeName));
+	private Class<? extends FileFilterRule> getRuleClass(String typeName) {
+		return rulesTable.get(ruleNamesConversionTable.get(typeName));
 	}
 
 	private String getRuleTypeName(String guiName) {
-		return (String) reverseRuleNamesConversionTable.get(guiName);
+		return reverseRuleNamesConversionTable.get(guiName);
 	}
 
 	private String getRuleGUIName(String typeName) {
-		return (String) ruleNamesConversionTable.get(typeName);
+		return ruleNamesConversionTable.get(typeName);
 	}
 
 	public String getRuleType() {
@@ -175,8 +173,8 @@ public class FilterRuleListItem implements ValueChangedListener {
 		});
 
 		comboRuleTypes.removeAll();
-		for (int i = 0; i < ruleTypeNames.length; i++) {
-			comboRuleTypes.add(ruleTypeNames[i]);
+		for (String ruleTypeName : ruleTypeNames) {
+			comboRuleTypes.add(ruleTypeName);
 		}
 
 		if ((ruleType == null) || (ruleType.equals(""))) { //$NON-NLS-1$
@@ -203,8 +201,8 @@ public class FilterRuleListItem implements ValueChangedListener {
 		if (!getRuleClass(ruleType).equals(SubfilterFileFilerRule.class)) {
 			String[] ops = fileFilterManager.getOperatorsForRuleType(ruleType);
 			comboOperators.removeAll();
-			for (int i = 0; i < ops.length; i++) {
-				comboOperators.add(ops[i]);
+			for (String op2 : ops) {
+				comboOperators.add(op2);
 			}
 			if ((op < 0) || (op >= comboOperators.getItemCount())) {
 				op = 0;

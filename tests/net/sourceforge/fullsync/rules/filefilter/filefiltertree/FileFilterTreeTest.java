@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -34,13 +34,13 @@ public class FileFilterTreeTest extends TestCase {
 	public void testBasic() {
 		FileFilterTree tree = new FileFilterTree("/");
 
-		TestNode node1 = new TestNode("a", "./a", true, true, 0, 0);
-		TestNode node2 = new TestNode("b", "./b", true, true, 0, 0);
-		TestNode node3 = new TestNode("c", "./a/c", true, true, 0, 0);
-		TestNode node4 = new TestNode("d", "./a/c/d", true, true, 0, 0);
-		TestNode node5 = new TestNode("e", "./b/e", true, true, 0, 0);
-		TestNode node6 = new TestNode("f", "./a/f", true, true, 0, 0);
-		TestNode node7 = new TestNode("g", "./a/c/d/g", true, true, 0, 0);
+		new TestNode("a", "./a", true, true, 0, 0);
+		new TestNode("b", "./b", true, true, 0, 0);
+		new TestNode("c", "./a/c", true, true, 0, 0);
+		new TestNode("d", "./a/c/d", true, true, 0, 0);
+		new TestNode("e", "./b/e", true, true, 0, 0);
+		new TestNode("f", "./a/f", true, true, 0, 0);
+		new TestNode("g", "./a/c/d/g", true, true, 0, 0);
 
 		FileFilter filter1 = new FileFilter();
 		FileFilter filter2 = new FileFilter();

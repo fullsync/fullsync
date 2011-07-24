@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -31,8 +31,9 @@ import net.sourceforge.fullsync.fs.FileAttributes;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public abstract class InstableConnection implements FileSystemConnection {
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2L;
 
+	@Override
 	public File createChild(File parent, String name, boolean directory) throws IOException {
 		try {
 			return _createChild(parent, name, directory);
@@ -43,6 +44,7 @@ public abstract class InstableConnection implements FileSystemConnection {
 		}
 	}
 
+	@Override
 	public Hashtable<String, File> getChildren(File dir) throws IOException {
 		try {
 			return _getChildren(dir);
@@ -53,6 +55,7 @@ public abstract class InstableConnection implements FileSystemConnection {
 		}
 	}
 
+	@Override
 	public boolean makeDirectory(File dir) throws IOException {
 		try {
 			return _makeDirectory(dir);
@@ -63,6 +66,7 @@ public abstract class InstableConnection implements FileSystemConnection {
 		}
 	}
 
+	@Override
 	public boolean writeFileAttributes(File file, FileAttributes att) throws IOException {
 		try {
 			return _writeFileAttributes(file, att);
@@ -73,6 +77,7 @@ public abstract class InstableConnection implements FileSystemConnection {
 		}
 	}
 
+	@Override
 	public InputStream readFile(File file) throws IOException {
 		try {
 			return _readFile(file);
@@ -83,6 +88,7 @@ public abstract class InstableConnection implements FileSystemConnection {
 		}
 	}
 
+	@Override
 	public OutputStream writeFile(File file) throws IOException {
 		try {
 			return _writeFile(file);
@@ -93,6 +99,7 @@ public abstract class InstableConnection implements FileSystemConnection {
 		}
 	}
 
+	@Override
 	public boolean delete(File node) throws IOException {
 		try {
 			return _delete(node);
@@ -121,17 +128,22 @@ public abstract class InstableConnection implements FileSystemConnection {
 
 	public abstract boolean _delete(File node) throws IOException;
 
+	@Override
 	public abstract File getRoot();
 
+	@Override
 	public abstract String getUri();
 
+	@Override
 	public abstract boolean isCaseSensitive();
 
 	public abstract void connect() throws IOException;
 
 	public abstract void reconnect() throws IOException;
 
+	@Override
 	public abstract void close() throws IOException;
 
+	@Override
 	public abstract void flush() throws IOException;
 }

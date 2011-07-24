@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -100,18 +100,24 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		RuleSet rules = profile.getRuleSet().createRuleSet();
 
 		ActionDecider actionDecider;
-		if (profile.getSynchronizationType().equals("Publish/Update"))
+		if (profile.getSynchronizationType().equals("Publish/Update")) {
 			actionDecider = new PublishActionDecider();
-		else if (profile.getSynchronizationType().equals("Publish/Update Overwrite"))
+		}
+		else if (profile.getSynchronizationType().equals("Publish/Update Overwrite")) {
 			actionDecider = new PublishOverwriteActionDecider();
-		else if (profile.getSynchronizationType().equals("Backup Copy"))
+		}
+		else if (profile.getSynchronizationType().equals("Backup Copy")) {
 			actionDecider = new BackupActionDecider();
-		else if (profile.getSynchronizationType().equals("Exact Copy"))
+		}
+		else if (profile.getSynchronizationType().equals("Exact Copy")) {
 			actionDecider = new ExactCopyActionDecider();
-		else if (profile.getSynchronizationType().equals("Two Way Sync"))
+		}
+		else if (profile.getSynchronizationType().equals("Two Way Sync")) {
 			actionDecider = new TwoWaySyncActionDecider();
-		else
+		}
+		else {
 			throw new IllegalArgumentException("Profile has unknown synchronization type.");
+		}
 
 		try {
 			d1 = fsm.createConnection(profile.getSource());
@@ -119,10 +125,12 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 			return execute(d1, d2, actionDecider, rules);
 		}
 		catch (FileSystemException ex) {
-			if (d1 != null)
+			if (d1 != null) {
 				d1.close();
-			if (d2 != null)
+			}
+			if (d2 != null) {
 				d2.close();
+			}
 			throw ex;
 		}
 	}
@@ -130,10 +138,12 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 	@Override
 	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules) throws DataParseException,
 			FileSystemException, IOException {
-		if (!source.isAvailable())
+		if (!source.isAvailable()) {
 			throw new FileSystemException("source is unavailable");
-		if (!destination.isAvailable())
+		}
+		if (!destination.isAvailable()) {
 			throw new FileSystemException("destination is unavailable");
+		}
 
 		this.actionDecider = actionDecider;
 
@@ -142,8 +152,9 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 				Location.None, BufferUpdate.None, "Root") });
 		tree.setRoot(root);
 
-		for (int i = 0; i < taskGenerationListeners.size(); i++)
+		for (int i = 0; i < taskGenerationListeners.size(); i++) {
 			(taskGenerationListeners.get(i)).taskTreeStarted(tree);
+		}
 
 		// TODO use syncnodes here [?]
 		// TODO get traversal type and start correct traversal action
@@ -152,8 +163,9 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		// TODO this would be better, but we need the rules to sync Nodes :-/
 		// synchronizeNodes( source.getRoot(), destination.getRoot(), rules, root );
 
-		for (int i = 0; i < taskGenerationListeners.size(); i++)
+		for (int i = 0; i < taskGenerationListeners.size(); i++) {
 			(taskGenerationListeners.get(i)).taskTreeFinished(tree);
+		}
 
 		return tree;
 	}

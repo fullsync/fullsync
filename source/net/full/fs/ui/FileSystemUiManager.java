@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -32,22 +32,27 @@ public class FileSystemUiManager {
 	private static FileSystemUiManager instance;
 
 	public static FileSystemUiManager getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new FileSystemUiManager();
+		}
 		return instance;
 	}
 
 	public ProtocolSpecificComposite createProtocolSpecificComposite(Composite parent, int style, String protocol) {
 		ProtocolSpecificComposite composite = null;
 
-		if (protocol.equals("file"))
+		if (protocol.equals("file")) {
 			composite = new FileSpecificComposite(parent, style);
-		else if (protocol.equals("ftp"))
+		}
+		else if (protocol.equals("ftp")) {
 			composite = new UserPasswordSpecificComposite(parent, style);
-		else if (protocol.equals("sftp"))
+		}
+		else if (protocol.equals("sftp")) {
 			composite = new UserPasswordSpecificComposite(parent, style);
-		else if (protocol.equals("smb"))
+		}
+		else if (protocol.equals("smb")) {
 			composite = new UserPasswordSpecificComposite(parent, style);
+		}
 
 		if (composite != null) {
 			composite.reset(protocol);

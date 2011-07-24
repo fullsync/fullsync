@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -38,7 +38,7 @@ import net.sourceforge.fullsync.rules.Rule;
  * Provides informations and rules about how to handle specific<br>
  * files and whether system files should be used or not.<br>
  * TODO refine commands to a lot of SETs and add RESET commands
- * 
+ *
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public abstract class AbstractRuleSet implements RuleSet, Cloneable {
@@ -52,9 +52,9 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 	int checkingBufferAlways;
 	int checkingBufferOnReplace;
 
-	Vector takeRules;
-	Vector ignoreRules;
-	Vector syncRules;
+	Vector<Rule> takeRules;
+	Vector<Rule> ignoreRules;
+	Vector<String> syncRules;
 
 	boolean applyingTakeRules;
 	boolean applyingIgnoreRules;
@@ -85,7 +85,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 
 	/**
 	 * Constructor AbstractRuleSet.
-	 * 
+	 *
 	 * @param name
 	 */
 	public AbstractRuleSet(String name) {
@@ -104,20 +104,26 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 		checkingBufferAlways = Location.None;
 		checkingBufferOnReplace = Location.None;
 
-		if (takeRules == null)
-			takeRules = new Vector();
-		else
+		if (takeRules == null) {
+			takeRules = new Vector<Rule>();
+		}
+		else {
 			takeRules.clear();
+		}
 
-		if (ignoreRules == null)
-			ignoreRules = new Vector();
-		else
+		if (ignoreRules == null) {
+			ignoreRules = new Vector<Rule>();
+		}
+		else {
 			ignoreRules.clear();
+		}
 
-		if (syncRules == null)
-			syncRules = new Vector();
-		else
+		if (syncRules == null) {
+			syncRules = new Vector<String>();
+		}
+		else {
 			syncRules.clear();
+		}
 
 		applyingTakeRules = false;
 		applyingIgnoreRules = false;
@@ -134,52 +140,63 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 	/**
 	 * @return Returns true if the file should be taken, false if ignored
 	 */
+	@Override
 	public boolean isNodeIgnored(File node) {
-		String filename = node.getName();
+		node.getName();
 		boolean take = !ignoreAll;
-		Enumeration e;
+		Enumeration<Rule> e;
 
-		if (take)
+		if (take) {
 			for (e = ignoreRules.elements(); e.hasMoreElements();) {
-				Rule rule = (Rule) e.nextElement();
+				Rule rule = e.nextElement();
 				if (rule.accepts(node)) {
 					take = false;
 					break;
 				}
 			}
+		}
 
-		if (!take)
+		if (!take) {
 			for (e = takeRules.elements(); e.hasMoreElements();) {
-				Rule rule = (Rule) e.nextElement();
+				Rule rule = e.nextElement();
 				if (rule.accepts(node)) {
 					take = true;
 					break;
 				}
 			}
+		}
 
 		return !take;
 	}
 
 	protected long evalRealValue(FileAttributes f, String exp) throws DataParseException {
-		if (exp.equalsIgnoreCase("length"))
+		if (exp.equalsIgnoreCase("length")) {
 			return f.getLength();
-		else if (exp.equalsIgnoreCase("date"))
+		}
+		else if (exp.equalsIgnoreCase("date")) {
 			return (int) Math.floor(f.getLastModified() / 1000.0);
-		else
+		}
+		else {
 			throw new DataParseException("Error while parsing SyncRule: '" + exp + "' is unknown", 0);
+		}
 	}
 
 	protected int eval(long srcValue, String operator, long dstValue) throws DataParseException {
-		if (operator.equals("!="))
+		if (operator.equals("!=")) {
 			return (srcValue != dstValue) ? -100 : 0;
-		else if (operator.equals("=="))
+		}
+		else if (operator.equals("==")) {
 			return (srcValue == dstValue) ? 0 : -100;
-		else if (operator.equals(">"))
+		}
+		else if (operator.equals(">")) {
 			return (srcValue > dstValue) ? -1 : 1;
-		else if (operator.equals("<"))
+		}
+		else if (operator.equals("<")) {
 			return (srcValue < dstValue) ? 1 : -1;
-		else
+		}
+		else {
 			throw new DataParseException("Error while parsing SyncRule: '" + operator + "' is unknown operator", 0);
+		}
 	}
 
 	private static final State inSyncBoth = new State(State.NodeInSync, Location.Both);
@@ -187,12 +204,13 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 	private static final State fileChgSrc = new State(State.FileChange, Location.Source);
 	private static final State fileChgNone = new State(State.FileChange, Location.None);
 
+	@Override
 	public State compareFiles(FileAttributes src, FileAttributes dst) throws DataParseException {
 		// TODO verify functionality of this method
 		boolean isEqual = true;
 		int val = 0, totalVal = 0;
-		for (Enumeration e = syncRules.elements(); e.hasMoreElements();) {
-			String rule = (String) e.nextElement();
+		for (Enumeration<String> e = syncRules.elements(); e.hasMoreElements();) {
+			String rule = e.nextElement();
 
 			StringTokenizer t = new StringTokenizer(rule, " ");
 			String srcValue = t.nextToken();
@@ -220,8 +238,9 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 			}
 		}
 		totalVal = val;
-		if (totalVal == 0 && isEqual)
+		if ((totalVal == 0) && isEqual) {
 			return inSyncBoth;
+		}
 		else if (totalVal > 0) {
 			return fileChgDst;
 		}
@@ -234,13 +253,16 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 		// return new State( State.NodeInSync, Location.Both );
 	}
 
+	@Override
 	public RuleSet createChild(File src, File dst) throws DataParseException, IOException {
 		try {
 			AbstractRuleSet rules = (AbstractRuleSet) this.clone();
-			if (rules.isUsingRulesFile(SyncTokenizer.LOCAL))
+			if (rules.isUsingRulesFile(SyncTokenizer.LOCAL)) {
 				rules.processRules(src);
-			if (rules.isUsingRulesFile(SyncTokenizer.REMOTE))
+			}
+			if (rules.isUsingRulesFile(SyncTokenizer.REMOTE)) {
 				rules.processRules(dst);
+			}
 			return rules;
 		}
 		catch (CloneNotSupportedException cnse) {
@@ -251,10 +273,10 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 
 	public void processRules(File dir) throws DataParseException, IOException {
 		// TODO really unbuffered ?
-		File node = ((File) dir.getUnbuffered()).getChild(syncRulesFilename);
-		if (node != null && !node.isDirectory()) {
-			InputStream in = ((File) node).getInputStream();
-			processRules(in, ((File) node).getPath());
+		File node = (dir.getUnbuffered()).getChild(syncRulesFilename);
+		if ((node != null) && !node.isDirectory()) {
+			InputStream in = (node).getInputStream();
+			processRules(in, (node).getPath());
 			in.close();
 		}
 	}
@@ -262,7 +284,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 	public abstract void processRules(InputStream in, String filename) throws IOException, DataParseException;
 
 	/**
-	 * 
+	 *
 	 * @return boolean true if rules should be processed, false if not; it does not depend on the active direction
 	 */
 	public boolean isUsingRulesFile(int where) {
@@ -283,17 +305,19 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 		// return false;
 	}
 
+	@Override
 	public boolean isUsingRecursion() {
 		return usingRecursion;
 	}
 
+	@Override
 	public boolean isUsingRecursionOnIgnore() {
 		return usingRecursionOnIgnore;
 	}
 
 	/**
 	 * Returns the ruleSet.
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getRuleSet() {
@@ -302,7 +326,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 
 	/**
 	 * Sets the ruleSet.
-	 * 
+	 *
 	 * @param ruleSet
 	 *            The ruleSet to set
 	 */
@@ -312,7 +336,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 
 	/**
 	 * Returns the direction.
-	 * 
+	 *
 	 * @return int
 	 */
 	public int getDirection() {
@@ -321,16 +345,17 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 
 	/**
 	 * Returns the justLogging.
-	 * 
+	 *
 	 * @return boolean
 	 */
+	@Override
 	public boolean isJustLogging() {
 		return justLogging;
 	}
 
 	/**
 	 * Sets the justLogging.
-	 * 
+	 *
 	 * @param justLogging
 	 *            The justLogging to set
 	 */
@@ -340,9 +365,10 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 
 	/**
 	 * Returns the applyDeletion.
-	 * 
+	 *
 	 * @return boolean
 	 */
+	@Override
 	public boolean isApplyingDeletion(int location) {
 		return (applyingDeletion & location) > 0;
 	}
@@ -371,10 +397,12 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 		this.applyingTakeRules = applyingTakeRules;
 	}
 
+	@Override
 	public boolean isCheckingBufferAlways(int location) {
 		return (checkingBufferAlways & location) > 0;
 	}
 
+	@Override
 	public boolean isCheckingBufferOnReplace(int location) {
 		return (checkingBufferOnReplace & location) > 0;
 	}
@@ -387,11 +415,11 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 		this.ignoreAll = ignoreAll;
 	}
 
-	public Vector getIgnoreRules() {
+	public Vector<Rule> getIgnoreRules() {
 		return ignoreRules;
 	}
 
-	public void setIgnoreRules(Vector ignoreRules) {
+	public void setIgnoreRules(Vector<Rule> ignoreRules) {
 		this.ignoreRules = ignoreRules;
 	}
 
@@ -399,11 +427,11 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 		this.ignoreRules.add(rule);
 	}
 
-	public Vector getSyncRules() {
+	public Vector<String> getSyncRules() {
 		return syncRules;
 	}
 
-	public void setSyncRules(Vector syncRules) {
+	public void setSyncRules(Vector<String> syncRules) {
 		this.syncRules = syncRules;
 	}
 
@@ -415,11 +443,11 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 		this.syncRulesFilename = syncRulesFilename;
 	}
 
-	public Vector getTakeRules() {
+	public Vector<Rule> getTakeRules() {
 		return takeRules;
 	}
 
-	public void setTakeRules(Vector takeRules) {
+	public void setTakeRules(Vector<Rule> takeRules) {
 		this.takeRules = takeRules;
 	}
 
@@ -451,6 +479,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 		this.usingRecursionOnIgnore = usingRecursionOnIgnore;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}

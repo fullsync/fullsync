@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -23,9 +23,7 @@
 package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
@@ -36,16 +34,16 @@ class FileFilterTreeItem {
 
 	private FileFilter filter;
 
-	private HashMap childrenMap;
+	private HashMap<String, FileFilterTreeItem> childrenMap;
 
 	public FileFilterTreeItem() {
 		this.filter = null;
-		this.childrenMap = new HashMap();
+		this.childrenMap = new HashMap<String, FileFilterTreeItem>();
 	}
 
 	public FileFilterTreeItem(FileFilter filter) {
 		this.filter = filter;
-		this.childrenMap = new HashMap();
+		this.childrenMap = new HashMap<String, FileFilterTreeItem>();
 	}
 
 	public void setFilter(FileFilter filter) {
@@ -61,22 +59,18 @@ class FileFilterTreeItem {
 	}
 
 	public FileFilterTreeItem getChildren(String key) {
-		return (FileFilterTreeItem) childrenMap.get(key);
+		return childrenMap.get(key);
 	}
 
 	public void removeChildren(String key) {
 		childrenMap.remove(key);
 	}
 
+	@Override
 	public String toString() {
-		// TODO not implemented yet!
 		StringBuffer buffer = new StringBuffer();
-
-		Set entrySet = childrenMap.entrySet();
-		Iterator it = entrySet.iterator();
 		buffer.append("[ ");
-		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
+		for (Entry<String, FileFilterTreeItem> entry : childrenMap.entrySet()) {
 			buffer.append(entry.getKey());
 			buffer.append("->");
 			buffer.append(entry.getValue());

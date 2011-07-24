@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -28,7 +28,7 @@ import net.sourceforge.fullsync.DataParseException;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class CrontabSchedule3 implements Schedule {
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2L;
 
 	private String origPattern;
 
@@ -50,7 +50,7 @@ public class CrontabSchedule3 implements Schedule {
 
 	/**
 	 * Reads a crontab schedule as specified in the crontab man document:
-	 * 
+	 *
 	 * The time and date fields are:
 	 * field allowed values
 	 * ----- --------------
@@ -63,10 +63,10 @@ public class CrontabSchedule3 implements Schedule {
 	 * Ranges of numbers are allowed. Ranges are two numbers separated with a
 	 * hyphen. The specified range is inclusive. For example, 8-11 for an
 	 * 'hours' entry specifies execution at hours 8, 9, 10 and 11.
-	 * 
+	 *
 	 * Lists are allowed. A list is a set of numbers (or ranges) separated by
 	 * commas. Examples: '1,2,5,9', '0-4,8-12'.
-	 * 
+	 *
 	 * Step values can be used in conjunction with ranges. Following a range
 	 * with '/<number>' specifies skips of the number's value through the
 	 * range. For example, '0-23/2' can be used in the hours field to spec-
@@ -87,6 +87,7 @@ public class CrontabSchedule3 implements Schedule {
 		allDaysOfWeek = parseToken(tokenizer.nextToken(), bDaysOfWeek, false);
 	}
 
+	@Override
 	public String toString() {
 		return origPattern;
 	}
@@ -102,8 +103,9 @@ public class CrontabSchedule3 implements Schedule {
 
 			if (index > 0) {
 				each = Integer.parseInt(token.substring(index + 1));
-				if (each == 0)
+				if (each == 0) {
 					throw new DataParseException("Never use expressions like */0 ");
+				}
 
 				token = token.substring(0, index);
 			}
@@ -135,8 +137,9 @@ public class CrontabSchedule3 implements Schedule {
 				 * end--;
 				 * }
 				 */
-				for (int j = start; j <= end; j += each)
+				for (int j = start; j <= end; j += each) {
 					arrayBool[j] = true;
+				}
 				return false;
 			}
 
@@ -154,6 +157,7 @@ public class CrontabSchedule3 implements Schedule {
 		}
 	}
 
+	@Override
 	public long getNextOccurrence(long now) {
 		Calendar calNow = Calendar.getInstance();
 		calNow.setTimeInMillis(now);
@@ -161,23 +165,27 @@ public class CrontabSchedule3 implements Schedule {
 
 		while (calDest.get(Calendar.YEAR) <= calNow.get(Calendar.YEAR) + 1) {
 			if (!allMonths) {
-				if (gotoNext(bMonths, calDest, Calendar.MONTH))
+				if (gotoNext(bMonths, calDest, Calendar.MONTH)) {
 					continue;
+				}
 			}
 
 			if (!allDaysOfMonth) {
-				if (gotoNext(bDaysOfMonth, calDest, Calendar.DAY_OF_MONTH))
+				if (gotoNext(bDaysOfMonth, calDest, Calendar.DAY_OF_MONTH)) {
 					continue;
+				}
 			}
 
 			if (!allHours) {
-				if (gotoNext(bHours, calDest, Calendar.HOUR_OF_DAY))
+				if (gotoNext(bHours, calDest, Calendar.HOUR_OF_DAY)) {
 					continue;
+				}
 			}
 
 			if (!allMinutes) {
-				if (gotoNext(bMinutes, calDest, Calendar.MINUTE))
+				if (gotoNext(bMinutes, calDest, Calendar.MINUTE)) {
 					continue;
+				}
 			}
 
 			calDest.set(Calendar.SECOND, 0);
@@ -206,8 +214,9 @@ public class CrontabSchedule3 implements Schedule {
 				now = min;
 				while (!bArray[now]) {
 					now++;
-					if (now > max)
+					if (now > max) {
 						throw new RuntimeException("deadloop");
+					}
 				}
 				cal.set(field, now);
 
@@ -254,13 +263,14 @@ public class CrontabSchedule3 implements Schedule {
 		return false;
 	}
 
+	@Override
 	public void setLastOccurrence(long now) {
 
 	}
 
 	/**
 	 * Returns true if the time table entry matchs with the calendar given
-	 * 
+	 *
 	 * @param cal
 	 *            Calendar to compare with the time table entry
 	 * @return true if the time table entry matchs with the calendar given

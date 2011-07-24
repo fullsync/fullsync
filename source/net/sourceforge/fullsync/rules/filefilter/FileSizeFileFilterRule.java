@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -21,8 +21,6 @@
  * Created on May 29, 2005
  */
 package net.sourceforge.fullsync.rules.filefilter;
-
-import java.util.regex.Pattern;
 
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
@@ -33,6 +31,8 @@ import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
  * @author Michele Aiello
  */
 public class FileSizeFileFilterRule extends FileFilterRule {
+
+	private static final long serialVersionUID = 2L;
 
 	public static String typeName = "File size";
 
@@ -46,8 +46,7 @@ public class FileSizeFileFilterRule extends FileFilterRule {
 	private SizeValue size;
 	private int op;
 
-	private Pattern regexppattern;
-
+	@Override
 	public String getRuleType() {
 		return typeName;
 	}
@@ -65,18 +64,22 @@ public class FileSizeFileFilterRule extends FileFilterRule {
 		this.op = operator;
 	}
 
+	@Override
 	public int getOperator() {
 		return op;
 	}
 
+	@Override
 	public String getOperatorName() {
 		return allOperators[op];
 	}
 
+	@Override
 	public OperandValue getValue() {
 		return size;
 	}
 
+	@Override
 	public boolean match(File file) throws FilterRuleNotAppliableException {
 		FileAttributes attrs = file.getFileAttributes();
 		if (attrs == null) {
@@ -99,6 +102,7 @@ public class FileSizeFileFilterRule extends FileFilterRule {
 		return false;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer buff = new StringBuffer(30);
 

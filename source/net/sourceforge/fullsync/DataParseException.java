@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -21,16 +21,17 @@ package net.sourceforge.fullsync;
 
 /**
  * Thrown when an error occured while parsing a file.
- * 
+ *
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class DataParseException extends NestedException {
+	private static final long serialVersionUID = 2L;
 	String sourceName = "unknown";
 	long linenumber = -1;
 
 	/**
 	 * Constructor for ParseException.
-	 * 
+	 *
 	 * @param text
 	 */
 	public DataParseException(String text) {
@@ -39,7 +40,7 @@ public class DataParseException extends NestedException {
 
 	/**
 	 * Constructor for ParseException.
-	 * 
+	 *
 	 * @param text
 	 * @param linenumber
 	 */
@@ -50,7 +51,7 @@ public class DataParseException extends NestedException {
 
 	/**
 	 * Constructor for ParseException.
-	 * 
+	 *
 	 * @param text
 	 * @param linenumber
 	 * @param sourcename
@@ -62,7 +63,7 @@ public class DataParseException extends NestedException {
 
 	/**
 	 * Constructor for ParseException.
-	 * 
+	 *
 	 * @param cause
 	 */
 	public DataParseException(Throwable cause) {
@@ -71,7 +72,7 @@ public class DataParseException extends NestedException {
 
 	/**
 	 * Constructor for ParseException.
-	 * 
+	 *
 	 * @param cause
 	 * @param linenumber
 	 */
@@ -82,7 +83,7 @@ public class DataParseException extends NestedException {
 
 	/**
 	 * Constructor for ParseException.
-	 * 
+	 *
 	 * @param text
 	 * @param cause
 	 */
@@ -92,7 +93,7 @@ public class DataParseException extends NestedException {
 
 	/**
 	 * Constructor DataParseException.
-	 * 
+	 *
 	 * @param text
 	 * @param cause
 	 * @param lineno
@@ -104,13 +105,14 @@ public class DataParseException extends NestedException {
 		setSourceName(source);
 	}
 
+	@Override
 	public String getMessage() {
 		return sourceName + "[" + linenumber + "]: " + super.getMessage();
 	}
 
 	/**
 	 * Returns the filename.
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getSourceName() {
@@ -119,7 +121,7 @@ public class DataParseException extends NestedException {
 
 	/**
 	 * Returns the linenumber.
-	 * 
+	 *
 	 * @return long
 	 */
 	public long getLinenumber() {
@@ -128,7 +130,7 @@ public class DataParseException extends NestedException {
 
 	/**
 	 * Sets the sourceName.
-	 * 
+	 *
 	 * @param sourceName
 	 *            The sourceName to set
 	 */
@@ -138,7 +140,7 @@ public class DataParseException extends NestedException {
 
 	/**
 	 * Sets the linenumber.
-	 * 
+	 *
 	 * @param linenumber
 	 *            The linenumber to set
 	 */

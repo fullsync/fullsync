@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -157,6 +157,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 		}
 	}
 
+	@Override
 	public void handleEvent(Event event) {
 		switch (event.type) {
 			case SWT.MouseEnter:
@@ -171,8 +172,9 @@ public class NiceListViewItem extends Canvas implements Listener {
 				parent.setSelected(NiceListViewItem.this);
 				break;
 			case SWT.MouseUp:
-				if (event.button == 3)
+				if (event.button == 3) {
 					getMenu().setVisible(true);
+				}
 				break;
 			case SWT.MouseDoubleClick:
 				handler.editProfile(profile);
@@ -193,29 +195,35 @@ public class NiceListViewItem extends Canvas implements Listener {
 
 	}
 
+	@Override
 	public void setBackground(Color color) {
 		Control[] children;
 		super.setBackground(color);
-		if (labelIcon.getImage() != null)
+		if (labelIcon.getImage() != null) {
 			labelIcon.getImage().setBackground(color);
+		}
 
 		children = this.getChildren();
-		for (int i = 0; i < children.length; i++)
-			children[i].setBackground(color);
+		for (Control element : children) {
+			element.setBackground(color);
+		}
 
 		if (compositeContent != null) {
 			children = compositeContent.getChildren();
-			for (int i = 0; i < children.length; i++)
-				children[i].setBackground(color);
+			for (Control element : children) {
+				element.setBackground(color);
+			}
 		}
 	}
 
 	public void updateBackground() {
 		if (selected) {
-			if (hasFocus)
+			if (hasFocus) {
 				setBackground(colorSelectedFocus);
-			else
+			}
+			else {
 				setBackground(colorSelectedDefault);
+			}
 		}
 		else if (mouseOver) {
 			setBackground(colorHover);
@@ -241,10 +249,12 @@ public class NiceListViewItem extends Canvas implements Listener {
 	}
 
 	public void setStatusText(String status) {
-		if (status == null || status.length() == 0)
+		if ((status == null) || (status.length() == 0)) {
 			labelStatus.setText(""); //$NON-NLS-1$
-		else
+		}
+		else {
 			labelStatus.setText("(" + status + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		labelStatus.pack();
 	}
 
@@ -294,10 +304,10 @@ public class NiceListViewItem extends Canvas implements Listener {
 		compositeContent.addListener(SWT.MouseUp, this);
 		compositeContent.addListener(SWT.MouseDown, this);
 		Control[] children = compositeContent.getChildren();
-		for (int i = 0; i < children.length; i++) {
-			children[i].addListener(SWT.MouseDoubleClick, this);
-			children[i].addListener(SWT.MouseUp, this);
-			children[i].addListener(SWT.MouseDown, this);
+		for (Control element : children) {
+			element.addListener(SWT.MouseDoubleClick, this);
+			element.addListener(SWT.MouseUp, this);
+			element.addListener(SWT.MouseDown, this);
 		}
 	}
 

@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -60,18 +60,22 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 			super(parent, style);
 		}
 
+		@Override
 		public String getSchedulingName() {
 			return Messages.getString("ScheduleSelectionDialog.none"); //$NON-NLS-1$
 		}
 
+		@Override
 		public boolean canHandleSchedule(Schedule sched) {
 			return false;
 		}
 
+		@Override
 		public Schedule getSchedule() {
 			return null;
 		}
 
+		@Override
 		public void setSchedule(Schedule sched) {
 		}
 	}
@@ -124,9 +128,10 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 					cbTypeLData.heightHint = 21;
 					cbType.setLayoutData(cbTypeLData);
 					cbType.addListener(SWT.Modify, new Listener() {
+						@Override
 						public void handleEvent(Event arg0) {
 							Control[] children = groupOptions.getChildren();
-							if (cbType.getSelectionIndex() > -1 && cbType.getSelectionIndex() < children.length) {
+							if ((cbType.getSelectionIndex() > -1) && (cbType.getSelectionIndex() < children.length)) {
 								Control c = children[cbType.getSelectionIndex()];
 								((StackLayout) groupOptions.getLayout()).topControl = c;
 								groupOptions.layout();
@@ -151,6 +156,7 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 				buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
 				buttonOk.setText(Messages.getString("ScheduleSelectionDialog.Ok")); //$NON-NLS-1$
 				buttonOk.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent evt) {
 						try {
 							schedule = ((ScheduleOptions) ((StackLayout) groupOptions.getLayout()).topControl).getSchedule();
@@ -175,6 +181,7 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 				buttonCancelLData.heightHint = 23;
 				buttonCancel.setLayoutData(buttonCancelLData);
 				buttonCancel.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent evt) {
 						dialogShell.dispose();
 					}
@@ -194,8 +201,9 @@ public class ScheduleSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 			dialogShell.layout();
 			dialogShell.open();
 			while (!dialogShell.isDisposed()) {
-				if (!display.readAndDispatch())
+				if (!display.readAndDispatch()) {
 					display.sleep();
+				}
 			}
 		}
 		catch (Exception e) {

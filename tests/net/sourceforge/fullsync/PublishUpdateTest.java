@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -73,10 +73,11 @@ public class PublishUpdateTest extends TestCase {
 
 	protected void clearDirectory(File dir) {
 		File[] files = dir.listFiles();
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].isDirectory())
-				clearDirectory(files[i]);
-			files[i].delete();
+		for (File file : files) {
+			if (file.isDirectory()) {
+				clearDirectory(file);
+			}
+			file.delete();
 		}
 	}
 
@@ -114,7 +115,7 @@ public class PublishUpdateTest extends TestCase {
 		new File(dir, filename).setLastModified(lm);
 	}
 
-	protected TaskTree assertPhaseOneActions(final Hashtable expectation) throws Exception {
+	protected TaskTree assertPhaseOneActions(final Hashtable<String, Action> expectation) throws Exception {
 		TaskGenerationListener list = new TaskGenerationListener() {
 			public void taskGenerationFinished(Task task) {
 				Object ex = expectation.get(task.getSource().getName());
@@ -152,7 +153,7 @@ public class PublishUpdateTest extends TestCase {
 	public void testBasicSynchronization() throws Exception {
 		createRuleFile();
 		long lm = new Date().getTime();
-		Hashtable expectation = new Hashtable();
+		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
 		TaskTree tree;
 
 		// Creating files and dirs

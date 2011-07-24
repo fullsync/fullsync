@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -42,7 +43,7 @@ import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 public class RemoteManager {
 
 	private RemoteInterface remoteInterface;
-	private HashMap listenersMap = new HashMap();
+	private HashMap<Object, UnicastRemoteObject> listenersMap = new HashMap<Object, UnicastRemoteObject>();
 	private boolean useRemoteListener = false;
 
 	public RemoteManager(String host, int port, String password) throws MalformedURLException, RemoteException, NotBoundException {

@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -36,7 +36,7 @@ import net.sourceforge.fullsync.fs.File;
 
 /**
  * An ActionDecider for source to destination backup.
- * 
+ *
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class BackupActionDecider implements ActionDecider {
@@ -54,6 +54,7 @@ public class BackupActionDecider implements ActionDecider {
 	private static final Action inSync = new Action(Action.Nothing, Location.None, BufferUpdate.None, "In Sync");
 	private static final Action ignore = new Action(Action.Nothing, Location.None, BufferUpdate.None, "Ignore");
 
+	@Override
 	public TraversalType getTraversalType() {
 		return new TraversalType();
 	}
@@ -64,8 +65,9 @@ public class BackupActionDecider implements ActionDecider {
 	 * return getPossibleActions( src, dst, sd, bsd )[0];
 	 * }
 	 */
+	@Override
 	public Task getTask(File src, File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
-		Vector actions = new Vector(3);
+		Vector<Action> actions = new Vector<Action>(3);
 		State state = sd.getState(src, dst);
 		switch (state.getType()) {
 			case State.Orphan:
@@ -89,13 +91,15 @@ public class BackupActionDecider implements ActionDecider {
 							"There was a node in buff, but its orphan, so add"));
 				}
 				else if (buff.equals(State.DirHereFileThere, state.getLocation())) {
-					if (state.getLocation() == Location.Source)
+					if (state.getLocation() == Location.Source) {
 						actions.add(new Action(Action.Nothing, Location.None, BufferUpdate.Destination,
 								"dirherefilethere, but there is a dir instead of file, so its in sync"));
-					else
+					}
+					else {
 						actions.add(new Action(Action.DirHereFileThereError, Location.Destination, BufferUpdate.None,
 								"file changed from/to dir, can't overwrite"));
 					// TODO ^ recompare here
+					}
 				}
 				else {
 					actions.add(new Action(Action.DirHereFileThereError, state.getLocation(), BufferUpdate.None,

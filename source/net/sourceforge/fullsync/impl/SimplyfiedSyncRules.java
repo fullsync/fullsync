@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -71,6 +71,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 		this.name = name;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -86,6 +87,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	/**
 	 * @see net.sourceforge.fullsync.RuleSet#isUsingRecursion()
 	 */
+	@Override
 	public boolean isUsingRecursion() {
 		return isUsingRecursion;
 	}
@@ -161,6 +163,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	/**
 	 * @see net.sourceforge.fullsync.RuleSet#isUsingRecursionOnIgnore()
 	 */
+	@Override
 	public boolean isUsingRecursionOnIgnore() {
 		return false;
 	}
@@ -168,6 +171,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	/**
 	 * @see net.sourceforge.fullsync.RuleSet#isJustLogging()
 	 */
+	@Override
 	public boolean isJustLogging() {
 		return false;
 	}
@@ -175,6 +179,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	/**
 	 * @see net.sourceforge.fullsync.IgnoreDecider#isNodeIgnored(net.sourceforge.fullsync.fs.File)
 	 */
+	@Override
 	public boolean isNodeIgnored(File node) {
 		if (!useFilter) {
 			return false;
@@ -202,6 +207,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	 * @see net.sourceforge.fullsync.FileComparer#compareFiles(net.sourceforge.fullsync.fs.FileAttributes,
 	 *      net.sourceforge.fullsync.fs.FileAttributes)
 	 */
+	@Override
 	public State compareFiles(FileAttributes src, FileAttributes dst) throws DataParseException {
 		if (Math.floor(src.getLastModified() / 1000.0) > Math.floor(dst.getLastModified() / 1000.0)) {
 			return new State(State.FileChange, Location.Source);
@@ -218,6 +224,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	/**
 	 * @see net.sourceforge.fullsync.RuleSet#createChild(net.sourceforge.fullsync.fs.File, net.sourceforge.fullsync.fs.File)
 	 */
+	@Override
 	public RuleSet createChild(File src, File dst) {
 		// TODO even simple sync rules should allow override rules
 		return this;
@@ -226,6 +233,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	/**
 	 * @see net.sourceforge.fullsync.RuleSet#isApplyingDeletion(int)
 	 */
+	@Override
 	public boolean isApplyingDeletion(int location) {
 		return (applyingDeletion & location) > 0;
 	}
@@ -248,6 +256,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	/**
 	 * @see net.sourceforge.fullsync.RuleSet#isCheckingBufferAlways(int)
 	 */
+	@Override
 	public boolean isCheckingBufferAlways(int location) {
 		return false;
 	}
@@ -255,6 +264,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	/**
 	 * @see net.sourceforge.fullsync.RuleSet#isCheckingBufferOnReplace(int)
 	 */
+	@Override
 	public boolean isCheckingBufferOnReplace(int location) {
 		return false;
 	}

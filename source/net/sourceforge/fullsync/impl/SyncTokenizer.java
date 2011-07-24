@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -54,43 +54,47 @@ public class SyncTokenizer extends StreamTokenizer {
 	}
 
 	public String nextString() throws DataParseException {
-		int i;
 		try {
-			i = nextToken();
+			nextToken();
 		}
 		catch (IOException ioe) {
 			throw new DataParseException(ioe.getMessage(), ioe.getCause(), lineno(), getSourceName());
 		}
-		if (ttype == TT_EOF)
+		if (ttype == TT_EOF) {
 			return null;
-		if (ttype != '\"' && ttype != TT_WORD)
+		}
+		if ((ttype != '\"') && (ttype != TT_WORD)) {
 			throw new DataParseException("string expected", lineno(), getSourceName());
+		}
 
 		return sval;
 	}
 
 	public String nextWord() throws DataParseException {
-		int i;
 		try {
-			i = nextToken();
+			nextToken();
 		}
 		catch (IOException ioe) {
 			throw new DataParseException(ioe.getMessage(), ioe.getCause(), lineno(), getSourceName());
 		}
-		if (ttype == TT_EOF)
+		if (ttype == TT_EOF) {
 			return null;
-		if (ttype != TT_WORD)
+		}
+		if (ttype != TT_WORD) {
 			throw new DataParseException("identifier expected", lineno(), getSourceName());
+		}
 
 		return sval;
 	}
 
 	public int nextWordValue(String[] values) throws DataParseException {
-		String word = nextWord();
+		nextWord();
 
-		for (int c = 0; c < values.length; c++)
-			if (sval.equals(values[c]))
+		for (int c = 0; c < values.length; c++) {
+			if (sval.equals(values[c])) {
 				return c;
+			}
+		}
 
 		throw new DataParseException("could not identify identifier \"" + sval + "\"", lineno(), getSourceName());
 	}
@@ -119,7 +123,7 @@ public class SyncTokenizer extends StreamTokenizer {
 
 	/**
 	 * Returns the sourceName.
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getSourceName() {
@@ -128,7 +132,7 @@ public class SyncTokenizer extends StreamTokenizer {
 
 	/**
 	 * Sets the sourceName.
-	 * 
+	 *
 	 * @param sourceName
 	 *            The sourceName to set
 	 */

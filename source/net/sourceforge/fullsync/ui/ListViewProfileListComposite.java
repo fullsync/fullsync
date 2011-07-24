@@ -3,24 +3,23 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
 package net.sourceforge.fullsync.ui;
 
 import java.util.Date;
-import java.util.Enumeration;
 
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileListChangeListener;
@@ -102,16 +101,19 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 	}
 
 	public void populateProfileList() {
-		long now = new Date().getTime();
+		new Date().getTime();
 		if (getProfileManager() != null) {
 			tableProfiles.clearAll();
 			tableProfiles.setItemCount(0);
-			Enumeration e = getProfileManager().getProfiles();
-			while (e.hasMoreElements()) {
-				Profile p = (Profile) e.nextElement();
+			for (Profile p : getProfileManager().getProfiles()) {
 				TableItem item = new TableItem(tableProfiles, SWT.NULL);
-				item.setText(new String[] { p.getName(), p.getLastUpdateText(), p.getNextUpdateText(), p.getSource().toString(),
-						p.getDestination().toString() });
+				String[] cells = new String[5];
+				cells[0] = p.getName();
+				cells[1] = p.getLastUpdateText();
+				cells[2] = p.getNextUpdateText();
+				cells[3] = p.getSource().toString();
+				cells[4] = p.getDestination().toString();
+				item.setText(cells);
 				item.setData(p);
 			}
 			tableColumnName.pack();
@@ -122,19 +124,24 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 		}
 	}
 
+	@Override
 	public void dispose() {
 		profileManager.removeProfilesChangeListener(this);
 		super.dispose();
 	}
 
+	@Override
 	public Profile getSelectedProfile() {
 		TableItem[] sel = tableProfiles.getSelection();
-		if (sel.length == 0)
+		if (sel.length == 0) {
 			return null;
-		else
+		}
+		else {
 			return (Profile) (sel[0].getData());
+		}
 	}
 
+	@Override
 	public void setProfileManager(ProfileManager profileManager) {
 		if (this.profileManager != null) {
 			profileManager.removeProfilesChangeListener(this);
@@ -147,32 +154,40 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 		populateProfileList();
 	}
 
+	@Override
 	public ProfileManager getProfileManager() {
 		return profileManager;
 	}
 
+	@Override
 	public ProfileListControlHandler getHandler() {
 		return handler;
 	}
 
+	@Override
 	public void setHandler(ProfileListControlHandler handler) {
 		this.handler = handler;
 	}
 
+	@Override
 	public void setMenu(Menu menu) {
 		tableProfiles.setMenu(menu);
 	}
 
+	@Override
 	public Menu getMenu() {
 		return tableProfiles.getMenu();
 	}
 
+	@Override
 	public void profileChanged(Profile p) {
 		profileListChanged();
 	}
 
+	@Override
 	public void profileListChanged() {
 		getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				populateProfileList();
 			}

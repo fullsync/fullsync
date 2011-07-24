@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -68,11 +68,13 @@ public class SystemTrayItem implements TaskGenerationListener {
 		trayItem.setImage(imageList[0]);
 		trayItem.setToolTipText("FullSync"); //$NON-NLS-1$
 		trayItem.addListener(SWT.DefaultSelection, new Listener() {
+			@Override
 			public void handleEvent(Event arg0) {
 				guiController.setMainShellVisible(true);
 			}
 		});
 		trayItem.addListener(SWT.MenuDetect, new Listener() {
+			@Override
 			public void handleEvent(Event evt) {
 				menu.setVisible(true);
 			}
@@ -84,6 +86,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 		item = new MenuItem(menu, SWT.NULL);
 		item.setText(Messages.getString("SystemTrayItem.OpenFullSync")); //$NON-NLS-1$
 		item.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event arg0) {
 				guiController.setMainShellVisible(true);
 			}
@@ -93,6 +96,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 		item.setText(Messages.getString("SystemTrayItem.Exit")); //$NON-NLS-1$
 		item.addListener(SWT.Selection, new Listener() {
 
+			@Override
 			public void handleEvent(Event event) {
 				guiController.closeGui();
 			}
@@ -112,28 +116,35 @@ public class SystemTrayItem implements TaskGenerationListener {
 	public void dispose() {
 		trayItem.dispose();
 		menu.dispose();
-		for (int i = 0; i < imageList.length; i++)
-			imageList[i].dispose();
+		for (Image element : imageList) {
+			element.dispose();
+		}
 	}
 
+	@Override
 	public void taskGenerationStarted(File source, File destination) {
 
 	}
 
+	@Override
 	public void taskGenerationFinished(Task task) {
 
 	}
 
+	@Override
 	public synchronized void taskTreeStarted(TaskTree tree) {
 		if (!isBusy) {
 			this.timer = new Timer();
 			isBusy = true;
 			timer.schedule(new TimerTask() {
+				@Override
 				public void run() {
 					imageActive++;
-					if (imageActive >= imageList.length)
+					if (imageActive >= imageList.length) {
 						imageActive = 0;
+					}
 					trayItem.getDisplay().asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							trayItem.setImage(imageList[imageActive]);
 						}
@@ -143,6 +154,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 		}
 	}
 
+	@Override
 	public synchronized void taskTreeFinished(TaskTree tree) {
 		if (isBusy) {
 			isBusy = false;
@@ -151,6 +163,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 
 			imageActive = 0;
 			trayItem.getDisplay().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					trayItem.setImage(imageList[imageActive]);
 				}

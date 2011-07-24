@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -76,17 +76,19 @@ public class SizeValueRuleComposite extends RuleComposite {
 		textValue.setLayoutData(text1LData);
 
 		if (value != null) {
-			textValue.setText(String.valueOf(((SizeValue) value).getValue()));
+			textValue.setText(String.valueOf((value).getValue()));
 		}
 
 		textValue.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent arg0) {
-				((SizeValue) value).fromString(textValue.getText() + " " + comboUnits.getText());
+				(value).fromString(textValue.getText() + " " + comboUnits.getText());
 				valueChanged(new ValueChangedEvent(value));
 			}
 		});
 
 		textValue.addKeyListener(new KeyListener() {
+			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if (((arg0.character < '0') || (arg0.character > '9')) && (arg0.character != '.') && (arg0.keyCode != SWT.DEL)
 						&& (arg0.keyCode != SWT.BS) && (arg0.keyCode != SWT.ARROW_LEFT) && (arg0.keyCode != SWT.ARROW_UP)
@@ -95,6 +97,7 @@ public class SizeValueRuleComposite extends RuleComposite {
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent arg0) {
 				if (((arg0.character < '0') || (arg0.character > '9')) && (arg0.character != '.') && (arg0.keyCode != SWT.DEL)
 						&& (arg0.keyCode != SWT.BS) && (arg0.keyCode != SWT.ARROW_LEFT) && (arg0.keyCode != SWT.ARROW_UP)
@@ -111,19 +114,21 @@ public class SizeValueRuleComposite extends RuleComposite {
 		comboUnitsLData.horizontalAlignment = GridData.BEGINNING;
 		comboUnits.setLayoutData(comboUnitsLData);
 		String[] units = SizeValue.getAllUnits();
-		for (int i = 0; i < units.length; i++) {
-			comboUnits.add(units[i]);
+		for (String unit : units) {
+			comboUnits.add(unit);
 		}
-		comboUnits.select(((SizeValue) value).getUnit());
+		comboUnits.select((value).getUnit());
 
 		comboUnits.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				((SizeValue) value).setUnit(comboUnits.getSelectionIndex());
+				(value).setUnit(comboUnits.getSelectionIndex());
 				valueChanged(new ValueChangedEvent(value));
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				((SizeValue) value).setUnit(comboUnits.getSelectionIndex());
+				(value).setUnit(comboUnits.getSelectionIndex());
 				valueChanged(new ValueChangedEvent(value));
 			}
 		});

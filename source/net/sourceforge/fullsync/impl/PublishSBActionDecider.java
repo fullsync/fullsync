@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -37,29 +37,34 @@ import net.sourceforge.fullsync.fs.connection.AbstractBufferedFile;
 
 /**
  * An ActionDecider for source buffered publish/update.
- * 
+ *
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class PublishSBActionDecider implements ActionDecider {
+	@Override
 	public TraversalType getTraversalType() {
 		return new TraversalType(Location.Source);
 	}
 
+	@Override
 	public Task getTask(File src, File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
-		Vector actions = new Vector(3);
+		Vector<Action> actions = new Vector<Action>(3);
 		State state = sd.getState(src, dst);
 
 		switch (state.getType()) {
 			case State.Orphan:
 				if (state.getLocation() == Location.Source) {
-					if (!bsd.getState(src).equals(State.Orphan, Location.Buffer))
+					if (!bsd.getState(src).equals(State.Orphan, Location.Buffer)) {
 						actions.add(new Action(Action.Add, Location.Destination, BufferUpdate.Source, "Add"));
-					else
+					}
+					else {
 						actions.add(new Action(Action.Nothing, Location.None, BufferUpdate.None, "In Sync"));
+					}
 				}
 				else if (state.getLocation() == Location.Destination) {
-					if (!bsd.getState(src).equals(State.Orphan, Location.FileSystem))
+					if (!bsd.getState(src).equals(State.Orphan, Location.FileSystem)) {
 						actions.add(new Action(Action.Delete, Location.Destination, BufferUpdate.Source, "Deletion", false));
+					}
 					else {
 						// we have to update buffer
 						src.refreshBuffer();
@@ -77,13 +82,15 @@ public class PublishSBActionDecider implements ActionDecider {
 							"There was a node in buff, but its orphan, so delete"));
 				}
 				else if (buff.equals(State.DirHereFileThere, state.getLocation())) {
-					if (state.getLocation() == Location.Source)
+					if (state.getLocation() == Location.Source) {
 						actions.add(new Action(Action.Nothing, Location.None, BufferUpdate.None,
 								"dirherefilethere, but there is a dir instead of file, so its in sync")); // FIXME may be out of sync
 																											// anyways sync
-					else
+					}
+					else {
 						actions.add(new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None,
 								"dirherefilethere, but there is a file instead of dir, so unexpected change"));
+					}
 				}
 				else {
 					actions.add(new Action(Action.DirHereFileThereError, state.getLocation(), BufferUpdate.None,
@@ -116,8 +123,9 @@ public class PublishSBActionDecider implements ActionDecider {
 					State newState = sd.getState(unbuff, dst);
 					switch (newState.getType()) {
 						case State.Orphan:
-							if (newState.getLocation() == Location.Destination)
+							if (newState.getLocation() == Location.Destination) {
 								actions.add(new Action(Action.Delete, Location.Destination, BufferUpdate.Source, "Deletion", false));
+							}
 							break;
 						case State.DirHereFileThere:
 							actions.add(new Action(Action.DirHereFileThereError, newState.getLocation(), BufferUpdate.Source,

@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -45,7 +45,7 @@ import com.sshtools.j2ssh.sftp.SftpFile;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class ScpConnection implements FileSystemConnection {
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2L;
 
 	private ConnectionDescription desc;
 	private SshClient sshClient;
@@ -77,8 +77,9 @@ public class ScpConnection implements FileSystemConnection {
 			schClient.executeCommand("pwd");
 			// basePath = ; ??????????/
 
-			if (basePath.endsWith("/"))
+			if (basePath.endsWith("/")) {
 				basePath = basePath.substring(0, basePath.length() - 1);
+			}
 		}
 		else {
 			throw new FileSystemException("Could not connect");
@@ -86,14 +87,17 @@ public class ScpConnection implements FileSystemConnection {
 		this.root = new AbstractFile(this, ".", ".", null, true, true);
 	}
 
+	@Override
 	public boolean isAvailable() {
 		return true;
 	}
 
+	@Override
 	public File getRoot() {
 		return root;
 	}
 
+	@Override
 	public File createChild(File parent, String name, boolean directory) {
 		return new AbstractFile(this, name, parent.getPath() + "/" + name, parent, directory, false);
 	}
@@ -105,26 +109,28 @@ public class ScpConnection implements FileSystemConnection {
 		File n = new AbstractFile(this, name, path, parent, file.isDirectory(), true);
 
 		FileAttributes att = file.getAttributes();
-		if (file.isFile())
+		if (file.isFile()) {
 			n.setFileAttributes(new net.sourceforge.fullsync.fs.FileAttributes(att.getSize().longValue(), att.getModifiedTime().longValue()));
+		}
 
 		return n;
 	}
 
-	public Hashtable getChildren(File dir) {
+	@Override
+	public Hashtable<String, File> getChildren(File dir) {
 		/*
 		 * try {
 		 * SftpFile f = sftpClient.openDirectory( basePath+"/"+dir.getPath() );
 		 * ArrayList files = new ArrayList();
 		 * sftpClient.listChildren( f, files );
-		 * 
+		 *
 		 * Hashtable table = new Hashtable();
 		 * for( Iterator i = files.iterator(); i.hasNext(); )
 		 * {
 		 * SftpFile file = (SftpFile)i.next();
 		 * table.put( file.getFilename(), buildNode( dir, file ) );
 		 * }
-		 * 
+		 *
 		 * return table;
 		 * } catch( IOException ioe ) {
 		 * //ExceptionHandler.reportException( ioe );
@@ -134,6 +140,7 @@ public class ScpConnection implements FileSystemConnection {
 		return null;
 	}
 
+	@Override
 	public boolean makeDirectory(File dir) {
 		try {
 			schClient.executeCommand("mkdir" + basePath + "/" + dir.getPath());
@@ -145,10 +152,12 @@ public class ScpConnection implements FileSystemConnection {
 		}
 	}
 
+	@Override
 	public boolean writeFileAttributes(File file, net.sourceforge.fullsync.fs.FileAttributes att) {
 		return false;
 	}
 
+	@Override
 	public InputStream readFile(File file) {
 		/*
 		 * try {
@@ -161,6 +170,7 @@ public class ScpConnection implements FileSystemConnection {
 		return null;
 	}
 
+	@Override
 	public OutputStream writeFile(File file) {
 		/*
 		 * try {
@@ -177,12 +187,15 @@ public class ScpConnection implements FileSystemConnection {
 		return null;
 	}
 
+	@Override
 	public boolean delete(File node) {
 		try {
-			if (node.isDirectory())
+			if (node.isDirectory()) {
 				schClient.executeCommand("rmdir " + basePath + "/" + node.getPath());
-			else
+			}
+			else {
 				schClient.executeCommand("rm " + basePath + "/" + node.getPath());
+			}
 			return true;
 		}
 		catch (IOException e) {
@@ -191,19 +204,23 @@ public class ScpConnection implements FileSystemConnection {
 		}
 	}
 
+	@Override
 	public void flush() throws IOException {
 
 	}
 
+	@Override
 	public void close() throws IOException {
 		schClient.close();
 		sshClient.disconnect();
 	}
 
+	@Override
 	public String getUri() {
 		return desc.getUri();
 	}
 
+	@Override
 	public boolean isCaseSensitive() {
 		// TODO find out whether current fs is case sensitive
 		return false;

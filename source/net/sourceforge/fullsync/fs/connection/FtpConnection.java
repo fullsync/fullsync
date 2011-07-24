@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -42,6 +42,9 @@ import org.apache.commons.net.ftp.FTPFile;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class FtpConnection extends InstableConnection {
+
+	private static final long serialVersionUID = 2L;
+
 	class FtpFileInputStream extends InputStream {
 		private InputStream in;
 		private FTPClient client;
@@ -51,39 +54,48 @@ public class FtpConnection extends InstableConnection {
 			this.client = client;
 		}
 
+		@Override
 		public int available() throws IOException {
 			return in.available();
 		}
 
+		@Override
 		public void close() throws IOException {
 			in.close();
 			client.completePendingCommand();
 		}
 
+		@Override
 		public int read(byte[] b, int off, int len) throws IOException {
 			return in.read(b, off, len);
 		}
 
+		@Override
 		public int read(byte[] b) throws IOException {
 			return in.read(b);
 		}
 
+		@Override
 		public synchronized void reset() throws IOException {
 			in.reset();
 		}
 
+		@Override
 		public int read() throws IOException {
 			return in.read();
 		}
 
+		@Override
 		public synchronized void mark(int readlimit) {
 			in.mark(readlimit);
 		}
 
+		@Override
 		public boolean markSupported() {
 			return in.markSupported();
 		}
 
+		@Override
 		public long skip(long n) throws IOException {
 			return in.skip(n);
 		}
@@ -98,23 +110,28 @@ public class FtpConnection extends InstableConnection {
 			this.client = client;
 		}
 
+		@Override
 		public void close() throws IOException {
 			out.close();
 			client.completePendingCommand();
 		}
 
+		@Override
 		public void flush() throws IOException {
 			out.flush();
 		}
 
+		@Override
 		public void write(byte[] b, int off, int len) throws IOException {
 			out.write(b, off, len);
 		}
 
+		@Override
 		public void write(byte[] b) throws IOException {
 			out.write(b);
 		}
 
+		@Override
 		public void write(int b) throws IOException {
 			out.write(b);
 		}
@@ -146,10 +163,12 @@ public class FtpConnection extends InstableConnection {
 			Pattern p = Pattern.compile("(\\w+)=(\\w+)");
 			Matcher m = p.matcher(query);
 			while (m.find()) {
-				if (m.group(1).equals("passive"))
+				if (m.group(1).equals("passive")) {
 					usePassiveMode = m.group(2).equals("true");
-				else if (m.group(1).equals("compatible"))
+				}
+				else if (m.group(1).equals("compatible")) {
 					changeDirBeforeList = m.group(2).equals("true");
+				}
 			}
 		}
 
@@ -158,12 +177,15 @@ public class FtpConnection extends InstableConnection {
 			sb.append("Creating FtpConnection to ");
 			sb.append(connectionUri);
 			sb.append(" [");
-			if (usePassiveMode)
+			if (usePassiveMode) {
 				sb.append("passive");
-			else
+			}
+			else {
 				sb.append("active");
-			if (changeDirBeforeList)
+			}
+			if (changeDirBeforeList) {
 				sb.append(",changeDirBeforeList");
+			}
 			sb.append("]");
 			log.debug(sb.toString());
 		}
@@ -171,12 +193,15 @@ public class FtpConnection extends InstableConnection {
 		connect();
 	}
 
+	@Override
 	public void connect() throws IOException {
 		client.setDefaultTimeout(30000);
 		client.connect(connectionUri.getHost(), connectionUri.getPort() == -1 ? 21 : connectionUri.getPort());
 		client.login(desc.getUsername(), desc.getPassword());
 		if (usePassiveMode)
+		 {
 			client.enterLocalPassiveMode(); // FIXME i need to be specified in the ConnectionDescription
+		}
 		client.setFileType(FTP.BINARY_FILE_TYPE);
 		client.setSoTimeout(0);
 		basePath = client.printWorkingDirectory() + connectionUri.getPath();
@@ -190,10 +215,12 @@ public class FtpConnection extends InstableConnection {
 			throw new IOException("Could not set working dir");
 		}
 
-		if (basePath.endsWith("/"))
+		if (basePath.endsWith("/")) {
 			basePath = basePath.substring(0, basePath.length() - 1);
+		}
 	}
 
+	@Override
 	public void reconnect() throws IOException {
 		try {
 			client.quit();
@@ -208,31 +235,38 @@ public class FtpConnection extends InstableConnection {
 		}
 	}
 
+	@Override
 	public void close() throws IOException {
 		client.quit();
 		client.disconnect();
 	}
 
+	@Override
 	public void flush() throws IOException {
 
 	}
 
+	@Override
 	public boolean isAvailable() {
 		return true;
 	}
 
+	@Override
 	public String getUri() {
 		return desc.getUri();
 	}
 
+	@Override
 	public boolean isCaseSensitive() {
 		return caseSensitive;
 	}
 
+	@Override
 	public File getRoot() {
 		return root;
 	}
 
+	@Override
 	public File _createChild(File parent, String name, boolean directory) {
 		return new AbstractFile(this, name, null, parent, directory, false);
 	}
@@ -242,12 +276,14 @@ public class FtpConnection extends InstableConnection {
 		// String path = parent.getPath()+"/"+name;
 
 		File n = new AbstractFile(this, name, null, parent, file.isDirectory(), true);
-		if (!file.isDirectory())
+		if (!file.isDirectory()) {
 			n.setFileAttributes(new FileAttributes(file.getSize(), file.getTimestamp().getTimeInMillis()));
+		}
 		return n;
 	}
 
-	public Hashtable _getChildren(File dir) throws IOException {
+	@Override
+	public Hashtable<String, File> _getChildren(File dir) throws IOException {
 		FTPFile[] files;
 		if (changeDirBeforeList) {
 			client.changeWorkingDirectory(basePath + "/" + dir.getPath());
@@ -257,45 +293,55 @@ public class FtpConnection extends InstableConnection {
 			files = client.listFiles("-a " + basePath + "/" + dir.getPath());
 		}
 
-		Hashtable table = new Hashtable();
-		for (int i = 0; i < files.length; i++) {
-			String name = files[i].getName();
-			if (!name.equals(".") && !name.equals(".."))
-				table.put(name, _buildNode(dir, files[i]));
+		Hashtable<String, File> table = new Hashtable<String, File>();
+		for (FTPFile file : files) {
+			String name = file.getName();
+			if (!name.equals(".") && !name.equals("..")) {
+				table.put(name, _buildNode(dir, file));
+			}
 		}
 
 		return table;
 	}
 
+	@Override
 	public boolean _makeDirectory(File dir) throws IOException {
 		return client.makeDirectory(basePath + "/" + dir.getPath());
 	}
 
+	@Override
 	public boolean _writeFileAttributes(File file, FileAttributes attr) {
 		return false;
 	}
 
+	@Override
 	public InputStream _readFile(File file) throws IOException {
 		InputStream in = client.retrieveFileStream(basePath + "/" + file.getPath());
-		if (in == null)
+		if (in == null) {
 			throw new IOException("Ftp error while trying to read " + file.getPath() + " [" + client.getReplyCode() + "] "
 					+ client.getReplyString());
+		}
 
 		return new FtpFileInputStream(in, client);
 	}
 
+	@Override
 	public OutputStream _writeFile(File file) throws IOException {
 		OutputStream out = client.storeFileStream(basePath + "/" + file.getPath());
-		if (out == null)
+		if (out == null) {
 			throw new IOException("Ftp error while trying to write " + file.getPath() + " [" + client.getReplyCode() + "] "
 					+ client.getReplyString());
+		}
 		return new FtpFileOutputStream(out, client);
 	}
 
+	@Override
 	public boolean _delete(File file) throws IOException {
-		if (file.isDirectory())
+		if (file.isDirectory()) {
 			return client.removeDirectory(basePath + "/" + file.getPath());
-		else
+		}
+		else {
 			return client.deleteFile(basePath + "/" + file.getPath());
+		}
 	}
 }

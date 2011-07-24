@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -40,15 +40,16 @@ public class FtpFileSystem implements FileSystem {
 	public FtpFileSystem() {
 	}
 
+	@Override
 	public Site createConnection(ConnectionDescription desc) throws FileSystemException {
-		if (!desc.getUri().startsWith("ftp:"))
+		if (!desc.getUri().startsWith("ftp:")) {
 			return null;
 		/*
 		 * try {
 		 * FTPClient client = new FTPClient();
 		 * client.connect( uri.getHost(), uri.getPort()==-1?21:uri.getPort() );
 		 * client.login( uri.getUserInfo(), "test" );
-		 * 
+		 *
 		 * if( !client.changeWorkingDirectory( uri.getPath() ) )
 		 * {
 		 * // we cannot change to given dir, maybe its a file
@@ -66,12 +67,13 @@ public class FtpFileSystem implements FileSystem {
 		 * client.quit();
 		 * throw new FileSystemException( "Could not set working dir" );
 		 * }
-		 * 
+		 *
 		 * return new FtpDirectory(client, client.printWorkingDirectory() );
 		 * } catch( IOException ioe ) {
 		 * throw new FileSystemException(ioe);
 		 * }
 		 */
+		}
 
 		FileSystemConnection conn;
 		try {

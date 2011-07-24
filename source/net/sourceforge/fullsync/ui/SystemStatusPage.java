@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -40,32 +40,39 @@ public class SystemStatusPage implements WizardPage {
 		dialog.setPage(this);
 	}
 
+	@Override
 	public String getTitle() {
 		return "System Status";
 	}
 
+	@Override
 	public String getCaption() {
 		return "System Status";
 	}
 
+	@Override
 	public String getDescription() {
 		return "";
 	}
 
+	@Override
 	public Image getIcon() {
 		return null;
 	}
 
+	@Override
 	public Image getImage() {
 		return null;
 	}
 
+	@Override
 	public void createBottom(Composite bottom) {
 		bottom.setLayout(new GridLayout(1, false));
 
 		Button okButton = new Button(bottom, SWT.PUSH);
 		okButton.setText("Ok");
 		okButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				dialog.dispose();
 			}
@@ -73,6 +80,7 @@ public class SystemStatusPage implements WizardPage {
 		okButton.setLayoutData(new GridData(GridData.END, GridData.CENTER, true, true));
 	}
 
+	@Override
 	public void createContent(Composite content) {
 		systemStatusComposite = new SystemStatusComposite(content, SWT.NULL);
 	}

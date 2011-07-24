@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -120,9 +120,9 @@ public class OptionsDialog extends org.eclipse.swt.widgets.Dialog implements Sel
 			compositeButtonsLayout.marginTop = 3;
 			compositeButtonsLayout.marginRight = 3;
 			compositeButtonsLayout.marginBottom = 3;
-			for (int c = 0; c < options.length; c++) {
+			for (String option : options) {
 				Button b = new Button(compositeButtons, SWT.PUSH);
-				b.setText(options[c]);
+				b.setText(option);
 				b.addSelectionListener(this);
 			}
 			compositeButtons.layout();
@@ -139,8 +139,9 @@ public class OptionsDialog extends org.eclipse.swt.widgets.Dialog implements Sel
 			dialogShell.open();
 			Display display = dialogShell.getDisplay();
 			while (!dialogShell.isDisposed()) {
-				if (!display.readAndDispatch())
+				if (!display.readAndDispatch()) {
 					display.sleep();
+				}
 			}
 		}
 		catch (Exception e) {
@@ -165,12 +166,14 @@ public class OptionsDialog extends org.eclipse.swt.widgets.Dialog implements Sel
 		return options;
 	}
 
+	@Override
 	public void widgetDefaultSelected(SelectionEvent arg0) {
 		result = options[0];
 		dialogShell.close();
 		dialogShell.dispose();
 	}
 
+	@Override
 	public void widgetSelected(SelectionEvent arg0) {
 		result = ((Button) arg0.widget).getText();
 		dialogShell.close();

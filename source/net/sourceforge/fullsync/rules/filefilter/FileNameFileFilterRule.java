@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -34,6 +34,8 @@ import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
  * @author Michele Aiello
  */
 public class FileNameFileFilterRule extends FileFilterRule {
+
+	private static final long serialVersionUID = 2L;
 
 	public static String typeName = "File name";
 
@@ -56,6 +58,7 @@ public class FileNameFileFilterRule extends FileFilterRule {
 
 	private Pattern regexppattern;
 
+	@Override
 	public String getRuleType() {
 		return typeName;
 	}
@@ -79,18 +82,22 @@ public class FileNameFileFilterRule extends FileFilterRule {
 		}
 	}
 
+	@Override
 	public int getOperator() {
 		return op;
 	}
 
+	@Override
 	public String getOperatorName() {
 		return allOperators[op];
 	}
 
+	@Override
 	public OperandValue getValue() {
 		return pattern;
 	}
 
+	@Override
 	public boolean match(File file) {
 		String name = file.getName();
 
@@ -130,6 +137,7 @@ public class FileNameFileFilterRule extends FileFilterRule {
 		}
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer buff = new StringBuffer(30);
 

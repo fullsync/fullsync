@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -38,11 +38,11 @@ public class ImageRepository {
 	 * public final static int PositionBeginning = 0;
 	 * public final static int PositionCenter = 1;
 	 * public final static int PositionEnd = 2;
-	 * 
+	 *
 	 * private Image image;
 	 * private int positionX;
 	 * private int positionY;
-	 * 
+	 *
 	 * public Overlay( Image image )
 	 * {
 	 * this( image, PositionBeginning, PositionBeginning );
@@ -69,11 +69,11 @@ public class ImageRepository {
 	 */
 
 	private Display display;
-	private Hashtable cache = new Hashtable();
+	private Hashtable<String, Image> cache = new Hashtable<String, Image>();
 
 	public ImageRepository(Display display) {
 		this.display = display;
-		this.cache = new Hashtable();
+		this.cache = new Hashtable<String, Image>();
 	}
 
 	public Image getImage(String imageName) {
@@ -94,11 +94,12 @@ public class ImageRepository {
 	}
 
 	public void dispose() {
-		Enumeration en = cache.elements();
+		Enumeration<Image> en = cache.elements();
 		while (en.hasMoreElements()) {
-			Image i = (Image) en.nextElement();
-			if (!i.isDisposed())
+			Image i = en.nextElement();
+			if (!i.isDisposed()) {
 				i.dispose();
+			}
 		}
 		cache.clear();
 	}

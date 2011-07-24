@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -55,19 +55,23 @@ public class NiceListView extends Composite implements Listener {
 	public NiceListView(org.eclipse.swt.widgets.Composite parent, int style) {
 		super(parent, style);
 		addFocusListener(new FocusAdapter() {
+			@Override
 			public void focusGained(FocusEvent e) {
 
 			}
 		});
 		addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				try {
 					Control[] children = getChildren();
 					int index = Arrays.asList(children).indexOf(selected);
-					if (e.keyCode == SWT.ARROW_UP)
+					if (e.keyCode == SWT.ARROW_UP) {
 						setSelected((NiceListViewItem) children[index - 1]);
-					else if (e.keyCode == SWT.ARROW_DOWN)
+					}
+					else if (e.keyCode == SWT.ARROW_DOWN) {
 						setSelected((NiceListViewItem) children[index + 1]);
+					}
 				}
 				catch (ClassCastException ex) {
 					ExceptionHandler.reportException(ex);
@@ -77,6 +81,7 @@ public class NiceListView extends Composite implements Listener {
 		initGUI();
 	}
 
+	@Override
 	public void handleEvent(Event event) {
 		switch (event.type) {
 			case SWT.KeyDown:
@@ -85,10 +90,12 @@ public class NiceListView extends Composite implements Listener {
 					case SWT.ARROW_DOWN:
 						Control[] children = getChildren();
 						int index = Arrays.asList(children).indexOf(selected);
-						if (event.keyCode == SWT.ARROW_UP && index > 0)
+						if ((event.keyCode == SWT.ARROW_UP) && (index > 0)) {
 							setSelected((NiceListViewItem) children[index - 1]);
-						else if (event.keyCode == SWT.ARROW_DOWN && index + 1 < children.length)
+						}
+						else if ((event.keyCode == SWT.ARROW_DOWN) && (index + 1 < children.length)) {
 							setSelected((NiceListViewItem) children[index + 1]);
+						}
 						break;
 				}
 		}
@@ -109,8 +116,9 @@ public class NiceListView extends Composite implements Listener {
 	}
 
 	public Composite getSelectedContent() {
-		if (selected == null)
+		if (selected == null) {
 			return null;
+		}
 		return selected.getContent();
 	}
 
@@ -120,8 +128,8 @@ public class NiceListView extends Composite implements Listener {
 			return;
 		}
 		Control[] children = this.getChildren();
-		for (int i = 0; i < children.length; i++) {
-			NiceListViewItem a = (NiceListViewItem) children[i];
+		for (Control element : children) {
+			NiceListViewItem a = (NiceListViewItem) element;
 			a.setSelected(false);
 		}
 		item.setSelected(true);
@@ -130,6 +138,7 @@ public class NiceListView extends Composite implements Listener {
 		this.layout();
 	}
 
+	@Override
 	public boolean setFocus() {
 		if (selected != null) {
 			selected.forceFocus();
@@ -156,8 +165,8 @@ public class NiceListView extends Composite implements Listener {
 
 	public void clear() {
 		Control[] children = this.getChildren();
-		for (int i = 0; i < children.length; i++) {
-			children[i].dispose();
+		for (Control element : children) {
+			element.dispose();
 		}
 	}
 }

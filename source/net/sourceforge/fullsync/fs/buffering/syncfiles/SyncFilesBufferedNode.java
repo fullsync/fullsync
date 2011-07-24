@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -34,7 +34,6 @@ import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.fs.File;
@@ -45,7 +44,7 @@ import net.sourceforge.fullsync.fs.buffering.BufferedFile;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class SyncFilesBufferedNode implements BufferedFile {
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2L;
 
 	protected BufferedFile parent;
 	protected File unbuff;
@@ -68,21 +67,27 @@ public class SyncFilesBufferedNode implements BufferedFile {
 		this.exists = exists;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public String getPath() {
-		if (unbuff == null)
+		if (unbuff == null) {
 			return parent.getPath() + "/" + name;
-		else
+		}
+		else {
 			return unbuff.getPath();
+		}
 	}
 
+	@Override
 	public File getParent() {
 		return parent;
 	}
 
+	@Override
 	public boolean isBuffered() {
 		return true;
 	}
@@ -91,6 +96,7 @@ public class SyncFilesBufferedNode implements BufferedFile {
 		return dirty;
 	}
 
+	@Override
 	public File getUnbuffered() {
 		return unbuff;
 	}
@@ -104,6 +110,7 @@ public class SyncFilesBufferedNode implements BufferedFile {
 		return "Buffered: " + unbuff.toString();
 	}
 
+	@Override
 	public boolean exists() {
 		return exists;
 	}
@@ -121,26 +128,29 @@ public class SyncFilesBufferedNode implements BufferedFile {
 	protected void loadFromBuffer() throws IOException {
 		try {
 			File node = unbuff.getChild(syncBufferFilename);
-			if (node == null || !node.exists() || node.isDirectory())
+			if ((node == null) || !node.exists() || node.isDirectory())
+			 {
 				return; // TODO clear children list ?
+			}
 
 			String line;
-			File f = (File) node;
+			File f = node;
 			ByteArrayOutputStream out = new ByteArrayOutputStream((int) f.getFileAttributes().getLength());
 
 			InputStream in = f.getInputStream();
-			int i;
 			byte[] block = new byte[1024];
-			while ((i = in.read(block)) > 0)
+			while ((in.read(block)) > 0) {
 				out.write(block);
+			}
 			in.close();
 			out.close();
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(out.toByteArray())));
 			while ((line = reader.readLine()) != null) {
 				String[] parts = line.split("\t");
-				if (parts.length < 2)
+				if (parts.length < 2) {
 					continue;
+				}
 				File n = unbuff.getChild(parts[1]);
 				if (n == null) {
 					n = unbuff.createChild(parts[1], parts[0].equals("D"));
@@ -172,12 +182,11 @@ public class SyncFilesBufferedNode implements BufferedFile {
 			}
 			// TODO avoid writing empty files
 
-			File f = (File) node;
+			File f = node;
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(f.getOutputStream()));
-			// TODO: move to generic
-			Collection items = getChildren();
-			for (Iterator i = items.iterator(); i.hasNext();) {
-				SyncFilesBufferedNode n = (SyncFilesBufferedNode) i.next();
+			Collection<File> items = getChildren();
+			for (File element : items) {
+				SyncFilesBufferedNode n = (SyncFilesBufferedNode) element;
 				if (n.exists()) {
 					writer.write(n.toBufferLine());
 					writer.write('\n');
@@ -194,45 +203,55 @@ public class SyncFilesBufferedNode implements BufferedFile {
 		if (isDirty()) {
 			saveToBuffer();
 		}
-		for (Enumeration e = children.elements(); e.hasMoreElements();) {
+		for (Enumeration<File> e = children.elements(); e.hasMoreElements();) {
 			BufferedFile n = (BufferedFile) e.nextElement();
 			if (n.exists())
+			 {
 				;
 			// n.flushDirty(); //FIXME!
+			}
 		}
 	}
 
+	@Override
 	public File createChild(String name, boolean directory) throws IOException {
 		markDirty();
 		File n = unbuff.getChild(name);
-		if (n == null)
+		if (n == null) {
 			n = unbuff.createChild(name, directory);
+		}
 		SyncFilesBufferedNode bn = new SyncFilesBufferedNode(name, n, syncBufferFilename, this, directory, false);
 		children.put(name, bn);
 		return bn;
 	}
 
+	@Override
 	public InputStream getInputStream() throws IOException {
 		return unbuff.getInputStream();
 	}
 
+	@Override
 	public OutputStream getOutputStream() throws IOException {
 		markDirty();
 		return unbuff.getOutputStream();
 	}
 
+	@Override
 	public FileAttributes getFileAttributes() {
 		return attributes;
 	}
 
+	@Override
 	public void writeFileAttributes() throws IOException {
 
 	}
 
+	@Override
 	public void setFileAttributes(FileAttributes attributes) {
 		this.attributes = attributes;
 	}
 
+	@Override
 	public FileAttributes getFsFileAttributes() {
 		return fsAttributes;
 	}
@@ -241,61 +260,76 @@ public class SyncFilesBufferedNode implements BufferedFile {
 		this.fsAttributes = fsAttributes;
 	}
 
+	@Override
 	public boolean isDirectory() {
 		return directory;
 	}
 
+	@Override
 	public boolean makeDirectory() throws IOException {
 		markDirty();
 		// parent.markDirty();
 		return unbuff.makeDirectory();
 	}
 
+	@Override
 	public File getChild(String name) {
 		Object obj = children.get(name);
-		if (obj == null)
+		if (obj == null) {
 			return null;
-		else
+		}
+		else {
 			return (File) obj;
+		}
 	}
 
+	@Override
 	public Collection<File> getChildren() {
 		return children.values();
 	}
 
+	@Override
 	public void addChild(File node) {
 		children.put(node.getName(), node);
 	}
 
+	@Override
 	public void refreshReference() throws IOException {
 		unbuff = getParent().getUnbuffered().getChild(getName());
 	}
 
+	@Override
 	public void removeChild(String name) {
 		children.remove(name);
 	}
 
+	@Override
 	public boolean delete() throws IOException {
 		markDirty();
 		return unbuff.delete();
 	}
 
+	@Override
 	public boolean isFile() {
 		return !directory;
 	}
 
+	@Override
 	public boolean isFiltered() {
 		return filtered;
 	}
 
+	@Override
 	public void setFiltered(boolean filtered) {
 		this.filtered = filtered;
 	}
 
+	@Override
 	public void refresh() {
 		// TODO refresh()
 	}
 
+	@Override
 	public void refreshBuffer() {
 		// TODO refreshBuffer()
 	}

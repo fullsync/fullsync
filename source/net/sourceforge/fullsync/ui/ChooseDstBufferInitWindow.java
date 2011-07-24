@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -198,7 +198,7 @@ public class ChooseDstBufferInitWindow extends org.eclipse.swt.widgets.Composite
 	/**
 	 * This static method creates a new instance of this class and shows
 	 * it inside a new Shell.
-	 * 
+	 *
 	 * It is a convenience method for showing the GUI, but it can be
 	 * copied and used as a basis for your own code. *
 	 * It is auto-generated code - the body of this method will be
@@ -209,14 +209,15 @@ public class ChooseDstBufferInitWindow extends org.eclipse.swt.widgets.Composite
 		try {
 			Display display = Display.getDefault();
 			Shell shell = new Shell(display);
-			ChooseDstBufferInitWindow inst = new ChooseDstBufferInitWindow(shell, SWT.NULL);
+			new ChooseDstBufferInitWindow(shell, SWT.NULL);
 			shell.setLayout(new org.eclipse.swt.layout.FillLayout());
 			Rectangle shellBounds = shell.computeTrim(0, 0, 560, 157);
 			shell.setSize(shellBounds.width, shellBounds.height);
 			shell.open();
 			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch())
+				if (!display.readAndDispatch()) {
 					display.sleep();
+				}
 			}
 		}
 		catch (Exception e) {

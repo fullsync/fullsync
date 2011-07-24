@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -30,10 +30,11 @@ import net.sourceforge.fullsync.ui.Messages;
  * TODO the eights day of week should be wrapped to the first! (in cron: 0 == 7)
  * if( daysOfWeek.bArray[8] )
  * daysOfWeek.bArray[1] = true;
- * 
+ *
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class CrontabPart implements Serializable {
+	private static final long serialVersionUID = 2L;
 	// REVISIT we can't localize those names as we don't have an guicontroller at this point of time
 	// atm the name isn't used anywhere, but if it is used, we need to think of some nice trick
 	public final static CrontabPart MINUTES = new CrontabPart("minutes", 0, 59, 0); //$NON-NLS-1$
@@ -44,6 +45,7 @@ public class CrontabPart implements Serializable {
 	public final static CrontabPart[] ALL_PARTS = new CrontabPart[] { MINUTES, HOURS, DAYSOFMONTH, MONTHS, DAYSOFWEEK };
 
 	public class Instance implements Serializable {
+		private static final long serialVersionUID = 2L;
 		public final String pattern;
 		public final boolean[] bArray;
 		public final boolean all;
@@ -76,16 +78,18 @@ public class CrontabPart implements Serializable {
 		}
 
 		private void setIntArray(int[] intArray, int intOffset) {
-			for (int i = 0; i < intArray.length; i++)
+			for (int i = 0; i < intArray.length; i++) {
 				bArray[intArray[i] - intOffset + offset] = true;
+			}
 		}
 
 		public int[] getIntArray(int intOffset) {
 			int[] a = new int[high + 1];
 			int aPos = 0;
 			for (int i = low; i <= high; i++) {
-				if (bArray[i + offset])
+				if (bArray[i + offset]) {
 					a[aPos++] = i + intOffset;
+				}
 			}
 			int[] res;
 			if (aPos == high + 1) {
@@ -93,8 +97,9 @@ public class CrontabPart implements Serializable {
 			}
 			else {
 				res = new int[aPos];
-				for (int i = 0; i < aPos; i++)
+				for (int i = 0; i < aPos; i++) {
 					res[i] = a[i];
+				}
 			}
 			return res;
 		}
@@ -106,10 +111,12 @@ public class CrontabPart implements Serializable {
 					p.append(String.valueOf(i)).append(',');
 				}
 			}
-			if (p.length() == 0)
+			if (p.length() == 0) {
 				return "0";
-			else
+			}
+			else {
 				return p.substring(0, p.length() - 1);
+			}
 		}
 
 		private boolean parseToken(String token) throws DataParseException {
@@ -124,7 +131,9 @@ public class CrontabPart implements Serializable {
 				if (index > 0) {
 					each = Integer.parseInt(token.substring(index + 1));
 					if (each == 0)
+					 {
 						throw new DataParseException(Messages.getString("CrontabPart.NeverUseExpressions")); //$NON-NLS-1$
+					}
 
 					token = token.substring(0, index);
 				}
@@ -156,8 +165,9 @@ public class CrontabPart implements Serializable {
 					 * end--;
 					 * }
 					 */
-					for (int j = start; j <= end; j += each)
+					for (int j = start; j <= end; j += each) {
 						bArray[j + offset] = true;
+					}
 					return false;
 				}
 

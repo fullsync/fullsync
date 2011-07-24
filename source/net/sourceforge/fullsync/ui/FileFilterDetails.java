@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -75,7 +75,7 @@ public class FileFilterDetails extends Composite {
 	private FileFilterManager fileFilterManager = new FileFilterManager();
 	private FileFilter fileFilter;
 
-	private Vector ruleItems = new Vector();
+	private Vector<FilterRuleListItem> ruleItems = new Vector<FilterRuleListItem>();
 
 	/**
 	 * Auto-generated main method to display this
@@ -96,7 +96,7 @@ public class FileFilterDetails extends Composite {
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
 		shell.layout();
-		if (size.x == 0 && size.y == 0) {
+		if ((size.x == 0) && (size.y == 0)) {
 			inst.pack();
 			shell.pack();
 		}
@@ -106,8 +106,9 @@ public class FileFilterDetails extends Composite {
 		}
 		shell.open();
 		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
+			if (!display.readAndDispatch()) {
 				display.sleep();
+			}
 		}
 	}
 
@@ -179,6 +180,7 @@ public class FileFilterDetails extends Composite {
 					buttonMore = new Button(buttonsComposite, SWT.PUSH | SWT.CENTER);
 					buttonMore.setText("More");
 					buttonMore.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent evt) {
 							addRuleRow();
 							buttonFewer.setEnabled(ruleItems.size() > 1);
@@ -192,6 +194,7 @@ public class FileFilterDetails extends Composite {
 					buttonFewer = new Button(buttonsComposite, SWT.PUSH | SWT.CENTER);
 					buttonFewer.setText("Fewer");
 					buttonFewer.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent evt) {
 							removeRuleRow();
 							buttonFewer.setEnabled(ruleItems.size() > 1);
@@ -216,8 +219,8 @@ public class FileFilterDetails extends Composite {
 				comboFilterType.select(fileFilter.getFilterType());
 				buttonAppliesToDir.setSelection(fileFilter.appliesToDirectories());
 				FileFilterRule[] rules = fileFilter.getFileFiltersRules();
-				for (int i = 0; i < rules.length; i++) {
-					addRuleRow(rules[i].getRuleType(), rules[i].getOperator(), rules[i].getValue());
+				for (FileFilterRule rule : rules) {
+					addRuleRow(rule.getRuleType(), rule.getOperator(), rule.getValue());
 				}
 			}
 			else {
@@ -254,7 +257,7 @@ public class FileFilterDetails extends Composite {
 		compositeRuleList.dispose();
 		createCompositeRuleList();
 		for (int i = 0; i < ruleItems.size(); i++) {
-			FilterRuleListItem ruleItem = (FilterRuleListItem) ruleItems.elementAt(i);
+			FilterRuleListItem ruleItem = ruleItems.elementAt(i);
 			ruleItem.init(compositeRuleList);
 		}
 		compositeRuleList.pack();
@@ -288,7 +291,7 @@ public class FileFilterDetails extends Composite {
 
 		FileFilterRule[] rules = new FileFilterRule[ruleItems.size()];
 		for (int i = 0; i < rules.length; i++) {
-			FilterRuleListItem ruleItem = (FilterRuleListItem) ruleItems.get(i);
+			FilterRuleListItem ruleItem = ruleItems.get(i);
 			rules[i] = fileFilterManager.createFileFilterRule(ruleItem.getRuleType(), ruleItem.getOperator(), ruleItem.getValue());
 		}
 

@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -22,14 +22,12 @@ package net.sourceforge.fullsync.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.IgnoreDecider;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.fs.File;
 
 /**
@@ -71,7 +69,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param src
 	 * @param dst
 	 * @param rules
@@ -79,26 +77,31 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	 * @throws DataParseException
 	 * @throws FileSystemException
 	 */
+	@Override
 	public void synchronizeNodes(File src, File dst, RuleSet rules, Task parent) throws DataParseException, IOException {
 		if (!takeIgnoreDecider.isNodeIgnored(src)) {
-			for (int i = 0; i < taskGenerationListeners.size(); i++)
-				((TaskGenerationListener) taskGenerationListeners.get(i)).taskGenerationStarted(src, dst);
+			for (int i = 0; i < taskGenerationListeners.size(); i++) {
+				(taskGenerationListeners.get(i)).taskGenerationStarted(src, dst);
+			}
 
 			Task task = getActionDecider().getTask(src, dst, stateDecider, bufferStateDecider);
 
-			for (int i = 0; i < taskGenerationListeners.size(); i++)
-				((TaskGenerationListener) taskGenerationListeners.get(i)).taskGenerationFinished(task);
+			for (int i = 0; i < taskGenerationListeners.size(); i++) {
+				(taskGenerationListeners.get(i)).taskGenerationFinished(task);
+			}
 
-			if (rules.isUsingRecursion())
+			if (rules.isUsingRecursion()) {
 				recurse(src, dst, rules, task);
+			}
 			parent.addChild(task);
 		}
 		else {
 			src.setFiltered(true);
 			dst.setFiltered(true);
 			// Enqueue ignore action ?
-			if (rules.isUsingRecursionOnIgnore())
+			if (rules.isUsingRecursionOnIgnore()) {
 				recurse(src, dst, rules, parent);
+			}
 		}
 	}
 
@@ -106,29 +109,32 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	 * we could updateRules in synchronizeNodes and apply synchronizeDirectories
 	 * to the given src and dst if they are directories
 	 */
+	@Override
 	public void synchronizeDirectories(File src, File dst, RuleSet oldrules, Task parent) throws DataParseException, IOException {
 		// update rules to current directory
 		RuleSet rules = updateRules(src, dst, oldrules);
 
-		Collection srcFiles = src.getChildren();
-		Collection dstFiles = new ArrayList(dst.getChildren());
+		Collection<File> srcFiles = src.getChildren();
+		Collection<File> dstFiles = new ArrayList<File>(dst.getChildren());
 
-		for (Iterator i = srcFiles.iterator(); i.hasNext();) {
-			File sfile = (File) i.next();
+		for (File sfile : srcFiles) {
 			File dfile = dst.getChild(sfile.getName());
-			if (dfile == null)
+			if (dfile == null) {
 				dfile = dst.createChild(sfile.getName(), sfile.isDirectory());
-			else
+			}
+			else {
 				dstFiles.remove(dfile);
+			}
 
 			synchronizeNodes(sfile, dfile, rules, parent);
 		}
 
-		for (Iterator i = dstFiles.iterator(); i.hasNext();) {
-			File dfile = (File) i.next();
+		for (Object element : dstFiles) {
+			File dfile = (File) element;
 			File sfile = src.getChild(dfile.getName());
-			if (sfile == null)
+			if (sfile == null) {
 				sfile = src.createChild(dfile.getName(), dfile.isDirectory());
+			}
 
 			synchronizeNodes(sfile, dfile, rules, parent);
 		}

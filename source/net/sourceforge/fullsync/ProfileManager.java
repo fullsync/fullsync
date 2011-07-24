@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -31,8 +31,8 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
 /**
  * A ProfileManager handles persistence of Profiles and provides
  * a scheduler for creating events when a Profile should be executed.
- * 
+ *
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource, SchedulerChangeListener {
@@ -75,8 +75,10 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 			this.executionTime = executionTime;
 		}
 
+		@Override
 		public void run() {
 			Thread worker = new Thread(new Runnable() {
+				@Override
 				public void run() {
 					fireProfileSchedulerEvent(profile);
 				}
@@ -86,31 +88,32 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 			Thread.yield();
 		}
 
+		@Override
 		public long getExecutionTime() {
 			return executionTime;
 		}
 
+		@Override
 		public String toString() {
 			return "Scheduled execution of " + profile.getName();
 		}
 	}
 
-	class ProfileComparator implements Comparator {
-		public int compare(Object o1, Object o2) {
-			Profile p1 = (Profile) o1;
-			Profile p2 = (Profile) o2;
+	class ProfileComparator implements Comparator<Profile> {
+		@Override
+		public int compare(Profile p1, Profile p2) {
 			return p1.getName().compareTo(p2.getName());
 		}
 	}
 
 	private String configFile;
-	protected Vector profiles;
-	private Vector changeListeners;
-	private Vector scheduleListeners;
+	protected Vector<Profile> profiles;
+	private Vector<ProfileListChangeListener> changeListeners;
+	private Vector<ProfileSchedulerListener> scheduleListeners;
 
 	// FIXME this list is only needed because we need to give feedback from
 	// the local scheduler and a remote scheduler.
-	private Vector schedulerChangeListeners;
+	private Vector<SchedulerChangeListener> schedulerChangeListeners;
 
 	// TODO the scheduler shouldn't reside within the profile manager
 	// but just use it as task source
@@ -123,10 +126,10 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	private ProfileListChangeListener remoteListener;
 
 	protected ProfileManager() {
-		this.profiles = new Vector();
-		this.changeListeners = new Vector();
-		this.scheduleListeners = new Vector();
-		this.schedulerChangeListeners = new Vector();
+		this.profiles = new Vector<Profile>();
+		this.changeListeners = new Vector<ProfileListChangeListener>();
+		this.scheduleListeners = new Vector<ProfileSchedulerListener>();
+		this.schedulerChangeListeners = new Vector<SchedulerChangeListener>();
 		this.scheduler = new SchedulerImpl(this);
 		this.scheduler.addSchedulerChangeListener(this);
 	}
@@ -169,10 +172,12 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		this.remoteManager = remoteManager;
 
 		remoteListener = new ProfileListChangeListener() {
+			@Override
 			public void profileListChanged() {
 				updateRemoteProfiles();
 			}
 
+			@Override
 			public void profileChanged(Profile p) {
 				// ProfileManager.this.profileChanged(p);
 				updateRemoteProfiles();
@@ -185,12 +190,12 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	private void updateRemoteProfiles() {
-		this.profiles = new Vector();
+		this.profiles = new Vector<Profile>();
 
 		Profile[] remoteprofiles = remoteManager.getProfiles();
-		for (int i = 0; i < remoteprofiles.length; i++) {
-			this.profiles.add(remoteprofiles[i]);
-			remoteprofiles[i].addProfileChangeListener(this);
+		for (Profile remoteprofile : remoteprofiles) {
+			this.profiles.add(remoteprofile);
+			remoteprofile.addProfileChangeListener(this);
 		}
 
 		fireProfilesChangeEvent();
@@ -208,7 +213,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 			}
 			remoteManager = null;
 
-			this.profiles = new Vector();
+			this.profiles = new Vector<Profile>();
 
 			try {
 				loadProfiles();
@@ -268,15 +273,16 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		fireProfilesChangeEvent();
 	}
 
-	public Enumeration getProfiles() {
-		return profiles.elements();
+	public Vector<Profile> getProfiles() {
+		return profiles;
 	}
 
 	public Profile getProfile(String name) {
 		for (int i = 0; i < profiles.size(); i++) {
-			Profile p = (Profile) profiles.get(i);
-			if (p.getName().equals(name))
+			Profile p = profiles.get(i);
+			if (p.getName().equals(name)) {
 				return p;
+			}
 		}
 		return null;
 	}
@@ -308,16 +314,17 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		}
 	}
 
+	@Override
 	public ScheduleTask getNextScheduleTask() {
 		long now = System.currentTimeMillis();
 		long nextTime = Long.MAX_VALUE;
 		Profile nextProfile = null;
 
-		Enumeration e = profiles.elements();
+		Enumeration<Profile> e = profiles.elements();
 		while (e.hasMoreElements()) {
-			Profile p = (Profile) e.nextElement();
+			Profile p = e.nextElement();
 			Schedule s = p.getSchedule();
-			if (p.isEnabled() && s != null) {
+			if (p.isEnabled() && (s != null)) {
 				long o = s.getNextOccurrence(now);
 				if (nextTime > o) {
 					nextTime = o;
@@ -343,14 +350,17 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	protected void fireProfilesChangeEvent() {
-		for (int i = 0; i < changeListeners.size(); i++)
-			((ProfileListChangeListener) changeListeners.get(i)).profileListChanged();
+		for (ProfileListChangeListener changeListener : changeListeners) {
+			changeListener.profileListChanged();
+		}
 	}
 
+	@Override
 	public void profileChanged(Profile profile) {
 		scheduler.refresh();
-		for (int i = 0; i < changeListeners.size(); i++)
-			((ProfileListChangeListener) changeListeners.get(i)).profileChanged(profile);
+		for (ProfileListChangeListener changeListener : changeListeners) {
+			changeListener.profileChanged(profile);
+		}
 	}
 
 	public void addSchedulerListener(ProfileSchedulerListener listener) {
@@ -362,8 +372,9 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	protected void fireProfileSchedulerEvent(Profile profile) {
-		for (int i = 0; i < scheduleListeners.size(); i++)
-			((ProfileSchedulerListener) scheduleListeners.get(i)).profileExecutionScheduled(profile);
+		for (ProfileSchedulerListener schedulerListener : scheduleListeners) {
+			schedulerListener.profileExecutionScheduled(profile);
+		}
 	}
 
 	/*
@@ -374,6 +385,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	 * scheduler.removeSchedulerChangeListener(listener);
 	 * }
 	 */
+	@Override
 	public void schedulerStatusChanged(boolean status) {
 		fireSchedulerChangedEvent();
 	}
@@ -388,8 +400,8 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 
 	protected void fireSchedulerChangedEvent() {
 		boolean enabled = isSchedulerEnabled();
-		for (int i = 0; i < schedulerChangeListeners.size(); i++) {
-			((SchedulerChangeListener) schedulerChangeListeners.get(i)).schedulerStatusChanged(enabled);
+		for (SchedulerChangeListener listener : schedulerChangeListeners) {
+			listener.schedulerStatusChanged(enabled);
 		}
 	}
 
@@ -398,19 +410,22 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		desc.setUri(element.getAttribute("uri"));
 		String value;
 		value = element.getAttribute("buffer");
-		if (value.length() > 0)
+		if (value.length() > 0) {
 			desc.setBufferStrategy(value);
+		}
 		value = element.getAttribute("username");
-		if (value.length() > 0)
+		if (value.length() > 0) {
 			desc.setUsername(value);
+		}
 		value = element.getAttribute("password");
-		if (value.length() > 0)
+		if (value.length() > 0) {
 			desc.setCryptedPassword(value);
+		}
 
 		NodeList list = element.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
 			Node n = list.item(i);
-			if (n.getNodeType() == Node.ELEMENT_NODE && n.getNodeName().equals("Param")) {
+			if ((n.getNodeType() == Node.ELEMENT_NODE) && n.getNodeName().equals("Param")) {
 				Element e = (Element) n;
 				desc.setParameter(e.getAttribute("name"), e.getAttribute("value"));
 			}
@@ -420,16 +435,17 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	protected Schedule unserializeSchedule(Element element) {
-		if (element == null)
+		if (element == null) {
 			return null;
+		}
 		Schedule schedule = null;
 		String type = element.getAttribute("type");
-		if (type.equals("interval")) {
+		if ("interval".equals(type)) {
 			long firstSpan = element.hasAttribute("firstinterval") ? Long.parseLong(element.getAttribute("firstinterval")) : 0;
 			long span = Long.parseLong(element.getAttribute("interval"));
 			schedule = new IntervalSchedule(firstSpan, span);
 		}
-		else if (type.equals("crontab")) {
+		else if ("crontab".equals(type)) {
 			try {
 				schedule = new CrontabSchedule(element.getAttribute("pattern"));
 			}
@@ -450,10 +466,12 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		p.setName(element.getAttribute("name"));
 		p.setDescription(element.getAttribute("description"));
 		p.setSynchronizationType(element.getAttribute("type"));
-		if (element.hasAttribute("enabled"))
+		if (element.hasAttribute("enabled")) {
 			p.setEnabled(Boolean.valueOf(element.getAttribute("enabled")).booleanValue());
-		if (element.hasAttribute("lastErrorLevel"))
+		}
+		if (element.hasAttribute("lastErrorLevel")) {
 			p.setLastError(Integer.parseInt(element.getAttribute("lastErrorLevel")), element.getAttribute("lastErrorString"));
+		}
 
 		try {
 			p.setLastUpdate(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).parse(element.getAttribute("lastUpdate")));
@@ -472,20 +490,21 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	protected Element serialize(ConnectionDescription desc, String name, Document doc) {
 		Element elem = doc.createElement(name);
 		elem.setAttribute("uri", desc.getUri().toString());
-		if (desc.getBufferStrategy() != null)
+		if (desc.getBufferStrategy() != null) {
 			elem.setAttribute("buffer", desc.getBufferStrategy());
-		if (desc.getUsername() != null)
+		}
+		if (desc.getUsername() != null) {
 			elem.setAttribute("username", desc.getUsername());
-		if (desc.getPassword() != null)
+		}
+		if (desc.getPassword() != null) {
 			elem.setAttribute("password", desc.getCryptedPassword());
+		}
 
-		Dictionary params = desc.getParameters();
-		Enumeration e = params.keys();
-		while (e.hasMoreElements()) {
-			String key = (String) e.nextElement();
+		Hashtable<String, String> params = desc.getParameters();
+		for (String key : params.keySet()) {
 			Element p = doc.createElement("Param");
 			p.setAttribute("name", key);
-			p.setAttribute("value", (String) params.get(key));
+			p.setAttribute("value", params.get(key));
 			elem.appendChild(p);
 		}
 
@@ -521,8 +540,6 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 
 	protected Element serialize(Profile p, Document doc) {
 		Element elem = doc.createElement("Profile");
-		Element e;
-
 		elem.setAttribute("name", p.getName());
 		elem.setAttribute("description", p.getDescription());
 		elem.setAttribute("type", p.getSynchronizationType());
@@ -544,7 +561,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		if (remoteManager != null) {
 			try {
 				remoteManager.removeProfileListChangeListener(remoteListener);
-				remoteManager.save((Profile[]) profiles.toArray(new Profile[0]));
+				remoteManager.save(profiles.toArray(new Profile[0]));
 				remoteManager.addProfileListChangeListener(remoteListener);
 			}
 			catch (RemoteException e) {
@@ -558,9 +575,9 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 
 				Element e = doc.createElement("Profiles");
 				e.setAttribute("version", "1.0");
-				Enumeration en = profiles.elements();
+				Enumeration<Profile> en = profiles.elements();
 				while (en.hasMoreElements()) {
-					e.appendChild(serialize((Profile) en.nextElement(), doc));
+					e.appendChild(serialize(en.nextElement(), doc));
 				}
 				doc.appendChild(e);
 

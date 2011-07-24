@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -56,7 +55,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class SyncFileBufferedConnection implements BufferedConnection {
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2L;
 
 	class SyncFileDefaultHandler extends DefaultHandler {
 		BufferedConnection bc;
@@ -67,17 +66,20 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			current = (AbstractBufferedFile) bc.getRoot();
 		}
 
+		@Override
 		public void startDocument() throws SAXException {
 
 			super.startDocument();
 		}
 
+		@Override
 		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 			String name = attributes.getValue("Name");
 
 			if (qName.equals("Directory")) {
-				if (name.equals("/") || name.equals("."))
+				if (name.equals("/") || name.equals(".")) {
 					return;
+				}
 				// File n = current.getUnbuffered().getChild( name );
 				// if( n == null )
 				// n = current.getUnbuffered().createChild( name, true );
@@ -99,6 +101,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			super.startElement(uri, localName, qName, attributes);
 		}
 
+		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
 			if (qName.equals("Directory")) {
 				/*
@@ -117,6 +120,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			super.endElement(uri, localName, qName);
 		}
 
+		@Override
 		public void endDocument() throws SAXException {
 			super.endDocument();
 		}
@@ -134,37 +138,45 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		loadFromBuffer();
 	}
 
+	@Override
 	public boolean isAvailable() {
 		return fs.isAvailable();
 	}
 
+	@Override
 	public File createChild(File dir, String name, boolean directory) throws IOException {
 		dirty = true;
 		File n = dir.getUnbuffered().getChild(name);
-		if (n == null)
+		if (n == null) {
 			n = dir.getUnbuffered().createChild(name, directory);
+		}
 		BufferedFile bf = new AbstractBufferedFile(this, n, dir, directory, false);
 		return bf;
 	}
 
+	@Override
 	public boolean delete(File node) throws IOException {
 		node.getUnbuffered().delete();
 		((BufferedFile) node.getParent()).removeChild(node.getName());
 		return true;
 	}
 
-	public Hashtable getChildren(File dir) {
+	@Override
+	public Hashtable<String, File> getChildren(File dir) {
 		return null;
 	}
 
+	@Override
 	public File getRoot() {
 		return root;
 	}
 
+	@Override
 	public boolean makeDirectory(File dir) {
 		return false;
 	}
 
+	@Override
 	public InputStream readFile(File file) {
 		return null;
 	}
@@ -173,31 +185,34 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		return false;
 	}
 
+	@Override
 	public OutputStream writeFile(File file) {
 		return null;
 	}
 
+	@Override
 	public void flushDirty() throws IOException {
 		// if( dirty )
 		saveToBuffer();
 	}
 
+	@Override
 	public boolean writeFileAttributes(File file, FileAttributes att) {
 		return false;
 	}
 
 	protected void updateFromFileSystem(BufferedFile buffered) throws IOException {
 		// load fs entries if wanted
-		Collection fsChildren = buffered.getUnbuffered().getChildren();
-		for (Iterator i = fsChildren.iterator(); i.hasNext();) {
-			File uf = (File) i.next();
+		Collection<File> fsChildren = buffered.getUnbuffered().getChildren();
+		for (File uf : fsChildren) {
 			BufferedFile bf = (BufferedFile) buffered.getChild(uf.getName());
 			if (bf == null) {
 				bf = new AbstractBufferedFile(this, uf, root, uf.isDirectory(), false);
 				buffered.addChild(bf);
 			}
-			if (bf.isDirectory())
+			if (bf.isDirectory()) {
 				updateFromFileSystem(bf);
+			}
 		}
 	}
 
@@ -206,9 +221,10 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		File f = fsRoot.getChild(".syncfiles");
 
 		root = new AbstractBufferedFile(this, fsRoot, null, true, true);
-		if (f == null || !f.exists() || f.isDirectory()) {
-			if (isMonitoringFileSystem())
+		if ((f == null) || !f.exists() || f.isDirectory()) {
+			if (isMonitoringFileSystem()) {
 				updateFromFileSystem(root);
+			}
 			return;
 		}
 		ByteArrayOutputStream out;
@@ -222,8 +238,9 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			InputStream in = new GZIPInputStream(f.getInputStream());
 			int i;
 			byte[] block = new byte[1024];
-			while ((i = in.read(block)) > 0)
+			while ((i = in.read(block)) > 0) {
 				out.write(block, 0, i);
+			}
 			in.close();
 			out.close();
 
@@ -254,8 +271,9 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		}
 		finally {
 			try {
-				if (reader != null)
+				if (reader != null) {
 					reader.close();
+				}
 			}
 			catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -263,19 +281,19 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			}
 		}
 
-		if (isMonitoringFileSystem())
+		if (isMonitoringFileSystem()) {
 			updateFromFileSystem(root);
+		}
 	}
 
 	protected Element serializeFile(BufferedFile file, Document doc) throws IOException {
 		Element elem = doc.createElement(file.isDirectory() ? "Directory" : "File");
 		elem.setAttribute("Name", file.getName());
 		if (file.isDirectory()) {
-			Collection items = file.getChildren();
-			for (Iterator i = items.iterator(); i.hasNext();) {
-				File n = (File) i.next();
-				if (!n.exists())
+			for (File n : file.getChildren()) {
+				if (!n.exists()) {
 					continue;
+				}
 
 				elem.appendChild(serializeFile((BufferedFile) n, doc));
 			}
@@ -292,7 +310,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	public void saveToBuffer() throws IOException {
 		File fsRoot = fs.getRoot();
 		File node = fsRoot.getChild(".syncfiles");
-		if (node == null || !node.exists()) {
+		if ((node == null) || !node.exists()) {
 			node = root.createChild(".syncfiles", false);
 		}
 
@@ -304,7 +322,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			e.appendChild(serializeFile(root, doc));
 			doc.appendChild(e);
 
-			File f = (File) node;
+			File f = node;
 			OutputStream out = new GZIPOutputStream(f.getOutputStream());
 
 			OutputFormat format = new OutputFormat(doc, "UTF-8", true);
@@ -325,27 +343,33 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		}
 	}
 
+	@Override
 	public boolean isMonitoringFileSystem() {
 		return monitoringFileSystem;
 	}
 
+	@Override
 	public void setMonitoringFileSystem(boolean monitor) {
 		this.monitoringFileSystem = monitor;
 	}
 
+	@Override
 	public void flush() throws IOException {
 		saveToBuffer();
 		fs.flush();
 	}
 
+	@Override
 	public void close() throws IOException {
 		fs.close();
 	}
 
+	@Override
 	public String getUri() {
 		return fs.getUri();
 	}
 
+	@Override
 	public boolean isCaseSensitive() {
 		return fs.isCaseSensitive();
 	}

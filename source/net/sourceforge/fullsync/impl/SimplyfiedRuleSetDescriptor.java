@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -23,8 +23,7 @@
 package net.sourceforge.fullsync.impl;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import net.sourceforge.fullsync.RuleSet;
@@ -45,6 +44,7 @@ import org.w3c.dom.NodeList;
  */
 public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 
+	private static final long serialVersionUID = 2L;
 	private boolean syncSubDirs = false;
 	private String ignorePattern;
 	private String takePattern;
@@ -81,6 +81,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	/**
 	 * @see net.sourceforge.fullsync.RuleSetDescriptor#getType()
 	 */
+	@Override
 	public String getType() {
 		return "simple";
 	}
@@ -88,6 +89,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	/**
 	 * @see net.sourceforge.fullsync.RuleSetDescriptor#serialize(org.w3c.dom.Document)
 	 */
+	@Override
 	public Element serialize(Document document) {
 		Element simpleRuleSetElement = document.createElement("SimpleRuleSet");
 
@@ -105,13 +107,11 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		}
 
 		if (fileFilterTree != null) {
-			HashMap itemsMap = fileFilterTree.getItemsMap();
-			Set entrySet = itemsMap.entrySet();
-			Iterator it = entrySet.iterator();
-			while (it.hasNext()) {
-				Map.Entry entry = (Map.Entry) it.next();
-				String path = (String) entry.getKey();
-				FileFilter filter = (FileFilter) entry.getValue();
+			HashMap<String, FileFilter> itemsMap = fileFilterTree.getItemsMap();
+			Set<Entry<String, FileFilter>> entrySet = itemsMap.entrySet();
+			for (Entry<String, FileFilter> entry : entrySet) {
+				String path = entry.getKey();
+				FileFilter filter = entry.getValue();
 				Element subdirFilterElement = document.createElement("SubdirectoryFileFilter");
 				subdirFilterElement.setAttribute("path", path);
 				Element fileFilterElement = filterManager.serializeFileFilter(filter, document, "FileFilter", "FileFilterRule");
@@ -126,6 +126,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	/**
 	 * @see net.sourceforge.fullsync.RuleSetDescriptor#unserializeDescriptor(org.w3c.dom.Element)
 	 */
+	@Override
 	protected void unserializeDescriptor(Element element) {
 		NodeList ruleSetConfigNodeList = element.getElementsByTagName("SimpleRuleSet");
 
@@ -290,6 +291,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	/**
 	 * @see net.sourceforge.fullsync.RuleSetDescriptor#createRuleSet()
 	 */
+	@Override
 	public RuleSet createRuleSet() {
 		SimplyfiedSyncRules ruleSet = new SimplyfiedSyncRules();
 		ruleSet.setUsingRecursion(syncSubDirs);

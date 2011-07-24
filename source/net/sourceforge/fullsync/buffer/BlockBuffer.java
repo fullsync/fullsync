@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -48,7 +48,7 @@ public class BlockBuffer implements ExecutionBuffer {
 
 	int flushes;
 
-	Vector finishedListeners;
+	Vector<EntryFinishedListener> finishedListeners;
 
 	public BlockBuffer(Logger logger) {
 		this.logger = logger;
@@ -64,7 +64,7 @@ public class BlockBuffer implements ExecutionBuffer {
 
 		flushes = 0;
 
-		finishedListeners = new Vector();
+		finishedListeners = new Vector<EntryFinishedListener>();
 	}
 
 	public int getCapacity() {
@@ -85,6 +85,7 @@ public class BlockBuffer implements ExecutionBuffer {
 	 * status.BufferFlushes = flushes;
 	 * }
 	 */
+	@Override
 	public void load() {
 		if (buffer == null) {
 			buffer = new byte[maxSize];
@@ -92,16 +93,18 @@ public class BlockBuffer implements ExecutionBuffer {
 		}
 	}
 
+	@Override
 	public void unload() {
 		buffer = null;
 		entries = null;
 	}
 
+	@Override
 	public void flush() throws IOException {
 		for (int i = 0; i < numberEntries; i++) {
 			try {
 				Entry e = entries[i];
-				EntryDescriptor desc = (EntryDescriptor) e.descriptor;
+				EntryDescriptor desc = e.descriptor;
 				// desc.flush( this, e );
 				OutputStream out = desc.getOutputStream();
 				if (out != null) {
@@ -112,12 +115,13 @@ public class BlockBuffer implements ExecutionBuffer {
 				if ((e.internalSegment & Segment.Last) > 0) {
 					desc.finishWrite();
 					String opDesc = desc.getOperationDescription();
-					if (opDesc != null)
+					if (opDesc != null) {
 						logger.info(opDesc);
+					}
 
-					Enumeration en = finishedListeners.elements();
+					Enumeration<EntryFinishedListener> en = finishedListeners.elements();
 					while (en.hasMoreElements()) {
-						((EntryFinishedListener) en.nextElement()).entryFinished(desc);
+						en.nextElement().entryFinished(desc);
 					}
 				}
 			}
@@ -140,24 +144,25 @@ public class BlockBuffer implements ExecutionBuffer {
 	 * long offset = inStream.Position;
 	 * int start = numberBytes;
 	 * int read = inStream.Read( buffer, start, length );
-	 * 
+	 *
 	 * Segment s;
 	 * if( offset == 0 )
 	 * s += s.First;
 	 * if( inStream.E
 	 * entries[numberEntries] = new BufferEntry( dst, start, read, offset, lastSegment );
-	 * 
+	 *
 	 * numberBytes += read;
 	 * numberEntries++;
 	 * freeBytes -= read;
-	 * 
+	 *
 	 * return read;
 	 * }
 	 */
 	// may not read as much as length says
 	protected Entry storeBytes(InputStream inStream, long length) throws IOException {
-		if (length > freeBytes)
+		if (length > freeBytes) {
 			length = freeBytes;
+		}
 
 		int start = numberBytes;
 		int read = inStream.read(buffer, start, (int) length);
@@ -176,10 +181,12 @@ public class BlockBuffer implements ExecutionBuffer {
 		Entry entry = storeBytes(inStream, lengthLeft);
 
 		int s = Segment.Middle;
-		if (alreadyRead == 0)
+		if (alreadyRead == 0) {
 			s |= Segment.First;
-		if (entry.length == lengthLeft)
+		}
+		if (entry.length == lengthLeft) {
 			s |= Segment.Last;
+		}
 
 		entry.internalOffset = alreadyRead;
 		entry.internalSegment = s;
@@ -193,8 +200,9 @@ public class BlockBuffer implements ExecutionBuffer {
 		long lengthLeft = size;
 
 		do {
-			if (lengthLeft > freeBytes || numberEntries == maxEntries)
+			if ((lengthLeft > freeBytes) || (numberEntries == maxEntries)) {
 				flush();
+			}
 			int read = store(data, alreadyRead, lengthLeft, descriptor);
 			alreadyRead += read;
 			lengthLeft -= read;
@@ -202,11 +210,13 @@ public class BlockBuffer implements ExecutionBuffer {
 		// data.close();
 	}
 
+	@Override
 	public void storeEntry(EntryDescriptor descriptor) throws IOException {
 		Entry entry;
 		if (descriptor.getLength() == 0) {
-			if (numberEntries == maxEntries)
+			if (numberEntries == maxEntries) {
 				flush();
+			}
 			entry = new Entry(numberBytes, 0);
 			entry.descriptor = descriptor;
 			entries[numberEntries] = entry;
@@ -218,10 +228,12 @@ public class BlockBuffer implements ExecutionBuffer {
 		descriptor.finishStore();
 	}
 
+	@Override
 	public void addEntryFinishedListener(EntryFinishedListener listener) {
 		finishedListeners.add(listener);
 	}
 
+	@Override
 	public void removeEntryFinishedListener(EntryFinishedListener listener) {
 		finishedListeners.remove(listener);
 	}

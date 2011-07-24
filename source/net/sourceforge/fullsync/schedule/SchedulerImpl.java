@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -47,42 +47,50 @@ public class SchedulerImpl implements Scheduler, Runnable {
 		schedulerListeners = new ArrayList<SchedulerChangeListener>();
 	}
 
+	@Override
 	public void setSource(ScheduleTaskSource source) {
 		scheduleSource = source;
 	}
 
+	@Override
 	public ScheduleTaskSource getSource() {
 		return scheduleSource;
 	}
 
+	@Override
 	public void addSchedulerChangeListener(SchedulerChangeListener listener) {
 		schedulerListeners.add(listener);
 	}
 
+	@Override
 	public void removeSchedulerChangeListener(SchedulerChangeListener listener) {
 		schedulerListeners.remove(listener);
 	}
 
 	protected void fireSchedulerChangedEvent() {
 		for (int i = 0; i < schedulerListeners.size(); i++) {
-			((SchedulerChangeListener) schedulerListeners.get(i)).schedulerStatusChanged(enabled);
+			(schedulerListeners.get(i)).schedulerStatusChanged(enabled);
 		}
 	}
 
+	@Override
 	public boolean isRunning() {
 		return running;
 	}
 
+	@Override
 	public boolean isEnabled() {
 		return enabled;
 	}
 
+	@Override
 	public void start() {
-		if (enabled)
+		if (enabled) {
 			return;
+		}
 
 		enabled = true;
-		if (worker == null || !worker.isAlive()) {
+		if ((worker == null) || !worker.isAlive()) {
 			worker = new Thread(this, "Scheduler");
 			worker.setDaemon(true);
 			worker.start();
@@ -90,9 +98,11 @@ public class SchedulerImpl implements Scheduler, Runnable {
 		fireSchedulerChangedEvent();
 	}
 
+	@Override
 	public void stop() {
-		if (!enabled || worker == null)
+		if (!enabled || (worker == null)) {
 			return;
+		}
 
 		enabled = false;
 		if (running) {
@@ -109,20 +119,25 @@ public class SchedulerImpl implements Scheduler, Runnable {
 		fireSchedulerChangedEvent();
 	}
 
+	@Override
 	public void refresh() {
-		if (worker != null)
+		if (worker != null) {
 			worker.interrupt();
+		}
 	}
 
+	@Override
 	public void run() {
 		running = true;
 		while (enabled) {
 			long now = System.currentTimeMillis();
-			if (logger.isDebugEnabled())
+			if (logger.isDebugEnabled()) {
 				logger.debug("searching for next task after " + now);
+			}
 			ScheduleTask task = scheduleSource.getNextScheduleTask();
-			if (logger.isDebugEnabled())
+			if (logger.isDebugEnabled()) {
 				logger.debug("found: " + task.toString() + " at " + task.getExecutionTime());
+			}
 
 			if (task == null) {
 				// TODO log sth here ?
@@ -131,12 +146,15 @@ public class SchedulerImpl implements Scheduler, Runnable {
 
 			long nextTime = task.getExecutionTime();
 			try {
-				if (logger.isDebugEnabled())
+				if (logger.isDebugEnabled()) {
 					logger.debug("waiting for " + (nextTime - now) + " mseconds");
-				if (nextTime >= now)
+				}
+				if (nextTime >= now) {
 					Thread.sleep(nextTime - now);
-				if (logger.isDebugEnabled())
+				}
+				if (logger.isDebugEnabled()) {
 					logger.debug("Running task " + task);
+				}
 				task.run();
 			}
 			catch (InterruptedException ie) {

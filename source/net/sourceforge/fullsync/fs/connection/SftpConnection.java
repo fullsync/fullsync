@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -26,7 +26,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.fs.File;
@@ -51,6 +50,9 @@ import com.sshtools.j2ssh.transport.publickey.SshPrivateKeyFile;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class SftpConnection extends InstableConnection {
+
+	private static final long serialVersionUID = 2L;
+
 	private ConnectionDescription desc;
 	private URI connectionUri;
 	private SshAuthenticationClient sshAuth;
@@ -67,11 +69,13 @@ public class SftpConnection extends InstableConnection {
 		connect();
 	}
 
+	@Override
 	public void connect() throws IOException {
 		SshConnectionProperties prop = new SshConnectionProperties();
 		prop.setHost(connectionUri.getHost());
-		if (connectionUri.getPort() != -1)
+		if (connectionUri.getPort() != -1) {
 			prop.setPort(connectionUri.getPort());
+		}
 
 		sshClient = new SshClient();
 		// REVISIT not really fine (the static method call)
@@ -122,8 +126,9 @@ public class SftpConnection extends InstableConnection {
 			sftpClient = sshClient.openSftpChannel();
 			// sftpClient.cd( path );
 			basePath = sftpClient.getDefaultDirectory() + connectionUri.getPath();
-			if (basePath.endsWith("/"))
+			if (basePath.endsWith("/")) {
 				basePath = basePath.substring(0, basePath.length() - 1);
+			}
 
 		}
 		else {
@@ -133,38 +138,47 @@ public class SftpConnection extends InstableConnection {
 		this.root = new AbstractFile(this, ".", ".", null, true, true);
 	}
 
+	@Override
 	public void reconnect() throws IOException {
-		if (sshClient != null)
+		if (sshClient != null) {
 			sshClient.disconnect();
+		}
 		connect();
 	}
 
+	@Override
 	public void close() throws IOException {
 		sftpClient.close();
 		sshClient.disconnect();
 	}
 
+	@Override
 	public boolean isAvailable() {
 		return true;
 	}
 
+	@Override
 	public void flush() throws IOException {
 
 	}
 
+	@Override
 	public String getUri() {
 		return desc.getUri();
 	}
 
+	@Override
 	public boolean isCaseSensitive() {
 		// TODO find out whether current fs is case sensitive
 		return false;
 	}
 
+	@Override
 	public File getRoot() {
 		return root;
 	}
 
+	@Override
 	public File _createChild(File parent, String name, boolean directory) {
 		return new AbstractFile(this, name, null, parent, directory, false);
 	}
@@ -176,49 +190,58 @@ public class SftpConnection extends InstableConnection {
 		File n = new AbstractFile(this, name, null, parent, file.isDirectory(), true);
 
 		FileAttributes att = file.getAttributes();
-		if (file.isFile())
+		if (file.isFile()) {
 			n.setFileAttributes(new net.sourceforge.fullsync.fs.FileAttributes(att.getSize().longValue(), att.getModifiedTime().longValue()));
+		}
 
 		return n;
 	}
 
+	@Override
 	public Hashtable<String, File> _getChildren(File dir) throws IOException {
 		SftpFile f = null;
 		try {
 			f = sftpClient.openDirectory(basePath + "/" + dir.getPath());
 		}
 		catch (IOException ioe) {
-			if (ioe.getMessage().equals("No such file"))
+			if (ioe.getMessage().equals("No such file")) {
 				return new Hashtable<String, File>(); // TODO: was return new Hashtable(0);
-			else
+			}
+			else {
 				throw ioe;
+			}
 		}
 		ArrayList<File> files = new ArrayList<File>();
 		sftpClient.listChildren(f, files);
 
 		Hashtable<String, File> table = new Hashtable<String, File>();
-		for (Iterator i = files.iterator(); i.hasNext();) {
-			SftpFile file = (SftpFile) i.next();
-			if (!file.getFilename().equals(".") && !file.getFilename().equals(".."))
+		for (Object element : files) {
+			SftpFile file = (SftpFile) element;
+			if (!file.getFilename().equals(".") && !file.getFilename().equals("..")) {
 				table.put(file.getFilename(), buildNode(dir, file));
+			}
 		}
 
 		return table;
 	}
 
+	@Override
 	public boolean _makeDirectory(File dir) throws IOException {
 		sftpClient.makeDirectory(basePath + "/" + dir.getPath());
 		return true;
 	}
 
+	@Override
 	public boolean _writeFileAttributes(File file, net.sourceforge.fullsync.fs.FileAttributes att) {
 		return false;
 	}
 
+	@Override
 	public InputStream _readFile(File file) throws IOException {
 		return new SftpFileInputStream(sftpClient.openFile(basePath + "/" + file.getPath(), SftpSubsystemClient.OPEN_READ));
 	}
 
+	@Override
 	public OutputStream _writeFile(File file) throws IOException {
 		FileAttributes attrs = new FileAttributes();
 		attrs.setPermissions("rw-rw----");
@@ -227,11 +250,14 @@ public class SftpConnection extends InstableConnection {
 		return new SftpFileOutputStream(f);
 	}
 
+	@Override
 	public boolean _delete(File node) throws IOException {
-		if (node.isDirectory())
+		if (node.isDirectory()) {
 			sftpClient.removeDirectory(basePath + "/" + node.getPath());
-		else
+		}
+		else {
 			sftpClient.removeFile(basePath + "/" + node.getPath());
+		}
 		return true;
 	}
 }

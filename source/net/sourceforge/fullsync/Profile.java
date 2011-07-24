@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -31,7 +31,7 @@ import net.sourceforge.fullsync.schedule.Schedule;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class Profile implements Serializable {
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2L;
 
 	private String name;
 	private String description;
@@ -126,10 +126,12 @@ public class Profile implements Serializable {
 
 	public String getLastUpdateText() {
 		// TODO this doesnt belong here (l18n)
-		if (lastUpdate == null)
+		if (lastUpdate == null) {
 			return "never";
-		else
+		}
+		else {
 			return DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(lastUpdate);
+		}
 	}
 
 	public String getNextUpdateText() {

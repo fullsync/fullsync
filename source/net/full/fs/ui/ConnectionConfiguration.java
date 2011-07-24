@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -44,9 +44,9 @@ public class ConnectionConfiguration extends Composite {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @throws FileSystemException
-	 * 
+	 *
 	 */
 	private void initialize() {
 		GridLayout gridLayout = new GridLayout();
@@ -60,17 +60,18 @@ public class ConnectionConfiguration extends Composite {
 
 	/**
 	 * This method initializes comboProtocol
-	 * 
+	 *
 	 * @throws FileSystemException
-	 * 
+	 *
 	 */
 	private void createComboProtocol() {
 		comboProtocol = new Combo(this, SWT.READ_ONLY);
 		comboProtocol.addModifyListener(new org.eclipse.swt.events.ModifyListener() {
 			@Override
 			public void modifyText(org.eclipse.swt.events.ModifyEvent e) {
-				if (compositeSpecific != null)
+				if (compositeSpecific != null) {
 					compositeSpecific.dispose();
+				}
 
 				compositeSpecific = FileSystemUiManager.getInstance().createProtocolSpecificComposite(compositeProtocolSpecific, SWT.NULL,
 						comboProtocol.getText());
@@ -83,7 +84,7 @@ public class ConnectionConfiguration extends Composite {
 
 	/**
 	 * This method initializes compositeProtocolSpecific
-	 * 
+	 *
 	 */
 	private void createCompositeProtocolSpecific() {
 		GridData gridData1 = new org.eclipse.swt.layout.GridData();
@@ -100,8 +101,9 @@ public class ConnectionConfiguration extends Composite {
 	public void updateComponent() {
 		comboProtocol.removeAll();
 		String[] schemes = FileSystemUiManager.getInstance().getSchemes();
-		for (int i = 0; i < schemes.length; i++)
-			comboProtocol.add(schemes[i]);
+		for (String scheme : schemes) {
+			comboProtocol.add(scheme);
+		}
 		comboProtocol.select(0);
 	}
 

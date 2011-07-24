@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -35,7 +35,7 @@ import net.sourceforge.fullsync.fs.FileAttributes;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class LocalConnection implements FileSystemConnection {
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2L;
 
 	private java.io.File base;
 	private AbstractFile root;
@@ -45,14 +45,17 @@ public class LocalConnection implements FileSystemConnection {
 		this.root = new AbstractFile(this, ".", ".", null, true, base.exists());
 	}
 
+	@Override
 	public File getRoot() {
 		return root;
 	}
 
+	@Override
 	public boolean isAvailable() {
 		return base.exists() || base.mkdirs();
 	}
 
+	@Override
 	public File createChild(File parent, String name, boolean directory) {
 		return new AbstractFile(this, name, null, parent, directory, false);
 	}
@@ -68,39 +71,45 @@ public class LocalConnection implements FileSystemConnection {
 		return n;
 	}
 
-	public Hashtable getChildren(File dir) {
+	@Override
+	public Hashtable<String, File> getChildren(File dir) {
 		if (dir.exists()) {
 			java.io.File f = new java.io.File(base + "/" + dir.getPath());
 			java.io.File[] files = f.listFiles();
 
-			if (files == null)
-				return new Hashtable();
+			if (files == null) {
+				return new Hashtable<String, File>();
+			}
 
-			Hashtable table = new Hashtable(files.length);
-			if (files != null)
-				for (int i = 0; i < files.length; i++) {
-					java.io.File file = files[i];
-					if (file.isFile() || file.isDirectory())
+			Hashtable<String, File> table = new Hashtable<String, File>(files.length);
+			if (files != null) {
+				for (java.io.File file : files) {
+					if (file.isFile() || file.isDirectory()) {
 						table.put(file.getName(), buildNode(dir, file));
+					}
 				}
+			}
 			return table;
 		}
 		else {
-			return new Hashtable();
+			return new Hashtable<String, File>();
 		}
 	}
 
+	@Override
 	public boolean makeDirectory(File dir) {
 		java.io.File f = new java.io.File(base + "/" + dir.getPath());
 		return f.mkdirs();
 	}
 
+	@Override
 	public boolean writeFileAttributes(File file, FileAttributes att) {
 		java.io.File f = new java.io.File(base + "/" + file.getPath());
 		f.setLastModified(att.getLastModified());
 		return true;
 	}
 
+	@Override
 	public InputStream readFile(File file) {
 		try {
 			java.io.File f = new java.io.File(base + "/" + file.getPath());
@@ -112,6 +121,7 @@ public class LocalConnection implements FileSystemConnection {
 		}
 	}
 
+	@Override
 	public OutputStream writeFile(File file) {
 		try {
 			java.io.File f = new java.io.File(base + "/" + file.getPath());
@@ -123,23 +133,28 @@ public class LocalConnection implements FileSystemConnection {
 		}
 	}
 
+	@Override
 	public boolean delete(File node) {
 		java.io.File f = new java.io.File(base + "/" + node.getPath());
 		return f.delete();
 	}
 
+	@Override
 	public void flush() throws IOException {
 
 	}
 
+	@Override
 	public void close() throws IOException {
 
 	}
 
+	@Override
 	public String getUri() {
 		return base.toURI().toString();
 	}
 
+	@Override
 	public boolean isCaseSensitive() {
 		// TODO find out whether current fs is case sensitive
 		return false;

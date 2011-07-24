@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -37,17 +37,17 @@ import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class FileSystemManager {
-	private Hashtable schemes;
-	private Hashtable buffering;
+	private Hashtable<String, FileSystem> schemes;
+	private Hashtable<String, SyncFilesBufferingProvider> buffering;
 
 	public FileSystemManager() {
-		schemes = new Hashtable();
+		schemes = new Hashtable<String, FileSystem>();
 		schemes.put("file", new LocalFileSystem());
 		schemes.put("ftp", new CommonsVfsFileSystem());
 		schemes.put("sftp", new CommonsVfsFileSystem());
 		schemes.put("smb", new SmbFileSystem());
 
-		buffering = new Hashtable();
+		buffering = new Hashtable<String, SyncFilesBufferingProvider>();
 		buffering.put("syncfiles", new SyncFilesBufferingProvider());
 	}
 
@@ -58,14 +58,14 @@ public class FileSystemManager {
 		String scheme = url.getScheme();
 
 		if (scheme != null) {
-			fs = (FileSystem) schemes.get(scheme);
+			fs = schemes.get(scheme);
 		}
 		if (fs == null) {
 			// TODO maybe we should test and correct this in profile dialog !?
 			// no fs found, test for native path
 			File f = new File(url.toString()); // ignore query as local won't need query
 			if (f.exists()) {
-				fs = (FileSystem) schemes.get("file");
+				fs = schemes.get("file");
 				url = f.toURI();
 				desc.setUri(url.toString());
 			}
@@ -76,17 +76,19 @@ public class FileSystemManager {
 
 		Site s = fs.createConnection(desc);
 
-		if (desc.getBufferStrategy() != null && !desc.getBufferStrategy().equals(""))
+		if ((desc.getBufferStrategy() != null) && !desc.getBufferStrategy().equals("")) {
 			s = resolveBuffering(s, desc.getBufferStrategy());
+		}
 
 		return s;
 	}
 
 	public Site resolveBuffering(Site dir, String bufferStrategy) throws FileSystemException, IOException {
-		BufferingProvider p = (BufferingProvider) buffering.get(bufferStrategy);
+		BufferingProvider p = buffering.get(bufferStrategy);
 
-		if (p == null)
+		if (p == null) {
 			throw new FileSystemException("BufferStrategy '" + bufferStrategy + "' not found");
+		}
 
 		return p.createBufferedSite(dir);
 	}

@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -28,7 +28,7 @@ import net.sourceforge.fullsync.DataParseException;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class CrontabSchedule implements Schedule {
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2L;
 
 	private String origPattern;
 
@@ -47,8 +47,9 @@ public class CrontabSchedule implements Schedule {
 	public CrontabSchedule(String pattern) throws DataParseException {
 		read(pattern);
 
-		if (daysOfWeek.bArray[8])
+		if (daysOfWeek.bArray[8]) {
 			daysOfWeek.bArray[1] = true;
+		}
 	}
 
 	public CrontabSchedule(CrontabPart.Instance minutes, CrontabPart.Instance hours, CrontabPart.Instance daysOfMonth,
@@ -59,8 +60,9 @@ public class CrontabSchedule implements Schedule {
 		this.months = months;
 		this.daysOfWeek = daysOfWeek;
 
-		if (daysOfWeek.bArray[8])
+		if (daysOfWeek.bArray[8]) {
 			daysOfWeek.bArray[1] = true;
+		}
 
 		StringBuffer buff = new StringBuffer();
 		buff.append(minutes.pattern).append(' ');
@@ -73,7 +75,7 @@ public class CrontabSchedule implements Schedule {
 
 	/**
 	 * Reads a crontab schedule as specified in the crontab man document:
-	 * 
+	 *
 	 * The time and date fields are:
 	 * field allowed values
 	 * ----- --------------
@@ -86,10 +88,10 @@ public class CrontabSchedule implements Schedule {
 	 * Ranges of numbers are allowed. Ranges are two numbers separated with a
 	 * hyphen. The specified range is inclusive. For example, 8-11 for an
 	 * 'hours' entry specifies execution at hours 8, 9, 10 and 11.
-	 * 
+	 *
 	 * Lists are allowed. A list is a set of numbers (or ranges) separated by
 	 * commas. Examples: '1,2,5,9', '0-4,8-12'.
-	 * 
+	 *
 	 * Step values can be used in conjunction with ranges. Following a range
 	 * with '/<number>' specifies skips of the number's value through the
 	 * range. For example, '0-23/2' can be used in the hours field to spec-
@@ -115,9 +117,11 @@ public class CrontabSchedule implements Schedule {
 		return origPattern;
 	}
 
+	@Override
 	public long getNextOccurrence(long now) {
-		if (now == lastExecution)
+		if (now == lastExecution) {
 			now += 1000;
+		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(now);
 
@@ -125,19 +129,21 @@ public class CrontabSchedule implements Schedule {
 		// min will go to 1 and cycle at least once
 		gotoNextOrStay(months.bArray, cal, Calendar.MONTH);
 
-		if (months.all && daysOfMonth.all && !daysOfWeek.all)
+		if (months.all && daysOfMonth.all && !daysOfWeek.all) {
 			gotoNextOrStay(daysOfWeek.bArray, cal, Calendar.DAY_OF_WEEK);
 		// else if( !allDaysOfMonth )
 		// gotoNextOrStay( bDaysOfMonth, cal, Calendar.DAY_OF_MONTH );
-		else
+		}
+		else {
 			gotoNextOrStay(daysOfMonth.bArray, cal, Calendar.DAY_OF_MONTH);
 		// TODO currently we miss out the doublecase
 		// !allDaysOfWeek + !allDaysOfMonth
+		}
 
 		// gotoNextOrStay( bDaysOfWeek, cal, Calendar.DAY_OF_WEEK );
 		gotoNextOrStay(hours.bArray, cal, Calendar.HOUR_OF_DAY);
 		gotoNextOrStay(minutes.bArray, cal, Calendar.MINUTE);
-		if (cal.get(Calendar.SECOND) != 0 || cal.get(Calendar.MILLISECOND) != 0) {
+		if ((cal.get(Calendar.SECOND) != 0) || (cal.get(Calendar.MILLISECOND) != 0)) {
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 0);
 			gotoNext(minutes.bArray, cal, Calendar.MINUTE);
@@ -146,8 +152,9 @@ public class CrontabSchedule implements Schedule {
 	}
 
 	private void gotoNextOrStay(boolean[] bArray, Calendar cal, int field) {
-		if (!bArray[cal.get(field)])
+		if (!bArray[cal.get(field)]) {
 			gotoNext(bArray, cal, field);
+		}
 	}
 
 	private void gotoNext(boolean[] bArray, Calendar cal, int field) {
@@ -159,7 +166,7 @@ public class CrontabSchedule implements Schedule {
 		int max = cal.getActualMaximum(field);
 		int min = cal.getActualMinimum(field);
 
-		while (now > max || !bArray[now]) {
+		while ((now > max) || !bArray[now]) {
 			now++;
 			if (now > max) {
 				// cal.set( field, now );
@@ -179,12 +186,15 @@ public class CrontabSchedule implements Schedule {
 						orig = now;
 						break;
 					case Calendar.HOUR_OF_DAY:
-						if (months.all && daysOfMonth.all && !daysOfWeek.all)
+						if (months.all && daysOfMonth.all && !daysOfWeek.all) {
 							gotoNext(daysOfWeek.bArray, cal, Calendar.DAY_OF_WEEK);
-						else if (!daysOfMonth.all)
+						}
+						else if (!daysOfMonth.all) {
 							gotoNext(daysOfMonth.bArray, cal, Calendar.DAY_OF_MONTH);
-						else
+						}
+						else {
 							gotoNext(daysOfMonth.bArray, cal, Calendar.DAY_OF_MONTH);
+						}
 						// TODO currently we miss out the doublecase
 						// !allDaysOfWeek + !allDaysOfMonth
 						break;
@@ -213,6 +223,7 @@ public class CrontabSchedule implements Schedule {
 		cal.set(field, now);
 	}
 
+	@Override
 	public void setLastOccurrence(long now) {
 		lastExecution = now;
 	}
@@ -221,6 +232,7 @@ public class CrontabSchedule implements Schedule {
 		return new CrontabPart.Instance[] { minutes, hours, daysOfMonth, months, daysOfWeek };
 	}
 
+	@Override
 	public String toString() {
 		return "Crontab: " + origPattern;
 	}
