@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- * 
+ *
  *         TODO this class should also handle images
  */
 public class GuiController implements Runnable {
@@ -70,8 +70,9 @@ public class GuiController implements Runnable {
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText("FullSync"); //$NON-NLS-1$
 			mainShell.setImage(getImage("FullSync.png")); //$NON-NLS-1$
-			if (!minimized)
+			if (!minimized) {
 				mainShell.setVisible(true);
+			}
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
@@ -144,8 +145,9 @@ public class GuiController implements Runnable {
 	@Override
 	public void run() {
 		while (active) {
-			if (!display.readAndDispatch())
+			if (!display.readAndDispatch()) {
 				display.sleep();
+			}
 		}
 	}
 
@@ -155,15 +157,16 @@ public class GuiController implements Runnable {
 
 		// Close the application, but give him a chance to
 		// confirm his action first
-		if (profileManager.getNextScheduleTask() != null && preferences.confirmExit()) {
+		if ((profileManager.getNextScheduleTask() != null) && preferences.confirmExit()) {
 			MessageBox mb = new MessageBox(mainShell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
 			mb.setMessage(Messages.getString("GuiController.Do_You_Want_To_Quit") + "\n" //$NON-NLS-1$ //$NON-NLS-2$
 					+ Messages.getString("GuiController.Schedule_is_stopped")); //$NON-NLS-1$
 
 			// check whether the user really wants to close
-			if (mb.open() != SWT.YES)
+			if (mb.open() != SWT.YES) {
 				return;
+			}
 		}
 
 		GuiController.getInstance().getProfileManager().disconnectRemote();
@@ -195,8 +198,8 @@ public class GuiController implements Runnable {
 					Cursor cursor = show ? display.getSystemCursor(SWT.CURSOR_WAIT) : null;
 					Shell[] shells = display.getShells();
 
-					for (int i = 0; i < shells.length; i++) {
-						shells[i].setCursor(cursor);
+					for (Shell shell : shells) {
+						shell.setCursor(cursor);
 					}
 				}
 				catch (Exception ex) {
