@@ -18,10 +18,12 @@ Roadmap:
 	[ ] check all reported bugs, comment / close as apropriate
 	[ ] re-add the installer (windows/linux/(mac?))
 	[ ] windows/linux/(mac?) shortcuts
-	[ ] no writes to the installation directory, only to some $HOME/.fullsync/ directory (lookup location in FHS, windows doc, mac?)
-		[ ] store all profiles int the java.util.prefs store
+	[ ] no writes to the installation directory
+		[ ] store all profiles into the java.util.prefs store
 		[ ] add a way to ex/import the whole fullsync data from the java prefs store
-	[ ] configuration migration?
+	[ ] configuration migration
+		[X] configuration migration FullSync settings
+		[ ] configuration migration profiles
 	[ ] improve sync speed
 	[ ] setup tests(windows xp/7, x86, x86_64; Linux x86, x86_64; mac?)
 	[ ] ask for mac testers
@@ -35,12 +37,12 @@ Bugs:
 	[ ] SMB/CIFS connection broken
 	[ ] Update Task Count based on decisions made(correct?), 1337 of 7331; 42 incoming, .. outgoing
 	[X] file:/ URL's do not show contents in the Subdirectories Profile details tab
-	[ ] Profile can be stored without name
+	[ ] Profile can be stored without vital data (src, destination, name)
 	[ ] the buttons in the main list view need tooltips
 	[ ] the task decision dialog should not show ./ at the start either / or nothing at all(2)
 	[ ] task decision dialog Action, Size columns are too narrow
 	[ ] task decision dialog needs a lot of love
-	[ ] Ctrl+Q does not exit FullSync
+	[X] Ctrl+Q does not exit FullSync
 
 Features:
 	[ ] TaskDecisionDialog:
