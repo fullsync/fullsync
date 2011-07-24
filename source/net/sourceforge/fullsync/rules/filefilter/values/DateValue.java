@@ -31,6 +31,8 @@ import java.util.Date;
  */
 public class DateValue implements OperandValue {
 
+	private static final long serialVersionUID = 2L;
+
 	// TODO format for UI different form the one used to serialize.
 	// The UI format should depend on the locale or should be choosen by the user
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");

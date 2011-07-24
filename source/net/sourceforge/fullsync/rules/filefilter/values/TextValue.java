@@ -27,6 +27,8 @@ package net.sourceforge.fullsync.rules.filefilter.values;
  */
 public class TextValue implements OperandValue {
 
+	private static final long serialVersionUID = 2L;
+
 	private String value;
 
 	public TextValue() {

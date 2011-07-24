@@ -27,6 +27,8 @@ package net.sourceforge.fullsync.rules.filefilter.values;
  */
 public class TypeValue implements OperandValue {
 
+	private static final long serialVersionUID = 2L;
+
 	public static final int FILE_TYPE = 0;
 	public static final int DIRECTORY_TYPE = 1;
 

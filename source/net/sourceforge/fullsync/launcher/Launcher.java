@@ -30,8 +30,11 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 public class Launcher {
-	// setup the platform specific *sigh* classpath for SWT and load the application
-	public static void main(String[] args) {
+	/**
+	 *  setup the platform specific *sigh* classpath for SWT and load the application.
+	 * @param args command line arguments
+	 */
+	public static void main(final String[] args) {
 		// TODO: redirect stdout && stderr here!
 		try {
 			String arch = "x86";
@@ -73,6 +76,7 @@ public class Launcher {
 			Class<?> cls = cl.loadClass("net.sourceforge.fullsync.cli.Main");
 			Method main = cls.getDeclaredMethod("main", new Class<?>[] { String[].class });
 
+			Thread.currentThread().setContextClassLoader(cl);
 			// call the main method using reflection so that there is no static reference to it
 			main.invoke(null, new Object[] { args });
 		}

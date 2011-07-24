@@ -27,6 +27,8 @@ package net.sourceforge.fullsync.rules.filefilter.values;
  */
 public class SizeValue implements OperandValue {
 
+	private static final long serialVersionUID = 2L;
+
 	private double value;
 	private int unit;
 

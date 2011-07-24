@@ -22,6 +22,7 @@
  */
 package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -30,7 +31,8 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 /**
  * @author Michele Aiello
  */
-public class FileFilterTree {
+public class FileFilterTree implements Serializable {
+	private static final long serialVersionUID = 2L;
 
 	private FileFilterTreeItem root;
 	private HashMap<String, FileFilter> itemsMap;

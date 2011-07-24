@@ -22,10 +22,12 @@
  */
 package net.sourceforge.fullsync.rules.filefilter.values;
 
+import java.io.Serializable;
+
 /**
  * @author Michele Aiello
  */
-public interface OperandValue {
+public interface OperandValue extends Serializable {
 
 	public void fromString(String value);
 
