@@ -51,35 +51,8 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	public CommonsVfsConnection(ConnectionDescription desc) throws net.sourceforge.fullsync.FileSystemException {
 		try {
 			this.desc = desc;
-
 			FileSystemOptions options = new FileSystemOptions();
-			// UserInfo userInfo = new TrustEveryoneUserInfo();
-			// SftpFileSystemConfigBuilder.getInstance().setUserInfo( options, userInfo );
-
 			String uriString = desc.getUri();
-			// FIXME: fix authentication here!
-			/*
-			 * String userinfo = desc.getUsername();
-			 * if( userinfo != null )
-			 * {
-			 * String[] parts = userinfo.split("@");
-			 *
-			 * if( parts.length == 2 )
-			 * {
-			 * userinfo = parts[0];
-			 * String publickeyfile = parts[1];
-			 * SftpFileSystemConfigBuilder.getInstance().setIdentities( options, new java.io.File[]{ new java.io.File(publickeyfile) } );
-			 * }
-			 *
-			 * userinfo = URLEncoder.encode( userinfo );
-			 * if( desc.getPassword() != null )
-			 * userinfo += ":" + URLEncoder.encode( desc.getPassword() );
-			 *
-			 * uriString = desc.getUri().replaceFirst( "//", "//"+userinfo+"@" );
-			 * } else {
-			 * uriString = desc.getUri();
-			 * }
-			 */
 			URI uri = new URI(uriString);
 			String baseUri = uriString.substring(0, uriString.length() - (uri.getPath().length()));
 			UserAuthenticator auth = new StaticUserAuthenticator(null, desc.getUsername(), desc.getPassword());
@@ -174,11 +147,12 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	@Override
 	public void flush() throws IOException {
-
+		//FIXME: implement?
 	}
 
 	@Override
 	public void close() throws IOException {
+		//FIXME: implement
 	}
 
 	@Override

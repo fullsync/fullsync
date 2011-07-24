@@ -31,9 +31,6 @@ public class CommonsVfsFileSystem implements FileSystem {
 
 	@Override
 	public Site createConnection(ConnectionDescription desc) throws FileSystemException {
-		// if( !desc.getUri().startsWith( "sftp:" ) )
-		// return null;
-
 		return new CommonsVfsConnection(desc);
 	}
 }
