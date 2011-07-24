@@ -24,7 +24,6 @@ package net.sourceforge.fullsync.ui;
 
 import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -52,17 +51,25 @@ public class Messages {
 	}
 
 	public static String getString(String key) {
+		String value = '!' + key + '!';
 		if (_instance == null) {
 			_instance = new Messages();
 		}
 
 		try {
-			return _instance.RESOURCE_BUNDLE.getString(key);
+			value = _instance.RESOURCE_BUNDLE.getString(key);
+			if ((null != value) && (value.length() > 0)) {
+				return value;
+			}
+			else {
+				value = '!' + key + '!';
+				throw new Exception("WARNING: Translation for message '" + key + "' missing!"); //$NON-NLS-1$
+			}
 		}
-		catch (MissingResourceException e) {
+		catch (Exception e) {
 			e.printStackTrace();
-			return '!' + key + '!';
 		}
+		return value;
 	}
 
 	public static String getString(String key, String value) {
