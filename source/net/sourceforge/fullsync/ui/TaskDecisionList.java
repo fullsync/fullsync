@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 
@@ -52,22 +51,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-/**
- * This code was generated using CloudGarden's Jigloo
- * SWT/Swing GUI Builder, which is free for non-commercial
- * use. If Jigloo is being used commercially (ie, by a corporation,
- * company or business for any purpose whatever) then you
- * should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details.
- * Use of Jigloo implies acceptance of these licensing terms.
- * *************************************
- * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
- * for this machine, so Jigloo or this code cannot be used legally
- * for any corporate or commercial purpose.
- * *************************************
- */
-public class TaskDecisionList extends org.eclipse.swt.widgets.Composite {
-	private TableColumn tableColumn1;
+public class TaskDecisionList extends Composite {
 	private TableColumn tableColumnExplanation;
 	private TableColumn tableColumnFilename;
 	private TableColumn tableColumnAction;
@@ -85,7 +69,6 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite {
 	private Image nodeDirectory;
 	private Image nodeUndefined;
 
-	// private GuiController guiController;
 	private TaskTree taskTree;
 	private final HashMap<Task, TableItem> taskItemMap;
 
@@ -96,64 +79,38 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite {
 		super(parent, style);
 
 		this.taskItemMap = new HashMap<Task, TableItem>();
-
-		initGUI();
-		initializeImages();
-		onlyChanges = true;
-		changeAllowed = true;
-	}
-
-	/**
-	 * Initializes the GUI.
-	 * Auto-generated code - any changes you make will disappear.
-	 */
-	public void initGUI() {
 		try {
-			getDisplay().getSystemColor(SWT.COLOR_WHITE);
-
-			this.setSize(546, 395);
+			this.setSize(550, 500);
 
 			tableLogLines = new Table(this, SWT.FULL_SELECTION | SWT.MULTI | SWT.BORDER);
 			GridData tableLogLinesLData = new GridData();
-			tableLogLinesLData.verticalAlignment = GridData.FILL;
-			tableLogLinesLData.horizontalAlignment = GridData.FILL;
-			tableLogLinesLData.widthHint = -1;
-			tableLogLinesLData.heightHint = -1;
+			tableLogLinesLData.verticalAlignment = SWT.FILL;
+			tableLogLinesLData.horizontalAlignment = SWT.FILL;
 			tableLogLinesLData.horizontalIndent = 0;
 			tableLogLinesLData.horizontalSpan = 3;
-			tableLogLinesLData.verticalSpan = 1;
 			tableLogLinesLData.grabExcessHorizontalSpace = true;
 			tableLogLinesLData.grabExcessVerticalSpace = true;
 			tableLogLines.setLayoutData(tableLogLinesLData);
 			tableLogLines.setHeaderVisible(true);
 			tableLogLines.setLinesVisible(true);
-			tableLogLines.setSize(new org.eclipse.swt.graphics.Point(690, 179));
-			{
-				tableColumn1 = new TableColumn(tableLogLines, SWT.NONE);
-				tableColumn1.setResizable(false);
-				tableColumn1.setText("tableColumn1"); //$NON-NLS-1$
-			}
-			{
-				tableColumnFilename = new TableColumn(tableLogLines, SWT.NONE);
-				tableColumnFilename.setText(Messages.getString("TaskDecisionList.Filename")); //$NON-NLS-1$
-				tableColumnFilename.setWidth(238);
-			}
-			{
-				tableColumnSourceSize = new TableColumn(tableLogLines, SWT.NONE);
-				tableColumnSourceSize.setText(Messages.getString("TaskDecisionList.Size")); //$NON-NLS-1$
-				tableColumnSourceSize.setWidth(80);
-			}
-			{
-				tableColumnAction = new TableColumn(tableLogLines, SWT.NONE);
-				tableColumnAction.setResizable(false);
-				tableColumnAction.setText(Messages.getString("TaskDecisionList.Action")); //$NON-NLS-1$
-				tableColumnAction.setWidth(50);
-			}
-			{
-				tableColumnExplanation = new TableColumn(tableLogLines, SWT.NONE);
-				tableColumnExplanation.setText(Messages.getString("TaskDecisionList.Explanation")); //$NON-NLS-1$
-				tableColumnExplanation.setWidth(154);
-			}
+
+			tableColumnFilename = new TableColumn(tableLogLines, SWT.NONE);
+			tableColumnFilename.setText(Messages.getString("TaskDecisionList.Filename")); //$NON-NLS-1$
+			tableColumnFilename.setWidth(240);
+
+			tableColumnSourceSize = new TableColumn(tableLogLines, SWT.NONE);
+			tableColumnSourceSize.setText(Messages.getString("TaskDecisionList.Size")); //$NON-NLS-1$
+			tableColumnSourceSize.setWidth(90);
+
+			tableColumnAction = new TableColumn(tableLogLines, SWT.NONE);
+			tableColumnAction.setResizable(false);
+			tableColumnAction.setText(Messages.getString("TaskDecisionList.Action")); //$NON-NLS-1$
+			tableColumnAction.setWidth(70);
+
+			tableColumnExplanation = new TableColumn(tableLogLines, SWT.NONE);
+			tableColumnExplanation.setText(Messages.getString("TaskDecisionList.Explanation")); //$NON-NLS-1$
+			tableColumnExplanation.setWidth(170);
+
 			tableLogLines.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseUp(MouseEvent evt) {
@@ -163,15 +120,14 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite {
 
 			GridLayout thisLayout = new GridLayout();
 			this.setLayout(thisLayout);
-			thisLayout.marginWidth = 5;
-			thisLayout.marginHeight = 5;
-			thisLayout.horizontalSpacing = 0;
-			thisLayout.verticalSpacing = 0;
 			this.layout();
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
 		}
+		initializeImages();
+		onlyChanges = true;
+		changeAllowed = true;
 	}
 
 	public static void show(final GuiController guiController, final Profile profile, final TaskTree task, final boolean interactive) {
@@ -231,17 +187,12 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite {
 		locationSource.dispose();
 		locationDestination.dispose();
 		locationBoth.dispose();
-
-		Enumeration<Image> e;
-		e = actionImages.elements();
-		while (e.hasMoreElements()) {
-			e.nextElement().dispose();
+		for (Image i : actionImages.values()) {
+			i.dispose();
 		}
-		e = taskImages.elements();
-		while (e.hasMoreElements()) {
-			e.nextElement().dispose();
+		for (Image i : taskImages.values()) {
+			i.dispose();
 		}
-
 		super.dispose();
 	}
 
@@ -386,18 +337,14 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite {
 				tableLogLinesFillIndex++;
 				tableLogLinesFillCount++;
 			}
-			item.setImage(3, image);
+			item.setImage(2, image);
 			item.setText(new String[] {
-					"", //$NON-NLS-1$
 					t.getSource().getPath(),
-					Long.toString(t.getSource().getFileAttributes() != null ? t.getSource().getFileAttributes().getLength() : 0L)
-							+ " bytes", //$NON-NLS-1$
+					(t.getSource().getFileAttributes() != null ? Long.toString(t.getSource().getFileAttributes().getLength()) + " bytes" : ""), //$NON-NLS-1$
 					"", //$NON-NLS-1$
 					t.getCurrentAction().getExplanation() });
 			item.setData(t);
 
-			// putting the tableitem in the data slot of the task.
-			// t.setData(item);
 			taskItemMap.put(t, item);
 		}
 		addTaskChildren(t);
@@ -406,14 +353,11 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite {
 	protected void updateTask(TableItem item) {
 		Task t = (Task) item.getData();
 		Image image = getTaskImage(t);
-		item.setImage(3, image);
-		item.setText(4, t.getCurrentAction().getExplanation());
+		item.setImage(2, image);
+		item.setText(3, t.getCurrentAction().getExplanation());
 	}
 
 	public void rebuildActionList() {
-		// tableLogLines.clearAll();
-		// tableLogLines.setItemCount(0);
-
 		tableLogLinesFillIndex = 0;
 		tableLogLinesFillCount = tableLogLines.getItemCount();
 
@@ -429,21 +373,16 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite {
 	}
 
 	protected void showPopup(int x, int y) {
-		// TODO investigate whether there is a way to change the list selection
-		// while the context menu is open
-		// -> it would allow strange action changes
-
+		final TableItem[] tableItemList = tableLogLines.getSelection();
 		// TODO impl some kind of ActionList supporting "containsAction"
 		// and "indexOfAction" using own comparison rules
+		if (tableItemList.length == 0) {
+			return;
+		}
 
 		SelectionListener selListener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TableItem[] tableItemList = tableLogLines.getSelection();
-				if (tableItemList.length == 0) {
-					return;
-				}
-
 				Action targetAction = (Action) e.widget.getData();
 
 				for (TableItem item : tableItemList) {
@@ -464,14 +403,10 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite {
 			}
 		};
 
-		TableItem[] items = tableLogLines.getSelection();
-		if (items.length == 0) {
-			return;
-		}
 
-		Task[] taskList = new Task[items.length];
-		for (int i = 0; i < items.length; i++) {
-			taskList[i] = (Task) items[i].getData();
+		Task[] taskList = new Task[tableItemList.length];
+		for (int i = 0; i < tableItemList.length; i++) {
+			taskList[i] = (Task) tableItemList[i].getData();
 		}
 
 		Menu m = new Menu(this);
@@ -543,7 +478,6 @@ public class TaskDecisionList extends org.eclipse.swt.widgets.Composite {
 		tableLogLines.showItem(item);
 	}
 
-	/** Auto-generated event handler method */
 	protected void tableLogLinesMouseUp(MouseEvent evt) {
 		if (changeAllowed && (evt.button == 3)) {
 			showPopup(evt.x, evt.y);
