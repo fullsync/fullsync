@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -27,9 +27,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -44,8 +41,6 @@ public class WizardDialog {
 	private Composite compositeTop;
 	private Composite compositeBottom;
 	private Label labelImage;
-	private Label labelSeparatorBottom;
-	private Label labelSeparatorTop;
 	private Label labelDescription;
 	private Label labelCaption;
 	private Composite compositeContent;
@@ -87,71 +82,82 @@ public class WizardDialog {
 			GridData compositeTopLData = new GridData();
 			compositeTopLData.grabExcessHorizontalSpace = true;
 			compositeTopLData.horizontalAlignment = SWT.FILL;
+			compositeTopLData.horizontalIndent = 0;
+			compositeTopLData.verticalIndent = 0;
 			compositeTop.setLayoutData(compositeTopLData);
-			compositeTop.setLayout(new FormLayout());
+			GridLayout compositeTopLayout = new GridLayout(2, false);
+			compositeTopLayout.horizontalSpacing = 0;
+			compositeTopLayout.marginRight = 0;
+			compositeTopLayout.marginBottom = 0;
+			compositeTopLayout.marginTop = 0;
+			compositeTopLayout.marginLeft = 0;
+			compositeTopLayout.marginHeight = 0;
+			compositeTopLayout.marginWidth = 0;
+			compositeTop.setLayout(compositeTopLayout);
+
+			Composite topTextComposite = new Composite(compositeTop, SWT.NONE);
+			topTextComposite.setBackground(white);
+			GridLayout topTextCompositeLayout = new GridLayout(1, false);
+			topTextCompositeLayout.marginHeight = 10;
+			topTextCompositeLayout.marginWidth = 10;
+			topTextComposite.setLayout(topTextCompositeLayout);
+			GridData topTextCompositeData = new GridData();
+			topTextCompositeData.grabExcessHorizontalSpace = true;
+			topTextCompositeData.horizontalAlignment = SWT.FILL;
+			topTextComposite.setLayoutData(topTextCompositeData);
 
 			// top image
 			labelImage = new Label(compositeTop, SWT.NONE);
 			labelImage.setBackground(white);
-			FormData labelImageLData = new FormData();
-			labelImage.setBounds(386, 0, 64, 64);
-			labelImageLData.width = 64;
-			labelImageLData.height = 64;
-			labelImageLData.right = new FormAttachment(1000, 1000, 0);
-			labelImageLData.top = new FormAttachment(0, 1000, 0);
+			labelImage.setSize(64, 64);
+			GridData labelImageLData = new GridData();
+			labelImageLData.horizontalIndent = 0;
+			labelImageLData.verticalIndent = 0;
 			labelImage.setLayoutData(labelImageLData);
 
 			// wizard caption
-			labelCaption = new Label(compositeTop, SWT.NONE);
+			labelCaption = new Label(topTextComposite, SWT.NONE);
 			labelCaption.setBackground(white);
 			labelCaption.setFont(new Font(display, "Tohama", 9, SWT.BOLD)); //$NON-NLS-1$
-			FormData labelCaptionLData = new FormData();
-			labelCaptionLData.width = 330;
-			labelCaptionLData.height = 13;
-			labelCaptionLData.left = new FormAttachment(0, 1000, 10);
-			labelCaptionLData.top = new FormAttachment(0, 1000, 10);
-			labelCaptionLData.right = new FormAttachment(labelImage, 20);
+			GridData labelCaptionLData = new GridData();
+			labelCaptionLData.grabExcessHorizontalSpace = true;
 			labelCaption.setLayoutData(labelCaptionLData);
 
 			// wizard description
-			labelDescription = new Label(compositeTop, SWT.NULL);
+			labelDescription = new Label(topTextComposite, SWT.NULL);
 			labelDescription.setBackground(white);
-			FormData labelDescriptionLData = new FormData();
-			labelDescriptionLData.width = 330;
-			labelDescriptionLData.height = 26;
-			labelDescriptionLData.left = new FormAttachment(0, 1000, 20);
-			labelDescriptionLData.top = new FormAttachment(0, 1000, 30);
-			labelDescriptionLData.right = new FormAttachment(labelImage, 20);
+			GridData labelDescriptionLData = new GridData();
+			labelDescriptionLData.grabExcessHorizontalSpace = true;
 			labelDescription.setLayoutData(labelDescriptionLData);
 
 			// line below the header
-			labelSeparatorTop = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
+			Label labelSeparatorTop = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
 			GridData labelSeparatorTopLData = new GridData();
 			labelSeparatorTopLData.horizontalAlignment = SWT.FILL;
 			labelSeparatorTop.setLayoutData(labelSeparatorTopLData);
 
 			// composite for the wizard content
 			compositeContent = new Composite(dialogShell, SWT.NONE);
-			GridData compositeContentLData = new GridData();
-			compositeContentLData.grabExcessHorizontalSpace = true;
-			compositeContentLData.horizontalAlignment = SWT.FILL;
-			compositeContentLData.verticalAlignment = SWT.FILL;
-			compositeContentLData.grabExcessVerticalSpace = true;
-			compositeContent.setLayoutData(compositeContentLData);
+			GridData compositeContentData = new GridData();
+			compositeContentData.grabExcessHorizontalSpace = true;
+			compositeContentData.horizontalAlignment = SWT.FILL;
+			compositeContentData.verticalAlignment = SWT.FILL;
+			compositeContentData.grabExcessVerticalSpace = true;
+			compositeContent.setLayoutData(compositeContentData);
 			compositeContent.setLayout(new GridLayout());
 
 			// line below wizard content
-			labelSeparatorBottom = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
-			GridData labelSeparatorBottomLData = new GridData();
-			labelSeparatorBottomLData.horizontalAlignment = GridData.FILL;
-			labelSeparatorBottom.setLayoutData(labelSeparatorBottomLData);
+			Label labelSeparatorBottom = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
+			GridData labelSeparatorBottomData = new GridData();
+			labelSeparatorBottomData.horizontalAlignment = SWT.FILL;
+			labelSeparatorBottom.setLayoutData(labelSeparatorBottomData);
 
 			// button bar at the bottom
 			compositeBottom = new Composite(dialogShell, SWT.NONE);
-			GridData compositeBottomLData = new GridData();
-			compositeBottomLData.grabExcessHorizontalSpace = true;
-			compositeBottomLData.horizontalAlignment = SWT.FILL;
-			compositeBottom.setLayoutData(compositeBottomLData);
+			GridData compositeBottomData = new GridData();
+			compositeBottomData.grabExcessHorizontalSpace = true;
+			compositeBottomData.horizontalAlignment = SWT.FILL;
+			compositeBottom.setLayoutData(compositeBottomData);
 			GridLayout compositeBottomLayout = new GridLayout();
 			compositeBottomLayout.makeColumnsEqualWidth = true;
 			compositeBottom.setLayout(compositeBottomLayout);
@@ -179,8 +185,9 @@ public class WizardDialog {
 			dialogOpened();
 
 			while (!dialogShell.isDisposed()) {
-				if (!display.readAndDispatch())
+				if (!display.readAndDispatch()) {
 					display.sleep();
+				}
 			}
 		}
 		catch (Exception e) {

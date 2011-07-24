@@ -3,17 +3,17 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- * 
+ *
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
@@ -68,7 +68,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-public class ProfileDetailsTabbed extends Composite implements DisposeListener {
+public class ProfileDetailsTabbed implements DisposeListener {
 
 	private TabFolder tabs;
 	private Text textProfileName;
@@ -109,15 +109,19 @@ public class ProfileDetailsTabbed extends Composite implements DisposeListener {
 
 	private FileFilter filter;
 
+	private Composite m_parent;
+	private int m_style;
+
 	public ProfileDetailsTabbed(Composite parent, int style) {
-		super(parent, style);
+		m_parent = parent;
+		m_style = style;
 		initGUI();
-		this.addDisposeListener(this);
+		m_parent.addDisposeListener(this);
 	}
 
 	public void initGUI() {
 		try {
-			tabs = new TabFolder(getParent(), SWT.NULL);
+			tabs = new TabFolder(m_parent, m_style);
 			GridData tabsData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			tabs.setLayoutData(tabsData);
 			TabItem tabGeneral = new TabItem(tabs, SWT.NULL);
@@ -155,7 +159,7 @@ public class ProfileDetailsTabbed extends Composite implements DisposeListener {
 
 	/**
 	 * initGenralTab creates all controls of the first tab.
-	 * 
+	 *
 	 * @param parent
 	 *            parent element for the control
 	 * @return composite to be placed inside the general tab
@@ -229,7 +233,7 @@ public class ProfileDetailsTabbed extends Composite implements DisposeListener {
 		buttonScheduling.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent evt) {
-				ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(getShell(), SWT.NULL);
+				ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(m_parent.getShell(), SWT.NULL);
 				dialog.setSchedule((Schedule) buttonScheduling.getData());
 				dialog.open();
 				buttonScheduling.setData(dialog.getSchedule());
@@ -244,7 +248,7 @@ public class ProfileDetailsTabbed extends Composite implements DisposeListener {
 
 	/**
 	 * initLocationsTab creates all controls of the second tab.
-	 * 
+	 *
 	 * @param parent
 	 *            parent element for the control
 	 * @return composite to be placed inside the locations tab
@@ -306,7 +310,7 @@ public class ProfileDetailsTabbed extends Composite implements DisposeListener {
 
 	/**
 	 * initFiltersTab creates all controls of the third tab.
-	 * 
+	 *
 	 * @param parent
 	 *            parent element for the control
 	 * @return composite to be placed inside the filters tab
@@ -372,7 +376,7 @@ public class ProfileDetailsTabbed extends Composite implements DisposeListener {
 			@Override
 			public void widgetSelected(final SelectionEvent evt) {
 				try {
-					WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
+					WizardDialog dialog = new WizardDialog(m_parent.getShell(), SWT.APPLICATION_MODAL);
 					FileFilterPage page = new FileFilterPage(dialog, filter);
 					dialog.show();
 					FileFilter newfilter = page.getFileFilter();
@@ -429,7 +433,7 @@ public class ProfileDetailsTabbed extends Composite implements DisposeListener {
 
 	/**
 	 * initSubDirsTab creates all controls of the fourth tab.
-	 * 
+	 *
 	 * @param parent
 	 *            parent element for the control
 	 * @return composite to be placed inside the subdirectories tab
@@ -502,7 +506,7 @@ public class ProfileDetailsTabbed extends Composite implements DisposeListener {
 				if (selectedItems.length > 0) {
 					TreeItem selectedItem = selectedItems[0];
 					FileFilter currentItemFilter = (FileFilter) selectedItem.getData(FILTER_KEY);
-					WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
+					WizardDialog dialog = new WizardDialog(m_parent.getShell(), SWT.APPLICATION_MODAL);
 					FileFilterPage page = new FileFilterPage(dialog, currentItemFilter);
 					dialog.show();
 					FileFilter newfilter = page.getFileFilter();
@@ -713,7 +717,7 @@ public class ProfileDetailsTabbed extends Composite implements DisposeListener {
 		if ((profileName == null) || !textProfileName.getText().equals(profileName)) {
 			Profile pr = profileManager.getProfile(textProfileName.getText());
 			if (pr != null) {
-				MessageBox mb = new MessageBox(this.getShell(), SWT.ICON_ERROR);
+				MessageBox mb = new MessageBox(m_parent.getShell(), SWT.ICON_ERROR);
 				mb.setText(Messages.getString("ProfileDetails.Duplicate_Entry")); //$NON-NLS-1$
 				mb.setMessage(Messages.getString("ProfileDetails.Profile_already_exists")); //$NON-NLS-1$
 				mb.open();
@@ -792,7 +796,7 @@ public class ProfileDetailsTabbed extends Composite implements DisposeListener {
 
 	protected void buttonCancelWidgetSelected(SelectionEvent evt) {
 		closeSourceSite();
-		getShell().dispose();
+		m_parent.getShell().dispose();
 	}
 
 	protected void selectRuleSetButton(Button button) {
@@ -873,10 +877,8 @@ public class ProfileDetailsTabbed extends Composite implements DisposeListener {
 	}
 
 	private FileFilterTree getFileFilterTree() {
-		int numOfNodes = treeItemsWithFilter.size();
 		FileFilterTree fileFilterTree = new FileFilterTree();
-		for (int i = 0; i < numOfNodes; i++) {
-			TreeItem item = (TreeItem) treeItemsWithFilter.get(i);
+		for (TreeItem item : treeItemsWithFilter) {
 			FileFilter itemFilter = (FileFilter) item.getData(FILTER_KEY);
 			File itemFile = (File) item.getData();
 			fileFilterTree.addFileFilter(itemFile.getPath(), itemFilter);
@@ -891,6 +893,7 @@ public class ProfileDetailsTabbed extends Composite implements DisposeListener {
 				sourceSite = null;
 			}
 			catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
