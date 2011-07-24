@@ -133,8 +133,7 @@ public class GuiController implements Runnable {
 				display.syncExec(new Runnable() {
 					@Override
 					public void run() {
-						ExceptionDialog ed = new ExceptionDialog(mainShell, message, exception);
-						ed.open();
+						new ExceptionDialog(mainShell, message, exception);
 					}
 				});
 			}
