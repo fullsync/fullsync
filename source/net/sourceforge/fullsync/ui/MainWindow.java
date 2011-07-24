@@ -363,7 +363,7 @@ public class MainWindow extends org.eclipse.swt.widgets.Composite implements Pro
 
 		MenuItem menuItemExitProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemExitProfile.setText(Messages.getString("MainWindow.Exit_Menu")); //$NON-NLS-1$
-		menuItemEditProfile.setAccelerator(SWT.CTRL | 'Q'); // FIXME: my system ignores this, no idea why
+		menuItemExitProfile.setAccelerator(SWT.CTRL + 'Q');
 		menuItemExitProfile.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {
