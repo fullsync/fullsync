@@ -17,14 +17,14 @@ import net.sourceforge.fullsync.ExceptionHandler;
 public class Messages {
 	private static final String BUNDLE_NAME = "net.sourceforge.fullsync.ui.messages";//$NON-NLS-1$
 	private ResourceBundle RESOURCE_BUNDLE;
-	
+
 	private static Messages _instance;
-	
+
 	private Messages() {
 		String code = GuiController.getInstance().getPreferences().getLanguageCode();
 		Locale langLocale = new Locale(code);
 		try {
-            Locale.setDefault(langLocale);
+			Locale.setDefault(langLocale);
 			RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME, langLocale);
 		} catch (Throwable e) {
 			ExceptionHandler.reportException( "Unable to find locale for language "+code, e);
@@ -32,12 +32,12 @@ public class Messages {
 		}
 	}
 
-	public static String getString(String key) 
+	public static String getString(String key)
     {
 		if (_instance == null) {
 			_instance = new Messages();
 		}
-		
+
 		try {
 			return _instance.RESOURCE_BUNDLE.getString(key);
 		} catch (MissingResourceException e) {
@@ -45,7 +45,7 @@ public class Messages {
 			return '!' + key + '!';
 		}
 	}
-    
+
     public static String getString( String key, String value )
     {
         String msg = getString( key );
