@@ -33,6 +33,7 @@ import net.sourceforge.fullsync.ProfileSchedulerListener;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
+import net.sourceforge.fullsync.impl.JVMPreferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 import net.sourceforge.fullsync.ui.GuiController;
 
@@ -125,7 +126,23 @@ public class CommandLineInterpreter {
 
 			// Initialize basic facilities
 			DOMConfigurator.configure("logging.xml");
-			Preferences preferences = new ConfigurationPreferences("preferences.properties");
+			JVMPreferences preferences = new JVMPreferences();
+			if (new File("preferences.properties").exists() && !preferences.getOldSettingsMigrated()) {
+				// migrate old settings to the new settings store
+				Preferences oldpref = new ConfigurationPreferences("preferences.properties");
+				preferences.setConfirmExit(oldpref.confirmExit());
+				preferences.setCloseMinimizesToSystemTray(oldpref.closeMinimizesToSystemTray());
+				preferences.setMinimizeMinimizesToSystemTray(oldpref.minimizeMinimizesToSystemTray());
+				preferences.setSystemTrayEnabled(oldpref.systemTrayEnabled());
+				preferences.setProfileListStyle(oldpref.getProfileListStyle());
+				preferences.setListeningForRemoteConnections(oldpref.listeningForRemoteConnections());
+				preferences.setRemoteConnectionsPort(oldpref.getRemoteConnectionsPort());
+				preferences.setRemoteConnectionsPassword(oldpref.getRemoteConnectionsPassword());
+				preferences.setAutostartScheduler(oldpref.getAutostartScheduler());
+				preferences.setLanguageCode(oldpref.getLanguageCode());
+				preferences.setOldSettingsMigrated(true);
+				preferences.save();
+			}
 
 			String profilesFile = "profiles.xml";
 			if (line.hasOption("P")) {
@@ -219,7 +236,10 @@ public class CommandLineInterpreter {
 			}
 			else {
 				try {
-					if (!line.hasOption('P') && !(new File(profilesFile)).exists()) {
+					GuiController guiController = new GuiController(preferences, profileManager, sync);
+					guiController.startGui(line.hasOption('m'));
+
+					if (!line.hasOption('P') && !preferences.getHelpShown()) {
 						try {
 							File f = new File("docs/manual/Getting_Started.html");
 							if (f.exists()) {
@@ -227,10 +247,11 @@ public class CommandLineInterpreter {
 							}
 						}
 						catch (Error ex) {
+							ex.printStackTrace();
 						}
+						preferences.setHelpShown(true);
+						preferences.save();
 					}
-					GuiController guiController = new GuiController(preferences, profileManager, sync);
-					guiController.startGui(line.hasOption('m'));
 
 					if (listenerStarupException != null) {
 						ExceptionHandler.reportException("Unable to start incoming connections listener.", listenerStarupException);

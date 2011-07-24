@@ -64,4 +64,8 @@ public interface Preferences {
 	String getLanguageCode();
 
 	void setLanguageCode(String code);
+
+	boolean getHelpShown();
+
+	void setHelpShown(boolean shown);
 }
