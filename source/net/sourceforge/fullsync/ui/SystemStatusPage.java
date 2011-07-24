@@ -27,11 +27,8 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class SystemStatusPage implements WizardPage {
-	private WizardDialog dialog;
-	private SystemStatusComposite systemStatusComposite;
 
-	public SystemStatusPage(WizardDialog dialog) {
-		this.dialog = dialog;
+	public SystemStatusPage(final WizardDialog dialog) {
 		dialog.setPage(this);
 	}
 
@@ -61,15 +58,15 @@ public class SystemStatusPage implements WizardPage {
 	}
 
 	@Override
-	public void createContent(Composite content) {
-		systemStatusComposite = new SystemStatusComposite(content, SWT.NULL);
+	public void createContent(final Composite content) {
+		new SystemStatusComposite(content, SWT.FILL);
 	}
-	
+
 	@Override
 	public boolean apply() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean cancel() {
 		return true;

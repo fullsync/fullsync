@@ -28,38 +28,20 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 
-/**
- * This code was generated using CloudGarden's Jigloo
- * SWT/Swing GUI Builder, which is free for non-commercial
- * use. If Jigloo is being used commercially (ie, by a corporation,
- * company or business for any purpose whatever) then you
- * should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details.
- * Use of Jigloo implies acceptance of these licensing terms.
- * *************************************
- * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
- * for this machine, so Jigloo or this code cannot be used legally
- * for any corporate or commercial purpose.
- * *************************************
- */
-public class SystemStatusComposite extends org.eclipse.swt.widgets.Composite {
-	private Group groupMemory;
-	private Label label1;
-	private Label labelMemoryTotal;
-	private Label label2;
-	private Button buttonMemoryGc;
+public class SystemStatusComposite extends Composite {
+	private Label totalMemory;
+	private Label maxMemory;
+	private Label freeMemory;
 	private ProgressBar progressBarMemory;
-	private Label labelMemoryMax;
-	private Label label3;
-	private Label labelMemoryFree;
 	private Timer timer;
 
-	public SystemStatusComposite(org.eclipse.swt.widgets.Composite parent, int style) {
+	public SystemStatusComposite(Composite parent, int style) {
 		super(parent, style);
 		initGUI();
 		updateView();
@@ -75,66 +57,56 @@ public class SystemStatusComposite extends org.eclipse.swt.widgets.Composite {
 	private void initGUI() {
 		try {
 			this.setLayout(new GridLayout());
-			{
-				groupMemory = new Group(this, SWT.NONE);
-				GridLayout groupMemoryLayout = new GridLayout();
-				groupMemoryLayout.numColumns = 2;
-				groupMemory.setLayout(groupMemoryLayout);
-				groupMemory.setText("VM Memory");
-				{
-					progressBarMemory = new ProgressBar(groupMemory, SWT.NONE);
-					GridData progressBarMemoryLData = new GridData();
-					progressBarMemoryLData.horizontalSpan = 2;
-					progressBarMemory.setLayoutData(progressBarMemoryLData);
+			Group groupMemory = new Group(this, SWT.NONE);
+			groupMemory.setLayout(new GridLayout(2, false));
+			groupMemory.setText("VM Memory");
+
+			progressBarMemory = new ProgressBar(groupMemory, SWT.NONE);
+			GridData progressBarMemoryLData = new GridData();
+			progressBarMemoryLData.horizontalSpan = 2;
+			progressBarMemory.setLayoutData(progressBarMemoryLData);
+
+			// total memory
+			Label labelTotalMemory = new Label(groupMemory, SWT.NONE);
+			labelTotalMemory.setText("Total Memory:");
+			totalMemory = new Label(groupMemory, SWT.RIGHT);
+			GridData totalMemoryLData = new GridData();
+			totalMemoryLData.horizontalAlignment = SWT.FILL;
+			totalMemory.setLayoutData(totalMemoryLData);
+
+			// max memory
+			Label labelMaxMemory = new Label(groupMemory, SWT.NONE);
+			labelMaxMemory.setText("Max Memory:");
+
+			maxMemory = new Label(groupMemory, SWT.RIGHT);
+			GridData maxMemoryLData = new GridData();
+			maxMemoryLData.horizontalAlignment = GridData.FILL;
+			maxMemory.setLayoutData(maxMemoryLData);
+
+			// free memory
+			Label labelFreeMemory = new Label(groupMemory, SWT.NONE);
+			labelFreeMemory.setText("Free Memory:");
+
+			freeMemory = new Label(groupMemory, SWT.RIGHT);
+			freeMemory.setText("<free memory>");
+			GridData freeMemoryLData = new GridData();
+			freeMemoryLData.horizontalAlignment = GridData.FILL;
+			freeMemory.setLayoutData(freeMemoryLData);
+
+			// gc button
+			Button buttonMemoryGc = new Button(groupMemory, SWT.PUSH | SWT.CENTER);
+			buttonMemoryGc.setText("Clean up");
+			GridData buttonMemoryGcLData = new GridData();
+			buttonMemoryGc.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent evt) {
+					System.gc();
 				}
-				{
-					label1 = new Label(groupMemory, SWT.NONE);
-					label1.setText("Total Memory:");
-				}
-				{
-					labelMemoryTotal = new Label(groupMemory, SWT.RIGHT);
-					labelMemoryTotal.setText("<total memory>");
-					GridData labelMemoryTotalLData = new GridData();
-					labelMemoryTotalLData.horizontalAlignment = GridData.FILL;
-					labelMemoryTotal.setLayoutData(labelMemoryTotalLData);
-				}
-				{
-					label3 = new Label(groupMemory, SWT.NONE);
-					label3.setText("Max Memory:");
-				}
-				{
-					labelMemoryMax = new Label(groupMemory, SWT.RIGHT);
-					labelMemoryMax.setText("<max memory>");
-					GridData labelMemoryMaxLData = new GridData();
-					labelMemoryMaxLData.horizontalAlignment = GridData.FILL;
-					labelMemoryMax.setLayoutData(labelMemoryMaxLData);
-				}
-				{
-					label2 = new Label(groupMemory, SWT.NONE);
-					label2.setText("Free Memory:");
-				}
-				{
-					labelMemoryFree = new Label(groupMemory, SWT.RIGHT);
-					labelMemoryFree.setText("<free memory>");
-					GridData labelMemoryFreeLData = new GridData();
-					labelMemoryFreeLData.horizontalAlignment = GridData.FILL;
-					labelMemoryFree.setLayoutData(labelMemoryFreeLData);
-				}
-				{
-					buttonMemoryGc = new Button(groupMemory, SWT.PUSH | SWT.CENTER);
-					buttonMemoryGc.setText("Clean up");
-					GridData buttonMemoryGcLData = new GridData();
-					buttonMemoryGc.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent evt) {
-							System.gc();
-						}
-					});
-					buttonMemoryGcLData.horizontalAlignment = GridData.END;
-					buttonMemoryGcLData.horizontalSpan = 2;
-					buttonMemoryGc.setLayoutData(buttonMemoryGcLData);
-				}
-			}
+			});
+			buttonMemoryGcLData.horizontalAlignment = SWT.END;
+			buttonMemoryGcLData.horizontalSpan = 2;
+			buttonMemoryGc.setLayoutData(buttonMemoryGcLData);
+
 			this.layout();
 		}
 		catch (Exception e) {
@@ -153,15 +125,15 @@ public class SystemStatusComposite extends org.eclipse.swt.widgets.Composite {
 			public void run() {
 				Runtime rt = Runtime.getRuntime();
 
-				long totalMemory = rt.totalMemory();
-				long maxMemory = rt.maxMemory();
-				long freeMemory = rt.freeMemory();
-				
-				labelMemoryTotal.setText(String.valueOf(totalMemory));
-				labelMemoryMax.setText(String.valueOf(maxMemory));
-				labelMemoryFree.setText(String.valueOf(freeMemory));
-				progressBarMemory.setMaximum((int) (totalMemory / 1024));
-				progressBarMemory.setSelection((int) ((totalMemory - freeMemory) / 1024));
+				long ltotalMemory = rt.totalMemory();
+				long lmaxMemory = rt.maxMemory();
+				long lfreeMemory = rt.freeMemory();
+
+				totalMemory.setText(String.valueOf(ltotalMemory));
+				maxMemory.setText(String.valueOf(lmaxMemory));
+				freeMemory.setText(String.valueOf(lfreeMemory));
+				progressBarMemory.setMaximum((int) (ltotalMemory / 1024));
+				progressBarMemory.setSelection((int) ((ltotalMemory - lfreeMemory) / 1024));
 			}
 		});
 	}
