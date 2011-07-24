@@ -240,4 +240,9 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 			}
 		}
 	}
+
+	@Override
+	public boolean isConnectedToRemoteInstance() {
+		return profileManager.isConnectedToRemoteInstance();
+	}
 }

@@ -161,4 +161,8 @@ public class RemoteManager {
 		remoteInterface.save(profiles);
 	}
 
+	public boolean isConnectedToRemoteInstance() throws RemoteException {
+		return remoteInterface.isConnectedToRemoteInstance();
+	}
+
 }

@@ -66,4 +66,6 @@ public interface RemoteInterface extends Remote {
 
 	void save(Profile[] profiles) throws RemoteException;
 
+	boolean isConnectedToRemoteInstance() throws RemoteException;
+
 }

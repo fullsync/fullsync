@@ -110,6 +110,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	protected Vector<Profile> profiles;
 	private Vector<ProfileListChangeListener> changeListeners;
 	private Vector<ProfileSchedulerListener> scheduleListeners;
+	private boolean remoteConnected = false;
 
 	// FIXME this list is only needed because we need to give feedback from
 	// the local scheduler and a remote scheduler.
@@ -219,15 +220,27 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 				loadProfiles();
 			}
 			catch (Exception e) {
-				// TODO Auto-generated catch block
 				ExceptionHandler.reportException(e);
 			}
+			remoteConnected = false;
 			fireProfilesChangeEvent();
 		}
 	}
 
-	public boolean isConnected() {
+	/**
+	 * Check for the existence of a successful remote connection.
+	 * @return true if a remote connection is active.
+	 */
+	public final boolean isConnected() {
 		return (remoteManager != null);
+	}
+
+	/**
+	 * This method in necessary to avoid self RMI connections.
+	 * @return true if this instance is connected to another instance, or an attempt to connect is running
+	 */
+	public final boolean isConnectedToRemoteInstance() {
+		return remoteConnected;
 	}
 
 	private void loadProfiles() throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
@@ -595,5 +608,9 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 				ExceptionHandler.reportException(e);
 			}
 		}
+	}
+
+	public void setRemoteConnected(boolean connected) {
+		remoteConnected = connected;
 	}
 }

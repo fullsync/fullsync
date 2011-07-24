@@ -61,11 +61,12 @@ public class ConnectionPage implements WizardPage {
 
 	@Override
 	public Image getImage() {
-		return GuiController.getInstance().getImage("Remote_Wizard.png");} //$NON-NLS-1$
+		return GuiController.getInstance().getImage("Remote_Wizard.png"); //$NON-NLS-1$
+	}
 
 	@Override
 	public void createContent(Composite content) {
-		composite = new ConnectionComposite(content, SWT.NULL);
+		composite = new ConnectionComposite(content, SWT.FILL);
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class ConnectionPage implements WizardPage {
 		composite.apply();
 		return true; //FIXME: return false if failed
 	}
-	
+
 	@Override
 	public boolean cancel() {
 		return true;
