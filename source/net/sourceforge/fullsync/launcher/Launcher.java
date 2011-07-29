@@ -52,21 +52,23 @@ public class Launcher {
 			else if (-1 != osName.indexOf("mac")) {
 				os = "cocoa-macosx";
 			}
-			String dot = new File(".").getAbsoluteFile().getCanonicalPath();
+			String dot = new File(".").getAbsoluteFile().toURI().toString();
 			ArrayList<URL> jars = new ArrayList<URL>();
+			
+			System.out.println("launching FullSync... OS=" + os + "; ARCH=" + arch + "; DOT=" + dot);
 
 			// add application and correct SWT implementation the class-loader
-			jars.add(new URL("file://" + dot + "/lib/fullsync.jar"));
-			jars.add(new URL("file://" + dot + "/lib/swt-" + os + "-" + arch + ".jar"));
+			jars.add(new URL(dot + "/lib/fullsync.jar"));
+			jars.add(new URL(dot + "/lib/swt-" + os + "-" + arch + ".jar"));
 
 			// read out the "fake" class-path set on the launcher jar
-			File launcher = new File(dot + File.separator + "launcher.jar");
+			File launcher = new File("./launcher.jar");
 			JarFile jf = new JarFile(launcher);
 			Manifest manifest = jf.getManifest();
 			Attributes attributes = manifest.getMainAttributes();
 			String fsClassPath = attributes.getValue("FullSync-Class-Path");
 			for (String s : fsClassPath.split("\\.jar\\s")) {
-				jars.add(new URL("file://" + dot + "/" + s.trim() + ".jar"));
+				jars.add(new URL(dot + "/" + s.trim() + ".jar"));
 			}
 			URL[] urls = new URL[jars.size()];
 			System.arraycopy(jars.toArray(), 0, urls, 0, urls.length);

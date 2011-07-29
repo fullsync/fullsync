@@ -42,7 +42,6 @@ public class ConnectionConfiguration implements ModifyListener {
 	public ConnectionConfiguration(Composite parent) {
 		m_parent = parent;
 		initialize();
-		comboProtocol.select(comboProtocol.getSelectionIndex());
 	}
 
 	private void initialize() {
@@ -74,6 +73,9 @@ public class ConnectionConfiguration implements ModifyListener {
 		}
 		comboProtocol.select(selectedIndex);
 		comboProtocol.addModifyListener(this);
+
+		selectedScheme = comboProtocol.getText();
+		compositeSpecific = createProtocolSpecificComposite();
 	}
 
 	private void dispose() {
