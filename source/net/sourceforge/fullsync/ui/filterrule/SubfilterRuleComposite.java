@@ -31,7 +31,6 @@ import net.sourceforge.fullsync.ui.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -42,55 +41,32 @@ import org.eclipse.swt.widgets.Text;
  * @author Michele Aiello
  */
 public class SubfilterRuleComposite extends RuleComposite {
-
-	private Color whiteColor = new Color(null, 255, 255, 255);
-
 	private Text textValue;
 	private Button buttonFilter;
 
-	private FilterValue filterValue;
-
-	public SubfilterRuleComposite(Composite parent, int style, FilterValue filterValue) {
+	public SubfilterRuleComposite(Composite parent, int style, final FilterValue filterValue) {
 		super(parent, style);
-		this.filterValue = filterValue;
-		initGUI();
-	}
-
-	private void initGUI() {
-		GridLayout compositeLayout = new GridLayout();
-		compositeLayout.numColumns = 2;
-		compositeLayout.marginWidth = 0;
-		compositeLayout.makeColumnsEqualWidth = false;
-
-		this.setLayout(compositeLayout);
-		this.setBackground(whiteColor);
+		this.setLayout(new GridLayout(4, true));
+		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		layoutData.horizontalSpan = 2;
+		layoutData.grabExcessHorizontalSpace = true;
+		this.setLayoutData(layoutData);
 
 		textValue = new Text(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		buttonFilter = new Button(this, SWT.PUSH | SWT.CENTER);
-
-		GridData text1LData = new GridData();
-		text1LData.widthHint = 210;
-		text1LData.heightHint = 26;
-		text1LData.horizontalSpan = 1;
-		text1LData.horizontalAlignment = GridData.FILL;
-		text1LData.grabExcessHorizontalSpace = false;
-		text1LData.horizontalAlignment = GridData.BEGINNING;
-		textValue.setLayoutData(text1LData);
-
+		GridData textValueData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		textValueData.horizontalSpan = 3;
+		textValue.setLayoutData(textValueData);
 		if (filterValue != null) {
 			textValue.setText(filterValue.toString());
 		}
-
 		textValue.setEditable(false);
-		textValue.setBackground(whiteColor);
 
-		GridData buttonFilterLData = new GridData();
-		buttonFilterLData.horizontalSpan = 1;
-		buttonFilter.setLayoutData(buttonFilterLData);
+		buttonFilter = new Button(this, SWT.PUSH);
+		buttonFilter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		buttonFilter.setText("Set Filter...");
 		buttonFilter.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent evt) {
+			public void widgetSelected(final SelectionEvent evt) {
 				try {
 					WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
 					FileFilterPage page = new FileFilterPage(dialog, filterValue.getValue());
@@ -105,9 +81,7 @@ public class SubfilterRuleComposite extends RuleComposite {
 				catch (Exception e) {
 					ExceptionHandler.reportException(e);
 				}
-
 			}
 		});
-
 	}
 }

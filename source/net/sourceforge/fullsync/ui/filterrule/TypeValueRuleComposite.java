@@ -27,7 +27,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -37,53 +36,36 @@ import org.eclipse.swt.widgets.Composite;
  * @author Michele Aiello
  */
 public class TypeValueRuleComposite extends RuleComposite {
-
-	private Color whiteColor = new Color(null, 255, 255, 255);
-
 	private Combo comboTypes;
-	private TypeValue value;
 
-	public TypeValueRuleComposite(Composite parent, int style, TypeValue value) {
+	public TypeValueRuleComposite(Composite parent, int style, final TypeValue value) {
 		super(parent, style);
-		this.value = value;
-		initGUI();
-	}
-
-	private void initGUI() {
-		GridLayout compositeLayout = new GridLayout();
-		compositeLayout.numColumns = 1;
-		compositeLayout.makeColumnsEqualWidth = false;
-
-		this.setLayout(compositeLayout);
-		this.setBackground(whiteColor);
+		GridData compositeLayoutData = new GridData();
+		compositeLayoutData.horizontalAlignment = SWT.FILL;
+		compositeLayoutData.grabExcessHorizontalSpace = true;
+		this.setLayoutData(compositeLayoutData);
+		this.setLayout(new GridLayout(1, false));
 
 		comboTypes = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
-
 		GridData comboTypesLData = new GridData();
-		comboTypesLData.horizontalSpan = 1;
-		comboTypesLData.horizontalAlignment = GridData.FILL;
-		comboTypesLData.grabExcessHorizontalSpace = false;
-		comboTypesLData.horizontalAlignment = GridData.BEGINNING;
+		comboTypesLData.horizontalAlignment = SWT.FILL;
+		comboTypesLData.grabExcessHorizontalSpace = true;
 		comboTypes.setLayoutData(comboTypesLData);
-		String[] types = TypeValue.getAllTypes();
-		for (String type : types) {
+		for (String type : TypeValue.getAllTypes()) {
 			comboTypes.add(type);
 		}
-		comboTypes.select((value).getType());
-
+		comboTypes.select(value.getType());
 		comboTypes.addSelectionListener(new SelectionListener() {
 			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				(value).setType(comboTypes.getSelectionIndex());
+			public void widgetSelected(final SelectionEvent evt) {
+				value.setType(comboTypes.getSelectionIndex());
 				valueChanged(new ValueChangedEvent(value));
 			}
-
 			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				(value).setType(comboTypes.getSelectionIndex());
+			public void widgetDefaultSelected(final SelectionEvent evt) {
+				value.setType(comboTypes.getSelectionIndex());
 				valueChanged(new ValueChangedEvent(value));
 			}
 		});
-
 	}
 }

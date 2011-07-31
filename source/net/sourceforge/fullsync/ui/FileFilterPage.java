@@ -29,24 +29,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * This code was generated using CloudGarden's Jigloo
- * SWT/Swing GUI Builder, which is free for non-commercial
- * use. If Jigloo is being used commercially (ie, by a corporation,
- * company or business for any purpose whatever) then you
- * should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details.
- * Use of Jigloo implies acceptance of these licensing terms.
- * *************************************
- * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
- * for this machine, so Jigloo or this code cannot be used legally
- * for any corporate or commercial purpose.
- * *************************************
- */
-/**
  * @author Michele Aiello
  */
 public class FileFilterPage implements WizardPage {
-	private WizardDialog dialog;
 
 	private FileFilterDetails details;
 	private FileFilter filter;
@@ -54,7 +39,6 @@ public class FileFilterPage implements WizardPage {
 	public FileFilterPage(WizardDialog dialog, FileFilter filter) {
 		dialog.setPage(this);
 		this.filter = filter;
-		this.dialog = dialog;
 	}
 
 	@Override
@@ -90,13 +74,13 @@ public class FileFilterPage implements WizardPage {
 	public FileFilter getFileFilter() {
 		return filter;
 	}
-	
+
 	@Override
 	public boolean apply() {
 		filter = details.getFileFilter();
 		return true; //FIXME: return false if failed
 	}
-	
+
 	@Override
 	public boolean cancel() {
 		filter = null;

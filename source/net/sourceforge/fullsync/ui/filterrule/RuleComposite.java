@@ -22,7 +22,6 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
-import java.util.Iterator;
 import java.util.Vector;
 
 import org.eclipse.swt.widgets.Composite;
@@ -39,22 +38,18 @@ public abstract class RuleComposite extends Composite {
 	}
 
 	public void addValueChangedListener(ValueChangedListener listener) {
-		if (listeners.contains(listener)) {
-			return;
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
 		}
-		listeners.add(listener);
 	}
 
 	public void removeValueChangedListener(ValueChangedListener listener) {
 		listeners.remove(listener);
 	}
 
-	protected void valueChanged(ValueChangedEvent evt) {
-		Iterator<ValueChangedListener> it = listeners.iterator();
-		while (it.hasNext()) {
-			ValueChangedListener listener = it.next();
+	protected void valueChanged(final ValueChangedEvent evt) {
+		for (ValueChangedListener listener : listeners) {
 			listener.onValueChanged(evt);
 		}
 	}
-
 }

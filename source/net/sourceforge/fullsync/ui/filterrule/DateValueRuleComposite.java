@@ -27,7 +27,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -39,67 +38,34 @@ import org.eclipse.swt.widgets.Text;
  */
 public class DateValueRuleComposite extends RuleComposite {
 
-	private Color whiteColor = new Color(null, 255, 255, 255);
-
 	private Text textValue;
 	private Button buttonCalendar;
 
-	private DateValue value;
-
-	public DateValueRuleComposite(Composite parent, int style, DateValue value) {
+	public DateValueRuleComposite(Composite parent, int style, final DateValue value) {
 		super(parent, style);
-		this.value = value;
-		initGUI();
-	}
-
-	private void initGUI() {
-		GridLayout compositeLayout = new GridLayout();
-		compositeLayout.numColumns = 2;
-		compositeLayout.makeColumnsEqualWidth = false;
-
-		this.setLayout(compositeLayout);
-		this.setBackground(whiteColor);
+		this.setLayout(new GridLayout(2, true));
 
 		textValue = new Text(this, SWT.BORDER);
-		buttonCalendar = new Button(this, SWT.PUSH | SWT.CENTER);
-
-		GridData text1LData = new GridData();
-		text1LData.widthHint = 60;
-		text1LData.heightHint = 13;
-		text1LData.horizontalSpan = 1;
-		text1LData.horizontalAlignment = GridData.FILL;
-		text1LData.grabExcessHorizontalSpace = false;
-		text1LData.horizontalAlignment = GridData.BEGINNING;
-		textValue.setLayoutData(text1LData);
-
+		textValue.setEditable(false);
+		textValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		if (value != null) {
 			textValue.setText(value.toString());
 		}
 
-		textValue.setEditable(false);
-		textValue.setBackground(whiteColor);
-		// textValue.addModifyListener(new ModifyListener() {
-		// public void modifyText(ModifyEvent arg0) {
-		// ((DateValue)value).fromString(textValue.getText());
-		// valueChanged(new ValueChangedEvent(value));
-		// }
-		// });
-
-		GridData buttonCalendarLData = new GridData();
-		buttonCalendarLData.horizontalSpan = 1;
-		buttonCalendar.setLayoutData(buttonCalendarLData);
+		buttonCalendar = new Button(this, SWT.PUSH | SWT.CENTER);
+		buttonCalendar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		buttonCalendar.setText("Choose Date...");
 		buttonCalendar.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent evt) {
+			public void widgetSelected(final SelectionEvent evt) {
 				SWTCalendarDialog swtCalDialog = new SWTCalendarDialog(getDisplay());
 				swtCalDialog.setDate(value.getDate());
+				//TODO: position this dialog somewhere sane
 				swtCalDialog.open();
 				value.setDate(swtCalDialog.getCalendar().getTime());
 				textValue.setText(value.toString());
 				valueChanged(new ValueChangedEvent(value));
 			}
 		});
-
 	}
 }
