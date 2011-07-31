@@ -86,7 +86,7 @@ public class OptionsDialog extends Dialog implements SelectionListener {
 
 			GridData labelMessageLData = new GridData();
 			labelMessageLData.verticalAlignment = GridData.CENTER;
-			labelMessageLData.horizontalAlignment = GridData.FILL;
+			labelMessageLData.horizontalAlignment = SWT.FILL;
 			labelMessageLData.widthHint = -1;
 			labelMessageLData.heightHint = -1;
 			labelMessageLData.horizontalIndent = 0;

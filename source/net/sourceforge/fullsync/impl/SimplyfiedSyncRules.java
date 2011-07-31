@@ -48,10 +48,10 @@ public class SimplyfiedSyncRules implements RuleSet {
 	private String patternsType;
 
 	private String ignorePattern;
-	private Rule ignoreRule;
+	private Rule ignoreRule; // FIXME: unused
 
 	private String takePattern;
-	private Rule takeRule;
+	private Rule takeRule; // FIXME: unused
 
 	private FileFilter fileFilter;
 	private FileFilterTree fileFilterTree;
@@ -59,16 +59,9 @@ public class SimplyfiedSyncRules implements RuleSet {
 	private boolean useFilter;
 
 	/**
-	 * Default Constructor
+	 * Default Constructor.
 	 */
 	public SimplyfiedSyncRules() {
-	}
-
-	/**
-	 * Constructor
-	 */
-	public SimplyfiedSyncRules(String name) {
-		this.name = name;
 	}
 
 	@Override

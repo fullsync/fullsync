@@ -114,7 +114,7 @@ public class FileObjectChooser extends Dialog {
 			textUrlExtension = new Text(compositeTop, SWT.BORDER);
 			GridData textUrlExtensionLData = new GridData();
 			textUrlExtensionLData.grabExcessHorizontalSpace = true;
-			textUrlExtensionLData.horizontalAlignment = GridData.FILL;
+			textUrlExtensionLData.horizontalAlignment = SWT.FILL;
 			textUrlExtension.setLayoutData(textUrlExtensionLData);
 			textUrlExtension.setText("<url extension>");
 

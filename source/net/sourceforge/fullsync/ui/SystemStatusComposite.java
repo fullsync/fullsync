@@ -80,7 +80,7 @@ public class SystemStatusComposite extends Composite {
 
 			maxMemory = new Label(groupMemory, SWT.RIGHT);
 			GridData maxMemoryLData = new GridData();
-			maxMemoryLData.horizontalAlignment = GridData.FILL;
+			maxMemoryLData.horizontalAlignment = SWT.FILL;
 			maxMemory.setLayoutData(maxMemoryLData);
 
 			// free memory
@@ -90,7 +90,7 @@ public class SystemStatusComposite extends Composite {
 			freeMemory = new Label(groupMemory, SWT.RIGHT);
 			freeMemory.setText("<free memory>");
 			GridData freeMemoryLData = new GridData();
-			freeMemoryLData.horizontalAlignment = GridData.FILL;
+			freeMemoryLData.horizontalAlignment = SWT.FILL;
 			freeMemory.setLayoutData(freeMemoryLData);
 
 			// gc button

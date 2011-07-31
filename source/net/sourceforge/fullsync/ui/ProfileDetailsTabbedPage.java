@@ -24,23 +24,19 @@ import net.sourceforge.fullsync.ProfileManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class ProfileDetailsTabbedPage implements WizardPage {
-	private WizardDialog dialog;
 	private ProfileManager profileManager;
 	private String profileName;
-	private Button okButton;
 
 	private ProfileDetailsTabbed details;
 
 	public ProfileDetailsTabbedPage(WizardDialog dialog, ProfileManager profileManager, String profileName) {
 		dialog.setPage(this);
-		this.dialog = dialog;
 		this.profileManager = profileManager;
 		this.profileName = profileName;
 	}
@@ -80,13 +76,13 @@ public class ProfileDetailsTabbedPage implements WizardPage {
 		details.setProfileManager(profileManager);
 		details.setProfileName(profileName);
 	}
-	
+
 	@Override
 	public boolean apply() {
 		details.apply();
 		return true; //FIXME: return false if failed
 	}
-	
+
 	@Override
 	public boolean cancel() {
 		return true;

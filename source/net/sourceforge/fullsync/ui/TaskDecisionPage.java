@@ -117,7 +117,7 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 	public void createContent(Composite content) {
 		list = new TaskDecisionList(content, SWT.NULL);
 		list.setTaskTree(taskTree);
-		list.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+		list.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		content.setLayout(new GridLayout());
 
 		dialog.getShell().addShellListener(new ShellAdapter() {
@@ -147,7 +147,7 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 		GridLayout compositeBottomLayout = new GridLayout();
 		GridData compositeBottomLData = new GridData();
 		compositeBottomLData.grabExcessHorizontalSpace = true;
-		compositeBottomLData.horizontalAlignment = GridData.FILL;
+		compositeBottomLData.horizontalAlignment = SWT.FILL;
 		compositeBottom.setLayoutData(compositeBottomLData);
 		compositeBottomLayout.numColumns = 3;
 		compositeBottom.setLayout(compositeBottomLayout);
@@ -172,7 +172,7 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 		{
 			labelProgress = new Label(compositeBottom, SWT.NONE);
 			GridData labelProgressLData = new GridData();
-			labelProgressLData.horizontalAlignment = GridData.FILL;
+			labelProgressLData.horizontalAlignment = SWT.FILL;
 			labelProgressLData.heightHint = 13;
 			labelProgressLData.horizontalIndent = 5;
 			labelProgressLData.grabExcessHorizontalSpace = true;

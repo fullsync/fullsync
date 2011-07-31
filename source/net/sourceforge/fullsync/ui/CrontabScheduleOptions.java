@@ -80,7 +80,7 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 					shell.setText(Messages.getString("CrontabScheduleOptions.Select") + part.name); //$NON-NLS-1$
 
 					final List table = new List(shell, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
-					GridData data = new GridData(GridData.FILL, GridData.FILL, true, true, 2, 1);
+					GridData data = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 					table.setLayoutData(data);
 					for (int i = part.low; i <= part.high; ++i) {
 						table.add(String.valueOf(i));

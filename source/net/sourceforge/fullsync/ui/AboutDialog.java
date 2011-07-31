@@ -85,8 +85,8 @@ class AboutDialog extends Dialog implements DisposeListener {
 			GridData labelPictureLData = new GridData();
 			labelPictureLData.grabExcessHorizontalSpace = true;
 			labelPictureLData.grabExcessVerticalSpace = true;
-			labelPictureLData.horizontalAlignment = GridData.FILL;
-			labelPictureLData.verticalAlignment = GridData.FILL;
+			labelPictureLData.horizontalAlignment = SWT.FILL;
+			labelPictureLData.verticalAlignment = SWT.FILL;
 			labelPicture.setLayoutData(labelPictureLData);
 			Image aboutImg = GuiController.getInstance().getImage("About.png"); //$NON-NLS-1$
 			Rectangle r = aboutImg.getBounds();
@@ -131,7 +131,7 @@ class AboutDialog extends Dialog implements DisposeListener {
 			// separator
 			Label labelSeparator1 = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
 			GridData labelSeparatorLData = new GridData();
-			labelSeparatorLData.horizontalAlignment = GridData.FILL;
+			labelSeparatorLData.horizontalAlignment = SWT.FILL;
 			labelSeparatorLData.grabExcessHorizontalSpace = true;
 			labelSeparator1.setLayoutData(labelSeparatorLData);
 			// credits background
@@ -139,7 +139,7 @@ class AboutDialog extends Dialog implements DisposeListener {
 			composite1.setLayout(new FillLayout());
 			GridLayout composite1Layout = new GridLayout(1, true);
 			GridData composite1LData = new GridData();
-			composite1LData.horizontalAlignment = GridData.FILL;
+			composite1LData.horizontalAlignment = SWT.FILL;
 			composite1LData.heightHint = 57;
 			composite1.setLayoutData(composite1LData);
 			composite1.setLayout(composite1Layout);
@@ -194,13 +194,13 @@ class AboutDialog extends Dialog implements DisposeListener {
 			Label labelSeparator2 = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
 			GridData labelSeparator2LData = new GridData();
 			labelSeparator2LData.grabExcessHorizontalSpace = true;
-			labelSeparator2LData.horizontalAlignment = GridData.FILL;
+			labelSeparator2LData.horizontalAlignment = SWT.FILL;
 			labelSeparator2.setLayoutData(labelSeparator2LData);
 			// buttons composite
 			compositeBottom = new Composite(dialogShell, SWT.NONE);
 			GridLayout compositeBottomLayout = new GridLayout();
 			GridData compositeBottomLData = new GridData();
-			compositeBottomLData.horizontalAlignment = GridData.FILL;
+			compositeBottomLData.horizontalAlignment = SWT.FILL;
 			compositeBottom.setLayoutData(compositeBottomLData);
 			compositeBottomLayout.makeColumnsEqualWidth = true;
 			compositeBottomLayout.numColumns = 2;

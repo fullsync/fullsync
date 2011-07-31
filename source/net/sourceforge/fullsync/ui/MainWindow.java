@@ -257,8 +257,8 @@ class MainWindow extends org.eclipse.swt.widgets.Composite implements ProfileSch
 				}
 				GridData coolBarLData = new GridData();
 				coolBarLData.grabExcessHorizontalSpace = true;
-				coolBarLData.horizontalAlignment = GridData.FILL;
-				coolBarLData.verticalAlignment = GridData.FILL;
+				coolBarLData.horizontalAlignment = SWT.FILL;
+				coolBarLData.verticalAlignment = SWT.FILL;
 				coolBar.setLayoutData(coolBarLData);
 				coolBar.setLocked(true);
 			}
@@ -271,8 +271,8 @@ class MainWindow extends org.eclipse.swt.widgets.Composite implements ProfileSch
 				GridData profileListLData = new GridData();
 				profileListLData.grabExcessHorizontalSpace = true;
 				profileListLData.grabExcessVerticalSpace = true;
-				profileListLData.horizontalAlignment = GridData.FILL;
-				profileListLData.verticalAlignment = GridData.FILL;
+				profileListLData.horizontalAlignment = SWT.FILL;
+				profileListLData.verticalAlignment = SWT.FILL;
 				profileListContainer.setLayoutData(profileListLData);
 				profileListContainer.setLayout(new FillLayout());
 			}
@@ -280,7 +280,7 @@ class MainWindow extends org.eclipse.swt.widgets.Composite implements ProfileSch
 				statusLine = new StatusLine(this, SWT.NONE);
 				GridData statusLineLData = new GridData();
 				statusLineLData.grabExcessHorizontalSpace = true;
-				statusLineLData.horizontalAlignment = GridData.FILL;
+				statusLineLData.horizontalAlignment = SWT.FILL;
 				statusLine.setLayoutData(statusLineLData);
 			}
 			createMenu();

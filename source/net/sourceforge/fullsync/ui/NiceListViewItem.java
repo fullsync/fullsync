@@ -68,7 +68,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 		try {
 			GridData layoutData = new GridData();
 			layoutData.grabExcessHorizontalSpace = true;
-			layoutData.horizontalAlignment = GridData.FILL;
+			layoutData.horizontalAlignment = SWT.FILL;
 			this.setLayoutData(layoutData);
 
 			GridLayout thisLayout = new GridLayout();
