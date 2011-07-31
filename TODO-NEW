@@ -30,6 +30,7 @@ Roadmap:
 	[ ] --> Stable Release
 	[ ] move all images, xml's, config files into the fullsync jar, into some resource package to make loading them easier
 	[ ] exception handling: look up ways to minimize exception handling code, should also allow to specify that we don't want to handle them and just rethrow them (debugging)
+	[ ] review & improve documentation of the commandline arguments
 
 Bugs:
 	[ ] Exception if starting sync on a readonly FS
@@ -43,9 +44,16 @@ Bugs:
 	[ ] task decision dialog Action, Size columns are too narrow
 	[ ] task decision dialog needs a lot of love
 	[X] Ctrl+Q does not exit FullSync
+	[ ] dialogs must initialize themself fully without relying on change/* events being dispatched
+		there are some dialogs that rely on change events of other controls to fully initialize,
+		the profile dialog however has proven that SWT does not behave identical on eg windows and linux,
+		thus any such dialog might fail on either platform
 
 Features:
 	[ ] TaskDecisionDialog:
 		* Ignore all Incoming
 		* Ignore all Outgoing
-
+	[ ] detect file renames:
+		* have a source buffer with file metadata (and hash?)
+		* if a new file has the same metadata that a file has that is missing it's most likely the same file but renamed
+	[ ] Exact Copy: allow users to specify that they want to remove deleted files before transferring new files (needed in case the destination is low on free space)
