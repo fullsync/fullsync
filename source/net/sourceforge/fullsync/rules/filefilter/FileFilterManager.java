@@ -57,7 +57,8 @@ public class FileFilterManager {
 
 	public Element serializeRule(FileFilterRule fileFilterRule, Document document, String elementName) {
 		Element ruleElement = document.createElement(elementName);
-		String ruleType = getRuleType(fileFilterRule);
+
+		String ruleType = (fileFilterRule != null) ? fileFilterRule.getRuleType() : null;
 
 		ruleElement.setAttribute("ruletype", ruleType);
 		serializeRuleAttributes(fileFilterRule, ruleElement);
@@ -67,22 +68,22 @@ public class FileFilterManager {
 
 	public FileFilter unserializeFileFilter(Element fileFilterElement, String ruleElementName) {
 		FileFilter fileFilter = new FileFilter();
-		int match_type = 0;
+		int matchType = 0;
 
 		try {
-			match_type = Integer.parseInt(fileFilterElement.getAttribute("matchtype"));
+			matchType = Integer.parseInt(fileFilterElement.getAttribute("matchtype"));
 		}
 		catch (NumberFormatException e) {
 		}
-		fileFilter.setMatchType(match_type);
+		fileFilter.setMatchType(matchType);
 
-		int filter_type = 0;
+		int filterType = 0;
 		try {
-			filter_type = Integer.parseInt(fileFilterElement.getAttribute("filtertype"));
+			filterType = Integer.parseInt(fileFilterElement.getAttribute("filtertype"));
 		}
 		catch (NumberFormatException e) {
 		}
-		fileFilter.setFilterType(filter_type);
+		fileFilter.setFilterType(filterType);
 
 		boolean applies = Boolean.valueOf(fileFilterElement.getAttribute("appliestodir")).booleanValue();
 		fileFilter.setAppliesToDirectories(applies);
@@ -267,38 +268,6 @@ public class FileFilterManager {
 		}
 
 		return new String[] { "N/A" };
-	}
-
-	private String getRuleType(FileFilterRule fileFilterRule) {
-		if (fileFilterRule instanceof FileNameFileFilterRule) {
-			return FileNameFileFilterRule.typeName;
-		}
-
-		if (fileFilterRule instanceof FilePathFileFilterRule) {
-			return FilePathFileFilterRule.typeName;
-		}
-
-		if (fileFilterRule instanceof FileTypeFileFilterRule) {
-			return FileTypeFileFilterRule.typeName;
-		}
-
-		if (fileFilterRule instanceof FileSizeFileFilterRule) {
-			return FileSizeFileFilterRule.typeName;
-		}
-
-		if (fileFilterRule instanceof FileModificationDateFileFilterRule) {
-			return FileModificationDateFileFilterRule.typeName;
-		}
-
-		if (fileFilterRule instanceof FileAgeFileFilterRule) {
-			return FileAgeFileFilterRule.typeName;
-		}
-
-		if (fileFilterRule instanceof SubfilterFileFilerRule) {
-			return SubfilterFileFilerRule.typeName;
-		}
-
-		return null;
 	}
 
 }
