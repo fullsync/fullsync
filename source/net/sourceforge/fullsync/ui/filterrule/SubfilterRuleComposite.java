@@ -68,7 +68,7 @@ public class SubfilterRuleComposite extends RuleComposite {
 			@Override
 			public void widgetSelected(final SelectionEvent evt) {
 				try {
-					WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
+					WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL | SWT.RESIZE);
 					FileFilterPage page = new FileFilterPage(dialog, filterValue.getValue());
 					dialog.show();
 					FileFilter newfilter = page.getFileFilter();

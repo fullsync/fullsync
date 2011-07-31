@@ -113,11 +113,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 	public ProfileDetailsTabbed(Composite parent, int style) {
 		m_parent = parent;
 		m_style = style;
-		initGUI();
 		m_parent.addDisposeListener(this);
-	}
-
-	public void initGUI() {
 		try {
 			tabs = new TabFolder(m_parent, m_style);
 			GridData tabsData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -363,7 +359,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 			@Override
 			public void widgetSelected(final SelectionEvent evt) {
 				try {
-					WizardDialog dialog = new WizardDialog(m_parent.getShell(), SWT.APPLICATION_MODAL);
+					WizardDialog dialog = new WizardDialog(m_parent.getShell(), SWT.APPLICATION_MODAL | SWT.RESIZE);
 					FileFilterPage page = new FileFilterPage(dialog, filter);
 					dialog.show();
 					FileFilter newfilter = page.getFileFilter();
@@ -493,7 +489,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 				if (selectedItems.length > 0) {
 					TreeItem selectedItem = selectedItems[0];
 					FileFilter currentItemFilter = (FileFilter) selectedItem.getData(FILTER_KEY);
-					WizardDialog dialog = new WizardDialog(m_parent.getShell(), SWT.APPLICATION_MODAL);
+					WizardDialog dialog = new WizardDialog(m_parent.getShell(), SWT.APPLICATION_MODAL | SWT.RESIZE);
 					FileFilterPage page = new FileFilterPage(dialog, currentItemFilter);
 					dialog.show();
 					FileFilter newfilter = page.getFileFilter();
@@ -686,8 +682,8 @@ public class ProfileDetailsTabbed implements DisposeListener {
 
 		ConnectionDescription src, dst;
 		try {
-			src = getSourceConnection();
-			dst = getDestinationConnection();
+			src = getConnectionDescription(srcConnectionConfiguration);
+			dst = getConnectionDescription(dstConnectionConfiguration);
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
@@ -746,30 +742,15 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		profileManager.save();
 	}
 
-	private ConnectionDescription getDestinationConnection() {
-		ConnectionDescription dst;
-		try {
-			dst = dstConnectionConfiguration.getLocationDescription().toConnectionDescription();
-		}
-		catch (URISyntaxException e) {
-			return null;
-		}
-		if (dstConnectionConfiguration.getBuffered()) {
-			dst.setBufferStrategy("syncfiles"); //$NON-NLS-1$
-		}
-		return dst;
-	}
-
-	private ConnectionDescription getSourceConnection() {
+	private ConnectionDescription getConnectionDescription(final ConnectionConfiguration cfg) {
 		ConnectionDescription dst = null;
 		try {
-			dst = srcConnectionConfiguration.getLocationDescription().toConnectionDescription();
+			dst = cfg.getLocationDescription().toConnectionDescription();
+			if (cfg.getBuffered()) {
+				dst.setBufferStrategy("syncfiles"); //$NON-NLS-1$
+			}
 		}
 		catch (URISyntaxException e) {
-			return null;
-		}
-		if (srcConnectionConfiguration.getBuffered()) {
-			dst.setBufferStrategy("syncfiles"); //$NON-NLS-1$
 		}
 		return dst;
 	}
@@ -805,7 +786,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 
 	private void treeTabsWidgetSelected(SelectionEvent evt) {
 		if (evt.item == tabSubDirs) {
-			ConnectionDescription src = getSourceConnection();
+			ConnectionDescription src = getConnectionDescription(srcConnectionConfiguration);
 			if (null != sourceSite) {
 				try {
 					sourceSite.close();
@@ -824,7 +805,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 				display.asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						ConnectionDescription src = getSourceConnection();
+						ConnectionDescription src = getConnectionDescription(srcConnectionConfiguration);
 						try {
 							if (null != src) {
 								sourceSite = fsm.createConnection(src);
