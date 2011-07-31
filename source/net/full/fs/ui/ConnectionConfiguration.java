@@ -45,14 +45,9 @@ public class ConnectionConfiguration implements ModifyListener {
 	}
 
 	private void initialize() {
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.horizontalAlignment = SWT.FILL;
 		compositeProtocolSpecific = new Composite(m_parent, SWT.NONE);
 		compositeProtocolSpecific.setLayout(new GridLayout(3, false));
-		compositeProtocolSpecific.setLayoutData(gridData);
+		compositeProtocolSpecific.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		// protcol combo box
 		labelProtocol = new Label(compositeProtocolSpecific, SWT.NONE);
@@ -91,7 +86,6 @@ public class ConnectionConfiguration implements ModifyListener {
 		selectedScheme = comboProtocol.getText();
 		dispose();
 		initialize();
-		compositeSpecific = createProtocolSpecificComposite();
 
 		m_parent.layout(true);
 	}
@@ -129,7 +123,7 @@ public class ConnectionConfiguration implements ModifyListener {
 	public void setBuffered(boolean buffered) {
 		compositeSpecific.setBuffered(buffered);
 	}
-	
+
 	public void setBufferedEnabled(boolean enabled) {
 		compositeSpecific.setBufferedEnabled(enabled);
 	}
