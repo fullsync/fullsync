@@ -43,18 +43,8 @@ public class SystemStatusComposite extends Composite {
 
 	public SystemStatusComposite(Composite parent, int style) {
 		super(parent, style);
-		initGUI();
-		updateView();
-		timer = new Timer(true);
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				updateView();
-			}
-		}, 1000, 1000);
-	}
-
-	private void initGUI() {
+		// FIXME: add interesting versions and the system properties used by the launcher,...
+		// TODO: add a way to report a bug here?
 		try {
 			this.setLayout(new GridLayout());
 			Group groupMemory = new Group(this, SWT.NONE);
@@ -108,6 +98,14 @@ public class SystemStatusComposite extends Composite {
 			buttonMemoryGc.setLayoutData(buttonMemoryGcLData);
 
 			this.layout();
+			updateView();
+			timer = new Timer(true);
+			timer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					updateView();
+				}
+			}, 1000, 1000);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
