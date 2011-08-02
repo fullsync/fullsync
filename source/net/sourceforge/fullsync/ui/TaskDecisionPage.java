@@ -48,23 +48,9 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
- * This code was generated using CloudGarden's Jigloo
- * SWT/Swing GUI Builder, which is free for non-commercial
- * use. If Jigloo is being used commercially (ie, by a corporation,
- * company or business for any purpose whatever) then you
- * should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details.
- * Use of Jigloo implies acceptance of these licensing terms.
- * *************************************
- * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
- * for this machine, so Jigloo or this code cannot be used legally
- * for any corporate or commercial purpose.
- * *************************************
- */
-/**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class TaskDecisionPage implements WizardPage, Serializable {
+public class TaskDecisionPage extends ShellAdapter implements WizardPage, Serializable {
 	private static final long serialVersionUID = 2L;
 	private transient WizardDialog dialog;
 	private transient GuiController guiController;
@@ -114,79 +100,70 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 	}
 
 	@Override
-	public void createContent(Composite content) {
-		list = new TaskDecisionList(content, SWT.NULL);
-		list.setTaskTree(taskTree);
-		list.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		content.setLayout(new GridLayout());
+	public void shellClosed(final ShellEvent event) {
+		if (processing) {
+			MessageBox mb = new MessageBox(dialog.getShell(), SWT.ICON_ERROR | SWT.OK);
+			mb.setText(Messages.getString("TaskDecisionPage.Error")); //$NON-NLS-1$
+			mb.setMessage(Messages.getString("TaskDecisionPage.SyncWindowCantBeClosed")); //$NON-NLS-1$
+			mb.open();
 
-		dialog.getShell().addShellListener(new ShellAdapter() {
+			event.doit = false;
+		}
+		else {
+			try {
+				taskTree.getSource().close();
+				taskTree.getDestination().close();
+			}
+			catch (IOException ioe) {
+				ExceptionHandler.reportException(ioe);
+			}
+		}
+	}
+
+
+	@Override
+	public void createContent(final Composite content) {
+		dialog.getShell().addShellListener(this);
+		content.setLayout(new GridLayout(2, false));
+
+		// filter combo
+		comboFilter = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
+		comboFilter.add(Messages.getString("TaskDecisionPage.Everything")); //$NON-NLS-1$
+		comboFilter.add(Messages.getString("TaskDecisionPage.ChangesOnly")); //$NON-NLS-1$
+		comboFilter.select(1);
+		comboFilter.addModifyListener(new ModifyListener() {
 			@Override
-			public void shellClosed(ShellEvent event) {
-				if (processing) {
-					MessageBox mb = new MessageBox(dialog.getShell(), SWT.ICON_ERROR | SWT.OK);
-					mb.setText(Messages.getString("TaskDecisionPage.Error")); //$NON-NLS-1$
-					mb.setMessage(Messages.getString("TaskDecisionPage.SyncWindowCantBeClosed")); //$NON-NLS-1$
-					mb.open();
-
-					event.doit = false;
-				}
-				else {
-					try {
-						taskTree.getSource().close();
-						taskTree.getDestination().close();
-					}
-					catch (IOException ioe) {
-						ExceptionHandler.reportException(ioe);
+			public void modifyText(final ModifyEvent evt) {
+				if (!processing) {
+					list.setOnlyChanges(comboFilter.getSelectionIndex() == 1);
+					if (taskTree != null) {
+						list.rebuildActionList();
 					}
 				}
 			}
 		});
-		
-		Composite compositeBottom = new Composite(content, SWT.FILL);
-		GridLayout compositeBottomLayout = new GridLayout();
-		GridData compositeBottomLData = new GridData();
-		compositeBottomLData.grabExcessHorizontalSpace = true;
-		compositeBottomLData.horizontalAlignment = SWT.FILL;
-		compositeBottom.setLayoutData(compositeBottomLData);
-		compositeBottomLayout.numColumns = 3;
-		compositeBottom.setLayout(compositeBottomLayout);
-		{
-			comboFilter = new Combo(compositeBottom, SWT.DROP_DOWN | SWT.READ_ONLY);
-			GridData comboFilterLData = new GridData();
-			comboFilterLData.widthHint = 90;
-			comboFilterLData.heightHint = 21;
-			comboFilter.setLayoutData(comboFilterLData);
-			comboFilter.addModifyListener(new ModifyListener() {
-				@Override
-				public void modifyText(ModifyEvent evt) {
-					if (!processing) {
-						list.setOnlyChanges(comboFilter.getSelectionIndex() == 1);
-						if (taskTree != null) {
-							list.rebuildActionList();
-						}
-					}
-				}
-			});
-		}
-		{
-			labelProgress = new Label(compositeBottom, SWT.NONE);
-			GridData labelProgressLData = new GridData();
-			labelProgressLData.horizontalAlignment = SWT.FILL;
-			labelProgressLData.heightHint = 13;
-			labelProgressLData.horizontalIndent = 5;
-			labelProgressLData.grabExcessHorizontalSpace = true;
-			labelProgress.setLayoutData(labelProgressLData);
-			labelProgress.setSize(new org.eclipse.swt.graphics.Point(42, 13));
-			Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
-			IoStatistics stats = synchronizer.getIoStatistics(taskTree);
-			labelProgress.setText("Totals: " + stats.getCountActions() + " tasks, " + stats.getBytesTransferred() + " bytes");
-		}
 
-		comboFilter.add(Messages.getString("TaskDecisionPage.Everything")); //$NON-NLS-1$
-		comboFilter.add(Messages.getString("TaskDecisionPage.ChangesOnly")); //$NON-NLS-1$
-		comboFilter.select(1);
+		// progress label
+		labelProgress = new Label(content, SWT.NONE);
+		GridData labelProgressLData = new GridData();
+		labelProgressLData.horizontalAlignment = SWT.FILL;
+		labelProgressLData.horizontalIndent = 5;
+		labelProgressLData.grabExcessHorizontalSpace = true;
+		labelProgress.setLayoutData(labelProgressLData);
+		Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
+		IoStatistics stats = synchronizer.getIoStatistics(taskTree);
+		labelProgress.setText("Totals: " + stats.getCountActions() + " tasks, " + stats.getBytesTransferred() + " bytes");
 
+		list = new TaskDecisionList(content, SWT.NULL);
+		list.setTaskTree(taskTree);
+		GridData listLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		listLayoutData.horizontalSpan = 2;
+		list.setLayoutData(listLayoutData);
+
+		list.setOnlyChanges(true);
+		if (taskTree != null) {
+			list.rebuildActionList();
+		}
 	}
 
 	@Override
@@ -197,16 +174,20 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean cancel() {
 		if (!processing) {
 			return true;
 		}
-		//FIXME: tell the user this can't be canceled currently, or implement that
+		MessageBox mb = new MessageBox(dialog.getShell(), SWT.ICON_ERROR | SWT.OK);
+		mb.setText(Messages.getString("TaskDecisionPage.Error")); //$NON-NLS-1$
+		mb.setMessage(Messages.getString("TaskDecisionPage.SyncWindowCantBeClosed")); //$NON-NLS-1$
+		mb.open();
+		//TODO: implement canceling a running profile
 		return false;
 	}
-	
+
 	void performActions() {
 		Thread worker = new Thread(new Runnable() {
 			@Override
@@ -239,12 +220,13 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 								@Override
 								public void run() {
 									tasksFinished++;
+									// TODO: move this into one translatable string with arguments
 									labelProgress
 											.setText(tasksFinished
 													+ " " + Messages.getString("TaskDecisionPage.of") + " " + tasksTotal + " " + Messages.getString("TaskDecisionPage.tasksFinished")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 									Task task = event.getTask();
 									TableItem item = list.getTableItemForTask(task);
-									// TODO This doesn't seams to work. Even if there is an exception in the sync of one item
+									// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item
 									// the item is colored with the "successful" color.
 									if (item != null) {
 										if (event.isSuccessful()) {
@@ -268,7 +250,6 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 							mb.setText(Messages.getString("TaskDecisionPage.Finished")); //$NON-NLS-1$
 							mb.setMessage(Messages.getString("TaskDecisionPage.ProfileFinished")); //$NON-NLS-1$
 							mb.open();
-							// dialog.getShell().dispose();
 						}
 					});
 				}
