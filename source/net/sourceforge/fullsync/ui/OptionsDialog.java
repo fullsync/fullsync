@@ -28,7 +28,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
@@ -36,22 +35,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-/**
- * This code was generated using CloudGarden's Jigloo
- * SWT/Swing GUI Builder, which is free for non-commercial
- * use. If Jigloo is being used commercially (ie, by a corporation,
- * company or business for any purpose whatever) then you
- * should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details.
- * Use of Jigloo implies acceptance of these licensing terms.
- * *************************************
- * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
- * for this machine, so Jigloo or this code cannot be used legally
- * for any corporate or commercial purpose.
- * *************************************
- */
 public class OptionsDialog extends Dialog implements SelectionListener {
-	private Composite compositeButtons;
 	private Label labelImage;
 	private Label labelMessage;
 	private Shell dialogShell;
@@ -64,10 +48,6 @@ public class OptionsDialog extends Dialog implements SelectionListener {
 		super(parent, style);
 	}
 
-	/**
-	 * Opens the Dialog Shell.
-	 * Auto-generated code - any changes you make will disappear.
-	 */
 	public String open() {
 		try {
 			result = null;
@@ -75,68 +55,31 @@ public class OptionsDialog extends Dialog implements SelectionListener {
 			Shell parent = getParent();
 			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 			dialogShell.setText(getText());
+
+			dialogShell.setSize(new Point(500, 200));
+
 			labelImage = new Label(dialogShell, SWT.NULL);
-			labelMessage = new Label(dialogShell, SWT.NULL);
-			compositeButtons = new Composite(dialogShell, SWT.NULL);
-
-			dialogShell.setSize(new Point(418, 139));
-
 			Image i = parent.getDisplay().getSystemImage(getStyle());
 			labelImage.setImage(i);
 
-			GridData labelMessageLData = new GridData();
-			labelMessageLData.verticalAlignment = GridData.CENTER;
-			labelMessageLData.horizontalAlignment = SWT.FILL;
-			labelMessageLData.widthHint = -1;
-			labelMessageLData.heightHint = -1;
-			labelMessageLData.horizontalIndent = 0;
-			labelMessageLData.horizontalSpan = 1;
-			labelMessageLData.verticalSpan = 1;
-			labelMessageLData.grabExcessHorizontalSpace = true;
-			labelMessageLData.grabExcessVerticalSpace = false;
-			labelMessage.setLayoutData(labelMessageLData);
+			labelMessage = new Label(dialogShell, SWT.NULL);
+			labelMessage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			labelMessage.setText(getMessage());
 
-			GridData compositeButtonsLData = new GridData();
-			compositeButtonsLData.verticalAlignment = GridData.CENTER;
-			compositeButtonsLData.horizontalAlignment = GridData.CENTER;
-			compositeButtonsLData.widthHint = -1;
-			compositeButtonsLData.heightHint = -1;
-			compositeButtonsLData.horizontalIndent = 0;
-			compositeButtonsLData.horizontalSpan = 2;
-			compositeButtonsLData.verticalSpan = 1;
-			compositeButtonsLData.grabExcessHorizontalSpace = true;
-			compositeButtonsLData.grabExcessVerticalSpace = false;
-			compositeButtons.setLayoutData(compositeButtonsLData);
-			RowLayout compositeButtonsLayout = new RowLayout(256);
+			Composite compositeButtons = new Composite(dialogShell, SWT.NULL);
+			GridData compositeButtonsData = new GridData(SWT.CENTER, SWT.CENTER, true, false);
+			compositeButtonsData.horizontalSpan = 2;
+			compositeButtons.setLayoutData(compositeButtonsData);
+			GridLayout compositeButtonsLayout = new GridLayout(options.length, true);
 			compositeButtons.setLayout(compositeButtonsLayout);
-			compositeButtonsLayout.type = SWT.HORIZONTAL;
-			compositeButtonsLayout.marginWidth = 0;
-			compositeButtonsLayout.marginHeight = 0;
-			compositeButtonsLayout.spacing = 3;
-			compositeButtonsLayout.wrap = true;
-			compositeButtonsLayout.pack = true;
-			compositeButtonsLayout.fill = false;
-			compositeButtonsLayout.justify = false;
-			compositeButtonsLayout.marginLeft = 3;
-			compositeButtonsLayout.marginTop = 3;
-			compositeButtonsLayout.marginRight = 3;
-			compositeButtonsLayout.marginBottom = 3;
 			for (String option : options) {
 				Button b = new Button(compositeButtons, SWT.PUSH);
 				b.setText(option);
 				b.addSelectionListener(this);
+				b.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			}
-			compositeButtons.layout();
-			GridLayout dialogShellLayout = new GridLayout(2, true);
-			dialogShell.setLayout(dialogShellLayout);
-			dialogShellLayout.marginWidth = 14;
-			dialogShellLayout.marginHeight = 14;
-			dialogShellLayout.numColumns = 2;
-			dialogShellLayout.makeColumnsEqualWidth = false;
-			dialogShellLayout.horizontalSpacing = 14;
-			dialogShellLayout.verticalSpacing = 14;
-			dialogShell.layout();
+
+			dialogShell.setLayout(new GridLayout(2, false));
 			dialogShell.pack();
 			dialogShell.open();
 			Display display = dialogShell.getDisplay();
@@ -176,8 +119,8 @@ public class OptionsDialog extends Dialog implements SelectionListener {
 	}
 
 	@Override
-	public void widgetSelected(SelectionEvent arg0) {
-		result = ((Button) arg0.widget).getText();
+	public void widgetSelected(SelectionEvent evt) {
+		result = ((Button) evt.widget).getText();
 		dialogShell.close();
 		dialogShell.dispose();
 	}
