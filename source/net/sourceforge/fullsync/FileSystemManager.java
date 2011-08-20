@@ -54,7 +54,7 @@ public class FileSystemManager {
 	public Site createConnection(ConnectionDescription desc) throws FileSystemException, IOException, URISyntaxException {
 		FileSystem fs = null;
 
-		URI url = new URI(desc.getUri());
+		URI url = desc.getUri();
 		String scheme = url.getScheme();
 
 		if (scheme != null) {
@@ -67,7 +67,7 @@ public class FileSystemManager {
 			if (f.exists()) {
 				fs = schemes.get("file");
 				url = f.toURI();
-				desc.setUri(url.toString());
+				desc.setUri(url);
 			}
 			else {
 				throw new URISyntaxException(url.toString(), "Not a valid uri or unknown scheme");
@@ -76,8 +76,10 @@ public class FileSystemManager {
 
 		Site s = fs.createConnection(desc);
 
-		if ((desc.getBufferStrategy() != null) && !desc.getBufferStrategy().equals("")) {
-			s = resolveBuffering(s, desc.getBufferStrategy());
+		String bufferStrategy = desc.getParameter("bufferStrategy");
+
+		if ((null != bufferStrategy) && !"".equals(bufferStrategy)) {
+			s = resolveBuffering(s, bufferStrategy);
 		}
 
 		return s;

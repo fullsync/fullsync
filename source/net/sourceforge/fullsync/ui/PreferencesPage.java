@@ -29,12 +29,10 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class PreferencesPage implements WizardPage {
-	private WizardDialog dialog;
 	private PreferencesComposite composite;
 	private Preferences preferences;
 
 	public PreferencesPage(WizardDialog dialog, Preferences preferences) {
-		this.dialog = dialog;
 		dialog.setPage(this);
 		this.preferences = preferences;
 	}

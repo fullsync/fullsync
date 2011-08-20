@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.zip.GZIPInputStream;
@@ -76,8 +77,8 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 			String name = attributes.getValue("Name");
 
-			if (qName.equals("Directory")) {
-				if (name.equals("/") || name.equals(".")) {
+			if ("Directory".equals(qName)) {
+				if ("/".equals(name) || ".".equals(name)) {
 					return;
 				}
 				// File n = current.getUnbuffered().getChild( name );
@@ -87,7 +88,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 				current.addChild(newDir);
 				current = newDir;
 			}
-			else if (qName.equals("File")) {
+			else if ("File".equals(qName)) {
 				// File n = current.getUnbuffered().getChild( name );
 				// if( n == null )
 				// n = current.getUnbuffered().createChild( name, false );
@@ -103,7 +104,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 
 		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
-			if (qName.equals("Directory")) {
+			if ("Directory".equals(qName)) {
 				/*
 				 * Source Buffer needs to load fs files after buffer info /
 				 * Collection fsChildren = current.getUnbuffered().getChildren();
@@ -322,8 +323,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			e.appendChild(serializeFile(root, doc));
 			doc.appendChild(e);
 
-			File f = node;
-			OutputStream out = new GZIPOutputStream(f.getOutputStream());
+			OutputStream out = new GZIPOutputStream(node.getOutputStream());
 
 			OutputFormat format = new OutputFormat(doc, "UTF-8", true);
 			XMLSerializer serializer = new XMLSerializer(out, format);
@@ -365,7 +365,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	}
 
 	@Override
-	public String getUri() {
+	public URI getUri() {
 		return fs.getUri();
 	}
 

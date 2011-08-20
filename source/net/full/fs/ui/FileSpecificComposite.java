@@ -24,6 +24,7 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ui.Messages;
 
 import org.eclipse.swt.SWT;
@@ -37,36 +38,34 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 public class FileSpecificComposite implements ProtocolSpecificComposite {
-	private Composite m_parent;
 	private Label labelPath = null;
 	private Text textPath = null;
 	private Button buttonBrowse = null;
 	private Button buttonBuffered = null;
 
-	public FileSpecificComposite(Composite parent) {
-		m_parent = parent;
+	public FileSpecificComposite(final Composite parent) {
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.verticalAlignment = SWT.CENTER;
-		labelPath = new Label(m_parent, SWT.NONE);
+		labelPath = new Label(parent, SWT.NONE);
 		labelPath.setText("Path:");
-		textPath = new Text(m_parent, SWT.BORDER);
+		textPath = new Text(parent, SWT.BORDER);
 		textPath.setLayoutData(gridData);
-		buttonBrowse = new Button(m_parent, SWT.NONE);
+		buttonBrowse = new Button(parent, SWT.NONE);
 		buttonBrowse.setText("...");
 		buttonBrowse.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				DirectoryDialog d = new DirectoryDialog(m_parent.getShell());
+				DirectoryDialog d = new DirectoryDialog(parent.getShell());
 				String dir = d.open();
 				if (dir != null) {
 					File f = new File(dir);
-					textPath.setText(f.toURI().toString());
+					textPath.setText(f.toURI().getPath());
 				}
 			}
 		});
-		buttonBuffered = new Button(m_parent, SWT.CHECK | SWT.LEFT);
+		buttonBuffered = new Button(parent, SWT.CHECK | SWT.LEFT);
 		GridData buttonDestinationBufferedData = new GridData();
 		buttonDestinationBufferedData.horizontalSpan = 3;
 		buttonBuffered.setLayoutData(buttonDestinationBufferedData);
@@ -74,13 +73,13 @@ public class FileSpecificComposite implements ProtocolSpecificComposite {
 	}
 
 	@Override
-	public LocationDescription getLocationDescription() throws URISyntaxException {
-		return new LocationDescription(new URI(textPath.getText()));
+	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
+		return new ConnectionDescription(new URI("file", null, textPath.getText(), null));
 	}
 
 	@Override
-	public void setLocationDescription(LocationDescription location) {
-		textPath.setText(location.getUri().toString());
+	public void setConnectionDescription(ConnectionDescription connection) {
+		textPath.setText(connection.getUri().getPath());
 	}
 
 	@Override

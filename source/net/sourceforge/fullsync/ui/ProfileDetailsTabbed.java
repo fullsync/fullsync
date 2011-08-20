@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import net.full.fs.ui.ConnectionConfiguration;
-import net.full.fs.ui.LocationDescription;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemManager;
@@ -378,7 +377,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		GridData labelFilterDescriptionData = new GridData();
 		labelFilterDescriptionData.horizontalSpan = 2;
 		labelFilterDescriptionData.horizontalAlignment = SWT.FILL;
-		labelFilterDescriptionData.heightHint = 48;
+		labelFilterDescriptionData.heightHint = 120;
 		labelFilterDescriptionData.grabExcessHorizontalSpace = true;
 		textFilterDescription.setLayoutData(labelFilterDescriptionData);
 		textFilterDescription.setText("");
@@ -549,25 +548,15 @@ public class ProfileDetailsTabbed implements DisposeListener {
 
 		textProfileName.setText(p.getName());
 		textProfileDescription.setText(p.getDescription());
-		try {
-			srcConnectionConfiguration.setLocationDescription(new LocationDescription(p.getSource()));
-		}
-		catch (URISyntaxException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+
+		srcConnectionConfiguration.setConnectionDescription(p.getSource());
 		if (null != srcConnectionConfiguration) {
-			srcConnectionConfiguration.setBuffered("syncfiles".equals(p.getSource().getBufferStrategy())); //$NON-NLS-1$
+			srcConnectionConfiguration.setBuffered("syncfiles".equals(p.getSource().getParameter("bufferStrategy"))); //$NON-NLS-1$
 		}
-		try {
-			dstConnectionConfiguration.setLocationDescription(new LocationDescription(p.getDestination()));
-		}
-		catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		dstConnectionConfiguration.setConnectionDescription(p.getDestination());
 		if (null != dstConnectionConfiguration) {
-			dstConnectionConfiguration.setBuffered("syncfiles".equals(p.getDestination().getBufferStrategy())); //$NON-NLS-1$
+			dstConnectionConfiguration.setBuffered("syncfiles".equals(p.getDestination().getParameter("bufferStrategy"))); //$NON-NLS-1$
 		}
 
 		if ((p.getSynchronizationType() != null) && (p.getSynchronizationType().length() > 0)) {
@@ -745,9 +734,9 @@ public class ProfileDetailsTabbed implements DisposeListener {
 	private ConnectionDescription getConnectionDescription(final ConnectionConfiguration cfg) {
 		ConnectionDescription dst = null;
 		try {
-			dst = cfg.getLocationDescription().toConnectionDescription();
+			dst = cfg.getConnectionDescription();
 			if (cfg.getBuffered()) {
-				dst.setBufferStrategy("syncfiles"); //$NON-NLS-1$
+				dst.setParameter("bufferStrategy", "syncfiles"); //$NON-NLS-1$
 			}
 		}
 		catch (URISyntaxException e) {
@@ -786,15 +775,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 
 	private void treeTabsWidgetSelected(SelectionEvent evt) {
 		if (evt.item == tabSubDirs) {
-			ConnectionDescription src = getConnectionDescription(srcConnectionConfiguration);
-			if (null != sourceSite) {
-				try {
-					sourceSite.close();
-				}
-				catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			final ConnectionDescription src = getConnectionDescription(srcConnectionConfiguration);
 			if ((sourceSite == null) || (src == null) || !src.getUri().toString().equals(lastSourceLoaded)) {
 				directoryTree.removeAll();
 				TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
@@ -805,9 +786,10 @@ public class ProfileDetailsTabbed implements DisposeListener {
 				display.asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						ConnectionDescription src = getConnectionDescription(srcConnectionConfiguration);
 						try {
 							if (null != src) {
+								closeSourceSite();
+								src.setParameter("bufferStrategy", ""); // the subdirs tab should bypass the buffer imo
 								sourceSite = fsm.createConnection(src);
 								drawDirectoryTree();
 								lastSourceLoaded = src.getUri().toString();

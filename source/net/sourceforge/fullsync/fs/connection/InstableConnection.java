@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.fs.connection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.fs.File;
@@ -132,7 +133,7 @@ public abstract class InstableConnection implements FileSystemConnection {
 	public abstract File getRoot();
 
 	@Override
-	public abstract String getUri();
+	public abstract URI getUri();
 
 	@Override
 	public abstract boolean isCaseSensitive();

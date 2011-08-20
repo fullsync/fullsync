@@ -54,8 +54,14 @@ public class PhaseOneTest extends TestCase {
 		processor = new TaskGeneratorImpl();
 		profile = new Profile();
 		profile.setName("TestProfile");
-		profile.setSource(new ConnectionDescription(testingSource.toURI().toString(), ""));
-		profile.setDestination(new ConnectionDescription(testingDestination.toURI().toString(), ""));
+		ConnectionDescription src = new ConnectionDescription(testingSource.toURI());
+		src.setParameter("bufferStrategy", "");
+		profile.setSource(src);
+
+		ConnectionDescription dst = new ConnectionDescription(testingDestination.toURI());
+		dst.setParameter("bufferStrategy", "");
+		profile.setDestination(dst);
+
 		profile.setRuleSet(new AdvancedRuleSetDescriptor("UPLOAD"));
 		profile.setSynchronizationType("Publish/Update");
 

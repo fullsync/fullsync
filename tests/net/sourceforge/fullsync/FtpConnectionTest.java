@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URI;
 import java.util.Date;
 import java.util.Hashtable;
 
@@ -59,10 +60,16 @@ public class FtpConnectionTest extends TestCase {
 		synchronizer = new Synchronizer();
 		profile = new Profile();
 		profile.setName("TestProfile");
-		profile.setSource(new ConnectionDescription(testingSource.toURI().toString(), ""));
-		profile.setDestination(new ConnectionDescription("ftp://127.0.0.1:" + TEST_FTP_PORT + "/", "syncfiles"));
-		profile.getDestination().setUsername("SampleUser");
-		profile.getDestination().setPassword("Sample");
+		ConnectionDescription src = new ConnectionDescription(testingSource.toURI());
+		src.setParameter("bufferStrategy", "");
+		profile.setSource(src);
+
+		ConnectionDescription dst = new ConnectionDescription(new URI("ftp://127.0.0.1:" + TEST_FTP_PORT + "/"));
+		dst.setParameter("bufferStrategy", "syncfiles");
+		dst.setParameter("username", "SampleUser");
+		dst.setSecretParameter("password", "Sample");
+		profile.setDestination(dst);
+
 		profile.setRuleSet(new AdvancedRuleSetDescriptor("UPLOAD"));
 		profile.setSynchronizationType("Publish/Update");
 

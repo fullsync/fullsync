@@ -22,6 +22,7 @@ package net.full.fs.ui;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.ui.Messages;
 
@@ -98,7 +99,8 @@ public class UserPasswordSpecificComposite implements ProtocolSpecificComposite 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				try {
-					LocationDescription desc = getLocationDescription();
+					ConnectionDescription desc = getConnectionDescription();
+					//FIXME: this should resolve exactly as the profile run will do, have a look at the SFTPSpecificComposite and do it the same way here!
 
 					FileObject base = resolveFile(desc);
 					FileObjectChooser foc = new FileObjectChooser(m_parent.getShell(), SWT.NULL);
@@ -123,21 +125,20 @@ public class UserPasswordSpecificComposite implements ProtocolSpecificComposite 
 	}
 
 	@Override
-	public LocationDescription getLocationDescription() throws URISyntaxException {
-		URI uri = new URI(m_scheme, textHost.getText(), textPath.getText(), null);
-		LocationDescription loc = new LocationDescription(uri);
-		loc.setProperty("username", textUsername.getText());
-		loc.setProperty("password", textPassword.getText());
-		return loc;
+	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
+		ConnectionDescription desc = new ConnectionDescription(new URI(m_scheme, textHost.getText(), textPath.getText(), null));
+		desc.setParameter("username", textUsername.getText());
+		desc.setSecretParameter("password", textPassword.getText());
+		return desc;
 	}
 
 	@Override
-	public void setLocationDescription(LocationDescription location) {
-		URI uri = location.getUri();
+	public void setConnectionDescription(ConnectionDescription connection) {
+		URI uri = connection.getUri();
 		textHost.setText(uri.getHost());
 		textPath.setText(uri.getPath());
-		textUsername.setText(location.getProperty("username"));
-		textPassword.setText(location.getProperty("password"));
+		textUsername.setText(connection.getParameter("username"));
+		textPassword.setText(connection.getSecretParameter("password"));
 	}
 
 	@Override
@@ -149,18 +150,16 @@ public class UserPasswordSpecificComposite implements ProtocolSpecificComposite 
 		textPassword.setText("");
 	}
 
-	public FileObject resolveFile(LocationDescription location) throws FileSystemException {
-		String uri = location.getUri().toString();
-
+	public FileObject resolveFile(ConnectionDescription connection) throws FileSystemException {
 		FileSystemOptions fileSystemOptions = new FileSystemOptions();
 
-		if (uri.startsWith("ftp") || uri.startsWith("sftp") || uri.startsWith("smb")) {
-			String username = location.getProperty("username");
-			String password = location.getProperty("password");
+		if ("ftp".equals(connection.getUri().getScheme()) || "smb".equals(connection.getUri().getScheme())) {
+			String username = connection.getParameter("username");
+			String password = connection.getSecretParameter("password");
 			UserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
 			DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(fileSystemOptions, auth);
 		}
-		return VFS.getManager().resolveFile(uri, fileSystemOptions);
+		return VFS.getManager().resolveFile(connection.getUri().toString(), fileSystemOptions);
 	}
 
 	@Override

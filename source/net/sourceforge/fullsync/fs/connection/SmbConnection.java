@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.Hashtable;
 
@@ -53,15 +54,15 @@ public class SmbConnection extends InstableConnection {
 	@Override
 	public void connect() throws IOException {
 		String domain = null, username, password;
-		String[] user = desc.getUsername().split("@");
+		String[] user = desc.getParameter("username").split("@");
 		username = user[0];
 		if (user.length > 1) {
 			domain = user[1];
 		}
-		password = desc.getPassword();
+		password = desc.getSecretParameter("password");
 
 		NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(domain, username, password);
-		base = new SmbFile(desc.getUri() + "/", auth);
+		base = new SmbFile(desc.getUri().toString() + "/", auth);
 	}
 
 	@Override
@@ -171,7 +172,7 @@ public class SmbConnection extends InstableConnection {
 	}
 
 	@Override
-	public String getUri() {
+	public URI getUri() {
 		return desc.getUri();
 	}
 

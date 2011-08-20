@@ -21,6 +21,7 @@ package net.sourceforge.fullsync.fs;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URI;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -38,7 +39,7 @@ public interface Site extends Serializable {
 
 	public void close() throws IOException;
 
-	public String getUri();
+	public URI getUri();
 
 	public boolean isCaseSensitive();
 

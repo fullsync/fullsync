@@ -31,11 +31,9 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class ConnectionPage implements WizardPage {
 
-	private WizardDialog dialog;
 	private ConnectionComposite composite;
 
 	public ConnectionPage(WizardDialog dialog) {
-		this.dialog = dialog;
 		dialog.setPage(this);
 	}
 

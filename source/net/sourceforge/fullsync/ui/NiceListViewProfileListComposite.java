@@ -272,16 +272,25 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 			setItemsMenu(null);
 			profileList.clear();
 			for (Profile p : getProfileManager().getProfiles()) {
-				NiceListViewItem item = new NiceListViewItem(profileList, SWT.NULL);
-				ContentComposite content = new ContentComposite(item, SWT.NULL);
-				content.setProfile(p);
-				item.setContent(content);
-				item.setMenu(getMenu());
-				item.setHandler(handler);
-				item.setProfile(p);
-				updateItem(item, p);
+				NiceListViewItem item = null;
+				try {
+					item = new NiceListViewItem(profileList, SWT.NULL);
+					ContentComposite content = new ContentComposite(item, SWT.NULL);
+					content.setProfile(p);
+					item.setContent(content);
+					item.setMenu(getMenu());
+					item.setHandler(handler);
+					item.setProfile(p);
+					updateItem(item, p);
 
-				profilesToItems.put(p, item);
+					profilesToItems.put(p, item);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+					if (item != null) {
+						item.dispose();
+					}
+				}
 			}
 			profileList.pack();
 		}

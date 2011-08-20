@@ -21,6 +21,8 @@ package net.full.fs.ui;
 
 import java.net.URISyntaxException;
 
+import net.sourceforge.fullsync.ConnectionDescription;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -91,13 +93,13 @@ public class ConnectionConfiguration implements ModifyListener {
 	}
 
 
-	public void setLocationDescription(LocationDescription location) {
+	public void setConnectionDescription(ConnectionDescription location) {
 		comboProtocol.setText(location.getUri().getScheme());
-		compositeSpecific.setLocationDescription(location);
+		compositeSpecific.setConnectionDescription(location);
 	}
 
-	public LocationDescription getLocationDescription() throws URISyntaxException {
-		return compositeSpecific.getLocationDescription();
+	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
+		return compositeSpecific.getConnectionDescription();
 	}
 
 	private ProtocolSpecificComposite createProtocolSpecificComposite() {
@@ -106,8 +108,11 @@ public class ConnectionConfiguration implements ModifyListener {
 		if ("file".equals(selectedScheme)) {
 			composite = new FileSpecificComposite(compositeProtocolSpecific);
 		}
-		else if ("ftp".equals(selectedScheme) || "sftp".equals(selectedScheme) || "smb".equals(selectedScheme)) {
+		else if ("ftp".equals(selectedScheme) || "smb".equals(selectedScheme)) {
 			composite = new UserPasswordSpecificComposite(compositeProtocolSpecific);
+		}
+		else if ("sftp".equals(selectedScheme)) {
+			composite = new SFTPSpecificComposite(compositeProtocolSpecific);
 		}
 
 		if (composite != null) {

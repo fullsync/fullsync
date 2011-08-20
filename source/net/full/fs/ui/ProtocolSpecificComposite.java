@@ -21,13 +21,15 @@ package net.full.fs.ui;
 
 import java.net.URISyntaxException;
 
+import net.sourceforge.fullsync.ConnectionDescription;
+
 public interface ProtocolSpecificComposite {
 
 	public void reset(String scheme);
 
-	public void setLocationDescription(LocationDescription location);
+	public void setConnectionDescription(ConnectionDescription connection);
 
-	public LocationDescription getLocationDescription() throws URISyntaxException;
+	public ConnectionDescription getConnectionDescription() throws URISyntaxException;
 
 	public void dispose();
 

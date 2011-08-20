@@ -40,6 +40,7 @@ public class PublishUpdateTest extends TestCase {
 	private Synchronizer synchronizer;
 	private Profile profile;
 
+	@Override
 	protected void setUp() throws Exception {
 		testingDir = new File("testing");
 		testingSource = new File(testingDir, "source");
@@ -52,8 +53,14 @@ public class PublishUpdateTest extends TestCase {
 		synchronizer = new Synchronizer();
 		profile = new Profile();
 		profile.setName("TestProfile");
-		profile.setSource(new ConnectionDescription(testingSource.toURI().toString(), ""));
-		profile.setDestination(new ConnectionDescription(testingDestination.toURI().toString(), "syncfiles"));
+		ConnectionDescription src = new ConnectionDescription(testingSource.toURI());
+		src.setParameter("bufferStrategy", "");
+		profile.setSource(src);
+
+		ConnectionDescription dst = new ConnectionDescription(testingDestination.toURI());
+		dst.setParameter("bufferStrategy", "syncfiles");
+		profile.setDestination(dst);
+
 		profile.setRuleSet(new AdvancedRuleSetDescriptor("UPLOAD"));
 		profile.setSynchronizationType("Publish/Update");
 
@@ -62,6 +69,7 @@ public class PublishUpdateTest extends TestCase {
 		super.setUp();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		clearUp();
 		testingSource.delete();
@@ -117,6 +125,7 @@ public class PublishUpdateTest extends TestCase {
 
 	protected TaskTree assertPhaseOneActions(final Hashtable<String, Action> expectation) throws Exception {
 		TaskGenerationListener list = new TaskGenerationListener() {
+			@Override
 			public void taskGenerationFinished(Task task) {
 				Object ex = expectation.get(task.getSource().getName());
 				assertNotNull("Unexpected generated Task for file: " + task.getSource().getName(), ex);
@@ -124,12 +133,15 @@ public class PublishUpdateTest extends TestCase {
 						.getCurrentAction().equalsExceptExplanation((Action) ex));
 			}
 
+			@Override
 			public void taskGenerationStarted(net.sourceforge.fullsync.fs.File source, net.sourceforge.fullsync.fs.File destination) {
 			}
 
+			@Override
 			public void taskTreeFinished(TaskTree tree) {
 			}
 
+			@Override
 			public void taskTreeStarted(TaskTree tree) {
 			}
 		};

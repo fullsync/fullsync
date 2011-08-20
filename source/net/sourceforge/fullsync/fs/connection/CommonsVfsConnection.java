@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.ConnectionDescription;
@@ -32,7 +31,6 @@ import net.sourceforge.fullsync.fs.FileAttributes;
 
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystem;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.FileType;
@@ -40,32 +38,47 @@ import org.apache.commons.vfs2.UserAuthenticator;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
+import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
+
+import com.jcraft.jsch.UserInfo;
 
 public class CommonsVfsConnection implements FileSystemConnection {
 	private static final long serialVersionUID = 2L;
 	private ConnectionDescription desc;
 	private FileObject base;
-	private FileSystem fileSystem;
 	private File root;
 
-	public CommonsVfsConnection(ConnectionDescription desc) throws net.sourceforge.fullsync.FileSystemException {
+	public CommonsVfsConnection(final ConnectionDescription desc) throws net.sourceforge.fullsync.FileSystemException {
+		this(desc, null);
+	}
+
+	public CommonsVfsConnection(final ConnectionDescription desc, UserInfo info) throws net.sourceforge.fullsync.FileSystemException {
 		try {
 			this.desc = desc;
 			FileSystemOptions options = new FileSystemOptions();
-			String uriString = desc.getUri();
-			URI uri = new URI(uriString);
+			URI uri = desc.getUri();
+			String uriString = uri.toString();
 			String baseUri = uriString.substring(0, uriString.length() - (uri.getPath().length()));
-			UserAuthenticator auth = new StaticUserAuthenticator(null, desc.getUsername(), desc.getPassword());
+			UserAuthenticator auth = new StaticUserAuthenticator(null, desc.getParameter("username"), desc.getSecretParameter("password"));
+
+			if ("sftp".equals(uri.getScheme())) {
+				SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
+				cfg.setUserInfo(options, info);
+				cfg.setStrictHostKeyChecking(options, "ask");
+				if ("enabled".equals(desc.getParameter("publicKeyAuth"))) {
+					cfg.setPreferredAuthentications(options, "publickey,password,keyboard-interactive");
+				}
+				else {
+					cfg.setPreferredAuthentications(options, "password,keyboard-interactive");
+				}
+			}
+
 			DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 			base = VFS.getManager().resolveFile(baseUri, options);
 			base = base.resolveFile(uri.getPath());
-			fileSystem = base.getFileSystem();
 			root = new AbstractFile(this, ".", ".", null, true, base.exists());
 		}
 		catch (FileSystemException e) {
-			throw new net.sourceforge.fullsync.FileSystemException(e);
-		}
-		catch (URISyntaxException e) {
 			throw new net.sourceforge.fullsync.FileSystemException(e);
 		}
 	}
@@ -145,6 +158,10 @@ public class CommonsVfsConnection implements FileSystemConnection {
 		return root;
 	}
 
+	public FileObject getBase() {
+		return base;
+	}
+
 	@Override
 	public void flush() throws IOException {
 		//FIXME: implement?
@@ -152,11 +169,11 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	@Override
 	public void close() throws IOException {
-		//FIXME: implement
+		VFS.getManager().closeFileSystem(base.getFileSystem());
 	}
 
 	@Override
-	public String getUri() {
+	public URI getUri() {
 		return desc.getUri();
 	}
 

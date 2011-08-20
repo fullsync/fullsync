@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -150,8 +151,8 @@ public class LocalConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public String getUri() {
-		return base.toURI().toString();
+	public URI getUri() {
+		return base.toURI();
 	}
 
 	@Override

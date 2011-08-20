@@ -32,7 +32,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -418,35 +417,6 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		}
 	}
 
-	protected ConnectionDescription unserializeConnectionDescription(Element element) {
-		ConnectionDescription desc = new ConnectionDescription();
-		desc.setUri(element.getAttribute("uri"));
-		String value;
-		value = element.getAttribute("buffer");
-		if (value.length() > 0) {
-			desc.setBufferStrategy(value);
-		}
-		value = element.getAttribute("username");
-		if (value.length() > 0) {
-			desc.setUsername(value);
-		}
-		value = element.getAttribute("password");
-		if (value.length() > 0) {
-			desc.setCryptedPassword(value);
-		}
-
-		NodeList list = element.getChildNodes();
-		for (int i = 0; i < list.getLength(); i++) {
-			Node n = list.item(i);
-			if ((n.getNodeType() == Node.ELEMENT_NODE) && n.getNodeName().equals("Param")) {
-				Element e = (Element) n;
-				desc.setParameter(e.getAttribute("name"), e.getAttribute("value"));
-			}
-		}
-
-		return desc;
-	}
-
 	protected Schedule unserializeSchedule(Element element) {
 		if (element == null) {
 			return null;
@@ -493,33 +463,9 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 
 		p.setRuleSet(unserializeRuleSetDescriptor((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)));
 		p.setSchedule(unserializeSchedule((Element) element.getElementsByTagName("Schedule").item(0)));
-		p.setSource(unserializeConnectionDescription((Element) element.getElementsByTagName("Source").item(0)));
-		p.setDestination(unserializeConnectionDescription((Element) element.getElementsByTagName("Destination").item(0)));
+		p.setSource(ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)));
+		p.setDestination(ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)));
 		return p;
-	}
-
-	protected Element serialize(ConnectionDescription desc, String name, Document doc) {
-		Element elem = doc.createElement(name);
-		elem.setAttribute("uri", desc.getUri().toString());
-		if (desc.getBufferStrategy() != null) {
-			elem.setAttribute("buffer", desc.getBufferStrategy());
-		}
-		if (desc.getUsername() != null) {
-			elem.setAttribute("username", desc.getUsername());
-		}
-		if (desc.getPassword() != null) {
-			elem.setAttribute("password", desc.getCryptedPassword());
-		}
-
-		Hashtable<String, String> params = desc.getParameters();
-		for (String key : params.keySet()) {
-			Element p = doc.createElement("Param");
-			p.setAttribute("name", key);
-			p.setAttribute("value", params.get(key));
-			elem.appendChild(p);
-		}
-
-		return elem;
 	}
 
 	protected Element serialize(Schedule schedule, String name, Document doc) {
@@ -564,8 +510,8 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		if (null != s) {
 			elem.appendChild(s.serialize(doc));
 		}
-		elem.appendChild(serialize(p.getSource(), "Source", doc));
-		elem.appendChild(serialize(p.getDestination(), "Destination", doc));
+		elem.appendChild(p.getSource().serialize("Source", doc));
+		elem.appendChild(p.getDestination().serialize("Destination", doc));
 
 		return elem;
 	}

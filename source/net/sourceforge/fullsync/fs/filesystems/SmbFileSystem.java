@@ -34,17 +34,16 @@ public class SmbFileSystem implements FileSystem {
 
 	@Override
 	public Site createConnection(ConnectionDescription desc) throws FileSystemException {
-		if (!desc.getUri().startsWith("smb:")) {
-			return null;
+		Site s = null;
+		if ("smb".equals(desc.getUri().getScheme())) {
+			try {
+				s = new SmbConnection(desc);
+			}
+			catch (IOException e) {
+				throw new FileSystemException(e);
+			}
 		}
-
-		try {
-			return new SmbConnection(desc);
-		}
-		catch (IOException e) {
-			throw new FileSystemException(e);
-		}
-
+		return s;
 	}
 
 }

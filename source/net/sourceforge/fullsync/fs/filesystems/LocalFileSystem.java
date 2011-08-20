@@ -24,7 +24,6 @@ package net.sourceforge.fullsync.fs.filesystems;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
@@ -42,21 +41,11 @@ public class LocalFileSystem implements FileSystem {
 
 	@Override
 	public Site createConnection(ConnectionDescription desc) throws FileSystemException, IOException {
-		if (!desc.getUri().startsWith("file"))
-		 {
-			return null;// TODO throw exception here !
+		URI uri = desc.getUri();
+		if ((null != uri) && "file".equals(uri.getScheme())) {
+			return new LocalConnection(new java.io.File(uri.getPath()));
 		}
-
-		// return new LocalDirectory( new java.io.File( uri ) );
-		LocalConnection conn;
-		try {
-			conn = new LocalConnection(new java.io.File(new URI(desc.getUri()).getPath()));
-			return conn;
-		}
-		catch (URISyntaxException e) {
-			throw new FileSystemException(e);
-		}
-
+		return null;// TODO throw exception here !
 	}
 
 }

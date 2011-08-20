@@ -26,9 +26,6 @@ import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
 public class CommonsVfsFileSystem implements FileSystem {
-	public CommonsVfsFileSystem() {
-	}
-
 	@Override
 	public Site createConnection(ConnectionDescription desc) throws FileSystemException {
 		return new CommonsVfsConnection(desc);
