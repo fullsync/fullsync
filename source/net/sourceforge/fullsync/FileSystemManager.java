@@ -31,6 +31,7 @@ import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
 import net.sourceforge.fullsync.fs.buffering.syncfiles.SyncFilesBufferingProvider;
 import net.sourceforge.fullsync.fs.filesystems.CommonsVfsFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 
 /**
@@ -44,7 +45,7 @@ public class FileSystemManager {
 		schemes = new Hashtable<String, FileSystem>();
 		schemes.put("file", new LocalFileSystem());
 		schemes.put("ftp", new CommonsVfsFileSystem());
-		schemes.put("sftp", new CommonsVfsFileSystem());
+		schemes.put("sftp", new SFTPFileSystem());
 		schemes.put("smb", new SmbFileSystem());
 
 		buffering = new Hashtable<String, SyncFilesBufferingProvider>();
