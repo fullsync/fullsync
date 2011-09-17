@@ -31,6 +31,7 @@ Roadmap:
 	[ ] move all images, xml's, config files into the fullsync jar, into some resource package to make loading them easier
 	[ ] exception handling: look up ways to minimize exception handling code, should also allow to specify that we don't want to handle them and just rethrow them (debugging)
 	[ ] review & improve documentation of the commandline arguments
+	[ ] increase maximum allowed RAM for FullSync, 1G?
 
 Bugs:
 	[ ] Exception if starting sync on a readonly FS
@@ -48,6 +49,7 @@ Bugs:
 		there are some dialogs that rely on change events of other controls to fully initialize,
 		the profile dialog however has proven that SWT does not behave identical on eg windows and linux,
 		thus any such dialog might fail on either platform
+	[ ] FulllSync launchers need to be able to accept arbitrary JVM arguments (debugging, RAM, ...)
 
 Features:
 	[ ] TaskDecisionDialog:
