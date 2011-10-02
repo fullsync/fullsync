@@ -38,9 +38,7 @@ import org.junit.rules.TemporaryFolder;
 
 public class BaseConnectionTest {
 	@Rule
-	public TemporaryFolder testingTmpSourceFolder = new TemporaryFolder();
-	@Rule
-	public TemporaryFolder testingTmpDestinationFolder = new TemporaryFolder();
+	public TemporaryFolder tmpFolder = new TemporaryFolder();
 
 	protected File testingDst;
 	protected File testingSrc;
@@ -49,9 +47,9 @@ public class BaseConnectionTest {
 
 	@Before
 	public void setUp() throws Exception {
-		testingDst = testingTmpDestinationFolder.getRoot();
+		testingDst = tmpFolder.newFolder("destination");
 		testingDst.mkdirs();
-		testingSrc = testingTmpSourceFolder.getRoot();
+		testingSrc = tmpFolder.newFolder("source");
 		testingSrc.mkdirs();
 
 		synchronizer = new Synchronizer();
@@ -67,8 +65,7 @@ public class BaseConnectionTest {
 
 	@After
 	public void tearDown() throws Exception {
-		testingTmpDestinationFolder.delete();
-		testingTmpSourceFolder.delete();
+		tmpFolder.delete();
 	}
 
 	protected void createRuleFile() throws IOException {
@@ -81,6 +78,7 @@ public class BaseConnectionTest {
 
 	protected PrintStream createNewFile(File dir, String filename) throws IOException {
 		File file = new File(dir, filename);
+		file.getParentFile().mkdirs();
 		file.createNewFile();
 		PrintStream out = new PrintStream(new FileOutputStream(file));
 		return out;

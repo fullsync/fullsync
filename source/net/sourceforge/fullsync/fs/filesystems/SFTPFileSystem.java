@@ -32,6 +32,7 @@ import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 import org.apache.log4j.Logger;
 
+import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UIKeyboardInteractive;
 import com.jcraft.jsch.UserInfo;
 
@@ -43,7 +44,7 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 
 	public SFTPFileSystem() {
 		if (!loggerSetupCompleted) {
-			com.jcraft.jsch.JSch.setLogger(new SFTPLogger());
+			JSch.setLogger(new SFTPLogger());
 		}
 	}
 

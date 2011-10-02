@@ -1,7 +1,6 @@
 package net.sourceforge.fullsync;
 
 import java.io.File;
-import java.io.PrintStream;
 import java.net.URI;
 import java.util.Date;
 import java.util.Hashtable;
@@ -25,6 +24,10 @@ public class SFTPConnectionTest extends BaseConnectionTest {
 		dst.setParameter("username", "SampleUser");
 		dst.setSecretParameter("password", "SampleUser");
 		profile.setDestination(dst);
+
+		testingDst.delete();
+		testingDst = sshServer.getUserHome();
+		System.setProperty("vfs.sftp.sshdir", new File("./sshd-config/").getAbsolutePath());
 	}
 
 	@Test
@@ -35,16 +38,7 @@ public class SFTPConnectionTest extends BaseConnectionTest {
 
 		createNewFileWithContents(testingSrc, "sourceFile1.txt", lm, "this is a test\ncontent1");
 		createNewFileWithContents(testingSrc, "sourceFile2.txt", lm, "this is a test\ncontent2");
-		File home = sshServer.getRootDirectory().newFolder("home");
-		File homeDir = new File(home, "SampleUser");
-		File file1 = new File(homeDir, "sourceFile1.txt");
-		homeDir.mkdirs();
-		file1.createNewFile();
-		file1.setLastModified(lm);
-		PrintStream ps = new PrintStream(file1);
-		ps.print("this is a test\ncontent1");
-		ps.flush();
-		ps.close();
+		createNewFileWithContents(testingDst, "sourceFile1.txt", lm, "this is a test\ncontent1");
 
 		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
 		expectation.put("sourceFile1.txt", new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, ""));
