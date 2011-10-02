@@ -393,8 +393,8 @@ Distro:
    	[ ]	put logging.xml into jar as well
    	
 Gui:
-	[ ] split profile details into multiple panels activated by treeview
-	[ ]	fields for connections should depend on the chosen connection type
+	[X] split profile details into multiple panels activated by treeview
+	[X]	fields for connections should depend on the chosen connection type
 		so we don't need user/pw for local and could provide fields for
 		host, port, path and so on for ftp
 

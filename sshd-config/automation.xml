@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SSHTools automation file, defines mappings for automated configuration -->
+<Automation>
+    <RemoteIdentification defaultName="OpenSSH">
+       <Rule startsWith="OpenSSH"/>
+       <Rule startsWith="OpenSSH" contains="3.4" name="OpenSSH 3.4" priority="1"/>
+       <AuthorizedKeysFormat implementationClass="com.sshtools.common.automate.OpenSSHAuthorizedKeysFormat"
+                             defaultPath=".ssh/authorized_keys"/>
+    </RemoteIdentification>
+    <RemoteIdentification defaultName="SSHTools">
+       <Rule startsWith="http://www.sshtools.com"/>
+       <AuthorizedKeysFormat implementationClass="com.sshtools.common.automate.SshtoolsAuthorizedKeysFormat"
+                             defaultPath=".ssh2/authorization.xml"/>
+    </RemoteIdentification>
+    <RemoteIdentification defaultName="SSH2">
+       <Rule contains="SSH Secure Shell"/>
+       <AuthorizedKeysFormat implementationClass="com.sshtools.common.automate.SSH2AuthorizedKeysFormat"
+                             defaultPath=".ssh2/authorization"/>
+    </RemoteIdentification>
+
+</Automation>

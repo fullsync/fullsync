@@ -13,7 +13,7 @@ Roadmap:
 	[ ] add embedded servers for:
 		[ ] SMB
 		[X] FTP
-		[ ] SFTP
+		[X] SFTP
 	[ ] find SWT GUI test framework
 	[ ] get code coverage > 70% -> Alpha release
 	[ ] get code coverage > 80% -> Beta Release
