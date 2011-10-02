@@ -79,7 +79,7 @@ public class CrontabPart implements Serializable {
 
 		private void setIntArray(int[] intArray, int intOffset) {
 			for (int i = 0; i < intArray.length; i++) {
-				bArray[intArray[i] - intOffset + offset] = true;
+				bArray[(intArray[i] - intOffset) + offset] = true;
 			}
 		}
 
@@ -92,7 +92,7 @@ public class CrontabPart implements Serializable {
 				}
 			}
 			int[] res;
-			if (aPos == high + 1) {
+			if (aPos == (high + 1)) {
 				res = a;
 			}
 			else {
@@ -130,8 +130,7 @@ public class CrontabPart implements Serializable {
 
 				if (index > 0) {
 					each = Integer.parseInt(token.substring(index + 1));
-					if (each == 0)
-					 {
+					if (each == 0) {
 						throw new DataParseException(Messages.getString("CrontabPart.NeverUseExpressions")); //$NON-NLS-1$
 					}
 
@@ -139,7 +138,7 @@ public class CrontabPart implements Serializable {
 				}
 
 				if (token.equals("*")) {
-					for (i = low; i < bArray.length - offset; i += each) {
+					for (i = low; i < (bArray.length - offset); i += each) {
 						bArray[i + offset] = true;
 					}
 					return each == 1;

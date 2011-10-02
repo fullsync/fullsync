@@ -44,12 +44,7 @@ class FileFilterTreeItem implements Serializable {
 		this.childrenMap = new HashMap<String, FileFilterTreeItem>();
 	}
 
-	public FileFilterTreeItem(FileFilter filter) {
-		this.filter = filter;
-		this.childrenMap = new HashMap<String, FileFilterTreeItem>();
-	}
-
-	public void setFilter(FileFilter filter) {
+	public void setFilter(final FileFilter filter) {
 		this.filter = filter;
 	}
 
@@ -57,15 +52,15 @@ class FileFilterTreeItem implements Serializable {
 		return this.filter;
 	}
 
-	public void addChildren(String key, FileFilterTreeItem item) {
+	public void addChildren(final String key, final FileFilterTreeItem item) {
 		childrenMap.put(key, item);
 	}
 
-	public FileFilterTreeItem getChildren(String key) {
+	public FileFilterTreeItem getChildren(final String key) {
 		return childrenMap.get(key);
 	}
 
-	public void removeChildren(String key) {
+	public void removeChildren(final String key) {
 		childrenMap.remove(key);
 	}
 

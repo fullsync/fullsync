@@ -35,7 +35,7 @@ public class Messages {
 	private static final String BUNDLE_NAME = "net.sourceforge.fullsync.ui.messages";//$NON-NLS-1$
 	private ResourceBundle RESOURCE_BUNDLE;
 
-	private static Messages _instance;
+	private static Messages instance;
 
 	private Messages() {
 		String code = GuiController.getInstance().getPreferences().getLanguageCode();
@@ -50,14 +50,14 @@ public class Messages {
 		}
 	}
 
-	public static String getString(String key) {
+	public static String getString(final String key) {
 		String value = '!' + key + '!';
-		if (_instance == null) {
-			_instance = new Messages();
+		if (instance == null) {
+			instance = new Messages();
 		}
 
 		try {
-			value = _instance.RESOURCE_BUNDLE.getString(key);
+			value = instance.RESOURCE_BUNDLE.getString(key);
 			if ((null != value) && (value.length() > 0)) {
 				return value;
 			}
@@ -72,7 +72,7 @@ public class Messages {
 		return value;
 	}
 
-	public static String getString(String key, String value) {
+	public static String getString(final String key, final String value) {
 		String msg = getString(key);
 		return MessageFormat.format(msg, new Object[] { value });
 	}

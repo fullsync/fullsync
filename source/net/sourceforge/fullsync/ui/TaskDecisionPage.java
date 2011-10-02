@@ -24,7 +24,6 @@ import java.io.Serializable;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
-import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskFinishedEvent;
@@ -34,8 +33,6 @@ import net.sourceforge.fullsync.TaskTree;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -50,11 +47,10 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class TaskDecisionPage extends ShellAdapter implements WizardPage, Serializable {
+public class TaskDecisionPage implements WizardPage, Serializable {
 	private static final long serialVersionUID = 2L;
 	private transient WizardDialog dialog;
 	private transient GuiController guiController;
-	private transient Profile profile;
 	private transient TaskTree taskTree;
 	private transient boolean processing;
 	private transient int tasksFinished;
@@ -64,10 +60,9 @@ public class TaskDecisionPage extends ShellAdapter implements WizardPage, Serial
 	private transient Combo comboFilter;
 	private transient Label labelProgress;
 
-	public TaskDecisionPage(WizardDialog dialog, GuiController guiController, Profile profile, TaskTree taskTree) {
+	public TaskDecisionPage(WizardDialog dialog, GuiController guiController, TaskTree taskTree) {
 		this.dialog = dialog;
 		this.guiController = guiController;
-		this.profile = profile;
 		this.taskTree = taskTree;
 
 		dialog.setPage(this);
@@ -100,30 +95,7 @@ public class TaskDecisionPage extends ShellAdapter implements WizardPage, Serial
 	}
 
 	@Override
-	public void shellClosed(final ShellEvent event) {
-		if (processing) {
-			MessageBox mb = new MessageBox(dialog.getShell(), SWT.ICON_ERROR | SWT.OK);
-			mb.setText(Messages.getString("TaskDecisionPage.Error")); //$NON-NLS-1$
-			mb.setMessage(Messages.getString("TaskDecisionPage.SyncWindowCantBeClosed")); //$NON-NLS-1$
-			mb.open();
-
-			event.doit = false;
-		}
-		else {
-			try {
-				taskTree.getSource().close();
-				taskTree.getDestination().close();
-			}
-			catch (IOException ioe) {
-				ExceptionHandler.reportException(ioe);
-			}
-		}
-	}
-
-
-	@Override
 	public void createContent(final Composite content) {
-		dialog.getShell().addShellListener(this);
 		content.setLayout(new GridLayout(2, false));
 
 		// filter combo
@@ -178,6 +150,13 @@ public class TaskDecisionPage extends ShellAdapter implements WizardPage, Serial
 	@Override
 	public boolean cancel() {
 		if (!processing) {
+			try {
+				taskTree.getSource().close();
+				taskTree.getDestination().close();
+			}
+			catch (IOException ioe) {
+				ExceptionHandler.reportException(ioe);
+			}
 			return true;
 		}
 		MessageBox mb = new MessageBox(dialog.getShell(), SWT.ICON_ERROR | SWT.OK);

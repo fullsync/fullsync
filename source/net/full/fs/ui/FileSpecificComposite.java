@@ -27,7 +27,7 @@ import net.sourceforge.fullsync.ConnectionDescription;
 
 import org.eclipse.swt.widgets.DirectoryDialog;
 
-public class FileSpecificComposite extends ProtocolSpecificComposite {
+class FileSpecificComposite extends ProtocolSpecificComposite {
 	@Override
 	public void onBrowse() {
 		ConnectionDescription desc = null;

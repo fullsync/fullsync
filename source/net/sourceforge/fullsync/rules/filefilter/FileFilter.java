@@ -84,18 +84,18 @@ public class FileFilter implements Serializable {
 		return this.rules;
 	}
 
-	public boolean match(File file) {
-		boolean result = _match(file);
+	public boolean match(final File file) {
+		boolean result = doMmatch(file);
 		return (filter_type == INCLUDE) ? result : !result;
 	}
 
-	private boolean _match(File file) {
+	private boolean doMmatch(final File file) {
 		if (rules.length == 0) {
 			return true;
 		}
 
 		switch (match_type) {
-			case MATCH_ALL: {
+			case MATCH_ALL:
 				for (FileFilterRule rule : rules) {
 					if ((!appliesToDir) && (file.isDirectory())) {
 						continue;
@@ -110,8 +110,6 @@ public class FileFilter implements Serializable {
 					}
 				}
 				return true;
-			}
-
 			case MATCH_ANY: {
 				int applyedRules = 0;
 
@@ -141,7 +139,7 @@ public class FileFilter implements Serializable {
 		if (rules.length == 0) {
 			return "Empty filter";
 		}
-		StringBuffer buff = new StringBuffer(25 + 30 * rules.length);
+		StringBuffer buff = new StringBuffer(25 + (30 * rules.length));
 
 		switch (filter_type) {
 			case INCLUDE:
@@ -154,7 +152,7 @@ public class FileFilter implements Serializable {
 
 		buff.append(" any file where ");
 
-		for (int i = 0; i < rules.length - 1; i++) {
+		for (int i = 0; i < (rules.length - 1); i++) {
 			buff.append(rules[i].toString());
 			switch (match_type) {
 				case MATCH_ALL:

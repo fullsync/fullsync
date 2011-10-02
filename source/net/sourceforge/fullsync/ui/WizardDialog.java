@@ -26,6 +26,8 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
@@ -38,7 +40,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public class WizardDialog extends SelectionAdapter {
+public class WizardDialog extends SelectionAdapter implements ShellListener {
 
 	private Shell dialogShell;
 	private Composite compositeTop;
@@ -70,6 +72,7 @@ public class WizardDialog extends SelectionAdapter {
 	public void show() {
 		try {
 			dialogShell = new Shell(parent, style);
+			dialogShell.addShellListener(this);
 			Display display = dialogShell.getDisplay();
 
 			Color white = display.getSystemColor(SWT.COLOR_WHITE);
@@ -197,10 +200,10 @@ public class WizardDialog extends SelectionAdapter {
 			size.x = Math.max(size.x, 500);
 			size.y = Math.max(size.y, 400);
 
-			if (size.x > display.getBounds().width - dialogShell.getBounds().x) {
+			if (size.x > (display.getBounds().width - dialogShell.getBounds().x)) {
 				size.x = display.getBounds().width - dialogShell.getBounds().x - 50;
 			}
-			if (size.y > display.getBounds().height - dialogShell.getBounds().y) {
+			if (size.y > (display.getBounds().height - dialogShell.getBounds().y)) {
 				size.y = display.getBounds().height - dialogShell.getBounds().y - 50;
 			}
 
@@ -288,5 +291,31 @@ public class WizardDialog extends SelectionAdapter {
 	 */
 	public final void setCancelButtonEnabled(final boolean enabled) {
 		cancelButton.setEnabled(enabled);
+	}
+
+	@Override
+	public void shellActivated(ShellEvent e) {
+	}
+
+	@Override
+	public void shellClosed(ShellEvent e) {
+		if (wizardPage.cancel()) {
+			dialogShell.dispose();
+		}
+		else {
+			e.doit = false;
+		}
+	}
+
+	@Override
+	public void shellDeactivated(ShellEvent e) {
+	}
+
+	@Override
+	public void shellDeiconified(ShellEvent e) {
+	}
+
+	@Override
+	public void shellIconified(ShellEvent e) {
 	}
 }

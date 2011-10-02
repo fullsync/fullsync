@@ -33,16 +33,16 @@ public class WildcardRule implements Rule {
 
 	private Pattern pattern;
 
-	public WildcardRule(String pattern) {
+	public WildcardRule(final String pattern) {
 		this.pattern = Pattern.compile(toRegExp(pattern));
 	}
 
 	@Override
-	public boolean accepts(File node) {
+	public boolean accepts(final File node) {
 		return pattern.matcher(node.getName()).matches();
 	}
 
-	private String toRegExp(String pattern) {
+	private String toRegExp(final String pattern) {
 		StringBuffer buff = new StringBuffer(pattern.length() * 2);
 
 		for (int i = 0; i < pattern.length(); i++) {

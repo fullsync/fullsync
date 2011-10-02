@@ -27,7 +27,7 @@ package net.sourceforge.fullsync;
  */
 public class SystemDate {
 
-	private static SystemDate _instance;
+	private static SystemDate instance;
 
 	private long baseTime = -1;
 	private long timeOfBaseTime = -1;
@@ -37,10 +37,10 @@ public class SystemDate {
 	}
 
 	public static SystemDate getInstance() {
-		if (_instance == null) {
-			_instance = new SystemDate();
+		if (instance == null) {
+			instance = new SystemDate();
 		}
-		return _instance;
+		return instance;
 	}
 
 	public void setCurrent(long millis) {

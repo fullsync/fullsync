@@ -31,7 +31,7 @@ import net.sourceforge.fullsync.fs.FileAttributes;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class AbstractFile implements File {
+class AbstractFile implements File {
 	private static final long serialVersionUID = 2L;
 
 	protected FileSystemConnection fs;
@@ -44,7 +44,7 @@ public class AbstractFile implements File {
 	protected FileAttributes attributes;
 	protected Hashtable<String, File> children;
 
-	public AbstractFile(FileSystemConnection fs, String name, String path, File parent, boolean directory, boolean exists) {
+	AbstractFile(FileSystemConnection fs, String name, String path, File parent, boolean directory, boolean exists) {
 		this.fs = fs;
 		this.name = name;
 		this.path = path;
@@ -90,7 +90,7 @@ public class AbstractFile implements File {
 	}
 
 	@Override
-	public void setFiltered(boolean filtered) {
+	public void setFiltered(final boolean filtered) {
 		this.filtered = filtered;
 	}
 
@@ -115,7 +115,7 @@ public class AbstractFile implements File {
 	}
 
 	@Override
-	public void setFileAttributes(FileAttributes att) {
+	public void setFileAttributes(final FileAttributes att) {
 		this.attributes = att;
 	}
 
@@ -130,14 +130,14 @@ public class AbstractFile implements File {
 	}
 
 	@Override
-	public File createChild(String name, boolean directory) throws IOException {
+	public File createChild(final String name, final boolean directory) throws IOException {
 		File f = getConnection().createChild(this, name, directory);
 		children.put(name, f);
 		return f;
 	}
 
 	@Override
-	public File getChild(String name) throws IOException {
+	public File getChild(final String name) throws IOException {
 		if (children == null) {
 			refresh();
 		}

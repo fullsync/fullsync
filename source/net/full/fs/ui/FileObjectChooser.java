@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-public class FileObjectChooser extends Dialog {
+class FileObjectChooser extends Dialog {
 
 	private Shell dialogShell;
 	private Text textUrlExtension;

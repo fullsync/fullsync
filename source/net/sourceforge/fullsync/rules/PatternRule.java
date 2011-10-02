@@ -29,12 +29,12 @@ import net.sourceforge.fullsync.fs.File;
 public class PatternRule implements Rule {
 	private Pattern pattern;
 
-	public PatternRule(String pattern) {
+	public PatternRule(final String pattern) {
 		this.pattern = Pattern.compile(pattern);
 	}
 
 	@Override
-	public boolean accepts(File node) {
+	public boolean accepts(final File node) {
 		return pattern.matcher(node.getName()).matches();
 	}
 }

@@ -31,7 +31,7 @@ import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class AbstractBufferedFile extends AbstractFile implements BufferedFile {
+class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	private static final long serialVersionUID = 2L;
 
 	protected File unbuffered;
@@ -39,14 +39,14 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	private boolean dirty;
 	private FileAttributes fsAttributes;
 
-	public AbstractBufferedFile(BufferedConnection bc, String name, String path, File parent, boolean directory, boolean exists) {
+	AbstractBufferedFile(BufferedConnection bc, String name, String path, File parent, boolean directory, boolean exists) {
 		super(bc, name, path, parent, directory, exists);
 		this.dirty = false;
 		this.unbuffered = null;
 		children = new Hashtable<String, File>();
 	}
 
-	public AbstractBufferedFile(BufferedConnection bc, File unbuffered, File parent, boolean directory, boolean exists) {
+	AbstractBufferedFile(BufferedConnection bc, File unbuffered, File parent, boolean directory, boolean exists) {
 		super(bc, unbuffered.getName(), unbuffered.getPath(), parent, directory, exists);
 		this.dirty = false;
 		this.unbuffered = unbuffered;
@@ -79,7 +79,7 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 		return getUnbuffered().makeDirectory();
 	}
 
-	public void setFsFileAttributes(FileAttributes fs) {
+	public void setFsFileAttributes(final FileAttributes fs) {
 		this.fsAttributes = fs;
 	}
 
@@ -116,12 +116,12 @@ public class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	}
 
 	@Override
-	public void addChild(File node) {
+	public void addChild(final File node) {
 		children.put(node.getName(), node);
 	}
 
 	@Override
-	public void removeChild(String name) {
+	public void removeChild(final String name) {
 		children.remove(name);
 	}
 

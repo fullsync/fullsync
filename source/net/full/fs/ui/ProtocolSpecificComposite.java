@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class ProtocolSpecificComposite {
+class ProtocolSpecificComposite {
 
 	private Label labelPath = null;
 	private Text textPath = null;

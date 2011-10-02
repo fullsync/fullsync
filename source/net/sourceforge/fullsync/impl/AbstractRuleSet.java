@@ -209,9 +209,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 		// TODO verify functionality of this method
 		boolean isEqual = true;
 		int val = 0, totalVal = 0;
-		for (Enumeration<String> e = syncRules.elements(); e.hasMoreElements();) {
-			String rule = e.nextElement();
-
+		for (String rule : syncRules) {
 			StringTokenizer t = new StringTokenizer(rule, " ");
 			String srcValue = t.nextToken();
 			String operator = t.nextToken();

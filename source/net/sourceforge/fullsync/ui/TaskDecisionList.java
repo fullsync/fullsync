@@ -137,7 +137,7 @@ public class TaskDecisionList extends Composite {
 			public void run() {
 				try {
 					WizardDialog dialog = new WizardDialog(guiController.getMainShell(), SWT.RESIZE);
-					final TaskDecisionPage page = new TaskDecisionPage(dialog, guiController, profile, task);
+					final TaskDecisionPage page = new TaskDecisionPage(dialog, guiController, task);
 					if (!interactive) {
 						dialog.addWizardDialogListener(new WizardDialogAdapter() {
 							@Override
@@ -208,7 +208,7 @@ public class TaskDecisionList extends Composite {
 			n = t.getDestination();
 		}
 
-		int x = location == Location.Source ? 2 : 2 * 16 + 2;
+		int x = location == Location.Source ? 2 : (2 * 16) + 2;
 
 		if (n == null) {
 			g.drawImage(nodeUndefined, x, 0);
@@ -283,7 +283,7 @@ public class TaskDecisionList extends Composite {
 	}
 
 	protected Image buildTaskImage(Task t, Action a) {
-		ImageData data = new ImageData(16 * 3 + 2, 16, 8, new PaletteData(255, 255, 255));
+		ImageData data = new ImageData((16 * 3) + 2, 16, 8, new PaletteData(255, 255, 255));
 		data.transparentPixel = data.palette.getPixel(new RGB(0, 0, 0));
 
 		Image image = new Image(null, data);

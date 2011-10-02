@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class SFTPSpecificComposite extends ProtocolSpecificComposite {
+class SFTPSpecificComposite extends ProtocolSpecificComposite {
 	private Label labelHost = null;
 	private Text textHost = null;
 	private Label labelUsername = null;

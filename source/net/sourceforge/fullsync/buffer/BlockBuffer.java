@@ -211,7 +211,7 @@ public class BlockBuffer implements ExecutionBuffer {
 	}
 
 	@Override
-	public void storeEntry(EntryDescriptor descriptor) throws IOException {
+	public void storeEntry(final EntryDescriptor descriptor) throws IOException {
 		Entry entry;
 		if (descriptor.getLength() == 0) {
 			if (numberEntries == maxEntries) {
@@ -229,12 +229,12 @@ public class BlockBuffer implements ExecutionBuffer {
 	}
 
 	@Override
-	public void addEntryFinishedListener(EntryFinishedListener listener) {
+	public void addEntryFinishedListener(final EntryFinishedListener listener) {
 		finishedListeners.add(listener);
 	}
 
 	@Override
-	public void removeEntryFinishedListener(EntryFinishedListener listener) {
+	public void removeEntryFinishedListener(final EntryFinishedListener listener) {
 		finishedListeners.remove(listener);
 	}
 }

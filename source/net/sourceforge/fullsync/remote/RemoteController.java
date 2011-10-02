@@ -38,7 +38,7 @@ import net.sourceforge.fullsync.Synchronizer;
  */
 public class RemoteController {
 
-	private static RemoteController _instance;
+	private static RemoteController instance;
 	private RemoteServer remoteServer;
 	private String serverURL;
 	private int port;
@@ -48,10 +48,10 @@ public class RemoteController {
 	private Registry registry = null;
 
 	public static RemoteController getInstance() {
-		if (_instance == null) {
-			_instance = new RemoteController();
+		if (instance == null) {
+			instance = new RemoteController();
 		}
-		return _instance;
+		return instance;
 	}
 
 	public void startServer(int port, String password, ProfileManager profileManager, Synchronizer sync) throws RemoteException {

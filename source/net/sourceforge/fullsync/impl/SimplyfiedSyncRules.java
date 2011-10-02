@@ -100,7 +100,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	public void setIgnorePattern(String pattern) {
 		this.ignorePattern = pattern;
 
-		if ((ignorePattern == null) || (ignorePattern.equals(""))) {
+		if ((ignorePattern == null) || ("".equals(ignorePattern))) {
 			this.ignoreRule = null;
 		}
 		else {
@@ -111,7 +111,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	public void setTakePattern(String pattern) {
 		this.takePattern = pattern;
 
-		if ((takePattern == null) || (takePattern.equals(""))) {
+		if ((takePattern == null) || ("".equals(takePattern))) {
 			this.takeRule = null;
 		}
 		else {
@@ -173,27 +173,22 @@ public class SimplyfiedSyncRules implements RuleSet {
 	 * @see net.sourceforge.fullsync.IgnoreDecider#isNodeIgnored(net.sourceforge.fullsync.fs.File)
 	 */
 	@Override
-	public boolean isNodeIgnored(File node) {
-		if (!useFilter) {
-			return false;
-		}
-
-		FileFilter filterToUse = fileFilter;
-
-		if (fileFilterTree != null) {
-			FileFilter subFilter = fileFilterTree.getFilter(node.getPath());
-			if (subFilter != null) {
-				filterToUse = subFilter;
+	public boolean isNodeIgnored(final File node) {
+		if (useFilter) {
+			FileFilter filterToUse = fileFilter;
+			if (fileFilterTree != null) {
+				FileFilter subFilter = fileFilterTree.getFilter(node.getPath());
+				if (subFilter != null) {
+					filterToUse = subFilter;
+				}
 			}
+			boolean take = true;
+			if (filterToUse != null) {
+				take = filterToUse.match(node);
+			}
+			return !take;
 		}
-
-		boolean take = true;
-
-		if (filterToUse != null) {
-			take = filterToUse.match(node);
-		}
-
-		return !take;
+		return false;
 	}
 
 	/**
@@ -201,7 +196,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	 *      net.sourceforge.fullsync.fs.FileAttributes)
 	 */
 	@Override
-	public State compareFiles(FileAttributes src, FileAttributes dst) throws DataParseException {
+	public State compareFiles(final FileAttributes src, final FileAttributes dst) throws DataParseException {
 		if (Math.floor(src.getLastModified() / 1000.0) > Math.floor(dst.getLastModified() / 1000.0)) {
 			return new State(State.FileChange, Location.Source);
 		}
@@ -218,7 +213,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	 * @see net.sourceforge.fullsync.RuleSet#createChild(net.sourceforge.fullsync.fs.File, net.sourceforge.fullsync.fs.File)
 	 */
 	@Override
-	public RuleSet createChild(File src, File dst) {
+	public RuleSet createChild(final File src, final File dst) {
 		// TODO even simple sync rules should allow override rules
 		return this;
 	}
@@ -227,7 +222,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	 * @see net.sourceforge.fullsync.RuleSet#isApplyingDeletion(int)
 	 */
 	@Override
-	public boolean isApplyingDeletion(int location) {
+	public boolean isApplyingDeletion(final int location) {
 		return (applyingDeletion & location) > 0;
 	}
 
@@ -235,7 +230,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	 * @param applyingDeletion
 	 *            The applyingDeletion to set.
 	 */
-	public void setApplyingDeletion(int applyingDeletion) {
+	public void setApplyingDeletion(final int applyingDeletion) {
 		this.applyingDeletion = applyingDeletion;
 	}
 
@@ -250,7 +245,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	 * @see net.sourceforge.fullsync.RuleSet#isCheckingBufferAlways(int)
 	 */
 	@Override
-	public boolean isCheckingBufferAlways(int location) {
+	public boolean isCheckingBufferAlways(final int location) {
 		return false;
 	}
 
@@ -258,20 +253,19 @@ public class SimplyfiedSyncRules implements RuleSet {
 	 * @see net.sourceforge.fullsync.RuleSet#isCheckingBufferOnReplace(int)
 	 */
 	@Override
-	public boolean isCheckingBufferOnReplace(int location) {
+	public boolean isCheckingBufferOnReplace(final int location) {
 		return false;
 	}
 
-	private Rule createRuleFromPattern(String pattern) {
-		if (patternsType.equals("Wildcard")) {
-			return new WildcardRule(pattern);
+	private Rule createRuleFromPattern(final String pattern) {
+		Rule rule = null;
+		if ("Wildcard".equals(patternsType)) {
+			rule = new WildcardRule(pattern);
 		}
-
-		if (patternsType.equals("RegExp")) {
-			return new PatternRule(pattern);
+		else if ("RegExp".equals(patternsType)) {
+			rule = new PatternRule(pattern);
 		}
-
-		return null;
+		return rule;
 	}
 
 }
