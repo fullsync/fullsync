@@ -23,43 +23,23 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.ui.Messages;
 
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.UserAuthenticator;
-import org.apache.commons.vfs2.VFS;
-import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
-import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class UserPasswordSpecificComposite implements ProtocolSpecificComposite {
-	private String m_scheme;
-
-	private Composite m_parent;
-
-	private Label labelPath = null;
-	private Text textPath = null;
-	private Button buttonBrowse = null;
+public class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	private Label labelHost = null;
 	private Text textHost = null;
 	private Label labelUsername = null;
 	private Text textUsername = null;
 	private Label labelPassword = null;
 	private Text textPassword = null;
-	private Button buttonBuffered = null;
 
-	public UserPasswordSpecificComposite(Composite parent) {
-		m_parent = parent;
+	@Override
+	public void createGUI(final Composite parent) {
 		GridData gridData3 = new GridData();
 		gridData3.horizontalAlignment = SWT.FILL;
 		gridData3.horizontalSpan = 2;
@@ -72,123 +52,61 @@ public class UserPasswordSpecificComposite implements ProtocolSpecificComposite 
 		gridData1.horizontalAlignment = SWT.FILL;
 		gridData1.horizontalSpan = 2;
 		gridData1.verticalAlignment = SWT.CENTER;
-		labelHost = new Label(m_parent, SWT.NONE);
+		labelHost = new Label(parent, SWT.NONE);
 		labelHost.setText("Host:");
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.verticalAlignment = SWT.CENTER;
-		textHost = new Text(m_parent, SWT.BORDER);
+		textHost = new Text(parent, SWT.BORDER);
 		textHost.setLayoutData(gridData3);
-		labelUsername = new Label(m_parent, SWT.NONE);
+		labelUsername = new Label(parent, SWT.NONE);
 		labelUsername.setText("Username:");
-		textUsername = new Text(m_parent, SWT.BORDER);
+		textUsername = new Text(parent, SWT.BORDER);
 		textUsername.setLayoutData(gridData2);
-		labelPassword = new Label(m_parent, SWT.NONE);
+		labelPassword = new Label(parent, SWT.NONE);
 		labelPassword.setText("Password:");
-		textPassword = new Text(m_parent, SWT.BORDER);
+		textPassword = new Text(parent, SWT.BORDER);
 		textPassword.setLayoutData(gridData1);
 		textPassword.setEchoChar('*');
-		labelPath = new Label(m_parent, SWT.NONE);
-		labelPath.setText("Path:");
-		textPath = new Text(m_parent, SWT.BORDER);
-		textPath.setLayoutData(gridData);
-		buttonBrowse = new Button(m_parent, SWT.NONE);
-		buttonBrowse.setText("...");
-		buttonBrowse.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				try {
-					ConnectionDescription desc = getConnectionDescription();
-					//FIXME: this should resolve exactly as the profile run will do, have a look at the SFTPSpecificComposite and do it the same way here!
-
-					FileObject base = resolveFile(desc);
-					FileObjectChooser foc = new FileObjectChooser(m_parent.getShell(), SWT.NULL);
-					foc.setBaseFileObject(base);
-					foc.setSelectedFileObject(base);
-					if (foc.open()) {
-						URI uri;
-						uri = new URI(foc.getActiveFileObject().getName().getURI());
-						textPath.setText(uri.getPath());
-					}
-				}
-				catch (Exception e1) {
-					ExceptionHandler.reportException(e1);
-				}
-			}
-		});
-		buttonBuffered = new Button(m_parent, SWT.CHECK | SWT.LEFT);
-		GridData buttonDestinationBufferedData = new GridData();
-		buttonDestinationBufferedData.horizontalSpan = 3;
-		buttonBuffered.setLayoutData(buttonDestinationBufferedData);
-		buttonBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
+		super.createGUI(parent);
 	}
 
 	@Override
 	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
-		ConnectionDescription desc = new ConnectionDescription(new URI(m_scheme, textHost.getText(), textPath.getText(), null));
+		ConnectionDescription desc = super.getConnectionDescription();
+		desc.setUri(new URI(m_scheme, textHost.getText(), desc.getUri().getPath(), null));
 		desc.setParameter("username", textUsername.getText());
 		desc.setSecretParameter("password", textPassword.getText());
 		return desc;
 	}
 
 	@Override
-	public void setConnectionDescription(ConnectionDescription connection) {
+	public void setConnectionDescription(final ConnectionDescription connection) {
+		super.setConnectionDescription(connection);
 		URI uri = connection.getUri();
 		textHost.setText(uri.getHost());
-		textPath.setText(uri.getPath());
 		textUsername.setText(connection.getParameter("username"));
 		textPassword.setText(connection.getSecretParameter("password"));
 	}
 
 	@Override
 	public void reset(final String scheme) {
-		m_scheme = scheme;
+		super.reset(scheme);
 		textHost.setText("");
-		textPath.setText("");
 		textUsername.setText("");
 		textPassword.setText("");
 	}
 
-	public FileObject resolveFile(ConnectionDescription connection) throws FileSystemException {
-		FileSystemOptions fileSystemOptions = new FileSystemOptions();
-
-		if ("ftp".equals(connection.getUri().getScheme()) || "smb".equals(connection.getUri().getScheme())) {
-			String username = connection.getParameter("username");
-			String password = connection.getSecretParameter("password");
-			UserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
-			DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(fileSystemOptions, auth);
-		}
-		return VFS.getManager().resolveFile(connection.getUri().toString(), fileSystemOptions);
-	}
-
 	@Override
 	public void dispose() {
-		labelPath.dispose();
-		textPath.dispose();
-		buttonBrowse.dispose();
+		super.dispose();
 		labelHost.dispose();
 		textHost.dispose();
 		labelUsername.dispose();
 		textUsername.dispose();
 		labelPassword.dispose();
 		textPassword.dispose();
-		buttonBuffered.dispose();
-	}
-
-	@Override
-	public boolean getBuffered() {
-		return buttonBuffered.getEnabled() && buttonBuffered.getSelection();
-	}
-
-	@Override
-	public void setBuffered(boolean buffered) {
-		buttonBuffered.setSelection(buffered);
-	}
-
-	@Override
-	public void setBufferedEnabled(boolean enabled) {
-		buttonBuffered.setEnabled(enabled);
 	}
 
 }

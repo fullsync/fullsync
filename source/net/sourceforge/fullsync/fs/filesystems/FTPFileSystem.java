@@ -19,15 +19,29 @@
  */
 package net.sourceforge.fullsync.fs.filesystems;
 
+import java.io.IOException;
+
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
-public class CommonsVfsFileSystem implements FileSystem {
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
+import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
+
+public class FTPFileSystem implements FileSystem {
+
 	@Override
-	public Site createConnection(ConnectionDescription desc) throws FileSystemException {
-		return new CommonsVfsConnection(desc);
+	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws FileSystemException {
+		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter("username"), description.getSecretParameter("password"));
+		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 	}
+
+	@Override
+	public final Site createConnection(final ConnectionDescription description) throws net.sourceforge.fullsync.FileSystemException, IOException {
+		return new CommonsVfsConnection(description, this);
+	}
+
 }

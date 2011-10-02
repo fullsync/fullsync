@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
 
+import org.apache.commons.vfs2.FileObject;
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
@@ -44,6 +46,8 @@ public interface Site extends Serializable {
 	public boolean isCaseSensitive();
 
 	public boolean isAvailable(); // reachable, correct auth,...
+
+	FileObject getBase();
 
 	// public File getFile( String path );
 }

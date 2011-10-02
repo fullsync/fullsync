@@ -29,7 +29,7 @@ import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
 import net.sourceforge.fullsync.fs.buffering.syncfiles.SyncFilesBufferingProvider;
-import net.sourceforge.fullsync.fs.filesystems.CommonsVfsFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.FTPFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
@@ -44,7 +44,7 @@ public class FileSystemManager {
 	public FileSystemManager() {
 		schemes = new Hashtable<String, FileSystem>();
 		schemes.put("file", new LocalFileSystem());
-		schemes.put("ftp", new CommonsVfsFileSystem());
+		schemes.put("ftp", new FTPFileSystem());
 		schemes.put("sftp", new SFTPFileSystem());
 		schemes.put("smb", new SmbFileSystem());
 
@@ -52,7 +52,7 @@ public class FileSystemManager {
 		buffering.put("syncfiles", new SyncFilesBufferingProvider());
 	}
 
-	public Site createConnection(ConnectionDescription desc) throws FileSystemException, IOException, URISyntaxException {
+	public final Site createConnection(final ConnectionDescription desc) throws FileSystemException, IOException, URISyntaxException {
 		FileSystem fs = null;
 
 		URI url = desc.getUri();

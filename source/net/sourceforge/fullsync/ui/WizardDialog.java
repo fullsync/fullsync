@@ -170,7 +170,7 @@ public class WizardDialog extends SelectionAdapter {
 			// fill in wizard page
 			updateTop();
 			wizardPage.createContent(compositeContent);
-			
+
 			// bottom area
 			compositeBottom.setLayout(new GridLayout(2, false));
 			okButton = new Button(compositeBottom, SWT.PUSH);
@@ -273,7 +273,7 @@ public class WizardDialog extends SelectionAdapter {
 			}
 		}
 	}
-	
+
 	/**
 	 * enable or disable the ok button.
 	 * @param enabled

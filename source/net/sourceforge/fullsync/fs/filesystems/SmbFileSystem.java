@@ -19,13 +19,15 @@
  */
 package net.sourceforge.fullsync.fs.filesystems;
 
-import java.io.IOException;
-
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
-import net.sourceforge.fullsync.fs.connection.SmbConnection;
+import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
+
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
+import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -33,17 +35,14 @@ import net.sourceforge.fullsync.fs.connection.SmbConnection;
 public class SmbFileSystem implements FileSystem {
 
 	@Override
-	public Site createConnection(ConnectionDescription desc) throws FileSystemException {
-		Site s = null;
-		if ("smb".equals(desc.getUri().getScheme())) {
-			try {
-				s = new SmbConnection(desc);
-			}
-			catch (IOException e) {
-				throw new FileSystemException(e);
-			}
-		}
-		return s;
+	public final Site createConnection(final ConnectionDescription description) throws FileSystemException {
+		return new CommonsVfsConnection(description, this);
+	}
+
+	@Override
+	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws org.apache.commons.vfs2.FileSystemException {
+		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter("username"), description.getSecretParameter("password"));
+		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 	}
 
 }

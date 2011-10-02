@@ -23,29 +23,27 @@
 package net.sourceforge.fullsync.fs.filesystems;
 
 import java.io.IOException;
-import java.net.URI;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
-import net.sourceforge.fullsync.fs.connection.LocalConnection;
+import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
+
+import org.apache.commons.vfs2.FileSystemOptions;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class LocalFileSystem implements FileSystem {
-	public LocalFileSystem() {
 
+	@Override
+	public final Site createConnection(final ConnectionDescription description) throws FileSystemException, IOException {
+		return new CommonsVfsConnection(description, this);
 	}
 
 	@Override
-	public Site createConnection(ConnectionDescription desc) throws FileSystemException, IOException {
-		URI uri = desc.getUri();
-		if ((null != uri) && "file".equals(uri.getScheme())) {
-			return new LocalConnection(new java.io.File(uri.getPath()));
-		}
-		return null;// TODO throw exception here !
+	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options)
+			throws org.apache.commons.vfs2.FileSystemException {
 	}
-
 }

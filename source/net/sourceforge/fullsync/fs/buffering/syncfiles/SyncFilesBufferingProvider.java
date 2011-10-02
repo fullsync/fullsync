@@ -31,9 +31,8 @@ import net.sourceforge.fullsync.fs.connection.SyncFileBufferedConnection;
 public class SyncFilesBufferingProvider implements BufferingProvider {
 
 	@Override
-	public Site createBufferedSite(Site dir) throws IOException {
-		SyncFileBufferedConnection conn = new SyncFileBufferedConnection(dir);
-		return conn;
+	public final Site createBufferedSite(final Site dir) throws IOException {
+		return new SyncFileBufferedConnection(dir);
 	}
 
 }

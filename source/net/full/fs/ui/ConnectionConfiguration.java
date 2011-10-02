@@ -20,8 +20,10 @@
 package net.full.fs.ui;
 
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.ExceptionHandler;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -35,11 +37,22 @@ import org.eclipse.swt.widgets.Label;
 public class ConnectionConfiguration implements ModifyListener {
 	private Composite m_parent; // the tabs content
 	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" };
+	private static HashMap<String, Class<? extends ProtocolSpecificComposite>> composites;
 	private Label labelProtocol = null;
 	private Combo comboProtocol = null;
 	private Composite compositeProtocolSpecific = null;
 	private ProtocolSpecificComposite compositeSpecific;
 	private String selectedScheme;
+	private boolean bufferedEnabled = true;
+	private boolean bufferedActive = false;
+
+	static {
+		composites = new HashMap<String, Class<? extends ProtocolSpecificComposite>>();
+		composites.put("file", FileSpecificComposite.class);
+		composites.put("ftp", UserPasswordSpecificComposite.class);
+		composites.put("sftp", SFTPSpecificComposite.class);
+		composites.put("smb", UserPasswordSpecificComposite.class);
+	}
 
 	public ConnectionConfiguration(Composite parent) {
 		m_parent = parent;
@@ -75,10 +88,6 @@ public class ConnectionConfiguration implements ModifyListener {
 		compositeSpecific = createProtocolSpecificComposite();
 	}
 
-	private void dispose() {
-		compositeProtocolSpecific.dispose();
-	}
-
 	@Override
 	public void modifyText(final ModifyEvent e) {
 		if (compositeSpecific != null) {
@@ -86,7 +95,7 @@ public class ConnectionConfiguration implements ModifyListener {
 		}
 
 		selectedScheme = comboProtocol.getText();
-		dispose();
+		compositeProtocolSpecific.dispose();
 		initialize();
 
 		m_parent.layout(true);
@@ -104,19 +113,21 @@ public class ConnectionConfiguration implements ModifyListener {
 
 	private ProtocolSpecificComposite createProtocolSpecificComposite() {
 		ProtocolSpecificComposite composite = null;
-
-		if ("file".equals(selectedScheme)) {
-			composite = new FileSpecificComposite(compositeProtocolSpecific);
-		}
-		else if ("ftp".equals(selectedScheme) || "smb".equals(selectedScheme)) {
-			composite = new UserPasswordSpecificComposite(compositeProtocolSpecific);
-		}
-		else if ("sftp".equals(selectedScheme)) {
-			composite = new SFTPSpecificComposite(compositeProtocolSpecific);
-		}
-
-		if (composite != null) {
+		Class<? extends ProtocolSpecificComposite> com = composites.get(selectedScheme);
+		try {
+			composite = com.newInstance();
+			composite.createGUI(compositeProtocolSpecific);
 			composite.reset(selectedScheme);
+			composite.setBufferedEnabled(bufferedEnabled);
+			composite.setBuffered(bufferedActive);
+		}
+		catch (InstantiationException e) {
+			ExceptionHandler.reportException(e);
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e) {
+			ExceptionHandler.reportException(e);
+			e.printStackTrace();
 		}
 		return composite;
 	}
@@ -125,11 +136,13 @@ public class ConnectionConfiguration implements ModifyListener {
 		return compositeSpecific.getBuffered();
 	}
 
-	public void setBuffered(boolean buffered) {
+	public void setBuffered(final boolean buffered) {
+		bufferedActive = buffered;
 		compositeSpecific.setBuffered(buffered);
 	}
 
-	public void setBufferedEnabled(boolean enabled) {
+	public void setBufferedEnabled(final boolean enabled) {
+		bufferedEnabled = enabled;
 		compositeSpecific.setBufferedEnabled(enabled);
 	}
 }

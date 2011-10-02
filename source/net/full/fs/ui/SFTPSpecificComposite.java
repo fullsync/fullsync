@@ -19,20 +19,13 @@
  */
 package net.full.fs.ui;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.FileSystemManager;
-import net.sourceforge.fullsync.fs.Site;
-import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 import net.sourceforge.fullsync.ui.Messages;
 
-import org.apache.commons.vfs2.FileObject;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -41,26 +34,19 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class SFTPSpecificComposite implements ProtocolSpecificComposite {
-	private String m_scheme;
-
-	private Composite m_parent;
-
-	private Label labelPath = null;
-	private Text textPath = null;
-	private Button buttonBrowse = null;
+public class SFTPSpecificComposite extends ProtocolSpecificComposite {
 	private Label labelHost = null;
 	private Text textHost = null;
 	private Label labelUsername = null;
 	private Text textUsername = null;
 	private Label labelPassword = null;
 	private Text textPassword = null;
-	private Button buttonBuffered = null;
 	private Button buttonKeybased = null;
 	private Label labelKeyPassphrase = null;
 	private Text textKeyPassphrase = null;
 
-	public SFTPSpecificComposite(Composite parent) {
+	@Override
+	public void createGUI(final Composite parent) {
 		m_parent = parent;
 
 		GridData gridData1 = new GridData(SWT.FILL, SWT.CENTER, true, false);
@@ -117,58 +103,13 @@ public class SFTPSpecificComposite implements ProtocolSpecificComposite {
 		GridData textKeyPassphraseData = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		textKeyPassphraseData.horizontalSpan = 2;
 		textKeyPassphrase.setLayoutData(textKeyPassphraseData);
-
-		labelPath = new Label(m_parent, SWT.NONE);
-		labelPath.setText(Messages.getString("ProtocolSpecificComposite.Path"));
-		textPath = new Text(m_parent, SWT.BORDER);
-		textPath.setLayoutData(gridData);
-		buttonBrowse = new Button(m_parent, SWT.NONE);
-		buttonBrowse.setText("...");
-		buttonBrowse.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				ConnectionDescription desc = null;
-				Site conn = null;
-				try {
-					desc = getConnectionDescription();
-					FileSystemManager fsm = new FileSystemManager();
-					conn = fsm.createConnection(desc);
-
-					FileObject base = ((CommonsVfsConnection) conn).getBase();
-					FileObjectChooser foc = new FileObjectChooser(m_parent.getShell(), SWT.NULL);
-					foc.setBaseFileObject(base);
-					foc.setSelectedFileObject(base);
-					if (foc.open()) {
-						URI uri;
-						uri = new URI(foc.getActiveFileObject().getName().getURI());
-						textPath.setText(uri.getPath());
-					}
-				}
-				catch (Exception e1) {
-					ExceptionHandler.reportException(e1);
-				}
-				finally {
-					if (null != conn) {
-						try {
-							conn.close();
-						}
-						catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					}
-				}
-			}
-		});
-		buttonBuffered = new Button(m_parent, SWT.CHECK | SWT.LEFT);
-		GridData buttonDestinationBufferedData = new GridData();
-		buttonDestinationBufferedData.horizontalSpan = 3;
-		buttonBuffered.setLayoutData(buttonDestinationBufferedData);
-		buttonBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
+		super.createGUI(parent);
 	}
 
 	@Override
 	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
-		ConnectionDescription loc = new ConnectionDescription(new URI(m_scheme, textHost.getText(), textPath.getText(), null));
+		ConnectionDescription loc = super.getConnectionDescription();
+		loc.setUri(new URI(m_scheme, textHost.getText(), loc.getUri().getPath(), null));
 		loc.setParameter("username", textUsername.getText());
 		loc.setSecretParameter("password", textPassword.getText());
 		loc.setParameter("publicKeyAuth", buttonKeybased.getSelection() ? "enabled" : "disabled");
@@ -178,9 +119,9 @@ public class SFTPSpecificComposite implements ProtocolSpecificComposite {
 
 	@Override
 	public void setConnectionDescription(final ConnectionDescription connection) {
+		super.setConnectionDescription(connection);
 		URI uri = connection.getUri();
 		textHost.setText(uri.getHost());
-		textPath.setText(uri.getPath());
 		textUsername.setText(connection.getParameter("username"));
 		textPassword.setText(connection.getSecretParameter("password"));
 		buttonKeybased.setSelection("enabled".equals(connection.getParameter("publicKeyAuth")));
@@ -194,9 +135,8 @@ public class SFTPSpecificComposite implements ProtocolSpecificComposite {
 
 	@Override
 	public void reset(final String scheme) {
-		m_scheme = scheme;
+		super.reset(scheme);
 		textHost.setText("");
-		textPath.setText("");
 		textUsername.setText("");
 		textPassword.setText("");
 		buttonKeybased.setSelection(false);
@@ -207,31 +147,12 @@ public class SFTPSpecificComposite implements ProtocolSpecificComposite {
 
 	@Override
 	public void dispose() {
-		labelPath.dispose();
-		textPath.dispose();
-		buttonBrowse.dispose();
+		super.dispose();
 		labelHost.dispose();
 		textHost.dispose();
 		labelUsername.dispose();
 		textUsername.dispose();
 		labelPassword.dispose();
 		textPassword.dispose();
-		buttonBuffered.dispose();
 	}
-
-	@Override
-	public boolean getBuffered() {
-		return buttonBuffered.getEnabled() && buttonBuffered.getSelection();
-	}
-
-	@Override
-	public void setBuffered(final boolean buffered) {
-		buttonBuffered.setSelection(buffered);
-	}
-
-	@Override
-	public void setBufferedEnabled(final boolean enabled) {
-		buttonBuffered.setEnabled(enabled);
-	}
-
 }

@@ -1,4 +1,7 @@
 Roadmap:
+	[X] reimplement local connection on top of org.apache.commons.vfs2
+	[X] add FileObjectChooser to all ConnectionSpecificComposites
+	[X] reorganize code to avoid duplication of the File choosing stuff
 	[X] in what state is the codebase compared to the last release?
 	[ ] finish started work
 	[ ] GUI cleanup
@@ -36,7 +39,7 @@ Roadmap:
 Bugs:
 	[ ] Exception if starting sync on a readonly FS
 	[ ] if folder creation fails on a ro FS the task is being marked as succeeded
-	[ ] SMB/CIFS connection broken
+	[X] SMB/CIFS connection broken
 	[ ] Update Task Count based on decisions made(correct?), 1337 of 7331; 42 incoming, .. outgoing
 	[X] file:/ URL's do not show contents in the Subdirectories Profile details tab
 	[ ] Profile can be stored without vital data (src, destination, name)
@@ -50,6 +53,9 @@ Bugs:
 		the profile dialog however has proven that SWT does not behave identical on eg windows and linux,
 		thus any such dialog might fail on either platform
 	[ ] FulllSync launchers need to be able to accept arbitrary JVM arguments (debugging, RAM, ...)
+	[ ] sockets are treated like directories, and listing their children results in an exception
+	[ ] SMB: does Ntlm authentication with domain accounts work with FullSync?
+	[X] using the custom FileObjectChooser is impractical for the local filesystem
 
 Features:
 	[ ] TaskDecisionDialog:

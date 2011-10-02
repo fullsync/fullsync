@@ -21,16 +21,21 @@ package net.sourceforge.fullsync.fs.filesystems;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
+import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 import net.sourceforge.fullsync.impl.SFTPLogger;
 
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
+import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
+import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 import org.apache.log4j.Logger;
 
 import com.jcraft.jsch.UIKeyboardInteractive;
 import com.jcraft.jsch.UserInfo;
 
-public class SFTPFileSystem extends CommonsVfsFileSystem implements UIKeyboardInteractive, UserInfo {
+public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserInfo {
 	private static boolean loggerSetupCompleted = false;
 
 	private Logger logger = Logger.getLogger("FullSync");
@@ -39,6 +44,21 @@ public class SFTPFileSystem extends CommonsVfsFileSystem implements UIKeyboardIn
 	public SFTPFileSystem() {
 		if (!loggerSetupCompleted) {
 			com.jcraft.jsch.JSch.setLogger(new SFTPLogger());
+		}
+	}
+
+	@Override
+	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws org.apache.commons.vfs2.FileSystemException {
+		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter("username"), description.getSecretParameter("password"));
+		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
+		SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
+		cfg.setUserInfo(options, this);
+		cfg.setStrictHostKeyChecking(options, "ask");
+		if ("enabled".equals(description.getParameter("publicKeyAuth"))) {
+			cfg.setPreferredAuthentications(options, "publickey,password,keyboard-interactive");
+		}
+		else {
+			cfg.setPreferredAuthentications(options, "password,keyboard-interactive");
 		}
 	}
 

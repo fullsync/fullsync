@@ -28,19 +28,14 @@ import java.util.Hashtable;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
+import net.sourceforge.fullsync.fs.FileSystem;
 
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.FileType;
-import org.apache.commons.vfs2.UserAuthenticator;
 import org.apache.commons.vfs2.VFS;
-import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
-import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
-import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
-
-import com.jcraft.jsch.UserInfo;
 
 public class CommonsVfsConnection implements FileSystemConnection {
 	private static final long serialVersionUID = 2L;
@@ -48,34 +43,14 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	private FileObject base;
 	private File root;
 
-	public CommonsVfsConnection(final ConnectionDescription desc) throws net.sourceforge.fullsync.FileSystemException {
-		this(desc, null);
-	}
-
-	public CommonsVfsConnection(final ConnectionDescription desc, UserInfo info) throws net.sourceforge.fullsync.FileSystemException {
+	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystem fs) throws net.sourceforge.fullsync.FileSystemException {
 		try {
 			this.desc = desc;
 			FileSystemOptions options = new FileSystemOptions();
-			URI uri = desc.getUri();
-			String uriString = uri.toString();
-			String baseUri = uriString.substring(0, uriString.length() - (uri.getPath().length()));
-			UserAuthenticator auth = new StaticUserAuthenticator(null, desc.getParameter("username"), desc.getSecretParameter("password"));
-
-			if ("sftp".equals(uri.getScheme())) {
-				SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
-				cfg.setUserInfo(options, info);
-				cfg.setStrictHostKeyChecking(options, "ask");
-				if ("enabled".equals(desc.getParameter("publicKeyAuth"))) {
-					cfg.setPreferredAuthentications(options, "publickey,password,keyboard-interactive");
-				}
-				else {
-					cfg.setPreferredAuthentications(options, "password,keyboard-interactive");
-				}
+			if (null != fs) {
+				fs.authSetup(desc, options);
 			}
-
-			DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
-			base = VFS.getManager().resolveFile(baseUri, options);
-			base = base.resolveFile(uri.getPath());
+			base = VFS.getManager().resolveFile(desc.getUri().toString(), options);
 			root = new AbstractFile(this, ".", ".", null, true, base.exists());
 		}
 		catch (FileSystemException e) {
@@ -84,12 +59,12 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public File createChild(File parent, String name, boolean directory) throws IOException {
+	public final File createChild(final File parent, final String name, final boolean directory) throws IOException {
 		return new AbstractFile(this, name, null, parent, directory, false);
 
 	}
 
-	public File buildNode(File parent, FileObject file) throws FileSystemException {
+	private File buildNode(final File parent, final FileObject file) throws FileSystemException {
 		String name = file.getName().getBaseName();
 		// String path = parent.getPath()+"/"+name;
 
@@ -102,7 +77,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public Hashtable<String, File> getChildren(File dir) throws IOException {
+	public final Hashtable<String, File> getChildren(final File dir) throws IOException {
 		try {
 			Hashtable<String, File> children = new Hashtable<String, File>();
 
@@ -121,14 +96,14 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public boolean makeDirectory(File dir) throws IOException {
+	public final boolean makeDirectory(final File dir) throws IOException {
 		FileObject obj = base.resolveFile(dir.getPath());
 		obj.createFolder();
 		return true;
 	}
 
 	@Override
-	public boolean writeFileAttributes(File file, FileAttributes att) throws IOException {
+	public final boolean writeFileAttributes(final File file, final FileAttributes att) throws IOException {
 		FileObject obj = base.resolveFile(file.getPath());
 		FileContent content = obj.getContent();
 		content.setLastModifiedTime(att.getLastModified());
@@ -136,29 +111,30 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public InputStream readFile(File file) throws IOException {
+	public final InputStream readFile(final File file) throws IOException {
 		FileObject obj = base.resolveFile(file.getPath());
 		return obj.getContent().getInputStream();
 	}
 
 	@Override
-	public OutputStream writeFile(File file) throws IOException {
+	public final OutputStream writeFile(final File file) throws IOException {
 		FileObject obj = base.resolveFile(file.getPath());
 		return obj.getContent().getOutputStream();
 	}
 
 	@Override
-	public boolean delete(File node) throws IOException {
+	public final boolean delete(final File node) throws IOException {
 		FileObject obj = base.resolveFile(node.getPath());
 		return obj.delete();
 	}
 
 	@Override
-	public File getRoot() {
+	public final File getRoot() {
 		return root;
 	}
 
-	public FileObject getBase() {
+	@Override
+	public final FileObject getBase() {
 		return base;
 	}
 
@@ -168,23 +144,23 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public final void close() throws IOException {
 		VFS.getManager().closeFileSystem(base.getFileSystem());
 	}
 
 	@Override
-	public URI getUri() {
+	public final URI getUri() {
 		return desc.getUri();
 	}
 
 	@Override
-	public boolean isCaseSensitive() {
+	public final boolean isCaseSensitive() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean isAvailable() {
+	public final boolean isAvailable() {
 		// TODO Auto-generated method stub
 		return true;
 	}

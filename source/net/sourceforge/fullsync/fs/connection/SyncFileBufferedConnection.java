@@ -43,6 +43,7 @@ import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
+import org.apache.commons.vfs2.FileObject;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
@@ -65,12 +66,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		public SyncFileDefaultHandler(SyncFileBufferedConnection bc) {
 			this.bc = bc;
 			current = (AbstractBufferedFile) bc.getRoot();
-		}
-
-		@Override
-		public void startDocument() throws SAXException {
-
-			super.startDocument();
 		}
 
 		@Override
@@ -120,11 +115,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			}
 			super.endElement(uri, localName, qName);
 		}
-
-		@Override
-		public void endDocument() throws SAXException {
-			super.endDocument();
-		}
 	}
 
 	private Site fs;
@@ -132,7 +122,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	private boolean dirty;
 	private boolean monitoringFileSystem;
 
-	public SyncFileBufferedConnection(Site fs) throws IOException {
+	public SyncFileBufferedConnection(final Site fs) throws IOException {
 		this.fs = fs;
 		this.dirty = false;
 		this.monitoringFileSystem = false;
@@ -180,10 +170,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	@Override
 	public InputStream readFile(File file) {
 		return null;
-	}
-
-	public boolean setLastModifiedDate(File file, long lm) {
-		return false;
 	}
 
 	@Override
@@ -372,6 +358,11 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	@Override
 	public boolean isCaseSensitive() {
 		return fs.isCaseSensitive();
+	}
+
+	@Override
+	public FileObject getBase() {
+		return fs.getBase();
 	}
 
 }

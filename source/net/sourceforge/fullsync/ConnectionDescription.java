@@ -107,19 +107,19 @@ public class ConnectionDescription implements Serializable {
 		return parameters;
 	}
 
-	public String getParameter(String name) {
+	public String getParameter(final String name) {
 		return parameters.get(name);
 	}
 
-	public void setParameter(String name, String value) {
+	public void setParameter(final String name, final String value) {
 		parameters.put(name, value);
 	}
 
-	public String getSecretParameter(String name) {
+	public String getSecretParameter(final String name) {
 		return Crypt.decrypt(secretParameters.get(name));
 	}
 
-	public void setSecretParameter(String name, String value) {
+	public final void setSecretParameter(final String name, final String value) {
 		secretParameters.put(name, Crypt.encrypt(value));
 	}
 
@@ -128,7 +128,7 @@ public class ConnectionDescription implements Serializable {
 		return uri.toString();
 	}
 
-	public void setUri(URI uri) {
+	public void setUri(final URI uri) {
 		this.uri = uri;
 	}
 

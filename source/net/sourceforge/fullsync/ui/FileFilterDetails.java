@@ -126,11 +126,6 @@ public class FileFilterDetails extends Composite {
 		compositeRuleList.pack();
 	}
 
-	protected void removeRuleRow() {
-		ruleItems.removeElementAt(ruleItems.size() - 1);
-		recreateRuleList();
-	}
-
 	public void recreateRuleList() {
 		compositeRuleList.dispose();
 		createCompositeRuleList();
