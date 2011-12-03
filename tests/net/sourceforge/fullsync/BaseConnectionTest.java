@@ -67,6 +67,11 @@ public class BaseConnectionTest {
 
 	@After
 	public void tearDown() throws Exception {
+		try {
+			//FIXME: disconnect source and destination!
+		}
+		catch (Exception e) {
+		}
 		tmpFolder.delete();
 	}
 
@@ -80,7 +85,7 @@ public class BaseConnectionTest {
 			if (file.isDirectory()) {
 				clearDirectory(file);
 			}
-			file.delete();
+			assertTrue("File.delete failed for: " + file.getAbsolutePath(), file.delete());
 		}
 	}
 
@@ -95,8 +100,9 @@ public class BaseConnectionTest {
 
 	protected PrintStream createNewFile(File dir, String filename) throws IOException {
 		File file = new File(dir, filename);
-		file.getParentFile().mkdirs();
-		file.createNewFile();
+		File d = file.getParentFile();
+		assertTrue("File.mkdirs failed for: " + file.getParentFile().getAbsolutePath(), d.mkdirs() || d.exists());
+		assertTrue("File.createNewFile failed for: " + file.getAbsolutePath(), file.createNewFile());
 		PrintStream out = new PrintStream(new FileOutputStream(file));
 		return out;
 	}
@@ -105,8 +111,9 @@ public class BaseConnectionTest {
 		PrintStream out = createNewFile(dir, filename);
 		out.print(content);
 		out.close();
+		File f = new File(dir, filename);
 
-		new File(dir, filename).setLastModified(lm);
+		assertTrue("File.setLastModified failed for: " + f.getAbsolutePath(), f.setLastModified(lm));
 	}
 
 	protected TaskTree assertPhaseOneActions(final Hashtable<String, Action> expectation) throws Exception {
@@ -150,8 +157,7 @@ public class BaseConnectionTest {
 		clearDirectory(testingSrc);
 		clearDirectory(testingDst);
 		createRuleFile();
-		Date d = new Date();
-		long lm = d.getTime();
+		long lm = new Date().getTime();
 
 		createNewFileWithContents(testingSrc, "sourceFile1.txt", lm, "this is a test\ncontent1");
 		createNewFileWithContents(testingSrc, "sourceFile2.txt", lm, "this is a test\ncontent2");
@@ -172,7 +178,6 @@ public class BaseConnectionTest {
 		createRuleFile();
 		long lm = new Date().getTime();
 
-		new File(testingSrc, "sub - folder/sub2 - folder").mkdirs();
 		createNewFileWithContents(testingSrc, "sub - folder/sub2 - folder/sourceFile1.txt", lm, "this is a test\ncontent1");
 		createNewFileWithContents(testingSrc, "sub - folder/sourceFile2.txt", lm, "this is a test\ncontent2");
 

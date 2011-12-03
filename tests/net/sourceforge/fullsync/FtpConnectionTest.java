@@ -83,12 +83,7 @@ public class FtpConnectionTest extends BaseConnectionTest {
 			m_fakeServer.setFileSystem(fs);
 		}
 		else {
-			for (File file : dir.listFiles()) {
-				if (file.isDirectory()) {
-					clearDirectory(file);
-				}
-				file.delete();
-			}
+			super.clearDirectory(dir);
 		}
 	}
 

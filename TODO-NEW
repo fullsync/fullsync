@@ -56,6 +56,7 @@ Bugs:
 	[ ] sockets are treated like directories, and listing their children results in an exception
 	[ ] SMB: does Ntlm authentication with domain accounts work with FullSync?
 	[X] using the custom FileObjectChooser is impractical for the local filesystem
+	[ ] SFTP: Usability: the current handling of unknown hosts is probably bad, especially on win
 
 Features:
 	[ ] TaskDecisionDialog:
@@ -65,3 +66,9 @@ Features:
 		* have a source buffer with file metadata (and hash?)
 		* if a new file has the same metadata that a file has that is missing it's most likely the same file but renamed
 	[ ] Exact Copy: allow users to specify that they want to remove deleted files before transferring new files (needed in case the destination is low on free space)
+
+
+Future:
+	[ ] remove deprecated class net.sourceforge.fullsync.impl.ConfigurationPreferences and all dependencies (like commons-configuration.jar)
+		Breaks: updates from FulSync < 0.10
+	[ ] fix net.sourceforge.fullsync.TaskGeneratorImpl and net.sourceforge.fullsync.Synchronizer (multithreading)

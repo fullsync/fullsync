@@ -5,33 +5,33 @@
 	<appender name="FullSyncAppender" class="org.apache.log4j.ConsoleAppender">
 		<!--param name="File" value="logs/fullsync.log" />	-->
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{ISO8601} [%p] %c %x - %m%n"/>
+			<param name="ConversionPattern" value="%d{ISO8601} [%-5p] %-65c %x - %m%n"/>
 		</layout>
 	</appender>
 	<appender name="FullSyncInternalAppender" class="org.apache.log4j.ConsoleAppender">
 		<!--param name="File" value="logs/fullsync.internal.log" />	-->
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{ISO8601} [%p] %c %x - %m%n"/>
+			<param name="ConversionPattern" value="%d{ISO8601} [%-5p] %-65c %x - %m%n"/>
 		</layout>
 	</appender>
 
 	<appender name="Ssh" class="org.apache.log4j.ConsoleAppender">
 		<!--param name="File" value="logs/ssh.log" />-->
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{ISO8601} [%p] %c %x - %m%n"/>
+			<param name="ConversionPattern" value="%d{ISO8601} [%-5p] %-65c %x - %m%n"/>
 		</layout>
 	</appender>
 	
 	<appender name="error" class="org.apache.log4j.ConsoleAppender">
 		<!--param name="File" value="logs/error.log" />-->
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{ISO8601} [%p] %c %x - %m%n"/>
+			<param name="ConversionPattern" value="%d{ISO8601} [%-5p] %-65c %x - %m%n"/>
 		</layout>
 	</appender>
 
 	<appender name="org.mockftpserver.fake.FakeFtpServer" class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{ISO8601} %c{1} [%t] %p - %m%n"/>
+			<param name="ConversionPattern" value="%d{ISO8601} [%-5p] %-65c %x - %m%n"/>
 		</layout>
 	</appender>
 

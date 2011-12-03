@@ -19,9 +19,6 @@
  */
 package net.sourceforge.fullsync;
 
-import java.util.Date;
-import java.util.Hashtable;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,15 +39,13 @@ public class PhaseOneTest extends BaseConnectionTest {
 	@Override
 	@Test
 	public void testSingleInSync() throws Exception {
-		createRuleFile();
-		long lm = new Date().getTime();
+		super.testSingleInSync();
+	}
 
-		createNewFileWithContents(testingSrc, "sourceFile1.txt", lm, "this is a test\ncontent1");
-		createNewFileWithContents(testingDst, "sourceFile1.txt", lm, "this is a test\ncontent1");
-
-		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
-		expectation.put("sourceFile1.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
-		assertPhaseOneActions(expectation);
+	@Override
+	@Test
+	public void testSingleSpaceMinus() throws Exception {
+		super.testSingleSpaceMinus();
 	}
 
 	@Override
