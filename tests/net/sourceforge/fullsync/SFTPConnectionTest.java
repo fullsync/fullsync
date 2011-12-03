@@ -18,7 +18,7 @@ public class SFTPConnectionTest extends BaseConnectionTest {
 	public void setUp() throws Exception {
 		super.setUp();
 		ConnectionDescription dst = new ConnectionDescription(new URI("sftp://127.0.0.1:2222/"));
-		dst.setParameter("bufferStrategy", "syncfiles");
+		dst.setParameter("bufferStrategy", "");
 		dst.setParameter("username", "SampleUser");
 		dst.setSecretParameter("password", "SampleUser");
 		profile.setDestination(dst);
@@ -38,5 +38,11 @@ public class SFTPConnectionTest extends BaseConnectionTest {
 	@Test
 	public void testSingleSpaceMinus() throws Exception {
 		super.testSingleSpaceMinus();
+	}
+
+	@Override
+	@Test
+	public void testSingleFileChange() throws Exception {
+		super.testSingleFileChange();
 	}
 }

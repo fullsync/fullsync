@@ -47,7 +47,7 @@ public class FtpConnectionTest extends BaseConnectionTest {
 		super.setUp();
 
 		ConnectionDescription dst = new ConnectionDescription(new URI("ftp://127.0.0.1:" + TEST_FTP_PORT + "/"));
-		dst.setParameter("bufferStrategy", "syncfiles");
+		dst.setParameter("bufferStrategy", "");
 		dst.setParameter("username", "SampleUser");
 		dst.setSecretParameter("password", "Sample");
 		profile.setDestination(dst);
@@ -107,18 +107,21 @@ public class FtpConnectionTest extends BaseConnectionTest {
 	@Override
 	@Test
 	public void testSingleInSync() throws Exception {
+		//FIXME: this test fails because of timestamp quality from the FTP server
 		super.testSingleInSync();
 	}
 
 	@Override
 	@Test
 	public void testSingleSpaceMinus() throws Exception {
+		//FIXME: this test fails because of timestamp quality from the FTP server
 		super.testSingleSpaceMinus();
 	}
 
-//	@Override
-//	@Test
-//	public void testSingleFileChange() throws Exception {
-//		super.testSingleFileChange();
-//	}
+	@Override
+	@Test
+	public void testSingleFileChange() throws Exception {
+		//FIXME: this test fails because of timestamp quality from the FTP server
+		super.testSingleFileChange();
+	}
 }

@@ -158,7 +158,7 @@ public class BaseConnectionTest {
 		createNewFileWithContents(testingDst, "sourceFile1.txt", lm, "this is a test\ncontent1");
 
 		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
-		expectation.put("sourceFile1.txt", new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, ""));
+		expectation.put("sourceFile1.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
 		expectation.put("sourceFile2.txt", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
 		// Phase One:
 		TaskTree tree = assertPhaseOneActions(expectation);
