@@ -25,7 +25,7 @@ public class SFTPConnectionTest extends BaseConnectionTest {
 
 		testingDst.delete();
 		testingDst = sshServer.getUserHome();
-		System.setProperty("vfs.sftp.sshdir", new File("./sshd-config/").getAbsolutePath());
+		System.setProperty("vfs.sftp.sshdir", new File("./tests/sshd-config/").getAbsolutePath());
 	}
 
 	@Override
