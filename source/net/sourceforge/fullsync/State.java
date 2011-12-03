@@ -32,6 +32,8 @@ public class State implements Serializable {
 	public static final int FileChange = 3;
 	public static final int DirHereFileThere = 4;
 
+	public static final String[] names = new String[] { "", "NodeInSync", "Orphan", "FileChange", "DirHereFileThere" };
+
 	private int type;
 	private int location;
 
@@ -51,4 +53,14 @@ public class State implements Serializable {
 	public boolean equals(int type, int location) {
 		return ((this.type == type) && (this.location == location));
 	}
+
+	public static String toString(int type) {
+		return names[type];
+	}
+
+	@Override
+	public String toString() {
+		return State.toString(type) + " - " + Location.toString(location);
+	}
+
 }

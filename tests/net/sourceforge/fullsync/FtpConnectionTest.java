@@ -19,9 +19,10 @@
  */
 package net.sourceforge.fullsync;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
-import java.util.Hashtable;
 
 import org.junit.After;
 import org.junit.Before;
@@ -69,26 +70,44 @@ public class FtpConnectionTest extends BaseConnectionTest {
 		super.tearDown();
 	}
 
+	/**
+	 * recursively delete directory and all contained files.
+	 *
+	 * @param dir directory to clear
+	 */
+	@Override
+	protected void clearDirectory(final File dir) {
+		if (dir == testingDst) {
+			FileSystem fs = new UnixFakeFileSystem();
+			fs.add(new DirectoryEntry("/sampleuser"));
+			m_fakeServer.setFileSystem(fs);
+		}
+		else {
+			for (File file : dir.listFiles()) {
+				if (file.isDirectory()) {
+					clearDirectory(file);
+				}
+				file.delete();
+			}
+		}
+	}
+
+	@Override
+	protected void createNewFileWithContents(File dir, String filename, long lm, String content) throws IOException {
+		if (dir == testingDst) {
+			FileEntry file = new FileEntry("/" + filename, content);
+			file.setLastModified(new Date(lm));
+			m_fakeServer.getFileSystem().add(file);
+		}
+		else {
+			super.createNewFileWithContents(dir, filename, lm, content);
+		}
+	}
+
 	@Override
 	@Test
 	public void testSingleInSync() throws Exception {
-		createRuleFile();
-		Date d = new Date();
-		long lm = d.getTime();
-
-		createNewFileWithContents(testingSrc, "sourceFile1.txt", lm, "this is a test\ncontent1");
-		createNewFileWithContents(testingSrc, "sourceFile2.txt", lm, "this is a test\ncontent2");
-		FileEntry file = new FileEntry("/sourceFile1.txt", "this is a test\ncontent1");
-		file.setLastModified(d);
-		m_fakeServer.getFileSystem().add(file);
-
-		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
-		expectation.put("sourceFile1.txt", new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, ""));
-		expectation.put("sourceFile2.txt", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
-		// Phase One:
-		TaskTree tree = assertPhaseOneActions(expectation);
-		// Phase Three:
-		synchronizer.performActions(tree); // TODO assert task finished events ?
+		super.testSingleInSync();
 	}
 
 	@Override
@@ -96,4 +115,10 @@ public class FtpConnectionTest extends BaseConnectionTest {
 	public void testSingleSpaceMinus() throws Exception {
 		super.testSingleSpaceMinus();
 	}
+
+//	@Override
+//	@Test
+//	public void testSingleFileChange() throws Exception {
+//		super.testSingleFileChange();
+//	}
 }

@@ -34,6 +34,8 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.rules.Rule;
 
+import org.apache.log4j.Logger;
+
 /**
  * Provides informations and rules about how to handle specific<br>
  * files and whether system files should be used or not.<br>
@@ -42,6 +44,7 @@ import net.sourceforge.fullsync.rules.Rule;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public abstract class AbstractRuleSet implements RuleSet, Cloneable {
+	private static final Logger logger = Logger.getLogger(AbstractRuleSet.class);
 	String name;
 	boolean usingRecursion;
 	boolean usingRecursionOnIgnore;
@@ -206,15 +209,23 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 
 	@Override
 	public State compareFiles(FileAttributes src, FileAttributes dst) throws DataParseException {
-		// TODO verify functionality of this method
+		//FIXME: optimize rule processing
+		//FIXME: add debug logs to every decision
+		//FIXME: "compile" syncRules into a tree or so to allow resolution without string tokenization,...
 		boolean isEqual = true;
-		int val = 0, totalVal = 0;
+		State st = null;
+		int val = 0, res;
 		for (String rule : syncRules) {
 			StringTokenizer t = new StringTokenizer(rule, " ");
 			String srcValue = t.nextToken();
 			String operator = t.nextToken();
 			String dstValue = t.nextToken();
-			val += eval(evalRealValue(src, srcValue), operator, evalRealValue(dst, dstValue));
+			long srcV, dstV;
+			srcV = evalRealValue(src, srcValue);
+			dstV = evalRealValue(dst, dstValue);
+			res = eval(srcV, operator, dstV);
+			logger.debug(srcValue + " " + operator + " " + dstValue + ": " + srcV + operator + dstV + " = " + res);
+			val += res;
 			if (val < -50) {
 				val += 100;
 				isEqual = false;
@@ -223,32 +234,37 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 			for (; t.hasMoreTokens();) {
 				String bind = t.nextToken();
 				if (bind.equals(",")) {
+					//FIXME: uhm if , then nothing??
 				}
 
 				srcValue = t.nextToken();
 				operator = t.nextToken();
 				dstValue = t.nextToken();
-				val += eval(evalRealValue(src, srcValue), operator, evalRealValue(dst, dstValue));
+				srcV = evalRealValue(src, srcValue);
+				dstV = evalRealValue(dst, dstValue);
+				res = eval(srcV, operator, dstV);
+				val += res;
+				logger.debug(srcValue + " " + operator + " " + dstValue + ": " + srcV + operator + dstV + " = " + res);
 				if (val < -50) {
 					val += 100;
 					isEqual = false;
 				}
 			}
 		}
-		totalVal = val;
-		if ((totalVal == 0) && isEqual) {
-			return inSyncBoth;
+		if ((val == 0) && isEqual) {
+			st = inSyncBoth;
 		}
-		else if (totalVal > 0) {
-			return fileChgDst;
+		else if (val > 0) {
+			st = fileChgDst;
 		}
-		else if (totalVal < 0) {
-			return fileChgSrc;
+		else if (val < 0) {
+			st = fileChgSrc;
 		}
 		else {
-			return fileChgNone;
+			st = fileChgNone;
 		}
-		// return new State( State.NodeInSync, Location.Both );
+		logger.debug("compareFiles = " + st);
+		return st;
 	}
 
 	@Override

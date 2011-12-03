@@ -25,10 +25,13 @@ import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class StateDecider implements net.sourceforge.fullsync.StateDecider {
+	private static final Logger logger = Logger.getLogger(StateDecider.class);
 	private static final State inSyncNone = new State(State.NodeInSync, Location.None);
 	private static final State orphanSrc = new State(State.Orphan, Location.Source);
 	private static final State orphanDst = new State(State.Orphan, Location.Destination);
@@ -44,27 +47,34 @@ public class StateDecider implements net.sourceforge.fullsync.StateDecider {
 
 	@Override
 	public State getState(File source, File destination) throws DataParseException {
+		logger.debug(source + " vs. " + destination);
 		if (!source.exists()) {
 			if (!destination.exists()) {
+				logger.debug("both missing"); // FIXME: impossible?!
 				return inSyncNone;
 			}
 			else {
+				logger.debug("source missing");
 				return orphanDst;
 			}
 		}
 		else if (!destination.exists()) {
+			logger.debug("destination missing");
 			return orphanSrc;
 		}
 
 		if (source.isDirectory()) {
 			if (destination.isDirectory()) {
+				logger.debug("both are dirs");
 				return inSyncBoth;
 			}
 			else {
+				logger.debug("source directory, destination file");
 				return dirFileSrc;
 			}
 		}
 		else if (destination.isDirectory()) {
+			logger.debug("source file, destination directory");
 			return dirFileDst;
 		}
 

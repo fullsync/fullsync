@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.fs;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -42,4 +43,10 @@ public class FileAttributes implements Serializable {
 	public long getLastModified() {
 		return lastModified;
 	}
+
+	@Override
+	public String toString() {
+		return length + " Byte " + new Date(lastModified);
+	}
+
 }

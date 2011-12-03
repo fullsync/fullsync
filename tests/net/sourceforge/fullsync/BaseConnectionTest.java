@@ -31,6 +31,7 @@ import java.util.Hashtable;
 
 import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -44,6 +45,7 @@ public class BaseConnectionTest {
 	protected File testingSrc;
 	protected Synchronizer synchronizer;
 	protected Profile profile;
+	protected Logger logger = Logger.getLogger(BaseConnectionTest.class);
 
 	@Before
 	public void setUp() throws Exception {
@@ -67,6 +69,21 @@ public class BaseConnectionTest {
 	public void tearDown() throws Exception {
 		tmpFolder.delete();
 	}
+
+	/**
+	 * recursively delete directory and all contained files.
+	 *
+	 * @param dir directory to clear
+	 */
+	protected void clearDirectory(final File dir) {
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				clearDirectory(file);
+			}
+			file.delete();
+		}
+	}
+
 
 	protected void createRuleFile() throws IOException {
 		createNewFileWithContents(testingSrc, ".syncrules", new Date().getTime(), "START RULESET UPLOAD\n" + "	USE RULEFILES SOURCE\n"
@@ -97,7 +114,14 @@ public class BaseConnectionTest {
 			@Override
 			public void taskGenerationFinished(Task task) {
 				Object ex = expectation.get(task.getSource().getName());
+
+				if (null == ex) {
+					logger.error("Unexpected generated Task for file: " + task.getSource().getName() + " (null)");
+				}
 				assertNotNull("Unexpected generated Task for file: " + task.getSource().getName(), ex);
+				if (!task.getCurrentAction().equalsExceptExplanation((Action) ex)) {
+					logger.error("Action was " + task.getCurrentAction() + ", expected: " + ex + " for File " + task.getSource().getName());
+				}
 				assertTrue("Action was " + task.getCurrentAction() + ", expected: " + ex + " for File " + task.getSource().getName(), task
 						.getCurrentAction().equalsExceptExplanation((Action) ex));
 			}
@@ -123,6 +147,8 @@ public class BaseConnectionTest {
 	}
 
 	public void testSingleInSync() throws Exception {
+		clearDirectory(testingSrc);
+		clearDirectory(testingDst);
 		createRuleFile();
 		Date d = new Date();
 		long lm = d.getTime();
@@ -141,6 +167,8 @@ public class BaseConnectionTest {
 	}
 
 	public void testSingleSpaceMinus() throws Exception {
+		clearDirectory(testingSrc);
+		clearDirectory(testingDst);
 		createRuleFile();
 		long lm = new Date().getTime();
 
@@ -157,6 +185,23 @@ public class BaseConnectionTest {
 		TaskTree tree = assertPhaseOneActions(expectation);
 		// Phase Three:
 		synchronizer.performActions(tree); // TODO assert task finished events ?
+	}
+
+	public void testSingleFileChange() throws Exception {
+		clearDirectory(testingSrc);
+		clearDirectory(testingDst);
+		createRuleFile();
+		long lm = new Date().getTime();
+
+		createNewFileWithContents(testingSrc, "sourceFile1.txt", lm, "this is a test\ncontent2");
+		createNewFileWithContents(testingDst, "sourceFile1.txt", lm, "this is a test\ncontent2 bla");
+		createNewFileWithContents(testingSrc, "sourceFile2.txt", lm + 3600, "this is a test\ncontent2");
+		createNewFileWithContents(testingDst, "sourceFile2.txt", lm, "this is a test\ncontent2");
+
+		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
+		expectation.put("sourceFile1.txt", new Action(Action.Update, Location.Destination, BufferUpdate.Destination, ""));
+		expectation.put("sourceFile2.txt", new Action(Action.Update, Location.Destination, BufferUpdate.Destination, ""));
+		assertPhaseOneActions(expectation);
 	}
 
 }

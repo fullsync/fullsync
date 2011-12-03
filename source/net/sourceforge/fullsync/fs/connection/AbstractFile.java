@@ -234,4 +234,10 @@ class AbstractFile implements File {
 	public void refreshBuffer() throws IOException {
 
 	}
+
+	@Override
+	public String toString() {
+		return name + "; " + attributes;
+	}
+
 }
