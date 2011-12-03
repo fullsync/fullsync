@@ -18,6 +18,9 @@ Versions of dependent libraries in distributions:
  * xercesImpl.jar                2.9.1             2007-09-15
  * xml-apis.jar                  2.9.1             2007-09-15
 
+Launcher:
+ * WinRun4J                      0.4.3             2011-09-18
+
 Used only by the tests (stored in lib-tests/):
  * j2ssh-ant.jar                 svn rev 43        2011-04-14        from trunk
  * j2ssh-common.jar              svn rev 43        2011-04-14        from trunk
