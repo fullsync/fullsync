@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -119,9 +118,8 @@ public class BlockBuffer implements ExecutionBuffer {
 						logger.info(opDesc);
 					}
 
-					Enumeration<EntryFinishedListener> en = finishedListeners.elements();
-					while (en.hasMoreElements()) {
-						en.nextElement().entryFinished(desc);
+					for (EntryFinishedListener listener : finishedListeners) {
+						listener.entryFinished(desc);
 					}
 				}
 			}

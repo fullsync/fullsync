@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.fs.filesystems;
 
+import java.util.Arrays;
+
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.FileSystem;
@@ -110,8 +112,8 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 		logger.warn("Destination: " + destination);
 		logger.warn("Name: " + name);
 		logger.warn("Instruction: " + instruction);
-		logger.warn("Prompt (#" + prompt.length + "): " + prompt);
-		logger.warn("echo: (#" + echo.length + "): " + echo);
+		logger.warn("Prompt (#" + prompt.length + "): " + Arrays.toString(prompt));
+		logger.warn("echo: (#" + echo.length + "): " + Arrays.toString(echo));
 		logger.warn("rejecting prompt automatically");
 		return null;
 	}

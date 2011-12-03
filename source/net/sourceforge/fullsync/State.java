@@ -62,5 +62,4 @@ public class State implements Serializable {
 	public String toString() {
 		return State.toString(type) + " - " + Location.toString(location);
 	}
-
 }

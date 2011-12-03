@@ -103,10 +103,10 @@ public class FilePathFileFilterRule extends FileFilterRule {
 
 		switch (op) {
 			case OP_IS:
-				return name.equals(pattern);
+				return name.equals(pattern.getValue());
 
 			case OP_ISNT:
-				return !name.equals(pattern);
+				return !name.equals(pattern.getValue());
 
 			case OP_CONTAINS:
 				return (name.indexOf(pattern.getValue()) >= 0);

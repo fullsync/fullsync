@@ -21,7 +21,6 @@ package net.sourceforge.fullsync.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -145,13 +144,10 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 	 */
 	@Override
 	public boolean isNodeIgnored(File node) {
-		node.getName();
 		boolean take = !ignoreAll;
-		Enumeration<Rule> e;
 
 		if (take) {
-			for (e = ignoreRules.elements(); e.hasMoreElements();) {
-				Rule rule = e.nextElement();
+			for (Rule rule : ignoreRules) {
 				if (rule.accepts(node)) {
 					take = false;
 					break;
@@ -160,8 +156,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 		}
 
 		if (!take) {
-			for (e = takeRules.elements(); e.hasMoreElements();) {
-				Rule rule = e.nextElement();
+			for (Rule rule : takeRules) {
 				if (rule.accepts(node)) {
 					take = true;
 					break;
@@ -209,6 +204,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 
 	@Override
 	public State compareFiles(FileAttributes src, FileAttributes dst) throws DataParseException {
+		// TODO verify functionality of this method
 		//FIXME: optimize rule processing
 		//FIXME: add debug logs to every decision
 		//FIXME: "compile" syncRules into a tree or so to allow resolution without string tokenization,...

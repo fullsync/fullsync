@@ -20,7 +20,6 @@
 package net.sourceforge.fullsync.impl;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.Action;
@@ -183,9 +182,8 @@ public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListen
 	}
 
 	protected void fireTaskFinished(TaskFinishedEvent event) {
-		Enumeration<TaskFinishedListener> e = listeners.elements();
-		while (e.hasMoreElements()) {
-			e.nextElement().taskFinished(event);
+		for (TaskFinishedListener listener : listeners) {
+			listener.taskFinished(event);
 		}
 	}
 

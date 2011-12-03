@@ -239,5 +239,4 @@ class AbstractFile implements File {
 	public String toString() {
 		return name + "; " + attributes;
 	}
-
 }

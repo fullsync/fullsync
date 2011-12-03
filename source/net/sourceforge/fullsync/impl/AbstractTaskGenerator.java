@@ -152,8 +152,8 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 				Location.None, BufferUpdate.None, "Root") });
 		tree.setRoot(root);
 
-		for (int i = 0; i < taskGenerationListeners.size(); i++) {
-			(taskGenerationListeners.get(i)).taskTreeStarted(tree);
+		for (TaskGenerationListener listener : taskGenerationListeners) {
+			listener.taskTreeStarted(tree);
 		}
 
 		// TODO use syncnodes here [?]
@@ -163,8 +163,8 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		// TODO this would be better, but we need the rules to sync Nodes :-/
 		// synchronizeNodes( source.getRoot(), destination.getRoot(), rules, root );
 
-		for (int i = 0; i < taskGenerationListeners.size(); i++) {
-			(taskGenerationListeners.get(i)).taskTreeFinished(tree);
+		for (TaskGenerationListener listener : taskGenerationListeners) {
+			listener.taskTreeFinished(tree);
 		}
 
 		return tree;

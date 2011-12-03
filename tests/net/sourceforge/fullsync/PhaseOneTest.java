@@ -39,6 +39,7 @@ public class PhaseOneTest extends BaseConnectionTest {
 		profile.setDestination(dst);
 	}
 
+	@Override
 	@Test
 	public void testSingleInSync() throws Exception {
 		createRuleFile();
@@ -52,19 +53,9 @@ public class PhaseOneTest extends BaseConnectionTest {
 		assertPhaseOneActions(expectation);
 	}
 
+	@Override
 	@Test
 	public void testSingleFileChange() throws Exception {
-		createRuleFile();
-		long lm = new Date().getTime();
-
-		createNewFileWithContents(testingSrc, "sourceFile1.txt", lm, "this is a test\ncontent2");
-		createNewFileWithContents(testingDst, "sourceFile1.txt", lm, "this is a test\ncontent2 bla");
-		createNewFileWithContents(testingSrc, "sourceFile2.txt", lm + 3600, "this is a test\ncontent2");
-		createNewFileWithContents(testingDst, "sourceFile2.txt", lm, "this is a test\ncontent2");
-
-		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
-		expectation.put("sourceFile1.txt", new Action(Action.Update, Location.Destination, BufferUpdate.Destination, ""));
-		expectation.put("sourceFile2.txt", new Action(Action.Update, Location.Destination, BufferUpdate.Destination, ""));
-		assertPhaseOneActions(expectation);
+		super.testSingleFileChange();
 	}
 }

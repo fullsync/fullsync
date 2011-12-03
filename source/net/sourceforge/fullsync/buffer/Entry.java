@@ -46,7 +46,7 @@ public class Entry {
 
 	@Override
 	public String toString() {
-		Formatter format = new Formatter().format("%10d-%10d: %s", new Object[] { new Integer(start), new Integer(start + length - 1),
+		Formatter format = new Formatter().format("%10d-%10d: %s", new Object[] { Integer.valueOf(start), Integer.valueOf((start + length) - 1),
 				descriptor.toString(), });
 		return format.out().toString();
 	}

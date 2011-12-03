@@ -286,7 +286,7 @@ class FileObjectChooser extends Dialog {
 			}
 
 			item.setText(0, data.getName().getBaseName());
-			String type = data.getType().getName();
+			String type = data.getType().getName(); //FIXME: translate type name {file,folder}
 
 			if (data.getType().hasContent()) {
 				FileContent content = data.getContent();

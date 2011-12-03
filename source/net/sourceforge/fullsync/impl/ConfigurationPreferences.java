@@ -83,7 +83,7 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public void setConfirmExit(final boolean bool) {
-		config.setProperty("Interface.ConfirmExit", new Boolean(bool));
+		config.setProperty("Interface.ConfirmExit", Boolean.valueOf(bool));
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public void setCloseMinimizesToSystemTray(final boolean bool) {
-		config.setProperty("Interface.CloseMinimizesToSystemTray", new Boolean(bool));
+		config.setProperty("Interface.CloseMinimizesToSystemTray", Boolean.valueOf(bool));
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public void setMinimizeMinimizesToSystemTray(final boolean bool) {
-		config.setProperty("Interface.MinimizeMinimizesToSystemTray", new Boolean(bool));
+		config.setProperty("Interface.MinimizeMinimizesToSystemTray", Boolean.valueOf(bool));
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public void setSystemTrayEnabled(final boolean bool) {
-		config.setProperty("Interface.SystemTray.Enabled", new Boolean(bool));
+		config.setProperty("Interface.SystemTray.Enabled", Boolean.valueOf(bool));
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public void setListeningForRemoteConnections(final boolean bool) {
-		config.setProperty("RemoteConnection.active", new Boolean(bool));
+		config.setProperty("RemoteConnection.active", Boolean.valueOf(bool));
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public void setRemoteConnectionsPort(final int port) {
-		config.setProperty("RemoteConnection.port", new Integer(port));
+		config.setProperty("RemoteConnection.port", Integer.valueOf(port));
 	}
 
 	@Override
@@ -166,12 +166,12 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public void setAutostartScheduler(final boolean bool) {
-		config.setProperty("Interface.AutostartScheduler", new Boolean(bool));
+		config.setProperty("Interface.AutostartScheduler", Boolean.valueOf(bool));
 	}
 
 	@Override
 	public String getLanguageCode() {
-		return config.getString("Interface.LanguageCode", new String("en"));
+		return config.getString("Interface.LanguageCode", "en");
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class ConfigurationPreferences implements Preferences {
 	}
 
 	@Override
-	public void setHelpShown(boolean shown) {
+	public void setHelpShown(final boolean shown) {
 		// ignore
 	}
 

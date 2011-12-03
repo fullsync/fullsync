@@ -40,7 +40,7 @@ import org.apache.commons.vfs2.VFS;
 public class CommonsVfsConnection implements FileSystemConnection {
 	private static final long serialVersionUID = 2L;
 	private ConnectionDescription desc;
-	private FileObject base;
+	private FileObject base; //FIXME FileObject is not serializable?!
 	private File root;
 
 	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystem fs) throws net.sourceforge.fullsync.FileSystemException {

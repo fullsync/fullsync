@@ -170,10 +170,10 @@ public class TaskDecisionList extends Composite {
 
 		actionImages = new Hashtable<Integer, Image>();
 		for (int i = 0; i < Action.names.length; i++) {
-			actionImages.put(new Integer(i), gui.getImage("Action_" + Action.names[i] + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
+			actionImages.put(Integer.valueOf(i), gui.getImage("Action_" + Action.names[i] + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		for (int i = 0; i < Action.errorNames.length; i++) {
-			actionImages.put(new Integer(i + 10), gui.getImage("Action_" + Action.errorNames[i] + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
+			actionImages.put(Integer.valueOf(i + 10), gui.getImage("Action_" + Action.errorNames[i] + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		taskImages = new Hashtable<Object, Image>();
@@ -224,7 +224,7 @@ public class TaskDecisionList extends Composite {
 		// TODO draw some not-existing image ?
 
 		if ((a.getLocation() & location) > 0) {
-			Image actionImage = actionImages.get(new Integer(a.getType()));
+			Image actionImage = actionImages.get(Integer.valueOf(a.getType()));
 			if (actionImage != null) {
 				g.drawImage(actionImage, x, 0);
 			}
@@ -279,7 +279,7 @@ public class TaskDecisionList extends Composite {
 		hash |= (a.getLocation() << 6);
 		hash |= (a.getType() << 8);
 
-		return new Integer(hash);
+		return Integer.valueOf(hash);
 	}
 
 	protected Image buildTaskImage(Task t, Action a) {

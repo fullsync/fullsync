@@ -28,6 +28,7 @@ import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.IgnoreDecider;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.fs.File;
 
 /**
@@ -80,14 +81,14 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	@Override
 	public void synchronizeNodes(File src, File dst, RuleSet rules, Task parent) throws DataParseException, IOException {
 		if (!takeIgnoreDecider.isNodeIgnored(src)) {
-			for (int i = 0; i < taskGenerationListeners.size(); i++) {
-				(taskGenerationListeners.get(i)).taskGenerationStarted(src, dst);
+			for (TaskGenerationListener listener : taskGenerationListeners) {
+				listener.taskGenerationStarted(src, dst);
 			}
 
 			Task task = getActionDecider().getTask(src, dst, stateDecider, bufferStateDecider);
 
-			for (int i = 0; i < taskGenerationListeners.size(); i++) {
-				(taskGenerationListeners.get(i)).taskGenerationFinished(task);
+			for (TaskGenerationListener listener : taskGenerationListeners) {
+				listener.taskGenerationFinished(task);
 			}
 
 			if (rules.isUsingRecursion()) {
