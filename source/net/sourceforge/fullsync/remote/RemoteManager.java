@@ -53,17 +53,6 @@ public class RemoteManager {
 		}
 	}
 
-	public Profile getProfile(String name) {
-		try {
-			Profile remoteprofile = remoteInterface.getProfile(name);
-			return remoteprofile;
-		}
-		catch (RemoteException e) {
-			ExceptionHandler.reportException(e);
-			return null;
-		}
-	}
-
 	public Profile[] getProfiles() {
 		try {
 			Profile[] remoteprofiles = remoteInterface.getProfiles();
@@ -99,10 +88,6 @@ public class RemoteManager {
 	public void removeSchedulerChangeListener(SchedulerChangeListener listener) throws RemoteException {
 		RemoteSchedulerChangeListener remoteListener = (RemoteSchedulerChangeListener) listenersMap.remove(listener);
 		remoteInterface.removeSchedulerChangeListener(remoteListener);
-	}
-
-	public void runProfile(String name) throws RemoteException {
-		remoteInterface.runProfile(name);
 	}
 
 	public void startTimer() {

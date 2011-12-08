@@ -267,18 +267,6 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		fireProfilesChangeEvent();
 	}
 
-	public void addProfile(String name, ConnectionDescription source, ConnectionDescription destination, RuleSetDescriptor ruleSet,
-			String lastUpdate) {
-		Date date;
-		try {
-			date = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).parse(lastUpdate);
-		}
-		catch (ParseException e) {
-			date = new Date();
-		}
-		addProfile(new Profile(name, source, destination, ruleSet, date));
-	}
-
 	public void removeProfile(Profile profile) {
 		profile.removeProfileChangeListener(this);
 		profiles.remove(profile);
@@ -437,11 +425,6 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		return schedule;
 	}
 
-	protected RuleSetDescriptor unserializeRuleSetDescriptor(Element element) {
-		RuleSetDescriptor descriptor = RuleSetDescriptor.unserialize(element);
-		return descriptor;
-	}
-
 	protected Profile unserializeProfile(Element element) {
 		Profile p = new Profile();
 		p.setName(element.getAttribute("name"));
@@ -461,28 +444,11 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 			p.setLastUpdate(new Date());
 		}
 
-		p.setRuleSet(unserializeRuleSetDescriptor((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)));
+		p.setRuleSet(RuleSetDescriptor.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)));
 		p.setSchedule(unserializeSchedule((Element) element.getElementsByTagName("Schedule").item(0)));
 		p.setSource(ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)));
 		p.setDestination(ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)));
 		return p;
-	}
-
-	protected Element serialize(Schedule schedule, String name, Document doc) {
-		Element element = doc.createElement(name);
-
-		if (schedule instanceof IntervalSchedule) {
-			IntervalSchedule is = (IntervalSchedule) schedule;
-			element.setAttribute("type", "interval");
-			element.setAttribute("firstinterval", String.valueOf(is.getFirstInterval()));
-			element.setAttribute("interval", String.valueOf(is.getInterval()));
-		}
-		else if (schedule instanceof CrontabSchedule) {
-			CrontabSchedule cs = (CrontabSchedule) schedule;
-			element.setAttribute("type", "crontab");
-			element.setAttribute("pattern", cs.getPattern());
-		}
-		return element;
 	}
 
 	protected Element serialize(RuleSetDescriptor desc, String name, Document doc) {

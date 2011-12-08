@@ -297,7 +297,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 
 		MenuItem logItem = new MenuItem(menuEdit, SWT.PUSH);
 		logItem.setText(Messages.getString("MainWindow.Show_Log_Menu")); //$NON-NLS-1$
-		logItem.setAccelerator(SWT.CTRL | SWT.SHIFT + 'L');
+		logItem.setAccelerator(SWT.CTRL | (SWT.SHIFT + 'L'));
 		logItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {
@@ -308,7 +308,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 
 		MenuItem preferencesItem = new MenuItem(menuEdit, SWT.PUSH);
 		preferencesItem.setText(Messages.getString("MainWindow.Preferences_Menu")); //$NON-NLS-1$
-		preferencesItem.setAccelerator(SWT.CTRL | SWT.SHIFT + 'P');
+		preferencesItem.setAccelerator(SWT.CTRL | (SWT.SHIFT + 'P'));
 		preferencesItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {
@@ -327,12 +327,12 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 
 		final MenuItem connectItem = new MenuItem(menuRemoteConnection, SWT.PUSH);
 		connectItem.setText(Messages.getString("MainWindow.Connect_Menu")); //$NON-NLS-1$
-		connectItem.setAccelerator(SWT.CTRL | SWT.SHIFT + 'C');
+		connectItem.setAccelerator(SWT.CTRL | (SWT.SHIFT + 'C'));
 		connectItem.setEnabled(true);
 
 		final MenuItem disconnectItem = new MenuItem(menuRemoteConnection, SWT.PUSH);
 		disconnectItem.setText(Messages.getString("MainWindow.Disconnect_Menu")); //$NON-NLS-1$
-		disconnectItem.setAccelerator(SWT.CTRL | SWT.SHIFT + 'D');
+		disconnectItem.setAccelerator(SWT.CTRL | (SWT.SHIFT + 'D'));
 		disconnectItem.setEnabled(false);
 
 		connectItem.addListener(SWT.Selection, new Listener() {
