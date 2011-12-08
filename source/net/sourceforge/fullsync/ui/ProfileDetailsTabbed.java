@@ -790,6 +790,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 							if (null != src) {
 								closeSourceSite();
 								src.setParameter("bufferStrategy", ""); // the subdirs tab should bypass the buffer imo
+								src.setParameter("interactive", "true");
 								sourceSite = fsm.createConnection(src);
 								drawDirectoryTree();
 								lastSourceLoaded = src.getUri().toString();

@@ -148,7 +148,7 @@ public class BaseConnectionTest {
 
 		TaskGenerator processor = synchronizer.getTaskGenerator();
 		processor.addTaskGenerationListener(list);
-		TaskTree tree = processor.execute(profile);
+		TaskTree tree = processor.execute(profile, false);
 		processor.removeTaskGenerationListener(list);
 		return tree;
 	}

@@ -100,6 +100,7 @@ class ProtocolSpecificComposite {
 		try {
 			ConnectionDescription desc = getConnectionDescription();
 			FileSystemManager fsm = new FileSystemManager();
+			desc.setParameter("interactive", "true");
 			conn = fsm.createConnection(desc);
 
 			FileObject base = conn.getBase();

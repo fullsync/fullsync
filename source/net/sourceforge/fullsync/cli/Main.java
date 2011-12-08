@@ -164,7 +164,7 @@ public class Main { // NO_UCD
 			// Apply executing options
 			if (line.hasOption("r")) {
 				Profile p = profileManager.getProfile(line.getOptionValue("r"));
-				TaskTree tree = sync.executeProfile(p);
+				TaskTree tree = sync.executeProfile(p, false);
 				sync.performActions(tree);
 				p.setLastUpdate(new Date());
 				profileManager.save();
@@ -211,7 +211,7 @@ public class Main { // NO_UCD
 				profileManager.addSchedulerListener(new ProfileSchedulerListener() {
 					@Override
 					public void profileExecutionScheduled(Profile profile) {
-						TaskTree tree = sync.executeProfile(profile);
+						TaskTree tree = sync.executeProfile(profile, false);
 						if (tree == null) {
 							profile.setLastError(1, "An error occured while comparing filesystems.");
 						}

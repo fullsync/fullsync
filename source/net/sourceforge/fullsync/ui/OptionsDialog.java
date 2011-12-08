@@ -76,7 +76,10 @@ public class OptionsDialog extends Dialog implements SelectionListener {
 				Button b = new Button(compositeButtons, SWT.PUSH);
 				b.setText(option);
 				b.addSelectionListener(this);
-				b.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+				GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+				data.widthHint = UISettings.BUTTON_WIDTH;
+				data.heightHint = UISettings.BUTTON_HEIGHT;
+				b.setLayoutData(data);
 			}
 
 			dialogShell.setLayout(new GridLayout(2, false));

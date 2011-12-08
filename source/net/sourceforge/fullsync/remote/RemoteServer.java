@@ -149,7 +149,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	@Override
 	public void runProfile(String name) throws RemoteException {
 		Profile p = profileManager.getProfile(name);
-		TaskTree tree = synchronizer.executeProfile(p);
+		TaskTree tree = synchronizer.executeProfile(p, false);
 		synchronizer.performActions(tree);
 		p.setLastUpdate(new Date());
 		profileManager.save();
@@ -173,7 +173,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	@Override
 	public TaskTree executeProfile(String name) throws RemoteException {
 		Profile p = profileManager.getProfile(name);
-		TaskTree tree = synchronizer.executeProfile(p);
+		TaskTree tree = synchronizer.executeProfile(p, false);
 		return tree;
 	}
 

@@ -549,7 +549,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 	@Override
 	public void profileExecutionScheduled(Profile profile) {
 		Synchronizer sync = guiController.getSynchronizer();
-		TaskTree tree = sync.executeProfile(profile);
+		TaskTree tree = sync.executeProfile(profile, false);
 		if (tree == null) {
 			profile.setLastError(1, Messages.getString("MainWindow.Error_Comparing_Filesystems")); //$NON-NLS-1$
 		}
@@ -622,7 +622,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 				}, 10, 100);
 				statusDelayString = Messages.getString("MainWindow.Starting_Profile") + p.getName() + "..."; //$NON-NLS-1$ //$NON-NLS-2$
 				statusLine.setMessage(statusDelayString);
-				t = guiController.getSynchronizer().executeProfile(p);
+				t = guiController.getSynchronizer().executeProfile(p, interactive);
 				if (t == null) {
 					p.setLastError(1, Messages.getString("MainWindow.Error_Comparing_Filesystems")); //$NON-NLS-1$
 					statusLine.setMessage(Messages.getString("MainWindow.Error_Processing_Profile", p.getName())); //$NON-NLS-1$

@@ -56,7 +56,7 @@ Bugs:
 	[ ] sockets are treated like directories, and listing their children results in an exception
 	[ ] SMB: does Ntlm authentication with domain accounts work with FullSync?
 	[X] using the custom FileObjectChooser is impractical for the local filesystem
-	[ ] SFTP: Usability: the current handling of unknown hosts is probably bad, especially on win
+	[X] SFTP: Usability: the current handling of unknown hosts is probably bad, especially on win
 
 Features:
 	[ ] TaskDecisionDialog:

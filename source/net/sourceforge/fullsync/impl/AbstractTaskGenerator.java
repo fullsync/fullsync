@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
 import net.sourceforge.fullsync.BufferUpdate;
+import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
@@ -94,7 +95,7 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 	}
 
 	@Override
-	public TaskTree execute(Profile profile) throws FileSystemException, URISyntaxException, DataParseException, IOException {
+	public TaskTree execute(Profile profile, boolean interactive) throws FileSystemException, URISyntaxException, DataParseException, IOException {
 		Site d1 = null, d2 = null;
 
 		RuleSet rules = profile.getRuleSet().createRuleSet();
@@ -120,8 +121,14 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		}
 
 		try {
-			d1 = fsm.createConnection(profile.getSource());
-			d2 = fsm.createConnection(profile.getDestination());
+			ConnectionDescription srcDesc = profile.getSource();
+			ConnectionDescription dstDesc = profile.getDestination();
+			if (interactive) {
+				srcDesc.setParameter("interactive", "true");
+				dstDesc.setParameter("interactive", "true");
+			}
+			d1 = fsm.createConnection(srcDesc);
+			d2 = fsm.createConnection(dstDesc);
 			return execute(d1, d2, actionDecider, rules);
 		}
 		catch (FileSystemException ex) {

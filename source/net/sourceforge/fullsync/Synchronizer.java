@@ -48,7 +48,7 @@ public class Synchronizer {
 		return taskGenerator;
 	}
 
-	public synchronized TaskTree executeProfile(Profile profile) {
+	public synchronized TaskTree executeProfile(Profile profile, boolean interactive) {
 		if (remoteManager != null) {
 			try {
 				return remoteManager.executeProfile(profile.getName());
@@ -59,21 +59,13 @@ public class Synchronizer {
 		}
 		else {
 			try {
-				return taskGenerator.execute(profile);
+				return taskGenerator.execute(profile, interactive);
 			}
 			catch (Exception e) {
 				ExceptionHandler.reportException(e);
 			}
 		}
 		return null;
-	}
-
-	public synchronized TaskTree executeProfile(Profile profile, TaskGenerationListener taskGenerationListener) {
-		taskGenerator.addTaskGenerationListener(taskGenerationListener);
-		TaskTree tree = executeProfile(profile);
-		taskGenerator.removeTaskGenerationListener(taskGenerationListener);
-
-		return tree;
 	}
 
 	/**

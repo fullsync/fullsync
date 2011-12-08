@@ -27,12 +27,15 @@ import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 import net.sourceforge.fullsync.impl.SFTPLogger;
+import net.sourceforge.fullsync.ui.GuiController;
+import net.sourceforge.fullsync.ui.OptionsDialog;
 
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 import org.apache.log4j.Logger;
+import org.eclipse.swt.SWT;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UIKeyboardInteractive;
@@ -97,8 +100,25 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 
 	@Override
 	public final boolean promptYesNo(final String message) {
-		logger.warn("SFTP UserInfo::promptYesNo: " + message + "; automatic decision: No");
-		return false;
+		final boolean[] arr = new boolean[] { false };
+		if (null != desc.getParameter("interactive")) {
+			GuiController.getInstance().getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					OptionsDialog od = new OptionsDialog(GuiController.getInstance().getMainShell(), SWT.ICON_QUESTION);
+					od.setText("Question - FullSync"); //FIXME: translate
+					od.setMessage(message); //FIXE: translate message
+					od.setOptions(new String[] { "Yes", "No" }); //FIXME: translate
+					if ("Yes".equals(od.open())) { //FIXME: translate
+						arr[0] = true;
+					}
+				}
+			});
+		}
+		else {
+			logger.warn("SFTP UserInfo::promptYesNo: " + message + "; automatic decision: No");
+		}
+		return arr[0];
 	}
 
 	@Override
