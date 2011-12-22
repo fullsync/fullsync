@@ -33,7 +33,9 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.rules.Rule;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Provides informations and rules about how to handle specific<br>
@@ -43,7 +45,7 @@ import org.apache.log4j.Logger;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public abstract class AbstractRuleSet implements RuleSet, Cloneable {
-	private static final Logger logger = Logger.getLogger(AbstractRuleSet.class);
+	private static final Logger logger = LoggerFactory.getLogger(AbstractRuleSet.class);
 	String name;
 	boolean usingRecursion;
 	boolean usingRecursionOnIgnore;

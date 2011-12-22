@@ -20,8 +20,10 @@
 package net.sourceforge.fullsync.cli;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.nio.channels.FileChannel;
 import java.rmi.RemoteException;
 import java.util.Date;
 
@@ -44,15 +46,14 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.xml.DOMConfigurator;
 import org.eclipse.swt.program.Program;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
+@SuppressWarnings("deprecation")
 public class Main { // NO_UCD
 	private static Options options;
 
@@ -97,15 +98,23 @@ public class Main { // NO_UCD
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.printHelp("fullsync [-hvrdp]", options);
 	}
+
+	public static String getConfigDir() {
+		String configDir = System.getenv("XDG_CONFIG_HOME");
+		if (null == configDir) {
+			configDir = System.getProperty("user.home") + File.separator + ".config";
+		}
+		configDir = configDir + File.separator + "fullsync" + File.separator;
+		if (!new File(configDir).exists()) {
+			new File(configDir).mkdirs();
+		}
+		return configDir;
+	}
+
 	public static void main(String[] args) {
 		initOptions();
-
+		String configDir = getConfigDir();
 		try {
-			if (null == System.getProperty("net.sourceforge.fullsync.noredirectstderr")) {
-				System.setErr(new PrintStream(new FileOutputStream("logs/stderr.log")));
-				// System.setOut( new PrintStream( new FileOutputStream( "logs/stdout.log" ) ) );
-			}
-
 			CommandLineParser parser = new PosixParser();
 			CommandLine line = null;
 
@@ -124,11 +133,9 @@ public class Main { // NO_UCD
 			}
 
 			// Initialize basic facilities
-			DOMConfigurator.configure("logging.xml");
 			JVMPreferences preferences = new JVMPreferences();
 			if (new File("preferences.properties").exists() && !preferences.getOldSettingsMigrated()) {
 				// migrate old settings to the new settings store
-				@SuppressWarnings("deprecation")
 				Preferences oldpref = new ConfigurationPreferences("preferences.properties");
 				preferences.setConfirmExit(oldpref.confirmExit());
 				preferences.setCloseMinimizesToSystemTray(oldpref.closeMinimizesToSystemTray());
@@ -148,17 +155,27 @@ public class Main { // NO_UCD
 			if (line.hasOption("P")) {
 				profilesFile = line.getOptionValue("P");
 			}
+			else {
+				profilesFile = configDir + "profiles.xml";
+				// upgrade code...
+				File newProfiles = new File(profilesFile);
+				File oldProfiles = new File("profiles.xml");
+				if (!newProfiles.exists() && oldProfiles.exists()) {
+					FileChannel in = new FileInputStream(oldProfiles).getChannel();
+					FileChannel out = new FileOutputStream(newProfiles).getChannel();
+					in.transferTo(0, in.size(), out);
+					in.close();
+					out.close();
+					oldProfiles.renameTo(new File("profiles_old.xml"));
+				}
+			}
 			ProfileManager profileManager = new ProfileManager(profilesFile);
 
 			final Synchronizer sync = new Synchronizer();
 
 			// Apply modifying options
-			if (line.hasOption("v")) {
-				ConsoleAppender appender = new ConsoleAppender(new PatternLayout("[%p] %c %x - %m%n"), "System.out");
-				appender.setName("Verbose");
-
-				Logger logger = Logger.getLogger("FullSync");
-				logger.addAppender(appender);
+			if (!line.hasOption("v")) {
+				System.setErr(new PrintStream(new FileOutputStream(configDir + "fullsync.log")));
 			}
 
 			// Apply executing options
@@ -196,7 +213,7 @@ public class Main { // NO_UCD
 			}
 			if (activateRemote) {
 				try {
-					Logger logger = Logger.getLogger("FullSync");
+					Logger logger = LoggerFactory.getLogger("FullSync");
 
 					RemoteController.getInstance().startServer(port, password, profileManager, sync);
 					logger.info("Remote Interface available on port: " + port);

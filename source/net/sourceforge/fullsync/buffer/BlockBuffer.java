@@ -28,7 +28,8 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>

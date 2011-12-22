@@ -25,13 +25,14 @@ import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class StateDecider implements net.sourceforge.fullsync.StateDecider {
-	private static final Logger logger = Logger.getLogger(StateDecider.class);
+	private static final Logger logger = LoggerFactory.getLogger(StateDecider.class);
 	private static final State inSyncNone = new State(State.NodeInSync, Location.None);
 	private static final State orphanSrc = new State(State.Orphan, Location.Source);
 	private static final State orphanDst = new State(State.Orphan, Location.Destination);

@@ -22,12 +22,13 @@
 		<include name="commons-configuration.jar" />
 		<include name="commons-collections.jar" />
 		<include name="commons-lang.jar" />
-		<include name="commons-logging.jar" />
 		<include name="commons-net.jar" />
-		<include name="j2ssh-core.jar" />
-		<include name="jakarta-oro.jar" />
+		<!--<include name="jakarta-oro.jar" />-->
 		<include name="jcifs.jar" />
-		<include name="log4j.jar" />
+		<include name="slf4j-api.jar" />
+		<include name="log4j-over-slf4j.jar" />
+		<include name="jcl-over-slf4j.jar" />
+		<include name="fullsync-logger.jar" />
 		<!-- can't be done because the swt jar is added to the class path at runtime... -->
 		<!-- <include name="swt-*.jar"/> -->
 		<include name="xercesImpl.jar" />
@@ -109,8 +110,6 @@
 				<include name="*.*" />
 			</fileset>
 		</copy>
-		<mkdir dir="${build.dir}/logs" />
-		<copy file="${basedir}/resources/logging-dist.xml" tofile="${build.dir}/logging.xml" />
 		<copy file="${basedir}/resources/sample.syncrules" tofile="${build.dir}/sample.syncrules" />
 		<copy file="${basedir}/resources/FullSync.sh" tofile="${build.dir}/FullSync.sh" />
 		<copy file="${basedir}/resources/FullSync.exe" tofile="${build.dir}/FullSync.exe" />
@@ -130,11 +129,23 @@
 
 	<target name="jar" depends="compile, rmic, copy-libs">
 		<jar destfile="${build.lib.dir}/fullsync.jar">
-			<fileset dir="${classes.dir}" includes="**/*" />
+			<fileset dir="${classes.dir}" includes="net/**/*" excludes="net/sourceforge/fullsync/launcher/**/*" />
 			<fileset dir="${basedir}">
 				<include name="jar-copyright.txt" />
 				<include name="jar-special-thanks.txt" />
 			</fileset>
+			<manifest>
+				<attribute name="License" value="GPLv2+" />
+				<attribute name="FullSync-Version" value="${version}" />
+				<attribute name="Copyright" value="${jar.copyright}" />
+				<!-- TODO: builddate,... -->
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="logger-jar" depends="compile, rmic, copy-libs, jar">
+		<jar destfile="${build.lib.dir}/fullsync-logger.jar">
+			<fileset dir="${classes.dir}" includes="org/slf4j/impl/**/*" />
 			<manifest>
 				<attribute name="License" value="GPLv2+" />
 				<attribute name="FullSync-Version" value="${version}" />
@@ -169,7 +180,7 @@
 		</jar>
 	</target>
 
-	<target name="build" depends="detect, clean, copy-libs, copy-resources, javadoc, jar, launcher-jar">
+	<target name="build" depends="detect, clean, copy-libs, copy-resources, javadoc, jar, logger-jar, launcher-jar">
 	</target>
 
 	<!-- Targets creating different distribution versions -->
@@ -179,7 +190,6 @@
 		<zip zipfile="${dist.dir}/${final.name}.zip">
 			<fileset dir="${build.dir}">
 				<include name="**/*.*" />
-				<include name="logs" />
 				<exclude name="classes/**" />
 				<exclude name="profiles.xml" />
 			</fileset>

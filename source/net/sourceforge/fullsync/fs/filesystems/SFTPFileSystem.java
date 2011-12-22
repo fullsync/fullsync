@@ -34,8 +34,9 @@ import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
-import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UIKeyboardInteractive;
@@ -44,7 +45,7 @@ import com.jcraft.jsch.UserInfo;
 public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserInfo {
 	private static boolean loggerSetupCompleted = false;
 
-	private Logger logger = Logger.getLogger("FullSync");
+	private Logger logger = LoggerFactory.getLogger("FullSync");
 	private ConnectionDescription desc = null;
 
 	public SFTPFileSystem() {

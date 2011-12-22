@@ -19,7 +19,9 @@
  */
 package net.sourceforge.fullsync.impl;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * SFTPLogger class implementing the com.jcraft.jsch.Logger interface
@@ -36,7 +38,7 @@ public class SFTPLogger implements com.jcraft.jsch.Logger {
 	 * Constructor of the SFTPLogger implementation.
 	 */
 	public SFTPLogger() {
-		logger = Logger.getLogger("FullSync");
+		logger = LoggerFactory.getLogger("SFTP");
 	}
 
 	@Override
@@ -51,7 +53,7 @@ public class SFTPLogger implements com.jcraft.jsch.Logger {
 			case INFO:  logger.info(message);  break;
 			case WARN:  logger.warn(message);  break;
 			case ERROR: logger.error(message); break;
-			case FATAL: logger.fatal(message); break;
+			case FATAL: logger.error(message); break;
 			default:    logger.debug(message); break;
 		}
 	}

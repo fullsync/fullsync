@@ -54,11 +54,10 @@ public class Launcher {
 			}
 			String dot = new File(".").getAbsoluteFile().toURI().toString();
 			ArrayList<URL> jars = new ArrayList<URL>();
-			
+
 			System.out.println("launching FullSync... OS=" + os + "; ARCH=" + arch + "; DOT=" + dot);
 
-			// add application and correct SWT implementation the class-loader
-			jars.add(new URL(dot + "/lib/fullsync.jar"));
+			// add correct SWT implementation to the class-loader
 			jars.add(new URL(dot + "/lib/swt-" + os + "-" + arch + ".jar"));
 
 			// read out the "fake" class-path set on the launcher jar

@@ -31,11 +31,12 @@ import java.util.Hashtable;
 
 import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BaseConnectionTest {
 	@Rule
@@ -45,7 +46,7 @@ public class BaseConnectionTest {
 	protected File testingSrc;
 	protected Synchronizer synchronizer;
 	protected Profile profile;
-	protected Logger logger = Logger.getLogger(BaseConnectionTest.class);
+	protected Logger logger = LoggerFactory.getLogger(BaseConnectionTest.class);
 
 	@Before
 	public void setUp() throws Exception {

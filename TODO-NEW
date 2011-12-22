@@ -22,17 +22,22 @@ Roadmap:
 	[ ] re-add the installer (windows/linux/(mac?))
 	[ ] windows/linux/(mac?) shortcuts
 	[ ] no writes to the installation directory
-		[ ] store all profiles into the java.util.prefs store
-		[ ] add a way to ex/import the whole fullsync data from the java prefs store
-	[ ] configuration migration
+		[X] store all profiles into the java.util.prefs store -> No, not suitable
+		[ ] add a way to ex/import the whole fullsync data from the java prefs store -> what for? not now
+		[X] move profiles and logs to some user writable directory (~/.config/fullsync/{profiles.xml,fullsync.log})
+	[X] configuration migration
 		[X] configuration migration FullSync settings
-		[ ] configuration migration profiles
+		[X] configuration migration profiles
 	[ ] improve sync speed
 	[ ] setup tests(windows xp/7, x86, x86_64; Linux x86, x86_64; mac?)
 	[ ] ask for mac testers
 	[ ] --> Stable Release
 	[ ] move all images, xml's, config files into the fullsync jar, into some resource package to make loading them easier
+		[ ] images
+		[ ] config files
+		[ ] split fullsync.jar into fullsync.jar and fullsync-ui.jar, where the fullsync.jar should work standalone without GUI dependencies
 	[ ] exception handling: look up ways to minimize exception handling code, should also allow to specify that we don't want to handle them and just rethrow them (debugging)
+		[ ] move most Exceptions to RuntimeExceptions?
 	[ ] review & improve documentation of the commandline arguments
 	[ ] increase maximum allowed RAM for FullSync, 1G?
 

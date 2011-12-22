@@ -39,7 +39,9 @@ import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This class is the server for remote connections.
@@ -57,7 +59,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 
 	private HashMap<Remote, Object> listenersMap = new HashMap<Remote, Object>();
 
-	Logger logger = Logger.getLogger("FullSync");
+	private Logger logger = LoggerFactory.getLogger("FullSync");
 
 	public RemoteServer(ProfileManager profileManager, Synchronizer synchronizer) throws RemoteException {
 		this.profileManager = profileManager;

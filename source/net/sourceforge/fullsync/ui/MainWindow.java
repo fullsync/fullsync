@@ -31,6 +31,7 @@ import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.cli.Main;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 
@@ -301,8 +302,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 		logItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {
-				// open main log file
-				Program.launch(new java.io.File("logs/fullsync.log").getAbsolutePath()); //$NON-NLS-1$
+				Program.launch(new java.io.File(Main.getConfigDir() + "fullsync.log").getAbsolutePath()); //$NON-NLS-1$
 			}
 		});
 

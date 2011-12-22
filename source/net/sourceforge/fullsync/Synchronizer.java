@@ -27,7 +27,8 @@ import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 import net.sourceforge.fullsync.impl.TaskGeneratorImpl;
 import net.sourceforge.fullsync.remote.RemoteManager;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class should provide wrappers for most common synchronization tasks
@@ -38,6 +39,8 @@ import org.apache.log4j.Logger;
 public class Synchronizer {
 	private TaskGenerator taskGenerator;
 	private RemoteManager remoteManager;
+
+	private Logger logger = LoggerFactory.getLogger("FullSync");
 
 	public Synchronizer() {
 		taskGenerator = new TaskGeneratorImpl();
@@ -87,7 +90,6 @@ public class Synchronizer {
 	 * @return Returns the ErrorLevel
 	 */
 	public int performActions(TaskTree taskTree, TaskFinishedListener listener) {
-		Logger logger = Logger.getLogger("FullSync");
 		if (remoteManager != null) {
 			logger.info("Remote Synchronization started");
 			try {
@@ -149,7 +151,7 @@ public class Synchronizer {
 
 	public IoStatistics getIoStatistics(TaskTree taskTree) {
 		// HACK omg, that's not the way io stats are intended to be generated / used
-		Logger logger = Logger.getLogger("FullSync");
+		Logger logger = LoggerFactory.getLogger("FullSync");
 		BlockBuffer buffer = new BlockBuffer(logger);
 		TaskExecutor queue = new FillBufferTaskExecutor(buffer);
 		return queue.createStatistics(taskTree);

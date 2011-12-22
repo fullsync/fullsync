@@ -24,13 +24,14 @@ package net.sourceforge.fullsync.schedule;
 
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class SchedulerImpl implements Scheduler, Runnable {
-	private Logger logger = Logger.getLogger(Scheduler.class);
+	private Logger logger = LoggerFactory.getLogger(Scheduler.class);
 	private ScheduleTaskSource scheduleSource;
 	private Thread worker;
 	private boolean running;
