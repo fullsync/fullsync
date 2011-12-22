@@ -93,7 +93,7 @@ class AboutDialog extends Dialog implements DisposeListener {
 			labelPicture.setSize(r.width, r.height);
 			labelPicture.setImage(aboutImg);
 			// version label
-			Font smallfont = new Font(null, new FontData("Sans Serif", 7, SWT.ITALIC));
+			Font smallfont = new Font(null, new FontData("Sans Serif", 7, SWT.NORMAL));
 			Label labelVersion = new Label(dialogShell, SWT.FILL);
 			labelVersion.setForeground(UISettings.COLOR_LIGHT_GREY);
 			labelVersion.setFont(smallfont);
