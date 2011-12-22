@@ -112,7 +112,7 @@ class AboutDialog extends Dialog implements DisposeListener {
 			}
 			catch (Exception e) {
 				/* this will happen during debugging, might happen at runtime too; ignore */
-				// FIXME: log this exception to some warn log
+				e.printStackTrace();
 			}
 			String copyright = "<unable to read copyright of jar file>";
 			InputStream copyrightIS = AboutDialog.class.getResourceAsStream("/jar-copyright.txt");

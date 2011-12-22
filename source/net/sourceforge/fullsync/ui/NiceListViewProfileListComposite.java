@@ -155,8 +155,8 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		}
 
 		public void updateComponent() {
-			lSource.setText(profile.getSource().toString());
-			lDestination.setText(profile.getDestination().toString());
+			lSource.setText("" + profile.getSource());
+			lDestination.setText("" + profile.getDestination());
 			lLastUpdate.setText(profile.getLastUpdateText());
 			lNextUpdate.setText(profile.getNextUpdateText());
 			layout();

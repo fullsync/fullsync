@@ -289,8 +289,12 @@ public class Profile implements Serializable {
 		if (null != schedule) {
 			elem.appendChild(schedule.serialize(doc));
 		}
-		elem.appendChild(source.serialize("Source", doc));
-		elem.appendChild(destination.serialize("Destination", doc));
+		if (null != source) {
+			elem.appendChild(source.serialize("Source", doc));
+		}
+		if (null != destination) {
+			elem.appendChild(destination.serialize("Destination", doc));
+		}
 
 		return elem;
 	}
