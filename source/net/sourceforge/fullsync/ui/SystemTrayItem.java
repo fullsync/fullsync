@@ -31,6 +31,8 @@ import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.fs.File;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -67,15 +69,20 @@ public class SystemTrayItem implements TaskGenerationListener {
 		// initialize trayItem
 		trayItem.setImage(imageList[0]);
 		trayItem.setToolTipText("FullSync"); //$NON-NLS-1$
-		trayItem.addListener(SWT.DefaultSelection, new Listener() {
+		trayItem.addSelectionListener(new SelectionListener() {
 			@Override
-			public void handleEvent(Event arg0) {
+			public void widgetSelected(final SelectionEvent e) {
+				guiController.setMainShellVisible(true);
+			}
+
+			@Override
+			public void widgetDefaultSelected(final SelectionEvent e) {
 				guiController.setMainShellVisible(true);
 			}
 		});
 		trayItem.addListener(SWT.MenuDetect, new Listener() {
 			@Override
-			public void handleEvent(Event evt) {
+			public void handleEvent(final Event evt) {
 				menu.setVisible(true);
 			}
 		});
