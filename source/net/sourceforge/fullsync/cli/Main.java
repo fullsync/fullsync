@@ -133,8 +133,9 @@ public class Main { // NO_UCD
 			}
 
 			// Initialize basic facilities
-			JVMPreferences preferences = new JVMPreferences();
-			if (new File("preferences.properties").exists() && !preferences.getOldSettingsMigrated()) {
+			JVMPreferences preferences = new JVMPreferences(configDir + "config.xml");
+			File prefs = new File("preferences.properties");
+			if (prefs.exists()) {
 				// migrate old settings to the new settings store
 				Preferences oldpref = new ConfigurationPreferences("preferences.properties");
 				preferences.setConfirmExit(oldpref.confirmExit());
@@ -147,8 +148,8 @@ public class Main { // NO_UCD
 				preferences.setRemoteConnectionsPassword(oldpref.getRemoteConnectionsPassword());
 				preferences.setAutostartScheduler(oldpref.getAutostartScheduler());
 				preferences.setLanguageCode(oldpref.getLanguageCode());
-				preferences.setOldSettingsMigrated(true);
 				preferences.save();
+				prefs.renameTo(new File("preferences_old.properties"));
 			}
 
 			String profilesFile = "profiles.xml";

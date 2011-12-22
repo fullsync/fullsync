@@ -19,7 +19,13 @@
  */
 package net.sourceforge.fullsync.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.prefs.BackingStoreException;
+import java.util.prefs.InvalidPreferencesFormatException;
 
 import net.sourceforge.fullsync.Crypt;
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -41,19 +47,44 @@ public class JVMPreferences implements Preferences {
 	private static String keyRemoteConnectionPassword = "remoteConnectionPassword";
 	private static String keyAutostartScheduler = "autostartScheduler";
 	private static String keyLanguageCode = "languageCode";
-	private static String keyOldSettingsMigrationDone = "oldSettingsMigrationDone";
 	private static String keyHelpShown = "helpShown";
-	
+
+	/**
+	 * preferences node for FullSync.
+	 */
+	private java.util.prefs.Preferences fullsyncRoot; //TODO: store version number, upgrade infos,...
+
 	/**
 	 * preferences node for FullSync settings.
 	 */
 	private java.util.prefs.Preferences prefs;
 
 	/**
+	 * name of the file where the preferences backup will be stored.
+	 */
+	private String backupFileName;
+	/**
 	 * Constructor for JVMPreferences loading the users preference Node.
 	 */
-	public JVMPreferences() {
-		prefs = java.util.prefs.Preferences.userRoot().node("/net/sourceforge/fullsync");
+	public JVMPreferences(final String _backupFileName) {
+		fullsyncRoot = java.util.prefs.Preferences.userRoot().node("/net/sourceforge/fullsync");
+		prefs = fullsyncRoot.node("config");
+		backupFileName = _backupFileName;
+		File backupFile = new File(backupFileName);
+		FileInputStream is;
+		try {
+			is = new FileInputStream(backupFile);
+			java.util.prefs.Preferences.importPreferences(is);
+		}
+		catch (FileNotFoundException e) {
+			/* ignore */
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		catch (InvalidPreferencesFormatException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -64,9 +95,20 @@ public class JVMPreferences implements Preferences {
 		try {
 			prefs.flush();
 			prefs.sync();
+			fullsyncRoot.flush();
+			fullsyncRoot.sync();
+			FileOutputStream os = new FileOutputStream(new File(backupFileName));
+			fullsyncRoot.exportSubtree(os);
+			os.flush();
+			os.close();
 		}
 		catch (BackingStoreException e) {
 			ExceptionHandler.reportException(e);
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -231,22 +273,6 @@ public class JVMPreferences implements Preferences {
 		prefs.put(keyLanguageCode, code);
 	}
 
-	/**
-	 * getOldSettingsMigrated.
-	 * @return false if the old settings were not yet migrated
-	 */
-	public final boolean getOldSettingsMigrated() {
-		return prefs.getBoolean(keyOldSettingsMigrationDone, false);
-	}
-
-	/**
-	 * setOldSettingsMigrated.
-	 * @param migrated set to true to indicate that old settings were migrated
-	 */
-	public final void setOldSettingsMigrated(final boolean migrated) {
-		prefs.putBoolean(keyOldSettingsMigrationDone, migrated);
-	}
-
 	@Override
 	public boolean getHelpShown() {
 		return prefs.getBoolean(keyHelpShown, false);
@@ -256,5 +282,4 @@ public class JVMPreferences implements Preferences {
 	public void setHelpShown(boolean shown) {
 		prefs.putBoolean(keyHelpShown, shown);
 	}
-
 }
