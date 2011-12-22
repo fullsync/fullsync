@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
  * @author Michele Aiello
  */
 public class AdvancedRuleSetDescriptor extends RuleSetDescriptor {
+	public static final String RULESET_TYPE = "advanced";
 
 	private static final long serialVersionUID = 2L;
 	private String ruleSetName;
@@ -51,16 +52,16 @@ public class AdvancedRuleSetDescriptor extends RuleSetDescriptor {
 	 */
 	@Override
 	public String getType() {
-		return "advanced";
+		return RULESET_TYPE;
 	}
 
 	/**
 	 * (non-Javadoc)
 	 *
-	 * @see net.sourceforge.fullsync.RuleSetDescriptor#serialize(org.w3c.dom.Document)
+	 * @see net.sourceforge.fullsync.RuleSetDescriptor#serializeDescriptor(org.w3c.dom.Document)
 	 */
 	@Override
-	public Element serialize(Document document) {
+	public Element serializeDescriptor(Document document) {
 		Element advancedRuleSetElement = document.createElement("AdvancedRuleSet");
 		advancedRuleSetElement.setAttribute("name", getRuleSetName());
 		return advancedRuleSetElement;

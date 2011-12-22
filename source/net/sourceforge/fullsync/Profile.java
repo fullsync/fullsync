@@ -22,10 +22,14 @@ package net.sourceforge.fullsync;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
 import net.sourceforge.fullsync.schedule.Schedule;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -48,6 +52,33 @@ public class Profile implements Serializable {
 
 	private transient boolean eventsAllowed;
 	private transient ArrayList<ProfileChangeListener> listeners;
+
+	public static Profile unserialize(Element element) {
+		Profile p = new Profile();
+		p.setName(element.getAttribute("name"));
+		p.setDescription(element.getAttribute("description"));
+		p.setSynchronizationType(element.getAttribute("type"));
+		if (element.hasAttribute("enabled")) {
+			p.setEnabled(Boolean.valueOf(element.getAttribute("enabled")).booleanValue());
+		}
+		if (element.hasAttribute("lastErrorLevel")) {
+			p.setLastError(Integer.parseInt(element.getAttribute("lastErrorLevel")), element.getAttribute("lastErrorString"));
+		}
+
+		try {
+			p.setLastUpdate(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).parse(element.getAttribute("lastUpdate")));
+		}
+		catch (ParseException e) {
+			p.setLastUpdate(new Date());
+		}
+
+		p.setRuleSet(RuleSetDescriptor.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)));
+		p.setSchedule(Schedule.unserialize((Element) element.getElementsByTagName("Schedule").item(0)));
+		p.setSource(ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)));
+		p.setDestination(ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)));
+		return p;
+
+	}
 
 	public Profile() {
 		this.listeners = new ArrayList<ProfileChangeListener>();
@@ -243,4 +274,25 @@ public class Profile implements Serializable {
 
 		this.listeners = new ArrayList<ProfileChangeListener>();
 	}
+
+	public Element serialize(final Document doc) {
+		Element elem = doc.createElement("Profile");
+		elem.setAttribute("name", name);
+		elem.setAttribute("description", description);
+		elem.setAttribute("type", synchronizationType);
+		elem.setAttribute("enabled", String.valueOf(enabled));
+		elem.setAttribute("lastErrorLevel", String.valueOf(lastErrorLevel));
+		elem.setAttribute("lastErrorString", lastErrorString);
+		elem.setAttribute("lastUpdate", DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(lastUpdate));
+
+		elem.appendChild(RuleSetDescriptor.serialize(ruleSet, "RuleSetDescriptor", doc));
+		if (null != schedule) {
+			elem.appendChild(schedule.serialize(doc));
+		}
+		elem.appendChild(source.serialize("Source", doc));
+		elem.appendChild(destination.serialize("Destination", doc));
+
+		return elem;
+	}
+
 }

@@ -30,8 +30,8 @@ import org.w3c.dom.Element;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class CrontabSchedule implements Schedule {
-	public static String SCHEDULE_TYPE = "crontab";
+public class CrontabSchedule extends Schedule {
+	public static final String SCHEDULE_TYPE = "crontab";
 
 	private static final long serialVersionUID = 2L;
 
@@ -45,12 +45,18 @@ public class CrontabSchedule implements Schedule {
 
 	private transient long lastExecution;
 
-	public static CrontabSchedule unserialize(final Element element) throws DataParseException {
+	@Override
+	public void unserializeSchedule(final Element element) {
 		String pattern = "* * * * *";
 		if (element.hasAttribute("pattern")) {
 			pattern = element.getAttribute("pattern");
 		}
-		return new CrontabSchedule(pattern);
+		try {
+			read(pattern);
+		}
+		catch (DataParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

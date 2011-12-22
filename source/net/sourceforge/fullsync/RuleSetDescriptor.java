@@ -43,15 +43,15 @@ public abstract class RuleSetDescriptor implements Serializable {
 	// TODO [Michele] change this!
 	static {
 		descriptorRegister = new Hashtable<String, Class<? extends RuleSetDescriptor>>(2);
-		descriptorRegister.put("simple", SimplyfiedRuleSetDescriptor.class);
-		descriptorRegister.put("advanced", AdvancedRuleSetDescriptor.class);
+		descriptorRegister.put(SimplyfiedRuleSetDescriptor.RULESET_TYPE, SimplyfiedRuleSetDescriptor.class);
+		descriptorRegister.put(AdvancedRuleSetDescriptor.RULESET_TYPE, AdvancedRuleSetDescriptor.class);
 	}
 
 	public abstract RuleSet createRuleSet();
 
 	public abstract String getType();
 
-	public abstract Element serialize(Document document);
+	public abstract Element serializeDescriptor(Document document);
 
 	protected abstract void unserializeDescriptor(Element element);
 
@@ -67,7 +67,6 @@ public abstract class RuleSetDescriptor implements Serializable {
 		}
 		else {
 			RuleSetDescriptor desc = null;
-
 			try {
 				desc = ruleSetDesctiptorClass.newInstance();
 			}
@@ -79,12 +78,16 @@ public abstract class RuleSetDescriptor implements Serializable {
 				ExceptionHandler.reportException(e);
 				return null;
 			}
-
 			desc.unserializeDescriptor(element);
-
 			return desc;
 		}
-
 	}
 
+	public static final Element serialize(RuleSetDescriptor desc, String name, Document doc) {
+		Element elem = doc.createElement(name);
+		elem.setAttribute("type", desc.getType());
+		Element ruleDescriptorElement = desc.serializeDescriptor(doc);
+		elem.appendChild(ruleDescriptorElement);
+		return elem;
+	}
 }

@@ -43,6 +43,7 @@ import org.w3c.dom.NodeList;
  * @author Michele Aiello
  */
 public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
+	public static final String RULESET_TYPE = "simple";
 
 	private static final long serialVersionUID = 2L;
 	private boolean syncSubDirs = false;
@@ -72,14 +73,14 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	 */
 	@Override
 	public String getType() {
-		return "simple";
+		return RULESET_TYPE;
 	}
 
 	/**
-	 * @see net.sourceforge.fullsync.RuleSetDescriptor#serialize(org.w3c.dom.Document)
+	 * @see net.sourceforge.fullsync.RuleSetDescriptor#serializeDescriptor(org.w3c.dom.Document)
 	 */
 	@Override
-	public Element serialize(Document document) {
+	public Element serializeDescriptor(Document document) {
 		Element simpleRuleSetElement = document.createElement("SimpleRuleSet");
 
 		simpleRuleSetElement.setAttribute("syncSubs", String.valueOf(isSyncSubDirs()));

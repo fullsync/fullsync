@@ -28,8 +28,8 @@ import org.w3c.dom.Element;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class IntervalSchedule implements Schedule {
-	public static String SCHEDULE_TYPE = "interval";
+public class IntervalSchedule extends Schedule {
+	public static final String SCHEDULE_TYPE = "interval";
 
 	private static final long serialVersionUID = 2L;
 
@@ -39,7 +39,8 @@ public class IntervalSchedule implements Schedule {
 	String displayUnit;
 
 
-	public static IntervalSchedule unserialize(final Element element) {
+	@Override
+	public void unserializeSchedule(final Element element) {
 		long firstInterval = 0;
 		long interval = 1;
 		String displayUnit = "seconds";
@@ -52,7 +53,10 @@ public class IntervalSchedule implements Schedule {
 		if (element.hasAttribute("displayUnit")) {
 			displayUnit = element.getAttribute("displayUnit");
 		}
-		return new IntervalSchedule(firstInterval, interval, displayUnit);
+		this.firstInterval = firstInterval;
+		this.interval = interval;
+		this.displayUnit = displayUnit;
+		this.next = System.currentTimeMillis() + firstInterval;
 	}
 
 	@Override

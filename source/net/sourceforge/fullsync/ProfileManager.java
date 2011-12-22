@@ -26,11 +26,8 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -40,8 +37,6 @@ import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.sourceforge.fullsync.remote.RemoteManager;
-import net.sourceforge.fullsync.schedule.CrontabSchedule;
-import net.sourceforge.fullsync.schedule.IntervalSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
 import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
@@ -137,35 +132,8 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	public ProfileManager(String configFile) throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
 		this();
 		this.configFile = configFile;
-
 		loadProfiles();
 		Collections.sort(profiles, new ProfileComparator());
-		/*
-		 * Digester dig = new Digester();
-		 * dig.push( this );
-		 * dig.addObjectCreate ( "Profiles/Profile", Profile.class );
-		 * dig.addSetProperties( "Profiles/Profile" );
-		 * dig.addObjectCreate ( "Profiles/Profile/Source", ConnectionDescription.class );
-		 * dig.addSetProperties( "Profiles/Profile/Source" );
-		 * dig.addCallMethod ( "Profiles/Profile/Source/Param", "setParameter" );
-		 * dig.addCallParam ( "Profiles/Profile/Source/Param", 0, "name" );
-		 * dig.addCallParam ( "Profiles/Profile/Source/Param", 1 );
-		 * dig.addSetNext ( "Profiles/Profile/Destination", "setSource" );
-		 * dig.addObjectCreate ( "Profiles/Profile/Destination", ConnectionDescription.class );
-		 * dig.addSetProperties( "Profiles/Profile/Destination" );
-		 * dig.addCallMethod ( "Profiles/Profile/Destination/Param", "setParameter" );
-		 * dig.addCallParam ( "Profiles/Profile/Destination/Param", 0, "name" );
-		 * dig.addCallParam ( "Profiles/Profile/Destination/Param", 1 );
-		 * dig.addSetNext ( "Profiles/Profile/Destination", "setDestination" );
-		 * dig.addSetNext ( "Profiles/Profile", "addProfile" );
-		 * try {
-		 * dig.parse( configFile );
-		 * } catch( IOException e ) {
-		 * ExceptionHandler.reportException( e );
-		 * } catch( SAXException e ) {
-		 * e.getException().printStackTrace();
-		 * }
-		 */
 	}
 
 	public void setRemoteConnection(RemoteManager remoteManager) throws MalformedURLException, RemoteException, NotBoundException {
@@ -252,7 +220,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 			for (int i = 0; i < list.getLength(); i++) {
 				Node n = list.item(i);
 				if (n.getNodeType() == Node.ELEMENT_NODE) {
-					Profile profile = unserializeProfile((Element) n);
+					Profile profile = Profile.unserialize((Element) n);
 					profiles.add(profile);
 					profile.addProfileChangeListener(this);
 				}
@@ -278,8 +246,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	public Profile getProfile(String name) {
-		for (int i = 0; i < profiles.size(); i++) {
-			Profile p = profiles.get(i);
+		for (Profile p: profiles) {
 			if (p.getName().equals(name)) {
 				return p;
 			}
@@ -377,14 +344,6 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		}
 	}
 
-	/*
-	 * public void addSchedulerChangeListener(SchedulerChangeListener listener) {
-	 * scheduler.addSchedulerChangeListener(listener);
-	 * }
-	 * public void removeSchedulerChangeListener(SchedulerChangeListener listener) {
-	 * scheduler.removeSchedulerChangeListener(listener);
-	 * }
-	 */
 	@Override
 	public void schedulerStatusChanged(boolean status) {
 		fireSchedulerChangedEvent();
@@ -403,83 +362,6 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		for (SchedulerChangeListener listener : schedulerChangeListeners) {
 			listener.schedulerStatusChanged(enabled);
 		}
-	}
-
-	protected Schedule unserializeSchedule(Element element) {
-		if (element == null) {
-			return null;
-		}
-		Schedule schedule = null;
-		String type = element.getAttribute("type");
-		try {
-			if (IntervalSchedule.SCHEDULE_TYPE.equals(type)) {
-				schedule = IntervalSchedule.unserialize(element);
-			}
-			else if (CrontabSchedule.SCHEDULE_TYPE.equals(type)) {
-				schedule = CrontabSchedule.unserialize(element);
-			}
-		}
-		catch (Exception ex) {
-			ExceptionHandler.reportException(ex);
-		}
-		return schedule;
-	}
-
-	protected Profile unserializeProfile(Element element) {
-		Profile p = new Profile();
-		p.setName(element.getAttribute("name"));
-		p.setDescription(element.getAttribute("description"));
-		p.setSynchronizationType(element.getAttribute("type"));
-		if (element.hasAttribute("enabled")) {
-			p.setEnabled(Boolean.valueOf(element.getAttribute("enabled")).booleanValue());
-		}
-		if (element.hasAttribute("lastErrorLevel")) {
-			p.setLastError(Integer.parseInt(element.getAttribute("lastErrorLevel")), element.getAttribute("lastErrorString"));
-		}
-
-		try {
-			p.setLastUpdate(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).parse(element.getAttribute("lastUpdate")));
-		}
-		catch (ParseException e) {
-			p.setLastUpdate(new Date());
-		}
-
-		p.setRuleSet(RuleSetDescriptor.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)));
-		p.setSchedule(unserializeSchedule((Element) element.getElementsByTagName("Schedule").item(0)));
-		p.setSource(ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)));
-		p.setDestination(ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)));
-		return p;
-	}
-
-	protected Element serialize(RuleSetDescriptor desc, String name, Document doc) {
-		Element elem = doc.createElement(name);
-
-		elem.setAttribute("type", desc.getType());
-		Element ruleDescriptorElement = desc.serialize(doc);
-		elem.appendChild(ruleDescriptorElement);
-
-		return elem;
-	}
-
-	protected Element serialize(Profile p, Document doc) {
-		Element elem = doc.createElement("Profile");
-		elem.setAttribute("name", p.getName());
-		elem.setAttribute("description", p.getDescription());
-		elem.setAttribute("type", p.getSynchronizationType());
-		elem.setAttribute("enabled", String.valueOf(p.isEnabled()));
-		elem.setAttribute("lastErrorLevel", String.valueOf(p.getLastErrorLevel()));
-		elem.setAttribute("lastErrorString", p.getLastErrorString());
-		elem.setAttribute("lastUpdate", DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(p.getLastUpdate()));
-
-		elem.appendChild(serialize(p.getRuleSet(), "RuleSetDescriptor", doc));
-		Schedule s = p.getSchedule();
-		if (null != s) {
-			elem.appendChild(s.serialize(doc));
-		}
-		elem.appendChild(p.getSource().serialize("Source", doc));
-		elem.appendChild(p.getDestination().serialize("Destination", doc));
-
-		return elem;
 	}
 
 	public void save()// throws ParserConfigurationException, FactoryConfigurationError, IOException
@@ -502,7 +384,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 				Element e = doc.createElement("Profiles");
 				e.setAttribute("version", "1.1");
 				for (Profile p : profiles) {
-					e.appendChild(serialize(p, doc));
+					e.appendChild(p.serialize(doc));
 				}
 				doc.appendChild(e);
 
