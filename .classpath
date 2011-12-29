@@ -27,5 +27,12 @@
 	<classpathentry kind="lib" path="lib/log4j-over-slf4j.jar"/>
 	<classpathentry kind="lib" path="lib-tests/MockFtpServer-2.2.jar"/>
 	<classpathentry kind="lib" path="lib/jcl-over-slf4j.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.eclipse.swtbot.junit4_x_2.0.5.20111003_1754-3676ac8-dev-e36.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.eclipse.swtbot.swt.finder_2.0.5.20111003_1754-3676ac8-dev-e36.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.hamcrest_1.1.0.v20090501071000.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.hamcrest.integration_1.1.0.v20090501071000.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.hamcrest.library_1.1.0.v20090501071000.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.hamcrest.text_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
