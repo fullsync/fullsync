@@ -22,20 +22,19 @@ package net.sourceforge.fullsync.cli;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.channels.FileChannel;
 import java.rmi.RemoteException;
 import java.util.Date;
 
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.ProfileSchedulerListener;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
-import net.sourceforge.fullsync.impl.JVMPreferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 import net.sourceforge.fullsync.ui.GuiController;
 
@@ -53,7 +52,6 @@ import org.slf4j.LoggerFactory;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-@SuppressWarnings("deprecation")
 public class Main { // NO_UCD
 	private static Options options;
 
@@ -100,7 +98,10 @@ public class Main { // NO_UCD
 	}
 
 	public static String getConfigDir() {
-		String configDir = System.getenv("XDG_CONFIG_HOME");
+		String configDir = System.getProperty("net.sourceforge.fullsync.configDir");
+		if (null == configDir) {
+			configDir = System.getenv("XDG_CONFIG_HOME");
+		}
 		if (null == configDir) {
 			configDir = System.getProperty("user.home") + File.separator + ".config";
 		}
@@ -109,6 +110,15 @@ public class Main { // NO_UCD
 			new File(configDir).mkdirs();
 		}
 		return configDir;
+	}
+
+	private static void backupFile(final File old, final File current, final String backupName) throws IOException {
+		FileChannel in = new FileInputStream(old).getChannel();
+		FileChannel out = new FileOutputStream(current).getChannel();
+		in.transferTo(0, in.size(), out);
+		in.close();
+		out.close();
+		old.renameTo(new File(backupName));
 	}
 
 	public static void main(String[] args) {
@@ -133,24 +143,17 @@ public class Main { // NO_UCD
 			}
 
 			// Initialize basic facilities
-			JVMPreferences preferences = new JVMPreferences(configDir + "config.xml");
-			File prefs = new File("preferences.properties");
-			if (prefs.exists()) {
-				// migrate old settings to the new settings store
-				Preferences oldpref = new ConfigurationPreferences("preferences.properties");
-				preferences.setConfirmExit(oldpref.confirmExit());
-				preferences.setCloseMinimizesToSystemTray(oldpref.closeMinimizesToSystemTray());
-				preferences.setMinimizeMinimizesToSystemTray(oldpref.minimizeMinimizesToSystemTray());
-				preferences.setSystemTrayEnabled(oldpref.systemTrayEnabled());
-				preferences.setProfileListStyle(oldpref.getProfileListStyle());
-				preferences.setListeningForRemoteConnections(oldpref.listeningForRemoteConnections());
-				preferences.setRemoteConnectionsPort(oldpref.getRemoteConnectionsPort());
-				preferences.setRemoteConnectionsPassword(oldpref.getRemoteConnectionsPassword());
-				preferences.setAutostartScheduler(oldpref.getAutostartScheduler());
-				preferences.setLanguageCode(oldpref.getLanguageCode());
-				preferences.save();
-				prefs.renameTo(new File("preferences_old.properties"));
+
+			// upgrade code...
+			do {
+				File newPreferences = new File(configDir + "preferences.properties");
+				File oldPreferences = new File("preferences.properties");
+				if (!newPreferences.exists() && oldPreferences.exists()) {
+					backupFile(oldPreferences, newPreferences, "preferences_old.properties");
+				}
 			}
+			while (false); // variable scope
+			ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
 
 			String profilesFile = "profiles.xml";
 			if (line.hasOption("P")) {
@@ -162,12 +165,7 @@ public class Main { // NO_UCD
 				File newProfiles = new File(profilesFile);
 				File oldProfiles = new File("profiles.xml");
 				if (!newProfiles.exists() && oldProfiles.exists()) {
-					FileChannel in = new FileInputStream(oldProfiles).getChannel();
-					FileChannel out = new FileOutputStream(newProfiles).getChannel();
-					in.transferTo(0, in.size(), out);
-					in.close();
-					out.close();
-					oldProfiles.renameTo(new File("profiles_old.xml"));
+					backupFile(oldProfiles, newProfiles, "profiles_old.xml");
 				}
 			}
 			ProfileManager profileManager = new ProfileManager(profilesFile);
@@ -291,7 +289,9 @@ public class Main { // NO_UCD
 
 				// FIXME [Michele] For some reasons there is some thread still alive if you run the remote interface
 				RemoteController.getInstance().stopServer();
-				System.exit(-1);
+				if (null == System.getProperty("net.sourceforge.fullsync.skipExit")) {
+					System.exit(-1);
+				}
 			}
 
 		}

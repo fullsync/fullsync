@@ -45,6 +45,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -286,7 +287,12 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 		menuItemExitProfile.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {
-				guiController.closeGui();
+				Display.getCurrent().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						guiController.closeGui();
+					}
+				});
 			}
 		});
 

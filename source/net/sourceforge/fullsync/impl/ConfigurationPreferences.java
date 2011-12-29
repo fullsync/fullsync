@@ -32,9 +32,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
  * @author Michele Aiello
- * @deprecated this class should be removed in a few stable releases.
  */
-@Deprecated
 public class ConfigurationPreferences implements Preferences {
 	/**
 	 * configuration object.
@@ -181,12 +179,12 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public boolean getHelpShown() {
-		return false;
+		return config.getBoolean("Interface.HelpShown", false);
 	}
 
 	@Override
 	public void setHelpShown(final boolean shown) {
-		// ignore
+		config.setProperty("Interface.HelpShown", Boolean.valueOf(shown));
 	}
 
 }

@@ -45,13 +45,13 @@ public class GuiController implements Runnable {
 	private final ProfileManager profileManager;
 	private final Synchronizer synchronizer;
 
+	private ExceptionHandler oldExceptionHandler;
+
 	private Display display;
 	private ImageRepository imageRepository;
 	private Shell mainShell;
 	private MainWindow mainWindow;
 	private SystemTrayItem systemTrayItem;
-
-	private boolean active;
 
 	public GuiController(Preferences preferences, ProfileManager profileManager, Synchronizer synchronizer) {
 		this.preferences = preferences;
@@ -125,7 +125,7 @@ public class GuiController implements Runnable {
 		imageRepository = new ImageRepository(display);
 		createMainShell(minimized);
 		systemTrayItem = new SystemTrayItem(this);
-		ExceptionHandler.registerExceptionHandler(new ExceptionHandler() {
+		oldExceptionHandler = ExceptionHandler.registerExceptionHandler(new ExceptionHandler() {
 			@Override
 			protected void doReportException(final String message, final Throwable exception) {
 				exception.printStackTrace();
@@ -138,12 +138,11 @@ public class GuiController implements Runnable {
 				});
 			}
 		});
-		active = true;
 	}
 
 	@Override
 	public void run() {
-		while (active) {
+		while (!mainShell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -172,18 +171,22 @@ public class GuiController implements Runnable {
 		GuiController.getInstance().getSynchronizer().disconnectRemote();
 
 		disposeGui();
-		active = false;
 	}
 
 	public void disposeGui() {
-		if (mainShell != null) {
+		ExceptionHandler.registerExceptionHandler(oldExceptionHandler);
+		if ((mainShell != null) && !mainShell.isDisposed()) {
+			mainShell.close();
 			mainShell.dispose();
-		}
-		if (systemTrayItem != null) {
-			systemTrayItem.dispose();
 		}
 		if (imageRepository != null) {
 			imageRepository.dispose();
+		}
+		if ((systemTrayItem != null) && !systemTrayItem.isDisposed()) {
+			systemTrayItem.dispose();
+		}
+		if ((display != null) && !display.isDisposed()) {
+			display.dispose();
 		}
 	}
 
