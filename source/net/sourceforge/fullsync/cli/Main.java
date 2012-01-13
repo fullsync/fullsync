@@ -255,7 +255,8 @@ public class Main { // NO_UCD
 					GuiController guiController = new GuiController(preferences, profileManager, sync);
 					guiController.startGui(line.hasOption('m'));
 
-					if (!line.hasOption('P') && !preferences.getHelpShown()) {
+					if (!line.hasOption('P') && !preferences.getHelpShown() && (null == System.getProperty("net.sourceforge.fullsync.skipHelp"))) {
+						//TODO: move to another thread, blocks GUI for the browser startup time...
 						try {
 							File f = new File("docs/manual/Getting_Started.html");
 							if (f.exists()) {

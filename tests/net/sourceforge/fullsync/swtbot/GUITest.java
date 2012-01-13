@@ -26,9 +26,8 @@ import java.io.File;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.swt.finder.SWTBot;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
@@ -39,19 +38,18 @@ import org.junit.rules.TemporaryFolder;
 public class GUITest {
 	private static final long GUI_STARTUP_TIMEOUT = 5000;
 
-	private static TemporaryFolder tempConfigDir;
-	private static Thread applicationThread;
-	private static SWTBot bot = null;
+	private Thread applicationThread;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	protected TemporaryFolder tempConfigDir;
+	protected SWTBot bot = null;
+
+	@Before
+	public void setUpBefore() throws Exception {
 		tempConfigDir = new TemporaryFolder();
 		tempConfigDir.create();
 		System.setProperty("net.sourceforge.fullsync.configDir", tempConfigDir.getRoot().toString());
 		System.setProperty("net.sourceforge.fullsync.skipExit", "true");
+		System.setProperty("net.sourceforge.fullsync.skipHelp", "true");
 
 		applicationThread = new Thread() {
 			@Override
@@ -70,11 +68,8 @@ public class GUITest {
 		bot = new SWTBot();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
+	@After
+	public void tearDownAfter() throws Exception {
 		final Display d = Display.findDisplay(applicationThread);
 		if ((null != d) && !d.isDisposed()) {
 			d.syncExec(new Runnable() {
@@ -85,10 +80,18 @@ public class GUITest {
 			});
 		}
 		applicationThread.join();
-		tempConfigDir.delete();
+
+		try {
+			assertConfigFileExists("profiles.xml");
+			assertConfigFileExists("preferences.properties");
+//			assertConfigFileExists("fullsync.log"); //FIXME: error log should also be created in verbose mode
+		}
+		finally {
+			tempConfigDir.delete();
+		}
 	}
 
-	private static Display waitForDisplayToAppear(final long timeOut) {
+	private Display waitForDisplayToAppear(final long timeOut) {
 		long endTime = System.currentTimeMillis() + timeOut;
 		Display display;
 		Thread[] threads = new Thread[Thread.activeCount()];
@@ -104,27 +107,20 @@ public class GUITest {
 		return null;
 	}
 
-	@Test
-	public void test() {
-		SWTBotMenu file = bot.menu("File");
-		file.menu("Exit").click();
-		try {
-			Thread.sleep(1000);
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Test
-	public void zzzStateSavedTest() {
-		assertConfigFileExists("profiles.xml");
-		assertConfigFileExists("preferences.properties");
-//		assertConfigFileExists("fullsync.log"); //FIXME: error log should also be created in verbose mode
-	}
-
 	private void assertConfigFileExists(final String name) {
 		File configFolder = new File(tempConfigDir.getRoot(), "fullsync");
 		assertTrue(configFolder + File.separator + name + " missing", new File(configFolder, name).exists());
+	}
+
+	@Test
+	public void testGUI() {
+		bot.menu("File").menu("New Profile").click();
+		SWTBot profile = bot.shell("Profile").bot();
+		assertTrue("Profile Dialog opens with General Tab selected", profile.tabItem("General").isActive());
+		profile.text(0).setText("SWTBot Profile 1");
+		profile.text(1).setText("Description");
+		profile.button("Ok").click();
+
+		bot.menu("File").menu("Exit").click();
 	}
 }
