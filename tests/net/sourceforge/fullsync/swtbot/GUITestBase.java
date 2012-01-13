@@ -28,14 +28,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
  * @author cobexer
  *
  */
-public class GUITest {
+public abstract class GUITestBase {
 	private static final long GUI_STARTUP_TIMEOUT = 5000;
 
 	private Thread applicationThread;
@@ -82,14 +81,14 @@ public class GUITest {
 		applicationThread.join();
 
 		try {
-			assertConfigFileExists("profiles.xml");
-			assertConfigFileExists("preferences.properties");
-//			assertConfigFileExists("fullsync.log"); //FIXME: error log should also be created in verbose mode
+			verifyAfterGUIStopped();
 		}
 		finally {
 			tempConfigDir.delete();
 		}
 	}
+
+	protected abstract void verifyAfterGUIStopped() throws Exception;
 
 	private Display waitForDisplayToAppear(final long timeOut) {
 		long endTime = System.currentTimeMillis() + timeOut;
@@ -107,20 +106,8 @@ public class GUITest {
 		return null;
 	}
 
-	private void assertConfigFileExists(final String name) {
+	protected void assertConfigFileExists(final String name) {
 		File configFolder = new File(tempConfigDir.getRoot(), "fullsync");
 		assertTrue(configFolder + File.separator + name + " missing", new File(configFolder, name).exists());
-	}
-
-	@Test
-	public void testGUI() {
-		bot.menu("File").menu("New Profile").click();
-		SWTBot profile = bot.shell("Profile").bot();
-		assertTrue("Profile Dialog opens with General Tab selected", profile.tabItem("General").isActive());
-		profile.text(0).setText("SWTBot Profile 1");
-		profile.text(1).setText("Description");
-		profile.button("Ok").click();
-
-		bot.menu("File").menu("Exit").click();
 	}
 }
