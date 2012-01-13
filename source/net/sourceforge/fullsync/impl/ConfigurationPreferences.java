@@ -86,7 +86,7 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public boolean closeMinimizesToSystemTray() {
-		return config.getBoolean("Interface.CloseMinimizesToSystemTray", true);
+		return config.getBoolean("Interface.CloseMinimizesToSystemTray", false);
 	}
 
 	@Override
