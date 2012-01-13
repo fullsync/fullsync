@@ -101,7 +101,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	private String configFile;
-	protected Vector<Profile> profiles;
+	private Vector<Profile> profiles;
 	private Vector<ProfileListChangeListener> changeListeners;
 	private Vector<ProfileSchedulerListener> scheduleListeners;
 	private boolean remoteConnected = false;
