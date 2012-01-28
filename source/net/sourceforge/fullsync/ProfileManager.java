@@ -246,7 +246,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	public Profile getProfile(String name) {
-		for (Profile p: profiles) {
+		for (Profile p : profiles) {
 			if (p.getName().equals(name)) {
 				return p;
 			}

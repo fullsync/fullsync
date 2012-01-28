@@ -176,7 +176,6 @@ public class GuiController implements Runnable {
 	public void disposeGui() {
 		ExceptionHandler.registerExceptionHandler(oldExceptionHandler);
 		if ((mainShell != null) && !mainShell.isDisposed()) {
-			mainShell.close();
 			mainShell.dispose();
 		}
 		if (imageRepository != null) {
