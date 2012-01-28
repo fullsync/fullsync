@@ -35,7 +35,7 @@ import org.junit.rules.TemporaryFolder;
  *
  */
 public abstract class GUITestBase {
-	private static final long GUI_STARTUP_TIMEOUT = 5000;
+	private static final long GUI_STARTUP_TIMEOUT = 7000;
 
 	private Thread applicationThread;
 
