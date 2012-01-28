@@ -122,6 +122,7 @@
 				<include name="manual/**/*" />
 			</fileset>
 		</copy>
+		<replaceregexp match="@VERSION@" replace="${version}" flags="g" byline="true" file="${build.dir}/docs/manual/manual.html" />
 		<copy file="${basedir}/CHANGELOG" tofile="${build.dir}/CHANGELOG" />
 		<copy file="${basedir}/LICENSE" tofile="${build.dir}/LICENSE" />
 		<!-- copy readme and so on -->

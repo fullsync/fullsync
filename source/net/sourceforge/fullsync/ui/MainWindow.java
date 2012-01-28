@@ -387,16 +387,18 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 			@Override
 			public void handleEvent(final Event e) {
 				// TODO help contents
-				java.io.File helpIndex = new java.io.File("docs/manual/index.html"); //$NON-NLS-1$
+				java.io.File helpIndex = new java.io.File("docs/manual/manual.html"); //$NON-NLS-1$
 				if (helpIndex.exists()) {
 					try {
 						Program.launch(helpIndex.toURI().toString());
 					}
 					catch (SecurityException ex) {
+						//FIXME: upload the new manul to the homepage!!
 						Program.launch("http://fullsync.sourceforge.net/docs/manual/index.html"); //$NON-NLS-1$
 					}
 				}
 				else {
+					//FIXME: upload the new manul to the homepage!!
 					Program.launch("http://fullsync.sourceforge.net/docs/manual/index.html"); //$NON-NLS-1$
 				}
 			}

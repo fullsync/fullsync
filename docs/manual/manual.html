@@ -1,0 +1,245 @@
+<!doctype html>
+<!--
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA 02110-1301, USA.
+
+For information about the authors of this project Have a look
+at the AUTHORS file in the root of this project.
+-->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; encoding=utf-8"/>
+		<title>FullSync Manual</title>
+		<link href="style.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<div id="header">
+			<h1>FullSync</h1>
+			<span>Publishing, Backup, Synchronization</span>
+			<img alt="" src="pictures/FullSync-head-logo.png" />
+		</div>
+		<div id="menu">
+			<ul>
+				<li><a href="#getting-started">Getting Started</a></li>
+				<li><a href="#connection-types">Connection Types</a></li>
+				<li><a href="#rule-sets">Rule Sets</a></li>
+				<li><a href="#sync-types">Synchronization Types</a></li>
+				<li><a href="#windows">Windows</a>
+					<ul>
+						<li><a href="#windows-main-window">Main Window</a></li>
+						<li><a href="#windows-profile-details">Profile Details</a></li>
+						<li><a href="#windows-settings">Settings Window</a></li>
+						<li><a href="#windows-task-decision">Task Decision Window</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div id="content">
+			<h2 id="getting-started">Getting Started</h2>
+			<p>
+				We will start creating a simple profile which updates a destination directory
+				with changes in the source directory. For example, this is useful for updating
+				websites on remote locations with changes that were done on the local working
+				copy. Additionally, we will make the profile being executed at specific times.
+			</p>
+
+			<p>
+				First, you need to create a new and empty profile. You will now see an empty
+				<a href="#windows-profile-details">Profile Details Window</a>. After entering
+				a name you have to specify the source and destination locations. As source
+				we will use a local directory, so you can use the browse button. The destination
+				will be an FTP-URL, which should look like this:
+				<code>ftp://your.domain.com/relative/path</code> where the 'relative path' is the
+				path needed to navigate to the destination path after logging in. So if you are
+				unsure what to enter, simply connect to the FTP site with your standard FTP
+				tool and find out what lies between the startup (default) directory and the
+				directory you want to be the destination. After that, enter the username and password.
+				Alternatively you can also specify a local path here, if you want to.<br />
+				<a href="#connection-types">more about connection types</a>
+			</p>
+
+			<p>
+				Now that the source and destination are given you will need to define in which
+				way you want those two locations to be synchronized. In this example we will use
+				Publish/Update, which will synchronize in just one direction, from source to
+				destination, as most of the currently provided types do.
+				Alternatively you can use Backup Copy or Exact Copy which have slightly different
+				behaviors that are shortly described in a text besides. <br />
+				<a href="#sync-types">more about synchronization types</a>
+			</p>
+
+			<p>
+				The last thing is defining the ruleset. Just select the simple rule set, activate
+				"Sync Subdirectories" and that's it. <br />
+				<a href="#rule-sets">more about rulesets</a>
+			</p>
+
+			<p>
+				Now you can press "ok" and run the profile. To additionally specify a scheduled
+				execution, simply edit the profile and select "Edit Scheduling". If you are used
+				to crontabs you can specify a crontab-like scheduling, or simply take the interval
+				execution. After accepting the new scheduling, enable this profile for scheduled
+				execution by checking the "Enabled" option and press "ok". If you now enable the
+				scheduler by pressing the run button in the toolbar all scheduled projects will
+				be executed at their specific times.
+			</p>
+
+			<h2 id="connection-types">Connection Types</h2>
+			<p>
+				FullSync supports a very flexible way of accessing different file system types
+				as source and destination for synchronization.
+				Currently available are the following types:
+			</p>
+			<!-- FIXME: rewrite this -->
+			<dl>
+				<dt>file:///[<i>drive</i>:/]<i>absolute-path</i></dt>
+				<dd>
+					Access the local filesystem directly. For windows,
+					add the drive letter. No username or password
+					required/supported.
+				</dd>
+				<dt>ftp://<i>host</i>[:<i>port</i>]/<i>relative-path[?[passive=true|false][&amp;compatible=true|false]]</i></dt>
+				<dd>
+					Access a remote server using ftp. Uses username and
+					password to authenticate.<br/>
+					<b>[0.9.1]</b> As of FullSync 0.9.1 you can add two query options to the url:
+					<ul>
+						<li>passive<br />
+							defaults to true, if you have connection problems set it false
+						</li>
+						<li>compatible<br />
+							defaults to false, if you have problems with directories containing minus or spaces
+							set it to true.
+						</li>
+					</ul>
+					Example: ftp://myhost/path/path?compatible=true&amp;passive=false
+				</dd>
+				<dt>sftp://<i>host</i>[:<i>port</i>]/<i>relative-path</i></dt>
+				<dd>
+					Access a remote server using sftp. Uses username and
+					password to authenticate.
+				</dd>
+				<dt>smb://<i>host</i>/<i>share</i>/<i>relative-path</i></dt>
+				<dd>
+					Access a computer using smb. Uses username and password
+					to authenticate. If you need to specify a domain, use
+					"username@domain" in the username field.
+				</dd>
+			</dl>
+
+			<h2 id="rule-sets">RuleSets</h2>
+			<p>
+				Currently there are two kinds of rule sets supported: simple
+				rule sets and advanced rule sets.
+			</p>
+
+			<p>
+				For basic operations the <b>simple rule set</b> is enough, it allows
+				you to define ignore and accept patterns (actually regular
+				expressions) and will operate in a default way.<br /><br />
+				So a simple regular expression for matching specific file endings looks
+				like this: <code>.+\.txt</code> or <code>.+\.(txt|jpg|tmp)</code> (for
+				matching multiple endings).<br />
+				If you just want to match complete file/directory names use this:
+				<code>DirectoryName</code> or for multiple names
+				<code>(DirectoryName1|DirectoryName2|file\.extension)</code>.
+				To match just the beginning or ending use the following, which is quite
+				much the same as matching endings: <code>prefix.+</code> or
+				<code>.+suffix</code> (note: + means there must be at least one character.
+				use * instead to make it match no character as well.).<br />
+				Until there is a more userfriendly way available, please use google
+				to find out more about regular expressions.
+			</p>
+
+			<p>
+				<b>Advanced rule sets</b> allow you to set rules more detailed,
+				like setting compare conditions, allowing deletion and it
+				allows you to overwrite these rules in each directory using
+				special files. At the moment, the format of the file is very
+				old and there are many options no longer supported, but still
+				you have the possibilty to overwrite ignore and accept patterns
+				per directory. To use the advanced rule set, simply copy the
+				sample.syncrules file to your source directory and rename it
+				to .syncrules (on windows you may need to use an editor or some
+				other filemanager to do this as the explorer does not like
+				names beginning with a dot). This will be the initial rule set
+				file containing one rule set named "UPLOAD". this must be named
+				in the advanced rule set options of the profile. To overwrite
+				ignore or accept (former "take") rules, just put a file called
+				.syncrules into the directory and copy the start and end rule set
+				lines into the file. now you can define a new ignore rule by
+				adding a line <code>DEFINE IGNORE "&lt;pattern&gt;"</code>.
+			</p>
+
+			<h2 id="sync-types">Synchronization Types</h2>
+			<p>
+				You can synchronize two locations using one of the following
+				supported types:
+			</p>
+			<dl>
+				<dt>Publish/Update</dt>
+				<dd>
+					This is used to update a website from a local copy to a remote server.
+					It will apply changes to the destination but not the other way around. If a file
+					changed in the destination a warning will be generated so it is not overwritten
+					without your knowledge. Additional files in the destination will be ignored, deleted
+					files in source will also be deleted on the destination. Short: FullSync creates
+					an exact copy of the source and keeps track of what it uploaded so additional files
+					(like generated data or config files) in destination are not affected.
+				</dd>
+				<dt>Backup Copy</dt>
+				<dd>
+					Copies all changes in the source to destination but does not delete anything in
+					destination.
+				</dd>
+				<dt>Exact Copy</dt>
+				<dd>
+					Copies all changes in the source to destination including deletions.
+				</dd>
+				<dt>Two-Way Synchronization</dt>
+				<dd>
+					Compares two locations and copies newer files to the other side. <br />
+					BEWARE: it does not recognize changes on both sides! in this case,
+					the older file is overwritten and changes to it are lost!
+				</dd>
+			</dl>
+
+			<div id="windows"></div>
+
+			<h2 id="windows-main-window">Main Window</h2>
+			<p>
+				This window is the main part of the graphical user interface.
+				It allows you to create, edit or delete profiles, run profiles
+				and choose which actions should be performed, enable and disable
+				the scheduler, edit properties and connect to other locations.
+			</p>
+			<img src="pictures/MainWindow.png" alt=""/>
+
+			<h2 id="windows-profile-details">Profile Details</h2>
+			<p>
+				In the profile details you can change properties of a specific
+				profile.
+			</p>
+			<img src="pictures/Profile_Details.png" alt=""/>
+			<p>
+				<a href="ConnectionTypes.html">more about ConnectionTypes (used in source and destination)</a><br/>
+				<a href="SynchronizationTypes.html">more about SynchronizationTypes</a><br/>
+				<a href="RuleSets.html">more about RuleSets</a>
+			</p>
+
+			<div id="version">Version @VERSION@</div>
+		</div>
+	</body>
+</html>

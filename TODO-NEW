@@ -3,6 +3,8 @@ Roadmap:
 	[X] add FileObjectChooser to all ConnectionSpecificComposites
 	[X] reorganize code to avoid duplication of the File choosing stuff
 	[X] in what state is the codebase compared to the last release?
+	[ ] update documentation
+	[ ] update documentation @http://fullsync.sourceforge.net/docs/manual/
 	[ ] finish started work
 	[ ] GUI cleanup
 	[X] check state of translations

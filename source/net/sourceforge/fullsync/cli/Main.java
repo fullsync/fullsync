@@ -257,7 +257,7 @@ public class Main { // NO_UCD
 
 					if (!line.hasOption('P') && !preferences.getHelpShown() && (null == System.getProperty("net.sourceforge.fullsync.skipHelp"))) {
 						try {
-							File f = new File("docs/manual/Getting_Started.html");
+							File f = new File("docs/manual/manual.html");
 							if (f.exists()) {
 								Program.launch(f.getAbsolutePath());
 							}
