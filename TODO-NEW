@@ -14,7 +14,7 @@ Roadmap:
 		[ ] SMB
 		[X] FTP
 		[X] SFTP
-	[ ] find SWT GUI test framework
+	[X] find SWT GUI test framework
 	[ ] get code coverage > 70% -> Alpha release
 	[ ] get code coverage > 80% -> Beta Release
 	[ ] fix all bugs along the way
@@ -23,7 +23,6 @@ Roadmap:
 	[ ] windows/linux/(mac?) shortcuts
 	[ ] no writes to the installation directory
 		[X] store all profiles into the java.util.prefs store -> No, not suitable
-		[ ] add a way to ex/import the whole fullsync data from the java prefs store -> what for? not now
 		[X] move profiles and logs to some user writable directory (~/.config/fullsync/{profiles.xml,fullsync.log})
 	[X] configuration migration
 		[X] configuration migration FullSync settings
@@ -74,6 +73,5 @@ Features:
 
 
 Future:
-	[ ] remove deprecated class net.sourceforge.fullsync.impl.ConfigurationPreferences and all dependencies (like commons-configuration.jar)
-		Breaks: updates from FulSync < 0.10
+	[ ] remove commons-configuration.jar
 	[ ] fix net.sourceforge.fullsync.TaskGeneratorImpl and net.sourceforge.fullsync.Synchronizer (multithreading)
