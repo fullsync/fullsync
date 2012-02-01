@@ -38,24 +38,24 @@ public class IntervalSchedule extends Schedule {
 	long next;
 	String displayUnit;
 
-
-	@Override
-	public void unserializeSchedule(final Element element) {
-		long firstInterval = 0;
-		long interval = 1;
-		String displayUnit = "seconds";
+	public IntervalSchedule(Element element) {
 		if (element.hasAttribute("firstinterval")) {
-			firstInterval = Long.parseLong(element.getAttribute("firstinterval"));
+			this.firstInterval = Long.parseLong(element.getAttribute("firstinterval"));
 		}
 		if (element.hasAttribute("interval")) {
-			interval = Long.parseLong(element.getAttribute("interval"));
+			this.interval = Long.parseLong(element.getAttribute("interval"));
 		}
 		if (element.hasAttribute("displayUnit")) {
-			displayUnit = element.getAttribute("displayUnit");
+			this.displayUnit = element.getAttribute("displayUnit");
 		}
+		this.next = System.currentTimeMillis() + firstInterval;
+	}
+
+	public IntervalSchedule(long firstInterval, long interval, String displayUnit) {
 		this.firstInterval = firstInterval;
 		this.interval = interval;
 		this.displayUnit = displayUnit;
+
 		this.next = System.currentTimeMillis() + firstInterval;
 	}
 
@@ -69,13 +69,6 @@ public class IntervalSchedule extends Schedule {
 		return element;
 	}
 
-	public IntervalSchedule(long firstInterval, long interval, String displayUnit) {
-		this.firstInterval = firstInterval;
-		this.interval = interval;
-		this.displayUnit = displayUnit;
-
-		this.next = System.currentTimeMillis() + firstInterval;
-	}
 
 	@Override
 	public long getNextOccurrence(long now) {

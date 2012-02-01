@@ -23,6 +23,7 @@
 package net.sourceforge.fullsync.schedule;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -43,8 +44,6 @@ public abstract class Schedule implements Serializable {
 
 	public abstract Element serialize(Document doc);
 
-	public abstract void unserializeSchedule(Element element);
-
 	private static Hashtable<String, Class<? extends Schedule>> scheduleRegister;
 
 	static {
@@ -54,7 +53,7 @@ public abstract class Schedule implements Serializable {
 	}
 
 
-	public static final Schedule unserialize(Element element) {
+	public static final Schedule unserialize(final Element element) {
 		if (element == null) {
 			return null;
 		}
@@ -68,18 +67,12 @@ public abstract class Schedule implements Serializable {
 			Schedule sched = null;
 
 			try {
-				sched = scheduleClass.newInstance();
+				Constructor<? extends Schedule> constructor = scheduleClass.getDeclaredConstructor(Element.class);
+				sched = constructor.newInstance(element);
 			}
-			catch (InstantiationException e) {
+			catch (Exception e) {
 				ExceptionHandler.reportException(e);
-				return null;
 			}
-			catch (IllegalAccessException e) {
-				ExceptionHandler.reportException(e);
-				return null;
-			}
-
-			sched.unserializeSchedule(element);
 
 			return sched;
 		}

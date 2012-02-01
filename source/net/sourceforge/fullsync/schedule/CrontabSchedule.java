@@ -45,22 +45,16 @@ public class CrontabSchedule extends Schedule {
 
 	private transient long lastExecution;
 
-	@Override
-	public void unserializeSchedule(final Element element) {
+	public CrontabSchedule(final Element element) throws DataParseException {
 		String pattern = "* * * * *";
 		if (element.hasAttribute("pattern")) {
 			pattern = element.getAttribute("pattern");
 		}
-		try {
-			read(pattern);
-		}
-		catch (DataParseException e) {
-			e.printStackTrace();
-		}
+		read(pattern);
 	}
 
 	@Override
-	public final Element serialize(final Document doc) {
+	public Element serialize(final Document doc) {
 		Element element = doc.createElement(Schedule.ELEMENT_NAME);
 		element.setAttribute("type", SCHEDULE_TYPE);
 		element.setAttribute("pattern", getPattern());
