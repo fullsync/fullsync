@@ -65,9 +65,13 @@ body {
 	padding: 1em .5em 1.5em .5em;
 }
 
-#content p, #content img {
+#content p {
 	padding: .4em .5em;
 	margin-bottom: 1.5em;
+}
+
+#content img {
+	padding: .2em;
 }
 
 #content dl, #content dd {
