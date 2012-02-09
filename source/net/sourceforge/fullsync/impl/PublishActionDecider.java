@@ -70,14 +70,8 @@ public class PublishActionDecider implements ActionDecider {
 		return new TraversalType();
 	}
 
-	/*
-	 * public Action getDefaultAction( File src, File dst, StateDecider sd, BufferStateDecider bsd ) throws DataParseException
-	 * {
-	 * return getPossibleActions( src, dst, sd, bsd )[0];
-	 * }
-	 */
 	@Override
-	public Task getTask(File src, File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
+	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd) throws DataParseException, IOException {
 		Vector<Action> actions = new Vector<Action>(3);
 		State state = sd.getState(src, dst);
 		switch (state.getType()) {
@@ -137,13 +131,7 @@ public class PublishActionDecider implements ActionDecider {
 				actions.add(inSync);
 				actions.add(overwriteDestination);
 				actions.add(overwriteSource);
-			} /*
-			 * else {
-			 * actions.add( new Action( UnexpectedChangeError, Destination, BufferUpdate.None,
-			 * "no local change, but changed remotely" ) );
-			 * actions.add( new Action( Update, Destination, BufferUpdate.Destination, "overwrite destination changes" ) );
-			 * }
-			 */
+			}
 				break;
 			default:
 				actions.add(new Action(NotDecidableError, None, BufferUpdate.None, "no rule found"));

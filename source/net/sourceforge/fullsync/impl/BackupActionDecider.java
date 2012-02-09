@@ -59,12 +59,6 @@ public class BackupActionDecider implements ActionDecider {
 		return new TraversalType();
 	}
 
-	/*
-	 * public Action getDefaultAction( File src, File dst, StateDecider sd, BufferStateDecider bsd ) throws DataParseException
-	 * {
-	 * return getPossibleActions( src, dst, sd, bsd )[0];
-	 * }
-	 */
 	@Override
 	public Task getTask(File src, File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
 		Vector<Action> actions = new Vector<Action>(3);
@@ -121,13 +115,7 @@ public class BackupActionDecider implements ActionDecider {
 			{
 				actions.add(inSync);
 				actions.add(overwriteDestination);
-			} /*
-			 * else {
-			 * actions.add( new Action( Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None,
-			 * "no local change, but changed remotely" ) );
-			 * actions.add( new Action( Action.Update, Location.Destination, BufferUpdate.Destination, "overwrite destination changes" ) );
-			 * }
-			 */
+			}
 				break;
 			default:
 				actions.add(new Action(Action.NotDecidableError, Location.None, BufferUpdate.None, "no rule found"));

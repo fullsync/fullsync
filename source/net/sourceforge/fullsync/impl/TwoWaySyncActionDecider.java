@@ -65,14 +65,8 @@ public class TwoWaySyncActionDecider implements ActionDecider {
 		return new TraversalType();
 	}
 
-	/*
-	 * public Action getDefaultAction( File src, File dst, StateDecider sd, BufferStateDecider bsd ) throws DataParseException
-	 * {
-	 * return getPossibleActions( src, dst, sd, bsd )[0];
-	 * }
-	 */
 	@Override
-	public Task getTask(File src, File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
+	public Task getTask(final File src, final File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
 		Vector<Action> actions = new Vector<Action>(3);
 		State state = sd.getState(src, dst);
 		switch (state.getType()) {
