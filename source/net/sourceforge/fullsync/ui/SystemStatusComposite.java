@@ -53,6 +53,7 @@ public class SystemStatusComposite extends Composite {
 
 			progressBarMemory = new ProgressBar(groupMemory, SWT.NONE);
 			GridData progressBarMemoryLData = new GridData();
+			progressBarMemoryLData.horizontalAlignment = SWT.FILL;
 			progressBarMemoryLData.horizontalSpan = 2;
 			progressBarMemory.setLayoutData(progressBarMemoryLData);
 
@@ -97,7 +98,6 @@ public class SystemStatusComposite extends Composite {
 			buttonMemoryGcLData.horizontalSpan = 2;
 			buttonMemoryGc.setLayoutData(buttonMemoryGcLData);
 
-			this.layout();
 			updateView();
 			timer = new Timer(true);
 			timer.schedule(new TimerTask() {
@@ -113,27 +113,41 @@ public class SystemStatusComposite extends Composite {
 	}
 
 	public void updateView() {
-		Display display = getDisplay();
-		if (display.isDisposed()) {
-			timer.cancel();
-			return;
-		}
-		display.syncExec(new Runnable() {
-			@Override
-			public void run() {
-				Runtime rt = Runtime.getRuntime();
-
-				long ltotalMemory = rt.totalMemory();
-				long lmaxMemory = rt.maxMemory();
-				long lfreeMemory = rt.freeMemory();
-
-				totalMemory.setText(String.valueOf(ltotalMemory));
-				maxMemory.setText(String.valueOf(lmaxMemory));
-				freeMemory.setText(String.valueOf(lfreeMemory));
-				progressBarMemory.setMaximum((int) (ltotalMemory / 1024));
-				progressBarMemory.setSelection((int) ((ltotalMemory - lfreeMemory) / 1024));
+		if (!isDisposed()) {
+			Display display = getDisplay();
+			if ((display == null) || display.isDisposed()) {
+				timer.cancel();
+				return;
 			}
-		});
+			final Composite comp = this;
+			display.syncExec(new Runnable() {
+				private final String[] units = { "B", "KiB", "MiB", "GiB", "TiB" };
+				private final long kilo = 1024;
+				private void setFormattedText(final Label l, final long origValue) {
+					long unit = 0, value = origValue;
+					while (value > kilo) {
+						value /= kilo;
+						unit++;
+					}
+					l.setText(String.valueOf(value) + " " + units[(int) unit]);
+				}
+				@Override
+				public void run() {
+					Runtime rt = Runtime.getRuntime();
+
+					long ltotalMemory = rt.totalMemory();
+					long lmaxMemory = rt.maxMemory();
+					long lfreeMemory = rt.freeMemory();
+
+					setFormattedText(totalMemory, ltotalMemory);
+					setFormattedText(maxMemory, lmaxMemory);
+					setFormattedText(freeMemory, lfreeMemory);
+					progressBarMemory.setMaximum((int) (ltotalMemory / kilo));
+					progressBarMemory.setSelection((int) ((ltotalMemory - lfreeMemory) / kilo));
+					comp.layout();
+				}
+			});
+		}
 	}
 
 	@Override
