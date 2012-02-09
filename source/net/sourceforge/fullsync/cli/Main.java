@@ -137,6 +137,11 @@ public class Main { // NO_UCD
 				return;
 			}
 
+			// Apply modifying options
+			if (!line.hasOption("v")) {
+				System.setErr(new PrintStream(new FileOutputStream(configDir + "fullsync.log")));
+			}
+
 			if (line.hasOption("h")) {
 				printHelp();
 				return;
@@ -171,11 +176,6 @@ public class Main { // NO_UCD
 			ProfileManager profileManager = new ProfileManager(profilesFile);
 
 			final Synchronizer sync = new Synchronizer();
-
-			// Apply modifying options
-			if (!line.hasOption("v")) {
-				System.setErr(new PrintStream(new FileOutputStream(configDir + "fullsync.log")));
-			}
 
 			// Apply executing options
 			if (line.hasOption("r")) {

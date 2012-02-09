@@ -60,7 +60,7 @@
 
 	<target name="compile">
 		<mkdir dir="${classes.dir}" />
-		<javac debug="${debug}" srcdir="${source.dir}" destdir="${classes.dir}" classpathref="compile.classpath" includeantruntime="false" target="1.5"/>
+		<javac debug="${debug}" srcdir="${source.dir}" destdir="${classes.dir}" classpathref="compile.classpath" includeantruntime="false" target="1.6" source="1.6"/>
 		<copy todir="${classes.dir}">
 			<fileset dir="${source.dir}">
 				<include name="**/*.properties" />
@@ -111,7 +111,11 @@
 			</fileset>
 		</copy>
 		<copy file="${basedir}/resources/sample.syncrules" tofile="${build.dir}/sample.syncrules" />
-		<copy file="${basedir}/resources/FullSync.sh" tofile="${build.dir}/FullSync.sh" />
+		<copy file="${basedir}/resources/FullSync.sh" tofile="${build.dir}/FullSync" />
+		<exec executable="/bin/chmod" osfamily="unix" >
+			<arg value="755"/>
+			<arg value="${build.dir}/FullSync"/>
+		</exec>
 		<copy file="${basedir}/resources/FullSync.exe" tofile="${build.dir}/FullSync.exe" />
 		<copy file="${basedir}/resources/FullSync.ini" tofile="${build.dir}/FullSync.ini" />
 		<copy file="${basedir}/resources/FullSync64.exe" tofile="${build.dir}/FullSync64.exe" />
