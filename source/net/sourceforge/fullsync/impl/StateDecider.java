@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class StateDecider implements net.sourceforge.fullsync.StateDecider {
-	private static final Logger logger = LoggerFactory.getLogger(StateDecider.class);
+	private static final Logger logger = LoggerFactory.getLogger(StateDecider.class.getSimpleName());
 	private static final State inSyncNone = new State(State.NodeInSync, Location.None);
 	private static final State orphanSrc = new State(State.Orphan, Location.Source);
 	private static final State orphanDst = new State(State.Orphan, Location.Destination);

@@ -24,17 +24,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sourceforge.fullsync.DataParseException;
-import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.IgnoreDecider;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.fs.File;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class TaskGeneratorImpl extends AbstractTaskGenerator {
+	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
 	// TODO this should be execution local so the class
 	// itself is multithreadable
 	// so maybe just put them all into a inmutable
@@ -86,6 +90,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 			}
 
 			Task task = getActionDecider().getTask(src, dst, stateDecider, bufferStateDecider);
+			logger.debug(src.getName() + ": " + task);
 
 			for (TaskGenerationListener listener : taskGenerationListeners) {
 				listener.taskGenerationFinished(task);
@@ -130,8 +135,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 			synchronizeNodes(sfile, dfile, rules, parent);
 		}
 
-		for (Object element : dstFiles) {
-			File dfile = (File) element;
+		for (File dfile : dstFiles) {
 			File sfile = src.getChild(dfile.getName());
 			if (sfile == null) {
 				sfile = src.createChild(dfile.getName(), dfile.isDirectory());
