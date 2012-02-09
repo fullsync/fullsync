@@ -20,7 +20,6 @@
 package net.sourceforge.fullsync.impl;
 
 import static net.sourceforge.fullsync.Action.Add;
-import static net.sourceforge.fullsync.Action.Delete;
 import static net.sourceforge.fullsync.Action.DirHereFileThereError;
 import static net.sourceforge.fullsync.Action.NotDecidableError;
 import static net.sourceforge.fullsync.Action.Nothing;
@@ -59,8 +58,7 @@ public class PublishActionDecider implements ActionDecider {
 	private static final Action overwriteSource = new Action(Update, Source, BufferUpdate.Destination, "overwrite source");
 	private static final Action overwriteDestination = new Action(Update, Destination, BufferUpdate.Destination, "overwrite destination");
 	private static final Action updateDestination = new Action(Update, Destination, BufferUpdate.Destination, "Source changed");
-	private static final Action deleteDestination = new Action(Delete, Destination, BufferUpdate.Destination, "Delete destination file", false);
-	private static final Action unexpectedDestinationChanged = new Action(UnexpectedChangeError, Destination, BufferUpdate.None, "will not delete, destination has changed");
+	private static final Action unexpectedDestinationChanged = new Action(UnexpectedChangeError, Destination, BufferUpdate.None, "Destination changed");
 	private static final Action unexpectedBothChanged = new Action(UnexpectedChangeError, Destination, BufferUpdate.None, "Source changed, but changed remotely too");
 	private static final Action inSync = new Action(Nothing, None, BufferUpdate.None, "In Sync");
 	private static final Action ignore = new Action(Nothing, None, BufferUpdate.None, "Ignore");
@@ -84,12 +82,6 @@ public class PublishActionDecider implements ActionDecider {
 						actions.add(ignoreDestinationExists);
 						actions.add(overwriteDestination);
 					}
-				}
-				else if (state.getLocation() == Destination) {
-					if (!bsd.getState(dst).equals(State.NodeInSync, Both)) {
-						actions.add(unexpectedDestinationChanged);
-					}
-					actions.add(deleteDestination);
 				}
 				break;
 			case State.DirHereFileThere:
@@ -116,7 +108,13 @@ public class PublishActionDecider implements ActionDecider {
 				break;
 			case State.FileChange:
 				if (bsd.getState(dst).equals(State.NodeInSync, Both)) {
-					actions.add(updateDestination);
+					if (state.getLocation() == Source) {
+						actions.add(updateDestination);
+					}
+					else if (state.getLocation() == Destination) {
+						actions.add(unexpectedDestinationChanged);
+						actions.add(overwriteDestination);
+					}
 				}
 				else {
 					actions.add(unexpectedBothChanged);
