@@ -61,7 +61,7 @@ public class TaskDecisionList extends Composite {
 	private int tableLogLinesFillCount;
 
 	private Hashtable<Integer, Image> actionImages;
-	private Hashtable<Object, Image> taskImages;
+	private Hashtable<Integer, Image> taskImages;
 	private Image locationSource;
 	private Image locationDestination;
 	private Image locationBoth;
@@ -176,7 +176,7 @@ public class TaskDecisionList extends Composite {
 			actionImages.put(Integer.valueOf(i + 10), gui.getImage("Action_" + Action.errorNames[i] + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		taskImages = new Hashtable<Object, Image>();
+		taskImages = new Hashtable<Integer, Image>();
 	}
 
 	@Override
@@ -251,7 +251,7 @@ public class TaskDecisionList extends Composite {
 		}
 	}
 
-	protected Object calcTaskImageHash(Task t, Action a) {
+	protected Integer calcTaskImageHash(Task t, Action a) {
 		int hash = 0;
 
 		// using 5 bits for files
@@ -297,14 +297,11 @@ public class TaskDecisionList extends Composite {
 
 	protected Image getTaskImage(Task t, Action a) {
 		Image image;
-		Object key = calcTaskImageHash(t, a);
-		Object value = taskImages.get(key);
-		if (value == null) {
+		Integer key = calcTaskImageHash(t, a);
+		image = taskImages.get(key);
+		if (image == null) {
 			image = buildTaskImage(t, a);
 			taskImages.put(key, image);
-		}
-		else {
-			image = (Image) value;
 		}
 		return image;
 	}

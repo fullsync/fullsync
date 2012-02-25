@@ -19,6 +19,9 @@
  */
 package net.sourceforge.fullsync.impl;
 
+import static net.sourceforge.fullsync.Location.Destination;
+import static net.sourceforge.fullsync.Location.Source;
+
 import java.io.IOException;
 import java.util.Vector;
 
@@ -59,7 +62,7 @@ public class ExactCopyActionDecider implements ActionDecider {
 	}
 
 	@Override
-	public Task getTask(File src, File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
+	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd) throws DataParseException, IOException {
 		Vector<Action> actions = new Vector<Action>(3);
 		State state = sd.getState(src, dst);
 		switch (state.getType()) {
@@ -100,7 +103,12 @@ public class ExactCopyActionDecider implements ActionDecider {
 				break;
 			case State.FileChange:
 				if (bsd.getState(dst).equals(State.NodeInSync, Location.Both)) {
-					actions.add(updateDestination);
+					if (state.getLocation() == Source) {
+						actions.add(updateDestination);
+					}
+					else if (state.getLocation() == Destination) {
+						actions.add(overwriteDestination);
+					}
 				}
 				else {
 					actions.add(overwriteDestination);

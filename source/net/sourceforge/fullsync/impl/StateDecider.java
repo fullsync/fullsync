@@ -47,7 +47,7 @@ public class StateDecider implements net.sourceforge.fullsync.StateDecider {
 	}
 
 	@Override
-	public State getState(File source, File destination) throws DataParseException {
+	public State getState(final File source, final File destination) throws DataParseException {
 		logger.debug(source + " vs. " + destination);
 		if (!source.exists()) {
 			if (!destination.exists()) {
