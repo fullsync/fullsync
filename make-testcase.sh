@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -z "$1" ]; then
+	echo "usage: $0 <target directory>"
+	exit 1
+fi
+
 BASE_DIR=`readlink -f "$1"`
 
 SRC_DIR="${BASE_DIR}/source"
