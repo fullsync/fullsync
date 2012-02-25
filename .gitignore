@@ -12,7 +12,9 @@
 /CHANGED
 /testing
 /tags
+/dependencies
 
 # everywhere
 .directory
 *~
+*.kdev4
