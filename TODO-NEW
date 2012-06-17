@@ -11,7 +11,7 @@ Roadmap:
 	[ ] check all contained configuration files
 	[ ] get some communication going, motivate others to join
 	[X] replace embedded net.sourceforge.wrabbitftp server with eg MockFtpServer
-	[ ] extend automatted testsuite
+	[ ] extend automated testsuite
 	[ ] add embedded servers for:
 		[ ] SMB
 		[X] FTP

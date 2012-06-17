@@ -220,8 +220,8 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		labelTypeDescription.setLayoutData(labelTypeDescriptionData);
 		labelTypeDescription.setText(Messages.getString("ProfileDetails.Description.Label")); //$NON-NLS-1$
 		// automated execution
-		Label labelAutomattedExecution = new Label(c, SWT.NONE);
-		labelAutomattedExecution.setText("Automatted Execution");
+		Label labelAutomatedExecution = new Label(c, SWT.NONE);
+		labelAutomatedExecution.setText("Automated Execution");
 		buttonEnabled = new Button(c, SWT.CHECK | SWT.RIGHT);
 		buttonEnabled.setText(Messages.getString("ProfileDetails.Enabled")); //$NON-NLS-1$
 		new Label(c, SWT.NONE); // area below the automated execution label should be empty
