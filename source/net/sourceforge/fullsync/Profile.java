@@ -69,10 +69,14 @@ public class Profile implements Serializable {
 			p.setLastUpdate(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).parse(element.getAttribute("lastUpdate")));
 		}
 		catch (ParseException e) {
-			p.setLastUpdate(new Date());
+			p.setLastUpdate(null);
 		}
 
-		p.setRuleSet(RuleSetDescriptor.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)));
+		Element ruleset = (Element) element.getElementsByTagName("RuleSetDescriptor").item(0);
+		if (null != ruleset && "advanced".equals(ruleset.getAttribute("type"))) {
+			p.setLastError(-1, "Advanced Rulesets are not supported in this version of FullSync");
+		}
+		p.setRuleSet(RuleSetDescriptor.unserialize(ruleset));
 		p.setSchedule(Schedule.unserialize((Element) element.getElementsByTagName("Schedule").item(0)));
 		p.setSource(ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)));
 		p.setDestination(ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)));
@@ -283,7 +287,9 @@ public class Profile implements Serializable {
 		elem.setAttribute("enabled", String.valueOf(enabled));
 		elem.setAttribute("lastErrorLevel", String.valueOf(lastErrorLevel));
 		elem.setAttribute("lastErrorString", lastErrorString);
-		elem.setAttribute("lastUpdate", DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(lastUpdate));
+		if (null != lastUpdate) {
+			elem.setAttribute("lastUpdate", DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(lastUpdate));
+		}
 
 		elem.appendChild(RuleSetDescriptor.serialize(ruleSet, "RuleSetDescriptor", doc));
 		if (null != schedule) {

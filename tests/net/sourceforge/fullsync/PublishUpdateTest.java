@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Hashtable;
 
+import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
+
 import org.junit.Before;
 import org.junit.Test;
 

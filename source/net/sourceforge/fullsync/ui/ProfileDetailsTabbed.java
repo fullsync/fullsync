@@ -410,6 +410,9 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		textRuleSetData.horizontalAlignment = SWT.FILL;
 		textRuleSet.setLayoutData(textRuleSetData);
 
+		rbAdvancedRuleSet.setVisible(false); //FIXME: [RULESETS] remove to restore advanced rule set support
+		labelRuleName.setVisible(false); //FIXME: [RULESETS] remove to restore advanced rule set support
+		textRuleSet.setVisible(false); //FIXME: [RULESETS] remove to restore advanced rule set support
 		return c;
 	}
 

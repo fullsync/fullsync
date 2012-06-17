@@ -26,10 +26,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.TimeZone;
 
-import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
+import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 
 import org.junit.After;
 import org.junit.Before;
@@ -62,7 +64,8 @@ public class BaseConnectionTest {
 		src.setParameter("bufferStrategy", "");
 		profile.setSource(src);
 
-		profile.setRuleSet(new AdvancedRuleSetDescriptor("UPLOAD"));
+		//profile.setRuleSet(new AdvancedRuleSetDescriptor("UPLOAD"));
+		profile.setRuleSet(new SimplyfiedRuleSetDescriptor(true, null, false, null));
 		profile.setSynchronizationType("Publish/Update");
 	}
 
