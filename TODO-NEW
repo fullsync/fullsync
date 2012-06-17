@@ -42,6 +42,12 @@ Roadmap:
 	[ ] review & improve documentation of the commandline arguments
 	[ ] increase maximum allowed RAM for FullSync, 1G?
 
+Roadmap 0.11.0:
+	[ ] restore handling of buffering = syncfiles (search for [BUFFERING])
+	[ ] restore handling of advanced rulesets (search for [RULESETS])
+	[ ] make sure everything is translateable
+	[ ] make shortcuts configurable
+
 Bugs:
 	[ ] Exception if starting sync on a readonly FS
 	[ ] if folder creation fails on a ro FS the task is being marked as succeeded

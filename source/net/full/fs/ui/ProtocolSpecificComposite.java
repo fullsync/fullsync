@@ -71,6 +71,7 @@ class ProtocolSpecificComposite {
 		buttonDestinationBufferedData.horizontalSpan = 3;
 		buttonBuffered.setLayoutData(buttonDestinationBufferedData);
 		buttonBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
+		buttonBuffered.setVisible(false); //FIXME: [BUFFERING] remove to restore buffering
 	}
 
 
