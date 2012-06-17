@@ -92,7 +92,12 @@ public class Action implements Serializable {
 
 	@Override
 	public String toString() {
-		return "[" + toString(type) + "(" + Location.toString(location) + ") - " + explanation + "]";
+		StringBuilder sb = new StringBuilder();
+		sb.append("[" + toString(getType()) + "(" + Location.toString(getLocation()) + ") BU: ");
+		sb.append(BufferUpdate.toString(getBufferUpdate()) + "; Rec: ");
+		sb.append(isBeforeRecursion());
+		sb.append(" - " + explanation + "]");
+		return sb.toString();
 	}
 
 	public boolean equalsExceptExplanation(Action action) {
