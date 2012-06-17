@@ -28,11 +28,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
-class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
+abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	private Label labelHost = null;
 	private Text textHost = null;
+	private Label labelPort = null;
+	private Spinner spinnerPort = null;
 	private Label labelUsername = null;
 	private Text textUsername = null;
 	private Label labelPassword = null;
@@ -40,42 +43,53 @@ class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 
 	@Override
 	public void createGUI(final Composite parent) {
-		GridData gridData3 = new GridData();
-		gridData3.horizontalAlignment = SWT.FILL;
-		gridData3.horizontalSpan = 2;
-		gridData3.verticalAlignment = SWT.CENTER;
-		GridData gridData2 = new GridData();
-		gridData2.horizontalAlignment = SWT.FILL;
-		gridData2.horizontalSpan = 2;
-		gridData2.verticalAlignment = SWT.CENTER;
+		labelHost = new Label(parent, SWT.NONE);
+		labelHost.setText("Host:");
+		GridData gridData = getGridData();
+		gridData.grabExcessHorizontalSpace = true;
+		textHost = new Text(parent, SWT.BORDER);
+		textHost.setLayoutData(getGridData());
+
+		int port = getDefaultPort();
+		if (-1 != port) {
+			labelPort = new Label(parent, SWT.NONE);
+			labelPort.setText("Port:");
+			spinnerPort = new Spinner(parent, SWT.BORDER);
+			spinnerPort.setMinimum(1);
+			spinnerPort.setMaximum(0xFFFF);
+			spinnerPort.setSelection(port);
+			spinnerPort.setLayoutData(getGridData());
+		}
+
+		labelUsername = new Label(parent, SWT.NONE);
+		labelUsername.setText("Username:");
+		textUsername = new Text(parent, SWT.BORDER);
+		textUsername.setLayoutData(getGridData());
+		labelPassword = new Label(parent, SWT.NONE);
+		labelPassword.setText("Password:");
+		textPassword = new Text(parent, SWT.BORDER);
+		textPassword.setLayoutData(getGridData());
+		textPassword.setEchoChar('*');
+		super.createGUI(parent);
+	}
+
+	private GridData getGridData() {
 		GridData gridData1 = new GridData();
 		gridData1.horizontalAlignment = SWT.FILL;
 		gridData1.horizontalSpan = 2;
 		gridData1.verticalAlignment = SWT.CENTER;
-		labelHost = new Label(parent, SWT.NONE);
-		labelHost.setText("Host:");
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.verticalAlignment = SWT.CENTER;
-		textHost = new Text(parent, SWT.BORDER);
-		textHost.setLayoutData(gridData3);
-		labelUsername = new Label(parent, SWT.NONE);
-		labelUsername.setText("Username:");
-		textUsername = new Text(parent, SWT.BORDER);
-		textUsername.setLayoutData(gridData2);
-		labelPassword = new Label(parent, SWT.NONE);
-		labelPassword.setText("Password:");
-		textPassword = new Text(parent, SWT.BORDER);
-		textPassword.setLayoutData(gridData1);
-		textPassword.setEchoChar('*');
-		super.createGUI(parent);
+		return gridData1;
 	}
 
 	@Override
 	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
 		ConnectionDescription desc = super.getConnectionDescription();
-		desc.setUri(new URI(m_scheme, textHost.getText(), desc.getUri().getPath(), null));
+		if (null != spinnerPort) {
+			desc.setUri(new URI(m_scheme, null, textHost.getText(), spinnerPort.getSelection(), desc.getUri().getPath(), null, null));
+		}
+		else {
+			desc.setUri(new URI(m_scheme, textHost.getText(), desc.getUri().getPath(), null));
+		}
 		desc.setParameter("username", textUsername.getText());
 		desc.setSecretParameter("password", textPassword.getText());
 		return desc;
@@ -86,6 +100,13 @@ class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 		super.setConnectionDescription(connection);
 		URI uri = connection.getUri();
 		textHost.setText(uri.getHost());
+		int port = uri.getPort();
+		if (-1 == port) {
+			port = getDefaultPort();
+		}
+		if (null != spinnerPort) {
+			spinnerPort.setSelection(port);
+		}
 		textUsername.setText(connection.getParameter("username"));
 		textPassword.setText(connection.getSecretParameter("password"));
 	}
@@ -94,6 +115,9 @@ class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	public void reset(final String scheme) {
 		super.reset(scheme);
 		textHost.setText("");
+		if (null != spinnerPort) {
+			spinnerPort.setSelection(getDefaultPort());
+		}
 		textUsername.setText("");
 		textPassword.setText("");
 	}
@@ -103,10 +127,15 @@ class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 		super.dispose();
 		labelHost.dispose();
 		textHost.dispose();
+		if (null != spinnerPort) {
+			labelPort.dispose();
+			spinnerPort.dispose();
+		}
 		labelUsername.dispose();
 		textUsername.dispose();
 		labelPassword.dispose();
 		textPassword.dispose();
 	}
 
+	abstract public int getDefaultPort();
 }

@@ -49,9 +49,9 @@ public class ConnectionConfiguration implements ModifyListener {
 	static {
 		composites = new HashMap<String, Class<? extends ProtocolSpecificComposite>>();
 		composites.put("file", FileSpecificComposite.class);
-		composites.put("ftp", UserPasswordSpecificComposite.class);
+		composites.put("ftp", FTPSpecificComposite.class);
 		composites.put("sftp", SFTPSpecificComposite.class);
-		composites.put("smb", UserPasswordSpecificComposite.class);
+		composites.put("smb", SMBSpecificComposite.class);
 	}
 
 	public ConnectionConfiguration(Composite parent) {

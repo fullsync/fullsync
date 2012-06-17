@@ -32,11 +32,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 class SFTPSpecificComposite extends ProtocolSpecificComposite {
+	private static final int DEFAULT_SFTP_PORT = 22;
+
 	private Label labelHost = null;
 	private Text textHost = null;
+	private Label labelPort = null;
+	private Spinner spinnerPort = null;
 	private Label labelUsername = null;
 	private Text textUsername = null;
 	private Label labelPassword = null;
@@ -63,6 +68,16 @@ class SFTPSpecificComposite extends ProtocolSpecificComposite {
 		GridData gridData3 = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gridData3.horizontalSpan = 2;
 		textHost.setLayoutData(gridData3);
+
+		labelPort = new Label(parent, SWT.NONE);
+		labelPort.setText("Port:");
+		spinnerPort = new Spinner(parent, SWT.BORDER);
+		spinnerPort.setMinimum(1);
+		spinnerPort.setMaximum(0xFFFF);
+		spinnerPort.setSelection(DEFAULT_SFTP_PORT);
+		GridData gridData4 = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		gridData4.horizontalSpan = 2;
+		spinnerPort.setLayoutData(gridData4);
 
 		labelUsername = new Label(m_parent, SWT.NONE);
 		labelUsername.setText(Messages.getString("ProtocolSpecificComposite.Username"));
@@ -109,7 +124,7 @@ class SFTPSpecificComposite extends ProtocolSpecificComposite {
 	@Override
 	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
 		ConnectionDescription loc = super.getConnectionDescription();
-		loc.setUri(new URI(m_scheme, textHost.getText(), loc.getUri().getPath(), null));
+		loc.setUri(new URI(m_scheme, null, textHost.getText(), spinnerPort.getSelection(), loc.getUri().getPath(), null, null));
 		loc.setParameter("username", textUsername.getText());
 		loc.setSecretParameter("password", textPassword.getText());
 		loc.setParameter("publicKeyAuth", buttonKeybased.getSelection() ? "enabled" : "disabled");
@@ -122,6 +137,11 @@ class SFTPSpecificComposite extends ProtocolSpecificComposite {
 		super.setConnectionDescription(connection);
 		URI uri = connection.getUri();
 		textHost.setText(uri.getHost());
+		int port = uri.getPort();
+		if (-1 == port) {
+			port = DEFAULT_SFTP_PORT;
+		}
+		spinnerPort.setSelection(port);
 		textUsername.setText(connection.getParameter("username"));
 		textPassword.setText(connection.getSecretParameter("password"));
 		buttonKeybased.setSelection("enabled".equals(connection.getParameter("publicKeyAuth")));
@@ -137,6 +157,7 @@ class SFTPSpecificComposite extends ProtocolSpecificComposite {
 	public void reset(final String scheme) {
 		super.reset(scheme);
 		textHost.setText("");
+		spinnerPort.setSelection(DEFAULT_SFTP_PORT);
 		textUsername.setText("");
 		textPassword.setText("");
 		buttonKeybased.setSelection(false);
@@ -150,6 +171,8 @@ class SFTPSpecificComposite extends ProtocolSpecificComposite {
 		super.dispose();
 		labelHost.dispose();
 		textHost.dispose();
+		labelPort.dispose();
+		spinnerPort.dispose();
 		labelUsername.dispose();
 		textUsername.dispose();
 		labelPassword.dispose();
