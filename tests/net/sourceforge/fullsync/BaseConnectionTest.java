@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BaseConnectionTest {
+	protected static final int MILLI_SECONDS_PER_DAY = 86400000;
 	@Rule
 	public TemporaryFolder tmpFolder = new TemporaryFolder();
 
@@ -48,7 +49,7 @@ public class BaseConnectionTest {
 	protected File testingSrc;
 	protected Synchronizer synchronizer;
 	protected Profile profile;
-	protected Logger logger = LoggerFactory.getLogger(BaseConnectionTest.class);
+	protected Logger logger = LoggerFactory.getLogger(BaseConnectionTest.class.getSimpleName());
 
 	@Before
 	public void setUp() throws Exception {
@@ -93,16 +94,58 @@ public class BaseConnectionTest {
 		}
 	}
 
-
-	protected void createRuleFile() throws IOException {
-		createNewFileWithContents(testingSrc, ".syncrules", new Date().getTime(), "START RULESET UPLOAD\n" + "	USE RULEFILES SOURCE\n"
-				+ "	USE DIRECTION DESTINATION\n" + "	USE RECURSION YES\n" + "	USE RECURSIONONIGNORE YES\n" + "\n"
-				+ "	APPLY IGNORERULES YES\n" + "	APPLY TAKERULES YES\n" + "	APPLY DELETION DESTINATION\n" + "\n"
-				+ "	DEFINE IGNORE \"^[.].+\"\n" + "	DEFINE SYNC \"length != length\"\n" + "	DEFINE SYNC \"date != date\"\n"
-				+ "END RULESET UPLOAD");
+	protected void createNewDir(File dir, String dirname, long lastModified) {
+		File d = new File(dir, dirname);
+		d.mkdir();
+		setLastModified(dir, dirname, lastModified);
 	}
 
-	protected PrintStream createNewFile(File dir, String filename) throws IOException {
+	protected long getLastModified() {
+		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Date d = cal.getTime();
+		return d.getTime();
+	}
+
+	protected void setLastModified(File dir, String filename, long lm) {
+		File file = new File(dir, filename);
+		if (!file.setLastModified(lm)) {
+			throw new RuntimeException("file.setLastModified(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
+		}
+	}
+
+	protected void delete(File dir, String filename) {
+		if (!(new File(dir, filename).delete())) {
+			throw new RuntimeException("file.delete(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
+		}
+	}
+
+	protected void fileToDir(File dir, String filename, long lm) {
+		File file = new File(dir, filename);
+		if (!file.delete()) {
+			throw new RuntimeException("file.delete(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
+		}
+		if (!file.mkdir()) {
+			throw new RuntimeException("file.mkdir(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
+		}
+		setLastModified(dir, filename, lm);
+	}
+
+	protected void dirToFile(File dir, String filename, long lm) throws IOException {
+		File file = new File(dir, filename);
+		if (!file.delete()) {
+			throw new RuntimeException("file.delete(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
+		}
+		if (!file.createNewFile()) {
+			throw new RuntimeException("file.createNewFile(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
+		}
+		setLastModified(dir, filename, lm);
+	}
+
+	protected PrintStream createNewFile(final File dir, final String filename) throws IOException {
 		File file = new File(dir, filename);
 		File d = file.getParentFile();
 		assertTrue("File.mkdirs failed for: " + file.getParentFile().getAbsolutePath(), d.mkdirs() || d.exists());
@@ -111,7 +154,7 @@ public class BaseConnectionTest {
 		return out;
 	}
 
-	protected void createNewFileWithContents(File dir, String filename, long lm, String content) throws IOException {
+	protected void createNewFileWithContents(final File dir, final String filename, final long lm, final String content) throws IOException {
 		PrintStream out = createNewFile(dir, filename);
 		out.print(content);
 		out.close();
@@ -123,7 +166,7 @@ public class BaseConnectionTest {
 	protected TaskTree assertPhaseOneActions(final Hashtable<String, Action> expectation) throws Exception {
 		TaskGenerationListener list = new TaskGenerationListener() {
 			@Override
-			public void taskGenerationFinished(Task task) {
+			public void taskGenerationFinished(final Task task) {
 				Object ex = expectation.get(task.getSource().getName());
 
 				if (null == ex) {
@@ -138,15 +181,15 @@ public class BaseConnectionTest {
 			}
 
 			@Override
-			public void taskGenerationStarted(net.sourceforge.fullsync.fs.File source, net.sourceforge.fullsync.fs.File destination) {
+			public void taskGenerationStarted(final net.sourceforge.fullsync.fs.File source, final net.sourceforge.fullsync.fs.File destination) {
 			}
 
 			@Override
-			public void taskTreeFinished(TaskTree tree) {
+			public void taskTreeFinished(final TaskTree tree) {
 			}
 
 			@Override
-			public void taskTreeStarted(TaskTree tree) {
+			public void taskTreeStarted(final TaskTree tree) {
 			}
 		};
 
@@ -160,8 +203,7 @@ public class BaseConnectionTest {
 	public void testSingleInSync() throws Exception {
 		clearDirectory(testingSrc);
 		clearDirectory(testingDst);
-		createRuleFile();
-		long lm = new Date().getTime();
+		long lm = getLastModified();
 
 		createNewFileWithContents(testingSrc, "sourceFile1.txt", lm, "this is a test\ncontent1");
 		createNewFileWithContents(testingSrc, "sourceFile2.txt", lm, "this is a test\ncontent2");
@@ -179,8 +221,7 @@ public class BaseConnectionTest {
 	public void testSingleSpaceMinus() throws Exception {
 		clearDirectory(testingSrc);
 		clearDirectory(testingDst);
-		createRuleFile();
-		long lm = new Date().getTime();
+		long lm = getLastModified();
 
 		createNewFileWithContents(testingSrc, "sub - folder/sub2 - folder/sourceFile1.txt", lm, "this is a test\ncontent1");
 		createNewFileWithContents(testingSrc, "sub - folder/sourceFile2.txt", lm, "this is a test\ncontent2");
@@ -199,16 +240,15 @@ public class BaseConnectionTest {
 	public void testSingleFileChange() throws Exception {
 		clearDirectory(testingSrc);
 		clearDirectory(testingDst);
-		createRuleFile();
-		long lm = new Date().getTime();
+		long lm = getLastModified();
 
 		createNewFileWithContents(testingSrc, "sourceFile1.txt", lm, "this is a test\ncontent2");
 		createNewFileWithContents(testingDst, "sourceFile1.txt", lm, "this is a test\ncontent2 bla");
-		createNewFileWithContents(testingSrc, "sourceFile2.txt", lm + 3600, "this is a test\ncontent2");
+		createNewFileWithContents(testingSrc, "sourceFile2.txt", lm + MILLI_SECONDS_PER_DAY, "this is a test\ncontent2");
 		createNewFileWithContents(testingDst, "sourceFile2.txt", lm, "this is a test\ncontent2");
 
 		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
-		expectation.put("sourceFile1.txt", new Action(Action.Update, Location.Destination, BufferUpdate.Destination, ""));
+		expectation.put("sourceFile1.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
 		expectation.put("sourceFile2.txt", new Action(Action.Update, Location.Destination, BufferUpdate.Destination, ""));
 		assertPhaseOneActions(expectation);
 	}

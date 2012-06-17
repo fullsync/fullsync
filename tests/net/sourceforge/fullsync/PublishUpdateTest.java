@@ -19,9 +19,6 @@
  */
 package net.sourceforge.fullsync;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
@@ -33,6 +30,9 @@ import org.junit.Test;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class PublishUpdateTest extends BaseConnectionTest {
+	protected long lm = getLastModified();
+	protected Hashtable<String, Action> expectation = new Hashtable<String, Action>();
+
 	@Override
 	@Before
 	public void setUp() throws Exception {
@@ -40,19 +40,12 @@ public class PublishUpdateTest extends BaseConnectionTest {
 		ConnectionDescription dst = new ConnectionDescription(testingDst.toURI());
 		dst.setParameter("bufferStrategy", "syncfiles");
 		profile.setDestination(dst);
-	}
-
-	protected void createNewDir(File dir, String dirname, long lastModified) {
-		File d = new File(dir, dirname);
-		d.mkdir();
-		d.setLastModified(lastModified);
+		profile.setRuleSet(new SimplyfiedRuleSetDescriptor(true, null, false, null));
+		profile.setSynchronizationType("Publish/Update");
 	}
 
 	@Test
 	public void testBasicSynchronization() throws Exception {
-		createRuleFile();
-		long lm = new Date().getTime();
-		Hashtable<String, Action> expectation = new Hashtable<String, Action>();
 		TaskTree tree;
 
 		// Creating files and dirs
@@ -108,36 +101,36 @@ public class PublishUpdateTest extends BaseConnectionTest {
 		expectation.clear();
 		expectation.put("inSync.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
 
-		setLastModified(testingSrc, "changeSource.txt", lm + 10000);
-		setLastModified(testingDst, "changeDestination.txt", lm + 10000);
-		setLastModified(testingSrc, "changeBoth.txt", lm + 10000);
-		setLastModified(testingDst, "changeBoth.txt", lm + 10000);
+		setLastModified(testingSrc, "changeSource.txt", lm + MILLI_SECONDS_PER_DAY);
+		setLastModified(testingDst, "changeDestination.txt", lm + MILLI_SECONDS_PER_DAY);
+		setLastModified(testingSrc, "changeBoth.txt", lm + MILLI_SECONDS_PER_DAY);
+		setLastModified(testingDst, "changeBoth.txt", lm + MILLI_SECONDS_PER_DAY);
 		expectation.put("changeSource.txt", new Action(Action.Update, Location.Destination, BufferUpdate.Destination, ""));
-		expectation.put("changeDestination.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
-		expectation.put("changeBoth.txt", new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, ""));
+		expectation.put("changeDestination.txt", new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, ""));
+		expectation.put("changeBoth.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
 
 		delete(testingSrc, "deleteSource.txt");
 		delete(testingDst, "deleteDestination.txt");
 		delete(testingSrc, "deleteBoth.txt");
 		delete(testingDst, "deleteBoth.txt");
-		expectation.put("deleteSource.txt", new Action(Action.Delete, Location.Destination, BufferUpdate.Destination, "", false));
-		expectation.put("deleteDestination.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("deleteSource.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("deleteDestination.txt", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
 		expectation.put("deleteBoth.txt", new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, ""));
 
-		fileToDir(testingSrc, "fileToDirSource.txt");
-		fileToDir(testingDst, "fileToDirDestination.txt");
-		fileToDir(testingSrc, "fileToDirBoth.txt");
-		fileToDir(testingDst, "fileToDirBoth.txt");
+		fileToDir(testingSrc, "fileToDirSource.txt", lm);
+		fileToDir(testingDst, "fileToDirDestination.txt", lm);
+		fileToDir(testingSrc, "fileToDirBoth.txt", lm);
+		fileToDir(testingDst, "fileToDirBoth.txt", lm);
 		expectation.put("fileToDirSource.txt", new Action(Action.DirHereFileThereError, Location.Source, BufferUpdate.None, ""));
-		expectation.put("fileToDirDestination.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("fileToDirDestination.txt", new Action(Action.DirHereFileThereError, Location.Destination, BufferUpdate.None, ""));
 		expectation.put("fileToDirBoth.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
 
 		expectation.put("inSync", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
 
-		setLastModified(testingSrc, "changeSource", lm + 10000);
-		setLastModified(testingDst, "changeDestination", lm + 10000);
-		setLastModified(testingSrc, "changeBoth", lm + 10000);
-		setLastModified(testingDst, "changeBoth", lm + 10000);
+		setLastModified(testingSrc, "changeSource", lm + MILLI_SECONDS_PER_DAY);
+		setLastModified(testingDst, "changeDestination", lm + MILLI_SECONDS_PER_DAY);
+		setLastModified(testingSrc, "changeBoth", lm + MILLI_SECONDS_PER_DAY);
+		setLastModified(testingDst, "changeBoth", lm + MILLI_SECONDS_PER_DAY);
 		expectation.put("changeSource", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
 		expectation.put("changeDestination", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
 		expectation.put("changeBoth", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
@@ -146,45 +139,19 @@ public class PublishUpdateTest extends BaseConnectionTest {
 		delete(testingDst, "deleteDestination");
 		delete(testingSrc, "deleteBoth");
 		delete(testingDst, "deleteBoth");
-		expectation.put("deleteSource", new Action(Action.Delete, Location.Destination, BufferUpdate.Destination, "", false));
-		expectation.put("deleteDestination", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("deleteSource", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("deleteDestination", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
 		expectation.put("deleteBoth", new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, ""));
 
-		dirToFile(testingSrc, "dirToFileSource");
-		dirToFile(testingDst, "dirToFileDestination");
-		dirToFile(testingSrc, "dirToFileBoth");
-		dirToFile(testingDst, "dirToFileBoth");
+		dirToFile(testingSrc, "dirToFileSource", lm);
+		dirToFile(testingDst, "dirToFileDestination", lm);
+		dirToFile(testingSrc, "dirToFileBoth", lm);
+		dirToFile(testingDst, "dirToFileBoth", lm);
 		expectation.put("dirToFileSource", new Action(Action.DirHereFileThereError, Location.Destination, BufferUpdate.None, ""));
-		expectation.put("dirToFileDestination", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
-		expectation.put("dirToFileBoth", new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None, ""));
+		expectation.put("dirToFileDestination", new Action(Action.DirHereFileThereError, Location.Source, BufferUpdate.None, ""));
+		expectation.put("dirToFileBoth", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
 
 		/* Phase One: */tree = assertPhaseOneActions(expectation);
 		/* Phase Two: */synchronizer.performActions(tree); // TODO assert task finished events ?
-	}
-
-	protected void setLastModified(File dir, String filename, long lm) {
-		File file = new File(dir, filename);
-		file.setLastModified(lm);
-	}
-
-	protected void delete(File dir, String filename) {
-		File file = new File(dir, filename);
-		file.delete();
-	}
-
-	protected void fileToDir(File dir, String filename) {
-		File file = new File(dir, filename);
-		long lm = file.lastModified();
-		file.delete();
-		file.mkdir();
-		file.setLastModified(lm);
-	}
-
-	protected void dirToFile(File dir, String filename) throws IOException {
-		File file = new File(dir, filename);
-		long lm = file.lastModified();
-		file.delete();
-		file.createNewFile();
-		file.setLastModified(lm);
 	}
 }
