@@ -320,6 +320,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		syncSubsButton = new Button(c, SWT.CHECK | SWT.LEFT);
 		syncSubsButton.setText(Messages.getString("ProfileDetails.Sync_SubDirs")); //$NON-NLS-1$
 		syncSubsButton.setToolTipText(Messages.getString("ProfileDetails.Rucurre")); //$NON-NLS-1$
+		syncSubsButton.setSelection(true);
 		GridData syncSubsButtonData = new GridData();
 		syncSubsButtonData.horizontalSpan = 2;
 		syncSubsButton.setLayoutData(syncSubsButtonData);

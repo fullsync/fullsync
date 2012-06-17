@@ -393,12 +393,12 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 						Program.launch(helpIndex.toURI().toString());
 					}
 					catch (SecurityException ex) {
-						//FIXME: upload the new manul to the homepage!!
+						//FIXME: upload the new manual to the homepage (in a versioned directory)!!
 						Program.launch("http://fullsync.sourceforge.net/docs/manual/index.html"); //$NON-NLS-1$
 					}
 				}
 				else {
-					//FIXME: upload the new manul to the homepage!!
+					//FIXME: upload the new manual to the homepage (in a versioned directory)!!
 					Program.launch("http://fullsync.sourceforge.net/docs/manual/index.html"); //$NON-NLS-1$
 				}
 			}
