@@ -76,7 +76,11 @@ class ProtocolSpecificComposite {
 
 
 	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
-		return new ConnectionDescription(new URI(m_scheme, null, textPath.getText(), null));
+		String path = textPath.getText();
+		if ((null == path) || (0 == path.length())) {
+			path = "/";
+		}
+		return new ConnectionDescription(new URI(m_scheme, null, path, null));
 	}
 
 	public void setConnectionDescription(final ConnectionDescription connection) {
