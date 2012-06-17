@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public abstract class AbstractRuleSet implements RuleSet, Cloneable {
-	private static final Logger logger = LoggerFactory.getLogger(AbstractRuleSet.class);
+	private static final Logger logger = LoggerFactory.getLogger(AbstractRuleSet.class.getSimpleName());
 	String name;
 	boolean usingRecursion;
 	boolean usingRecursionOnIgnore;
@@ -65,7 +65,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 	boolean applyingSyncRules;
 	int applyingDeletion;
 	/**
-	 * ignore all files by default; just Take rules will allow actions
+	 * ignore all files by default; just Take rules will allow actions.
 	 */
 	boolean ignoreAll;
 

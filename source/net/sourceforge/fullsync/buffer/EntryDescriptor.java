@@ -26,11 +26,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import net.sourceforge.fullsync.Task;
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public interface EntryDescriptor {
-	public Object getReferenceObject();
+	public Task getTask();
 
 	public long getLength();
 
@@ -40,9 +42,9 @@ public interface EntryDescriptor {
 
 	public OutputStream getOutputStream() throws IOException;
 
-	public void finishStore(); // into buffer
+	public void finishStore() throws IOException; // into buffer
 
-	public void finishWrite(); // to target
+	public void finishWrite() throws IOException; // to target
 	// public void flush( Buffer buffer, Entry entry ) throws IOException;
 
 	public String getOperationDescription();

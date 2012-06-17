@@ -173,12 +173,16 @@ public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListen
 	}
 
 	@Override
-	public void entryFinished(EntryDescriptor entry) {
-		Object ref = entry.getReferenceObject();
-		if (ref == null) {
-			return;
+	public void entryFinished(EntryDescriptor entry, IOException ioe) {
+		Task task = entry.getTask();
+		if (null != task) {
+			if (null != ioe) {
+				fireTaskFinished(new TaskFinishedEvent(task, ioe.getLocalizedMessage()));
+			}
+			else {
+				fireTaskFinished(new TaskFinishedEvent(task, 0));
+			}
 		}
-		fireTaskFinished(new TaskFinishedEvent((Task) ref, 0));
 	}
 
 	protected void fireTaskFinished(TaskFinishedEvent event) {

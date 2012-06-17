@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import net.sourceforge.fullsync.BufferUpdate;
-import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
@@ -43,7 +43,7 @@ public class BufferUpdateEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public Object getReferenceObject() {
+	public Task getTask() {
 		return null;
 	}
 
@@ -63,22 +63,16 @@ public class BufferUpdateEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public void finishStore() {
-
+	public void finishStore() throws IOException {
 	}
 
 	@Override
-	public void finishWrite() {
-		try {
-			if ((bufferUpdate & BufferUpdate.Source) > 0) {
-				src.refreshBuffer();
-			}
-			if ((bufferUpdate & BufferUpdate.Destination) > 0) {
-				dst.refreshBuffer();
-			}
+	public void finishWrite() throws IOException {
+		if ((bufferUpdate & BufferUpdate.Source) > 0) {
+			src.refreshBuffer();
 		}
-		catch (IOException ioe) {
-			ExceptionHandler.reportException(ioe);
+		if ((bufferUpdate & BufferUpdate.Destination) > 0) {
+			dst.refreshBuffer();
 		}
 	}
 

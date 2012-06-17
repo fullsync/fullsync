@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
@@ -31,20 +31,20 @@ import net.sourceforge.fullsync.fs.File;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class FileCopyEntryDescriptor implements EntryDescriptor {
-	private Object reference;
+	private Task reference;
 	private File src;
 	private File dst;
 	private InputStream inputStream;
 	private OutputStream outputStream;
 
-	public FileCopyEntryDescriptor(Object reference, File src, File dst) {
+	public FileCopyEntryDescriptor(Task reference, File src, File dst) {
 		this.reference = reference;
 		this.src = src;
 		this.dst = dst;
 	}
 
 	@Override
-	public Object getReferenceObject() {
+	public Task getTask() {
 		return reference;
 	}
 
@@ -70,28 +70,19 @@ public class FileCopyEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public void finishWrite() {
-		try {
-			if (outputStream != null) {
-				outputStream.close();
-			}
-			dst.setFileAttributes(src.getFileAttributes());
-			dst.writeFileAttributes();
-			dst.refresh();
+	public void finishWrite() throws IOException {
+		if (outputStream != null) {
+			outputStream.close();
 		}
-		catch (IOException ex) {
-			ExceptionHandler.reportException(ex);
-		}
+		dst.setFileAttributes(src.getFileAttributes());
+		dst.writeFileAttributes();
+		dst.refresh();
 	}
 
 	@Override
-	public void finishStore() {
-		try {
-			if (inputStream != null) {
-				inputStream.close();
-			}
-		}
-		catch (IOException ex) {
+	public void finishStore() throws IOException {
+		if (inputStream != null) {
+			inputStream.close();
 		}
 	}
 

@@ -101,10 +101,11 @@ public class BlockBuffer implements ExecutionBuffer {
 
 	@Override
 	public void flush() throws IOException {
-		for (int i = 0; i < numberEntries; i++) {
+		for (int i = 0; i < numberEntries; ++i) {
+			Entry e = entries[i];
+			EntryDescriptor desc = e.descriptor;
+			IOException ioe = null;
 			try {
-				Entry e = entries[i];
-				EntryDescriptor desc = e.descriptor;
 				// desc.flush( this, e );
 				OutputStream out = desc.getOutputStream();
 				if (out != null) {
@@ -118,14 +119,16 @@ public class BlockBuffer implements ExecutionBuffer {
 					if (opDesc != null) {
 						logger.info(opDesc);
 					}
-
-					for (EntryFinishedListener listener : finishedListeners) {
-						listener.entryFinished(desc);
-					}
 				}
 			}
-			catch (IOException ioe) {
-				logger.error("Exception", ioe);
+			catch (IOException ex) {
+				ioe = ex;
+				logger.error("Exception", ex);
+			}
+			if ((e.internalSegment & Segment.Last) > 0) {
+				for (EntryFinishedListener listener : finishedListeners) {
+					listener.entryFinished(desc, ioe);
+				}
 			}
 		}
 		Arrays.fill(entries, null);

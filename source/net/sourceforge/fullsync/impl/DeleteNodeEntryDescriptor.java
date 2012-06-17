@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
@@ -31,16 +31,16 @@ import net.sourceforge.fullsync.fs.File;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class DeleteNodeEntryDescriptor implements EntryDescriptor {
-	private Object reference;
+	private Task reference;
 	private File node;
 
-	public DeleteNodeEntryDescriptor(Object reference, File node) {
+	public DeleteNodeEntryDescriptor(Task reference, File node) {
 		this.reference = reference;
 		this.node = node;
 	}
 
 	@Override
-	public Object getReferenceObject() {
+	public Task getTask() {
 		return reference;
 	}
 
@@ -60,18 +60,12 @@ public class DeleteNodeEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public void finishStore() {
+	public void finishStore() throws IOException {
 	}
 
 	@Override
-	public void finishWrite() {
-		try {
-			node.delete();
-
-		}
-		catch (IOException ioe) {
-			ExceptionHandler.reportException(ioe);
-		}
+	public void finishWrite() throws IOException {
+		node.delete();
 	}
 
 	@Override

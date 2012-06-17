@@ -263,7 +263,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 				}
 			}
 			catch (IOException e1) {
-				// TODO Auto-generated catch block
 				ExceptionHandler.reportException(e1);
 			}
 		}

@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
@@ -31,10 +31,10 @@ import net.sourceforge.fullsync.fs.File;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class DirCreationEntryDescriptor implements EntryDescriptor {
-	private Object reference;
+	private Task reference;
 	private File dst;
 
-	public DirCreationEntryDescriptor(Object reference, File dst) {
+	public DirCreationEntryDescriptor(Task reference, File dst) {
 		this.reference = reference;
 		this.dst = dst;
 		if (dst == null) {
@@ -43,7 +43,7 @@ public class DirCreationEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public Object getReferenceObject() {
+	public Task getTask() {
 		return reference;
 	}
 
@@ -63,19 +63,13 @@ public class DirCreationEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public void finishWrite() {
-		try {
-			dst.makeDirectory();
-			dst.refresh();
-
-		}
-		catch (IOException e) {
-			ExceptionHandler.reportException(e);
-		}
+	public void finishWrite() throws IOException {
+		dst.makeDirectory();
+		dst.refresh();
 	}
 
 	@Override
-	public void finishStore() {
+	public void finishStore() throws IOException {
 
 	}
 
