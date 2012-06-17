@@ -330,7 +330,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		buttonUseFileFilterData.horizontalSpan = 2;
 		buttonUseFileFilter.setLayoutData(buttonUseFileFilterData);
 		buttonUseFileFilter.setText("Use file filter");
-		buttonUseFileFilter.setSelection(true);
+		buttonUseFileFilter.setSelection(false);
 		buttonUseFileFilter.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent evt) {
@@ -410,6 +410,10 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		textRuleSetData.grabExcessHorizontalSpace = true;
 		textRuleSetData.horizontalAlignment = SWT.FILL;
 		textRuleSet.setLayoutData(textRuleSetData);
+
+		labelFilesFilter.setEnabled(false);
+		buttonFileFilter.setEnabled(false);
+		textFilterDescription.setEnabled(false);
 
 		rbAdvancedRuleSet.setVisible(false); //FIXME: [RULESETS] remove to restore advanced rule set support
 		labelRuleName.setVisible(false); //FIXME: [RULESETS] remove to restore advanced rule set support
