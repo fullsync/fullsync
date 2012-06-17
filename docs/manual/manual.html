@@ -47,138 +47,99 @@ at the AUTHORS file in the root of this project.
 		<div id="content">
 			<h2 id="getting-started">Getting Started</h2>
 			<p>
-				We will start creating a simple profile which updates a destination directory
+				Lets start by creating a simple profile which updates a destination directory
 				with changes in the source directory. For example, this is useful for updating
 				websites on remote locations with changes that were done on the local working
 				copy. Additionally, we will make the profile being executed at specific times.
 			</p>
 
 			<p>
-				First, you need to create a new and empty profile. You will now see an empty
-				<a href="#windows-profile-details">Profile Details Window</a>. After entering
-				a name you have to specify the source and destination locations. As source
-				we will use a local directory, so you can use the browse button. The destination
-				will be an FTP-URL, which should look like this:
-				<code>ftp://your.domain.com/relative/path</code> where the 'relative path' is the
-				path needed to navigate to the destination path after logging in. So if you are
-				unsure what to enter, simply connect to the FTP site with your standard FTP
-				tool and find out what lies between the startup (default) directory and the
-				directory you want to be the destination. After that, enter the username and password.
-				Alternatively you can also specify a local path here, if you want to.<br />
-				<a href="#connection-types">more about connection types</a>
+				First, you need to create a new profile. You will now see an empty
+				<a href="#windows-profile-details">Profile Details Window</a>.
+				Entering a name and an optional description, then choose the type,
+				for this example use <code>Publish/Update</code>.
+				<code>Publish/Update</code> will synchronize changes in just one direction,
+				from source to destination, as most of the currently provided types do.<br />
+				There are currently four types:
+				<ul>
+					<li>Publish/Update</li>
+					<li>Backup Copy</li>
+					<li>Exact Copy</li>
+					<li>Two Way Sync</li>
+				</ul>
+				For more details see <a href="#sync-types">here</a>.
 			</p>
 
 			<p>
-				Now that the source and destination are given you will need to define in which
-				way you want those two locations to be synchronized. In this example we will use
-				Publish/Update, which will synchronize in just one direction, from source to
-				destination, as most of the currently provided types do.
-				Alternatively you can use Backup Copy or Exact Copy which have slightly different
-				behaviors that are shortly described in a text besides. <br />
-				<a href="#sync-types">more about synchronization types</a>
+				Now change to the Source tab, where we will use a local directory as our source,
+				the protocol for local files is called <code>file</code>.
+				You can use the browse button to select a directory. On the destination tab
+				we select a directory which will be on a FTP-Server, so change the protocol to <code>ftp</code>
+				and fill in the displayed fields. You can use the browse dialog to select the directory as usual.
+				Alternatively you can of course also specify a local path here, if you want to.<br />
+				<a href="#connection-types">More about connection types</a>
 			</p>
 
 			<p>
-				The last thing is defining the ruleset. Just select the simple rule set, activate
-				"Sync Subdirectories" and that's it. <br />
-				<a href="#rule-sets">more about rulesets</a>
+				On the next tab are a few options that allow you to exclude certain files from
+				the synchronization process. The defaults should be good enough for this example.
+				<!--a href="#rule-sets">more about Rule Sets</a-->
 			</p>
 
 			<p>
-				Now you can press "ok" and run the profile. To additionally specify a scheduled
+				Now you can press "Ok" and run the profile. To additionally specify a scheduled
 				execution, simply edit the profile and select "Edit Scheduling". If you are used
 				to crontabs you can specify a crontab-like scheduling, or simply take the interval
 				execution. After accepting the new scheduling, enable this profile for scheduled
-				execution by checking the "Enabled" option and press "ok". If you now enable the
+				execution by checking the "Enabled" option and press "Ok". If you now enable the
 				scheduler by pressing the run button in the toolbar all scheduled projects will
 				be executed at their specific times.
 			</p>
 
 			<h2 id="connection-types">Connection Types</h2>
 			<p>
-				FullSync supports a very flexible way of accessing different file system types
+				FullSync supports different file system types
 				as source and destination for synchronization.
 				Currently available are the following types:
 			</p>
-			<!-- FIXME: rewrite this -->
 			<dl>
-				<dt>file:///[<i>drive</i>:/]<i>absolute-path</i></dt>
+				<dt>file</dt>
 				<dd>
-					Access the local filesystem directly. For windows,
-					add the drive letter. No username or password
-					required/supported.
+					Files and Directories on your Computer.
 				</dd>
-				<dt>ftp://<i>host</i>[:<i>port</i>]/<i>relative-path[?[passive=true|false][&amp;compatible=true|false]]</i></dt>
+				<dt>ftp</dt>
 				<dd>
 					Access a remote server using ftp. Uses username and
-					password to authenticate.<br/>
-					<b>[0.9.1]</b> As of FullSync 0.9.1 you can add two query options to the url:
-					<ul>
-						<li>passive<br />
-							defaults to true, if you have connection problems set it false
-						</li>
-						<li>compatible<br />
-							defaults to false, if you have problems with directories containing minus or spaces
-							set it to true.
-						</li>
-					</ul>
-					Example: ftp://myhost/path/path?compatible=true&amp;passive=false
+					password to authenticate.<br />
+					This is typicallly used for accessing Websites.
 				</dd>
-				<dt>sftp://<i>host</i>[:<i>port</i>]/<i>relative-path</i></dt>
+				<dt>sftp</dt>
 				<dd>
 					Access a remote server using sftp. Uses username and
-					password to authenticate.
+					password to authenticate. May also use Public key
+					authentication, including keys that require a passphrase.<br />
+					This is typically used to access Linux Servers.
 				</dd>
-				<dt>smb://<i>host</i>/<i>share</i>/<i>relative-path</i></dt>
+				<dt>smb</dt>
 				<dd>
 					Access a computer using smb. Uses username and password
 					to authenticate. If you need to specify a domain, use
-					"username@domain" in the username field.
+					"username@domain" in the username field.<br />
+					This is typically used to access Windows shares.
 				</dd>
 			</dl>
 
-			<h2 id="rule-sets">RuleSets</h2>
-			<p>
+			<h2 id="rule-sets">Rule Sets</h2>
+			<!--p>
 				Currently there are two kinds of rule sets supported: simple
 				rule sets and advanced rule sets.
-			</p>
+			</p-->
 
 			<p>
-				For basic operations the <b>simple rule set</b> is enough, it allows
-				you to define ignore and accept patterns (actually regular
-				expressions) and will operate in a default way.<br /><br />
-				So a simple regular expression for matching specific file endings looks
-				like this: <code>.+\.txt</code> or <code>.+\.(txt|jpg|tmp)</code> (for
-				matching multiple endings).<br />
-				If you just want to match complete file/directory names use this:
-				<code>DirectoryName</code> or for multiple names
-				<code>(DirectoryName1|DirectoryName2|file\.extension)</code>.
-				To match just the beginning or ending use the following, which is quite
-				much the same as matching endings: <code>prefix.+</code> or
-				<code>.+suffix</code> (note: + means there must be at least one character.
-				use * instead to make it match no character as well.).<br />
-				Until there is a more userfriendly way available, please use google
-				to find out more about regular expressions.
-			</p>
-
-			<p>
-				<b>Advanced rule sets</b> allow you to set rules more detailed,
-				like setting compare conditions, allowing deletion and it
-				allows you to overwrite these rules in each directory using
-				special files. At the moment, the format of the file is very
-				old and there are many options no longer supported, but still
-				you have the possibilty to overwrite ignore and accept patterns
-				per directory. To use the advanced rule set, simply copy the
-				sample.syncrules file to your source directory and rename it
-				to .syncrules (on windows you may need to use an editor or some
-				other filemanager to do this as the explorer does not like
-				names beginning with a dot). This will be the initial rule set
-				file containing one rule set named "UPLOAD". this must be named
-				in the advanced rule set options of the profile. To overwrite
-				ignore or accept (former "take") rules, just put a file called
-				.syncrules into the directory and copy the start and end rule set
-				lines into the file. now you can define a new ignore rule by
-				adding a line <code>DEFINE IGNORE "&lt;pattern&gt;"</code>.
+				The <b>Simple Rule Set</b> allows you to define a flexible set of conditions
+				that control which files and directories will be included or excluded
+				from the synchronization. The rules can use name, path, type, size,
+				modification date, or age to decide if the file or directory should be considered.
 			</p>
 
 			<h2 id="sync-types">Synchronization Types</h2>
@@ -218,7 +179,7 @@ at the AUTHORS file in the root of this project.
 
 			<h2 id="windows-main-window">Main Window</h2>
 			<p>
-				This window is the main part of the graphical user interface.
+				This window is the main window of FullSync.
 				It allows you to create, edit or delete profiles, run profiles
 				and choose which actions should be performed, enable and disable
 				the scheduler, edit properties and connect to other locations.
@@ -232,17 +193,17 @@ at the AUTHORS file in the root of this project.
 			</p>
 			<img src="pictures/Profile_Details.png" alt=""/>
 			<p>
-				<a href="SynchronizationTypes.html">more about SynchronizationTypes</a><br/>
+				<a href="#sync-types">more about synchronization types</a><br/>
 			</p>
 
 			<img src="pictures/Profile_Details_dst.png" alt=""/>
 			<p>
-				<a href="ConnectionTypes.html">more about ConnectionTypes (used in source and destination)</a><br/>
+				<a href="#connection-types">more about connection types (used in source and destination)</a><br/>
 			</p>
 
 			<img src="pictures/Profile_Details_filters.png" alt=""/>
 			<p>
-				<a href="RuleSets.html">more about RuleSets</a>
+				<a href="#rule-sets">more about Rule Sets</a>
 			</p>
 
 			<img src="pictures/Profile_Details_subdirs.png" alt=""/>
