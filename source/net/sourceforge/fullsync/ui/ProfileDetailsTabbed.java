@@ -334,16 +334,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		buttonUseFileFilter.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent evt) {
-				if (buttonUseFileFilter.getSelection()) {
-					labelFilesFilter.setEnabled(true);
-					buttonFileFilter.setEnabled(true);
-					textFilterDescription.setEnabled(true);
-				}
-				else {
-					labelFilesFilter.setEnabled(false);
-					buttonFileFilter.setEnabled(false);
-					textFilterDescription.setEnabled(false);
-				}
+				enableFilterControls(buttonUseFileFilter.getSelection());
 			}
 		});
 
@@ -411,9 +402,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		textRuleSetData.horizontalAlignment = SWT.FILL;
 		textRuleSet.setLayoutData(textRuleSetData);
 
-		labelFilesFilter.setEnabled(false);
-		buttonFileFilter.setEnabled(false);
-		textFilterDescription.setEnabled(false);
+		enableFilterControls(false);
 
 		rbAdvancedRuleSet.setVisible(false); //FIXME: [RULESETS] remove to restore advanced rule set support
 		labelRuleName.setVisible(false); //FIXME: [RULESETS] remove to restore advanced rule set support
@@ -593,16 +582,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 			}
 			boolean useFilter = simpleDesc.isUseFilter();
 			buttonUseFileFilter.setSelection(useFilter);
-			if (useFilter) {
-				labelFilesFilter.setEnabled(true);
-				buttonFileFilter.setEnabled(true);
-				textFilterDescription.setEnabled(true);
-			}
-			else {
-				labelFilesFilter.setEnabled(false);
-				buttonFileFilter.setEnabled(false);
-				textFilterDescription.setEnabled(false);
-			}
+			enableFilterControls(useFilter);
 			FileFilterTree fileFilterTree = simpleDesc.getFileFilterTree();
 			if (fileFilterTree != null) {
 				itemsMap = fileFilterTree.getItemsMap();
@@ -615,6 +595,12 @@ public class ProfileDetailsTabbed implements DisposeListener {
 			AdvancedRuleSetDescriptor advDesc = (AdvancedRuleSetDescriptor) ruleSetDescriptor;
 			textRuleSet.setText(advDesc.getRuleSetName());
 		}
+	}
+
+	private void enableFilterControls(final boolean enable) {
+		labelFilesFilter.setEnabled(enable);
+		buttonFileFilter.setEnabled(enable);
+		textFilterDescription.setEnabled(enable);
 	}
 
 	private void drawDirectoryTree() {
@@ -764,9 +750,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 			syncSubsButton.setEnabled(true);
 			buttonUseFileFilter.setEnabled(true);
 			if (buttonUseFileFilter.getSelection()) {
-				labelFilesFilter.setEnabled(true);
-				buttonFileFilter.setEnabled(true);
-				textFilterDescription.setEnabled(true);
+				enableFilterControls(true);
 			}
 		}
 		else {
@@ -774,9 +758,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 			textRuleSet.setEnabled(true);
 			syncSubsButton.setEnabled(false);
 			buttonUseFileFilter.setEnabled(false);
-			labelFilesFilter.setEnabled(false);
-			buttonFileFilter.setEnabled(false);
-			textFilterDescription.setEnabled(false);
+			enableFilterControls(false);
 		}
 
 	}

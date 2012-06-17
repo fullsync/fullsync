@@ -386,18 +386,17 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 		menuItemHelpContent.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {
+				boolean helpShown = false;
 				// TODO help contents
-				java.io.File helpIndex = new java.io.File("docs/manual/manual.html"); //$NON-NLS-1$
+				java.io.File helpIndex = new java.io.File("docs/manual/manual.html").getAbsoluteFile(); //$NON-NLS-1$
 				if (helpIndex.exists()) {
 					try {
-						Program.launch(helpIndex.toURI().toString());
+						helpShown = Program.launch(helpIndex.getAbsolutePath());
 					}
-					catch (SecurityException ex) {
-						//FIXME: upload the new manual to the homepage (in a versioned directory)!!
-						Program.launch("http://fullsync.sourceforge.net/docs/manual/index.html"); //$NON-NLS-1$
+					catch (Exception ex) {
 					}
 				}
-				else {
+				if (!helpShown) {
 					//FIXME: upload the new manual to the homepage (in a versioned directory)!!
 					Program.launch("http://fullsync.sourceforge.net/docs/manual/index.html"); //$NON-NLS-1$
 				}
