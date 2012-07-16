@@ -194,7 +194,7 @@
 		<mkdir dir="${dist.dir}" />
 		<zip zipfile="${dist.dir}/${final.name}.zip">
 			<fileset dir="${build.dir}">
-				<include name="**/*.*" />
+				<include name="**/*" />
 				<exclude name="classes/**" />
 				<exclude name="profiles.xml" />
 			</fileset>
