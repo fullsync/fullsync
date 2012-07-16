@@ -69,6 +69,7 @@ public class Launcher {
 			for (String s : fsClassPath.split("\\.jar\\s")) {
 				jars.add(new URL(dot + "/" + s.trim() + ".jar"));
 			}
+			jf.close();
 			URL[] urls = new URL[jars.size()];
 			System.arraycopy(jars.toArray(), 0, urls, 0, urls.length);
 
