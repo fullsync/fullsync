@@ -50,8 +50,7 @@ public class Entry {
 		Formatter formatter = null;
 		try {
 			formatter = new Formatter();
-			Formatter format = formatter.format("%10d-%10d: %s", new Object[] { Integer.valueOf(start), Integer.valueOf((start + length) - 1),
-					descriptor.toString(), });
+			Formatter format = formatter.format("%10d-%10d: %s", start, (start + length) - 1, descriptor.toString());
 			result = format.out().toString();
 		}
 		finally {

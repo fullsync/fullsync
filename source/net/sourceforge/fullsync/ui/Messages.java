@@ -74,6 +74,6 @@ public class Messages {
 
 	public static String getString(final String key, final String value) {
 		String msg = getString(key);
-		return MessageFormat.format(msg, new Object[] { value });
+		return MessageFormat.format(msg, value);
 	}
 }
