@@ -80,8 +80,8 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 
 	@Override
 	public String getDescription() {
-		return Messages.getString("TaskDecisionPage.Source") + ": " + taskTree.getSource().getUri() + "\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				+ Messages.getString("TaskDecisionPage.Destination") + ": " + taskTree.getDestination().getUri(); //$NON-NLS-1$ //$NON-NLS-2$
+		return Messages.getString("TaskDecisionPage.Source") + ": " + taskTree.getSource().getConnectionDescription().getDisplayPath() + "\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ Messages.getString("TaskDecisionPage.Destination") + ": " + taskTree.getDestination().getConnectionDescription().getDisplayPath(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -172,8 +172,8 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 			@Override
 			public void run() {
 				guiController.showBusyCursor(true);
+				final Display display = dialog.getDisplay();
 				try {
-					final Display display = dialog.getDisplay();
 					processing = true;
 					list.setChangeAllowed(false);
 
@@ -221,7 +221,7 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 						}
 					});
 
-					dialog.getDisplay().asyncExec(new Runnable() {
+					display.asyncExec(new Runnable() {
 						@Override
 						public void run() {
 							// Notification Window.
@@ -229,6 +229,7 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 							mb.setText(Messages.getString("TaskDecisionPage.Finished")); //$NON-NLS-1$
 							mb.setMessage(Messages.getString("TaskDecisionPage.ProfileFinished")); //$NON-NLS-1$
 							mb.open();
+							dialog.widgetSelected(null);
 						}
 					});
 				}

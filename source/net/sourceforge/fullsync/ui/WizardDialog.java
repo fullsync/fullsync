@@ -265,7 +265,7 @@ public class WizardDialog extends SelectionAdapter implements ShellListener {
 
 	@Override
 	public void widgetSelected(final SelectionEvent e) {
-		if (e.widget == okButton) {
+		if (null != e && e.widget == okButton) {
 			if (wizardPage.apply()) {
 				dialogShell.dispose();
 			}
