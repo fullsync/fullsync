@@ -21,6 +21,7 @@
 package net.full.fs.ui;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.ConnectionDescription;
@@ -28,6 +29,21 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import org.eclipse.swt.widgets.DirectoryDialog;
 
 class FileSpecificComposite extends ProtocolSpecificComposite {
+	
+	@Override
+	public void setConnectionDescription(ConnectionDescription connection) {
+		if (null != connection) {
+			super.setConnectionDescription(connection);
+			textPath.setText(connection.getDisplayPath());
+		}
+	};
+	
+	@Override
+	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
+		File f = new File(textPath.getText());
+		return new ConnectionDescription(f.toURI());
+	}
+
 	@Override
 	public void onBrowse() {
 		ConnectionDescription desc = null;
@@ -44,7 +60,12 @@ class FileSpecificComposite extends ProtocolSpecificComposite {
 		String dir = d.open();
 		if (dir != null) {
 			File f = new File(dir);
-			setPath(f.toURI().getPath());
+			try {
+				setPath(f.getCanonicalPath());
+			} catch (IOException e) {
+				setPath("");
+				e.printStackTrace();
+			}
 		}
 	}
 }

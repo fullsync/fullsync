@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -134,5 +136,17 @@ public class ConnectionDescription implements Serializable {
 
 	public URI getUri() {
 		return uri;
+	}
+
+	public String getDisplayPath() {
+		if ("file".equals(uri.getScheme())) {
+			File f = new File(uri);
+			try {
+				return f.getCanonicalPath();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return uri.toString();
 	}
 }

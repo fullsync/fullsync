@@ -109,8 +109,8 @@ public class Synchronizer {
 		else {
 			try {
 				logger.info("Synchronization started");
-				logger.info("  source:      " + taskTree.getSource().getUri().toString());
-				logger.info("  destination: " + taskTree.getDestination().getUri().toString());
+				logger.info("  source:      " + taskTree.getSource().getConnectionDescription().getDisplayPath());
+				logger.info("  destination: " + taskTree.getDestination().getConnectionDescription().getDisplayPath());
 
 				BlockBuffer buffer = new BlockBuffer(logger);
 				TaskExecutor queue = new FillBufferTaskExecutor(buffer);

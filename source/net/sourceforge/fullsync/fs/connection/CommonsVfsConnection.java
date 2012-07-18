@@ -22,7 +22,6 @@ package net.sourceforge.fullsync.fs.connection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.ConnectionDescription;
@@ -149,11 +148,6 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public final URI getUri() {
-		return desc.getUri();
-	}
-
-	@Override
 	public final boolean isCaseSensitive() {
 		// TODO Auto-generated method stub
 		return false;
@@ -163,6 +157,11 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	public final boolean isAvailable() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	public ConnectionDescription getConnectionDescription() {
+		return desc;
 	}
 
 }

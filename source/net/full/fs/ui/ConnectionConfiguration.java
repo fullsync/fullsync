@@ -19,6 +19,7 @@
  */
 package net.full.fs.ui;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
@@ -103,7 +104,11 @@ public class ConnectionConfiguration implements ModifyListener {
 
 
 	public void setConnectionDescription(ConnectionDescription location) {
-		comboProtocol.setText(location.getUri().getScheme());
+		URI uri = null;
+		if (null != location) {
+			uri = location.getUri();
+		}
+		comboProtocol.setText((null != uri) ? uri.getScheme() : "");
 		compositeSpecific.setConnectionDescription(location);
 	}
 

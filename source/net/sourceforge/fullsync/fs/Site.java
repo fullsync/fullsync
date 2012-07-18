@@ -21,7 +21,8 @@ package net.sourceforge.fullsync.fs;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URI;
+
+import net.sourceforge.fullsync.ConnectionDescription;
 
 import org.apache.commons.vfs2.FileObject;
 
@@ -41,13 +42,13 @@ public interface Site extends Serializable {
 
 	public void close() throws IOException;
 
-	public URI getUri();
-
 	public boolean isCaseSensitive();
 
 	public boolean isAvailable(); // reachable, correct auth,...
 
 	FileObject getBase();
+
+	ConnectionDescription getConnectionDescription();
 
 	// public File getFile( String path );
 }

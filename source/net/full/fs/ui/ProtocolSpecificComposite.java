@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Text;
 class ProtocolSpecificComposite {
 
 	private Label labelPath = null;
-	private Text textPath = null;
+	protected Text textPath = null;
 	private Button buttonBrowse = null;
 	private Button buttonBuffered = null;
 	protected String m_scheme = null;
@@ -84,7 +84,12 @@ class ProtocolSpecificComposite {
 	}
 
 	public void setConnectionDescription(final ConnectionDescription connection) {
-		textPath.setText(connection.getUri().getPath());
+		if (null != connection && null != connection.getUri()) {
+			textPath.setText(connection.getUri().getPath());
+		}
+		else {
+			textPath.setText("");
+		}
 	}
 
 	public void reset(final String scheme) {

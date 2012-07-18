@@ -19,8 +19,12 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 
+import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
@@ -155,8 +159,10 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		}
 
 		public void updateComponent() {
-			lSource.setText("" + profile.getSource());
-			lDestination.setText("" + profile.getDestination());
+			ConnectionDescription desc = profile.getSource();
+			lSource.setText((null != desc) ? desc.getDisplayPath() : "null"); //TODO: null is not really user friendly
+			desc = profile.getDestination();
+			lDestination.setText((null != desc) ? desc.getDisplayPath() : "null"); //TODO: null is not really user friendly
 			lLastUpdate.setText(profile.getLastUpdateText());
 			lNextUpdate.setText(profile.getNextUpdateText());
 			layout();

@@ -37,6 +37,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
@@ -350,11 +351,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	}
 
 	@Override
-	public URI getUri() {
-		return fs.getUri();
-	}
-
-	@Override
 	public boolean isCaseSensitive() {
 		return fs.isCaseSensitive();
 	}
@@ -362,6 +358,11 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	@Override
 	public FileObject getBase() {
 		return fs.getBase();
+	}
+
+	@Override
+	public ConnectionDescription getConnectionDescription() {
+		return fs.getConnectionDescription();
 	}
 
 }
