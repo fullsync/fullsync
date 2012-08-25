@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.ui.UISettings;
 
 import org.apache.commons.vfs2.FileContent;
@@ -76,6 +77,7 @@ class FileObjectChooser extends Dialog {
 
 	private boolean result;
 	private FileObject baseFileObject;
+	private FileObject rootFileObject;
 	private FileObject activeFileObject;
 	private FileObject selectedFileObject;
 
@@ -109,14 +111,13 @@ class FileObjectChooser extends Dialog {
 			labelUrl.setText("Url:");
 
 			Label labelBaseUrl = new Label(compositeTop, SWT.NONE);
-			labelBaseUrl.setText(baseFileObject.getName().toString());
+			labelBaseUrl.setText(rootFileObject.getName().toString());
 
 			textUrlExtension = new Text(compositeTop, SWT.BORDER);
 			GridData textUrlExtensionLData = new GridData();
 			textUrlExtensionLData.grabExcessHorizontalSpace = true;
 			textUrlExtensionLData.horizontalAlignment = SWT.FILL;
 			textUrlExtension.setLayoutData(textUrlExtensionLData);
-			textUrlExtension.setText("<url extension>");
 
 			// toolbar: folder up, create new folder
 			toolBarActions = new ToolBar(compositeTop, SWT.NONE);
@@ -318,7 +319,7 @@ class FileObjectChooser extends Dialog {
 	private void updateActiveFileObject() throws FileSystemException {
 		tableItems.deselectAll();
 		populateList();
-		textUrlExtension.setText(baseFileObject.getName().getRelativeName(activeFileObject.getName()));
+		textUrlExtension.setText(rootFileObject.getName().getRelativeName(activeFileObject.getName()));
 	}
 
 	private void updateSelectedFileObject() throws FileSystemException {
@@ -334,6 +335,12 @@ class FileObjectChooser extends Dialog {
 		this.baseFileObject = baseFileObject;
 		if (activeFileObject == null) {
 			activeFileObject = baseFileObject;
+		}
+		try {
+			rootFileObject = baseFileObject.resolveFile("/");
+		}
+		catch (FileSystemException e) {
+			ExceptionHandler.reportException(e);
 		}
 	}
 
