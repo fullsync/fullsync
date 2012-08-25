@@ -25,17 +25,40 @@ import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
+import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
+import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class SmbFileSystem implements FileSystem {
+	private static boolean initialized = false;
+
+	private static synchronized void init() {
+		if (!initialized) {
+			try {
+				FileSystemManager fsm = VFS.getManager();
+				if (!fsm.hasProvider("smb") && (fsm instanceof DefaultFileSystemManager)) {
+					DefaultFileSystemManager dfsm = (DefaultFileSystemManager) fsm;
+					dfsm.addProvider("smb", new org.apache.commons.vfs2.provider.smb.SmbFileProvider());
+				}
+			}
+			catch (org.apache.commons.vfs2.FileSystemException e) {
+				e.printStackTrace();
+			}
+			initialized = true;
+		}
+	}
 
 	@Override
 	public final Site createConnection(final ConnectionDescription description) throws FileSystemException {
+		if (!initialized) {
+			init();
+		}
 		return new CommonsVfsConnection(description, this);
 	}
 
