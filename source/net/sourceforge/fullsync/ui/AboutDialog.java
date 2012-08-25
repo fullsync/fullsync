@@ -34,8 +34,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -93,11 +91,9 @@ class AboutDialog extends Dialog implements DisposeListener {
 			labelPicture.setSize(r.width, r.height);
 			labelPicture.setImage(aboutImg);
 			// version label
-			Font smallfont = new Font(null, new FontData("Sans Serif", 7, SWT.NORMAL));
 			Label labelVersion = new Label(dialogShell, SWT.FILL);
 			labelVersion.setForeground(UISettings.COLOR_LIGHT_GREY);
-			labelVersion.setFont(smallfont);
-			labelVersion.setText("Version: <unknown devel version>");
+			labelVersion.setText("Version: <unknown development version>");
 			GridData lvd = new GridData(SWT.FILL);
 			lvd.grabExcessHorizontalSpace = true;
 			lvd.horizontalIndent = 17;
@@ -122,7 +118,6 @@ class AboutDialog extends Dialog implements DisposeListener {
 			// copyright text
 			Label labelCopyright = new Label(dialogShell, SWT.FILL);
 			labelCopyright.setForeground(UISettings.COLOR_LIGHT_GREY);
-			labelCopyright.setFont(smallfont);
 			labelCopyright.setText(copyright);
 			GridData lcd = new GridData(SWT.FILL);
 			lcd.grabExcessHorizontalSpace = true;
