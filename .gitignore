@@ -18,3 +18,4 @@
 .directory
 *~
 *.kdev4
+*.xcf
