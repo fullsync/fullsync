@@ -9,10 +9,13 @@
 	<property name="final.name" value="${project}-${version}" />
 	<property name="final-src.name" value="${project}-${version}-src" />
 	<property name="source.dir" value="${basedir}/source" />
+	<property name="tests.dir" value="${basedir}/tests" />
 	<property name="res.dir" value="${basedir}/resources" />
 	<property name="build.dir" value="${basedir}/build" />
 	<property name="build.lib.dir" value="${build.dir}/lib" />
 	<property name="classes.dir" value="${build.dir}/classes" />
+	<property name="build-tests.dir" value="${basedir}/build-tests" />
+	<property name="classes-tests.dir" value="${build-tests.dir}/classes" />
 	<property name="dist.dir" value="${basedir}/dist" />
 	<property name="jar.copyright" value="Copyright (c) 2012 the ${project} Team" />
 	<property name="debug" value="on" />
@@ -25,7 +28,7 @@
 		<include name="commons-collections.jar" />
 		<include name="commons-lang.jar" />
 		<include name="commons-net.jar" />
-		<!--<include name="jakarta-oro.jar" />-->
+		<include name="jakarta-oro.jar" />
 		<include name="jcifs.jar" />
 		<include name="slf4j-api.jar" />
 		<include name="log4j-over-slf4j.jar" />
@@ -44,10 +47,19 @@
 		<fileset refid="dependentJars" />
 		<pathelement location="${classes.dir}" />
 		<!-- only used for compilation -->
-		<pathelement location="${build.lib.dir}/swt-gtk-linux-x86_64.jar">
-		</pathelement>
+		<pathelement location="${build.lib.dir}/swt-gtk-linux-x86_64.jar" />
 	</path>
 
+	<fileset id="dependentJars-tests" dir="${basedir}/lib-tests" includes="*.jar">
+	</fileset>
+
+	<path id="tests.classpath">
+		<path refid="compile.classpath" />
+		<fileset refid="dependentJars-tests" />
+		<pathelement location="${basedir}/tests" />
+		<pathelement location="${classes-tests.dir}" />
+		<pathelement location="/usr/share/java/junit4.jar"/>
+	</path>
 
 	<!-- Targets building a plain, working version into {build.dir} -->
 	<target name="detect" description="Display configuration and conditional compilation flags">
@@ -68,6 +80,13 @@
 				<include name="**/*.properties" />
 			</fileset>
 		</copy>
+	</target>
+
+	<target name="compile-tests">
+		<mkdir dir="${classes-tests.dir}" />
+		<property name="classpath-debug" refid="tests.classpath"></property>
+		<echo>${classpath-debug}</echo>
+		<javac debug="${debug}" srcdir="${tests.dir}" destdir="${classes-tests.dir}" classpathref="tests.classpath" includeantruntime="true" target="${java.target.version}" source="${java.source.version}"/>
 	</target>
 
 	<target name="rmic">
@@ -195,17 +214,16 @@
 		<echo message="Building a zip distribution" />
 		<mkdir dir="${dist.dir}" />
 		<zip zipfile="${dist.dir}/${final.name}.zip">
-			<fileset dir="${build.dir}">
-				<include name="**/*" />
+			<zipfileset dir="${build.dir}" prefix="${project}-${version}" includes="**/*">
 				<exclude name="classes/**" />
 				<exclude name="profiles.xml" />
-			</fileset>
+			</zipfileset>
 		</zip>
 	</target>
 
-	<!-- Target running the project -->
-	<target name="run" depends="compile">
-		<java classname="net.sourceforge.fullsync.launcher.Launcher" />
-		<!-- classpathref="classpath" /> -->
+	<target name="tests" depends="build, compile-tests">
+		<junit fork="true" printsummary="true" includeantruntime="true">
+			<classpath refid="tests.classpath"/>
+		</junit>
 	</target>
 </project>
