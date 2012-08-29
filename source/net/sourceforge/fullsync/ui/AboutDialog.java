@@ -19,6 +19,7 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -207,7 +208,32 @@ class AboutDialog extends Dialog implements DisposeListener {
 			buttonWebsite.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent evt) {
-					Program.launch("http://fullsync.sourceforge.net"); //$NON-NLS-1$
+					final String homepage = "http://fullsync.sourceforge.net";
+					if (System.getProperty("os.name").toLowerCase().indexOf("linux") > -1) {
+						Thread t = new Thread() {
+							@Override
+							public void run() {
+								try {
+									Process p = Runtime.getRuntime().exec(new String[] { "xdg-open", homepage });
+									p.waitFor();
+								}
+								catch (IOException e) {
+									ExceptionHandler.reportException("Error opening homepage.", e);
+								}
+								catch (InterruptedException e) {
+									ExceptionHandler.reportException("Error opening homepage.", e);
+								}
+							};
+						};
+						// set this thread as a daemon to avoid hanging the FullSync shutdown
+						// this might happen if xdg-open opens the browser directly and the
+						// browser is still running
+						t.setDaemon(true);
+						t.start();
+					}
+					else {
+						Program.launch(homepage);
+					}
 				}
 			});
 			buttonWebsiteLData.widthHint = UISettings.BUTTON_WIDTH;
