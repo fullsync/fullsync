@@ -74,7 +74,7 @@
 
 	<target name="compile">
 		<mkdir dir="${classes.dir}" />
-		<javac debug="${debug}" srcdir="${source.dir}" destdir="${classes.dir}" classpathref="compile.classpath" includeantruntime="false" target="${java.target.version}" source="${java.source.version}"/>
+		<javac debug="${debug}" srcdir="${source.dir}" destdir="${classes.dir}" classpathref="compile.classpath" includeantruntime="false" target="${java.target.version}" source="${java.source.version}" encoding="utf-8"/>
 		<copy todir="${classes.dir}">
 			<fileset dir="${source.dir}">
 				<include name="**/*.properties" />
