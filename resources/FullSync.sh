@@ -1,8 +1,8 @@
 #!/bin/sh
 
-FULLSYNC_DIR=`dirname $0`
+REAL_FULLSYNC_LOC=`readlink -f "$0"`
 
-REAL_FULLSYNC_DIR=`readlink -f ${FULLSYNC_DIR}`
+REAL_FULLSYNC_DIR=`dirname "${REAL_FULLSYNC_LOC}"`
 
 JAVA_BIN=`which java`
 
