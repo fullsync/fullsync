@@ -1,6 +1,7 @@
 # root directory
 /classes
 /build
+/build-tests
 /dist
 /logs
 /archive
