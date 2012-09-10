@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.io.IOException;
+
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.ImageRepository;
 import net.sourceforge.fullsync.Preferences;
@@ -29,6 +31,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -212,5 +215,39 @@ public class GuiController implements Runnable {
 
 	public static GuiController getInstance() {
 		return singleton;
+	}
+
+	public static void launchProgram(final String uri) {
+		if (System.getProperty("os.name").toLowerCase().indexOf("linux") > -1) {
+			Thread t = new Thread() {
+				@Override
+				public void run() {
+					try {
+						Process p = Runtime.getRuntime().exec(new String[] { "xdg-open", uri });
+						p.waitFor();
+					}
+					catch (IOException e) {
+						ExceptionHandler.reportException("Error opening " + uri + ".", e);
+					}
+					catch (InterruptedException e) {
+						ExceptionHandler.reportException("Error opening " + uri + ".", e);
+					}
+				};
+			};
+			// set this thread as a daemon to avoid hanging the FullSync shutdown
+			// this might happen if xdg-open opens the browser directly and the
+			// browser is still running
+			t.setDaemon(true);
+			t.start();
+		}
+		else {
+			try {
+				Program.launch(uri);
+			}
+			catch (Exception e) {
+				ExceptionHandler.reportException("Error opening " + uri + ".", e);
+			}
+		}
+
 	}
 }

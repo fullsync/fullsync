@@ -45,7 +45,6 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.eclipse.swt.program.Program;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -270,17 +269,12 @@ public class Main { // NO_UCD
 					guiController.startGui(line.hasOption('m'));
 
 					if (!line.hasOption('P') && !preferences.getHelpShown() && (null == System.getProperty("net.sourceforge.fullsync.skipHelp"))) {
-						try {
-							File f = new File("docs/manual/manual.html");
-							if (f.exists()) {
-								Program.launch(f.getAbsolutePath());
-							}
-						}
-						catch (Error ex) {
-							ex.printStackTrace();
-						}
 						preferences.setHelpShown(true);
 						preferences.save();
+						File f = new File("docs/manual/manual.html");
+						if (f.exists()) {
+							GuiController.launchProgram(f.getAbsolutePath());
+						}
 					}
 
 					if (listenerStarupException != null) {

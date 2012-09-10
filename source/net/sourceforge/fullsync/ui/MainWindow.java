@@ -43,7 +43,6 @@ import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -308,7 +307,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 		logItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {
-				Program.launch(new java.io.File(Main.getConfigDir() + "fullsync.log").getAbsolutePath()); //$NON-NLS-1$
+				GuiController.launchProgram(new java.io.File(Main.getConfigDir() + "fullsync.log").getAbsolutePath()); //$NON-NLS-1$
 			}
 		});
 
@@ -386,19 +385,14 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 		menuItemHelpContent.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {
-				boolean helpShown = false;
 				// TODO help contents
 				java.io.File helpIndex = new java.io.File("docs/manual/manual.html").getAbsoluteFile(); //$NON-NLS-1$
 				if (helpIndex.exists()) {
-					try {
-						helpShown = Program.launch(helpIndex.getAbsolutePath());
-					}
-					catch (Exception ex) {
-					}
+					GuiController.launchProgram(helpIndex.getAbsolutePath());
 				}
-				if (!helpShown) {
+				else {
 					//FIXME: upload the new manual to the homepage (in a versioned directory)!!
-					Program.launch("http://fullsync.sourceforge.net/docs/manual/index.html"); //$NON-NLS-1$
+					GuiController.launchProgram("http://fullsync.sourceforge.net/docs/manual/index.html"); //$NON-NLS-1$
 				}
 			}
 		});
