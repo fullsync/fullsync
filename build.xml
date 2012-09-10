@@ -141,6 +141,7 @@
 		<copy file="${basedir}/resources/FullSync.ini" tofile="${build.dir}/FullSync.ini" />
 		<copy file="${basedir}/resources/FullSync64.exe" tofile="${build.dir}/FullSync64.exe" />
 		<copy file="${basedir}/resources/FullSync64.ini" tofile="${build.dir}/FullSync64.ini" />
+		<copy file="${basedir}/resources/FullSync.desktop" tofile="${build.dir}/FullSync.desktop" />
 		<mkdir dir="${build.dir}/docs" />
 		<copy todir="${build.dir}/docs">
 			<fileset dir="${basedir}/docs">
