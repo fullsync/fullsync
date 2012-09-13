@@ -30,9 +30,12 @@ Requires:       java >= 1.6.0
 %endif
 Requires:       libgtk-2_0-0%{_isa} >= 2.4.1
 Requires:       xdg-utils
+Requires:       xdg-user-dirs
+Requires:       desktop-file-utils
 BuildRequires:  ant
 BuildRequires:  java-devel >= 1.6.0
 BuildRequires:  hicolor-icon-theme
+BuildRequires:  desktop-file-utils
 ExclusiveArch:  x86_64 i586
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
@@ -99,17 +102,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsscaldir}/%{name}.svg
 
 %post
-#% desktop_database_post
-if test -x %{_bindir}/update-desktop-database; then
-  %{_bindir}/update-desktop-database --quiet "%{_datadir}/applications" || true
-fi
+%desktop_database_post
 exit 0
 
 %postun
-#% desktop_database_postun
-if test -x %{_bindir}/update-desktop-database; then
-  %{_bindir}/update-desktop-database --quiet "%{_datadir}/applications" || true
-fi
+%desktop_database_postun
 exit 0
 
 %changelog
