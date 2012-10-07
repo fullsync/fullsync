@@ -324,6 +324,18 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 			}
 		});
 
+		MenuItem importItem = new MenuItem(menuEdit, SWT.PUSH);
+		importItem.setText(Messages.getString("MainWindow.Import_Menu")); //$NON-NLS-1$
+		importItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(final Event e) {
+				// show the Import Dialog.
+				WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
+				new ImportProfilesPage(dialog);
+				dialog.show();
+			}
+		});
+
 		MenuItem menuItemRemoteConnection = new MenuItem(menuBarMainWindow, SWT.CASCADE);
 		menuItemRemoteConnection.setText(Messages.getString("MainWindow.Remote_Connection_Menu")); //$NON-NLS-1$
 
