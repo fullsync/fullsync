@@ -42,6 +42,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 %define fsdir %{_javadir}/%{name}-%{version}
 # tell RPM not to generate provides for the contained jar files, they are not installed in a public dir
 %define _use_internal_dependency_generator 0
+%define exename fullsync
 
 %description
 FullSync is a universal file synchronization and backup tool
@@ -55,8 +56,8 @@ for developers, but the basic functionality is easy enough for everyone.
 export CLASSPATH=
 export OPT_JAR_LIST=:
 ant build
-desktop-file-edit "--set-key=Exec" "--set-value=%{_bindir}/%{name}" "build/%{name}.desktop"
-desktop-file-edit "--set-key=Comment" "--set-value=Easy file synchronization for everyone. Version: %{version}" "build/%{name}.desktop"
+desktop-file-edit "--set-key=Exec" "--set-value=%{_bindir}/%{exename}" "build/%{exename}.desktop"
+desktop-file-edit "--set-key=Comment" "--set-value=Easy file synchronization for everyone. Version: %{version}" "build/%{exename}.desktop"
 
 %install
 cd build/
@@ -69,8 +70,8 @@ install -d -m 755 $RPM_BUILD_ROOT%{_bindir}/
 install -m 644 launcher.jar $RPM_BUILD_ROOT%{fsdir}/launcher.jar
 install -m 644 LICENSE $RPM_BUILD_ROOT%{fsdir}/LICENSE
 install -m 644 CHANGELOG $RPM_BUILD_ROOT%{fsdir}/CHANGELOG
-install -m 755 %{name} $RPM_BUILD_ROOT%{fsdir}/%{name}
-ln -s %{fsdir}/%{name} $RPM_BUILD_ROOT%{_bindir}/%{name}
+install -m 755 %{exename} $RPM_BUILD_ROOT%{fsdir}/%{exename}
+ln -s %{fsdir}/%{exename} $RPM_BUILD_ROOT%{_bindir}/%{exename}
 install -m 644 lib/*.jar $RPM_BUILD_ROOT%{fsdir}/lib/
 rm -rf $RPM_BUILD_ROOT%{fsdir}/lib/swt-*
 %ifarch x86_64
@@ -78,8 +79,8 @@ install -m 644 lib/swt-gtk-linux-x86_64.jar $RPM_BUILD_ROOT%{fsdir}/lib/swt-gtk-
 %else
 install -m 644 lib/swt-gtk-linux-x86.jar $RPM_BUILD_ROOT%{fsdir}/lib/swt-gtk-linux-x86.jar
 %endif
-install -m 644 %{name}.svg $RPM_BUILD_ROOT%{_iconsscaldir}/%{name}.svg
-install -m 644 %{name}.desktop $RPM_BUILD_ROOT%{_desktopdir}/%{name}.desktop
+install -m 644 %{exename}.svg $RPM_BUILD_ROOT%{_iconsscaldir}/%{exename}.svg
+install -m 644 %{exename}.desktop $RPM_BUILD_ROOT%{_desktopdir}/%{exename}.desktop
 install -m 644 images/* $RPM_BUILD_ROOT%{fsdir}/images/
 
 
@@ -94,12 +95,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{fsdir}/LICENSE
 %doc %{fsdir}/CHANGELOG
 %{fsdir}/launcher.jar
-%attr(0755 root root) %{fsdir}/%{name}
-%{_bindir}/%{name}
+%attr(0755 root root) %{fsdir}/%{exename}
+%{_bindir}/%{exename}
 %{fsdir}/lib/*.jar
 %{fsdir}/images/*
-%{_desktopdir}/%{name}.desktop
-%{_iconsscaldir}/%{name}.svg
+%{_desktopdir}/%{exename}.desktop
+%{_iconsscaldir}/%{exename}.svg
 
 %post
 %desktop_database_post

@@ -132,17 +132,17 @@
 			</fileset>
 		</copy>
 		<copy file="${basedir}/resources/sample.syncrules" tofile="${build.dir}/sample.syncrules" />
-		<copy file="${basedir}/resources/FullSync.sh" tofile="${build.dir}/FullSync" />
+		<copy file="${basedir}/resources/fullsync.sh" tofile="${build.dir}/fullsync" />
 		<exec executable="/bin/chmod" osfamily="unix" >
 			<arg value="755"/>
-			<arg value="${build.dir}/FullSync"/>
+			<arg value="${build.dir}/fullsync"/>
 		</exec>
-		<copy file="${basedir}/resources/FullSync.exe" tofile="${build.dir}/FullSync.exe" />
-		<copy file="${basedir}/resources/FullSync.ini" tofile="${build.dir}/FullSync.ini" />
-		<copy file="${basedir}/resources/FullSync64.exe" tofile="${build.dir}/FullSync64.exe" />
-		<copy file="${basedir}/resources/FullSync64.ini" tofile="${build.dir}/FullSync64.ini" />
-		<copy file="${basedir}/resources/FullSync.desktop" tofile="${build.dir}/FullSync.desktop" />
-		<copy file="${basedir}/resources/images/FullSync.svg" tofile="${build.dir}/FullSync.svg" />
+		<copy file="${basedir}/resources/fullsync.exe" tofile="${build.dir}/fullsync.exe" />
+		<copy file="${basedir}/resources/fullsync.ini" tofile="${build.dir}/fullsync.ini" />
+		<copy file="${basedir}/resources/fullsync64.exe" tofile="${build.dir}/fullsync64.exe" />
+		<copy file="${basedir}/resources/fullsync64.ini" tofile="${build.dir}/fullsync64.ini" />
+		<copy file="${basedir}/resources/fullsync.desktop" tofile="${build.dir}/fullsync.desktop" />
+		<copy file="${basedir}/resources/images/fullsync.svg" tofile="${build.dir}/fullsync.svg" />
 		<mkdir dir="${build.dir}/docs" />
 		<copy todir="${build.dir}/docs">
 			<fileset dir="${basedir}/docs">
