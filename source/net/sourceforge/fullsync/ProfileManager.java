@@ -393,6 +393,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 				}
 				doc.appendChild(e);
 
+				//TODO: update profiles.xml generation: don't use deprecated API, don't write to the profiles.xml directly
 				OutputStream out = new FileOutputStream(configFile);
 
 				OutputFormat format = new OutputFormat(doc, "UTF-8", true);
