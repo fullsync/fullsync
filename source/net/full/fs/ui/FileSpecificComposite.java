@@ -29,15 +29,18 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import org.eclipse.swt.widgets.DirectoryDialog;
 
 class FileSpecificComposite extends ProtocolSpecificComposite {
-	
+
 	@Override
 	public void setConnectionDescription(ConnectionDescription connection) {
+		super.setConnectionDescription(connection);
 		if (null != connection) {
-			super.setConnectionDescription(connection);
 			textPath.setText(connection.getDisplayPath());
 		}
+		else {
+			textPath.setText("");
+		}
 	};
-	
+
 	@Override
 	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
 		File f = new File(textPath.getText());
