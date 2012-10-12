@@ -2,8 +2,8 @@
 Name=FullSync
 GenericName=FullSync
 Comment=Easy file synchronization for everyone. Version: #version
-Exec=/usr/bin/FullSync
-Icon=FullSync
+Exec=/usr/bin/fullsync
+Icon=fullsync
 Categories=Network;FileTransfer;
 Type=Application
 Terminal=false
