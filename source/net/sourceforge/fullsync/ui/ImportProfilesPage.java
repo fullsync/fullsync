@@ -19,16 +19,19 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import net.sourceforge.fullsync.ExceptionHandler;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.MessageBox;
 
 public class ImportProfilesPage implements WizardPage {
-	private ImportProfilesComposite composite;
+	private Composite composite;
+	private ImportProfilesComposite importProfiles;
 	public ImportProfilesPage(WizardDialog dialog) {
 		dialog.setPage(this);
 	}
-
 
 	@Override
 	public String getTitle() {
@@ -57,12 +60,26 @@ public class ImportProfilesPage implements WizardPage {
 
 	@Override
 	public void createContent(Composite content) {
-		composite = new ImportProfilesComposite(content, SWT.NULL);
+		composite = content;
+		importProfiles = new ImportProfilesComposite(content);
 	}
 
 	@Override
 	public boolean apply() {
-		// TODO Auto-generated method stub
+		try {
+			if (GuiController.getInstance().getProfileManager().loadProfiles(importProfiles.getSelectedFilename())) {
+				return true;
+			}
+			else {
+				MessageBox mb = new MessageBox(composite.getShell(), SWT.ICON_WARNING | SWT.OK);
+				mb.setText(Messages.getString("ImportProfilesPage.ProfilesFileNotFoundTitle")); //$NON-NLS-1$
+				mb.setMessage(Messages.getString("ImportProfilesPage.ProfilesFileNotFound")); //$NON-NLS-1$
+				mb.open();
+			}
+		}
+		catch (Exception e) {
+			ExceptionHandler.reportException(e);
+		}
 		return false;
 	}
 

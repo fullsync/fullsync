@@ -19,9 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
 import java.util.HashMap;
 
 import net.sourceforge.fullsync.ConnectionDescription;
@@ -355,6 +352,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 
 	@Override
 	public void profileListChanged() {
+		// use something like a de-bounced setTimeout
 		getDisplay().syncExec(new Runnable() {
 			@Override
 			public void run() {

@@ -19,13 +19,65 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Text;
 
-public class ImportProfilesComposite extends Composite {
+public class ImportProfilesComposite {
+	private Text textPath;
+	private Button buttonBrowse;
 
-	public ImportProfilesComposite(Composite parent, int style) {
-		super(parent, style);
-		// TODO Auto-generated constructor stub
+	public ImportProfilesComposite(final Composite parent) {
+		parent.setLayout(new GridLayout(2, false));
+		textPath = new Text(parent, SWT.BORDER);
+		GridData textData = new GridData();
+		textData.horizontalAlignment = SWT.FILL;
+		textData.grabExcessHorizontalSpace = true;
+		textData.grabExcessVerticalSpace = true;
+		textData.verticalAlignment = SWT.CENTER;
+		textPath.setLayoutData(textData);
+		buttonBrowse = new Button(parent, SWT.NONE);
+		buttonBrowse.setText("...");
+		buttonBrowse.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent evt) {
+				FileDialog fd = new FileDialog(parent.getShell());
+				fd.setFileName("profiles.xml"); //$NON-NLS-1$
+				fd.setFilterExtensions(new String[] {
+					"profiles.xml", //$NON-NLS-1$
+					"*.xml", //$NON-NLS-1$
+					"*" //$NON-NLS-1$
+				});
+				fd.setFilterIndex(0);
+				fd.setFilterPath(textPath.getText());
+				String file = fd.open();
+				if (file != null) {
+					File f = new File(file);
+					try {
+						textPath.setText(f.getCanonicalPath());
+					} catch (IOException e) {
+						textPath.setText(""); //$NON-NLS-1$
+						e.printStackTrace();
+					}
+				}
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent evt) {
+			}
+		});
 	}
 
+	public String getSelectedFilename() {
+		return textPath.getText();
+	}
 }

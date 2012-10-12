@@ -132,7 +132,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	public ProfileManager(String configFile) throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
 		this();
 		this.configFile = configFile;
-		loadProfiles();
+		loadProfiles(configFile);
 		Collections.sort(profiles, new ProfileComparator());
 	}
 
@@ -184,7 +184,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 			this.profiles = new Vector<Profile>();
 
 			try {
-				loadProfiles();
+				loadProfiles(configFile);
 			}
 			catch (Exception e) {
 				ExceptionHandler.reportException(e);
@@ -210,8 +210,8 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		return remoteConnected;
 	}
 
-	private void loadProfiles() throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
-		File file = new File(configFile);
+	public boolean loadProfiles(String profilesFileName) throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
+		File file = new File(profilesFileName);
 		if (file.exists()) {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = builder.parse(file);
@@ -221,17 +221,17 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 				Node n = list.item(i);
 				if (n.getNodeType() == Node.ELEMENT_NODE) {
 					try {
-						Profile profile = Profile.unserialize((Element) n);
-						profiles.add(profile);
-						profile.addProfileChangeListener(this);
+						//TODO: importing many profiles might become CPU intensive here, create a way to make the updates bulk aware
+						addProfile(Profile.unserialize((Element) n));
 					}
 					catch (Throwable t) {
 						ExceptionHandler.reportException("Failed to load a Profile, ignoring and continuing with the rest", t);
 					}
 				}
 			}
+			return true;
 		}
-
+		return false;
 	}
 
 	public void addProfile(Profile profile) {
