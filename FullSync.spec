@@ -36,7 +36,7 @@ BuildRequires:  ant
 BuildRequires:  java-devel >= 1.6.0
 BuildRequires:  hicolor-icon-theme
 BuildRequires:  desktop-file-utils
-ExclusiveArch:  x86_64 i586
+ExclusiveArch:  x86_64 i386 i486 i586 i686
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %define fsdir %{_javadir}/%{name}-%{version}
