@@ -182,8 +182,14 @@ public class Main { // NO_UCD
 				// upgrade code...
 				File newProfiles = new File(profilesFile);
 				File oldProfiles = new File("profiles.xml");
-				if (!newProfiles.exists() && oldProfiles.exists()) {
-					backupFile(oldProfiles, newProfiles, "profiles_old.xml");
+				if (!newProfiles.exists()) {
+					if (!oldProfiles.exists()) {
+						// on windows FullSync 0.9.1 installs itself into %ProgramFiles%\FullSync while 0.10.0 installs itself into %ProgramFiles%\FullSync\FullSync by default
+						oldProfiles = new File(".." + File.separator + "profiles.xml");
+					}
+					if (oldProfiles.exists()) {
+						backupFile(oldProfiles, newProfiles, "profiles_old.xml");
+					}
 				}
 			}
 			ProfileManager profileManager = new ProfileManager(profilesFile);
