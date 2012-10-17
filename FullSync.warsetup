@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WarSetup-Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" projectRunAfterInstall="true" mainTargetApp="ID_0cd43746_79a8_4288_a103_ba2ce347b847" nextUniqueId="2652" projectName="FullSync" projectUuid="52624696-2a49-4a27-bfff-5719809e0cc9" projectUpgradeUuid="1cb98a4c-c929-424f-ab60-50c5badb7504" projectVersion="0.10.0" projectOrganization="FullSync" projectFromWindowsVersion="Windows XP" projectMustBeAdministratorToInstall="false" project64BitTarget="false" projectTargetDirectory="dist" projectTargetName="FullSync" projectType="0" projectUserInterface="WixUI_InstallDir">
+  <LicencePaths>
+    <string>C:\Program Files (x86)\Jgaa's Internet\War Setup\Licenses</string>
+  </LicencePaths>
+  <Virgin>false</Virgin>
+  <projectFeatures featureId="ID80AA74C2833DAF06A82DF0CB2458397E" featureName="FullSync" featureDescription="FullSync" configurableDirectory="APPLICATIONFOLDER" configurableDirectoryDefaultPath="[ProjectName]" enableInDefaultInstall="true" enableInMinimalInstall="true" excludeFromBuild="false">
+    <components componentId="ID1001" componentGuid="56d3ad10-cad5-42ff-9e3f-bcfd27db50b7">
+      <componentFiles fileId="ID_0cd43746_79a8_4288_a103_ba2ce347b847" srcName="FullSync.exe" srcDirectory="build" dstName="FullSync.exe" dstPath="[APPLICATIONFOLDER]" isTrueTypeFont="false" isComModule="false" typelibGuid="" menuName="FullSync 0.10.0" shortcutInProgramFilesMenu="true" shortcutOnDesktop="true" shortcutInQuickLaunch="false" shortcutInStartupFolder="false" shortcutWorkingDirectory="[APPLICATIONFOLDER]" shortcutCommandArguments="" shortcutDescription="">
+        <service StartWhenInstalled="true" Remove="both" id="ID1000" isService="false" userAccount="" userPassword="" cmdLineArguments="" errorControl="normal" interactive="false" loadOrderGroup="" serviceName="" startMode="auto" vital="true" />
+      </componentFiles>
+      <addToCreateFolder>false</addToCreateFolder>
+    </components>
+    <components componentId="ID1005" componentGuid="47551c3a-d515-4935-b930-49c84d596406">
+      <componentFiles fileId="ID_72275c6b_cb94_4dda_b193_c61ed03a306b" srcName="CHANGELOG" srcDirectory="build" dstName="CHANGELOG" dstPath="" isTrueTypeFont="false" isComModule="false" typelibGuid="" menuName="CHANGELOG" shortcutInProgramFilesMenu="false" shortcutOnDesktop="false" shortcutInQuickLaunch="false" shortcutInStartupFolder="false" shortcutWorkingDirectory="" shortcutCommandArguments="" shortcutDescription="">
+        <service StartWhenInstalled="true" Remove="both" id="ID1004" isService="false" userAccount="" userPassword="" cmdLineArguments="" errorControl="normal" interactive="false" loadOrderGroup="" serviceName="" startMode="auto" vital="true" />
+      </componentFiles>
+      <addToCreateFolder>false</addToCreateFolder>
+    </components>
+    <components componentId="ID1007" componentGuid="b0eea323-5431-468a-bbb8-a203039e536b">
+      <componentFiles fileId="ID_845d6687_5a75_474f_ab48_0c568c149f47" srcName="LICENSE" srcDirectory="build" dstName="LICENSE" dstPath="" isTrueTypeFont="false" isComModule="false" typelibGuid="" menuName="LICENSE" shortcutInProgramFilesMenu="false" shortcutOnDesktop="false" shortcutInQuickLaunch="false" shortcutInStartupFolder="false" shortcutWorkingDirectory="" shortcutCommandArguments="" shortcutDescription="">
+        <service StartWhenInstalled="true" Remove="both" id="ID1006" isService="false" userAccount="" userPassword="" cmdLineArguments="" errorControl="normal" interactive="false" loadOrderGroup="" serviceName="" startMode="auto" vital="true" />
+      </componentFiles>
+      <addToCreateFolder>false</addToCreateFolder>
+    </components>
+    <components componentId="ID1009" componentGuid="7c870512-b90e-439e-9adf-406d6b35e70b">
+      <componentFiles fileId="ID_95270b87_ba4d_4262_9aa0_715364963679" srcName="launcher.jar" srcDirectory="build" dstName="launcher.jar" dstPath="" isTrueTypeFont="false" isComModule="false" typelibGuid="" menuName="launcher" shortcutInProgramFilesMenu="false" shortcutOnDesktop="false" shortcutInQuickLaunch="false" shortcutInStartupFolder="false" shortcutWorkingDirectory="" shortcutCommandArguments="" shortcutDescription="">
+        <service StartWhenInstalled="true" Remove="both" id="ID1008" isService="false" userAccount="" userPassword="" cmdLineArguments="" errorControl="normal" interactive="false" loadOrderGroup="" serviceName="" startMode="auto" vital="true" />
+      </componentFiles>
+      <addToCreateFolder>false</addToCreateFolder>
+    </components>
+    <components componentId="ID1011" componentGuid="ecf08d87-3e63-4c02-a0a9-5838fd522b22">
+      <componentFiles fileId="ID_61d1b0cf_f402_4e9b_a236_73d53b1b3f09" srcName="FullSync.ini" srcDirectory="build" dstName="FullSync.ini" dstPath="" isTrueTypeFont="false" isComModule="false" typelibGuid="" menuName="FullSync" shortcutInProgramFilesMenu="false" shortcutOnDesktop="false" shortcutInQuickLaunch="false" shortcutInStartupFolder="false" shortcutWorkingDirectory="" shortcutCommandArguments="" shortcutDescription="">
+        <service StartWhenInstalled="true" Remove="both" id="ID1010" isService="false" userAccount="" userPassword="" cmdLineArguments="" errorControl="normal" interactive="false" loadOrderGroup="" serviceName="" startMode="auto" vital="true" />
+      </componentFiles>
+      <addToCreateFolder>false</addToCreateFolder>
+    </components>
+    <components componentId="ID1015" componentGuid="a11f1ef8-15eb-4c44-b5db-72123cd9202a">
+      <componentFiles fileId="ID_5b0c1186_c8c7_492f_a94a_7ac5cf3209a8" srcName="sample.syncrules" srcDirectory="build" dstName="sample.syncrules" dstPath="" isTrueTypeFont="false" isComModule="false" typelibGuid="" menuName="sample" shortcutInProgramFilesMenu="false" shortcutOnDesktop="false" shortcutInQuickLaunch="false" shortcutInStartupFolder="false" shortcutWorkingDirectory="" shortcutCommandArguments="" shortcutDescription="">
+        <service StartWhenInstalled="true" Remove="both" id="ID1014" isService="false" userAccount="" userPassword="" cmdLineArguments="" errorControl="normal" interactive="false" loadOrderGroup="" serviceName="" startMode="auto" vital="true" />
+      </componentFiles>
+      <addToCreateFolder>false</addToCreateFolder>
+    </components>
+    <components componentId="ID1040" componentGuid="e3c905e2-ac0a-4cc5-82fb-c6e23be4ac92">
+      <componentFiles fileId="ID_df332058_4ccb_4580_9e73_8a4accdc391d" srcName="FullSync.ico" srcDirectory="build\images" dstName="FullSync.ico" dstPath="" isTrueTypeFont="false" isComModule="false" typelibGuid="" menuName="FullSync" shortcutInProgramFilesMenu="false" shortcutOnDesktop="false" shortcutInQuickLaunch="false" shortcutInStartupFolder="false" shortcutWorkingDirectory="" shortcutCommandArguments="" shortcutDescription="">
+        <service StartWhenInstalled="true" Remove="both" id="ID1039" isService="false" userAccount="" userPassword="" cmdLineArguments="" errorControl="normal" interactive="false" loadOrderGroup="" serviceName="" startMode="auto" vital="true" />
+      </componentFiles>
+      <addToCreateFolder>false</addToCreateFolder>
+    </components>
+    <defaultInstallMode>3</defaultInstallMode>
+    <directories dirId="ID1017" srcPath="build\lib" dstPath="lib" patterns=".*" excludePatterns=".*(macosx|linux|x86_64).*" recurse="false" preventEmptyDirectories="false" addToPath="false" ideHeaderFiles="false" ideExecutables="false" ideLibrary="false" ideMicrosoftVisualStudio2003="false" ideMicrosoftVisualStudio2005="false">
+      <pathComponent componentId="ID1016" componentGuid="064d35d5-3bf8-4270-a90c-a94d51e3a4b0">
+        <addToCreateFolder>false</addToCreateFolder>
+      </pathComponent>
+    </directories>
+    <directories dirId="ID1393" srcPath="build\images" dstPath="images" patterns=".*" excludePatterns="" recurse="false" preventEmptyDirectories="false" addToPath="false" ideHeaderFiles="false" ideExecutables="false" ideLibrary="false" ideMicrosoftVisualStudio2003="false" ideMicrosoftVisualStudio2005="false">
+      <pathComponent componentId="ID1392" componentGuid="461cf562-bced-49cf-9513-5b42eecd63a6">
+        <addToCreateFolder>false</addToCreateFolder>
+      </pathComponent>
+    </directories>
+    <directories dirId="ID1395" srcPath="build\docs" dstPath="docs" patterns=".*" excludePatterns="" recurse="true" preventEmptyDirectories="false" addToPath="false" ideHeaderFiles="false" ideExecutables="false" ideLibrary="false" ideMicrosoftVisualStudio2003="false" ideMicrosoftVisualStudio2005="false">
+      <pathComponent componentId="ID1394" componentGuid="b6fb640e-29f9-4ee7-9e8b-98e4976fdb08">
+        <addToCreateFolder>false</addToCreateFolder>
+      </pathComponent>
+    </directories>
+  </projectFeatures>
+  <projectInstallForCurrentOrAllUsers>1</projectInstallForCurrentOrAllUsers>
+  <License>
+    <System>true</System>
+    <Name>GNU General Public License (GPL) 2.0</Name>
+  </License>
+  <projectProperties LicencePath="" TopBanner="" BigBanner="" ExclamationIcon="" InfoIcon="" NewIcon="" UpIcon="" VS2003Integration="VS2003_INTEGRATION" VS2005Integration="VS2005_INTEGRATION" UseRelativePaths="true" LaunchAppText="" UseWixUI_ErrorProgressText="true" UseWixUI="true" CreateUninstallShortcut="false" Codepage="1252" ProductLanguage="1033" AlwaysMajorUpgrade="true" SupressValidation="false" Compress="true" BuildTarget="true" PublisherUrl="http://sourceforge.net/projects/fullsync/" SupportContact="" SupportUrl="http://sourceforge.net/projects/fullsync/forums/forum/394534" SupportPhone="" ReadMeFile="" UpdateUrl="http://sourceforge.net/projects/fullsync/" Comments="" Icon="[APPLICATIONFOLDER]\FullSync.ico" EmbedCab="true" MaxCabSize="0" CabCompressionLevel="high" InstallerVersion="300">
+    <UiCultures Name="en-US" Enabled="true" />
+    <UiCultures Name="de-de" Enabled="false" />
+    <UiCultures Name="es-es" Enabled="false" />
+    <UiCultures Name="nl-nl" Enabled="false" />
+  </projectProperties>
+</WarSetup-Project>
