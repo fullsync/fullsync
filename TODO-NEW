@@ -22,7 +22,15 @@ Roadmap:
 	[ ] fix all bugs along the way
 	[ ] check all reported bugs, comment / close as apropriate
 	[ ] re-add the installer (windows/linux/(mac?))
+		[X] Windows X86
+		[ ] Windows X86_64
+		[X] Linux RPM
+		[ ] Linux DEB
+		[ ] Mac
 	[ ] windows/linux/(mac?) shortcuts
+		[X] Windows
+		[X] Linux
+		[ ] Mac?
 	[ ] no writes to the installation directory
 		[X] store all profiles into the java.util.prefs store -> No, not suitable
 		[X] move profiles and logs to some user writable directory (~/.config/fullsync/{profiles.xml,fullsync.log})
@@ -64,7 +72,7 @@ Bugs:
 		there are some dialogs that rely on change events of other controls to fully initialize,
 		the profile dialog however has proven that SWT does not behave identical on eg windows and linux,
 		thus any such dialog might fail on either platform
-	[ ] FulllSync launchers need to be able to accept arbitrary JVM arguments (debugging, RAM, ...)
+	[ ] FullSync launchers need to be able to accept arbitrary JVM arguments (debugging, RAM, ...)
 	[ ] sockets are treated like directories, and listing their children results in an exception
 	[ ] SMB: does Ntlm authentication with domain accounts work with FullSync?
 	[X] using the custom FileObjectChooser is impractical for the local filesystem
