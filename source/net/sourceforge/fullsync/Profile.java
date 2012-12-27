@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class Profile implements Serializable {
+public class Profile implements Serializable, Comparable<Profile> {
 	private static final long serialVersionUID = 2L;
 
 	private String name;
@@ -303,6 +303,11 @@ public class Profile implements Serializable {
 		}
 
 		return elem;
+	}
+
+	@Override
+	public int compareTo(Profile o) {
+		return ("" + name).compareTo(o.getName());
 	}
 
 }

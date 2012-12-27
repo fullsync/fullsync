@@ -24,7 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
+import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.zip.GZIPInputStream;
@@ -36,6 +36,13 @@ import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -45,8 +52,6 @@ import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
 import org.apache.commons.vfs2.FileObject;
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
@@ -218,9 +223,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		ByteArrayOutputStream out;
 		InputStream reader = null;
 		try {
-			// TODO if we dont require ftp calls while creating buffer use
-			// input stream directly
-
 			out = new ByteArrayOutputStream((int) f.getFileAttributes().getLength());
 
 			InputStream in = new GZIPInputStream(f.getInputStream());
@@ -300,6 +302,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		if ((node == null) || !node.exists()) {
 			node = root.createChild(".syncfiles", false);
 		}
+		OutputStream out = null;
 
 		try {
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -309,14 +312,19 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			e.appendChild(serializeFile(root, doc));
 			doc.appendChild(e);
 
-			OutputStream out = new GZIPOutputStream(node.getOutputStream());
+			out = new GZIPOutputStream(node.getOutputStream());
 
-			OutputFormat format = new OutputFormat(doc, "UTF-8", true);
-			XMLSerializer serializer = new XMLSerializer(out, format);
-			serializer.asDOMSerializer();
-			serializer.serialize(doc);
+			TransformerFactory fac = TransformerFactory.newInstance();
+			fac.setAttribute("indent-number", 2);
+			Transformer tf = fac.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new OutputStreamWriter(out, "UTF-8"));
 
-			out.close();
+			tf.setOutputProperty(OutputKeys.METHOD, "xml");
+			tf.setOutputProperty(OutputKeys.VERSION, "1.0");
+			tf.setOutputProperty(OutputKeys.INDENT, "yes");
+			tf.setOutputProperty(OutputKeys.STANDALONE, "no");
+			tf.transform(source, result);
 		}
 		catch (IOException ioe) {
 			ExceptionHandler.reportException(ioe);
@@ -326,6 +334,15 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		}
 		catch (FactoryConfigurationError e) {
 			ExceptionHandler.reportException(e);
+		} catch (TransformerConfigurationException e) {
+			ExceptionHandler.reportException(e);
+		} catch (TransformerException e) {
+			ExceptionHandler.reportException(e);
+		}
+		finally {
+			if (null != out) {
+				out.close();
+			}
 		}
 	}
 

@@ -7,11 +7,9 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-cli.jar"/>
 	<classpathentry kind="lib" path="lib/commons-net.jar" sourcepath="/windows/D/Christoph/Source/org.apache.commons.net/trunk/src/main/java"/>
-	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib/jcifs.jar"/>
 	<classpathentry kind="lib" path="lib/swtcalendar.jar"/>
 	<classpathentry kind="lib" path="lib/jsch.jar" sourcepath="/home/cobexer/projects/FullSync/Downloads/jsch-0.1.44"/>
-	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="lib/commons-configuration.jar"/>
 	<classpathentry kind="lib" path="lib/commons-collections.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
@@ -34,5 +32,6 @@
 	<classpathentry kind="lib" path="lib-tests/org.hamcrest.integration_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="lib" path="lib-tests/org.hamcrest.library_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="lib" path="lib-tests/org.hamcrest.text_1.1.0.v20090501071000.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta-oro.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
