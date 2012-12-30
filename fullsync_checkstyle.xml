@@ -5,14 +5,12 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: FullSync
-    Description: 
-Base: Slightly modified version of Sun Checks that better matches the default code formatter setting of Eclipse.
+    Checkstyle-Configuration: FulllSync Checkstyle config
+    Description: none
 -->
 <module name="Checker">
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
-    <property name="tabWidth" value="4"/>
     <module name="JavadocMethod">
       <property name="suppressLoadErrors" value="true"/>
     </module>
@@ -62,7 +60,6 @@ Base: Slightly modified version of Sun Checks that better matches the default co
       <property name="option" value="alone"/>
     </module>
     <module name="AvoidInlineConditionals"/>
-    <module name="DoubleCheckedLocking"/>
     <module name="EmptyStatement"/>
     <module name="EqualsHashCode"/>
     <module name="HiddenField"/>
