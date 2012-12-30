@@ -20,6 +20,8 @@
 package net.sourceforge.fullsync;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -54,8 +56,11 @@ public class Profile implements Serializable, Comparable<Profile> {
 	private transient ArrayList<ProfileChangeListener> listeners;
 
 	public static Profile unserialize(Element element) {
-		Profile p = new Profile();
-		p.setName(element.getAttribute("name"));
+		Profile p = new Profile(
+				element.getAttribute("name"),
+				ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)),
+				ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)),
+				RuleSetDescriptor.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)));
 		p.setDescription(element.getAttribute("description"));
 		p.setSynchronizationType(element.getAttribute("type"));
 		if (element.hasAttribute("enabled")) {
@@ -72,34 +77,18 @@ public class Profile implements Serializable, Comparable<Profile> {
 			p.setLastUpdate(null);
 		}
 
-		Element ruleset = (Element) element.getElementsByTagName("RuleSetDescriptor").item(0);
-		if (null != ruleset && "advanced".equals(ruleset.getAttribute("type"))) {
-			p.setLastError(-1, "Advanced Rulesets are not supported in this version of FullSync");
-		}
-		p.setRuleSet(RuleSetDescriptor.unserialize(ruleset));
 		p.setSchedule(Schedule.unserialize((Element) element.getElementsByTagName("Schedule").item(0)));
-		p.setSource(ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)));
-		p.setDestination(ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)));
 		return p;
 
 	}
 
-	public Profile() {
-		this.listeners = new ArrayList<ProfileChangeListener>();
-		this.enabled = true;
-	}
-
 	public Profile(String name, ConnectionDescription source, ConnectionDescription destination, RuleSetDescriptor ruleSet) {
-		this(name, source, destination, ruleSet, new Date());
-	}
-
-	public Profile(String name, ConnectionDescription source, ConnectionDescription destination, RuleSetDescriptor ruleSet, Date lastUpdate) {
 		this.name = name;
 		this.description = "";
 		this.source = source;
 		this.destination = destination;
 		this.ruleSet = ruleSet;
-		this.lastUpdate = lastUpdate;
+		this.lastUpdate = new Date();
 		this.listeners = new ArrayList<ProfileChangeListener>();
 		this.enabled = true;
 	}
@@ -235,8 +224,10 @@ public class Profile implements Serializable, Comparable<Profile> {
 	}
 
 	protected void notifyProfileChangeListeners() {
-		for (ProfileChangeListener listener : listeners) {
-			listener.profileChanged(this);
+		if (eventsAllowed) {
+			for (ProfileChangeListener listener : listeners) {
+				listener.profileChanged(this);
+			}
 		}
 	}
 
@@ -249,7 +240,7 @@ public class Profile implements Serializable, Comparable<Profile> {
 		notifyProfileChangeListeners();
 	}
 
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+	private void writeObject(ObjectOutputStream out) throws IOException {
 		out.writeObject(name);
 		out.writeObject(description);
 		out.writeObject(synchronizationType);
@@ -263,7 +254,7 @@ public class Profile implements Serializable, Comparable<Profile> {
 		out.writeObject(lastErrorString);
 	}
 
-	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		name = (String) in.readObject();
 		description = (String) in.readObject();
 		synchronizationType = (String) in.readObject();

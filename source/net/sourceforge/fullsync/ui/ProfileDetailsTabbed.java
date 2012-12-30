@@ -403,10 +403,6 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		textRuleSet.setLayoutData(textRuleSetData);
 
 		enableFilterControls(false);
-
-		rbAdvancedRuleSet.setVisible(false); //FIXME: [RULESETS] remove to restore advanced rule set support
-		labelRuleName.setVisible(false); //FIXME: [RULESETS] remove to restore advanced rule set support
-		textRuleSet.setVisible(false); //FIXME: [RULESETS] remove to restore advanced rule set support
 		return c;
 	}
 

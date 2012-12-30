@@ -77,13 +77,11 @@ public class FileSystemManager {
 
 		Site s = fs.createConnection(desc);
 
-		//FIXME: [BUFFERING] uncomment to reenable buffering
-//		String bufferStrategy = desc.getParameter("bufferStrategy");
-//
-//		if ((null != bufferStrategy) && !"".equals(bufferStrategy)) {
-//			s = resolveBuffering(s, bufferStrategy);
-//		}
+		String bufferStrategy = desc.getParameter("bufferStrategy");
 
+		if ((null != bufferStrategy) && !"".equals(bufferStrategy)) {
+			s = resolveBuffering(s, bufferStrategy);
+		}
 		return s;
 	}
 

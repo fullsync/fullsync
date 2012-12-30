@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.TimeZone;
 
-import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
+import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
 
 import org.junit.After;
 import org.junit.Before;
@@ -59,14 +59,15 @@ public class BaseConnectionTest {
 		testingSrc.mkdirs();
 
 		synchronizer = new Synchronizer();
-		profile = new Profile();
-		profile.setName("TestProfile");
 		ConnectionDescription src = new ConnectionDescription(testingSrc.toURI());
+		ConnectionDescription dst = new ConnectionDescription(testingDst.toURI());
 		src.setParameter("bufferStrategy", "");
-		profile.setSource(src);
-
-		//profile.setRuleSet(new AdvancedRuleSetDescriptor("UPLOAD"));
-		profile.setRuleSet(new SimplyfiedRuleSetDescriptor(true, null, false, null));
+		profile = new Profile(
+			"TestProfile",
+			src,
+			dst,
+			new AdvancedRuleSetDescriptor("UPLOAD")
+		);
 		profile.setSynchronizationType("Publish/Update");
 	}
 
