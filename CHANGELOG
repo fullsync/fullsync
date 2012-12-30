@@ -1,5 +1,9 @@
+Version 0.10.1
+(XX XXXX XXXX)
+* removed bundled implementation of javax.xml
+
 Version 0.10.0
-(xx Xxxx 2012)
+(03 December 2012)
 * changed updated all bundled libraries to their latest version
 * added 64-bit support
 * initial attempt at mac support (needs testers!)
@@ -7,10 +11,6 @@ Version 0.10.0
 * added FullSync Launcher, since FullSync now uses the current SWT implementation it needs to have a launcher to select the correct SWT implementation at runtime
 * added support for public key authentication for SFTP connections
 * moved the profiles, preferences and log file to ~/.config/fullsync/ ($XDG_CONFIG_HOME) or C:\Documents and Settings\<username>\.config\fullsync\ for windows.
-
-Version 0.10.0
-(xx Xxxx 2006)
-
 * new commons-vfs source and destination browser should work now, certainly not fine, but it works
 * added a file filter for simplyfied ruleset. The filter is a replacement for the ignore/accept patterns.
 	Old profiles with regexp patterns are automatically converted to this new file filter.

@@ -11,7 +11,7 @@ Actions:
 	[X] Unify action model, add logging stream using actions
 		Actions can be "Add", "Update", "Delete", "Obsolete",
 		"UnexpectedChange" + where it happens
-	
+
 ActionList:
 	[X] Create some action list which will be a buffer pretty often
 	    (or reports to a buffer)
@@ -39,14 +39,14 @@ ActionQueue:
 ProcessorResults:
 	[X] we do have two different ways of synchronization. we can have
 		a pipeline model  Processor->ActionQueue->Buffer->IO Operations
-		or a static model Processor->Task w/ 
+		or a static model Processor->Task w/
 		Children->Interaction->AQ->Buff->IO
-		
+
 		there should be a clean differenciation between building a tasktree and
 		applying actions directly. on the other hand, when building a tasktree
 		first we could make synchronization more atomic. (check r/w for all
 		files first and start sync afterwards)
-		
+
 		no diff, only task tree
 
 Expandability:
@@ -56,25 +56,25 @@ FileSystem:
 	[X] Maybe make FileSystem and FileSystemProvider
 		then Fs could keep track of all dirs instantiated,
 		so there is no way we double-load a dir/file
-	
+
 		^we really need that... for example we do not know
 		when to close ftp connections atm
-		
+
 		we should call the access managing unit "FileSystemSite"
 		this also marks the virtual root for our sync purposes
 		and could be used to store one buffer file
 
 		what about creating universal Directory and File objects
 		and letting them get filled with data and functionallity
-		by FileSystemConnections ? 
-		
+		by FileSystemConnections ?
+
 		things that must be dynamic:
 			- get file info (size, last mod, perms)
 			- get childs of dir
 			- mkdir, mkfile, write file, read file, delete
-			
+
 		I think the new system is pretty nice
-		
+
 	[X]	Impl buffering
 
 Clarification:
@@ -85,23 +85,23 @@ Clarification:
 		ActionDecider recall after Bufferupdate or is it handled
 		within the decider ? (why not letting the ActionDecider call
 		the StateDecider on the initial objects?)
-		
+
 		the only change that can occur after actiondecider is
 		the selection of which action should take place.
 		ignore for example should not update the buffer.
-		
+
 		so it will be best to say we update buffer after action
 		and use buffered and unbuffered data to decide which actions
 		are possible. that means the AC needs the statedecider as well.
-		
+
 		source buffers will not get touched by actions !?
-		
+
 		task getting BufferActions ?
 
 FS/Buffer update:
 	[X] buffer layer must keep references
 		buffed file: refreshReference -> unbuff = parent.getChild( name )
-		
+
 -------------------------------------------------------------------------------
 
 Task/Action Interaction:
@@ -109,25 +109,25 @@ Task/Action Interaction:
 	inconsistency, so dont expect too much here
 
 ---===[ 0.7 to 0.8 Tasks ]====-------------------------------------------------
-		
+
 Ignore:
 	[X] apply filter at filesystem level [NO] and add Node.isFiltered() [YES]
 		umpf, but it may change during folder traversal...
 
 FTP passwording
-	[X] impl general way of supplying more properties to schemes 
+	[X] impl general way of supplying more properties to schemes
 		(?password=... ?) or popup?
 	[X] save pw crypted
-	
-SFTP fingerprint 
+
+SFTP fingerprint
 	[X] w/o questioning or MB question
 
 Logging:
 	[X] Implement logging mechanisms
 	[X] put sftp logging outside of main log file
-	
+
 Connection:
-	[X] disconnect properly 
+	[X] disconnect properly
 
 syncfiles
 	[X] gzip them
@@ -147,19 +147,19 @@ Feedback:
 		-> that will make multithreaded task execution extremely hard
 
 Interface:
-	[X] we should consider one gui item as gui controller who gets "general" gui 
+	[X] we should consider one gui item as gui controller who gets "general" gui
 		stuff lile closeApplication and show busy cursor. generally "FullSync" should
-		not be controlling too many gui items, it's much more the heart of the 
+		not be controlling too many gui items, it's much more the heart of the
 		sync processes. so mainwin should get a fullsync instance... or maybe we
 		rename this 'sync-controller' somehow ?
 
 	[X] investigate why the busy cursor is not shown when above the scrollbar
 		or table headers - because the main thread still answers
-		
+
 	[X] investigate whether it's possible to give the state image in the logwindow
 		a transparent bg (so the green bg color is seen all over the line)
 		-> the image is transparent atm, we would need to draw a green bg then
-				
+
 Sheduler:
 	[X]	copy sheduler from backup - we use Timer and ProfileManager directly
 		(so changes to intervals and stuff are propagated much easier)
@@ -178,11 +178,11 @@ Linux:
 	[X] preferences... layout is pretty bad
 
 Sheduler:
-	[X] add some simple stuff to the profile (interval, enabled and errorflag 
+	[X] add some simple stuff to the profile (interval, enabled and errorflag
 		with different levels like minor, major, blocker (could not connect))
    	[X] add symbol for scheduled tasks
    	[X] does daemon mode scheduling work atm ? we don't specify a listener !
-	
+
 Remote:
 	[X] make scheduler available via remote interface
 	[X] close gui while being connected doesn't remove listeners :-/
@@ -224,7 +224,7 @@ Release-critical:
    	[X] show correct number of tasks to do in taskDecider window
 	[X] show icons in profile list popups
 	[X] get rid of gifs, so we only use one patentfree format ;)
-	[X] set serialVersionIds... otherwise we'll have huge problems releasing 
+	[X] set serialVersionIds... otherwise we'll have huge problems releasing
 		patches even if not a single serializeable object has changed.
 	[X] propagate updates of server profiles to client-gui
 	[X] timer still creating/stopping thread?
@@ -232,15 +232,15 @@ Release-critical:
 		explaining how to use and that it's still unstable
 		-> actually, its working, and the whole program is without warrenty,
 		   so i guess it's in about the same level of unstability as the whole app
-	
+
 ---===[ to 0.9 Tasks ]====-----------------------------------------
 
 User reports:
 	[X] sftp not recognizing port
 	[X] two-way sync
-	
+
 ---===[ to 0.9.1 Tasks ]====-----------------------------------------
-	
+
 	[X] simple active ftp option
 	[X] paths with - and spaces make troubles
 
@@ -252,7 +252,7 @@ User reports:
 	[ ] smb copies all files always
 	[X] make exception window resizeable
 	[X] preferences dialog does not set "autostart scheduler" checkbox
-	
+
 ---===[ to 0.10 Tasks ]====-------------------------------------------------
 
 Background Processes:
@@ -260,12 +260,12 @@ Background Processes:
 
 Buffering:
 	[ ] write fs buffer file to bla+"_", delete existing and rename it
-	
+
 FileSystem Abstraction:
-	[ ] reorder file system abstraction layer and 
+	[X] reorder file system abstraction layer and
 		impl FileOpen/DirOpen dialog for abstract filesystems
 	(ConnectionDescription:)
-	[ ] we need a better gui for connections where we can define
+	[X] we need a better gui for connections where we can define
 	    different composites with different options for different
 	    connection descriptions
 	[ ] dont impl instable connection as base class but as wrapper
@@ -284,14 +284,14 @@ Feedback:
 	[?] some encapsulement for src and dst files ? [Task?]
 	[ ] Busy indication should count how many busies where started and stop
 		when all are finished (a general task/progress win like eclipse has?)
-		
+
 Naming:
 	[X] call Processor TaskGenerator ? (or is the ActionDecider the generator?)
 	[X] call ActionQueue TaskExecutor ? (as we don't care about the buffer at all)
 	[X] call FullSync Synchronizer ? (encapsuling main sync actions / objects)
 
 Syncprocess encapsulement:
-	[ ] beside having access to all the neat classes we can use to 
+	[ ] beside having access to all the neat classes we can use to
 		do a very custom synchronization process we need to encapsule
 		the functionallity offered by the program itself, like:
 		  - do full sync
@@ -304,7 +304,7 @@ Syncprocess encapsulement:
 
 Architecture:
 	[ ] give ActionQueue or Buffer some kind of input stream ?
-	[ ] generally make more stream-like behaviour ?		
+	[ ] generally make more stream-like behaviour ?
 		nah, it destroys all means of statistics/feedback
 		but enables us to sync much larger dirs and consume much less memory
 
@@ -323,14 +323,14 @@ Sheduler:
 	[ ] show that a profile is currently processed
 
 Exceptions/Errors:
-	[ ] try catching most exceptions at (few) specific points and show 
+	[ ] try catching most exceptions at (few) specific points and show
 		a dialog containing the exception and a link to the sf.net bugtracker.
 
 Sync Rules
 	[ ]	Ignore files older than a given date (Simple Rule).
-	[ ]	Advanced Rules configuration wizard. A wizard to help users creating 
+	[ ]	Advanced Rules configuration wizard. A wizard to help users creating
 		the .syncrules file in any directory (os subdirectory) where he needs it.
-		
+
 ==========================
 
 Bugs:
@@ -359,7 +359,7 @@ Images:
 	[X]	Add an ImageRepository loading all needed images
 	[ ]	and being able to create compositions (and cache them)
 	[X] Dispose all images we draw
-	
+
 Dispose:
 	[ ] make sure all widgets get properly disposed (tableitems ?)
 
@@ -367,15 +367,15 @@ Processor:
 	[ ] impl new TraveralTypes
 		actually we'll need the possibility to say "src didn't change, so
 		dst doesn't interest me" (in sync without retrieving file data)
-		
+
 ActionDecider:
 	[ ] make AD xml file
 
 Versioning:
 	[ ] implement working versioning system
-	
+
 License:
-	[ ] include license stuff correctly
+	[X] include license stuff correctly
 
 Backup:
 	[ ] copy to temp, then rename
@@ -385,13 +385,12 @@ Backup:
 		(good for not exact backup, so we don't copy temp files)
 
 Configuration:
-	[ ] make config files user-local
+	[X] make config files user-local
 	[ ] flush profiles every now and then, maybe use dirty flag
 
 Distro:
-   	[ ] put images into source / jar. 
-   	[ ]	put logging.xml into jar as well
-   	
+	[ ] put images into source / jar.
+
 Gui:
 	[X] split profile details into multiple panels activated by treeview
 	[X]	fields for connections should depend on the chosen connection type
@@ -412,7 +411,7 @@ FTP:
 
 Logwindow
 	[ ] Show size of copied data
-	
+
 SB:
 	[?] we need to build buffer info from fs as well, so fs orphans are
 		detected without having the same file on the other side
@@ -426,7 +425,7 @@ SB:
 		src <-> dst state at all.
 
 Files:
-	[ ] we need to differenciate between case sensitivity. 
+	[ ] we need to differenciate between case sensitivity.
 		store names toLower in hashtables and search for toLower
 		ftp: try checking x permission on . to find out if its a win system
 		local: check properties ?
@@ -439,14 +438,14 @@ TakeIgnore -> Filter:
 	[ ] Ignore takes place immediatly atm, on src and dst resulting
 		in absolutely no action, just being ignored from all syncs.
 		we should maybe add a special rule whether "ignore" is relevant
-		for source, destination or both. this does only affect the 
+		for source, destination or both. this does only affect the
 		ruleset, in detail the takeignoredecider. the action decider
 		will either not being asked or get a orphan state.
-		-> important is to add a location param to the takeignore 
+		-> important is to add a location param to the takeignore
 		   deciders method
 		-> but the statedecider will mark them equal :-/
 		   Node.isIgnored ?
-		   
+
 NoBufferFound Handling:
 	[ ] let him choose between:   [destination buffer only]
 		  - There is nothing at the destination.
@@ -455,33 +454,33 @@ NoBufferFound Handling:
 			but its not sure its the same as in source.
 			(don't ask overwrite)
 		  - There is the same version in destination.
-			(build buffer from filesystem (and source?))		   
-			
+			(build buffer from filesystem (and source?))
+
 Execution:
 	[ ] make some controlling unit which will handle profile execution
-	[ ] we should make sure profiles are locked while executed and 
+	[ ] we should make sure profiles are locked while executed and
 		we should show some neat symbol then.
 	[ ] make fullsync#performActions more feedback-friendly
-	[ ]	make logwindow use fullsync#performActions 
+	[ ]	make logwindow use fullsync#performActions
 
 Connections:
 	[ ] Sftp seems to pretty instable, it starts throwing exceptions
 		named "Failure", when trying to retrieve response headers,
 		after a few minutes
-		
+
 	[ ]	ZIP File System
 	[X] SMB File System (may be using jcifs - http://jcifs.sourceforge.net)
 
 Threading
 	[ ] better UI / task differenciation
-	[ ] console <-> ui 
-	
+	[ ] console <-> ui
+
 Logging:
 	[ ] verify logging quality
 	[ ] it would be nice if we explain in the logs, why we
-        think that a file has changed or not and show the 
+        think that a file has changed or not and show the
         relevant modification times of both file versions.
-			
+
 Buffer:
 	[X] test largefile handling (filesize > buffersize)
 	[ ] optimize largefile handling
@@ -489,7 +488,7 @@ Buffer:
 	[ ] create multithreaded delayed-read delayed-write buffer-access
 	[ ] create cyclic buffer-storage
 	[ ] create bufferedfile tree on the fly instead of ahead of sync process
-	
+
 Rules:
 	[ ] use xml for rulefiles
 	[ ] create generic rulesfile w/ dirrules
@@ -502,7 +501,7 @@ Optimization:
 		nope...
 	[ ] refresh of fs files
 	[ ] rewrite some connections using the nio package?
-	
+
 
 -------------------------------------------------------------------------------
 

@@ -3,8 +3,8 @@ Roadmap:
 	[X] add FileObjectChooser to all ConnectionSpecificComposites
 	[X] reorganize code to avoid duplication of the File choosing stuff
 	[X] in what state is the codebase compared to the last release?
-	[ ] update documentation
-	[ ] update documentation @http://fullsync.sourceforge.net/docs/manual/
+	[X] update documentation
+	[X] update documentation @http://fullsync.sourceforge.net/docs/manual/
 	[ ] finish started work
 	[ ] GUI cleanup
 	[X] check state of translations
@@ -53,7 +53,7 @@ Roadmap:
 Roadmap 0.11.0:
 	[ ] restore handling of buffering = syncfiles (search for [BUFFERING])
 	[ ] restore handling of advanced rulesets (search for [RULESETS])
-	[ ] make sure everything is translateable
+	[ ] make sure everything is translatable
 	[ ] make shortcuts configurable
 
 Bugs:
