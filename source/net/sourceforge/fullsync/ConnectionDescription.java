@@ -101,8 +101,8 @@ public class ConnectionDescription implements Serializable {
 		return desc;
 	}
 
-	public ConnectionDescription(URI _uri) {
-		uri = _uri;
+	public ConnectionDescription(URI uri) {
+		this.uri = uri;
 	}
 
 	public Hashtable<String, String> getParameters() {
@@ -143,7 +143,8 @@ public class ConnectionDescription implements Serializable {
 			File f = new File(uri);
 			try {
 				return f.getCanonicalPath();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

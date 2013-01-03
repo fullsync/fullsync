@@ -64,7 +64,8 @@ public class ImportProfilesComposite {
 					File f = new File(file);
 					try {
 						textPath.setText(f.getCanonicalPath());
-					} catch (IOException e) {
+					}
+					catch (IOException e) {
 						textPath.setText(""); //$NON-NLS-1$
 						e.printStackTrace();
 					}

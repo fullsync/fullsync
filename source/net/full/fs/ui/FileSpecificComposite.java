@@ -65,7 +65,8 @@ class FileSpecificComposite extends ProtocolSpecificComposite {
 			File f = new File(dir);
 			try {
 				setPath(f.getCanonicalPath());
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				setPath("");
 				e.printStackTrace();
 			}
