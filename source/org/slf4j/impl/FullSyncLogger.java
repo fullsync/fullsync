@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2004-2011 QOS.ch
  * All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -9,10 +9,10 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS  IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -20,7 +20,7 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
+ *
  */
 package org.slf4j.impl;
 
@@ -31,16 +31,16 @@ import org.slf4j.helpers.MessageFormatter;
 /**
  * A simple (and direct) implementation that logs messages of level TRACE or
  * higher on the console (<code>System.err</code>).
- * 
+ *
  * <p>
  * The output includes the relative time in milliseconds, thread name, the level, logger name, and the message followed by the line
  * separator for the host. In log4j terms it amounts to the "%r [%t] %level %logger - %m%n" pattern.
  * </p>
- * 
+ *
  * <p>
  * Sample output follows.
  * </p>
- * 
+ *
  * <pre>
  * 176 [main] INFO examples.Sort - Populating an array of 2 elements in reverse order.
  * 225 [main] INFO examples.SortAlgo - Entered the sort method.
@@ -53,7 +53,7 @@ import org.slf4j.helpers.MessageFormatter;
  *         at org.log4j.examples.Sort.main(Sort.java:64)
  * 467 [main] INFO  examples.Sort - Exiting main method.
  * </pre>
- * 
+ *
  * @author Ceki G&uuml;lc&uuml;
  */
 public class FullSyncLogger extends MarkerIgnoringBase {
@@ -81,7 +81,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 
 	/**
 	 * Always returns true.
-	 * 
+	 *
 	 * @return always true
 	 */
 	@Override
@@ -121,7 +121,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 	 * TRACE according to the format outlined above.
 	 */
 	@Override
-	public void trace(final String format, final Object[] argArray) {
+	public void trace(final String format, final Object... argArray) {
 		formatAndLog(TRACE_STR, format, argArray);
 	}
 
@@ -135,7 +135,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 
 	/**
 	 * Always returns true.
-	 * 
+	 *
 	 * @return always true
 	 */
 	@Override
@@ -175,7 +175,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 	 * DEBUG according to the format outlined above.
 	 */
 	@Override
-	public void debug(final String format, final Object[] argArray) {
+	public void debug(final String format, final Object... argArray) {
 		formatAndLog(DEBUG_STR, format, argArray);
 	}
 
@@ -190,7 +190,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 	/**
 	 * This is our internal implementation for logging regular (non-parameterized)
 	 * log messages.
-	 * 
+	 *
 	 * @param level
 	 * @param message
 	 * @param t
@@ -224,7 +224,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 
 	/**
 	 * For formatted messages, first substitute arguments and then log.
-	 * 
+	 *
 	 * @param level
 	 * @param format
 	 * @param param1
@@ -237,7 +237,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 
 	/**
 	 * For formatted messages, first substitute arguments and then log.
-	 * 
+	 *
 	 * @param level
 	 * @param format
 	 * @param argArray
@@ -287,7 +287,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 	 * INFO according to the format outlined above.
 	 */
 	@Override
-	public void info(final String format, final Object[] argArray) {
+	public void info(final String format, final Object... argArray) {
 		formatAndLog(INFO_STR, format, argArray);
 	}
 
@@ -339,7 +339,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 	 * WARN according to the format outlined above.
 	 */
 	@Override
-	public void warn(final String format, final Object[] argArray) {
+	public void warn(final String format, final Object... argArray) {
 		formatAndLog(WARN_STR, format, argArray);
 	}
 
@@ -391,7 +391,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 	 * ERROR according to the format outlined above.
 	 */
 	@Override
-	public void error(final String format, final Object[] argArray) {
+	public void error(final String format, final Object... argArray) {
 		formatAndLog(ERROR_STR, format, argArray);
 	}
 
