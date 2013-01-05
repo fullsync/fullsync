@@ -35,10 +35,10 @@ import org.eclipse.swt.widgets.Text;
 /**
  * @author Michele Aiello
  */
-public class TextValueRuleComposite extends RuleComposite {
+class TextValueRuleComposite extends RuleComposite {
 	private Text textValue;
 
-	public TextValueRuleComposite(Composite parent, int style, final TextValue value) {
+	TextValueRuleComposite(Composite parent, int style, final TextValue value) {
 		super(parent, style);
 		GridData compositeLayoutData = new GridData();
 		compositeLayoutData.horizontalAlignment = SWT.FILL;

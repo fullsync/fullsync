@@ -35,10 +35,10 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Michele Aiello
  */
-public class TypeValueRuleComposite extends RuleComposite {
+class TypeValueRuleComposite extends RuleComposite {
 	private Combo comboTypes;
 
-	public TypeValueRuleComposite(Composite parent, int style, final TypeValue value) {
+	TypeValueRuleComposite(Composite parent, int style, final TypeValue value) {
 		super(parent, style);
 		GridData compositeLayoutData = new GridData();
 		compositeLayoutData.horizontalAlignment = SWT.FILL;

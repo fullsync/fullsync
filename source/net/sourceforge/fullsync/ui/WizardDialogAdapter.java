@@ -27,6 +27,6 @@ package net.sourceforge.fullsync.ui;
  */
 public class WizardDialogAdapter implements WizardDialogListener {
 	@Override
-	public void dialogOpened(WizardDialog dialog) {
+	public void dialogOpened() {
 	}
 }

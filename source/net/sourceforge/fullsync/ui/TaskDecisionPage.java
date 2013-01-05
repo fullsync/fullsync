@@ -20,7 +20,6 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
@@ -42,30 +41,28 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class TaskDecisionPage implements WizardPage, Serializable {
-	private static final long serialVersionUID = 2L;
-	private transient WizardDialog dialog;
-	private transient GuiController guiController;
-	private transient TaskTree taskTree;
-	private transient boolean processing;
-	private transient int tasksFinished;
-	private transient int tasksTotal;
+public class TaskDecisionPage extends WizardDialog {
+	private WizardDialog dialog;
+	private GuiController guiController;
+	private TaskTree taskTree;
+	private boolean processing;
+	private int tasksFinished;
+	private int tasksTotal;
 
-	private transient TaskDecisionList list;
-	private transient Combo comboFilter;
-	private transient Label labelProgress;
+	private TaskDecisionList list;
+	private Combo comboFilter;
+	private Label labelProgress;
 
-	public TaskDecisionPage(WizardDialog dialog, GuiController guiController, TaskTree taskTree) {
-		this.dialog = dialog;
+	public TaskDecisionPage(Shell parent, GuiController guiController, TaskTree taskTree) {
+		super(parent);
 		this.guiController = guiController;
 		this.taskTree = taskTree;
-
-		dialog.setPage(this);
 	}
 
 	@Override

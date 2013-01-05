@@ -30,17 +30,16 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.vafada.swtcalendar.SWTCalendar;
-import org.vafada.swtcalendar.SWTCalendarListener;
 
 /**
  * @author Michele Aiello
  */
-public class SWTCalendarDialog {
+class SWTCalendarDialog {
 	private Shell shell;
 	private SWTCalendar swtcal;
 	private Display display;
 
-	public SWTCalendarDialog(Display display) {
+	SWTCalendarDialog(Display display) {
 		this.display = display;
 		shell = new Shell(display, SWT.APPLICATION_MODAL | SWT.CLOSE);
 		shell.setText("Choose Date...");
@@ -67,9 +66,4 @@ public class SWTCalendarDialog {
 		calendar.setTime(date);
 		swtcal.setCalendar(calendar);
 	}
-
-	public void addDateChangedListener(SWTCalendarListener listener) {
-		swtcal.addSWTCalendarListener(listener);
-	}
-
 }

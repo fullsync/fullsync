@@ -318,8 +318,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 			@Override
 			public void handleEvent(final Event e) {
 				// show the Preferences Dialog.
-				WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
-				new PreferencesPage(dialog, guiController.getPreferences());
+				PreferencesPage dialog = new PreferencesPage(getShell(), guiController.getPreferences());
 				dialog.show();
 			}
 		});
@@ -330,8 +329,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 			@Override
 			public void handleEvent(final Event e) {
 				// show the Import Dialog.
-				WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
-				new ImportProfilesPage(dialog);
+				WizardDialog dialog = new ImportProfilesPage(getShell());
 				dialog.show();
 			}
 		});
@@ -355,8 +353,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 		connectItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {
-				WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
-				new ConnectionPage(dialog);
+				WizardDialog dialog = new ConnectionPage(getShell());
 				dialog.show();
 				GuiController gc = GuiController.getInstance();
 				if (gc.getProfileManager().isConnected()) {
@@ -416,8 +413,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 		menuItemSystem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {
-				WizardDialog dialog = new WizardDialog(getShell(), SWT.NULL);
-				new SystemStatusPage(dialog);
+				WizardDialog dialog = new SystemStatusPage(getShell());
 				dialog.show();
 			}
 		});
@@ -583,14 +579,12 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 	@Override
 	public void createNewProfile() {
 		try {
-			WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL | SWT.RESIZE);
-			new ProfileDetailsTabbedPage(dialog, guiController.getProfileManager(), null);
+			WizardDialog dialog = new ProfileDetailsTabbedPage(getShell(), guiController.getProfileManager(), null);
 			dialog.show();
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
 		}
-
 	}
 
 	@Override
@@ -667,8 +661,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 			return;
 		}
 		try {
-			WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL | SWT.RESIZE);
-			new ProfileDetailsTabbedPage(dialog, guiController.getProfileManager(), p.getName());
+			WizardDialog dialog = new ProfileDetailsTabbedPage(getShell(), guiController.getProfileManager(), p.getName());
 			dialog.show();
 		}
 		catch (Exception e) {

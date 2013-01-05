@@ -40,11 +40,11 @@ import org.eclipse.swt.widgets.Text;
 /**
  * @author Michele Aiello
  */
-public class AgeValueRuleComposite extends RuleComposite {
+class AgeValueRuleComposite extends RuleComposite {
 
 	private Text textValue;
 
-	public AgeValueRuleComposite(Composite parent, int style, final AgeValue value) {
+	AgeValueRuleComposite(Composite parent, int style, final AgeValue value) {
 		super(parent, style);
 		this.setLayout(new GridLayout(2, true));
 		this.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));

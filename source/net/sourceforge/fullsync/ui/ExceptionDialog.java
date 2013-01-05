@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class ExceptionDialog extends Dialog implements SelectionListener {
+class ExceptionDialog extends Dialog implements SelectionListener {
 	private Shell dialogShell;
 	private Composite compositeBase;
 	private Button buttonDetails;

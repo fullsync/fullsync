@@ -26,7 +26,6 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.values.FilterValue;
 import net.sourceforge.fullsync.ui.FileFilterPage;
-import net.sourceforge.fullsync.ui.WizardDialog;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -40,11 +39,11 @@ import org.eclipse.swt.widgets.Text;
 /**
  * @author Michele Aiello
  */
-public class SubfilterRuleComposite extends RuleComposite {
+class SubfilterRuleComposite extends RuleComposite {
 	private Text textValue;
 	private Button buttonFilter;
 
-	public SubfilterRuleComposite(Composite parent, int style, final FilterValue filterValue) {
+	SubfilterRuleComposite(Composite parent, int style, final FilterValue filterValue) {
 		super(parent, style);
 		this.setLayout(new GridLayout(4, true));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -68,10 +67,9 @@ public class SubfilterRuleComposite extends RuleComposite {
 			@Override
 			public void widgetSelected(final SelectionEvent evt) {
 				try {
-					WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL | SWT.RESIZE);
-					FileFilterPage page = new FileFilterPage(dialog, filterValue.getValue());
+					FileFilterPage dialog = new FileFilterPage(getShell(), filterValue.getValue());
 					dialog.show();
-					FileFilter newfilter = page.getFileFilter();
+					FileFilter newfilter = dialog.getFileFilter();
 					if (newfilter != null) {
 						filterValue.setValue(newfilter);
 						textValue.setText(filterValue.toString());

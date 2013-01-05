@@ -136,13 +136,12 @@ public class TaskDecisionList extends Composite {
 			@Override
 			public void run() {
 				try {
-					WizardDialog dialog = new WizardDialog(guiController.getMainShell(), SWT.RESIZE);
-					final TaskDecisionPage page = new TaskDecisionPage(dialog, guiController, task);
+					final TaskDecisionPage dialog = new TaskDecisionPage(guiController.getMainShell(), guiController, task);
 					if (!interactive) {
 						dialog.addWizardDialogListener(new WizardDialogAdapter() {
 							@Override
-							public void dialogOpened(WizardDialog dialog) {
-								page.performActions();
+							public void dialogOpened() {
+								dialog.performActions();
 							}
 						});
 					}

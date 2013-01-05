@@ -19,18 +19,31 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.io.File;
+import java.io.IOException;
+
 import net.sourceforge.fullsync.ExceptionHandler;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
-public class ImportProfilesPage implements WizardPage {
+public class ImportProfilesPage extends WizardDialog {
 	private Composite composite;
-	private ImportProfilesComposite importProfiles;
-	public ImportProfilesPage(WizardDialog dialog) {
-		dialog.setPage(this);
+	private Text textPath;
+	private Button buttonBrowse;
+
+	public ImportProfilesPage(Shell parent) {
+		super(parent);
 	}
 
 	@Override
@@ -59,15 +72,53 @@ public class ImportProfilesPage implements WizardPage {
 	}
 
 	@Override
-	public void createContent(Composite content) {
+	public void createContent(final Composite content) {
 		composite = content;
-		importProfiles = new ImportProfilesComposite(content);
+		content.setLayout(new GridLayout(2, false));
+		textPath = new Text(content, SWT.BORDER);
+		GridData textData = new GridData();
+		textData.horizontalAlignment = SWT.FILL;
+		textData.grabExcessHorizontalSpace = true;
+		textData.grabExcessVerticalSpace = true;
+		textData.verticalAlignment = SWT.CENTER;
+		textPath.setLayoutData(textData);
+		buttonBrowse = new Button(content, SWT.NONE);
+		buttonBrowse.setText("...");
+		buttonBrowse.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent evt) {
+				FileDialog fd = new FileDialog(content.getShell());
+				fd.setFileName("profiles.xml"); //$NON-NLS-1$
+				fd.setFilterExtensions(new String[] {
+					"profiles.xml", //$NON-NLS-1$
+					"*.xml", //$NON-NLS-1$
+					"*" //$NON-NLS-1$
+				});
+				fd.setFilterIndex(0);
+				fd.setFilterPath(textPath.getText());
+				String file = fd.open();
+				if (file != null) {
+					File f = new File(file);
+					try {
+						textPath.setText(f.getCanonicalPath());
+					}
+					catch (IOException e) {
+						textPath.setText(""); //$NON-NLS-1$
+						e.printStackTrace();
+					}
+				}
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent evt) {
+			}
+		});
 	}
 
 	@Override
 	public boolean apply() {
 		try {
-			if (GuiController.getInstance().getProfileManager().loadProfiles(importProfiles.getSelectedFilename())) {
+			if (GuiController.getInstance().getProfileManager().loadProfiles(textPath.getText())) {
 				return true;
 			}
 			else {

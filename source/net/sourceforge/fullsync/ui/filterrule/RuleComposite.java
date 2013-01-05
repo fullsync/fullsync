@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Michele Aiello
  */
-public abstract class RuleComposite extends Composite {
+abstract class RuleComposite extends Composite {
 
 	private Vector<ValueChangedListener> listeners = new Vector<ValueChangedListener>();
 

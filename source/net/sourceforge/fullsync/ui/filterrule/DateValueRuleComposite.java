@@ -36,12 +36,12 @@ import org.eclipse.swt.widgets.Text;
 /**
  * @author Michele Aiello
  */
-public class DateValueRuleComposite extends RuleComposite {
+class DateValueRuleComposite extends RuleComposite {
 
 	private Text textValue;
 	private Button buttonCalendar;
 
-	public DateValueRuleComposite(Composite parent, int style, final DateValue value) {
+	DateValueRuleComposite(Composite parent, int style, final DateValue value) {
 		super(parent, style);
 		this.setLayout(new GridLayout(2, true));
 

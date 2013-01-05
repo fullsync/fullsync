@@ -40,11 +40,11 @@ import org.eclipse.swt.widgets.Text;
 /**
  * @author Michele Aiello
  */
-public class SizeValueRuleComposite extends RuleComposite {
+class SizeValueRuleComposite extends RuleComposite {
 
 	private Text textValue;
 
-	public SizeValueRuleComposite(Composite parent, int style, final SizeValue value) {
+	SizeValueRuleComposite(Composite parent, int style, final SizeValue value) {
 		super(parent, style);
 		this.setLayout(new GridLayout(2, true));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false);

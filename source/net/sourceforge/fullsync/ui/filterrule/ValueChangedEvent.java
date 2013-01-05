@@ -27,11 +27,11 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 /**
  * @author Michele Aiello
  */
-public class ValueChangedEvent {
+class ValueChangedEvent {
 
 	private OperandValue value;
 
-	public ValueChangedEvent(OperandValue value) {
+	ValueChangedEvent(OperandValue value) {
 		this.value = value;
 	}
 

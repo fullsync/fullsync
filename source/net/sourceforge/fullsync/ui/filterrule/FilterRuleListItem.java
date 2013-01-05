@@ -42,7 +42,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
-import net.sourceforge.fullsync.ui.FileFilterDetails;
+import net.sourceforge.fullsync.ui.FileFilterPage;
 import net.sourceforge.fullsync.ui.GuiController;
 import net.sourceforge.fullsync.ui.Messages;
 
@@ -73,11 +73,11 @@ public class FilterRuleListItem implements ValueChangedListener {
 
 	private RuleComposite ruleComposite;
 
-	private final FileFilterDetails root;
+	private final FileFilterPage root;
 
 	private final FileFilterManager fileFilterManager;
 
-	public FilterRuleListItem(FileFilterDetails root, Composite composite, FileFilterManager fileFilterManager, String ruleType, int op,
+	public FilterRuleListItem(FileFilterPage root, Composite composite, FileFilterManager fileFilterManager, String ruleType, int op,
 			OperandValue value) {
 		this.fileFilterManager = fileFilterManager;
 		this.ruleType = ruleType;

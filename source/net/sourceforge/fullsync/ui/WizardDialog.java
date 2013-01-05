@@ -30,6 +30,7 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -40,7 +41,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public class WizardDialog extends SelectionAdapter implements ShellListener {
+public abstract class WizardDialog extends SelectionAdapter implements ShellListener {
 
 	private Shell dialogShell;
 	private Composite compositeTop;
@@ -57,16 +58,10 @@ public class WizardDialog extends SelectionAdapter implements ShellListener {
 
 	private final Vector<WizardDialogListener> dialogListeners;
 
-	private WizardPage wizardPage;
-
-	public WizardDialog(Shell parent, int style) {
+	public WizardDialog(Shell parent) {
 		this.parent = parent;
-		this.style = SWT.DIALOG_TRIM | style;
+		this.style = SWT.DIALOG_TRIM | SWT.RESIZE | SWT.APPLICATION_MODAL;
 		this.dialogListeners = new Vector<WizardDialogListener>();
-	}
-
-	public void setPage(WizardPage page) {
-		this.wizardPage = page;
 	}
 
 	public void show() {
@@ -172,7 +167,7 @@ public class WizardDialog extends SelectionAdapter implements ShellListener {
 
 			// fill in wizard page
 			updateTop();
-			wizardPage.createContent(compositeContent);
+			createContent(compositeContent);
 
 			// bottom area
 			compositeBottom.setLayout(new GridLayout(2, false));
@@ -224,7 +219,7 @@ public class WizardDialog extends SelectionAdapter implements ShellListener {
 
 	protected void dialogOpened() {
 		for (WizardDialogListener listener : dialogListeners) {
-			listener.dialogOpened(this);
+			listener.dialogOpened();
 		}
 	}
 
@@ -246,11 +241,11 @@ public class WizardDialog extends SelectionAdapter implements ShellListener {
 	}
 
 	public void updateTop() {
-		dialogShell.setImage(wizardPage.getIcon());
-		dialogShell.setText(wizardPage.getTitle());
-		labelCaption.setText(wizardPage.getCaption());
-		labelDescription.setText(wizardPage.getDescription());
-		labelImage.setImage(wizardPage.getImage());
+		dialogShell.setImage(getIcon());
+		dialogShell.setText(getTitle());
+		labelCaption.setText(getCaption());
+		labelDescription.setText(getDescription());
+		labelImage.setImage(getImage());
 	}
 
 	public void addWizardDialogListener(WizardDialogListener listener) {
@@ -266,12 +261,12 @@ public class WizardDialog extends SelectionAdapter implements ShellListener {
 	@Override
 	public void widgetSelected(final SelectionEvent e) {
 		if (null != e && e.widget == okButton) {
-			if (wizardPage.apply()) {
+			if (apply()) {
 				dialogShell.dispose();
 			}
 		}
 		else {
-			if (wizardPage.cancel()) {
+			if (cancel()) {
 				dialogShell.dispose();
 			}
 		}
@@ -299,7 +294,7 @@ public class WizardDialog extends SelectionAdapter implements ShellListener {
 
 	@Override
 	public void shellClosed(ShellEvent e) {
-		if (wizardPage.cancel()) {
+		if (cancel()) {
 			dialogShell.dispose();
 		}
 		else {
@@ -318,4 +313,21 @@ public class WizardDialog extends SelectionAdapter implements ShellListener {
 	@Override
 	public void shellIconified(ShellEvent e) {
 	}
+
+	public abstract String getTitle();
+
+	public abstract String getCaption();
+
+	public abstract String getDescription();
+
+	public abstract Image getIcon();
+
+	public abstract Image getImage();
+
+	public abstract void createContent(Composite content);
+
+	public abstract boolean apply();
+
+	public abstract boolean cancel();
+
 }

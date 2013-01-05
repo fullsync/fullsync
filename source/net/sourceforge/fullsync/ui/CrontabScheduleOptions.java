@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class CrontabScheduleOptions extends ScheduleOptions {
+class CrontabScheduleOptions extends ScheduleOptions {
 	class PartContainer {
 		private CrontabPart part;
 		private Button cbAll;
@@ -150,12 +150,11 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 		}
 
 		public CrontabPart.Instance getInstance() throws DataParseException {
+			String pattern = text.getText();
 			if (cbAll.getSelection()) {
-				return part.createInstance();
+				pattern = "*"; //$NON-NLS-1$
 			}
-			else {
-				return part.createInstance(text.getText());
-			}
+			return part.createInstance(pattern);
 		}
 	}
 
