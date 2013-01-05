@@ -28,9 +28,6 @@ import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileAttributes;
-import net.sourceforge.fullsync.rules.PatternRule;
-import net.sourceforge.fullsync.rules.Rule;
-import net.sourceforge.fullsync.rules.WildcardRule;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 
@@ -43,15 +40,11 @@ public class SimplyfiedSyncRules implements RuleSet {
 
 	private boolean isUsingRecursion = true;
 
-	private int applyingDeletion = Location.None;
-
 	private String patternsType;
 
 	private String ignorePattern;
-	private Rule ignoreRule; // FIXME: unused
 
 	private String takePattern;
-	private Rule takeRule; // FIXME: unused
 
 	private FileFilter fileFilter;
 	private FileFilterTree fileFilterTree;
@@ -99,24 +92,10 @@ public class SimplyfiedSyncRules implements RuleSet {
 
 	public void setIgnorePattern(String pattern) {
 		this.ignorePattern = pattern;
-
-		if ((ignorePattern == null) || ("".equals(ignorePattern))) {
-			this.ignoreRule = null;
-		}
-		else {
-			ignoreRule = createRuleFromPattern(ignorePattern);
-		}
 	}
 
 	public void setTakePattern(String pattern) {
 		this.takePattern = pattern;
-
-		if ((takePattern == null) || ("".equals(takePattern))) {
-			this.takeRule = null;
-		}
-		else {
-			takeRule = createRuleFromPattern(takePattern);
-		}
 	}
 
 	/**
@@ -151,14 +130,6 @@ public class SimplyfiedSyncRules implements RuleSet {
 
 	public FileFilterTree getFileFilterTree() {
 		return fileFilterTree;
-	}
-
-	/**
-	 * @see net.sourceforge.fullsync.RuleSet#isUsingRecursionOnIgnore()
-	 */
-	@Override
-	public boolean isUsingRecursionOnIgnore() {
-		return false;
 	}
 
 	/**
@@ -217,55 +188,4 @@ public class SimplyfiedSyncRules implements RuleSet {
 		// TODO even simple sync rules should allow override rules
 		return this;
 	}
-
-	/**
-	 * @see net.sourceforge.fullsync.RuleSet#isApplyingDeletion(int)
-	 */
-	@Override
-	public boolean isApplyingDeletion(final int location) {
-		return (applyingDeletion & location) > 0;
-	}
-
-	/**
-	 * @param applyingDeletion
-	 *            The applyingDeletion to set.
-	 */
-	public void setApplyingDeletion(final int applyingDeletion) {
-		this.applyingDeletion = applyingDeletion;
-	}
-
-	/**
-	 * @return Returns the applyingDeletion.
-	 */
-	public int getApplyingDeletion() {
-		return applyingDeletion;
-	}
-
-	/**
-	 * @see net.sourceforge.fullsync.RuleSet#isCheckingBufferAlways(int)
-	 */
-	@Override
-	public boolean isCheckingBufferAlways(final int location) {
-		return false;
-	}
-
-	/**
-	 * @see net.sourceforge.fullsync.RuleSet#isCheckingBufferOnReplace(int)
-	 */
-	@Override
-	public boolean isCheckingBufferOnReplace(final int location) {
-		return false;
-	}
-
-	private Rule createRuleFromPattern(final String pattern) {
-		Rule rule = null;
-		if ("Wildcard".equals(patternsType)) {
-			rule = new WildcardRule(pattern);
-		}
-		else if ("RegExp".equals(patternsType)) {
-			rule = new PatternRule(pattern);
-		}
-		return rule;
-	}
-
 }

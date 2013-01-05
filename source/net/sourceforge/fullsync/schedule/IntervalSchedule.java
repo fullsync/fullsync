@@ -22,7 +22,6 @@
  */
 package net.sourceforge.fullsync.schedule;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -60,8 +59,7 @@ public class IntervalSchedule extends Schedule {
 	}
 
 	@Override
-	public final Element serialize(final Document doc) {
-		Element element = doc.createElement(Schedule.ELEMENT_NAME);
+	public final Element serialize(final Element element) {
 		element.setAttribute("type", SCHEDULE_TYPE);
 		element.setAttribute("firstinterval", "" + this.firstInterval);
 		element.setAttribute("interval", "" + this.interval);

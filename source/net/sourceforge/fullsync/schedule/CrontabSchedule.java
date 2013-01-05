@@ -24,7 +24,6 @@ import java.util.StringTokenizer;
 
 import net.sourceforge.fullsync.DataParseException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -54,8 +53,7 @@ public class CrontabSchedule extends Schedule {
 	}
 
 	@Override
-	public Element serialize(final Document doc) {
-		Element element = doc.createElement(Schedule.ELEMENT_NAME);
+	public Element serialize(final Element element) {
 		element.setAttribute("type", SCHEDULE_TYPE);
 		element.setAttribute("pattern", getPattern());
 		return element;
@@ -124,7 +122,7 @@ public class CrontabSchedule extends Schedule {
 	 * '* /2'.
 	 **/
 
-	public void read(String pattern) throws DataParseException {
+	private void read(String pattern) throws DataParseException {
 		origPattern = pattern;
 
 		StringTokenizer tokenizer = new StringTokenizer(pattern);

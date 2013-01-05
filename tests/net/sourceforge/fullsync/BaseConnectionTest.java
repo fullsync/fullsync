@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.TimeZone;
 
-import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
+import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 
 import org.junit.After;
 import org.junit.Before;
@@ -50,6 +50,7 @@ public class BaseConnectionTest {
 	protected Synchronizer synchronizer;
 	protected Profile profile;
 	protected Logger logger = LoggerFactory.getLogger(BaseConnectionTest.class.getSimpleName());
+	protected long lm;
 
 	@Before
 	public void setUp() throws Exception {
@@ -62,13 +63,18 @@ public class BaseConnectionTest {
 		ConnectionDescription src = new ConnectionDescription(testingSrc.toURI());
 		ConnectionDescription dst = new ConnectionDescription(testingDst.toURI());
 		src.setParameter("bufferStrategy", "");
+
 		profile = new Profile(
 			"TestProfile",
 			src,
 			dst,
-			new AdvancedRuleSetDescriptor("UPLOAD")
+			new SimplyfiedRuleSetDescriptor(true, null, false, null)
 		);
 		profile.setSynchronizationType("Publish/Update");
+
+		clearDirectory(testingSrc);
+		clearDirectory(testingDst);
+		lm = getLastModified();
 	}
 
 	@After
@@ -113,13 +119,14 @@ public class BaseConnectionTest {
 
 	protected void setLastModified(File dir, String filename, long lm) {
 		File file = new File(dir, filename);
-		if (!file.setLastModified(lm)) {
+		if (file.exists() && !file.setLastModified(lm)) {
 			throw new RuntimeException("file.setLastModified(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
 		}
 	}
 
 	protected void delete(File dir, String filename) {
-		if (!(new File(dir, filename).delete())) {
+		File file = new File(dir, filename);
+		if (file.exists() && !file.delete()) {
 			throw new RuntimeException("file.delete(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
 		}
 	}
@@ -137,7 +144,7 @@ public class BaseConnectionTest {
 
 	protected void dirToFile(File dir, String filename, long lm) throws IOException {
 		File file = new File(dir, filename);
-		if (!file.delete()) {
+		if (file.exists() && !file.delete()) {
 			throw new RuntimeException("file.delete(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
 		}
 		if (!file.createNewFile()) {
@@ -202,10 +209,6 @@ public class BaseConnectionTest {
 	}
 
 	public void testSingleInSync() throws Exception {
-		clearDirectory(testingSrc);
-		clearDirectory(testingDst);
-		long lm = getLastModified();
-
 		createNewFileWithContents(testingSrc, "sourceFile1.txt", lm, "this is a test\ncontent1");
 		createNewFileWithContents(testingSrc, "sourceFile2.txt", lm, "this is a test\ncontent2");
 		createNewFileWithContents(testingDst, "sourceFile1.txt", lm, "this is a test\ncontent1");
@@ -220,10 +223,6 @@ public class BaseConnectionTest {
 	}
 
 	public void testSingleSpaceMinus() throws Exception {
-		clearDirectory(testingSrc);
-		clearDirectory(testingDst);
-		long lm = getLastModified();
-
 		createNewFileWithContents(testingSrc, "sub - folder/sub2 - folder/sourceFile1.txt", lm, "this is a test\ncontent1");
 		createNewFileWithContents(testingSrc, "sub - folder/sourceFile2.txt", lm, "this is a test\ncontent2");
 
@@ -239,10 +238,6 @@ public class BaseConnectionTest {
 	}
 
 	public void testSingleFileChange() throws Exception {
-		clearDirectory(testingSrc);
-		clearDirectory(testingDst);
-		long lm = getLastModified();
-
 		createNewFileWithContents(testingSrc, "sourceFile1.txt", lm, "this is a test\ncontent2");
 		createNewFileWithContents(testingDst, "sourceFile1.txt", lm, "this is a test\ncontent2 bla");
 		createNewFileWithContents(testingSrc, "sourceFile2.txt", lm + MILLI_SECONDS_PER_DAY, "this is a test\ncontent2");

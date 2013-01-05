@@ -31,7 +31,6 @@ import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.StateDecider;
 import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TraversalType;
 import net.sourceforge.fullsync.fs.File;
 
 /**
@@ -41,8 +40,6 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class PublishOverwriteActionDecider implements ActionDecider {
 	private static final Action addDestination = new Action(Action.Add, Location.Destination, BufferUpdate.Destination, "Add");
-	private static final Action ignoreDestinationExists = new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None,
-			"will not add, destination already exists");
 	private static final Action overwriteSource = new Action(Action.Update, Location.Source, BufferUpdate.Destination, "overwrite source");
 	private static final Action overwriteDestination = new Action(Action.Update, Location.Destination, BufferUpdate.Destination,
 			"overwrite destination");
@@ -50,17 +47,8 @@ public class PublishOverwriteActionDecider implements ActionDecider {
 			"Source changed");
 	private static final Action deleteDestination = new Action(Action.Delete, Location.Destination, BufferUpdate.Destination,
 			"Delete destination file", false);
-	private static final Action unexpectedDestinationChanged = new Action(Action.UnexpectedChangeError, Location.Destination,
-			BufferUpdate.None, "will not delete, destination has changed");
-	private static final Action unexpectedBothChanged = new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None,
-			"Source changed, but changed remotely too");
 	private static final Action inSync = new Action(Action.Nothing, Location.None, BufferUpdate.None, "In Sync");
 	private static final Action ignore = new Action(Action.Nothing, Location.None, BufferUpdate.None, "Ignore");
-
-	@Override
-	public TraversalType getTraversalType() {
-		return new TraversalType();
-	}
 
 	@Override
 	public Task getTask(File src, File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {

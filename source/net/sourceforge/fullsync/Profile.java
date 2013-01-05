@@ -28,6 +28,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.w3c.dom.Document;
@@ -37,7 +38,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class Profile implements Serializable, Comparable<Profile> {
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 
 	private String name;
 	private String description;
@@ -55,12 +56,17 @@ public class Profile implements Serializable, Comparable<Profile> {
 	private transient boolean eventsAllowed;
 	private transient ArrayList<ProfileChangeListener> listeners;
 
-	public static Profile unserialize(Element element) {
+	static Profile unserialize(Element element) {
 		Profile p = new Profile(
 				element.getAttribute("name"),
 				ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)),
 				ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)),
 				RuleSetDescriptor.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)));
+		// this may happen with profiles that used advanced rule sets
+		if (null == p.getRuleSet()) {
+			p.setLastError(-1, "Error: the Filters of this Profile are broken");
+			p.setRuleSet(new SimplyfiedRuleSetDescriptor(true, null, false, null));
+		}
 		p.setDescription(element.getAttribute("description"));
 		p.setSynchronizationType(element.getAttribute("type"));
 		if (element.hasAttribute("enabled")) {
@@ -282,9 +288,9 @@ public class Profile implements Serializable, Comparable<Profile> {
 			elem.setAttribute("lastUpdate", DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(lastUpdate));
 		}
 
-		elem.appendChild(RuleSetDescriptor.serialize(ruleSet, "RuleSetDescriptor", doc));
+		elem.appendChild(RuleSetDescriptor.serialize(ruleSet, doc));
 		if (null != schedule) {
-			elem.appendChild(schedule.serialize(doc));
+			elem.appendChild(Schedule.serialize(schedule, doc));
 		}
 		if (null != source) {
 			elem.appendChild(source.serialize("Source", doc));

@@ -101,14 +101,6 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 			}
 			parent.addChild(task);
 		}
-		else {
-			src.setFiltered(true);
-			dst.setFiltered(true);
-			// Enqueue ignore action ?
-			if (rules.isUsingRecursionOnIgnore()) {
-				recurse(src, dst, rules, parent);
-			}
-		}
 	}
 
 	/*

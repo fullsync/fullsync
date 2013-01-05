@@ -31,7 +31,6 @@ import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.StateDecider;
 import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TraversalType;
 import net.sourceforge.fullsync.fs.File;
 
 /**
@@ -59,11 +58,6 @@ public class TwoWaySyncActionDecider implements ActionDecider {
 			"Delete orphan in source", false);
 	private static final Action inSync = new Action(Action.Nothing, Location.None, BufferUpdate.None, "In Sync");
 	private static final Action ignore = new Action(Action.Nothing, Location.None, BufferUpdate.None, "Ignore");
-
-	@Override
-	public TraversalType getTraversalType() {
-		return new TraversalType();
-	}
 
 	@Override
 	public Task getTask(final File src, final File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {

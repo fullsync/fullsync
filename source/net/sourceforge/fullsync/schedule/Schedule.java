@@ -36,15 +36,15 @@ import org.w3c.dom.Element;
  */
 public abstract class Schedule implements Serializable {
 	private static final long serialVersionUID = 2L;
-	public static String ELEMENT_NAME = "Schedule";
+	private static final String ELEMENT_NAME = "Schedule";
 
 	public abstract long getNextOccurrence(long now);
 
 	public abstract void setLastOccurrence(long now);
 
-	public abstract Element serialize(Document doc);
+	public abstract Element serialize(Element element);
 
-	private static Hashtable<String, Class<? extends Schedule>> scheduleRegister;
+	private final static Hashtable<String, Class<? extends Schedule>> scheduleRegister;
 
 	static {
 		scheduleRegister = new Hashtable<String, Class<? extends Schedule>>(2);
@@ -76,6 +76,11 @@ public abstract class Schedule implements Serializable {
 
 			return sched;
 		}
+	}
+
+	public static final Element serialize(Schedule sch, Document doc) {
+		Element element = doc.createElement(Schedule.ELEMENT_NAME);
+		return sch.serialize(element);
 	}
 
 }

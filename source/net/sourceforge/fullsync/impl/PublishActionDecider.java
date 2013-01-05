@@ -44,7 +44,6 @@ import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.StateDecider;
 import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TraversalType;
 import net.sourceforge.fullsync.fs.File;
 
 /**
@@ -62,11 +61,6 @@ public class PublishActionDecider implements ActionDecider {
 	private static final Action unexpectedBothChanged = new Action(UnexpectedChangeError, Destination, BufferUpdate.None, "Source changed, but changed remotely too");
 	private static final Action inSync = new Action(Nothing, None, BufferUpdate.None, "In Sync");
 	private static final Action ignore = new Action(Nothing, None, BufferUpdate.None, "Ignore");
-
-	@Override
-	public TraversalType getTraversalType() {
-		return new TraversalType();
-	}
 
 	@Override
 	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd) throws DataParseException, IOException {

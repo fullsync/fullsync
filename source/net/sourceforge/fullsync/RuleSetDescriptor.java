@@ -25,7 +25,6 @@ package net.sourceforge.fullsync;
 import java.io.Serializable;
 import java.util.Hashtable;
 
-import net.sourceforge.fullsync.impl.AdvancedRuleSetDescriptor;
 import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 
 import org.w3c.dom.Document;
@@ -38,13 +37,14 @@ public abstract class RuleSetDescriptor implements Serializable {
 
 	private static final long serialVersionUID = 2L;
 
+	private static final String ELEMENT_NAME = "RuleSetDescriptor";
+
 	private static Hashtable<String, Class<? extends RuleSetDescriptor>> descriptorRegister;
 
 	// TODO [Michele] change this!
 	static {
 		descriptorRegister = new Hashtable<String, Class<? extends RuleSetDescriptor>>(2);
 		descriptorRegister.put(SimplyfiedRuleSetDescriptor.RULESET_TYPE, SimplyfiedRuleSetDescriptor.class);
-		descriptorRegister.put(AdvancedRuleSetDescriptor.RULESET_TYPE, AdvancedRuleSetDescriptor.class);
 	}
 
 	public abstract RuleSet createRuleSet();
@@ -83,8 +83,8 @@ public abstract class RuleSetDescriptor implements Serializable {
 		}
 	}
 
-	public static final Element serialize(RuleSetDescriptor desc, String name, Document doc) {
-		Element elem = doc.createElement(name);
+	public static final Element serialize(RuleSetDescriptor desc, Document doc) {
+		Element elem = doc.createElement(ELEMENT_NAME);
 		elem.setAttribute("type", desc.getType());
 		Element ruleDescriptorElement = desc.serializeDescriptor(doc);
 		elem.appendChild(ruleDescriptorElement);
