@@ -25,7 +25,6 @@ package net.sourceforge.fullsync.remote;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Date;
 import java.util.HashMap;
 
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -80,11 +79,6 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 			logger.info("Client connection on remote interface rejected because of wrong password.");
 		}
 		return check;
-	}
-
-	@Override
-	public Profile getProfile(String name) throws RemoteException {
-		return profileManager.getProfile(name);
 	}
 
 	@Override
@@ -146,15 +140,6 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	public void removeSchedulerChangeListener(RemoteSchedulerChangeListenerInterface remoteListener) throws RemoteException {
 		SchedulerChangeListener listener = (SchedulerChangeListener) listenersMap.remove(remoteListener);
 		profileManager.removeSchedulerChangeListener(listener);
-	}
-
-	@Override
-	public void runProfile(String name) throws RemoteException {
-		Profile p = profileManager.getProfile(name);
-		TaskTree tree = synchronizer.executeProfile(p, false);
-		synchronizer.performActions(tree);
-		p.setLastUpdate(new Date());
-		profileManager.save();
 	}
 
 	@Override

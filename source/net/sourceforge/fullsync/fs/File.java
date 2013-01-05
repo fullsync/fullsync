@@ -44,10 +44,6 @@ public interface File extends Serializable {
 
 	public boolean exists();
 
-	public boolean isFiltered();
-
-	public void setFiltered(boolean filtered);
-
 	public boolean isBuffered();
 
 	public File getUnbuffered() throws IOException;

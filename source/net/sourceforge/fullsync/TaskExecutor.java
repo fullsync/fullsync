@@ -24,18 +24,18 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public interface TaskExecutor extends Phase {
+public interface TaskExecutor {
 	// we are much more a TaskExecutor
-	public IoStatistics createStatistics(TaskTree tree);
+	IoStatistics createStatistics(TaskTree tree);
 
-	public void enqueue(TaskTree tree);
+	void enqueue(TaskTree tree);
 
-	public void enqueue(Task task);
+	void enqueue(Task task);
 
-	public void flush() throws IOException;
+	void flush() throws IOException;
 
 	// listeners
-	public void addTaskFinishedListener(TaskFinishedListener listener);
+	void addTaskFinishedListener(TaskFinishedListener listener);
 
-	public void removeTaskFinishedListener(TaskFinishedListener listener);
+	void removeTaskFinishedListener(TaskFinishedListener listener);
 }

@@ -31,7 +31,6 @@ public class Entry {
 	public int start;
 	public int length;
 
-	public long internalOffset;
 	public int internalSegment;
 
 	public EntryDescriptor descriptor;
@@ -39,7 +38,6 @@ public class Entry {
 	public Entry(int start, int length) {
 		this.start = start;
 		this.length = length;
-		this.internalOffset = 0;
 		this.internalSegment = Segment.Only;
 		this.descriptor = null;
 	}

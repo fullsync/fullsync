@@ -20,7 +20,6 @@
 package net.sourceforge.fullsync.schedule;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 import net.sourceforge.fullsync.DataParseException;
@@ -49,14 +48,6 @@ public class CrontabPart implements Serializable {
 		public final String pattern;
 		public final boolean[] bArray;
 		public final boolean all;
-
-		public Instance() {
-			pattern = "*";
-			bArray = new boolean[high + 1 + offset];
-			all = true;
-
-			Arrays.fill(bArray, low, high, true);
-		}
 
 		public Instance(String pattern) throws DataParseException {
 			this.pattern = pattern;
@@ -198,16 +189,8 @@ public class CrontabPart implements Serializable {
 		this.offset = offset;
 	}
 
-	public Instance createInstance() {
-		return new Instance();
-	}
-
 	public Instance createInstance(String pattern) throws DataParseException {
 		return new Instance(pattern);
-	}
-
-	public Instance createInstance(boolean[] bArray) {
-		return new Instance(bArray);
 	}
 
 	public Instance createInstance(int[] intArray, int intOffset) {

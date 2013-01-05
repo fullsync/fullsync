@@ -39,7 +39,6 @@ class AbstractFile implements File {
 	protected String path;
 	protected File parent;
 	protected boolean exists;
-	protected boolean filtered;
 	protected boolean directory;
 	protected FileAttributes attributes;
 	protected Hashtable<String, File> children;
@@ -50,7 +49,6 @@ class AbstractFile implements File {
 		this.path = path;
 		this.parent = parent;
 		this.exists = exists;
-		this.filtered = false;
 		this.directory = directory;
 		this.children = null;
 	}
@@ -82,16 +80,6 @@ class AbstractFile implements File {
 	@Override
 	public boolean exists() {
 		return exists;
-	}
-
-	@Override
-	public boolean isFiltered() {
-		return filtered;
-	}
-
-	@Override
-	public void setFiltered(final boolean filtered) {
-		this.filtered = filtered;
 	}
 
 	@Override

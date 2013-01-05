@@ -67,24 +67,6 @@ public class BlockBuffer implements ExecutionBuffer {
 		finishedListeners = new Vector<EntryFinishedListener>();
 	}
 
-	public int getCapacity() {
-		return maxSize;
-	}
-
-	public void clearStatus() {
-		flushes = 0;
-	}
-
-	/*
-	 * public void updateStatus( BackupProcessStatus status )
-	 * {
-	 * status.BufferFileCapacity = maxEntries;
-	 * status.BufferByteCapacity = maxSize;
-	 * status.BufferBytesLoaded = numberBytes;
-	 * status.BufferFilesLoaded = numberEntries;
-	 * status.BufferFlushes = flushes;
-	 * }
-	 */
 	@Override
 	public void load() {
 		if (buffer == null) {
@@ -190,7 +172,6 @@ public class BlockBuffer implements ExecutionBuffer {
 			s |= Segment.Last;
 		}
 
-		entry.internalOffset = alreadyRead;
 		entry.internalSegment = s;
 		entry.descriptor = descriptor;
 

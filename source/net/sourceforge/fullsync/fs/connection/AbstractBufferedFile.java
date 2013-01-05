@@ -36,29 +36,18 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 
 	protected File unbuffered;
 
-	private boolean dirty;
 	private FileAttributes fsAttributes;
 
 	AbstractBufferedFile(BufferedConnection bc, String name, String path, File parent, boolean directory, boolean exists) {
 		super(bc, name, path, parent, directory, exists);
-		this.dirty = false;
 		this.unbuffered = null;
 		children = new Hashtable<String, File>();
 	}
 
 	AbstractBufferedFile(BufferedConnection bc, File unbuffered, File parent, boolean directory, boolean exists) {
 		super(bc, unbuffered.getName(), unbuffered.getPath(), parent, directory, exists);
-		this.dirty = false;
 		this.unbuffered = unbuffered;
 		children = new Hashtable<String, File>();
-	}
-
-	public boolean isDirty() {
-		return dirty;
-	}
-
-	public void markDirty() {
-		dirty = true;
 	}
 
 	@Override
@@ -99,10 +88,6 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 		else {
 			return attrib;
 		}
-	}
-
-	public void clearCachedFileAttributes() throws IOException {
-		setFileAttributes(getFsFileAttributes());
 	}
 
 	@Override

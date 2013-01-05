@@ -32,7 +32,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 public class FileSizeFileFilterRuleTest extends TestCase {
 
 	public void testOpIs() throws FilterRuleNotAppliableException {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue(1000, SizeValue.BYTES), FileSizeFileFilterRule.OP_IS);
+		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS);
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, 0);
 
 		assertTrue(filterRule.match(file));
@@ -42,7 +42,7 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 	}
 
 	public void testOpIsnt() throws FilterRuleNotAppliableException {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue(1000, SizeValue.BYTES), FileSizeFileFilterRule.OP_ISNT);
+		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_ISNT);
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, 0);
 		assertTrue(!filterRule.match(file));
 
@@ -51,7 +51,7 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 	}
 
 	public void testOpIsGreaterThan() throws FilterRuleNotAppliableException {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue(1000, SizeValue.BYTES),
+		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"),
 				FileSizeFileFilterRule.OP_IS_GREATER_THAN);
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, 0);
 
@@ -65,7 +65,7 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 	}
 
 	public void testOpIsLessThan() throws FilterRuleNotAppliableException {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue(1000, SizeValue.BYTES),
+		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"),
 				FileSizeFileFilterRule.OP_IS_LESS_THAN);
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, 0);
 

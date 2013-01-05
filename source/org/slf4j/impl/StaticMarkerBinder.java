@@ -37,7 +37,7 @@ import org.slf4j.spi.MarkerFactoryBinder;
  *
  * @author Ceki G&uuml;lc&uuml;
  */
-public final class StaticMarkerBinder implements MarkerFactoryBinder {
+public final class StaticMarkerBinder implements MarkerFactoryBinder { // NO_UCD
 
   /**
    * The unique instance of this class.

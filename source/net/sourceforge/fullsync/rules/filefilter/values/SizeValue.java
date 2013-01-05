@@ -45,7 +45,7 @@ public class SizeValue implements OperandValue {
 
 	public SizeValue() {
 		this.value = 0;
-		this.unit = 0;
+		this.unit = BYTES;
 	}
 
 	public SizeValue(String size) {
@@ -53,11 +53,6 @@ public class SizeValue implements OperandValue {
 		this.unit = BYTES;
 
 		fromString(size);
-	}
-
-	public SizeValue(double value, int unit) {
-		this.value = value;
-		this.unit = unit;
 	}
 
 	public long getBytes() {
@@ -98,7 +93,7 @@ public class SizeValue implements OperandValue {
 		}
 	}
 
-	public int getUnitFromString(String unitName) {
+	private int getUnitFromString(String unitName) {
 		for (int i = 0; i < allUnits.length; i++) {
 			if (allUnits[i].equalsIgnoreCase(unitName)) {
 				return i;

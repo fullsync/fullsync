@@ -30,16 +30,13 @@ import org.junit.Test;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class PublishUpdateTest extends BaseConnectionTest {
-	protected long lm = getLastModified();
 	protected Hashtable<String, Action> expectation = new Hashtable<String, Action>();
 
 	@Override
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		ConnectionDescription dst = new ConnectionDescription(testingDst.toURI());
-		dst.setParameter("bufferStrategy", "syncfiles");
-		profile.setDestination(dst);
+		//profile.getDestination().setParameter("bufferStrategy", "syncfiles");
 		profile.setRuleSet(new SimplyfiedRuleSetDescriptor(true, null, false, null));
 		profile.setSynchronizationType("Publish/Update");
 	}

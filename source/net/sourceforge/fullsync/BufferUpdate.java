@@ -32,21 +32,6 @@ public class BufferUpdate {
 
 	public static final String[] names = new String[] { "None", "Source", "Destination", "Both" };
 
-	public static int getOpposite(int location) {
-		switch (location) {
-			case 0:
-				return 3;
-			case 1:
-				return 2;
-			case 2:
-				return 1;
-			case 3:
-				return 0;
-			default:
-				return 0;
-		}
-	}
-
 	public static String toString(int location) {
 		return names[location];
 	}

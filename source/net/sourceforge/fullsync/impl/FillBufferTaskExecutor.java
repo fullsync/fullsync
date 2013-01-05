@@ -60,10 +60,6 @@ public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListen
 		return stats;
 	}
 
-	public IoStatistics getStatistics() {
-		return stats;
-	}
-
 	@Override
 	public void enqueue(TaskTree tree) {
 		stats = new IoStatisticsImpl();
@@ -199,26 +195,5 @@ public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListen
 	@Override
 	public void removeTaskFinishedListener(TaskFinishedListener listener) {
 		listeners.remove(listener);
-	}
-
-	@Override
-	public boolean isActive() {
-		// TODO please impl me !!
-		return true;
-	}
-
-	@Override
-	public void resume() {
-		// TODO please impl me !!
-	}
-
-	@Override
-	public void suspend() {
-		// TODO please impl me !!
-	}
-
-	@Override
-	public void cancel() {
-		// TODO please impl me !!
 	}
 }

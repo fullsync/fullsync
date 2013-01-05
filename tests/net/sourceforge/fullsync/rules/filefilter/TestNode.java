@@ -37,7 +37,6 @@ public class TestNode implements File {
 	private String path;
 	private boolean directory;
 	private boolean exists;
-	private boolean filtered;
 
 	private FileAttributes attr;
 
@@ -148,16 +147,6 @@ public class TestNode implements File {
 	@Override
 	public boolean isFile() {
 		return !directory;
-	}
-
-	@Override
-	public boolean isFiltered() {
-		return filtered;
-	}
-
-	@Override
-	public void setFiltered(boolean filtered) {
-		this.filtered = filtered;
 	}
 
 	@Override

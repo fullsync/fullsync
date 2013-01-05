@@ -55,6 +55,7 @@ public class FtpConnectionTest extends BaseConnectionTest {
 		m_fakeServer = new FakeFtpServer();
 		m_fakeServer.setServerControlPort(TEST_FTP_PORT);
 
+
 		FileSystem fs = new UnixFakeFileSystem();
 		fs.add(new DirectoryEntry("/sampleuser"));
 
@@ -78,9 +79,11 @@ public class FtpConnectionTest extends BaseConnectionTest {
 	@Override
 	protected void clearDirectory(final File dir) {
 		if (dir == testingDst) {
-			FileSystem fs = new UnixFakeFileSystem();
-			fs.add(new DirectoryEntry("/sampleuser"));
-			m_fakeServer.setFileSystem(fs);
+			if (null != m_fakeServer) {
+				FileSystem fs = new UnixFakeFileSystem();
+				fs.add(new DirectoryEntry("/sampleuser"));
+				m_fakeServer.setFileSystem(fs);
+			}
 		}
 		else {
 			super.clearDirectory(dir);

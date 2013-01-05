@@ -125,12 +125,10 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 
 	private Site fs;
 	private BufferedFile root;
-	private boolean dirty;
 	private boolean monitoringFileSystem;
 
 	public SyncFileBufferedConnection(final Site fs) throws IOException {
 		this.fs = fs;
-		this.dirty = false;
 		this.monitoringFileSystem = false;
 		loadFromBuffer();
 	}
@@ -142,7 +140,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 
 	@Override
 	public File createChild(File dir, String name, boolean directory) throws IOException {
-		dirty = true;
 		File n = dir.getUnbuffered().getChild(name);
 		if (n == null) {
 			n = dir.getUnbuffered().createChild(name, directory);
@@ -181,12 +178,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	@Override
 	public OutputStream writeFile(File file) {
 		return null;
-	}
-
-	@Override
-	public void flushDirty() throws IOException {
-		// if( dirty )
-		saveToBuffer();
 	}
 
 	@Override
@@ -349,11 +340,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	@Override
 	public boolean isMonitoringFileSystem() {
 		return monitoringFileSystem;
-	}
-
-	@Override
-	public void setMonitoringFileSystem(boolean monitor) {
-		this.monitoringFileSystem = monitor;
 	}
 
 	@Override

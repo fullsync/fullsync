@@ -30,7 +30,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.TaskFinishedListener;
@@ -120,10 +119,6 @@ public class RemoteManager {
 
 	public TaskTree executeProfile(String name) throws RemoteException {
 		return remoteInterface.executeProfile(name);
-	}
-
-	public IoStatistics getIoStatistics(TaskTree taskTree) throws RemoteException {
-		return remoteInterface.getIoStatistics(taskTree);
 	}
 
 	public void performActions(TaskTree taskTree, TaskFinishedListener listener) throws RemoteException {

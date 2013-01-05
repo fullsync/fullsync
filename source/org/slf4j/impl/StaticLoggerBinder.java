@@ -35,7 +35,7 @@ import org.slf4j.spi.LoggerFactoryBinder;
  *
  * @author Ceki G&uuml;lc&uuml;
  */
-public final class StaticLoggerBinder implements LoggerFactoryBinder {
+public final class StaticLoggerBinder implements LoggerFactoryBinder { // NO_UCD
 
   /**
    * The unique instance of this class.

@@ -229,7 +229,7 @@ public class FileFilterTest extends TestCase {
 		filter.setFilterType(FileFilter.INCLUDE);
 		filter.setFileFilterRules(new FileFilterRule[] {
 				new FileNameFileFilterRule(new TextValue(".txt"), FileNameFileFilterRule.OP_ENDS_WITH),
-				new FileSizeFileFilterRule(new SizeValue(1024, SizeValue.BYTES), FileSizeFileFilterRule.OP_IS_LESS_THAN) });
+				new FileSizeFileFilterRule(new SizeValue("1024 Bytes"), FileSizeFileFilterRule.OP_IS_LESS_THAN) });
 
 		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
 		assertTrue(filter.match(new TestNode("foobar.txt.", "somedir/foobar.txt", true, false, 0, 0)));
@@ -242,7 +242,7 @@ public class FileFilterTest extends TestCase {
 		filter.setFilterType(FileFilter.EXCLUDE);
 		filter.setFileFilterRules(new FileFilterRule[] {
 				new FileNameFileFilterRule(new TextValue(".txt"), FileNameFileFilterRule.OP_ENDS_WITH),
-				new FileSizeFileFilterRule(new SizeValue(1024, SizeValue.BYTES), FileSizeFileFilterRule.OP_IS_LESS_THAN) });
+				new FileSizeFileFilterRule(new SizeValue("1024 Bytes"), FileSizeFileFilterRule.OP_IS_LESS_THAN) });
 
 		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
 		assertTrue(!filter.match(new TestNode("foobar.txt.", "somedir/foobar.txt", true, false, 0, 0)));

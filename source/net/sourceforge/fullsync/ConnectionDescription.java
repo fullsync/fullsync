@@ -105,10 +105,6 @@ public class ConnectionDescription implements Serializable {
 		this.uri = uri;
 	}
 
-	public Hashtable<String, String> getParameters() {
-		return parameters;
-	}
-
 	public String getParameter(final String name) {
 		return parameters.get(name);
 	}

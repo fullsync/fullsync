@@ -38,8 +38,6 @@ public interface RemoteInterface extends Remote {
 
 	boolean checkPassword(String passwd) throws RemoteException;
 
-	Profile getProfile(String name) throws RemoteException;
-
 	Profile[] getProfiles() throws RemoteException;
 
 	void addProfileListChangeListener(RemoteProfileListChangeListenerInterface listener) throws RemoteException;
@@ -50,8 +48,6 @@ public interface RemoteInterface extends Remote {
 
 	void removeSchedulerChangeListener(RemoteSchedulerChangeListenerInterface remotelistener) throws RemoteException;
 
-	void runProfile(String name) throws RemoteException;
-
 	void startTimer() throws RemoteException;
 
 	void stopTimer() throws RemoteException;
@@ -60,7 +56,7 @@ public interface RemoteInterface extends Remote {
 
 	TaskTree executeProfile(String name) throws RemoteException;
 
-	public IoStatistics getIoStatistics(TaskTree taskTree) throws RemoteException;
+	IoStatistics getIoStatistics(TaskTree taskTree) throws RemoteException;
 
 	void performActions(TaskTree tree, RemoteTaskFinishedListenerInterface listener) throws RemoteException;
 
