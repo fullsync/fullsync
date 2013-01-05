@@ -260,7 +260,7 @@ public abstract class WizardDialog extends SelectionAdapter implements ShellList
 
 	@Override
 	public void widgetSelected(final SelectionEvent e) {
-		if (null != e && e.widget == okButton) {
+		if ((null != e) && (e.widget == okButton)) {
 			if (apply()) {
 				dialogShell.dispose();
 			}

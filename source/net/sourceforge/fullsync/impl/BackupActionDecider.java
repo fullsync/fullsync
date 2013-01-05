@@ -94,7 +94,7 @@ public class BackupActionDecider implements ActionDecider {
 					else {
 						actions.add(new Action(DirHereFileThereError, Destination, BufferUpdate.None,
 								"file changed from/to dir, can't overwrite"));
-					// TODO ^ recompare here
+						// TODO ^ recompare here
 					}
 				}
 				else {
@@ -123,7 +123,7 @@ public class BackupActionDecider implements ActionDecider {
 				actions.add(inSync);
 				actions.add(overwriteDestination);
 			}
-				break;
+			break;
 			default:
 				actions.add(new Action(NotDecidableError, None, BufferUpdate.None, "no rule found"));
 				break;

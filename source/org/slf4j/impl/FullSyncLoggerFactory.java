@@ -38,28 +38,28 @@ import org.slf4j.Logger;
  */
 public class FullSyncLoggerFactory implements ILoggerFactory {
 
-  static final FullSyncLoggerFactory INSTANCE = new FullSyncLoggerFactory();
+	static final FullSyncLoggerFactory INSTANCE = new FullSyncLoggerFactory();
 
-  Map<String, Logger> loggerMap;
+	Map<String, Logger> loggerMap;
 
-  public FullSyncLoggerFactory() {
-    loggerMap = new HashMap<String, Logger>();
-  }
+	public FullSyncLoggerFactory() {
+		loggerMap = new HashMap<String, Logger>();
+	}
 
-  /**
-   * Return an appropriate {@link FullSyncLogger} instance by name.
-   */
-  @Override
-public Logger getLogger(final String name) {
-    Logger slogger = null;
-    // protect against concurrent access of the loggerMap
-    synchronized (this) {
-      slogger = loggerMap.get(name);
-      if (slogger == null) {
-        slogger = new FullSyncLogger(name);
-        loggerMap.put(name, slogger);
-      }
-    }
-    return slogger;
-  }
+	/**
+	 * Return an appropriate {@link FullSyncLogger} instance by name.
+	 */
+	@Override
+	public Logger getLogger(final String name) {
+		Logger slogger = null;
+		// protect against concurrent access of the loggerMap
+		synchronized (this) {
+			slogger = loggerMap.get(name);
+			if (slogger == null) {
+				slogger = new FullSyncLogger(name);
+				loggerMap.put(name, slogger);
+			}
+		}
+		return slogger;
+	}
 }

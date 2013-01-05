@@ -82,7 +82,7 @@ public class PublishOverwriteActionDecider implements ActionDecider {
 					else {
 						actions.add(new Action(Action.UnexpectedChangeError, Location.Destination, BufferUpdate.None,
 								"dirherefilethere, but there is a file instead of dir, so unexpected change"));
-					// TODO ^ recompare here
+						// TODO ^ recompare here
 					}
 				}
 				else {
@@ -107,7 +107,7 @@ public class PublishOverwriteActionDecider implements ActionDecider {
 				actions.add(overwriteDestination);
 				actions.add(overwriteSource);
 			}
-				break;
+			break;
 			default:
 				actions.add(new Action(Action.NotDecidableError, Location.None, BufferUpdate.None, "no rule found"));
 				break;

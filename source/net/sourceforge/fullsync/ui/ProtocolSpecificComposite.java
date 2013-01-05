@@ -82,7 +82,7 @@ class ProtocolSpecificComposite {
 	}
 
 	public void setConnectionDescription(final ConnectionDescription connection) {
-		if (null != connection && null != connection.getUri()) {
+		if ((null != connection) && (null != connection.getUri())) {
 			textPath.setText(connection.getUri().getPath());
 		}
 		else {

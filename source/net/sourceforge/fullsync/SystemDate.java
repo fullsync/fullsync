@@ -60,7 +60,7 @@ public class SystemDate {
 
 	public long currentTimeMillis() {
 		if (baseTime >= 0) {
-			return baseTime + ((System.currentTimeMillis() - timeOfBaseTime)) * speed;
+			return baseTime + (((System.currentTimeMillis() - timeOfBaseTime)) * speed);
 		}
 		else {
 			return System.currentTimeMillis();

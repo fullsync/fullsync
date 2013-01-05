@@ -144,7 +144,7 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 
 	@Override
 	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules) throws DataParseException,
-			FileSystemException, IOException {
+	FileSystemException, IOException {
 		if (!source.isAvailable()) {
 			throw new FileSystemException("source is unavailable");
 		}

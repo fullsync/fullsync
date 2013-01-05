@@ -178,8 +178,8 @@ public class ScheduleSelectionDialog extends Dialog {
 			dialogShell.setSize(350, 300);
 
 			Rectangle rect = getParent().getBounds();
-			dialogShell.setLocation(rect.x + (rect.width / 2) - dialogShell.getSize().x / 2,
-					rect.y + (rect.height / 2) - dialogShell.getSize().y / 2);
+			dialogShell.setLocation((rect.x + (rect.width / 2)) - (dialogShell.getSize().x / 2),
+					(rect.y + (rect.height / 2)) - (dialogShell.getSize().y / 2));
 			dialogShell.layout();
 			dialogShell.open();
 			while (!dialogShell.isDisposed()) {

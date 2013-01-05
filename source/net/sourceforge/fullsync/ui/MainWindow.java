@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 class MainWindow extends Composite implements ShellListener, ProfileSchedulerListener, ProfileListControlHandler,
-		TaskGenerationListener, SchedulerChangeListener {
+TaskGenerationListener, SchedulerChangeListener {
 	private ToolItem toolItemNew;
 	private Menu menuBarMainWindow;
 	private StatusLine statusLine;

@@ -70,7 +70,7 @@ public class NiceListView extends Composite implements Listener {
 						if ((event.keyCode == SWT.ARROW_UP) && (index > 0)) {
 							setSelected((NiceListViewItem) children[index - 1]);
 						}
-						else if ((event.keyCode == SWT.ARROW_DOWN) && (index + 1 < children.length)) {
+						else if ((event.keyCode == SWT.ARROW_DOWN) && ((index + 1) < children.length)) {
 							setSelected((NiceListViewItem) children[index + 1]);
 						}
 						break;

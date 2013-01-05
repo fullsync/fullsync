@@ -87,7 +87,7 @@ public class ExactCopyActionDecider implements ActionDecider {
 					else {
 						actions.add(new Action(Action.DirHereFileThereError, Location.Destination, BufferUpdate.None,
 								"file changed from/to dir, can't overwrite"));
-					// TODO ^ recompare here
+						// TODO ^ recompare here
 					}
 				}
 				else {
@@ -116,7 +116,7 @@ public class ExactCopyActionDecider implements ActionDecider {
 				actions.add(inSync);
 				actions.add(overwriteDestination);
 			}
-				break;
+			break;
 			default:
 				actions.add(new Action(Action.NotDecidableError, Location.None, BufferUpdate.None, "no rule found"));
 				break;

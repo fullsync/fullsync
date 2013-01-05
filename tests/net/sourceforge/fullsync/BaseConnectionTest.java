@@ -65,11 +65,11 @@ public class BaseConnectionTest {
 		src.setParameter("bufferStrategy", "");
 
 		profile = new Profile(
-			"TestProfile",
-			src,
-			dst,
-			new SimplyfiedRuleSetDescriptor(true, null, false, null)
-		);
+				"TestProfile",
+				src,
+				dst,
+				new SimplyfiedRuleSetDescriptor(true, null, false, null)
+				);
 		profile.setSynchronizationType("Publish/Update");
 
 		clearDirectory(testingSrc);

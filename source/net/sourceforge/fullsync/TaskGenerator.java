@@ -33,7 +33,7 @@ public interface TaskGenerator extends Phase {
 	public TaskTree execute(Profile profile, boolean interactive) throws FileSystemException, DataParseException, URISyntaxException, IOException;
 
 	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet initialRules) throws FileSystemException,
-			DataParseException, IOException;
+	DataParseException, IOException;
 
 	// listeners
 	public void addTaskGenerationListener(TaskGenerationListener listener);

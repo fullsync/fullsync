@@ -653,7 +653,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 		Profile p;
 		RuleSetDescriptor ruleSetDescriptor = null;
 		ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), filter, buttonUseFileFilter.getSelection(),
-			getFileFilterTree());
+				getFileFilterTree());
 
 		if (profileName == null) {
 			p = new Profile(textProfileName.getText(), src, dst, ruleSetDescriptor);

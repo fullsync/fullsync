@@ -52,7 +52,7 @@ public class Crypt {
 		int pos = (str.length() / 3) % m_key.length();
 
 		StringBuffer ret = new StringBuffer();
-		for (int i = 0; i < str.length() / 3; i++) {
+		for (int i = 0; i < (str.length() / 3); i++) {
 			int digit;
 			int number = 0;
 			digit = str.charAt(i * 3);
@@ -60,12 +60,12 @@ public class Crypt {
 				return "";
 			}
 			number += (digit - '0') * 100;
-			digit = str.charAt(i * 3 + 1);
+			digit = str.charAt((i * 3) + 1);
 			if ((digit < '0') || (digit > '9')) {
 				return "";
 			}
 			number += (digit - '0') * 10;
-			digit = str.charAt(i * 3 + 2);
+			digit = str.charAt((i * 3) + 2);
 			if ((digit < '0') || (digit > '9')) {
 				return "";
 			}

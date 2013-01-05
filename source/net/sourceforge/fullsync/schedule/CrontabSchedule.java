@@ -152,13 +152,13 @@ public class CrontabSchedule extends Schedule {
 
 		if (months.all && daysOfMonth.all && !daysOfWeek.all) {
 			gotoNextOrStay(daysOfWeek.bArray, cal, Calendar.DAY_OF_WEEK);
-		// else if( !allDaysOfMonth )
-		// gotoNextOrStay( bDaysOfMonth, cal, Calendar.DAY_OF_MONTH );
+			// else if( !allDaysOfMonth )
+			// gotoNextOrStay( bDaysOfMonth, cal, Calendar.DAY_OF_MONTH );
 		}
 		else {
 			gotoNextOrStay(daysOfMonth.bArray, cal, Calendar.DAY_OF_MONTH);
-		// TODO currently we miss out the doublecase
-		// !allDaysOfWeek + !allDaysOfMonth
+			// TODO currently we miss out the doublecase
+			// !allDaysOfWeek + !allDaysOfMonth
 		}
 
 		// gotoNextOrStay( bDaysOfWeek, cal, Calendar.DAY_OF_WEEK );

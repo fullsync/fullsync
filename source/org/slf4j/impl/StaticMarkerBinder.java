@@ -39,33 +39,33 @@ import org.slf4j.spi.MarkerFactoryBinder;
  */
 public final class StaticMarkerBinder implements MarkerFactoryBinder { // NO_UCD
 
-  /**
-   * The unique instance of this class.
-   */
-  public static final StaticMarkerBinder SINGLETON = new StaticMarkerBinder();
+	/**
+	 * The unique instance of this class.
+	 */
+	public static final StaticMarkerBinder SINGLETON = new StaticMarkerBinder();
 
-  final IMarkerFactory markerFactory = new BasicMarkerFactory();
+	final IMarkerFactory markerFactory = new BasicMarkerFactory();
 
-  private StaticMarkerBinder() {
-  }
+	private StaticMarkerBinder() {
+	}
 
-  /**
-   * Currently this method always returns an instance of
-   * {@link BasicMarkerFactory}.
-   */
-  @Override
-public IMarkerFactory getMarkerFactory() {
-    return markerFactory;
-  }
+	/**
+	 * Currently this method always returns an instance of
+	 * {@link BasicMarkerFactory}.
+	 */
+	@Override
+	public IMarkerFactory getMarkerFactory() {
+		return markerFactory;
+	}
 
-  /**
-   * Currently, this method returns the class name of
-   * {@link BasicMarkerFactory}.
-   */
-  @Override
-public String getMarkerFactoryClassStr() {
-    return BasicMarkerFactory.class.getName();
-  }
+	/**
+	 * Currently, this method returns the class name of
+	 * {@link BasicMarkerFactory}.
+	 */
+	@Override
+	public String getMarkerFactoryClassStr() {
+		return BasicMarkerFactory.class.getName();
+	}
 
 
 }

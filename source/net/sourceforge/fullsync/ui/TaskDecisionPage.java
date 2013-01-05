@@ -198,8 +198,8 @@ public class TaskDecisionPage extends WizardDialog {
 									tasksFinished++;
 									// TODO: move this into one translatable string with arguments
 									labelProgress
-											.setText(tasksFinished
-													+ " " + Messages.getString("TaskDecisionPage.of") + " " + tasksTotal + " " + Messages.getString("TaskDecisionPage.tasksFinished")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+									.setText(tasksFinished
+											+ " " + Messages.getString("TaskDecisionPage.of") + " " + tasksTotal + " " + Messages.getString("TaskDecisionPage.tasksFinished")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 									Task task = event.getTask();
 									TableItem item = list.getTableItemForTask(task);
 									// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item
