@@ -18,7 +18,7 @@
  * at the AUTHORS file in the root of this project.
  */
 
-package net.full.fs.ui;
+package net.sourceforge.fullsync.ui;
 
 import java.io.File;
 import java.io.IOException;

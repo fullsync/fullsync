@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.full.fs.ui;
+package net.sourceforge.fullsync.ui;
 
 import java.text.DateFormat;
 import java.util.Arrays;
@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.Date;
 
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.ui.UISettings;
 
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;

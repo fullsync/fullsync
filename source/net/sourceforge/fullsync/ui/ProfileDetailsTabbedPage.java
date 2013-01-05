@@ -25,7 +25,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Vector;
 
-import net.full.fs.ui.ConnectionConfiguration;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemManager;

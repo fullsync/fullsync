@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.full.fs.ui;
+package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,7 +27,6 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.fs.Site;
-import net.sourceforge.fullsync.ui.Messages;
 
 import org.apache.commons.vfs2.FileObject;
 import org.eclipse.swt.SWT;

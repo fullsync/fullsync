@@ -17,13 +17,12 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.full.fs.ui;
+package net.sourceforge.fullsync.ui;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.ui.Messages;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
