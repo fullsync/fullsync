@@ -51,8 +51,8 @@ Roadmap:
 	[ ] increase maximum allowed RAM for FullSync, 1G?
 
 Roadmap 0.11.0:
-	[ ] restore handling of buffering = syncfiles (search for [BUFFERING])
-	[ ] restore handling of advanced rulesets (search for [RULESETS])
+	[X] restore handling of buffering = syncfiles (search for [BUFFERING])
+	[X] restore handling of advanced rulesets (search for [RULESETS]) -> DROPPED
 	[ ] make sure everything is translatable
 	[ ] make shortcuts configurable
 

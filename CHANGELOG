@@ -1,6 +1,7 @@
 Version 0.10.1
 (XX XXXX XXXX)
 * removed bundled implementation of javax.xml
+* removed support for Advanced Rule Sets
 
 Version 0.10.0
 (03 December 2012)
