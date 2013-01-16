@@ -19,6 +19,7 @@
  */
 package net.sourceforge.fullsync.fs.filesystems;
 
+import java.io.File;
 import java.util.Arrays;
 
 import net.sourceforge.fullsync.ConnectionDescription;
@@ -44,6 +45,7 @@ import com.jcraft.jsch.UserInfo;
 
 public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserInfo {
 	private static boolean loggerSetupCompleted = false;
+	private static String sshDirName = null; 
 
 	private Logger logger = LoggerFactory.getLogger("FullSync");
 	private ConnectionDescription desc = null;
@@ -52,6 +54,25 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 		if (!loggerSetupCompleted) {
 			JSch.setLogger(new SFTPLogger());
 		}
+		if (null == sshDirName) {
+	        String sshDirPath = System.getProperty("vfs.sftp.sshdir");
+	        if (sshDirPath == null) {
+	        	sshDirPath = System.getProperty("user.home") + File.separator + ".ssh";
+	        }
+	        File sshDir = new File(sshDirPath);
+	        if (!sshDir.exists()) {
+	        	if (sshDir.mkdirs()) {
+	        		System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath());
+		        	sshDirName = sshDirPath;
+	        	}
+	        	else {
+	        		logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... (tried: " + sshDir.getAbsolutePath().toString() + ")");
+	        	}
+	        }
+	        else {
+	        	sshDirName = sshDirPath;
+	        }
+		}
 	}
 
 	@Override
@@ -59,6 +80,10 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter("username"), description.getSecretParameter("password"));
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 		SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
+		if (null != sshDirName) {
+			cfg.setKnownHosts(options, new File(sshDirName, "known_hosts"));
+		}
+		logger.debug("SFTP using knownHosts: ", cfg.getKnownHosts(options));
 		cfg.setUserInfo(options, this);
 		cfg.setStrictHostKeyChecking(options, "ask");
 		if ("enabled".equals(description.getParameter("publicKeyAuth"))) {
