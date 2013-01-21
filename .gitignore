@@ -19,4 +19,8 @@
 .directory
 *~
 *.kdev4
-*.xcf
+
+# /resources/images/
+/resources/images/*.ico
+/resources/images/*.png
+/resources/images/*.gif
