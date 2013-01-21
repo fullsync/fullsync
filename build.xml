@@ -131,7 +131,6 @@
 				<include name="*.*" />
 			</fileset>
 		</copy>
-		<copy file="${basedir}/resources/sample.syncrules" tofile="${build.dir}/sample.syncrules" />
 		<copy file="${basedir}/resources/fullsync.sh" tofile="${build.dir}/fullsync" />
 		<exec executable="/bin/chmod" osfamily="unix" >
 			<arg value="755"/>
