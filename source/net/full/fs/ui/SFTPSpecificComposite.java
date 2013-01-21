@@ -142,8 +142,8 @@ class SFTPSpecificComposite extends ProtocolSpecificComposite {
 			port = DEFAULT_SFTP_PORT;
 		}
 		spinnerPort.setSelection(port);
-		textUsername.setText(connection.getParameter("username"));
-		textPassword.setText(connection.getSecretParameter("password"));
+		textUsername.setText(connection.getParameter(ConnectionDescription.PARAMETER_USERNAME));
+		textPassword.setText(connection.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
 		buttonKeybased.setSelection("enabled".equals(connection.getParameter("publicKeyAuth")));
 		labelKeyPassphrase.setEnabled(buttonKeybased.getSelection());
 		textKeyPassphrase.setEnabled(buttonKeybased.getSelection());

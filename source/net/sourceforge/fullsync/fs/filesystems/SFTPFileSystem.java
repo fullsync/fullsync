@@ -45,7 +45,7 @@ import com.jcraft.jsch.UserInfo;
 
 public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserInfo {
 	private static boolean loggerSetupCompleted = false;
-	private static String sshDirName = null; 
+	private static String sshDirName = null;
 
 	private Logger logger = LoggerFactory.getLogger("FullSync");
 	private ConnectionDescription desc = null;
@@ -55,29 +55,29 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 			JSch.setLogger(new SFTPLogger());
 		}
 		if (null == sshDirName) {
-	        String sshDirPath = System.getProperty("vfs.sftp.sshdir");
-	        if (sshDirPath == null) {
-	        	sshDirPath = System.getProperty("user.home") + File.separator + ".ssh";
-	        }
-	        File sshDir = new File(sshDirPath);
-	        if (!sshDir.exists()) {
-	        	if (sshDir.mkdirs()) {
-	        		System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath());
-		        	sshDirName = sshDirPath;
-	        	}
-	        	else {
-	        		logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... (tried: " + sshDir.getAbsolutePath().toString() + ")");
-	        	}
-	        }
-	        else {
-	        	sshDirName = sshDirPath;
-	        }
+			String sshDirPath = System.getProperty("vfs.sftp.sshdir");
+			if (sshDirPath == null) {
+				sshDirPath = System.getProperty("user.home") + File.separator + ".ssh";
+			}
+			File sshDir = new File(sshDirPath);
+			if (!sshDir.exists()) {
+				if (sshDir.mkdirs()) {
+					System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath());
+					sshDirName = sshDirPath;
+				}
+				else {
+					logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... (tried: " + sshDir.getAbsolutePath().toString() + ")");
+				}
+			}
+			else {
+				sshDirName = sshDirPath;
+			}
 		}
 	}
 
 	@Override
 	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws org.apache.commons.vfs2.FileSystemException {
-		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter("username"), description.getSecretParameter("password"));
+		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME), description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 		SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
 		if (null != sshDirName) {
@@ -109,7 +109,7 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 	@Override
 	public final String getPassword() {
 		logger.debug("SFTP UserInfo::getPassword");
-		return desc.getSecretParameter("password");
+		return desc.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD);
 	}
 
 	@Override
