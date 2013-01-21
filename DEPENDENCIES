@@ -20,7 +20,7 @@ Versions of dependent libraries in distributions:
  * slf4j-api.jar                 1.6.4             2011-10-31
 
 Launcher:
- * WinRun4J                      0.4.3             2011-09-18
+ * WinRun4J                      0.4.4             2012-01-30
 
 Used only by the tests (stored in lib-tests/):
  * j2ssh-ant.jar                 svn rev 43        2011-04-14        from trunk
