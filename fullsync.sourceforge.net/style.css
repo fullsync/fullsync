@@ -1,0 +1,190 @@
+body {
+	font-size: 13px;
+	color: #000000;
+	font-family: Verdana, Arial, Helvetica;
+	background-color: #f0f0f0;
+	background-image: url("img/bg2.gif");
+	padding: 1em;
+}
+
+TR.smallheader {
+	color: #FFFFFF;
+	background: #5599CC;
+}
+
+TD.smallheader {
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+tr.listing {
+	font-size: 9px;
+}
+
+TD {
+	font-size: 13px;
+	color: #000000;
+	font-family: Verdana, Arial, Helvetica;
+}
+
+TD.order {
+	font-size: 11px;
+	color: #000000;
+	font-family: Verdana, Arial, Helvetica;
+}
+
+A {
+	color: #003366;
+	text-decoration: none
+}
+
+A:link {
+	color: #003366;
+	text-decoration: none
+}
+
+A:visited {
+	color: #003366;
+	text-decoration: none
+}
+
+A:active {
+	color: #003366;
+	text-decoration: none
+}
+
+A:hover {
+	color: 336699;
+}
+
+dt {
+	font-weight: bold;
+}
+
+dd {
+	padding-bottom: 15px;
+}
+
+ul.donationlist {
+	line-height: 2em;
+}
+
+ul.donationlist label {
+	display: inline-block;
+}
+
+ul.donationlist label span.amount {
+	width: 7em;
+	font-weight: bold;
+	display: inline-block;
+}
+
+ul.donationlist input[type="radio"] {
+	margin: 0;
+	display: inline-block;
+}
+
+ul.donationlist label span.description {
+	display: inline-block;
+}
+
+ul.donationlist li * {
+	margin: 0;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+ul.donationlist li {
+	list-style: none;
+	padding: .3em 0;
+}
+
+ul.donationlist li:hover {
+	background-color: #F0F5FF;
+}
+
+span.donateIcon {
+	display: block;
+	float: right;
+}
+
+#donate-button {
+	margin: 0 auto;
+	display: block;
+}
+
+#wrapper {
+	width: 640px;
+	margin: 0 auto;
+}
+
+#header-logo, #footer {
+	border: none;
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+#menu {
+	font-size: 10pt;
+	text-align: center;
+	background-color: #b7c1ca;
+	font-weight: bold;
+	line-height: 1.8em;
+}
+
+#menu a:after {
+	content: " - ";
+	font-size: 80%;
+	color: #000;
+	font-weight: normal;
+}
+
+#menu a:last-child:after {
+	content: "";
+}
+
+#content {
+	min-height: 400px;
+	background-color: #fff;
+	padding: 1em;
+}
+
+ol {
+	list-style: disc;
+	padding: 0 0 0 1em;
+}
+
+ol > li {
+	margin: 1em 0;
+}
+
+ol ul {
+	padding: 0 0 0 1em;
+	margin: 0 0 0 1em;
+	list-style-position: outside;
+}
+
+#obs-download-frame {
+	border: none;
+	display: block;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	min-height: 450px;
+}
+
+#global-download-button {
+	margin: 2em 0 1em 0;
+	text-align: center;
+}
+
+#footer-copyright {
+	padding-top: 1em;
+	line-height: 31px;
+}
+
+#footer-copyright:after {
+	content: " ";
+	clear: both;
+}
