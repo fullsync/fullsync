@@ -2,7 +2,7 @@
 	include( "html.php" );
 	HtmlHeader( "Features" );
 ?>
-	<p style="font-size: 20"><b>Features</b></p>
+	<h1>Features</h1>
 	<dl>
 		<dt>Publication and update of websites, synchronization of local directories and making backups of your data.</dt>
 		<dd>Because of the large amount of options provided, you can use FullSync to publish
@@ -19,7 +19,7 @@
 			and can then define exceptions. Additionally you can configure criterias
 			which decide whether a file has changed or not. This is good when using 
 			filesystems which can not set modification times or where the size changes
-			while transferring from the source to destination (ftp).<br/><br/></dd>					
+			while transferring from the source to destination (ftp).<br/><br/></dd>
 		<dt>configuration and rule-rewriting per directory possible</dt>
 		<dd>For advanced configuration you can deploy xml files in the synchronized
 			paths which can overwrite the rules for this branch. So you could for example
@@ -42,7 +42,5 @@
 			good for making backups or synchronizations on one harddisk. For updating webpages
 			multithreaded writing is good for using full bandwidth.<br/><br/></dd>
 	</dl>
-	<a href="index.php">&lt;&lt; Back to Home</a><br/><br/>
 <?php
 	HtmlFooter();
-?>

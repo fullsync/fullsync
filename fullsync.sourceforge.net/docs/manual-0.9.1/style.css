@@ -1,0 +1,67 @@
+BODY
+{
+    FONT-SIZE: 13px;
+    COLOR: #000000;
+    FONT-FAMILY: Verdana
+}
+TR.smallheader
+	{
+	COLOR: #FFFFFF;
+	BACKGROUND: #5599CC;
+	}
+
+TD.smallheader
+	{
+	COLOR: #FFFFFF;
+	FONT-WEIGHT: bold;
+	}
+
+tr.listing {
+    FONT-SIZE: 9px;
+}
+TD
+{
+    FONT-SIZE: 13px;
+    COLOR: #000000;
+    FONT-FAMILY: Verdana;
+}
+
+TD.order
+{
+    FONT-SIZE: 11px;
+    COLOR: #000000;
+    FONT-FAMILY: Verdana;
+}
+
+A
+{
+    COLOR: #003366;
+    TEXT-DECORATION: none
+}
+
+A:link
+{
+    COLOR: #003366;
+    TEXT-DECORATION: none
+}
+
+A:visited
+{
+    COLOR: #003366;
+    TEXT-DECORATION: none
+}
+
+A:active
+{
+    COLOR: #003366;
+    TEXT-DECORATION: none
+}
+
+A:hover
+{
+    COLOR: 336699
+}
+dt
+{
+	font-weight: bold;
+}

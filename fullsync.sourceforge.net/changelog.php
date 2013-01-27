@@ -2,7 +2,7 @@
 	include( "html.php" );
 	HtmlHeader( "Press Releases" );
 ?>
-	<p style="font-size: 20"><b>Press Releases</b></p>
+	<h1>Press Releases</h1>
 
 <?php 
 	$f = fopen( "http://cvs.sourceforge.net/viewcvs.py/fullsync/FullSync/CHANGELOG?view=markup", "r" );
@@ -22,7 +22,5 @@
 	fclose( $f );
 ?>
 
-	<a href="index.php">&lt;&lt; Back to Home</a><br/><br/>
 <?php
 	HtmlFooter();
-?>

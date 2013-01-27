@@ -1,9 +1,8 @@
 <?php
 	include( "html.php" );
-	header( "Content-Type: text/html; charset=UTF-8" );
 	HtmlHeader( "Press Releases" );
 ?>
-	<p style="font-size: 20"><b>FullSync in the Press</b></p>
+	<h1>FullSync in the Press</h1>
 	<dl>
 		<dt>Softpedia 02/2006</dt>
 		<dd>
@@ -26,7 +25,5 @@
 		<dt>eWeek Review, 03/2005</dt>
 		<dd>"FullSync Gets Grip on Archiving Tasks" <a href="http://www.eweek.com/article2/0,1759,1778356,00.asp">Read more...</a></dd>
 	</dl>
-	<a href="index.php">&lt;&lt; Back to Home</a><br/><br/>
 <?php
 	HtmlFooter();
-?>

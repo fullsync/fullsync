@@ -2,7 +2,7 @@
 	include( "html.php" );
 	HtmlHeader( "Screenshots" );
 ?>
-	<p style="font-size: 20"><b>Screenshots</b></p><br>
+	<h1>Screenshots</h1>
 	<img src="pictures/2004-12-12-MainWindow.png"><br>
 	The main window with the new profile list. You can still switch back<br>
 	to the table if you wish, but it has a bit less features.<br><br><br>
@@ -17,7 +17,5 @@
 	Here you can specify when a profile is executed automatically.<br>
 	You can either choose an interval, a crontab-like scheduling<br>
 	(you can see in the picture) or none.<br><br><br>
-	<a href="index.php">&lt;&lt; Back to Home</a><br/><br/>
 <?php
 	HtmlFooter();
-?>
