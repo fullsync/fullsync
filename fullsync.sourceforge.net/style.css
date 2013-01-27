@@ -1,0 +1,95 @@
+BODY
+{
+    FONT-SIZE: 13px;
+    COLOR: #000000;
+    FONT-FAMILY: Verdana, Arial, Helvetica;
+}
+TR.smallheader
+	{
+	COLOR: #FFFFFF;
+	BACKGROUND: #5599CC;
+	}
+
+TD.smallheader
+	{
+	COLOR: #FFFFFF;
+	FONT-WEIGHT: bold;
+	}
+
+tr.listing {
+    FONT-SIZE: 9px;
+}
+TD
+{
+    FONT-SIZE: 13px;
+    COLOR: #000000;
+    FONT-FAMILY: Verdana, Arial, Helvetica;
+}
+
+TD.order
+{
+    FONT-SIZE: 11px;
+    COLOR: #000000;
+    FONT-FAMILY: Verdana, Arial, Helvetica;
+}
+
+A
+{
+    COLOR: #003366;
+    TEXT-DECORATION: none
+}
+
+A:link
+{
+    COLOR: #003366;
+    TEXT-DECORATION: none
+}
+
+A:visited
+{
+    COLOR: #003366;
+    TEXT-DECORATION: none
+}
+
+A:active
+{
+    COLOR: #003366;
+    TEXT-DECORATION: none
+}
+
+A:hover
+{
+    COLOR: 336699
+}
+dt
+{
+	font-weight: bold;
+}
+dd {
+	padding-bottom: 15px;
+}
+
+label span.amount {
+	float: left;
+	width: 7em;
+	font-weight: bold; 
+}
+
+label span.description {
+}
+
+ul.donationlist li {
+	list-style: none;
+}
+ul.donationlist li {
+	clear: left; 
+	padding: 1px 0; 
+}
+ul.donationlist li:hover {
+	background-color: #F0F5FF;
+}
+
+span.donateIcon {
+	display: block; 
+	float: right;
+}

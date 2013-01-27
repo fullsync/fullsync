@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<title>FullSync Manual - Synchronization Types</title>
+		<link href="style.css" rel="Stylesheet" type="text/css">
+		<style type="text/css">
+			dt {text-weight: bold;}
+		</style>
+	</head>
+	<body>
+		<table width="640">
+			<tr>
+				<td>
+					<br/>
+					<ul>
+						<p style="font-size: 24"><b>FullSync Manual</b> - Synchronization Types</p><br>
+						<ul>
+							You can synchronize two locations using one of the following
+							supported types::<br><br>
+							<dl>
+								<dt>Publish/Update</dt>
+								<dd>
+								This is used to update a website from a local copy to a remote server. 
+								It will apply changes to the destination but not the other way around. If a file
+								changed in the destination a warning will be generated so it is not overwritten
+								without your knowledge. Additional files in the destination will be ignored, deleted
+								files in source will also be deleted on the destination. Short: FullSync creates
+								an exact copy of the source and keeps track of what it uploaded so additional files 
+								(like generated data or config files) in destination are not affected.<br><br>
+								</dd>
+								<dt>Backup Copy</dt>
+								<dd>
+								Copies all changes in the source to destination but does not delete anything in
+								destination.<br><br>
+								</dd>
+								<dt>Exact Copy</dt>
+								<dd>
+								Copies all changes in the source to destination including deletions.<br><br>
+								</dd>
+								<dt>Two-Way Synchronization</dt>
+								<dd>
+								Compares two locations and copies newer files to the other side. <br>
+								BEWARE: it does not recognize changes on both sides! in this case, 
+								the older file is overwritten and changes to it are lost!
+								<br><br>
+								</dd>
+							</dl>
+							<br/><br/><br/><br/>
+							<a href="index.html">Back to Home</a><br/><br/>
+						</ul>
+					</ul>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
