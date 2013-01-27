@@ -1,166 +1,120 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ *
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
 package net.sourceforge.fullsync.ui;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.remote.RemoteManager;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import org.eclipse.swt.widgets.Button;
-/**
-* This code was generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* *************************************
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
-* for this machine, so Jigloo or this code cannot be used legally
-* for any corporate or commercial purpose.
-* *************************************
-*/
-public class ConnectionComposite extends org.eclipse.swt.widgets.Composite {
-	private Label label1;
-	private Label label2;
-	private Text textFieldPort;
-	private Button cbDisableRemoteListener;
-	private Text textPassword;
-	private Label label3;
+public class ConnectionComposite extends Composite {
 	private Text textFieldHostname;
+	private Text textFieldPort;
+	private Text textPassword;
+	private Button cbDisableRemoteListener;
 
-	/**
-	* Auto-generated main method to display this 
-	* org.eclipse.swt.widgets.Composite inside a new Shell.
-	*/
-	public static void main(String[] args) {
-		showGUI();
-	}
-		
-	/**
-	* Auto-generated method to display this 
-	* org.eclipse.swt.widgets.Composite inside a new Shell.
-	*/
-	public static void showGUI() {
-		Display display = Display.getDefault();
-		Shell shell = new Shell(display);
-		ConnectionComposite inst = new ConnectionComposite(shell, SWT.NULL);
-		Point size = inst.getSize();
-		shell.setLayout(new FillLayout());
-		shell.layout();
-		if(size.x == 0 && size.y == 0) {
-			inst.pack();
-			shell.pack();
-		} else {
-			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
-			int MENU_HEIGHT = 22;
-			if (shell.getMenuBar() != null)
-				shellBounds.height -= MENU_HEIGHT;
-			shell.setSize(shellBounds.width, shellBounds.height);
-		}
-		shell.open();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
-	}
-
-	public ConnectionComposite(org.eclipse.swt.widgets.Composite parent, int style) {
+	public ConnectionComposite(Composite parent, int style) {
 		super(parent, style);
-		initGUI();
-		postInitGUI();
-	}
+		GridLayout thisLayout = new GridLayout(2, false);
+		this.setLayout(thisLayout);
+		GridData gdata = new GridData();
+		gdata.grabExcessHorizontalSpace = true;
+		gdata.horizontalAlignment = SWT.FILL;
+		this.setLayoutData(gdata);
 
-	private void initGUI() {
-		try {
-			GridLayout thisLayout = new GridLayout();
-			this.setLayout(thisLayout);
-			thisLayout.numColumns = 2;
-			this.setSize(274, 139);
-			{
-				label1 = new Label(this, SWT.NONE);
-				label1.setText(Messages.getString("ConnectionComposite.Hostname")+":"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			{
-				textFieldHostname = new Text(this, SWT.BORDER);
-				textFieldHostname.setText("localhost"); //$NON-NLS-1$
-				GridData textFieldHostnameLData = new GridData();
-				textFieldHostnameLData.widthHint = 95;
-				textFieldHostnameLData.heightHint = 13;
-				textFieldHostnameLData.grabExcessHorizontalSpace = true;
-				textFieldHostname.setLayoutData(textFieldHostnameLData);
-			}
-			{
-				label2 = new Label(this, SWT.NONE);
-				label2.setText(Messages.getString("ConnectionComposite.Port")+":"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			{
-				textFieldPort = new Text(this, SWT.BORDER);
-				textFieldPort.setText("10000"); //$NON-NLS-1$
-				GridData textFieldPortLData = new GridData();
-				textFieldPortLData.widthHint = 34;
-				textFieldPortLData.heightHint = 13;
-				textFieldPort.setLayoutData(textFieldPortLData);
-			}
-			{
-				label3 = new Label(this, SWT.NONE);
-				label3.setText(Messages.getString("ConnectionComposite.Password")+":"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			{
-				textPassword = new Text(this, SWT.BORDER);
-				GridData textPasswordLData = new GridData();
-				textPasswordLData.widthHint = 95;
-				textPasswordLData.heightHint = 13;
-				textPasswordLData.grabExcessHorizontalSpace = true;
-				textPassword.setLayoutData(textPasswordLData);
-			}
-			{
-				cbDisableRemoteListener = new Button(this, SWT.CHECK | SWT.LEFT);
-				cbDisableRemoteListener
-					.setText(Messages.getString("ConnectionComposite.Disable_Indicator")); //$NON-NLS-1$
-				GridData cbDisableRemoteListenerLData = new GridData();
-				cbDisableRemoteListenerLData.horizontalSpan = 2;
-				cbDisableRemoteListener.setLayoutData(cbDisableRemoteListenerLData);
-			}
-			this.layout();
-		} catch (Exception e) {
-			ExceptionHandler.reportException( e );
-		}
-	}
+		// hostname
+		Label labelHostname = new Label(this, SWT.NONE);
+		labelHostname.setText(Messages.getString("ConnectionComposite.Hostname") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		textFieldHostname = new Text(this, SWT.BORDER);
+		textFieldHostname.setText("localhost"); //$NON-NLS-1$
+		GridData textFieldHostnameLData = new GridData();
+		textFieldHostnameLData.horizontalAlignment = SWT.FILL;
+		textFieldHostnameLData.grabExcessHorizontalSpace = true;
+		textFieldHostname.setLayoutData(textFieldHostnameLData);
 
-	private void postInitGUI() {
+		// port
+		Label labelPort = new Label(this, SWT.NONE);
+		labelPort.setText(Messages.getString("ConnectionComposite.Port") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		textFieldPort = new Text(this, SWT.BORDER);
+		textFieldPort.setText("10000"); //$NON-NLS-1$
+		GridData textFieldPortLData = new GridData();
+		textFieldPortLData.horizontalAlignment = SWT.FILL;
+		textFieldPortLData.grabExcessHorizontalSpace = true;
+		textFieldPort.setLayoutData(textFieldPortLData);
+
+		// password
+		Label labelPassword = new Label(this, SWT.NONE);
+		labelPassword.setText(Messages.getString("ConnectionComposite.Password") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		textPassword = new Text(this, SWT.BORDER);
+		GridData textPasswordLData = new GridData();
+		textPasswordLData.horizontalAlignment = SWT.FILL;
+		textPasswordLData.grabExcessHorizontalSpace = true;
+		textPassword.setLayoutData(textPasswordLData);
 		textPassword.setEchoChar('*');
+
+		// disable remote listener
+		cbDisableRemoteListener = new Button(this, SWT.CHECK | SWT.LEFT);
+		cbDisableRemoteListener.setText(Messages.getString("ConnectionComposite.Disable_Indicator")); //$NON-NLS-1$
+		GridData cbDisableRemoteListenerLData = new GridData();
+		cbDisableRemoteListenerLData.horizontalSpan = 2;
+		cbDisableRemoteListener.setLayoutData(cbDisableRemoteListenerLData);
+
+		this.layout();
 	}
-	
+
 	public void apply() {
 		String hostname = textFieldHostname.getText();
 		int port = 0;
 		try {
 			port = Integer.parseInt(textFieldPort.getText());
-		} catch (NumberFormatException e) {
 		}
-		
+		catch (NumberFormatException e) {
+			//FIXME: reject dialog and tell the user about
+		}
+
 		String password = textPassword.getText();
-		
+
 		boolean useRemoteListener = !cbDisableRemoteListener.getSelection();
-		
+
 		try {
-		    GuiController.getInstance().getProfileManager().stopScheduler();
+			GuiController.getInstance().getProfileManager().setRemoteConnected(true);
+			GuiController.getInstance().getProfileManager().stopScheduler();
 			RemoteManager remoteManager = new RemoteManager(hostname, port, password);
-			remoteManager.setUseRemoteListener(useRemoteListener);
-			GuiController.getInstance().getProfileManager().setRemoteConnection(remoteManager);
-			GuiController.getInstance().getSynchronizer().setRemoteConnection(remoteManager);
-		} catch (Exception e1) {
-			ExceptionHandler.reportException( Messages.getString("ConnectionComposite.Unable_To_Connect"), e1 ); //$NON-NLS-1$
+			if (!remoteManager.isConnectedToRemoteInstance()) {
+				remoteManager.setUseRemoteListener(useRemoteListener);
+				GuiController.getInstance().getProfileManager().setRemoteConnection(remoteManager);
+				GuiController.getInstance().getSynchronizer().setRemoteConnection(remoteManager);
+			}
+			else {
+				throw new Exception("The FullSync instance you tried to connect to is already connected to another FullSync instance");
+			}
+		}
+		catch (Exception e1) {
+			GuiController.getInstance().getProfileManager().setRemoteConnected(false);
+			ExceptionHandler.reportException(Messages.getString("ConnectionComposite.Unable_To_Connect"), e1); //$NON-NLS-1$
 		}
 	}
 }

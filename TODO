@@ -246,40 +246,33 @@ User reports:
 
 ---===[ to 0.9.2 Tasks ]====-----------------------------------------
 
-	[ ] sftp login seems to cripple password
+	[X] sftp login seems to cripple password
+		actually there seem to be other sftp auth mechanism
+		public key and host based auth implemented (pretty badly)
 	[ ] smb copies all files always
+	[X] make exception window resizeable
+	[X] preferences dialog does not set "autostart scheduler" checkbox
 	
 ---===[ to 0.10 Tasks ]====-------------------------------------------------
+
+Background Processes:
+	[ ] impl some dialog/composite showing all running processes
 
 Buffering:
 	[ ] write fs buffer file to bla+"_", delete existing and rename it
 	
-ConnectionDescription:
+FileSystem Abstraction:
+	[ ] reorder file system abstraction layer and 
+		impl FileOpen/DirOpen dialog for abstract filesystems
+	(ConnectionDescription:)
 	[ ] we need a better gui for connections where we can define
 	    different composites with different options for different
 	    connection descriptions
+	[ ] dont impl instable connection as base class but as wrapper
+		(so we are able to wrap every connection into an instable wrapper,
+		or better reconnect-on-error-wrapper)
 
-Bugs:
-	[ ] the infinite timeout seems to hang the app if the ftp thing
-		does not get any data (some silent disconnect?)
-	[ ] dirs with -s are not handled correctly on all ftp servers
-
-Small Things:
-	[ ] enable/disable certain menu items if not available
-	[ ] an icon to indicate fullsync is in remote listening mode (?)
-
-Linux:
-	[ ] popups of taskdecision dialog are pretty high (about twice the normal height)
-		guess it's as high as it is wide
-	[ ] some fonts are wrong: task decision: choose is smaller than source...
-		the latter one looks like a standard font
-	[ ] filter combo of task dec is too small (width)
-	[ ] nicelistview: all non bold fonts look rather large
-
-Remote:
-	[X] make gui mode listening for incoming connections
-	[ ] log remote connections (out and incoming)
-	[ ]	Improved security (crypted password and hidden inferfaces other than login)
+---===[ to 0.11 Tasks ]====-------------------------------------------------
 
 == Architecture Revamp ==
 
@@ -340,10 +333,32 @@ Sync Rules
 		
 ==========================
 
+Bugs:
+	[ ] the infinite timeout seems to hang the app if the ftp thing
+		does not get any data (some silent disconnect?)
+	[ ] dirs with -s are not handled correctly on all ftp servers
+
+Small Things:
+	[ ] enable/disable certain menu items if not available
+	[ ] an icon to indicate fullsync is in remote listening mode (?)
+
+Linux:
+	[ ] popups of taskdecision dialog are pretty high (about twice the normal height)
+		guess it's as high as it is wide
+	[ ] some fonts are wrong: task decision: choose is smaller than source...
+		the latter one looks like a standard font
+	[ ] filter combo of task dec is too small (width)
+	[ ] nicelistview: all non bold fonts look rather large
+
+Remote:
+	[X] make gui mode listening for incoming connections
+	[ ] log remote connections (out and incoming)
+	[ ]	Improved security (crypted password and hidden inferfaces other than login)
+
 Images:
-	[ ]	Add an ImageRepository loading all needed images
-		and being able to create compositions (and cache them)
-	[ ] Dispose all images we draw
+	[X]	Add an ImageRepository loading all needed images
+	[ ]	and being able to create compositions (and cache them)
+	[X] Dispose all images we draw
 	
 Dispose:
 	[ ] make sure all widgets get properly disposed (tableitems ?)
@@ -378,15 +393,22 @@ Distro:
    	[ ]	put logging.xml into jar as well
    	
 Gui:
-	[ ] split profile details into multiple panels activated by treeview
-	[ ]	fields for connections should depend on the chosen connection type
+	[X] split profile details into multiple panels activated by treeview
+	[X]	fields for connections should depend on the chosen connection type
 		so we don't need user/pw for local and could provide fields for
 		host, port, path and so on for ftp
 
 
----===[ to 0.11 Tasks ]====------------------------------------------------
-
 ---===[ to 1.0 Tasks ]====-------------------------------------------------
+
+Multitarget buffering:
+	[ ] nice name ;)... its just that the fact that you are not able
+		to use a buffered target in two different profiles is quite
+		annoying. it would be nice to be able to name the buffer
+		file differently or sth.
+
+FTP:
+	[ ] there must be a way to set times using UTIME command
 
 Logwindow
 	[ ] Show size of copied data
@@ -461,7 +483,7 @@ Logging:
         relevant modification times of both file versions.
 			
 Buffer:
-	[ ] test largefile handling (filesize > buffersize)
+	[X] test largefile handling (filesize > buffersize)
 	[ ] optimize largefile handling
 	[ ] create multithreaded direct-read delayed-write buffer-access
 	[ ] create multithreaded delayed-read delayed-write buffer-access
@@ -493,3 +515,9 @@ Directories handled as structure instead of file-like:
 	  to copy single changed files to the other side we need to make
 	  sure the dirs are created as well
 	- correct deletion of dirs
+
+
+---===[ Requests ]====------------------------------------------------------
+
+ [ ] Better backup, espec create date dir in destination like "/usr/local/foo/$DATE/..."
+		(Wolfgang)

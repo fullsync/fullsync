@@ -1,0 +1,214 @@
+<!doctype html>
+<!--
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA 02110-1301, USA.
+
+For information about the authors of this project Have a look
+at the AUTHORS file in the root of this project.
+-->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; encoding=utf-8"/>
+		<title>FullSync Manual</title>
+		<link href="style.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<div id="header">
+			<h1>FullSync</h1>
+			<span>Publishing, Backup, Synchronization</span>
+			<img alt="" src="pictures/FullSync-head-logo.png" />
+		</div>
+		<div id="menu">
+			<ul>
+				<li><a href="#getting-started">Getting Started</a></li>
+				<li><a href="#connection-types">Connection Types</a></li>
+				<li><a href="#rule-sets">Rule Sets</a></li>
+				<li><a href="#sync-types">Synchronization Types</a></li>
+				<li><a href="#windows">Windows</a>
+					<ul>
+						<li><a href="#windows-main-window">Main Window</a></li>
+						<li><a href="#windows-profile-details">Profile Details</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div id="content">
+			<h2 id="getting-started">Getting Started</h2>
+			<p>
+				Lets start by creating a simple profile which updates a destination directory
+				with changes in the source directory. For example, this is useful for updating
+				websites on remote locations with changes that were done on the local working
+				copy. Additionally, we will make the profile being executed at specific times.
+			</p>
+
+			<p>
+				First, you need to create a new profile. You will now see an empty
+				<a href="#windows-profile-details">Profile Details Window</a>.
+				Entering a name and an optional description, then choose the type,
+				for this example use <code>Publish/Update</code>.
+				<code>Publish/Update</code> will synchronize changes in just one direction,
+				from source to destination, as most of the currently provided types do.<br />
+				There are currently four types:
+				<ul>
+					<li>Publish/Update</li>
+					<li>Backup Copy</li>
+					<li>Exact Copy</li>
+					<li>Two Way Sync</li>
+				</ul>
+				For more details see <a href="#sync-types">here</a>.
+			</p>
+
+			<p>
+				Now change to the Source tab, where we will use a local directory as our source,
+				the protocol for local files is called <code>file</code>.
+				You can use the browse button to select a directory. On the destination tab
+				we select a directory which will be on a FTP-Server, so change the protocol to <code>ftp</code>
+				and fill in the displayed fields. You can use the browse dialog to select the directory as usual.
+				Alternatively you can of course also specify a local path here, if you want to.<br />
+				<a href="#connection-types">More about connection types</a>
+			</p>
+
+			<p>
+				On the next tab are a few options that allow you to exclude certain files from
+				the synchronization process. The defaults should be good enough for this example.
+				<!--a href="#rule-sets">more about Rule Sets</a-->
+			</p>
+
+			<p>
+				Now you can press "Ok" and run the profile. To additionally specify a scheduled
+				execution, simply edit the profile and select "Edit Scheduling". If you are used
+				to crontabs you can specify a crontab-like scheduling, or simply take the interval
+				execution. After accepting the new scheduling, enable this profile for scheduled
+				execution by checking the "Enabled" option and press "Ok". If you now enable the
+				scheduler by pressing the run button in the toolbar all scheduled projects will
+				be executed at their specific times.
+			</p>
+
+			<h2 id="connection-types">Connection Types</h2>
+			<p>
+				FullSync supports different file system types
+				as source and destination for synchronization.
+				Currently available are the following types:
+			</p>
+			<dl>
+				<dt>file</dt>
+				<dd>
+					Files and Directories on your Computer.
+				</dd>
+				<dt>ftp</dt>
+				<dd>
+					Access a remote server using ftp. Uses username and
+					password to authenticate.<br />
+					This is typicallly used for accessing Websites.
+				</dd>
+				<dt>sftp</dt>
+				<dd>
+					Access a remote server using sftp. Uses username and
+					password to authenticate. May also use Public key
+					authentication, including keys that require a passphrase.<br />
+					This is typically used to access Linux Servers.
+				</dd>
+				<dt>smb</dt>
+				<dd>
+					Access a computer using smb. Uses username and password
+					to authenticate. If you need to specify a domain, use
+					"username@domain" in the username field.<br />
+					This is typically used to access Windows shares.
+				</dd>
+			</dl>
+
+			<h2 id="rule-sets">Rule Sets</h2>
+			<!--p>
+				Currently there are two kinds of rule sets supported: simple
+				rule sets and advanced rule sets.
+			</p-->
+
+			<p>
+				The <b>Simple Rule Set</b> allows you to define a flexible set of conditions
+				that control which files and directories will be included or excluded
+				from the synchronization. The rules can use name, path, type, size,
+				modification date, or age to decide if the file or directory should be considered.
+			</p>
+
+			<h2 id="sync-types">Synchronization Types</h2>
+			<p>
+				You can synchronize two locations using one of the following
+				supported types:
+			</p>
+			<dl>
+				<dt>Publish/Update</dt>
+				<dd>
+					This is used to update a website from a local copy to a remote server.
+					It will apply changes to the destination but not the other way around. If a file
+					changed in the destination a warning will be generated so it is not overwritten
+					without your knowledge. Additional files in the destination will be ignored, deleted
+					files in source will also be deleted on the destination. Short: FullSync creates
+					an exact copy of the source and keeps track of what it uploaded so additional files
+					(like generated data or config files) in destination are not affected.
+				</dd>
+				<dt>Backup Copy</dt>
+				<dd>
+					Copies all changes in the source to destination but does not delete anything in
+					destination.
+				</dd>
+				<dt>Exact Copy</dt>
+				<dd>
+					Copies all changes in the source to destination including deletions.
+				</dd>
+				<dt>Two-Way Synchronization</dt>
+				<dd>
+					Compares two locations and copies newer files to the other side. <br />
+					BEWARE: it does not recognize changes on both sides! in this case,
+					the older file is overwritten and changes to it are lost!
+				</dd>
+			</dl>
+
+			<div id="windows"></div>
+
+			<h2 id="windows-main-window">Main Window</h2>
+			<p>
+				This window is the main window of FullSync.
+				It allows you to create, edit or delete profiles, run profiles
+				and choose which actions should be performed, enable and disable
+				the scheduler, edit properties and connect to other locations.
+			</p>
+			<img src="pictures/MainWindow.png" alt=""/>
+
+			<h2 id="windows-profile-details">Profile Details</h2>
+			<p>
+				In the profile details you can change properties of a specific
+				profile.
+			</p>
+			<img src="pictures/Profile_Details.png" alt=""/>
+			<p>
+				<a href="#sync-types">more about synchronization types</a><br/>
+			</p>
+
+			<img src="pictures/Profile_Details_dst.png" alt=""/>
+			<p>
+				<a href="#connection-types">more about connection types (used in source and destination)</a><br/>
+			</p>
+
+			<img src="pictures/Profile_Details_filters.png" alt=""/>
+			<p>
+				<a href="#rule-sets">more about Rule Sets</a>
+			</p>
+
+			<img src="pictures/Profile_Details_subdirs.png" alt=""/>
+
+			<div id="version">Version @VERSION@</div>
+		</div>
+	</body>
+</html>

@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="source"/>
-	<classpathentry kind="src" path="utils"/>
+	<classpathentry kind="src" path="lib-tests"/>
+	<classpathentry kind="src" path="images"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli.jar"/>
-	<classpathentry kind="lib" path="lib/commons-configuration.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
-	<classpathentry kind="lib" path="lib/commons-net.jar"/>
-	<classpathentry kind="lib" path="lib/j2ssh-core.jar"/>
-	<classpathentry kind="lib" path="lib/jakarta-oro.jar"/>
-	<classpathentry kind="lib" path="lib/log4j.jar"/>
-	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="lib/commons-net.jar" sourcepath="/windows/D/Christoph/Source/org.apache.commons.net/trunk/src/main/java"/>
 	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
-	<classpathentry kind="lib" path="lib/swt.jar"/>
 	<classpathentry kind="lib" path="lib/jcifs.jar"/>
+	<classpathentry kind="lib" path="lib/swtcalendar.jar"/>
+	<classpathentry kind="lib" path="lib/jsch.jar" sourcepath="/home/cobexer/projects/FullSync/Downloads/jsch-0.1.44"/>
+	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="lib/commons-configuration.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/commons-lang.jar"/>
+	<classpathentry kind="lib" path="lib/commons-vfs2-sandbox.jar" sourcepath="/home/cobexer/Source/org.apache.commons.vfs/trunk"/>
+	<classpathentry kind="lib" path="lib/commons-vfs2.jar" sourcepath="/home/cobexer/Source/org.apache.commons.vfs/trunk/core/src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/debug-SWT"/>
+	<classpathentry kind="lib" path="lib-tests/mvn-infix-junit-sshd.jar" sourcepath="lib-tests/mvn-infix-junit-sshd.jar"/>
+	<classpathentry kind="lib" path="lib-tests/j2ssh-common.jar"/>
+	<classpathentry kind="lib" path="lib-tests/j2ssh-core.jar" sourcepath="/home/cobexer/Source/j2ssh-fork.git/j2ssh-fork/src"/>
+	<classpathentry kind="lib" path="lib-tests/j2ssh-daemon.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-over-slf4j.jar"/>
+	<classpathentry kind="lib" path="lib-tests/MockFtpServer-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/jcl-over-slf4j.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.eclipse.swtbot.junit4_x_2.0.5.20111003_1754-3676ac8-dev-e36.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.eclipse.swtbot.swt.finder_2.0.5.20111003_1754-3676ac8-dev-e36.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.hamcrest_1.1.0.v20090501071000.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.hamcrest.integration_1.1.0.v20090501071000.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.hamcrest.library_1.1.0.v20090501071000.jar"/>
+	<classpathentry kind="lib" path="lib-tests/org.hamcrest.text_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

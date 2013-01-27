@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><umlet_diagram><element><type>com.umlet.element.base.Class</type><coordinates><x>10</x><y>20</y><w>240</w><h>210</h></coordinates><panel_attributes>PhaseLogic
+(extends ElementProcessedListener)
+--
+--
++initialize(): boolean
++prepareStart(): boolean
++process( Element ): boolean
++pause(): boolean
++resume(): boolean
++finish(): boolean
++cancel(): boolean
++addElementProcessedListener()
++removeElementProcessedListener()</panel_attributes><additional_attributes></additional_attributes></element></umlet_diagram>

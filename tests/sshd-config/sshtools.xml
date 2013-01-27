@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Java SSH API Configuration file -->
+<SshAPIConfiguration>
+  
+  <!-- The Cipher configuration, add or overide default cipher implementations -->
+  <CipherConfiguration>
+    <DefaultAlgorithm>blowfish-cbc</DefaultAlgorithm>
+  </CipherConfiguration>
+  <!-- The Message Authentication Code configuration, add or overide default mac implementations -->
+  <MacConfiguration>
+    <DefaultAlgorithm>hmac-md5</DefaultAlgorithm>
+  </MacConfiguration>
+  <!-- The Compression configuration, add or overide default compression implementations -->
+  <CompressionConfiguration>
+    <DefaultAlgorithm>none</DefaultAlgorithm>
+  </CompressionConfiguration>
+  <!-- The Public Key configuration, add or overide default public key implementations -->
+  <PublicKeyConfiguration>
+   <DefaultAlgorithm>ssh-dss</DefaultAlgorithm>
+   
+   <DefaultPublicFormat>SECSH-PublicKey-Base64Encoded</DefaultPublicFormat>
+   <DefaultPrivateFormat>SSHTools-PrivateKey-Base64Encoded</DefaultPrivateFormat>
+  </PublicKeyConfiguration>
+  <!-- The Authentication configuration, add or overide default authentication implementations  -->
+  <AuthenticationConfiguration>
+     
+  </AuthenticationConfiguration>
+  <!-- The Key Exchange configuration, add or overide default Key Exchange implementations -->
+  <KeyExchangeConfiguration>
+    <DefaultAlgorithm>diffie-hellman-group1-sha1</DefaultAlgorithm>
+  </KeyExchangeConfiguration>
+</SshAPIConfiguration>

@@ -1,37 +1,57 @@
 Versions of dependent libraries in distributions:
 
-commons-cli.jar				1.0		2004-11-06
-commons-collections.jar		3.1		2004-06-26	(in utils.jar)
-commons-configuration.jar	1.0		2004-10-12
-commons-lang.jar			2.0		2004-08-27	(in utils.jar)
-commons-logging.jar			1.0.4	2004-06-15
-commons-net.jar				1.3		2004-12-14
-j2ssh-core.jar				0.2.7	2003-12-07
-jakarta-oro.jar				2.0.8	2003-12-28
-jcifs.jar					1.1.7	2005-01-16
-log4j.jar					1.2.9	2004-11-01
-swt.jar						3.063	2004-??-??
-xercesImpl.jar+xml-apis.jar	2.6.2	2004-02-20
+                                                   YYYY-MM-DD
+ * commons-cli.jar               1.2               2009-03-19
+ * commons-collections.jar       3.2.1             2008-04-10
+ * commons-configuration.jar     1.6               2008-12-19
+ * commons-lang.jar              2.6               2011-01-12
+ * commons-net.jar               2.2               2010-11-17
+ * commons-vfs2.jar              2.0               2010-12-21
+ * commons-vfs2-sandbox.jar      2.0               2010-12-21
+ * j2ssh-core.jar                0.2.9             2007-09-07
+ * jakarta-oro.jar               2.0.8             2003-12-28
+ * jcifs.jar                     1.3.15            2010-10-07
+ * swt-*.jar                     3.738 (aka 3.7.1) 2011-09-10
+ * jsch.jar                      0.1.45            2011-11-01
+ * xercesImpl.jar                2.9.1             2007-09-15
+ * xml-apis.jar                  2.9.1             2007-09-15
+ * jcl-over-slf4j.jar            1.6.4             2011-10-31
+ * log4j-over-slf4j.jar          1.6.4             2011-10-31
+ * slf4j-api.jar                 1.6.4             2011-10-31
 
+Launcher:
+ * WinRun4J                      0.4.3             2011-09-18
+
+Used only by the tests (stored in lib-tests/):
+ * j2ssh-ant.jar                 svn rev 43        2011-04-14        from trunk
+ * j2ssh-common.jar              svn rev 43        2011-04-14        from trunk
+ * j2ssh-core.jar                svn rev 43        2011-04-14        from trunk
+ * j2ssh-daemon.jar              svn rev 43        2011-04-14        from trunk
+ * j2ssh-server.jar              svn rev 43        2011-04-14        from trunk
+ * mvn-infix-junit-sshd.jar      svn rev 112       2011-06-19        modified, .jar contains all sources it was built from
+ * SWTBot                        2.0.5             2011-10-03
+  * org.eclipse.swtbot.junit4_x_2.0.5.20111003_1754-3676ac8-dev-e36.jar
+  * org.eclipse.swtbot.swt.finder_2.0.5.20111003_1754-3676ac8-dev-e36.jar
+  * org.hamcrest.core_1.1.0.v20090501071000.jar
+  * org.hamcrest.integration_1.1.0.v20090501071000.jar
+  * org.hamcrest.library_1.1.0.v20090501071000.jar
+  * org.hamcrest.text_1.1.0.v20090501071000.jar
+  * org.hamcrest_1.1.0.v20090501071000.jar
 
 
 commons-cli.jar
 	Dependencies:
 		none
-
 	Used in:
 		initial startup of application
 
-
-commons-collections-3.1.jar (removed. all needed classes are available in utils.jar)
+commons-collections.jar
 	Dependencies:
 		none
-
 	Used by:
-		commons-configuration-1.0.jar
+		commons-configuration.jar
 
-
-commons-configuration-1.0.jar
+commons-configuration.jar
 	Dependencies:
 		*Core: Java 1.3, commons-collections, commons-lang
 		 ConfigurationFactory: commons-logging, commons-digester, JDK 1.4 or xml-apis
@@ -39,83 +59,92 @@ commons-configuration-1.0.jar
 		*XMLConfiguration, HierarchicalXMLConfiguration: Java 1.4 or (xml-apis + xerces)
 		 JNDIConfiguration: commons-logging
 		 ConfigurationDynaBean: commons-beanutils, commons-logging
-
 	Used in:
 		loading properties from file
 
-
-commons-lang-2.0.jar (removed. all needed classes are available in utils.jar)
+commons-lang.jar
 	Dependencies:
 		none
-
 	Used by:
-		commons-configuration-1.0.jar
-
+		commons-configuration.jar
 	Used in:
 		none
 
-
-commons-logging.jar
+commons-net.jar
 	Dependencies:
-		log4j-1.2.8.jar
-
-	Used by:
-		commons-configuration-1.0.jar
-
-	Used in:
-		none
-
-
-commons-net-1.2.2.jar
-	Dependencies:
-		jakarta-oro.jar (2.0.8)
-
+		jakarta-oro.jar
 	Used in:
 		net.sourceforge.fullsync.fs.connection.FtpConnection
 
-
 j2ssh-core.jar
 	Dependencies:
-		none ?
-
+		none
 	Used in:
 		net.sourceforge.fullsync.fs.connection.SftpConnection
 
-
-jakarta-oro-2.0.7.jar
+jakarta-oro.jar
 	Regular expressions
-
 	Dependencies:
 		none
-
 	Used by:
-		commons-net-1.2.2.jar
+		commons-net.jar
 
 jcifs.jar
 	Used in:
 		net.sourceforge.fullsync.fs.connection.SmbConnection
 
-log4j-1.2.8.jar
+swt-*.jar
 	Dependencies:
 		none
-
-	Used by:
-		commons-logging.jar
-		
-	Used in:
-		whole application
-		
-
-swt.jar
-	Dependencies:
-		none
-
 	Used in:
 		whole Gui
 	
+jsch.jar
+	Dependencies:
+		none
+	Used in:
+		net.sourceforge.fullsync.fs.connection.CommonsVfsConnection
+	
 
 xercesImpl.jar + xml-apis.jar
-
 	Used in:
 		direct xml reading/writing (Profiles, XmlProperties)
+
+jcl-over-slf4j.jar
+	Dependensies:
+		slf4j-api.jar
+	Provides:
+		org.apache.commons.logging
+
+log4j-over-slf4j.jar
+	Dependencies:
+		slf4j-api.jar
+	Provides:
+		org.apache.log4j
+
+slf4j-api.jar
+	Dependencies:
+		fullsync-logger.jar
+	Used in:
+		entire FullSync
+
+------------------------------------- TESTS ---------------------------------
+
+
+
+j2ssh-*.jar
+	Upstream:
+		http://j2ssh-fork.googlecode.com/svn
+	Dependencies:
+		each other
+	Used in:
+		mvn-infix-junit-sshd.jar
+	
+mvn-infix-junit-sshd.jar
+	Upstream:
+		https://mvn-infix.svn.sourceforge.net/svnroot/mvn-infix
+	Dependencies:
+		each other, j2ssh-*
+	Used in:
+		net.sourceforge.fullsync.SFTPConnectionTest
 

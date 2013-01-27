@@ -1,107 +1,107 @@
 <?xml version="1.0"?>
-<project name="FullSync" default="build" basedir="." >
-	
-	<property file="build.properties"/>
-	
+<project name="FullSync" default="build" basedir=".">
+
+	<property file="build.properties" />
+
 	<!-- Project Properties -->
-	<property name="name" 				value="FullSync"/>
-	<property name="project"			value="FullSync"/>
-	<property name="version"			value="0.9.1"/>
-	<property name="final.name"			value="${project}-${version}"/>
-	<property name="final-src.name"		value="${project}-${version}-src"/>
-
-	<property name="source.dir"			value="${basedir}/source" />
-	<property name="res.dir"			value="${basedir}/resources" />
-	<property name="build.dir"			value="${basedir}\build" />
-	<property name="build.lib.dir"		value="${build.dir}\lib" />
-	<property name="classes.dir"		value="${build.dir}/classes" />
-	<property name="dist.dir"			value="${basedir}/dist" />
-
-	<property name="utils.source.dir"	value="${basedir}/utils" />
-	<property name="utils.classes.dir"	value="${basedir}/utils-classes" />
-
-	<!-- External Tools Paths -->
-	<!-- need to be specified in the build.properties file
-	<property name="jsmooth.dir"		value="D:\Java\JSmooth 0.9.7"/>
-	<property name="izpack.dir" 		value="D:\Development\IzPack"/>
-	-->
-	
-	<property name="debug" 				value="on" />
-	
-	<taskdef name="jsmoothgen"
-		classname="net.charabia.jsmoothgen.ant.JSmoothGen"
-		classpath="${jsmooth.dir}\lib\jsmoothgen-ant.jar"/>
-
-	<taskdef name="izpack" 
-		classname="com.izforge.izpack.ant.IzPackTask"
-		classpath="${izpack.dir}/lib/compiler.jar"/>
+	<property name="project" value="FullSync" />
+	<property name="version" value="0.10.0" />
+	<property name="final.name" value="${project}-${version}" />
+	<property name="final-src.name" value="${project}-${version}-src" />
+	<property name="source.dir" value="${basedir}/source" />
+	<property name="tests.dir" value="${basedir}/tests" />
+	<property name="res.dir" value="${basedir}/resources" />
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="build.lib.dir" value="${build.dir}/lib" />
+	<property name="classes.dir" value="${build.dir}/classes" />
+	<property name="build-tests.dir" value="${basedir}/build-tests" />
+	<property name="classes-tests.dir" value="${build-tests.dir}/classes" />
+	<property name="dist.dir" value="${basedir}/dist" />
+	<property name="jar.copyright" value="Copyright (c) 2012 the ${project} Team" />
+	<property name="debug" value="on" />
+	<property name="java.source.version" value="1.6" />
+	<property name="java.target.version" value="1.6" />
 
 	<fileset id="dependentJars" dir="${basedir}/lib">
-		<include name="commons-cli.jar"/>
-		<include name="commons-configuration.jar"/>
-		<!-- <include name="commons-collections.jar"/> -->
-		<!-- <include name="commons-lang.jar"/> -->
-		<include name="commons-logging.jar"/>
-		<include name="commons-net.jar"/>
-		<include name="j2ssh-core.jar"/>
-		<include name="jakarta-oro.jar"/>
-		<include name="jcifs.jar"/>
-		<include name="log4j.jar"/>
-		<include name="swt.jar"/>
-		<include name="xercesImpl.jar"/>
-		<include name="xml-apis.jar"/>
+		<include name="commons-cli.jar" />
+		<include name="commons-configuration.jar" />
+		<include name="commons-collections.jar" />
+		<include name="commons-lang.jar" />
+		<include name="commons-net.jar" />
+		<include name="jakarta-oro.jar" />
+		<include name="jcifs.jar" />
+		<include name="slf4j-api.jar" />
+		<include name="log4j-over-slf4j.jar" />
+		<include name="jcl-over-slf4j.jar" />
+		<include name="fullsync-logger.jar" />
+		<!-- can't be done because the swt jar is added to the class path at runtime... -->
+		<!-- <include name="swt-*.jar"/> -->
+		<include name="xercesImpl.jar" />
+		<include name="xml-apis.jar" />
+		<include name="commons-vfs2.jar" />
+		<include name="commons-vfs2-sandbox.jar" />
+		<include name="jsch.jar" />
+		<include name="swtcalendar.jar" />
 	</fileset>
-	<path id="classpath">
-		<fileset refid="dependentJars"/>
+	<path id="compile.classpath">
+		<fileset refid="dependentJars" />
 		<pathelement location="${classes.dir}" />
-		<pathelement location="${build.lib.dir}/utils.jar" />
+		<!-- only used for compilation -->
+		<pathelement location="${build.lib.dir}/swt-gtk-linux-x86_64.jar" />
 	</path>
 
-	
+	<fileset id="dependentJars-tests" dir="${basedir}/lib-tests" includes="*.jar">
+	</fileset>
+
+	<path id="tests.classpath">
+		<path refid="compile.classpath" />
+		<fileset refid="dependentJars-tests" />
+		<pathelement location="${basedir}/tests" />
+		<pathelement location="${classes-tests.dir}" />
+		<pathelement location="/usr/share/java/junit4.jar"/>
+	</path>
+
 	<!-- Targets building a plain, working version into {build.dir} -->
 	<target name="detect" description="Display configuration and conditional compilation flags">
-		<echo message="--- ${name} ${version} Build ---"/>
+		<echo message="--- ${project} ${version} Build ---" />
 	</target>
 
-	<target name="jar-utils">
-		<delete dir="${utils.classes.dir}"/>
-		<mkdir dir="${utils.classes.dir}"/>
-		<javac debug="off" optimize="on" srcdir="${utils.source.dir}" destdir="${utils.classes.dir}"/>
-		<jar destfile="${build.lib.dir}/utils.jar">
-			<fileset dir="${utils.classes.dir}" includes="**/*"/>
-		</jar>
-		<delete dir="${utils.classes.dir}"/>
-	</target>
-				
-	<target name="clean" description="cleans project files" >
-		<delete dir="${build.dir}" /> 
+	<target name="clean" description="cleans project files">
+		<delete dir="${build.dir}" />
 		<delete dir="${dist.dir}" />
-		<delete dir="${classes.dir}"/>
+		<delete dir="${classes.dir}" />
 	</target>
 
-	<target name="compile" depends="jar-utils">
-		<mkdir dir="${classes.dir}"/>
-		<javac debug="${debug}" srcdir="${source.dir}" destdir="${classes.dir}" classpathref="classpath"/>
+	<target name="compile">
+		<mkdir dir="${classes.dir}" />
+		<javac debug="${debug}" srcdir="${source.dir}" destdir="${classes.dir}" classpathref="compile.classpath" includeantruntime="false" target="${java.target.version}" source="${java.source.version}" encoding="utf-8"/>
 		<copy todir="${classes.dir}">
 			<fileset dir="${source.dir}">
-				<include name="**/*.properties"/>
+				<include name="**/*.properties" />
 			</fileset>
 		</copy>
 	</target>
 
-    <target name="rmic">
-        <rmic classname="net.sourceforge.fullsync.remote.RemoteServer" base="${classes.dir}" classpathref="classpath"/>
-        <rmic classname="net.sourceforge.fullsync.remote.RemoteTaskFinishedListener" base="${classes.dir}" classpathref="classpath"/>
-        <rmic classname="net.sourceforge.fullsync.remote.RemoteProfileListChangeListener" base="${classes.dir}" classpathref="classpath"/>
-        <rmic classname="net.sourceforge.fullsync.remote.RemoteSchedulerChangeListener" base="${classes.dir}" classpathref="classpath"/>
-    </target>
+	<target name="compile-tests">
+		<mkdir dir="${classes-tests.dir}" />
+		<property name="classpath-debug" refid="tests.classpath"></property>
+		<echo>${classpath-debug}</echo>
+		<javac debug="${debug}" srcdir="${tests.dir}" destdir="${classes-tests.dir}" classpathref="tests.classpath" includeantruntime="true" target="${java.target.version}" source="${java.source.version}"/>
+	</target>
 
-    <target name="rmic-eclipse" description="RMIC compiler for classes used by the IDE">
-        <rmic classname="net.sourceforge.fullsync.remote.RemoteServer" base="${basedir}/classes" classpathref="classpath"/>
-        <rmic classname="net.sourceforge.fullsync.remote.RemoteTaskFinishedListener" base="${basedir}/classes" classpathref="classpath"/>
-        <rmic classname="net.sourceforge.fullsync.remote.RemoteProfileListChangeListener" base="${basedir}/classes" classpathref="classpath"/>
-        <rmic classname="net.sourceforge.fullsync.remote.RemoteSchedulerChangeListener" base="${basedir}/classes" classpathref="classpath"/>
-    </target>
+	<target name="rmic">
+		<rmic classname="net.sourceforge.fullsync.remote.RemoteServer" base="${classes.dir}" classpathref="compile.classpath" />
+		<rmic classname="net.sourceforge.fullsync.remote.RemoteTaskFinishedListener" base="${classes.dir}" classpathref="compile.classpath" />
+		<rmic classname="net.sourceforge.fullsync.remote.RemoteProfileListChangeListener" base="${classes.dir}" classpathref="compile.classpath" />
+		<rmic classname="net.sourceforge.fullsync.remote.RemoteSchedulerChangeListener" base="${classes.dir}" classpathref="compile.classpath" />
+	</target>
+
+	<target name="rmic-eclipse" description="RMIC compiler for classes used by the IDE">
+		<rmic classname="net.sourceforge.fullsync.remote.RemoteServer" base="${basedir}/classes" classpathref="compile.classpath" />
+		<rmic classname="net.sourceforge.fullsync.remote.RemoteTaskFinishedListener" base="${basedir}/classes" classpathref="compile.classpath" />
+		<rmic classname="net.sourceforge.fullsync.remote.RemoteProfileListChangeListener" base="${basedir}/classes" classpathref="compile.classpath" />
+		<rmic classname="net.sourceforge.fullsync.remote.RemoteSchedulerChangeListener" base="${basedir}/classes" classpathref="compile.classpath" />
+	</target>
 
 	<target name="javadoc">
 		<!--
@@ -113,12 +113,14 @@
 		</javadoc>
 		-->
 	</target>
-	
+
 	<target name="copy-libs">
-		<mkdir dir="${build.dir}"/>
-		<mkdir dir="${build.lib.dir}"/>
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.lib.dir}" />
 		<copy todir="${build.lib.dir}">
-			<fileset refid="dependentJars"></fileset>
+			<fileset refid="dependentJars">
+			</fileset>
+			<fileset dir="${basedir}/lib" includes="swt-*.jar" excludes="swt-*-debug.jar" />
 		</copy>
 	</target>
 
@@ -126,113 +128,104 @@
 		<echo>copy images, create logs dir and init logging.xml + README and co</echo>
 		<copy todir="${build.dir}/images">
 			<fileset dir="${basedir}/images">
-				<include name="*.*"/>
+				<include name="*.*" />
 			</fileset>
 		</copy>
-		<mkdir dir="${build.dir}/logs"/>
-		<copy file="${basedir}/resources/logging-dist.xml" tofile="${build.dir}/logging.xml"/>		
-		<copy file="${basedir}/resources/sample.syncrules" tofile="${build.dir}/sample.syncrules"/>				
-		<copy todir="${build.dir}">
-			<fileset dir="./resources">
-				<include name="**/*.manifest"/>
-			</fileset>
-			<fileset dir="./resources/swt-win32">
-				<include name="**/*.dll"/>
-			</fileset>
-		</copy>
-		<mkdir dir="${build.dir}/docs"/>
+		<copy file="${basedir}/resources/sample.syncrules" tofile="${build.dir}/sample.syncrules" />
+		<copy file="${basedir}/resources/fullsync.sh" tofile="${build.dir}/fullsync" />
+		<exec executable="/bin/chmod" osfamily="unix" >
+			<arg value="755"/>
+			<arg value="${build.dir}/fullsync"/>
+		</exec>
+		<copy file="${basedir}/resources/fullsync.exe" tofile="${build.dir}/fullsync.exe" />
+		<copy file="${basedir}/resources/fullsync.ini" tofile="${build.dir}/fullsync.ini" />
+		<copy file="${basedir}/resources/fullsync64.exe" tofile="${build.dir}/fullsync64.exe" />
+		<copy file="${basedir}/resources/fullsync64.ini" tofile="${build.dir}/fullsync64.ini" />
+		<copy file="${basedir}/resources/fullsync.desktop" tofile="${build.dir}/fullsync.desktop" />
+		<copy file="${basedir}/resources/images/fullsync.svg" tofile="${build.dir}/fullsync.svg" />
+		<mkdir dir="${build.dir}/docs" />
 		<copy todir="${build.dir}/docs">
 			<fileset dir="${basedir}/docs">
-				<include name="manual/**/*"/>
+				<include name="manual/**/*" />
 			</fileset>
 		</copy>
-		<copy file="${basedir}/CHANGELOG" tofile="${build.dir}/CHANGELOG"/>		
-		<copy file="${basedir}/LICENSE" tofile="${build.dir}/LICENSE"/>		
+		<replaceregexp match="@VERSION@" replace="${version}" flags="g" byline="true" file="${build.dir}/docs/manual/manual.html" />
+		<copy file="${basedir}/CHANGELOG" tofile="${build.dir}/CHANGELOG" />
+		<copy file="${basedir}/LICENSE" tofile="${build.dir}/LICENSE" />
 		<!-- copy readme and so on -->
 	</target>
 
 	<target name="jar" depends="compile, rmic, copy-libs">
-		<fileset dir="${build.lib.dir}" id="lib.dist.fileset">
-			<include name="**/*.jar"/>
-			<!-- add win swt lib -->
-		</fileset>
-		<pathconvert pathsep=" " property="dist.classpath" refid="lib.dist.fileset">
-			<map from="${build.lib.dir}" to=".\lib"/>
-		</pathconvert>
 		<jar destfile="${build.lib.dir}/fullsync.jar">
-			<fileset dir="${classes.dir}" includes="**/*"/>
+			<fileset dir="${classes.dir}" includes="net/**/*" excludes="net/sourceforge/fullsync/launcher/**/*" />
+			<fileset dir="${basedir}">
+				<include name="jar-copyright.txt" />
+				<include name="jar-special-thanks.txt" />
+			</fileset>
 			<manifest>
-				<attribute name="Main-Class" value="net.sourceforge.fullsync.Main"/>
-				<attribute name="Class-Path" value=". ${dist.classpath}"/>
+				<attribute name="License" value="GPLv2+" />
+				<attribute name="FullSync-Version" value="${version}" />
+				<attribute name="Copyright" value="${jar.copyright}" />
+				<!-- TODO: builddate,... -->
 			</manifest>
 		</jar>
 	</target>
-	
-	<target name="win32-exe" description="Create Exe-Stub for Win32 distro" depends="jar">
-		<jsmoothgen project="resources/fullsync.jsmooth" 
-		      skeletonroot="${jsmooth.dir}/skeletons" verbose="true"/>
-	</target>
-	
-	<target name="build" depends="detect, copy-libs, copy-resources, javadoc, jar, win32-exe">
+
+	<target name="logger-jar" depends="compile, rmic, copy-libs, jar">
+		<jar destfile="${build.lib.dir}/fullsync-logger.jar">
+			<fileset dir="${classes.dir}" includes="org/slf4j/impl/**/*" />
+			<manifest>
+				<attribute name="License" value="GPLv2+" />
+				<attribute name="FullSync-Version" value="${version}" />
+				<attribute name="Copyright" value="${jar.copyright}" />
+				<!-- TODO: builddate,... -->
+			</manifest>
+		</jar>
 	</target>
 
-	
+	<target name="launcher-jar" depends="compile">
+		<fileset dir="${build.lib.dir}" id="lib.dist.fileset">
+			<include name="**/*.jar" />
+			<exclude name="swt-*.jar" />
+		</fileset>
+		<pathconvert pathsep=" " property="dist.classpath" refid="lib.dist.fileset" dirsep="/">
+			<map from="${build.lib.dir}" to="./lib" />
+		</pathconvert>
+		<jar destfile="${build.dir}/launcher.jar">
+			<fileset dir="${classes.dir}" includes="net/sourceforge/fullsync/launcher/**/*" />
+			<fileset dir="${basedir}">
+				<include name="jar-copyright.txt" />
+				<include name="jar-special-thanks.txt" />
+			</fileset>
+			<manifest>
+				<attribute name="Main-Class" value="net.sourceforge.fullsync.launcher.Launcher" />
+				<attribute name="FullSync-Class-Path" value="${dist.classpath}" />
+				<attribute name="License" value="GPLv2+" />
+				<attribute name="FullSync-Version" value="${version}" />
+				<attribute name="Copyright" value="${jar.copyright}" />
+				<!-- TODO: builddate,... -->
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="build" depends="detect, clean, copy-libs, copy-resources, javadoc, jar, logger-jar, launcher-jar">
+	</target>
+
 	<!-- Targets creating different distribution versions -->
 	<target name="dist-zip" description="Builds a zipfile distribution" depends="build">
-    	<echo message="Building a zip distribution"/>
-
-		<mkdir dir="${dist.dir}"/>
-		<zip zipfile="${dist.dir}/FullSync-${version}.zip">
-			<fileset dir="${build.dir}">
-				<include name="**/*.*"/>
-				<include name="logs"/>
-				<exclude name="classes/**"/>
-				<exclude name="profiles.xml"/>
-			</fileset>
+		<echo message="Building a zip distribution" />
+		<mkdir dir="${dist.dir}" />
+		<zip zipfile="${dist.dir}/${final.name}.zip">
+			<zipfileset dir="${build.dir}" prefix="${project}-${version}" includes="**/*">
+				<exclude name="classes/**" />
+				<exclude name="profiles.xml" />
+			</zipfileset>
 		</zip>
 	</target>
-	
-    <target name="dist-installer" description="Builds an multiplatform installer distribution" depends="build">
-    	<echo message="Building a multi-platform installer distribution"/>
-    	<mkdir dir="${dist.dir}"/>
-        <izpack 
-        	input="${basedir}/resources/installer/install.xml"
-			output="${dist.dir}/FullSyncInstaller.jar"
-			installerType="standard"
-			basedir="${basedir}"
-			izPackDir="${izpack.dir}"/>
 
-        <jsmoothgen 
-        	project="${basedir}/resources/installer/FullSyncInstaller.jsmooth" 
-			skeletonroot="${jsmooth.dir}/skeletons" 
-        	verbose="true"/>
-    </target>
-	
-	<target name="dist-win32-installer" description="Create Windows installer" depends="build">
-		<echo message="Builds a Windows installer based on Nullsoft Installer"/>
-		<echo message="NSIS must be installed in the default directory"/>
-		<copy file="${nsis.installoptions.dll}" todir="${dist.dir}"/>
-		<copy file="${nsis.nsexec.dll}" todir="${dist.dir}"/>
-		<filter token="VERSION" value="${version}"/>
-		<copy todir="${dist.dir}/lib">
-			<fileset refid="dependentJars" />
-		</copy>
-		<copy file="${res.dir}/fullsync.nsi" tofile="${dist.dir}/fullsync.nsi" filtering="true"/>
-		<exec dir="${dist.dir}" executable="${nsis.exe}">
-			<arg value="/DNSISDIR=${nsis.home}"/>
-			<arg value="fullsync.nsi"/>
-		</exec>
-		<!--<move file="${tomcat.dist}/fullsync-installer.exe" tofile="${tomcat.release}/v${version}/bin/${final.name}.exe"/>-->
+	<target name="tests" depends="build, compile-tests">
+		<junit fork="true" printsummary="true" includeantruntime="true">
+			<classpath refid="tests.classpath"/>
+		</junit>
 	</target>
-
-	<target name="dist-all" depends="dist-zip, dist-installer">
-	</target>
-	
-	
-	<!-- Target running the project -->
-	<target name="run" depends="compile">
-		<java classname="net.sourceforge.fullsync.Main" classpathref="classpath" />
-	</target>
-	
-	
 </project>

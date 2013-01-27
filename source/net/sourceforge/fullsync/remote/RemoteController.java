@@ -1,4 +1,23 @@
 /*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ *
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
+/*
  * Created on Nov 23, 2004
  */
 package net.sourceforge.fullsync.remote;
@@ -19,75 +38,74 @@ import net.sourceforge.fullsync.Synchronizer;
  */
 public class RemoteController {
 
-	private static RemoteController _instance;
+	private static RemoteController instance;
 	private RemoteServer remoteServer;
 	private String serverURL;
 	private int port;
 	private String password;
 	private boolean isActive = false;
-	
+
 	private Registry registry = null;
-	
+
 	public static RemoteController getInstance() {
-		if (_instance == null) {
-			_instance = new RemoteController();
+		if (instance == null) {
+			instance = new RemoteController();
 		}
-		return _instance;
+		return instance;
 	}
-	
-	public void startServer(int port, String password, ProfileManager profileManager, Synchronizer sync) 
-		throws RemoteException 
-	{
-		try {		
+
+	public void startServer(int port, String password, ProfileManager profileManager, Synchronizer sync) throws RemoteException {
+		try {
 			this.port = port;
-			serverURL = "rmi://localhost:"+port+"/FullSync";
+			serverURL = "rmi://localhost:" + port + "/FullSync";
 			this.password = password;
-			
+
 			if (remoteServer == null) {
 				remoteServer = new RemoteServer(profileManager, sync);
 				remoteServer.setPassword(password);
 			}
-			
+
 			if (registry == null) {
 				registry = LocateRegistry.createRegistry(port);
 			}
-			
+
 			Naming.rebind(serverURL, remoteServer);
 			isActive = true;
-		} catch (MalformedURLException e) {
-			ExceptionHandler.reportException( e );
+		}
+		catch (MalformedURLException e) {
+			ExceptionHandler.reportException(e);
 		}
 	}
-	
-	public void stopServer() 
-		throws RemoteException 
-	{
+
+	public void stopServer() throws RemoteException {
 		if (!isActive) {
 			return;
 		}
-		
+
 		try {
 			Naming.unbind(serverURL);
 			isActive = false;
-		} catch (MalformedURLException e) {
-			ExceptionHandler.reportException( e );
-		} catch (NotBoundException e) {
-			ExceptionHandler.reportException( e );
+		}
+		catch (MalformedURLException e) {
+			ExceptionHandler.reportException(e);
+		}
+		catch (NotBoundException e) {
+			ExceptionHandler.reportException(e);
 		}
 	}
-	
+
 	public boolean isActive() {
 		return isActive;
 	}
-	
+
 	public int getPort() {
-		return port;	
+		return port;
 	}
-	
+
 	public String getPassword() {
 		return password;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 		remoteServer.setPassword(password);
