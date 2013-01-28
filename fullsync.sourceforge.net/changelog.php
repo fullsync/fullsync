@@ -2,25 +2,14 @@
 	include( "html.php" );
 	HtmlHeader( "Press Releases" );
 ?>
-	<h1>Press Releases</h1>
-
-<?php 
-	$f = fopen( "http://cvs.sourceforge.net/viewcvs.py/fullsync/FullSync/CHANGELOG?view=markup", "r" );
-	$doPrint = 0;
-	while( $line = fgets( $f, 10000 ) )
-	{
-		if( substr( $line, 0, 6 ) == "</pre>" && $doPrint == 2 ) {
-			$doPrint = 0;
-		} else if( $doPrint == 2 ) {
-			print $line;
-		} else if( substr( $line, 0, 5 ) == "<pre>" ) {
-			$doPrint++;
-			if( $doPrint == 2 )
-			print substr( $line, 5 );
+	<h2>FullSync Changelog</h2>
+	<ol>
+<?php
+		$versions = getVersions(0);
+		foreach ($versions as $v) {
+			echo "\t\t<li>Version ${v[version]} (${v[releaseDate]}):<br />${v[changes]}</li>\n";
 		}
-	}
-	fclose( $f );
 ?>
-
+	</ol>
 <?php
 	HtmlFooter();

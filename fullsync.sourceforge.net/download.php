@@ -1,7 +1,8 @@
 <?php
 	include( "html.php" );
 	HtmlHeader( "Download" );
-	$version = '0.10.0';
+	$version = getVersions(1);
+	$version = $version[0]['version'];
 ?>
 	<h1>Download FullSync</h1>
 
@@ -25,7 +26,7 @@
 	<p>
 		The source code of FullSync Version <?php echo $version; ?> can be obtained here:
 		<a href="http://sourceforge.net/projects/fullsync/files/FullSync%20<?php echo $version; ?>/FullSync-<?php echo $version; ?>-src.tar.gz/download">FullSync-<?php echo $version; ?>-src.tar.gz</a><br />
-		To access the FullSync SVN repository head over to <a href="http://sourceforge.net/scm/?type=svn&amp;group_id=115436">here</a>.
+		To access the FullSync Source repository head over to <a href="http://sourceforge.net/p/fullsync/git/">here</a>.
 	</p>
 
 	<h2>Older versions</h2>
