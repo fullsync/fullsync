@@ -31,7 +31,7 @@
 
 	<h2>Older versions</h2>
 	<p>
-		You can get older versions of FullSync from <a href="http://sourceforge.net/projects/fullsync/files/">http://sourceforge.net/projects/fullsync/files/</a>.
+		You can get older versions of FullSync from <a href="http://sourceforge.net/projects/fullsync/files/">the download archive</a>.
 	</p>
 
 <?php

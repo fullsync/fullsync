@@ -87,6 +87,7 @@ function HtmlHeader( $caption ) {
 				<!-- <a href="donate.php">Donate</a> -->
 				<a href="docs.php">Documentation</a>
 				<a href="download.php">Download</a>
+				<a href="contribute.php">Contribute</a>
 				<a href="press.php">In The Press</a>
 			</div>
 			<div id="content">
