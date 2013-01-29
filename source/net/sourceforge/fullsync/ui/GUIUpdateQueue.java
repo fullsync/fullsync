@@ -47,7 +47,7 @@ public class GUIUpdateQueue<Item> {
 				@Override
 				public void run() {
 					m_updateScheduled.set(false);
-					LinkedList<Item> items = new LinkedList<>();
+					LinkedList<Item> items = new LinkedList<Item>();
 					Item item;
 					while(null != (item = m_queue.poll())) {
 						items.add(item);
