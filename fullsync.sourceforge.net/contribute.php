@@ -1,6 +1,6 @@
 <?php
-	include( "html.php" );
-	HtmlHeader( "Contribute" );
+	include("html.php");
+	HtmlHeader("Contribute", 'help-banner');
 ?>
 	<h1>Contribute to FullSync</h1>
 	FullSync is looking for:<br />

@@ -6,4 +6,3 @@
 	<a href="index.php">&lt;&lt; Back to Home</a><br/><br/>
 <?php
 	HtmlFooter();
-?>

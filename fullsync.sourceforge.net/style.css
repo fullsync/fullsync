@@ -126,6 +126,19 @@ span.donateIcon {
 	content: "";
 }
 
+#help-banner {
+	text-align: center;
+	padding: 1em;
+	background-color: white;
+}
+
+#help-banner div {
+	border: 1px solid black;
+	padding: 1em;
+	border-radius: .6em;
+	background-color: #C1CCD6;
+}
+
 #content {
 	background-color: #fff;
 	padding: 1em;

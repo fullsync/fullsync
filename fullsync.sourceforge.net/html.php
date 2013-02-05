@@ -63,7 +63,7 @@ function getVersions($count) {
 	return $versions;
 }
 
-function HtmlHeader( $caption ) {
+function HtmlHeader($caption, $skip) {
 ?>
 <!doctype html>
 <html>
@@ -90,6 +90,13 @@ function HtmlHeader( $caption ) {
 				<a href="contribute.php">Contribute</a>
 				<a href="press.php">In The Press</a>
 			</div>
+<?php if ('help-banner' !== $skip) { ?>
+			<div id="help-banner">
+				<div>
+					FullSync is looking for you! Check out the <a href="contribute.php">Contribute</a> page for more infos!
+				</div>
+			</div>
+<?php } ?>
 			<div id="content">
 <?php
 }

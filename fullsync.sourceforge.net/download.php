@@ -8,8 +8,8 @@
 
 	<h2>for Windows</h2>
 	<p>
-		Tested with Windows XP, and Windows 7. Java must be installed, you can get it at <a href="http://www.java.com/">www.java.com</a>
-		<a href="http://sourceforge.net/projects/fullsync/files/FullSync%20<?php echo $version; ?>/FullSync-<?php echo $version; ?>-Windows.msi/download">Download FullSync for Windows</a>
+		Tested with Windows XP, and Windows 7. <a href="http://sourceforge.net/projects/fullsync/files/FullSync%20<?php echo $version; ?>/FullSync-<?php echo $version; ?>-Windows.msi/download">Download FullSync for Windows</a><br />
+		Java must be installed, you can get it at <a href="http://www.java.com/">www.java.com</a>
 	</p>
 
 	<h2>for Linux</h2>
