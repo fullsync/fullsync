@@ -125,7 +125,7 @@
 	</target>
 
 	<target name="copy-resources">
-		<echo>copy images, create logs dir and init logging.xml + README and co</echo>
+		<echo>copy images, README and so on</echo>
 		<copy todir="${build.dir}/images">
 			<fileset dir="${basedir}/images">
 				<include name="*.*" />
@@ -210,14 +210,40 @@
 	<target name="build" depends="detect, clean, copy-libs, copy-resources, javadoc, jar, logger-jar, launcher-jar">
 	</target>
 
-	<!-- Targets creating different distribution versions -->
-	<target name="dist-zip" description="Builds a zipfile distribution" depends="build">
-		<echo message="Building a zip distribution" />
+	<target name="dist" description="creates a zip and tar.gz files ready for distribution" depends="build">
 		<mkdir dir="${dist.dir}" />
-		<zip zipfile="${dist.dir}/${final.name}.zip">
+		<tar destfile="${dist.dir}/${final.name}-linux.tar.gz" compression="gzip">
+			<tarfileset dir="${build.dir}" prefix="${project}-${version}" includes="**/*">
+				<exclude name="classes/**" />
+				<exclude name="fullsync" />
+				<exclude name="lib/swt-cocoa-*" />
+				<exclude name="lib/swt-win32-*" />
+				<exclude name="*.exe" />
+				<exclude name="*.ini" />
+			</tarfileset>
+			<tarfileset dir="${build.dir}" prefix="${project}-${version}" mode="755">
+				<include name="fullsync"/>
+			</tarfileset>
+		</tar>
+		<tar destfile="${dist.dir}/${final.name}-mac.tar.gz" compression="gzip">
+			<tarfileset dir="${build.dir}" prefix="${project}-${version}" includes="**/*">
+				<exclude name="classes/**" />
+				<exclude name="fullsync" />
+				<exclude name="lib/swt-gtk-*" />
+				<exclude name="lib/swt-win32-*" />
+				<exclude name="*.exe" />
+				<exclude name="*.ini" />
+			</tarfileset>
+			<tarfileset dir="${build.dir}" prefix="${project}-${version}" mode="755">
+				<include name="fullsync"/>
+			</tarfileset>
+		</tar>
+		<zip zipfile="${dist.dir}/${final.name}-win.zip">
 			<zipfileset dir="${build.dir}" prefix="${project}-${version}" includes="**/*">
 				<exclude name="classes/**" />
-				<exclude name="profiles.xml" />
+				<exclude name="fullsync" />
+				<exclude name="lib/swt-cocoa-*" />
+				<exclude name="lib/swt-gtk-*" />
 			</zipfileset>
 		</zip>
 	</target>
