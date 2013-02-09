@@ -1,9 +1,12 @@
+@charset "utf-8";
 body {
 	font-size: 13pt;
 	color: #000000;
 	font-family: Verdana, Arial, Helvetica;
 	background-color: #f0f0f0;
 	padding: 1em;
+	margin: 0 auto;
+	width: 900px;
 }
 
 a {
@@ -76,25 +79,17 @@ span.donateIcon {
 	display: block;
 }
 
-#wrapper {
-	width: 900px;
-	margin: 0 auto;
-}
-
 #header {
 	display: block;
 	background-color: #C1CCD6;
-	padding: 1em;
+	padding: .3em 1em;
 	position: relative;
 	border-top-left-radius: 8px;
 	border-top-right-radius: 8px;
 }
 
 #header img {
-	position: absolute;
-	top: 50%;
-	right: 1em;
-	margin-top: -36px;
+	float: right;
 }
 
 #header h1 {
@@ -128,13 +123,13 @@ span.donateIcon {
 
 #help-banner {
 	text-align: center;
-	padding: 1em;
+	padding: .5em;
 	background-color: white;
 }
 
 #help-banner div {
 	border: 1px solid black;
-	padding: 1em;
+	padding: .5em;
 	border-radius: .6em;
 	background-color: #C1CCD6;
 }

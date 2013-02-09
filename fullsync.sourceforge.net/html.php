@@ -74,43 +74,41 @@ function HtmlHeader($caption, $skip) {
 		<link rel="shortcut icon" href="favicon.ico" />
 	</head>
 	<body>
-		<div id="wrapper">
-			<div id="header">
-				<img alt="" src="img/fullsync72.png" />
-				<h1>FullSync</h1>
-				<span>Publishing, Backup, Synchronization</span>
-			</div>
-			<div id="menu">
-				<a href="index.php">Home</a>
-				<a href="features.php">Features</a>
-				<a href="screenshots.php">Screenshots</a>
-				<!-- <a href="donate.php">Donate</a> -->
-				<a href="docs.php">Documentation</a>
-				<a href="download.php">Download</a>
-				<a href="contribute.php">Contribute</a>
-				<a href="press.php">In The Press</a>
-			</div>
+		<div id="header">
+			<img alt="" src="img/fullsync72.png" />
+			<h1>FullSync</h1>
+			<span>Publishing, Backup, Synchronization</span>
+		</div>
+		<div id="menu">
+			<a href="index.php">Home</a>
+			<a href="features.php">Features</a>
+			<a href="screenshots.php">Screenshots</a>
+			<!-- <a href="donate.php">Donate</a> -->
+			<a href="docs.php">Documentation</a>
+			<a href="download.php">Download</a>
+			<a href="contribute.php">Contribute</a>
+			<a href="press.php">In The Press</a>
+		</div>
 <?php if ('help-banner' !== $skip) { ?>
-			<div id="help-banner">
-				<div>
-					FullSync is looking for you! Check out the <a href="contribute.php">Contribute</a> page for more infos!
-				</div>
+		<div id="help-banner">
+			<div>
+				FullSync is looking for you! Check out the <a href="contribute.php">Contribute</a> page for more infos!
 			</div>
+		</div>
 <?php } ?>
-			<div id="content">
+		<div id="content">
 <?php
 }
 
 function HtmlFooter() {
 ?>
-				<a href="download.php" id="global-download-button">Get it now!</a>
-				<div id="footer-copyright">
-					<span style="font-size: 10pt; color: #999999;">Copyright &copy; 2004-2013 The FullSync Authors. All Rights Reserved.</span>
-					<a href="http://sourceforge.net" style="float: right;"><img src="http://sourceforge.net/sflogo.php?group_id=115436&amp;type=1" alt="SourceForge Logo"/></a>
-				</div>
+			<a href="download.php" id="global-download-button">Get it now!</a>
+			<div id="footer-copyright">
+				<span style="font-size: 10pt; color: #999999;">Copyright &copy; 2004-2013 The FullSync Authors. All Rights Reserved.</span>
+				<a href="http://sourceforge.net" style="float: right;"><img src="http://sourceforge.net/sflogo.php?group_id=115436&amp;type=1" alt="SourceForge Logo"/></a>
 			</div>
-			<div id="footer"> </div>
 		</div>
+		<div id="footer"> </div>
 	</body>
 </html>
 <?php

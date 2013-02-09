@@ -49,7 +49,7 @@ foreach($screenshots as $version) {
 	}
 	echo "<h3>Version ${version['major']}.${version['minor']}.${version['patch']}</h3>";
 	foreach($version['screenshots'] as $s => $desc) {
-		echo '<img src="' . ${s} . '" /><br />';
+		echo '<img src="' . $s . '" /><br />';
 		if ($desc) {
 			echo $desc . "<br />";
 		}
