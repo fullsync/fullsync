@@ -1,5 +1,5 @@
 Copyright (c) 2005 Jan Kopcsek. All Rights Reserved.
-Copyright (c) 2012 Christoph Obexer. All Rights Reserved.
+Copyright (c) 2013 Christoph Obexer. All Rights Reserved.
 
 Jan Kopcsek, Project Admin and Developer
 Michele Aiello, Developer
