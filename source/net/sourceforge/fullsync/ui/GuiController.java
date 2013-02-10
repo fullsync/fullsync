@@ -72,7 +72,7 @@ public class GuiController implements Runnable {
 			Rectangle shellBounds = mainShell.computeTrim(0, 0, mainWindow.getSize().x, mainWindow.getSize().y);
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText("FullSync"); //$NON-NLS-1$
-			mainShell.setImage(getImage("fullsync.ico")); //$NON-NLS-1$
+			mainShell.setImage(getImage("fullsync48.png")); //$NON-NLS-1$
 			if (!minimized) {
 				mainShell.setVisible(true);
 			}
