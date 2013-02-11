@@ -13,3 +13,7 @@
 *.PDF	   diff=astextplain
 *.rtf	   diff=astextplain
 *.RTF	   diff=astextplain
+
+# files that need LF as EOL character
+*.spec     eol=lf
+*.sh       eol=lf
