@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<title>FullSync Manual - Getting Started</title>
+		<link href="style.css" rel="Stylesheet" type="text/css">
+	</head>
+	<body>
+		<table width="640">
+			<tr>
+				<td>
+					<br/>
+					<ul>
+						<p style="font-size: 24"><b>FullSync Manual</b> - Getting Started</p><br>
+						<ul>
+							<p>
+							We will start creating a simple profile which updates a destination directory
+							with changes in the source directory. For example, this is useful for updating
+							websites on remote locations with changes that were done on the local working
+							copy. Additionally, we will make the profile being executed at specific times.
+							</p>
+							
+							<p>
+							First, you need to create a new and empty profile. You will now see an empty
+							<a href="Windows_ProfileDetails.html">Profile Details Window</a>. After entering
+							a name you have to specify the source and destination locations. As source
+							we will use a local directory, so you can use the browse button. The destination
+							will be an ftp url, which should look like this: 
+							<code>ftp://your.domain.com/relative/path</code> where the 'relative path' is the
+							path needed to navigate to the destination path after logging in. So if you are
+							unsure what to enter, simply connect to the ftp site with your standard ftp
+							tool and find out what lies between the startup (default) directory and the
+							directory you want to be the destination. After that, enter the username and password.
+							Alternatively you can also specify a local path here, if you want to.<br>
+							<a href="ConnectionTypes.html">more about connection types</a>
+							</p>
+							
+							<p>
+							Now that the source and destination are given you will need to define in which
+							way you want those two locations to be synchronized. In this example we will use
+							Publish/Update, which will synchronize in just one direction, from source to 
+							destination, as most of the currently provided types do.
+							Alternatively you can use Backup Copy or Exact Copy which have slightly different
+							behaviours that are shortly described in a text besides. <br>
+							<a href="SynchronizationTypes.html">more about synchronization types</a>
+							</p>
+
+							<p>
+							The last thing is defining the ruleset. Just select the simple rule set, activate
+							"Sync Subdirectories" and that's it. <br>
+							<a href="RuleSets.html">more about rulesets</a>
+							</p>
+
+							<p>
+							Now you can press "ok" and run the profile. To additionally specify a scheduled
+							execution, simply edit the profile and select "Edit Scheduling". If you are used
+							to crontabs you can specify a crontab-like scheduling, or simply take the interval
+							execution. After accepting the new scheduling, enable this profile for scheduled
+							execution by checking the "Enabled" option and press "ok". If you now enable the
+							scheduler by pressing the run button in the toolbar all scheduled projects will
+							be executed at their specific times.
+							</p>
+
+							<br/><br/>
+							<a href="index.html">Back to Home</a><br/><br/>
+						</ul>
+					</ul>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

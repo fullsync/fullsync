@@ -1,0 +1,105 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background-color: #f0f0f0;
+	font-size: 1em;
+	color: #000000;
+	font-family: Verdana;
+}
+#header {
+	height: 5em;
+	border-bottom: 1px solid black;
+	position: relative;
+	background-color: #C1CCD6;
+	text-align: center;
+	top: -1px;
+}
+#header > h1 {
+	color: #1F5C79;
+	font-size: 35pt;
+}
+#header > span {
+	font-size: 80%;
+}
+#header > img {
+	position: absolute;
+	right: 2em;
+	top : 50%;
+	margin-top: -35.5px;
+}
+
+#menu {
+	line-height: 1.5em;
+	position: absolute;
+	left: 0;
+	top: 5em;
+	overflow: auto;
+	width: 17em;
+	bottom: 0;
+}
+
+#menu ul {
+	margin-left: 1em;
+	list-style: disc;
+	list-style-position: inside;
+}
+
+#menu > ul {
+	margin-bottom: 2em;
+}
+
+#content {
+	position: absolute;
+	left: 17em;
+	top: 5em;
+	right: 0;
+	bottom: 0;
+	border-left: 1px solid black;
+	overflow: auto;
+}
+
+#content h2 {
+	padding: 1em .5em 1.5em .5em;
+}
+
+#content p {
+	padding: .4em .5em;
+	margin-bottom: 1.5em;
+}
+
+#content img {
+	padding: .2em;
+}
+
+#content dl, #content dd {
+	margin-left: 1.5em;
+	margin-bottom: 1em;
+}
+
+#content ul {
+	margin-left: 1em;
+	list-style: disc;
+	list-style-position: outside;
+}
+
+#version {
+	text-align: center;
+	font-size: 70%;
+}
+
+a, a:link, a:visited, a:active {
+	color: #003366;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #336699;
+}
+
+#content a {
+	font-weight: bold;
+	text-decoration: underline;
+}

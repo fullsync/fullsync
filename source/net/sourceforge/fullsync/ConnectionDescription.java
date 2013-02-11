@@ -37,6 +37,9 @@ import org.w3c.dom.NodeList;
 public class ConnectionDescription implements Serializable {
 	private static final long serialVersionUID = 2L;
 
+	public static final String PARAMETER_USERNAME = "username";
+	public static final String PARAMETER_PASSWORD = "password";
+
 	private URI uri = null;
 	private Hashtable<String, String> parameters = new Hashtable<String, String>();
 	private Hashtable<String, String> secretParameters = new Hashtable<String, String>();
@@ -46,8 +49,8 @@ public class ConnectionDescription implements Serializable {
 		Element elem = doc.createElement(name);
 		elem.setAttribute("uri", uri.toString());
 		for (String key : parameters.keySet()) {
-			if ("username".equals(key)) {
-				elem.setAttribute("username", parameters.get(key));
+			if (PARAMETER_USERNAME.equals(key)) {
+				elem.setAttribute(PARAMETER_USERNAME, parameters.get(key));
 			}
 			else if ("bufferStrategy".equals(key)) {
 				elem.setAttribute("buffer", parameters.get(key));
@@ -60,8 +63,8 @@ public class ConnectionDescription implements Serializable {
 			}
 		}
 		for (String key : secretParameters.keySet()) {
-			if ("password".equals(key)) {
-				elem.setAttribute("password", secretParameters.get(key));
+			if (PARAMETER_PASSWORD.equals(key)) {
+				elem.setAttribute(PARAMETER_PASSWORD, secretParameters.get(key));
 			}
 			else {
 				Element p = doc.createElement("SecretParam");
@@ -82,8 +85,8 @@ public class ConnectionDescription implements Serializable {
 			e1.printStackTrace();
 		}
 		desc.parameters.put("bufferStrategy", element.getAttribute("buffer"));
-		desc.parameters.put("username", element.getAttribute("username"));
-		desc.secretParameters.put("password", element.getAttribute("password"));
+		desc.parameters.put(PARAMETER_USERNAME, element.getAttribute(PARAMETER_USERNAME));
+		desc.secretParameters.put(PARAMETER_PASSWORD, element.getAttribute(PARAMETER_PASSWORD));
 
 		NodeList list = element.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {

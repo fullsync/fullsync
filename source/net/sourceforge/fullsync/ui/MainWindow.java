@@ -378,7 +378,7 @@ TaskGenerationListener, SchedulerChangeListener {
 
 					connectItem.setEnabled(true);
 					disconnectItem.setEnabled(false);
-					gc.getMainShell().setImage(gc.getImage("FullSync.png")); //$NON-NLS-1$
+					gc.getMainShell().setImage(gc.getImage("fullsync48.png")); //$NON-NLS-1$
 				}
 			}
 		});

@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
@@ -189,32 +190,40 @@ public class TaskDecisionPage extends WizardDialog {
 						}
 					});
 
+					final GUIUpdateQueue<TaskFinishedEvent> updateQueue = new GUIUpdateQueue<TaskFinishedEvent>(display, new GUIUpdateQueue.GUIUpdateTask<TaskFinishedEvent>(){
+						@Override
+						public void doUpdate(Display display, LinkedList<TaskFinishedEvent> items) {
+							TableItem item = null;
+							System.err.println("GUIUpdateQueue<TaskFinishedEvent>::doUpdate: " + items.size());
+							for (TaskFinishedEvent event : items) {
+								tasksFinished++;
+								// TODO: move this into one translatable string with arguments
+								labelProgress
+									.setText(tasksFinished
+											+ " " + Messages.getString("TaskDecisionPage.of") + " " + tasksTotal + " " + Messages.getString("TaskDecisionPage.tasksFinished")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+								Task task = event.getTask();
+								item = list.getTableItemForTask(task);
+								// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item
+								// the item is colored with the "successful" color.
+								if (item != null) {
+									if (event.isSuccessful()) {
+										item.setBackground(colorFinishedSuccessful);
+									}
+									else {
+										item.setBackground(colorFinishedUnsuccessful);
+									}
+								}
+							}
+							if (null != item) {
+								list.showItem(item);
+							}
+						}
+					});
+
 					synchronizer.performActions(taskTree, new TaskFinishedListener() {
 						@Override
 						public void taskFinished(final TaskFinishedEvent event) {
-							display.asyncExec(new Runnable() {
-								@Override
-								public void run() {
-									tasksFinished++;
-									// TODO: move this into one translatable string with arguments
-									labelProgress
-									.setText(tasksFinished
-											+ " " + Messages.getString("TaskDecisionPage.of") + " " + tasksTotal + " " + Messages.getString("TaskDecisionPage.tasksFinished")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-									Task task = event.getTask();
-									TableItem item = list.getTableItemForTask(task);
-									// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item
-									// the item is colored with the "successful" color.
-									if (item != null) {
-										if (event.isSuccessful()) {
-											item.setBackground(colorFinishedSuccessful);
-										}
-										else {
-											item.setBackground(colorFinishedUnsuccessful);
-										}
-										list.showItem(item);
-									}
-								}
-							});
+							updateQueue.add(event);
 						}
 					});
 
