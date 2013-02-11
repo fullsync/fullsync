@@ -63,7 +63,7 @@ function getVersions($count) {
 	return $versions;
 }
 
-function HtmlHeader($caption, $skip) {
+function HtmlHeader($caption, $skip = '') {
 ?>
 <!doctype html>
 <html>
