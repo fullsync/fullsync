@@ -13,13 +13,13 @@
 		$versions = getVersions(3);
 		$first = true;
 		foreach ($versions as $v) {
-			echo "\t\t<li>Version ${v[version]} (${v[releaseDate]}):<br />${v[changes]}";
+			echo "\t\t<li>Version ${v['version']} (${v['releaseDate']}):<br />${v['changes']}";
 			if ($first) {
-				echo "<a href=\"https://sourceforge.net/projects/fullsync/files/FullSync%20${v[version]}/\">Download Now</a> or";
+				echo "<a href=\"https://sourceforge.net/projects/fullsync/files/FullSync%20${v['version']}/\">Download Now</a> or";
 				$first = false;
 			}
 			if (isset($v['manual'])) {
-				echo " view an online version of the <a href=\"docs/manual-${v[version]}/${v[manual]}\">documentation</a>.";
+				echo " view an online version of the <a href=\"docs/manual-${v['version']}/${v['manual']}\">documentation</a>.";
 			}
 			echo "</li>\n";
 		}

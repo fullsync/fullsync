@@ -15,12 +15,15 @@
 	<h2>for Linux</h2>
 	<iframe id="obs-download-frame" src="http://software.opensuse.org/download/package.iframe?project=home%3Acobexer%3AFullSync&amp;package=FullSync"></iframe>
 
-	<h2>other Versions</h2>
+	<h2>FullSync without Installer</h2>
 	<p>
-		This download can be used on Windows, Linux and (in theory) on Mac.<br />
-		It contains both 32bit and 64bit versions of FullSync.
-		<a href="http://sourceforge.net/projects/fullsync/files/FullSync%20<?php echo $version; ?>/FullSync-<?php echo $version; ?>.zip/download">Platform independent download</a>
+		Theese downloads contain both 32bit and 64bit versions of FullSync.
 	</p>
+	<ul>
+		<li>for <a href="http://sourceforge.net/projects/fullsync/files/FullSync%20<?php echo $version; ?>/FullSync-<?php echo $version; ?>-win.zip/download">Windows</a></li>
+		<li>for <a href="http://sourceforge.net/projects/fullsync/files/FullSync%20<?php echo $version; ?>/FullSync-<?php echo $version; ?>-linux.tar.gz/download">Linux</a></li>
+		<li>for <a href="http://sourceforge.net/projects/fullsync/files/FullSync%20<?php echo $version; ?>/FullSync-<?php echo $version; ?>-mac.tar.gz/download">Mac</a> please test this download and <a href="https://sourceforge.net/p/fullsync/discussion/">tell me if it works for you</a>.</li>
+	</ul>
 
 	<h2>Source Code</h2>
 	<p>
