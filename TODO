@@ -1,257 +1,5 @@
-
----===[ to 0.7 Tasks ]====-----------------------------------------------------
-
-
-Clarification
-	[X]	What situations can occur, how to handle them best,
-	[X] ignore directories ? so we dont depend on the order the
-		actions are generated -> no
-
-Actions:
-	[X] Unify action model, add logging stream using actions
-		Actions can be "Add", "Update", "Delete", "Obsolete",
-		"UnexpectedChange" + where it happens
-
-ActionList:
-	[X] Create some action list which will be a buffer pretty often
-	    (or reports to a buffer)
-
-Track local changes:
-	[X] buffer the situation of the local filesystem and
-		check whether there are changes. if so, be able to:
-			count these changes
-			show which files changed
-		... dont get too complex, we'll use svn/cvs anyway if
-		it's a large project...
-		-> Source Buffer
-
-Task:
-	[X] remove task as it is used now and add it as a container for:
-		src, dst, state, actions, chosen action
-		so we'll have a taskqueue receiving tasks from the processor and
-		sending actions to the action queue
-
-ActionQueue:
-	[X] those are getting pretty senseless if we remove src/dst.
-		either they get even more abstract, say they have a
-		add( Action, Node src, Node dst ) method or they get a task (first)
-
-ProcessorResults:
-	[X] we do have two different ways of synchronization. we can have
-		a pipeline model  Processor->ActionQueue->Buffer->IO Operations
-		or a static model Processor->Task w/
-		Children->Interaction->AQ->Buff->IO
-
-		there should be a clean differenciation between building a tasktree and
-		applying actions directly. on the other hand, when building a tasktree
-		first we could make synchronization more atomic. (check r/w for all
-		files first and start sync afterwards)
-
-		no diff, only task tree
-
-Expandability:
-	[X] put length and lm into FileAttributes ?
-
-FileSystem:
-	[X] Maybe make FileSystem and FileSystemProvider
-		then Fs could keep track of all dirs instantiated,
-		so there is no way we double-load a dir/file
-
-		^we really need that... for example we do not know
-		when to close ftp connections atm
-
-		we should call the access managing unit "FileSystemSite"
-		this also marks the virtual root for our sync purposes
-		and could be used to store one buffer file
-
-		what about creating universal Directory and File objects
-		and letting them get filled with data and functionallity
-		by FileSystemConnections ?
-
-		things that must be dynamic:
-			- get file info (size, last mod, perms)
-			- get childs of dir
-			- mkdir, mkfile, write file, read file, delete
-
-		I think the new system is pretty nice
-
-	[X]	Impl buffering
-
-Clarification:
-	[X] where is / and how to avoid //... use . instead
-
-Clarification:
-	[X] Bufferupdate !? when where and how ? State refresh and
-		ActionDecider recall after Bufferupdate or is it handled
-		within the decider ? (why not letting the ActionDecider call
-		the StateDecider on the initial objects?)
-
-		the only change that can occur after actiondecider is
-		the selection of which action should take place.
-		ignore for example should not update the buffer.
-
-		so it will be best to say we update buffer after action
-		and use buffered and unbuffered data to decide which actions
-		are possible. that means the AC needs the statedecider as well.
-
-		source buffers will not get touched by actions !?
-
-		task getting BufferActions ?
-
-FS/Buffer update:
-	[X] buffer layer must keep references
-		buffed file: refreshReference -> unbuff = parent.getChild( name )
-
--------------------------------------------------------------------------------
-
-Task/Action Interaction:
-	we'll get trouble when changing actions creating
-	inconsistency, so dont expect too much here
-
----===[ 0.7 to 0.8 Tasks ]====-------------------------------------------------
-
-Ignore:
-	[X] apply filter at filesystem level [NO] and add Node.isFiltered() [YES]
-		umpf, but it may change during folder traversal...
-
-FTP passwording
-	[X] impl general way of supplying more properties to schemes
-		(?password=... ?) or popup?
-	[X] save pw crypted
-
-SFTP fingerprint
-	[X] w/o questioning or MB question
-
-Logging:
-	[X] Implement logging mechanisms
-	[X] put sftp logging outside of main log file
-
-Connection:
-	[X] disconnect properly
-
-syncfiles
-	[X] gzip them
-
-Logwindow
-	[X] show progress of performing actions
-	[X] show size of files
-
-Images:
-	[X] cache images for different states/actions
-
-Feedback:
-	[X]	progress indication for performing actions
-	[X] progress indication (or at least what am i doing atm) for check phase
-	[X] After ActionQueue: Action started (this may be multiple ?)
-		show "(Task 2130 of 2430) E:\bla -> ftp:// ..."
-		-> that will make multithreaded task execution extremely hard
-
-Interface:
-	[X] we should consider one gui item as gui controller who gets "general" gui
-		stuff lile closeApplication and show busy cursor. generally "FullSync" should
-		not be controlling too many gui items, it's much more the heart of the
-		sync processes. so mainwin should get a fullsync instance... or maybe we
-		rename this 'sync-controller' somehow ?
-
-	[X] investigate why the busy cursor is not shown when above the scrollbar
-		or table headers - because the main thread still answers
-
-	[X] investigate whether it's possible to give the state image in the logwindow
-		a transparent bg (so the green bg color is seen all over the line)
-		-> the image is transparent atm, we would need to draw a green bg then
-
-Sheduler:
-	[X]	copy sheduler from backup - we use Timer and ProfileManager directly
-		(so changes to intervals and stuff are propagated much easier)
-	[X] add button to toolbar enable/disable scheduling
-	[X] add column next update
-	[X] update lastUpdate / nextUpdate correctly
-
-Connection:
-	[X] reconnect
-
-Gui:
-	[X] realize the gui concept (2004-11-07)
-
-Linux:
-	[X] about dialog has no picture and no buttons!? but splash works
-	[X] preferences... layout is pretty bad
-
-Sheduler:
-	[X] add some simple stuff to the profile (interval, enabled and errorflag
-		with different levels like minor, major, blocker (could not connect))
-   	[X] add symbol for scheduled tasks
-   	[X] does daemon mode scheduling work atm ? we don't specify a listener !
-
-Remote:
-	[X] make scheduler available via remote interface
-	[X] close gui while being connected doesn't remove listeners :-/
-	[X] password for connection
-
-GraphicsTodo:
-	[X] a clock icon for the scheduler
-	[X] a small clock to indicated profiles that are scheduled
-	[X] an icon for remote connection (startup / being connected)
-	[X] a wizard image for starting a remote connection
-	[X] some different images for start scheduler and stop scheduler
-
-Release-critical:
-	[X] LogWindow should have: global source - destination, filename just once,
-		                       explanation on the right side
-    [X] backup action decider
-    [X] stabilize/test backup action decider
-    [X] configurable action decider per profile
-    [X] "checking <file>" is taking most of the time when comparing local to local
-    	we shouldn't push but poll this status string !
-    [X] scheduler not creating popup logwindow
-    [X] set next update after LogWindow - go, or scheduler run (but after execution phase!!)
-   	[X] scheduler in profile
-   	[X] we should calculate next update from lastupdate, not now
-   	[X] verify scheduler functionallity
-   	[X] make config files not required.
-   	[X] passive ftp
-   	[X] handle case where no profile is selected but edit or run is clicked
-   	[X] look for timeout/disconnect before committing changes and reconnect or report error
-   	[X] verify simple rulesets
-   	[X] rename of profiles (see hashtable in profilemanager)
-   	[X] add crontab scheduler to profile
-   	[X] finished crontab editor (buttons)
-   	[X] make sure schedules are not executed more than once, just
-   		because they were inactive for some time
-   	[X] make src/dst buffering set by the type and use text field to explain
-   		the types a little
-   	[X] if scheduling is changed we need to refresh the timer
-   	[X] show correct number of tasks to do in taskDecider window
-	[X] show icons in profile list popups
-	[X] get rid of gifs, so we only use one patentfree format ;)
-	[X] set serialVersionIds... otherwise we'll have huge problems releasing
-		patches even if not a single serializeable object has changed.
-	[X] propagate updates of server profiles to client-gui
-	[X] timer still creating/stopping thread?
-	[X] make remote 'experimental feature' or add some texts in dialog
-		explaining how to use and that it's still unstable
-		-> actually, its working, and the whole program is without warrenty,
-		   so i guess it's in about the same level of unstability as the whole app
-
----===[ to 0.9 Tasks ]====-----------------------------------------
-
-User reports:
-	[X] sftp not recognizing port
-	[X] two-way sync
-
----===[ to 0.9.1 Tasks ]====-----------------------------------------
-
-	[X] simple active ftp option
-	[X] paths with - and spaces make troubles
-
 ---===[ to 0.9.2 Tasks ]====-----------------------------------------
-
-	[X] sftp login seems to cripple password
-		actually there seem to be other sftp auth mechanism
-		public key and host based auth implemented (pretty badly)
 	[ ] smb copies all files always
-	[X] make exception window resizeable
-	[X] preferences dialog does not set "autostart scheduler" checkbox
 
 ---===[ to 0.10 Tasks ]====-------------------------------------------------
 
@@ -262,12 +10,6 @@ Buffering:
 	[ ] write fs buffer file to bla+"_", delete existing and rename it
 
 FileSystem Abstraction:
-	[X] reorder file system abstraction layer and
-		impl FileOpen/DirOpen dialog for abstract filesystems
-	(ConnectionDescription:)
-	[X] we need a better gui for connections where we can define
-	    different composites with different options for different
-	    connection descriptions
 	[ ] dont impl instable connection as base class but as wrapper
 		(so we are able to wrap every connection into an instable wrapper,
 		or better reconnect-on-error-wrapper)
@@ -284,11 +26,6 @@ Feedback:
 	[?] some encapsulement for src and dst files ? [Task?]
 	[ ] Busy indication should count how many busies where started and stop
 		when all are finished (a general task/progress win like eclipse has?)
-
-Naming:
-	[X] call Processor TaskGenerator ? (or is the ActionDecider the generator?)
-	[X] call ActionQueue TaskExecutor ? (as we don't care about the buffer at all)
-	[X] call FullSync Synchronizer ? (encapsuling main sync actions / objects)
 
 Syncprocess encapsulement:
 	[ ] beside having access to all the neat classes we can use to
@@ -351,14 +88,11 @@ Linux:
 	[ ] nicelistview: all non bold fonts look rather large
 
 Remote:
-	[X] make gui mode listening for incoming connections
 	[ ] log remote connections (out and incoming)
 	[ ]	Improved security (crypted password and hidden inferfaces other than login)
 
 Images:
-	[X]	Add an ImageRepository loading all needed images
-	[ ]	and being able to create compositions (and cache them)
-	[X] Dispose all images we draw
+	[ ]	and being able to create compositions (and cache them) in the ImageRepository
 
 Dispose:
 	[ ] make sure all widgets get properly disposed (tableitems ?)
@@ -374,9 +108,6 @@ ActionDecider:
 Versioning:
 	[ ] implement working versioning system
 
-License:
-	[X] include license stuff correctly
-
 Backup:
 	[ ] copy to temp, then rename
 	[ ] scan whole src, then dst - saves hd jumps (traversal type)
@@ -385,17 +116,10 @@ Backup:
 		(good for not exact backup, so we don't copy temp files)
 
 Configuration:
-	[X] make config files user-local
 	[ ] flush profiles every now and then, maybe use dirty flag
 
 Distro:
 	[ ] put images into source / jar.
-
-Gui:
-	[X] split profile details into multiple panels activated by treeview
-	[X]	fields for connections should depend on the chosen connection type
-		so we don't need user/pw for local and could provide fields for
-		host, port, path and so on for ftp
 
 
 ---===[ to 1.0 Tasks ]====-------------------------------------------------
@@ -469,7 +193,6 @@ Connections:
 		after a few minutes
 
 	[ ]	ZIP File System
-	[X] SMB File System (may be using jcifs - http://jcifs.sourceforge.net)
 
 Threading
 	[ ] better UI / task differenciation
@@ -482,7 +205,6 @@ Logging:
         relevant modification times of both file versions.
 
 Buffer:
-	[X] test largefile handling (filesize > buffersize)
 	[ ] optimize largefile handling
 	[ ] create multithreaded direct-read delayed-write buffer-access
 	[ ] create multithreaded delayed-read delayed-write buffer-access

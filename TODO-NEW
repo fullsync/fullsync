@@ -1,44 +1,22 @@
 Roadmap:
-	[X] reimplement local connection on top of org.apache.commons.vfs2
-	[X] add FileObjectChooser to all ConnectionSpecificComposites
-	[X] reorganize code to avoid duplication of the File choosing stuff
-	[X] in what state is the codebase compared to the last release?
-	[X] update documentation
-	[X] update documentation @http://fullsync.sourceforge.net/docs/manual/
 	[ ] finish started work
 	[ ] GUI cleanup
-	[X] check state of translations
 	[ ] check all contained configuration files
 	[ ] get some communication going, motivate others to join
-	[X] replace embedded net.sourceforge.wrabbitftp server with eg MockFtpServer
 	[ ] extend automated testsuite
 	[ ] add embedded servers for:
 		[ ] SMB
-		[X] FTP
-		[X] SFTP
-	[X] find SWT GUI test framework
 	[ ] get code coverage > 70% -> Alpha release
 	[ ] get code coverage > 80% -> Beta Release
 	[ ] fix all bugs along the way
 	[ ] check all reported bugs, comment / close as apropriate
 	[ ] re-add the installer (windows/linux/(mac?))
-		[X] Windows X86
 		[ ] Windows X86_64
-		[X] Linux RPM
 		[ ] Linux DEB
 		[ ] Mac
 	[ ] windows/linux/(mac?) shortcuts
-		[X] Windows
-		[X] Linux
 		[ ] Mac?
-	[ ] no writes to the installation directory
-		[X] store all profiles into the java.util.prefs store -> No, not suitable
-		[X] move profiles and logs to some user writable directory (~/.config/fullsync/{profiles.xml,fullsync.log})
-	[X] configuration migration
-		[X] configuration migration FullSync settings
-		[X] configuration migration profiles
 	[ ] improve sync speed
-	[ ] setup tests(windows xp/7, x86, x86_64; Linux x86, x86_64; mac?)
 	[ ] ask for mac testers
 	[ ] --> Stable Release
 	[ ] move all images, xml's, config files into the fullsync jar, into some resource package to make loading them easier
@@ -52,22 +30,18 @@ Roadmap:
 
 Roadmap 0.11.0:
 	[X] restore handling of buffering = syncfiles (search for [BUFFERING])
-	[X] restore handling of advanced rulesets (search for [RULESETS]) -> DROPPED
 	[ ] make sure everything is translatable
 	[ ] make shortcuts configurable
 
 Bugs:
 	[ ] Exception if starting sync on a readonly FS
 	[ ] if folder creation fails on a ro FS the task is being marked as succeeded
-	[X] SMB/CIFS connection broken
 	[ ] Update Task Count based on decisions made(correct?), 1337 of 7331; 42 incoming, .. outgoing
-	[X] file:/ URL's do not show contents in the Subdirectories Profile details tab
 	[ ] Profile can be stored without vital data (src, destination, name)
 	[ ] the buttons in the main list view need tooltips
 	[ ] the task decision dialog should not show ./ at the start either / or nothing at all(2)
 	[ ] task decision dialog Action, Size columns are too narrow
 	[ ] task decision dialog needs a lot of love
-	[X] Ctrl+Q does not exit FullSync
 	[ ] dialogs must initialize themself fully without relying on change/* events being dispatched
 		there are some dialogs that rely on change events of other controls to fully initialize,
 		the profile dialog however has proven that SWT does not behave identical on eg windows and linux,
@@ -75,8 +49,6 @@ Bugs:
 	[ ] FullSync launchers need to be able to accept arbitrary JVM arguments (debugging, RAM, ...)
 	[ ] sockets are treated like directories, and listing their children results in an exception
 	[ ] SMB: does Ntlm authentication with domain accounts work with FullSync?
-	[X] using the custom FileObjectChooser is impractical for the local filesystem
-	[X] SFTP: Usability: the current handling of unknown hosts is probably bad, especially on win
 
 Features:
 	[ ] TaskDecisionDialog:
