@@ -102,7 +102,7 @@ public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListen
 				buffer.storeEntry(new FileCopyEntryDescriptor(task, source, destination));
 			}
 			stats.filesCopied++;
-			stats.bytesTransferred += source.getFileAttributes().getLength();
+			stats.bytesTransferred += source.getSize();
 		}
 		catch (IOException ioe) {
 			// FIXME that's not right, the task does not neccessarily be the one

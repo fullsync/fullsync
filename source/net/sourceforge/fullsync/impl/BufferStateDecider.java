@@ -69,6 +69,6 @@ public class BufferStateDecider extends StateDecider implements net.sourceforge.
 			return new State(State.DirHereFileThere, Location.Destination);
 		}
 
-		return comparer.compareFiles(source.getFileAttributes(), destination.getFsFileAttributes());
+		return comparer.compareFiles(source, destination);
 	}
 }

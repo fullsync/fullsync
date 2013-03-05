@@ -25,16 +25,14 @@ package net.sourceforge.fullsync.fs.buffering;
 import java.io.IOException;
 
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.FileAttributes;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public interface BufferedFile extends File {
-	// public boolean isDirty();
-	// public void markDirty();
+	public long getFsLastModified();
 
-	public FileAttributes getFsFileAttributes();
+	public long getFsSize();
 
 	public void addChild(File node);
 

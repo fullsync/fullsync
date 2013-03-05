@@ -125,7 +125,7 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 		labelProgress.setLayoutData(labelProgressLData);
 		Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
 		IoStatistics stats = synchronizer.getIoStatistics(taskTree);
-		labelProgress.setText("Totals: " + stats.getCountActions() + " tasks, " + stats.getBytesTransferred() + " bytes");
+		labelProgress.setText("Totals: " + stats.getCountActions() + " tasks, " + UISettings.formatSize(stats.getBytesTransferred()));
 
 		list = new TaskDecisionList(content, SWT.NULL);
 		list.setTaskTree(taskTree);

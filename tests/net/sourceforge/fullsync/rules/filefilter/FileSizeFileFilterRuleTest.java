@@ -23,7 +23,6 @@
 package net.sourceforge.fullsync.rules.filefilter;
 
 import junit.framework.TestCase;
-import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 /**
@@ -37,7 +36,7 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 
 		assertTrue(filterRule.match(file));
 
-		file.setFileAttributes(new FileAttributes(2000, 0));
+		file.setSize(2000);
 		assertTrue(!filterRule.match(file));
 	}
 
@@ -46,7 +45,7 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, 0);
 		assertTrue(!filterRule.match(file));
 
-		file.setFileAttributes(new FileAttributes(2000, 0));
+		file.setSize(2000);
 		assertTrue(filterRule.match(file));
 	}
 
@@ -57,10 +56,10 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 
 		assertTrue(!filterRule.match(file));
 
-		file.setFileAttributes(new FileAttributes(2000, 0));
+		file.setSize(2000);
 		assertTrue(filterRule.match(file));
 
-		file.setFileAttributes(new FileAttributes(999, 0));
+		file.setSize(999);
 		assertTrue(!filterRule.match(file));
 	}
 
@@ -71,10 +70,10 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 
 		assertTrue(!filterRule.match(file));
 
-		file.setFileAttributes(new FileAttributes(2000, 0));
+		file.setSize(2000);
 		assertTrue(!filterRule.match(file));
 
-		file.setFileAttributes(new FileAttributes(999, 0));
+		file.setSize(999);
 		assertTrue(filterRule.match(file));
 	}
 

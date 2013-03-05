@@ -48,7 +48,7 @@ public class BufferUpdateEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public long getLength() {
+	public long getSize() {
 		return 0;
 	}
 

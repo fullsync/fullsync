@@ -26,7 +26,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import junit.framework.TestCase;
-import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 /**
@@ -43,7 +42,7 @@ public class FileModificationDateFileFilterRuleTest extends TestCase {
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, dateFormat.parse("01/06/2005 10:00:00").getTime());
 
 		assertTrue(filterRule.match(file));
-		file.setFileAttributes(new FileAttributes(1000, dateFormat.parse("02/06/2005 10:00:00").getTime()));
+		file.setLastModified(dateFormat.parse("02/06/2005 10:00:00").getTime());
 
 		assertTrue(!filterRule.match(file));
 	}

@@ -23,16 +23,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.FileAttributes;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 class AbstractFile implements File {
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 
 	protected FileSystemConnection fs;
 	protected String name;
@@ -41,8 +41,10 @@ class AbstractFile implements File {
 	protected boolean exists;
 	protected boolean filtered;
 	protected boolean directory;
-	protected FileAttributes attributes;
 	protected Hashtable<String, File> children;
+	protected long size;
+	protected long lastModified;
+
 
 	AbstractFile(FileSystemConnection fs, String name, String path, File parent, boolean directory, boolean exists) {
 		this.fs = fs;
@@ -53,6 +55,8 @@ class AbstractFile implements File {
 		this.filtered = false;
 		this.directory = directory;
 		this.children = null;
+		this.size = -1;
+		this.lastModified = -1;
 	}
 
 	public FileSystemConnection getConnection() {
@@ -115,18 +119,28 @@ class AbstractFile implements File {
 	}
 
 	@Override
-	public void setFileAttributes(final FileAttributes att) {
-		this.attributes = att;
+	public void setLastModified(final long lastModified) {
+		this.lastModified = lastModified;
 	}
 
 	@Override
 	public void writeFileAttributes() throws IOException {
-		getConnection().writeFileAttributes(this, attributes);
+		getConnection().writeFileAttributes(this);
 	}
 
 	@Override
-	public FileAttributes getFileAttributes() {
-		return attributes;
+	public long getLastModified() {
+		return lastModified;
+	}
+
+	@Override
+	public long getSize() {
+		return size;
+	}
+
+	@Override
+	public void setSize(long size) {
+		this.size = size;
 	}
 
 	@Override
@@ -237,6 +251,6 @@ class AbstractFile implements File {
 
 	@Override
 	public String toString() {
-		return name + "; " + attributes;
+		return name + "; " + size + " Bytes " + new Date(lastModified);
 	}
 }

@@ -25,28 +25,28 @@ import java.io.OutputStream;
 import java.util.Collection;
 
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.FileAttributes;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class TestNode implements File {
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2L;
 
 	private String name;
 	private String path;
 	private boolean directory;
 	private boolean exists;
 	private boolean filtered;
-
-	private FileAttributes attr;
+	private long lastModified;
+	private long size;
 
 	public TestNode(String name, String path, boolean exists, boolean directory, long length, long lm) {
 		this.name = name;
 		this.path = path;
 		this.exists = exists;
 		this.directory = directory;
-		this.attr = new FileAttributes(length, lm);
+		this.lastModified = lm;
+		this.size = length;
 	}
 
 	public File getDirectory() {
@@ -141,11 +141,6 @@ public class TestNode implements File {
 	}
 
 	@Override
-	public FileAttributes getFileAttributes() {
-		return attr;
-	}
-
-	@Override
 	public boolean isFile() {
 		return !directory;
 	}
@@ -161,8 +156,8 @@ public class TestNode implements File {
 	}
 
 	@Override
-	public void setFileAttributes(FileAttributes att) {
-		this.attr = att;
+	public void setLastModified(long lastModified) {
+		this.lastModified = lastModified;
 	}
 
 	@Override
@@ -195,7 +190,22 @@ public class TestNode implements File {
 			return "Directory";
 		}
 		else {
-			return "File (" + attr.getLength() + "," + attr.getLastModified() + ")";
+			return "File (" + size + "," + lastModified + ")";
 		}
+	}
+
+	@Override
+	public long getLastModified() {
+		return lastModified;
+	}
+
+	@Override
+	public long getSize() {
+		return size;
+	}
+
+	@Override
+	public void setSize(long size) {
+		this.size = size;
 	}
 }

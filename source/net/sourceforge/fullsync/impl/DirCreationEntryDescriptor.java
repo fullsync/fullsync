@@ -48,7 +48,7 @@ public class DirCreationEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public long getLength() {
+	public long getSize() {
 		return 0;
 	}
 

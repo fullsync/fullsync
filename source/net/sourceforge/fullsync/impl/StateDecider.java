@@ -79,6 +79,6 @@ public class StateDecider implements net.sourceforge.fullsync.StateDecider {
 			return dirFileDst;
 		}
 
-		return comparer.compareFiles(source.getFileAttributes(), destination.getFileAttributes());
+		return comparer.compareFiles(source, destination);
 	}
 }

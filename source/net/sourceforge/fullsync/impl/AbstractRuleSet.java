@@ -30,7 +30,6 @@ import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.rules.Rule;
 
 import org.slf4j.Logger;
@@ -169,9 +168,9 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 		return !take;
 	}
 
-	protected long evalRealValue(FileAttributes f, String exp) throws DataParseException {
+	protected long evalRealValue(File f, String exp) throws DataParseException {
 		if (exp.equalsIgnoreCase("length")) {
-			return f.getLength();
+			return f.getSize();
 		}
 		else if (exp.equalsIgnoreCase("date")) {
 			return (int) Math.floor(f.getLastModified() / 1000.0);
@@ -205,7 +204,7 @@ public abstract class AbstractRuleSet implements RuleSet, Cloneable {
 	private static final State fileChgNone = new State(State.FileChange, Location.None);
 
 	@Override
-	public State compareFiles(FileAttributes src, FileAttributes dst) throws DataParseException {
+	public State compareFiles(File src, File dst) throws DataParseException {
 		// TODO verify functionality of this method
 		//FIXME: optimize rule processing
 		//FIXME: add debug logs to every decision

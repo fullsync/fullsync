@@ -49,8 +49,8 @@ public class FileCopyEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public long getLength() {
-		return src.getFileAttributes().getLength();
+	public long getSize() {
+		return src.getSize();
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class FileCopyEntryDescriptor implements EntryDescriptor {
 		if (outputStream != null) {
 			outputStream.close();
 		}
-		dst.setFileAttributes(src.getFileAttributes());
+		dst.setLastModified(src.getLastModified());
 		dst.writeFileAttributes();
 		dst.refresh();
 	}

@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
 /**
@@ -37,20 +36,21 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	protected File unbuffered;
 
 	private boolean dirty;
-	private FileAttributes fsAttributes;
+	private long fsSize;
+	private long fsLastModified;
 
 	AbstractBufferedFile(BufferedConnection bc, String name, String path, File parent, boolean directory, boolean exists) {
 		super(bc, name, path, parent, directory, exists);
 		this.dirty = false;
 		this.unbuffered = null;
 		children = new Hashtable<String, File>();
+		fsSize = -1;
+		fsLastModified = -1;
 	}
 
 	AbstractBufferedFile(BufferedConnection bc, File unbuffered, File parent, boolean directory, boolean exists) {
-		super(bc, unbuffered.getName(), unbuffered.getPath(), parent, directory, exists);
-		this.dirty = false;
+		this(bc, unbuffered.getName(), unbuffered.getPath(), parent, directory, exists);
 		this.unbuffered = unbuffered;
-		children = new Hashtable<String, File>();
 	}
 
 	public boolean isDirty() {
@@ -79,30 +79,32 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 		return getUnbuffered().makeDirectory();
 	}
 
-	public void setFsFileAttributes(final FileAttributes fs) {
-		this.fsAttributes = fs;
+	public void setFsLastModified(long lastModified) {
+		this.fsLastModified = lastModified;
+	}
+
+	public void setFsSize(long size) {
+		this.fsSize = size;
 	}
 
 	@Override
-	public FileAttributes getFsFileAttributes() {
-		return fsAttributes;
+	public long getFsLastModified() {
+		// if the last modified timestamp has not been directly set, use the cached value
+		long lm = super.getLastModified();
+		if (-1 == lm) {
+			lm = this.fsLastModified;
+		}
+		return lm;
 	}
 
 	@Override
-	public FileAttributes getFileAttributes() {
-		// in case we are requesting file attributes that
-		// were not explicitly set, just take the fs attributes
-		FileAttributes attrib = super.getFileAttributes();
-		if (attrib == null) {
-			return fsAttributes;
+	public long getFsSize() {
+		// if the size has not been directly set, use the cached value
+		long size = super.getSize();
+		if (-1 == size) {
+			size = this.fsSize;
 		}
-		else {
-			return attrib;
-		}
-	}
-
-	public void clearCachedFileAttributes() throws IOException {
-		setFileAttributes(getFsFileAttributes());
+		return size;
 	}
 
 	@Override
@@ -134,11 +136,13 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 
 	@Override
 	public void refreshBuffer() throws IOException {
-		directory = getUnbuffered().isDirectory();
-		exists = getUnbuffered().exists();
+		File unb = getUnbuffered();
+		directory = unb.isDirectory();
+		exists = unb.exists();
 
 		if (exists && !directory) {
-			setFsFileAttributes(getUnbuffered().getFileAttributes());
+			setFsLastModified(unb.getLastModified());
+			setFsSize(unb.getSize());
 		}
 	}
 

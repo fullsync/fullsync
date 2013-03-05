@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.fs.Site;
 
 /**
@@ -41,7 +40,7 @@ public interface FileSystemConnection extends Site {
 
 	public boolean makeDirectory(File dir) throws IOException;
 
-	public boolean writeFileAttributes(File file, FileAttributes att) throws IOException;
+	public boolean writeFileAttributes(File file) throws IOException;
 
 	public InputStream readFile(File file) throws IOException;
 
