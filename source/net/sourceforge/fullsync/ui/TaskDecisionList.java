@@ -100,6 +100,7 @@ public class TaskDecisionList extends Composite {
 
 			tableColumnSourceSize = new TableColumn(tableLogLines, SWT.NONE);
 			tableColumnSourceSize.setText(Messages.getString("TaskDecisionList.Size")); //$NON-NLS-1$
+			tableColumnSourceSize.setAlignment(SWT.RIGHT);
 			tableColumnSourceSize.setWidth(90);
 
 			tableColumnAction = new TableColumn(tableLogLines, SWT.NONE);
