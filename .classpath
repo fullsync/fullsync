@@ -34,5 +34,10 @@
 	<classpathentry kind="lib" path="lib-tests/org.hamcrest.integration_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="lib" path="lib-tests/org.hamcrest.library_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="lib" path="lib-tests/org.hamcrest.text_1.1.0.v20090501071000.jar"/>
+	<classpathentry kind="lib" path="lib/joda-time.jar" sourcepath="/home/cobexer/Downloads/joda-time-2.2/joda-time-2.2-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/cobexer/Downloads/joda-time-2.2/joda-time-2.2-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

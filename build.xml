@@ -47,6 +47,7 @@
 		<include name="jsch.jar" />
 		<include name="swtcalendar.jar" />
 		<include name="jsoup.jar" />
+		<include name="joda-time.jar" />
 	</fileset>
 	<path id="compile.classpath">
 		<fileset refid="dependentJars" />

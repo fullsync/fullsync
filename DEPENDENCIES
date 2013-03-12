@@ -19,6 +19,7 @@ Versions of dependent libraries in distributions:
  * log4j-over-slf4j.jar          1.6.4             2011-10-31
  * slf4j-api.jar                 1.6.4             2011-10-31
  * jsoup.jar                     1.7.3             2013-11-10
+ * joda-time.jar                 2.2               2013-03-08
 
 Launcher:
  * WinRun4J                      0.4.4             2012-01-30

@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.fs.connection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.ConnectionDescription;
@@ -34,12 +35,16 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.FileType;
 import org.apache.commons.vfs2.VFS;
+import org.apache.log4j.Logger;
+import org.joda.time.DateTimeZone;
 
 public class CommonsVfsConnection implements FileSystemConnection {
 	private static final long serialVersionUID = 2L;
+	private static Logger logger = Logger.getLogger(CommonsVfsConnection.class);
 	private ConnectionDescription desc;
 	private FileObject base; //FIXME FileObject is not serializable?!
 	private File root;
+	private transient DateTimeZone fstz = null;
 
 	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystem fs) throws net.sourceforge.fullsync.FileSystemException {
 		try {
@@ -59,17 +64,37 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	@Override
 	public final File createChild(final File parent, final String name, final boolean directory) throws IOException {
 		return new AbstractFile(this, name, null, parent, directory, false);
+	}
 
+	private DateTimeZone getTz() {
+		if (null == fstz) {
+			String timezone = desc.getParameter("timeZone");
+			try {
+				fstz = DateTimeZone.forID(timezone);
+			}
+			catch(Exception ex) {
+				logger.warn("Failed to get timezone '" + timezone + "', using current local timezone instead", ex);
+				fstz = DateTimeZone.getDefault();
+			}
+		}
+		return fstz;
+	}
+
+	public long toUTC(long local) {
+		return getTz().convertLocalToUTC(local, false);
+	}
+
+	public long toLocal(long utc) {
+		return getTz().convertUTCToLocal(utc);
 	}
 
 	private File buildNode(final File parent, final FileObject file) throws FileSystemException {
 		String name = file.getName().getBaseName();
-		// String path = parent.getPath()+"/"+name;
 
 		File n = new AbstractFile(this, name, null, parent, file.getType() == FileType.FOLDER, true);
 		if (file.getType() == FileType.FILE) {
 			FileContent content = file.getContent();
-			n.setLastModified(content.getLastModifiedTime());
+			n.setLastModified(toUTC(content.getLastModifiedTime()));
 			n.setSize(content.getSize());
 		}
 		return n;
@@ -105,7 +130,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	public final boolean writeFileAttributes(final File file) throws IOException {
 		FileObject obj = base.resolveFile(file.getPath());
 		FileContent content = obj.getContent();
-		content.setLastModifiedTime(file.getLastModified());
+		content.setLastModifiedTime(toLocal(file.getLastModified()));
 		return true;
 	}
 

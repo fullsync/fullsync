@@ -26,13 +26,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Hashtable;
-import java.util.TimeZone;
 
 import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTimeZone;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -101,18 +100,13 @@ public class BaseConnectionTest {
 	}
 
 	protected long getLastModified() {
-		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		Date d = cal.getTime();
-		return d.getTime();
+		DateMidnight dm = new DateMidnight();
+		return DateTimeZone.getDefault().convertLocalToUTC(dm.getMillis(), false);
 	}
 
 	protected void setLastModified(File dir, String filename, long lm) {
 		File file = new File(dir, filename);
-		if (!file.setLastModified(lm)) {
+		if (!file.setLastModified(DateTimeZone.getDefault().convertUTCToLocal(lm))) {
 			throw new RuntimeException("file.setLastModified(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
 		}
 	}
@@ -160,7 +154,7 @@ public class BaseConnectionTest {
 		out.close();
 		File f = new File(dir, filename);
 
-		assertTrue("File.setLastModified failed for: " + f.getAbsolutePath(), f.setLastModified(lm));
+		assertTrue("File.setLastModified failed for: " + f.getAbsolutePath(), f.setLastModified(DateTimeZone.getDefault().convertUTCToLocal(lm)));
 	}
 
 	protected TaskTree assertPhaseOneActions(final Hashtable<String, Action> expectation) throws Exception {

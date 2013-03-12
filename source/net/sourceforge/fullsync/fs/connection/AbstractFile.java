@@ -23,10 +23,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.fs.File;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -251,6 +253,17 @@ class AbstractFile implements File {
 
 	@Override
 	public String toString() {
-		return name + "; " + size + " Bytes " + new Date(lastModified);
+		StringBuilder sb = new StringBuilder();
+		sb.append(name);
+		if (-1 != size) {
+			sb.append("; ");
+			sb.append(size);
+			sb.append(" Bytes ");
+			sb.append(new DateTime(DateTimeZone.getDefault().convertUTCToLocal(lastModified)));
+		}
+		else {
+			sb.append("; ~");
+		}
+		return sb.toString();
 	}
 }

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
 
+import org.joda.time.DateTimeZone;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,7 +92,7 @@ public class FtpConnectionTest extends BaseConnectionTest {
 	protected void createNewFileWithContents(File dir, String filename, long lm, String content) throws IOException {
 		if (dir == testingDst) {
 			FileEntry file = new FileEntry("/sampleuser/" + filename, content);
-			file.setLastModified(new Date(lm));
+			file.setLastModified(new Date(DateTimeZone.getDefault().convertUTCToLocal(lm)));
 			m_fakeServer.getFileSystem().add(file);
 		}
 		else {
