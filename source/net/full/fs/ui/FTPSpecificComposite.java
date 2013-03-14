@@ -23,6 +23,7 @@ import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ui.Messages;
+import net.sourceforge.fullsync.ui.TimeZoneCombo;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -35,6 +36,8 @@ import org.eclipse.swt.widgets.Label;
 public class FTPSpecificComposite extends UserPasswordSpecificComposite {
 	private static final String FTP_ANONYMOUS_USERNAME = "Anonymous";
 	Combo comboAuthentication;
+	TimeZoneCombo tzcombo;
+
 	@Override
 	public int getDefaultPort() {
 		return 21;
@@ -65,6 +68,12 @@ public class FTPSpecificComposite extends UserPasswordSpecificComposite {
 	}
 
 	@Override
+	public void createGUI(Composite parent) {
+		super.createGUI(parent);
+		tzcombo = new TimeZoneCombo(parent);
+	}
+
+	@Override
 	public void setConnectionDescription(ConnectionDescription connection) {
 		super.setConnectionDescription(connection);
 		if (FTP_ANONYMOUS_USERNAME.equals(connection.getParameter(ConnectionDescription.PARAMETER_USERNAME))) {
@@ -74,6 +83,10 @@ public class FTPSpecificComposite extends UserPasswordSpecificComposite {
 			comboAuthentication.select(1);
 		}
 		setUserPasswordEnabled(comboAuthentication.getSelectionIndex() == 1);
+		String timeZone = connection.getParameter(ConnectionDescription.PARAMETER_TIMEZONE);
+		if (null != timeZone) {
+			tzcombo.setTimeZone(timeZone);
+		}
 	}
 
 	@Override
@@ -83,6 +96,7 @@ public class FTPSpecificComposite extends UserPasswordSpecificComposite {
 			connection.setParameter(ConnectionDescription.PARAMETER_USERNAME, FTP_ANONYMOUS_USERNAME);
 			connection.setSecretParameter(ConnectionDescription.PARAMETER_PASSWORD, "");
 		}
+		connection.setParameter(ConnectionDescription.PARAMETER_TIMEZONE, tzcombo.getTimeZone());
 		return connection;
 	}
 }

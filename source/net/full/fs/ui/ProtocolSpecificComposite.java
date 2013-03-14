@@ -27,7 +27,6 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.fs.Site;
-import net.sourceforge.fullsync.ui.Messages;
 
 import org.apache.commons.vfs2.FileObject;
 import org.eclipse.swt.SWT;
@@ -66,12 +65,14 @@ class ProtocolSpecificComposite {
 				onBrowse();
 			}
 		});
+		/*
 		buttonBuffered = new Button(parent, SWT.CHECK | SWT.LEFT);
 		GridData buttonDestinationBufferedData = new GridData();
 		buttonDestinationBufferedData.horizontalSpan = 3;
 		buttonBuffered.setLayoutData(buttonDestinationBufferedData);
 		buttonBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
 		buttonBuffered.setVisible(false); //FIXME: [BUFFERING] remove to restore buffering
+		*/
 	}
 
 
@@ -144,7 +145,7 @@ class ProtocolSpecificComposite {
 	 * @return true if the buffered checkbox is set and enabled
 	 */
 	public boolean getBuffered() {
-		return buttonBuffered.getEnabled() && buttonBuffered.getSelection();
+		return buttonBuffered != null && buttonBuffered.getEnabled() && buttonBuffered.getSelection();
 	}
 
 	/**
@@ -153,7 +154,9 @@ class ProtocolSpecificComposite {
 	 * @param buffered true to set the checkbox
 	 */
 	public void setBuffered(final boolean buffered) {
-		buttonBuffered.setSelection(buffered);
+		if (null != buttonBuffered) {
+			buttonBuffered.setSelection(buffered);
+		}
 	}
 
 	/**
@@ -162,7 +165,9 @@ class ProtocolSpecificComposite {
 	 * @param enabled true to enable
 	 */
 	public void setBufferedEnabled(final boolean enabled) {
-		buttonBuffered.setEnabled(enabled);
+		if (null != buttonBuffered) {
+			buttonBuffered.setEnabled(enabled);
+		}
 	}
 
 	/**
@@ -173,6 +178,8 @@ class ProtocolSpecificComposite {
 		labelPath.dispose();
 		textPath.dispose();
 		buttonBrowse.dispose();
-		buttonBuffered.dispose();
+		if (null != buttonBuffered) {
+			buttonBuffered.dispose();
+		}
 	}
 }

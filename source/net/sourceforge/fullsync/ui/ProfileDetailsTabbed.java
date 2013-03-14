@@ -725,6 +725,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		profileManager.save();
 	}
 
+	//TODO: drop this method
 	private ConnectionDescription getConnectionDescription(final ConnectionConfiguration cfg) {
 		ConnectionDescription dst = null;
 		try {

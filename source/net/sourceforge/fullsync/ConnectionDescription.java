@@ -39,6 +39,7 @@ public class ConnectionDescription implements Serializable {
 
 	public static final String PARAMETER_USERNAME = "username";
 	public static final String PARAMETER_PASSWORD = "password";
+	public static final String PARAMETER_TIMEZONE = "timeZone";
 
 	private URI uri = null;
 	private Hashtable<String, String> parameters = new Hashtable<String, String>();

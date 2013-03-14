@@ -207,7 +207,7 @@ public class PreferencesComposite extends Composite {
 		labelNeedsRestartLData.horizontalAlignment = SWT.FILL;
 		labelNeedsRestart.setLayoutData(labelNeedsRestartLData);
 
-		
+
 		groupRemoteConnection = new Group(this, SWT.NONE);
 		GridLayout groupRemoteConnectionLayout = new GridLayout();
 		GridData groupRemoteConnectionLData = new GridData();
@@ -244,7 +244,7 @@ public class PreferencesComposite extends Composite {
 		textListeningPortLData.grabExcessHorizontalSpace = true;
 		textListeningPort.setLayoutData(textListeningPortLData);
 		textListeningPort.setEnabled(false);
-		
+
 		// remote password
 		labelPassword = new Label(groupRemoteConnection, SWT.NONE);
 		labelPassword.setText(Messages.getString("PreferencesComposite.IncomingPassword") + ":"); //$NON-NLS-1$ //$NON-NLS-2$

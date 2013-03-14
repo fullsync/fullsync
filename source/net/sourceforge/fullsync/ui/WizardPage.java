@@ -40,6 +40,6 @@ public interface WizardPage {
 	public void createContent(Composite content);
 
 	public boolean apply();
-	
+
 	public boolean cancel();
 }

@@ -22,7 +22,6 @@ package net.sourceforge.fullsync.fs.connection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.ConnectionDescription;
@@ -68,7 +67,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	private DateTimeZone getTz() {
 		if (null == fstz) {
-			String timezone = desc.getParameter("timeZone");
+			String timezone = desc.getParameter(ConnectionDescription.PARAMETER_TIMEZONE);
 			try {
 				fstz = DateTimeZone.forID(timezone);
 			}
