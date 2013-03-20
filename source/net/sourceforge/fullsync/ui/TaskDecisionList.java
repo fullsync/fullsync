@@ -28,6 +28,7 @@ import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.fs.File;
 
 import org.eclipse.swt.SWT;
@@ -338,7 +339,7 @@ public class TaskDecisionList extends Composite {
 			item.setImage(2, image);
 			item.setText(new String[] {
 					t.getSource().getPath(),
-					UISettings.formatSize(t.getSource().getSize()),
+					Util.formatSize(t.getSource().getSize()),
 					"", //$NON-NLS-1$
 					t.getCurrentAction().getExplanation() });
 			item.setData(t);

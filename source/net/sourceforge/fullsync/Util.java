@@ -76,4 +76,19 @@ public abstract class Util {
 		return Util.getResourceAsString("net/sourceforge/fullsync/twitter-url.txt");
 	}
 
+	public static String formatSize(long size) {
+		if (size == -1) {
+			return "";
+		}
+		if (size > (1024 * 1024 * 1024)) {
+			return ((long)(Math.ceil(size / (1024 * 1024 * 1024)))) + " GiB";
+		}
+		if (size > (1024 * 1024)) {
+			return ((long)(Math.ceil(size / (1024 * 1024)))) + " MiB";
+		}
+		if (size > 1024) {
+			return ((long)(Math.ceil(size / 1024))) + " KiB";
+		}
+		return size + " B";
+	}
 }

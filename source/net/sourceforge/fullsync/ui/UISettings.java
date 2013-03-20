@@ -47,20 +47,4 @@ public abstract class UISettings {
 	 * light grey color.
 	 */
 	public static final Color COLOR_LIGHT_GREY = new Color(null, 51, 51, 51);
-
-	public static String formatSize(long size) {
-		if (size == -1) {
-			return "";
-		}
-		if (size > (1024 * 1024 * 1024)) {
-			return ((long)(Math.ceil(size / (1024 * 1024 * 1024)))) + " GiB";
-		}
-		if (size > (1024 * 1024)) {
-			return ((long)(Math.ceil(size / (1024 * 1024)))) + " MiB";
-		}
-		if (size > 1024) {
-			return ((long)(Math.ceil(size / 1024))) + " KiB";
-		}
-		return size + " B";
-	}
 }

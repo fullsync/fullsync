@@ -30,6 +30,7 @@ import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.Util;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -125,7 +126,7 @@ public class TaskDecisionPage implements WizardPage, Serializable {
 		labelProgress.setLayoutData(labelProgressLData);
 		Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
 		IoStatistics stats = synchronizer.getIoStatistics(taskTree);
-		labelProgress.setText("Totals: " + stats.getCountActions() + " tasks, " + UISettings.formatSize(stats.getBytesTransferred()));
+		labelProgress.setText("Totals: " + stats.getCountActions() + " tasks, " + Util.formatSize(stats.getBytesTransferred()));
 
 		list = new TaskDecisionList(content, SWT.NULL);
 		list.setTaskTree(taskTree);
