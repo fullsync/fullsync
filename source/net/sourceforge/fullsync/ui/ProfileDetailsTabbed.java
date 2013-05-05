@@ -547,12 +547,12 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		textProfileDescription.setText(p.getDescription());
 
 		srcConnectionConfiguration.setConnectionDescription(p.getSource());
-		if (null != srcConnectionConfiguration) {
+		if (p.getSource() != null) {
 			srcConnectionConfiguration.setBuffered("syncfiles".equals(p.getSource().getParameter("bufferStrategy"))); //$NON-NLS-1$
 		}
 
 		dstConnectionConfiguration.setConnectionDescription(p.getDestination());
-		if (null != dstConnectionConfiguration) {
+		if (p.getDestination() != null) {
 			dstConnectionConfiguration.setBuffered("syncfiles".equals(p.getDestination().getParameter("bufferStrategy"))); //$NON-NLS-1$
 		}
 
