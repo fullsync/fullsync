@@ -26,9 +26,11 @@ Used only by the tests (stored in lib-tests/):
  * j2ssh-daemon.jar              svn rev 43        2011-04-14        from trunk
  * j2ssh-server.jar              svn rev 43        2011-04-14        from trunk
  * mvn-infix-junit-sshd.jar      svn rev 112       2011-06-19        modified, .jar contains all sources it was built from
- * SWTBot                        2.0.5             2011-10-03
-  * org.eclipse.swtbot.junit4_x_2.0.5.20111003_1754-3676ac8-dev-e36.jar
-  * org.eclipse.swtbot.swt.finder_2.0.5.20111003_1754-3676ac8-dev-e36.jar
+ * SWTBot                        2.1.0             2013-03-21
+  * org.eclipse.swtbot.ant.junit_2.1.0.201302221524.jar
+  * org.eclipse.swtbot.generator_2.1.0.201302221524.jar
+  * org.eclipse.swtbot.junit4_x_2.1.0.201302221524.jar
+  * org.eclipse.swtbot.swt.finder_2.1.0.201302221524.jar
   * org.hamcrest.core_1.1.0.v20090501071000.jar
   * org.hamcrest.integration_1.1.0.v20090501071000.jar
   * org.hamcrest.library_1.1.0.v20090501071000.jar
