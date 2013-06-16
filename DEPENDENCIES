@@ -9,7 +9,7 @@ Versions of dependent libraries in distributions:
  * commons-vfs2.jar              2.0               2010-12-21
  * commons-vfs2-sandbox.jar      2.0               2010-12-21
  * jcifs.jar                     1.3.17            2011-08-18
- * swt-*.jar                     4.234 (aka 4.2.1) 2012-09-16
+ * swt-*.jar                     4.236 (aka 4.2.2) 2013-02-06
  * jsch.jar                      0.1.49            2012-10-11
  * jcl-over-slf4j.jar            1.7.5             2013-03-25
  * log4j-over-slf4j.jar          1.7.5             2013-03-25
