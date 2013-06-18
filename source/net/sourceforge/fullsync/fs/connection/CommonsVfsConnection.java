@@ -91,9 +91,9 @@ public class CommonsVfsConnection implements FileSystemConnection {
 		String name = file.getName().getBaseName();
 
 		File n = new AbstractFile(this, name, null, parent, file.getType() == FileType.FOLDER, true);
+		FileContent content = file.getContent();
+		n.setLastModified(toUTC(content.getLastModifiedTime()));
 		if (file.getType() == FileType.FILE) {
-			FileContent content = file.getContent();
-			n.setLastModified(toUTC(content.getLastModifiedTime()));
 			n.setSize(content.getSize());
 		}
 		return n;
