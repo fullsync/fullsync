@@ -23,7 +23,6 @@ package net.sourceforge.fullsync.ui;
 import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.ui.Messages;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
