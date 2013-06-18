@@ -24,16 +24,26 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
 import java.rmi.RemoteException;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TreeSet;
 
+import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FileSystemException;
+import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.ProfileSchedulerListener;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.Util;
+import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 import net.sourceforge.fullsync.ui.GuiController;
@@ -45,6 +55,10 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,6 +103,18 @@ public class Main{ // NO_UCD
 		OptionBuilder.withArgName("passwd");
 		options.addOption(OptionBuilder.create("a"));
 		// + interactive mode
+
+		OptionBuilder.withLongOpt("list");
+		OptionBuilder.withDescription("list all files and directories at the given location");
+		OptionBuilder.hasArg();
+		OptionBuilder.withArgName("URL");
+		options.addOption(OptionBuilder.create("ls"));
+
+		OptionBuilder.withLongOpt("timezone");
+		OptionBuilder.withDescription("timezone of the server, needed to convert the server time to your local time");
+		OptionBuilder.hasArg();
+		OptionBuilder.withArgName("timezone name");
+		options.addOption(OptionBuilder.create("tz"));
 	}
 
 	private static void printHelp() {
@@ -160,6 +186,10 @@ public class Main{ // NO_UCD
 				return;
 			}
 			
+			if (line.hasOption("ls")) {
+				doList(line);
+			}
+
 			// Initialize basic facilities
 			
 			// upgrade code...
@@ -173,7 +203,7 @@ public class Main{ // NO_UCD
 			while (false); // variable scope
 			final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
 			
-			String profilesFile = "profiles.xml";
+			String profilesFile;
 			if (line.hasOption("P")) {
 				profilesFile = line.getOptionValue("P");
 			}
@@ -312,5 +342,54 @@ public class Main{ // NO_UCD
 		catch (Exception exp) {
 			ExceptionHandler.reportException(exp);
 		}
+	}
+
+	private static void doList(CommandLine line) {
+		String suri = line.getOptionValue("ls");
+		URI uri = null;
+		try {
+			uri = new URI(suri);
+		}
+		catch (URISyntaxException ex) {
+			ExceptionHandler.reportException(ex);
+			System.err.println("Unable to parse URI. " + ex.getMessage());
+			//TODO: try native path  to uri
+		}
+		if (null != uri) {
+			ConnectionDescription desc = new ConnectionDescription(uri);
+			if (line.hasOption("timezone")) {
+				desc.setParameter(ConnectionDescription.PARAMETER_TIMEZONE, line.getOptionValue("timezone"));
+			}
+			FileSystemManager fsm = new FileSystemManager();
+			try {
+				Site site = fsm.createConnection(desc);
+				DateTimeZone local = DateTimeZone.getDefault();
+
+				String dateFormat = DateTimeFormat.patternForStyle("MM", Locale.getDefault());
+				DateTimeFormatter fmt = DateTimeFormat.forPattern(dateFormat);
+				int timelength = fmt.print(DateTime.now()).length() + 5; // for missing leading zeros
+				// <type> <last modified> <size> <name>
+				String lineFormat = "%4s %" + timelength + "s %10s %s";
+				Collection<net.sourceforge.fullsync.fs.File> children = site.getRoot().getChildren();
+				TreeSet<net.sourceforge.fullsync.fs.File> sortedChildren = new TreeSet<net.sourceforge.fullsync.fs.File>(children);
+				for (net.sourceforge.fullsync.fs.File child : sortedChildren) {
+					String size = "";
+					String type = "dir";
+					if (child.isFile()) {
+						size = Util.formatSize(child.getSize());
+						type = "file";
+					}
+					System.out.println(String.format(lineFormat, type, fmt.print(local.convertUTCToLocal(child.getLastModified())), size, child.getName()));
+				}
+				System.exit(0);
+			} catch (FileSystemException ex) {
+				ExceptionHandler.reportException(ex);
+			} catch (IOException ex) {
+				ExceptionHandler.reportException(ex);
+			} catch (URISyntaxException ex) {
+				ExceptionHandler.reportException(ex);
+			}
+		}
+		System.exit(1);
 	}
 }

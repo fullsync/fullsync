@@ -33,7 +33,7 @@ import org.joda.time.DateTimeZone;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-class AbstractFile implements File {
+class AbstractFile implements File, Comparable<AbstractFile> {
 	private static final long serialVersionUID = 3L;
 
 	protected FileSystemConnection fs;
@@ -265,5 +265,10 @@ class AbstractFile implements File {
 			sb.append("; ~");
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public int compareTo(AbstractFile o) {
+		return getName().compareTo(o.getName());
 	}
 }

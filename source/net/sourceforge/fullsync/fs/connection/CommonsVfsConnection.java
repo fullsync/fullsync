@@ -80,10 +80,16 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	public long toUTC(long local) {
+//		if ("sftp".equals(desc.getUri().getScheme())) {
+//			return local;
+//		}
 		return getTz().convertLocalToUTC(local, false);
 	}
 
 	public long toLocal(long utc) {
+//		if ("sftp".equals(desc.getUri().getScheme())) {
+//			return utc;
+//		}
 		return getTz().convertUTCToLocal(utc);
 	}
 
