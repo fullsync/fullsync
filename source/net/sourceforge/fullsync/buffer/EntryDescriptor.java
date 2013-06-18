@@ -34,7 +34,7 @@ import net.sourceforge.fullsync.Task;
 public interface EntryDescriptor {
 	public Task getTask();
 
-	public long getLength();
+	public long getSize();
 
 	// REVISIT if those streams don't get closed, the entry descriptor should
 	// return the same one as before (say the opened one)

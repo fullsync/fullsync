@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.zip.GZIPInputStream;
@@ -47,7 +48,6 @@ import javax.xml.transform.stream.StreamResult;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
@@ -94,10 +94,11 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 				// if( n == null )
 				// n = current.getUnbuffered().createChild( name, false );
 				AbstractBufferedFile newFile = new AbstractBufferedFile(bc, name, current.getPath() + "/" + name, current, false, true);
-				newFile.setFileAttributes(new FileAttributes(Long.parseLong(attributes.getValue("BufferedLength")), Long
-						.parseLong(attributes.getValue("BufferedLastModified"))));
-				newFile.setFsFileAttributes(new FileAttributes(Long.parseLong(attributes.getValue("FileSystemLength")), Long
-						.parseLong(attributes.getValue("FileSystemLastModified"))));
+				newFile.setSize(Long.parseLong(attributes.getValue("BufferedLength")));
+				newFile.setLastModified(Long.parseLong(attributes.getValue("BufferedLastModified")));
+
+				newFile.setFsSize(Long.parseLong(attributes.getValue("FileSystemLength")));
+				newFile.setFsLastModified(Long.parseLong(attributes.getValue("FileSystemLastModified")));
 				current.addChild(newFile);
 			}
 			super.startElement(uri, localName, qName, attributes);
@@ -181,7 +182,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	}
 
 	@Override
-	public boolean writeFileAttributes(File file, FileAttributes att) {
+	public boolean writeFileAttributes(File file) {
 		return false;
 	}
 
@@ -214,7 +215,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		ByteArrayOutputStream out;
 		InputStream reader = null;
 		try {
-			out = new ByteArrayOutputStream((int) f.getFileAttributes().getLength());
+			out = new ByteArrayOutputStream((int) f.getSize());
 
 			InputStream in = new GZIPInputStream(f.getInputStream());
 			int i;
@@ -279,10 +280,10 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			}
 		}
 		else {
-			elem.setAttribute("BufferedLength", String.valueOf(file.getFileAttributes().getLength()));
-			elem.setAttribute("BufferedLastModified", String.valueOf(file.getFileAttributes().getLastModified()));
-			elem.setAttribute("FileSystemLength", String.valueOf(file.getFsFileAttributes().getLength()));
-			elem.setAttribute("FileSystemLastModified", String.valueOf(file.getFsFileAttributes().getLastModified()));
+			elem.setAttribute("BufferedLength", String.valueOf(file.getSize()));
+			elem.setAttribute("BufferedLastModified", String.valueOf(file.getLastModified()));
+			elem.setAttribute("FileSystemLength", String.valueOf(file.getFsSize()));
+			elem.setAttribute("FileSystemLastModified", String.valueOf(file.getFsLastModified()));
 		}
 		return elem;
 	}

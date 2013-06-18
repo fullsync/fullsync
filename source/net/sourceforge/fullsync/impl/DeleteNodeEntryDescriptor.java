@@ -45,7 +45,7 @@ public class DeleteNodeEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public long getLength() {
+	public long getSize() {
 		return 0;
 	}
 

@@ -196,7 +196,7 @@ public class BlockBuffer implements ExecutionBuffer {
 	@Override
 	public void storeEntry(final EntryDescriptor descriptor) throws IOException {
 		Entry entry;
-		if (descriptor.getLength() == 0) {
+		if (descriptor.getSize() == 0) {
 			if (numberEntries == maxEntries) {
 				flush();
 			}
@@ -206,7 +206,7 @@ public class BlockBuffer implements ExecutionBuffer {
 			numberEntries++;
 		}
 		else {
-			storeEntry(descriptor.getInputStream(), descriptor.getLength(), descriptor);
+			storeEntry(descriptor.getInputStream(), descriptor.getSize(), descriptor);
 		}
 		descriptor.finishStore();
 	}

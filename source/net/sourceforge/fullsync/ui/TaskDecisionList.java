@@ -100,6 +100,7 @@ public class TaskDecisionList extends Composite {
 
 			tableColumnSourceSize = new TableColumn(tableLogLines, SWT.NONE);
 			tableColumnSourceSize.setText(Messages.getString("TaskDecisionList.Size")); //$NON-NLS-1$
+			tableColumnSourceSize.setAlignment(SWT.RIGHT);
 			tableColumnSourceSize.setWidth(90);
 
 			tableColumnAction = new TableColumn(tableLogLines, SWT.NONE);
@@ -336,7 +337,7 @@ public class TaskDecisionList extends Composite {
 			item.setImage(2, image);
 			item.setText(new String[] {
 					t.getSource().getPath(),
-					(t.getSource().getFileAttributes() != null ? Long.toString(t.getSource().getFileAttributes().getLength()) + " bytes" : ""), //$NON-NLS-1$
+					UISettings.formatSize(t.getSource().getSize()),
 					"", //$NON-NLS-1$
 					t.getCurrentAction().getExplanation() });
 			item.setData(t);

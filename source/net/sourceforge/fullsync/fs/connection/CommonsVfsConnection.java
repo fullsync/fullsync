@@ -26,7 +26,6 @@ import java.util.Hashtable;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.fs.FileSystem;
 
 import org.apache.commons.vfs2.FileContent;
@@ -70,7 +69,8 @@ public class CommonsVfsConnection implements FileSystemConnection {
 		File n = new AbstractFile(this, name, null, parent, file.getType() == FileType.FOLDER, true);
 		if (file.getType() == FileType.FILE) {
 			FileContent content = file.getContent();
-			n.setFileAttributes(new FileAttributes(content.getSize(), content.getLastModifiedTime()));
+			n.setLastModified(content.getLastModifiedTime());
+			n.setSize(content.getSize());
 		}
 		return n;
 	}
@@ -102,10 +102,10 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public final boolean writeFileAttributes(final File file, final FileAttributes att) throws IOException {
+	public final boolean writeFileAttributes(final File file) throws IOException {
 		FileObject obj = base.resolveFile(file.getPath());
 		FileContent content = obj.getContent();
-		content.setLastModifiedTime(att.getLastModified());
+		content.setLastModifiedTime(file.getLastModified());
 		return true;
 	}
 

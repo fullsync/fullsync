@@ -27,7 +27,6 @@ import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 
@@ -167,14 +166,14 @@ public class SimplyfiedSyncRules implements RuleSet {
 	 *      net.sourceforge.fullsync.fs.FileAttributes)
 	 */
 	@Override
-	public State compareFiles(final FileAttributes src, final FileAttributes dst) throws DataParseException {
+	public State compareFiles(final File src, final File dst) throws DataParseException {
 		if (Math.floor(src.getLastModified() / 1000.0) > Math.floor(dst.getLastModified() / 1000.0)) {
 			return new State(State.FileChange, Location.Source);
 		}
 		else if (Math.floor(src.getLastModified() / 1000.0) < Math.floor(dst.getLastModified() / 1000.0)) {
 			return new State(State.FileChange, Location.Destination);
 		}
-		if (src.getLength() != dst.getLength()) {
+		if (src.getSize() != dst.getSize()) {
 			return new State(State.FileChange, Location.None);
 		}
 		return new State(State.NodeInSync, Location.Both);

@@ -52,9 +52,11 @@ public interface File extends Serializable {
 
 	public void writeFileAttributes() throws IOException;
 
-	public void setFileAttributes(FileAttributes att);
+	public long getLastModified();
+	public void setLastModified(long lastModified);
 
-	public FileAttributes getFileAttributes();
+	public long getSize();
+	public void setSize(long size);
 
 	public Collection<File> getChildren() throws IOException;
 

@@ -23,7 +23,6 @@
 package net.sourceforge.fullsync.rules.filefilter;
 
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.FileAttributes;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
@@ -81,11 +80,10 @@ public class FileSizeFileFilterRule extends FileFilterRule {
 
 	@Override
 	public boolean match(File file) throws FilterRuleNotAppliableException {
-		FileAttributes attrs = file.getFileAttributes();
-		if (attrs == null) {
+		long filesize = file.getSize();
+		if (-1 == filesize) {
 			throw new FilterRuleNotAppliableException("The file doesn't have any size attribute");
 		}
-		long filesize = attrs.getLength();
 		switch (op) {
 			case OP_IS:
 				return filesize == size.getBytes();
