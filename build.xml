@@ -87,20 +87,6 @@
 		<javac debug="${debug}" srcdir="${tests.dir}" destdir="${classes-tests.dir}" classpathref="tests.classpath" includeantruntime="true" target="${java.target.version}" source="${java.source.version}"/>
 	</target>
 
-	<target name="rmic">
-		<rmic classname="net.sourceforge.fullsync.remote.RemoteServer" base="${classes.dir}" classpathref="compile.classpath" />
-		<rmic classname="net.sourceforge.fullsync.remote.RemoteTaskFinishedListener" base="${classes.dir}" classpathref="compile.classpath" />
-		<rmic classname="net.sourceforge.fullsync.remote.RemoteProfileListChangeListener" base="${classes.dir}" classpathref="compile.classpath" />
-		<rmic classname="net.sourceforge.fullsync.remote.RemoteSchedulerChangeListener" base="${classes.dir}" classpathref="compile.classpath" />
-	</target>
-
-	<target name="rmic-eclipse" description="RMIC compiler for classes used by the IDE">
-		<rmic classname="net.sourceforge.fullsync.remote.RemoteServer" base="${basedir}/classes" classpathref="compile.classpath" />
-		<rmic classname="net.sourceforge.fullsync.remote.RemoteTaskFinishedListener" base="${basedir}/classes" classpathref="compile.classpath" />
-		<rmic classname="net.sourceforge.fullsync.remote.RemoteProfileListChangeListener" base="${basedir}/classes" classpathref="compile.classpath" />
-		<rmic classname="net.sourceforge.fullsync.remote.RemoteSchedulerChangeListener" base="${basedir}/classes" classpathref="compile.classpath" />
-	</target>
-
 	<target name="javadoc">
 		<!--
 		<mkdir dir="${build.dir}/docs/api"/>
@@ -152,7 +138,7 @@
 		<!-- copy readme and so on -->
 	</target>
 
-	<target name="jar" depends="compile, rmic, copy-libs">
+	<target name="jar" depends="compile, copy-libs">
 		<jar destfile="${build.lib.dir}/fullsync.jar">
 			<fileset dir="${classes.dir}" includes="net/**/*" excludes="net/sourceforge/fullsync/launcher/**/*" />
 			<fileset dir="${basedir}">
@@ -168,7 +154,7 @@
 		</jar>
 	</target>
 
-	<target name="logger-jar" depends="compile, rmic, copy-libs, jar">
+	<target name="logger-jar" depends="compile, copy-libs, jar">
 		<jar destfile="${build.lib.dir}/fullsync-logger.jar">
 			<fileset dir="${classes.dir}" includes="org/slf4j/impl/**/*" />
 			<manifest>
