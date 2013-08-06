@@ -29,7 +29,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -126,7 +125,7 @@ public class WizardDialog extends SelectionAdapter implements ShellListener {
 			// wizard caption
 			labelCaption = new Label(topTextComposite, SWT.NONE);
 			labelCaption.setBackground(white);
-			labelCaption.setFont(new Font(display, "Tohama", 9, SWT.BOLD)); //$NON-NLS-1$
+			labelCaption.setFont(GuiController.getInstance().getFont("Tohama", 9, SWT.BOLD)); //$NON-NLS-1$
 			GridData labelCaptionLData = new GridData();
 			labelCaptionLData.grabExcessHorizontalSpace = true;
 			labelCaption.setLayoutData(labelCaptionLData);

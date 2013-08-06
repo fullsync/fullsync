@@ -24,7 +24,6 @@ import net.sourceforge.fullsync.Profile;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -103,7 +102,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 
 			// profile name
 			labelCaption = new Label(this, SWT.TRANSPARENT);
-			labelCaption.setFont(new Font(getDisplay(), "Tahoma", 9, 1)); //$NON-NLS-1$
+			labelCaption.setFont(GuiController.getInstance().getFont("Tahoma", 9, 1)); //$NON-NLS-1$
 			GridData labelCaptionLData = new GridData();
 			labelCaptionLData.widthHint = -1;
 			labelCaption.setLayoutData(labelCaptionLData);

@@ -28,6 +28,7 @@ import net.sourceforge.fullsync.Synchronizer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -52,6 +53,7 @@ public class GuiController implements Runnable {
 
 	private Display display;
 	private ImageRepository imageRepository;
+	private FontRepository fontRepository;
 	private Shell mainShell;
 	private MainWindow mainWindow;
 	private SystemTrayItem systemTrayItem;
@@ -122,6 +124,7 @@ public class GuiController implements Runnable {
 	public void startGui(boolean minimized) {
 		display = Display.getDefault();
 		imageRepository = new ImageRepository(display);
+		fontRepository = new FontRepository(display);
 		createMainShell(minimized);
 		systemTrayItem = new SystemTrayItem(this);
 		oldExceptionHandler = ExceptionHandler.registerExceptionHandler(new ExceptionHandler() {
@@ -179,6 +182,9 @@ public class GuiController implements Runnable {
 		}
 		if (imageRepository != null) {
 			imageRepository.dispose();
+		}
+		if (fontRepository != null) {
+			fontRepository.dispose();
 		}
 		if ((systemTrayItem != null) && !systemTrayItem.isDisposed()) {
 			systemTrayItem.dispose();
@@ -245,5 +251,8 @@ public class GuiController implements Runnable {
 			}
 		}
 
+	}
+	public Font getFont(String name, int height, int style) {
+		return fontRepository.getFont(name, height, style);
 	}
 }
