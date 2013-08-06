@@ -86,7 +86,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 			thisLayout.marginWidth = 3;
 
 			// icon
-			labelIcon = new Label(this, SWT.NULL);
+			labelIcon = new Label(this, SWT.TRANSPARENT);
 			labelIcon.setSize(16, 16);
 			GridData labelIconLData = new GridData();
 			labelIconLData.grabExcessVerticalSpace = true;
@@ -102,7 +102,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 			labelIcon.addListener(SWT.MouseDoubleClick, this);
 
 			// profile name
-			labelCaption = new Label(this, SWT.NULL);
+			labelCaption = new Label(this, SWT.TRANSPARENT);
 			labelCaption.setFont(new Font(getDisplay(), "Tahoma", 9, 1)); //$NON-NLS-1$
 			GridData labelCaptionLData = new GridData();
 			labelCaptionLData.widthHint = -1;
@@ -114,7 +114,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 			labelCaption.addListener(SWT.MouseDoubleClick, this);
 
 
-			labelStatus = new Label(this, SWT.NONE);
+			labelStatus = new Label(this, SWT.TRANSPARENT);
 			GridData labelStatusLData = new GridData();
 			labelStatusLData.grabExcessHorizontalSpace = true;
 			labelStatusLData.horizontalAlignment = SWT.FILL;
@@ -170,26 +170,18 @@ public class NiceListViewItem extends Canvas implements Listener {
 			default:
 				break;
 		}
-		;
-
 	}
 
 	@Override
 	public void setBackground(Color color) {
-		Control[] children;
 		super.setBackground(color);
-		if (labelIcon.getImage() != null) {
-			labelIcon.getImage().setBackground(color);
-		}
 
-		children = this.getChildren();
-		for (Control element : children) {
+		for (Control element : this.getChildren()) {
 			element.setBackground(color);
 		}
 
 		if (compositeContent != null) {
-			children = compositeContent.getChildren();
-			for (Control element : children) {
+			for (Control element : compositeContent.getChildren()) {
 				element.setBackground(color);
 			}
 		}
@@ -214,11 +206,6 @@ public class NiceListViewItem extends Canvas implements Listener {
 
 	public void setImage(Image image) {
 		labelIcon.setImage(image);
-		image.setBackground(labelIcon.getBackground());
-	}
-
-	public Image getImage() {
-		return labelIcon.getImage();
 	}
 
 	public void setText(String text) {

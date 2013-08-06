@@ -195,7 +195,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		super(parent, style);
 		loadImages();
 		scrollPane = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
-		profileList = new NiceListView(scrollPane, SWT.NULL);
+		profileList = new NiceListView(scrollPane, SWT.TRANSPARENT);
 		scrollPane.setExpandHorizontal(true);
 		scrollPane.setExpandVertical(false);
 		scrollPane.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
@@ -228,25 +228,22 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	}
 
 	private void updateItem(NiceListViewItem item, Profile profile) {
-		if (item.getImage() != null) {
-			item.getImage().dispose();
-		}
 		if (profile.isEnabled() && (profile.getSchedule() != null)) {
 			// scheduled
 			if (profile.getLastErrorLevel() > 0) {
-				item.setImage(new Image(getDisplay(), imageProfileErrorScheduled, SWT.IMAGE_COPY));
+				item.setImage(imageProfileErrorScheduled);
 			}
 			else {
-				item.setImage(new Image(getDisplay(), imageProfileScheduled, SWT.IMAGE_COPY));
+				item.setImage(imageProfileScheduled);
 			}
 		}
 		else {
 			// not scheduled
 			if (profile.getLastErrorLevel() > 0) {
-				item.setImage(new Image(getDisplay(), imageProfileError, SWT.IMAGE_COPY));
+				item.setImage(imageProfileError);
 			}
 			else {
-				item.setImage(new Image(getDisplay(), imageProfileDefault, SWT.IMAGE_COPY));
+				item.setImage(imageProfileDefault);
 			}
 		}
 
