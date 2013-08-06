@@ -22,7 +22,6 @@ package net.sourceforge.fullsync.ui;
 import java.io.IOException;
 
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.ImageRepository;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
@@ -31,6 +30,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -68,7 +68,7 @@ public class GuiController implements Runnable {
 		try {
 			mainShell = new Shell(display);
 			mainWindow = new MainWindow(mainShell, SWT.NULL, this);
-			mainShell.setLayout(new org.eclipse.swt.layout.FillLayout());
+			mainShell.setLayout(new FillLayout());
 			Rectangle shellBounds = mainShell.computeTrim(0, 0, mainWindow.getSize().x, mainWindow.getSize().y);
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText("FullSync"); //$NON-NLS-1$
@@ -117,10 +117,6 @@ public class GuiController implements Runnable {
 
 	public Image getImage(String imageName) {
 		return imageRepository.getImage(imageName);
-	}
-
-	public void removeImage(String imageName) {
-		imageRepository.removeImage(imageName);
 	}
 
 	public void startGui(boolean minimized) {
