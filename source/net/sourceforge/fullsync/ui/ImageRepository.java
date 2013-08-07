@@ -17,10 +17,9 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync;
+package net.sourceforge.fullsync.ui;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -69,34 +68,24 @@ public class ImageRepository {
 	 */
 
 	private Display display;
-	private Hashtable<String, Image> cache = new Hashtable<String, Image>();
+	private HashMap<String, Image> cache;
 
 	public ImageRepository(Display display) {
 		this.display = display;
-		this.cache = new Hashtable<String, Image>();
+		cache = new HashMap<String, Image>();
 	}
 
 	public Image getImage(String imageName) {
-		Object obj = cache.get(imageName);
-		if (obj == null) {
-			Image image = new Image(display, "images/" + imageName);
-			cache.put(imageName, image);
-			obj = image;
+		Image img = cache.get(imageName);
+		if (img == null) {
+			img = new Image(display, "images/" + imageName);
+			cache.put(imageName, img);
 		}
-		return (Image) obj;
-	}
-
-	public void removeImage(String imageName) {
-		Object obj = cache.remove(imageName);
-		if (obj != null) {
-			((Image) obj).dispose();
-		}
+		return img;
 	}
 
 	public void dispose() {
-		Enumeration<Image> en = cache.elements();
-		while (en.hasMoreElements()) {
-			Image i = en.nextElement();
+		for (Image i : cache.values()) {
 			if (!i.isDisposed()) {
 				i.dispose();
 			}

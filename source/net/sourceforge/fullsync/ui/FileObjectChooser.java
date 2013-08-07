@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.Date;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.ui.GuiController;
 
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
@@ -35,7 +36,6 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -71,9 +71,6 @@ class FileObjectChooser extends Dialog {
 	private Composite compositeTop;
 	private Table tableItems;
 
-	private Image imageFile;
-	private Image imageFolder;
-
 	private boolean result;
 	private FileObject baseFileObject;
 	private FileObject rootFileObject;
@@ -90,8 +87,6 @@ class FileObjectChooser extends Dialog {
 			Shell parent = getParent();
 			dialogShell = new Shell(parent, SWT.BORDER | SWT.TITLE | SWT.RESIZE | SWT.APPLICATION_MODAL);
 			dialogShell.setText("Choose File...");
-			imageFile = new Image(parent.getDisplay(), "images/FS_File_text_plain.gif");
-			imageFolder = new Image(parent.getDisplay(), "images/FS_Folder_Collapsed.gif");
 
 			dialogShell.setLayout(new GridLayout());
 			dialogShell.layout();
@@ -122,7 +117,7 @@ class FileObjectChooser extends Dialog {
 			toolBarActions = new ToolBar(compositeTop, SWT.NONE);
 			// folder up
 			toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
-			toolItemParent.setImage(new Image(parent.getDisplay(), "images/FS_LevelUp.gif"));
+			toolItemParent.setImage(GuiController.getInstance().getImage("FS_LevelUp.gif"));
 			toolItemParent.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent evt) {
@@ -131,8 +126,8 @@ class FileObjectChooser extends Dialog {
 			});
 			// new folder
 			toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
-			toolItemNewFolder.setImage(new Image(parent.getDisplay(), "images/FS_Folder_New.gif"));
-			toolItemNewFolder.setDisabledImage(new Image(parent.getDisplay(), "images/FS_Folder_New_disabled.gif"));
+			toolItemNewFolder.setImage(GuiController.getInstance().getImage("FS_Folder_New.gif"));
+			toolItemNewFolder.setDisabledImage(GuiController.getInstance().getImage("FS_Folder_New_disabled.gif"));
 			toolItemNewFolder.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent evt) {
@@ -304,10 +299,10 @@ class FileObjectChooser extends Dialog {
 			item.setText(2, type);
 
 			if (data.getType() == FileType.FOLDER) {
-				item.setImage(imageFolder);
+				item.setImage(GuiController.getInstance().getImage("FS_Folder_Collapsed.gif"));
 			}
 			else {
-				item.setImage(imageFile);
+				item.setImage(GuiController.getInstance().getImage("FS_File_text_plain.gif"));
 			}
 
 			item.setData(data);

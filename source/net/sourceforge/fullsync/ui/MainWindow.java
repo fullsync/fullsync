@@ -67,7 +67,6 @@ TaskGenerationListener, SchedulerChangeListener {
 	private ToolItem toolItemScheduleStop;
 
 	private Composite profileListContainer;
-	private Menu profilePopupMenu;
 	private ProfileListComposite profileList;
 	private GuiController guiController;
 
@@ -206,7 +205,6 @@ TaskGenerationListener, SchedulerChangeListener {
 			statusLine.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 			createMenu();
-			createPopupMenu();
 			createProfileList();
 			this.layout();
 		}
@@ -431,9 +429,9 @@ TaskGenerationListener, SchedulerChangeListener {
 		});
 	}
 
-	private void createPopupMenu() {
+	private Menu createPopupMenu() {
 		// PopUp Menu for the Profile list.
-		profilePopupMenu = new Menu(getShell(), SWT.POP_UP);
+		Menu profilePopupMenu = new Menu(getShell(), SWT.POP_UP);
 
 		MenuItem runItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		runItem.setText(Messages.getString("MainWindow.Run_Profile")); //$NON-NLS-1$
@@ -486,22 +484,17 @@ TaskGenerationListener, SchedulerChangeListener {
 				createNewProfile();
 			}
 		});
+		return profilePopupMenu;
 	}
 
 	void createProfileList() {
-		if (profileList != null) {
-			// take away our menu so it's not disposed
-			profileList.setMenu(null);
-			profileList.dispose();
-		}
-
 		if ("NiceListView".equals(guiController.getPreferences().getProfileListStyle())) {
 			profileList = new NiceListViewProfileListComposite(profileListContainer, SWT.NULL);
 		}
 		else {
 			profileList = new ListViewProfileListComposite(profileListContainer, SWT.NULL);
 		}
-		profileList.setMenu(profilePopupMenu);
+		profileList.setMenu(createPopupMenu());
 		profileList.setHandler(this);
 		profileList.setProfileManager(guiController.getProfileManager());
 
