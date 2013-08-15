@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="FullSync" uid="net.sourceforge.fullsync.product" version="1.0.0" useFeatures="true" includeLaunchers="true">
+
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>-consoleLog</programArgs>
+      <vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown-=true</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages/>
+
+
+   <launcher name="fullsync.exe">
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+
+   <vm>
+      <windows include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</windows>
+   </vm>
+
+
+   <plugins>
+      <plugin id="net.sourceforge.fullsync.cli"/>
+      <plugin id="org.eclipse.osgi"/>
+   </plugins>
+
+   <features>
+      <feature id="net.sourceforge.fullsync.feature" version="1.0.0"/>
+   </features>
+
+   <configurations>
+      <plugin id="net.sourceforge.fullsync.cli" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+   </configurations>
+
+</product>
