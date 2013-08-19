@@ -3,9 +3,15 @@ Version 0.11.0
 * removed bundled implementation of javax.xml
 * removed support for Advanced Rule Sets
 
+Version 0.10.2
+(25 August 2013)
+* improved the formatting of the Size column in the Task Decision dialog
+* slightly reduced memory consumption
+* updated French translations special thanks to farvardin <farvardin@users.sf.net>
+
 Version 0.10.1
 (10 February 2013)
-* improved performace of the task decision dialog
+* improved performance of the task decision dialog
 * fix remembering the SSH host keys in case the .ssh directory did not already exist
 * added a select box to choose the authentication method for FTP
 
