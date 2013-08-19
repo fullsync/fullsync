@@ -5,7 +5,7 @@
 
 	<!-- Project Properties -->
 	<property name="project" value="FullSync" />
-	<property name="version" value="0.10.1" />
+	<property name="version" value="0.10.2" />
 	<property name="final.name" value="${project}-${version}" />
 	<property name="final-src.name" value="${project}-${version}-src" />
 	<property name="source.dir" value="${basedir}/source" />

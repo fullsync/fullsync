@@ -16,7 +16,7 @@
 #
 
 Name:           FullSync
-Version:        0.10.1
+Version:        0.10.2
 Release:        0
 Summary:        Easy file synchronization for everyone
 License:        GPL-2.0+
