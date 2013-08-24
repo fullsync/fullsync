@@ -4,8 +4,7 @@ Bundle-Name: CLI
 Bundle-SymbolicName: net.sourceforge.fullsync.cli;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: net.sourceforge.fullsync.cli.Activator
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.osgi.launch;version="1.0.0",
- org.osgi.framework;version="1.7.0"
 Export-Package: net.sourceforge.fullsync.cli
+Import-Package: org.osgi.framework;version="1.7.0"

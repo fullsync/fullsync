@@ -11,6 +11,7 @@ public class Activator implements BundleActivator {
 	 */
 	public void start(BundleContext context) throws Exception {
 		System.out.println("Hello World!!");
+		System.getProperties().list(System.out);
 	}
 	
 	/*

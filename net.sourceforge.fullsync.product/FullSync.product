@@ -7,8 +7,9 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-consoleLog</programArgs>
-      <vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown-=true</vmArgs>
+      <programArgs>-consoleLog -console -test</programArgs>
+      <vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown=true
+-Dosgi.console.enable.builtin=true</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
