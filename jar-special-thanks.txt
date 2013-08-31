@@ -11,3 +11,7 @@ Français: farvardin <farvardin@users.sf.net>
 Italiano: Michele Aiello
 
 
+Patches
+VCD <VeryCrazyDog@gmail.com>
+
+
