@@ -22,13 +22,21 @@ Summary:        Easy file synchronization for everyone
 License:        GPL-2.0+
 Group:          Productivity/Archiving/Backup
 URL:            http://fullsync.sourceforge.net/
-Source0:        %{name}-%{version}.tar.gz
+Source0:        %{name}-%{version}-src.tar.gz
 %ifarch x86_64
+%if 0%{?fedora} > 0
+Requires:       java >= 1.6.0
+%else
 Requires:       java-64 >= 1.6.0
+%endif
 %else
 Requires:       java >= 1.6.0
 %endif
+%if 0%{?fedora} > 0
+Requires:       gtk2%{_isa} >= 2.4.1
+%else
 Requires:       libgtk-2_0-0%{_isa} >= 2.4.1
+%endif
 Requires:       xdg-utils
 Requires:       xdg-user-dirs
 Requires:       desktop-file-utils
@@ -36,6 +44,7 @@ BuildRequires:  ant
 BuildRequires:  java-devel >= 1.6.0
 BuildRequires:  hicolor-icon-theme
 BuildRequires:  desktop-file-utils
+BuildRequires:  dos2unix
 ExclusiveArch:  x86_64 i386 i486 i586 i686
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
@@ -61,6 +70,7 @@ desktop-file-edit "--set-key=Comment" "--set-value=Easy file synchronization for
 
 %install
 cd build/
+dos2unix fullsync
 install -d -m 755 $RPM_BUILD_ROOT%{fsdir}/
 install -d -m 755 $RPM_BUILD_ROOT%{fsdir}/lib/
 install -d -m 755 $RPM_BUILD_ROOT%{fsdir}/images/
@@ -103,11 +113,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsscaldir}/%{exename}.svg
 
 %post
+%if 0%{?fedora} > 0
+/usr/bin/update-desktop-database &> /dev/null || :
+%else
 %desktop_database_post
+%endif
 exit 0
 
 %postun
+%if 0%{?fedora} > 0
+/usr/bin/update-desktop-database &> /dev/null || :
+%else
 %desktop_database_postun
+%endif
 exit 0
 
 %changelog
