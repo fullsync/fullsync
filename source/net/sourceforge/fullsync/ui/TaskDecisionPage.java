@@ -49,7 +49,6 @@ import org.eclipse.swt.widgets.TableItem;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class TaskDecisionPage extends WizardDialog {
-	private WizardDialog dialog;
 	private GuiController guiController;
 	private TaskTree taskTree;
 	private boolean processing;
@@ -139,7 +138,7 @@ public class TaskDecisionPage extends WizardDialog {
 	@Override
 	public boolean apply() {
 		if (!processing) {
-			dialog.setCancelButtonEnabled(false);
+			setCancelButtonEnabled(false);
 			performActions();
 		}
 		return false;
@@ -157,7 +156,7 @@ public class TaskDecisionPage extends WizardDialog {
 			}
 			return true;
 		}
-		MessageBox mb = new MessageBox(dialog.getShell(), SWT.ICON_ERROR | SWT.OK);
+		MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
 		mb.setText(Messages.getString("TaskDecisionPage.Error")); //$NON-NLS-1$
 		mb.setMessage(Messages.getString("TaskDecisionPage.SyncWindowCantBeClosed")); //$NON-NLS-1$
 		mb.open();
@@ -170,7 +169,7 @@ public class TaskDecisionPage extends WizardDialog {
 			@Override
 			public void run() {
 				guiController.showBusyCursor(true);
-				final Display display = dialog.getDisplay();
+				final Display display = getDisplay();
 				try {
 					processing = true;
 					list.setChangeAllowed(false);
@@ -186,7 +185,7 @@ public class TaskDecisionPage extends WizardDialog {
 					display.syncExec(new Runnable() {
 						@Override
 						public void run() {
-							dialog.setOkButtonEnabled(false);
+							setOkButtonEnabled(false);
 						}
 					});
 
@@ -231,11 +230,11 @@ public class TaskDecisionPage extends WizardDialog {
 						@Override
 						public void run() {
 							// Notification Window.
-							MessageBox mb = new MessageBox(dialog.getShell(), SWT.ICON_INFORMATION | SWT.OK);
+							MessageBox mb = new MessageBox(getShell(), SWT.ICON_INFORMATION | SWT.OK);
 							mb.setText(Messages.getString("TaskDecisionPage.Finished")); //$NON-NLS-1$
 							mb.setMessage(Messages.getString("TaskDecisionPage.ProfileFinished")); //$NON-NLS-1$
 							mb.open();
-							dialog.widgetSelected(null);
+							widgetSelected(null);
 						}
 					});
 				}
