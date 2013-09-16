@@ -25,6 +25,8 @@
 	<property name="jar.copyright" value="Copyright (c) ${current.year} the ${ant.project.name} Team" />
 
 	<fileset id="dependentJars" dir="${basedir}/lib" includesfile="${source.dir}/net/sourceforge/fullsync/launcher/dependencies.txt">
+		<include name="swtcalendar.jar" />
+		<include name="simpleeventbus.jar" />
 	</fileset>
 	<path id="compile.classpath">
 		<fileset refid="dependentJars" />

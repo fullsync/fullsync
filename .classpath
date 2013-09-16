@@ -32,5 +32,6 @@
 	<classpathentry kind="lib" path="lib-tests/org.eclipse.swtbot.generator_2.1.0.201302221524.jar"/>
 	<classpathentry kind="lib" path="lib-tests/org.eclipse.swtbot.junit4_x_2.1.0.201302221524.jar"/>
 	<classpathentry kind="lib" path="lib-tests/org.eclipse.swtbot.swt.finder_2.1.0.201302221524.jar"/>
+	<classpathentry kind="lib" path="lib/simpleeventbus.jar" sourcepath="/simpleeventbus.git"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
