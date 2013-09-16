@@ -325,9 +325,11 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		}
 		catch (FactoryConfigurationError e) {
 			ExceptionHandler.reportException(e);
-		} catch (TransformerConfigurationException e) {
+		}
+		catch (TransformerConfigurationException e) {
 			ExceptionHandler.reportException(e);
-		} catch (TransformerException e) {
+		}
+		catch (TransformerException e) {
 			ExceptionHandler.reportException(e);
 		}
 		finally {
