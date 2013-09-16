@@ -139,7 +139,7 @@ public class TaskDecisionList extends Composite {
 				try {
 					final TaskDecisionPage dialog = new TaskDecisionPage(guiController.getMainShell(), guiController, task);
 					if (!interactive) {
-						dialog.addWizardDialogListener(new WizardDialogAdapter() {
+						dialog.addWizardDialogListener(new WizardDialogListener() {
 							@Override
 							public void dialogOpened() {
 								dialog.performActions();
