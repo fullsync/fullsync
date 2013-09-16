@@ -30,6 +30,7 @@ import java.rmi.RemoteException;
 import java.util.Date;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
@@ -173,6 +174,7 @@ public class Main { // NO_UCD
 				}
 			} while (false); // variable scope
 			final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
+			final FullSync fs = new FullSync(preferences);
 
 			String profilesFile = "profiles.xml";
 			if (line.hasOption("P")) {
