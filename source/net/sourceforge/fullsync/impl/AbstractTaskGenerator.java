@@ -47,8 +47,6 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 	protected boolean active; // resume/suspend
 	protected boolean cancelled; // cancel
 
-	private ActionDecider actionDecider;
-
 	public AbstractTaskGenerator() {
 		this.fsm = new FileSystemManager();
 		active = true;
@@ -85,10 +83,6 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 	public void cancel() {
 		cancelled = true;
 		active = false;
-	}
-
-	public ActionDecider getActionDecider() {
-		return actionDecider;
 	}
 
 	@Override
@@ -154,8 +148,6 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 			throw new FileSystemException("destination is unavailable");
 		}
 
-		this.actionDecider = actionDecider;
-
 		TaskTree tree = new TaskTree(source, destination);
 		Task root = new Task(null, null, new State(State.NodeInSync, Location.None),
 				new Action[] { new Action(Action.Nothing, Location.None, BufferUpdate.None, "Root") });
@@ -167,7 +159,7 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 
 		// TODO use syncnodes here [?]
 		// TODO get traversal type and start correct traversal action
-		synchronizeDirectories(source.getRoot(), destination.getRoot(), rules, root);
+		synchronizeDirectories(source.getRoot(), destination.getRoot(), rules, root, actionDecider);
 
 		// TODO this would be better, but we need the rules to sync Nodes :-/
 		// synchronizeNodes( source.getRoot(), destination.getRoot(), rules, root );
@@ -179,7 +171,7 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		return tree;
 	}
 
-	public abstract void synchronizeNodes(File src, File dst, RuleSet rules, Task parent) throws DataParseException, IOException;
+	public abstract void synchronizeNodes(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException;
 
-	public abstract void synchronizeDirectories(File src, File dst, RuleSet rules, Task parent) throws DataParseException, IOException;
+	public abstract void synchronizeDirectories(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException;
 }
