@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sourceforge.fullsync.ActionDecider;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.IgnoreDecider;
@@ -44,8 +45,6 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	private StateDecider stateDecider;
 	private BufferStateDecider bufferStateDecider;
 
-	// private ActionDecider actionDecider;
-
 	public TaskGeneratorImpl() {
 		super();
 	}
@@ -62,9 +61,9 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 		return rules;
 	}
 
-	protected void recurse(File src, File dst, RuleSet rules, Task parent) throws DataParseException, IOException {
+	protected void recurse(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException {
 		if (src.isDirectory() && dst.isDirectory()) {
-			synchronizeDirectories(src, dst, rules, parent);
+			synchronizeDirectories(src, dst, rules, parent, actionDecider);
 		}
 		// TODO [DirHereFileThere, ?]
 		// handle case where src is dir but dst is file
@@ -80,17 +79,17 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	 * @throws FileSystemException
 	 */
 	@Override
-	public void synchronizeNodes(File src, File dst, RuleSet rules, Task parent) throws DataParseException, IOException {
+	public void synchronizeNodes(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException {
 		if (!takeIgnoreDecider.isNodeIgnored(src)) {
 			FullSync.publish(new TaskGenerationStarted(src,  dst));
 
-			Task task = getActionDecider().getTask(src, dst, stateDecider, bufferStateDecider);
+			Task task = actionDecider.getTask(src, dst, stateDecider, bufferStateDecider);
 			logger.debug(src.getName() + ": " + task);
 
 			FullSync.publish(task);
 
 			if (rules.isUsingRecursion()) {
-				recurse(src, dst, rules, task);
+				recurse(src, dst, rules, task, actionDecider);
 			}
 			parent.addChild(task);
 		}
@@ -101,7 +100,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	 * to the given src and dst if they are directories
 	 */
 	@Override
-	public void synchronizeDirectories(File src, File dst, RuleSet oldrules, Task parent) throws DataParseException, IOException {
+	public void synchronizeDirectories(File src, File dst, RuleSet oldrules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException {
 		// update rules to current directory
 		RuleSet rules = updateRules(src, dst, oldrules);
 
@@ -117,7 +116,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 				dstFiles.remove(dfile);
 			}
 
-			synchronizeNodes(sfile, dfile, rules, parent);
+			synchronizeNodes(sfile, dfile, rules, parent, actionDecider);
 		}
 
 		for (File dfile : dstFiles) {
@@ -126,7 +125,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 				sfile = src.createChild(dfile.getName(), dfile.isDirectory());
 			}
 
-			synchronizeNodes(sfile, dfile, rules, parent);
+			synchronizeNodes(sfile, dfile, rules, parent, actionDecider);
 		}
 
 		/* HACK OMG, that is utterly wrong !! */
