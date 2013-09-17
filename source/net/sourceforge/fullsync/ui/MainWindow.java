@@ -25,15 +25,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
-import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.cli.Main;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.events.TaskGenerationStarted;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -50,7 +49,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-class MainWindow extends Composite implements ProfileListControlHandler, TaskGenerationListener {
+import com.adamtaft.eb.EventHandler;
+
+class MainWindow extends Composite implements ProfileListControlHandler {
+
 	private ToolItem toolItemNew;
 	private Menu menuBarMainWindow;
 	private StatusLine statusLine;
@@ -120,11 +122,11 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 				toolItemScheduleStop.setEnabled(enabled);
 			});
 		});
-		guiController.getSynchronizer().getTaskGenerator().addTaskGenerationListener(this);
 
 		boolean enabled = pm.isSchedulerEnabled();
 		toolItemScheduleStart.setEnabled(!enabled);
 		toolItemScheduleStop.setEnabled(enabled);
+		FullSync.subscribe(this);
 	}
 
 	/**
@@ -440,23 +442,19 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		// TODO make sure Tray is visible here
 	}
 
-	@Override
-	public void taskTreeStarted(TaskTree tree) {
+	@EventHandler
+	public void taskGenerationStarted(final TaskGenerationStarted taskStarted) {
+		statusDelayString = Messages.getString("MainWindow.Checking_File", taskStarted.src.getPath()); //$NON-NLS-1$
 	}
 
-	@Override
-	public void taskGenerationStarted(final File source, final File destination) {
-		statusDelayString = Messages.getString("MainWindow.Checking_File", source.getPath()); //$NON-NLS-1$
-	}
-
-	@Override
-	public void taskGenerationFinished(Task task) {
-
-	}
-
-	@Override
-	public void taskTreeFinished(TaskTree tree) {
-		statusLine.setMessage(Messages.getString("MainWindow.Sync_Finished")); //$NON-NLS-1$
+	@EventHandler
+	public void taskTreeFinished(final TaskTree tree) {
+		getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				statusLine.setMessage(Messages.getString("MainWindow.Sync_Finished")); //$NON-NLS-1$
+			}
+		});
 	}
 
 	@Override

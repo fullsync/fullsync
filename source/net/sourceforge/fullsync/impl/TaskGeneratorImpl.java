@@ -24,10 +24,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sourceforge.fullsync.DataParseException;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.IgnoreDecider;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskGenerationListener;
+import net.sourceforge.fullsync.events.TaskGenerationStarted;
 import net.sourceforge.fullsync.fs.File;
 
 import org.slf4j.Logger;
@@ -81,16 +82,12 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	@Override
 	public void synchronizeNodes(File src, File dst, RuleSet rules, Task parent) throws DataParseException, IOException {
 		if (!takeIgnoreDecider.isNodeIgnored(src)) {
-			for (TaskGenerationListener listener : taskGenerationListeners) {
-				listener.taskGenerationStarted(src, dst);
-			}
+			FullSync.publish(new TaskGenerationStarted(src,  dst));
 
 			Task task = getActionDecider().getTask(src, dst, stateDecider, bufferStateDecider);
 			logger.debug(src.getName() + ": " + task);
 
-			for (TaskGenerationListener listener : taskGenerationListeners) {
-				listener.taskGenerationFinished(task);
-			}
+			FullSync.publish(task);
 
 			if (rules.isUsingRecursion()) {
 				recurse(src, dst, rules, task);

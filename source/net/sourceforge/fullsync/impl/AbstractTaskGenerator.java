@@ -21,7 +21,6 @@ package net.sourceforge.fullsync.impl;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
@@ -30,20 +29,20 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.events.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
 
 public abstract class AbstractTaskGenerator implements TaskGenerator {
 	protected FileSystemManager fsm;
-	protected ArrayList<TaskGenerationListener> taskGenerationListeners;
 	protected boolean active; // resume/suspend
 	protected boolean cancelled; // cancel
 
@@ -53,17 +52,6 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		this.fsm = new FileSystemManager();
 		active = true;
 		cancelled = false;
-		taskGenerationListeners = new ArrayList<TaskGenerationListener>();
-	}
-
-	@Override
-	public void addTaskGenerationListener(TaskGenerationListener listener) {
-		taskGenerationListeners.add(listener);
-	}
-
-	@Override
-	public void removeTaskGenerationListener(TaskGenerationListener listener) {
-		taskGenerationListeners.remove(listener);
 	}
 
 	@Override
@@ -161,9 +149,7 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 				new Action[] { new Action(Action.Nothing, Location.None, BufferUpdate.None, "Root") });
 		tree.setRoot(root);
 
-		for (TaskGenerationListener listener : taskGenerationListeners) {
-			listener.taskTreeStarted(tree);
-		}
+		FullSync.publish(new TaskTreeStarted(tree));
 
 		// TODO use syncnodes here [?]
 		// TODO get traversal type and start correct traversal action
@@ -172,10 +158,7 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		// TODO this would be better, but we need the rules to sync Nodes :-/
 		// synchronizeNodes( source.getRoot(), destination.getRoot(), rules, root );
 
-		for (TaskGenerationListener listener : taskGenerationListeners) {
-			listener.taskTreeFinished(tree);
-		}
-
+		FullSync.publish(tree);
 		return tree;
 	}
 

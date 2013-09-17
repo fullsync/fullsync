@@ -17,18 +17,15 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync;
+package net.sourceforge.fullsync.events;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import net.sourceforge.fullsync.fs.File;
 
-import net.sourceforge.fullsync.fs.Site;
-
-public interface TaskGenerator extends Phase {
-	// main functionallity
-	public TaskTree execute(Profile profile, boolean interactive)
-			throws FileSystemException, DataParseException, URISyntaxException, IOException;
-
-	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet initialRules)
-			throws FileSystemException, DataParseException, IOException;
+public class TaskGenerationStarted {
+	public final File src;
+	public final File dst;
+	public TaskGenerationStarted(final File _src, final File _dst) {
+		src = _src;
+		dst = _dst;
+	}
 }

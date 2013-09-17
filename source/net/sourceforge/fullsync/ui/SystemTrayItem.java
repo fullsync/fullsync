@@ -25,10 +25,9 @@ package net.sourceforge.fullsync.ui;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskGenerationListener;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.events.TaskTreeStarted;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -37,7 +36,11 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
-public class SystemTrayItem implements TaskGenerationListener {
+import com.adamtaft.eb.EventHandler;
+
+public class SystemTrayItem {
+	private GuiController guiController;
+	private Tray tray;
 	private TrayItem trayItem;
 	private Menu menu;
 	private Image[] imageList;
@@ -73,7 +76,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 		item.setText(Messages.getString("SystemTrayItem.Exit")); //$NON-NLS-1$
 		item.addListener(SWT.Selection, e -> guiController.closeGui());
 
-		guiController.getSynchronizer().getTaskGenerator().addTaskGenerationListener(this);
+		FullSync.subscribe(this);
 	}
 
 	public void setVisible(boolean visible) {
@@ -89,16 +92,8 @@ public class SystemTrayItem implements TaskGenerationListener {
 		menu.dispose();
 	}
 
-	@Override
-	public void taskGenerationStarted(File source, File destination) {
-	}
-
-	@Override
-	public void taskGenerationFinished(Task task) {
-	}
-
-	@Override
-	public synchronized void taskTreeStarted(TaskTree tree) {
+	@EventHandler
+	public synchronized void taskTreeStarted(final TaskTreeStarted treeStarted) {
 		if (!isBusy) {
 			this.timer = new Timer();
 			isBusy = true;
@@ -115,8 +110,8 @@ public class SystemTrayItem implements TaskGenerationListener {
 		}
 	}
 
-	@Override
-	public synchronized void taskTreeFinished(TaskTree tree) {
+	@EventHandler
+	public synchronized void taskTreeFinished(final TaskTree tree) {
 		if (isBusy) {
 			isBusy = false;
 			timer.cancel();

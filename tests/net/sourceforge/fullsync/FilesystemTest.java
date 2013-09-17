@@ -51,6 +51,7 @@ import org.mockftpserver.fake.filesystem.FileEntry;
 import org.mockftpserver.fake.filesystem.FileSystem;
 import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 
+import com.adamtaft.eb.EventHandler;
 import com.mindtree.techworks.infix.pluginscommon.test.ssh.SSHServerResource;
 
 @RunWith(Parameterized.class)
@@ -74,6 +75,7 @@ public class FilesystemTest {
 	protected File testingSrc;
 	protected Synchronizer synchronizer;
 	protected Profile profile;
+	private Map<String, Action> m_expectation;
 
 	private FakeFtpServer m_fakeServer;
 	@Rule
@@ -240,35 +242,27 @@ public class FilesystemTest {
 		}
 	}
 
+	@EventHandler
+	public void taskGenerationFinished(final Task task) {
+		Object ex = m_expectation.get(task.getSource().getName());
+
+		assertNotNull("Unexpected generated Task for file: " + task.getSource().getName(), ex);
+		assertTrue("Action was " + task.getCurrentAction() + ", expected: " + ex + " for File " + task.getSource().getName(), task
+				.getCurrentAction().equalsExceptExplanation((Action) ex));
+	}
+
 	protected TaskTree assertPhaseOneActions(final Map<String, Action> expectation) throws Exception {
-		TaskGenerationListener list = new TaskGenerationListener() {
-			@Override
-			public void taskGenerationFinished(final Task task) {
-				Object ex = expectation.get(task.getSource().getName());
-
-				assertNotNull("Unexpected generated Task for file: " + task.getSource().getName(), ex);
-				assertTrue("Action was " + task.getCurrentAction() + ", expected: " + ex + " for File " + task.getSource().getName(),
-						task.getCurrentAction().equalsExceptExplanation((Action) ex));
-			}
-
-			@Override
-			public void taskGenerationStarted(final net.sourceforge.fullsync.fs.File source,
-					final net.sourceforge.fullsync.fs.File destination) {
-			}
-
-			@Override
-			public void taskTreeFinished(final TaskTree tree) {
-			}
-
-			@Override
-			public void taskTreeStarted(final TaskTree tree) {
-			}
-		};
-
 		TaskGenerator processor = synchronizer.getTaskGenerator();
-		processor.addTaskGenerationListener(list);
-		TaskTree tree = processor.execute(profile, false);
-		processor.removeTaskGenerationListener(list);
+		FullSync.subscribe(this);
+		TaskTree tree;
+		try {
+			m_expectation = expectation;
+			tree = processor.execute(profile, false);
+		}
+		finally {
+			FullSync.unsubscribe(this);
+			m_expectation = null;
+		}
 		return tree;
 	}
 
