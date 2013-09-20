@@ -34,5 +34,6 @@
 	<classpathentry kind="lib" path="lib-tests/org.hamcrest.integration_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="lib" path="lib-tests/org.hamcrest.library_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="lib" path="lib-tests/org.hamcrest.text_1.1.0.v20090501071000.jar"/>
+	<classpathentry kind="var" path="SWT_LIB"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
