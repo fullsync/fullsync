@@ -44,11 +44,11 @@ public class PreferencesComposite extends Composite {
 	/**
 	 * supported language codes.
 	 */
-	private static String[] languageCodes = { "en", "it", "de", "fr", "es", "ar" };
+	private static String[] languageCodes = { "en", "it", "de", "fr", "es", "ar" , "gr" };
 	/**
 	 * supported language names.
 	 */
-	private static String[] languageNames = { "English", "Italiano", "Deutsch", "Français", "Español", "Arabic" };
+	private static String[] languageNames = { "English", "Italiano", "Deutsch", "Français", "Español", "Arabic" , "Ελληνικά" };
 
 	/**
 	 * search an element in an array and get the result from another array at the same index.
