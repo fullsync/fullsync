@@ -35,7 +35,6 @@ import net.sourceforge.fullsync.cli.Main;
 import net.sourceforge.fullsync.events.TaskGenerationStarted;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -558,16 +557,5 @@ class MainWindow extends Composite implements ProfileListControlHandler {
 				profileManager.save();
 			}
 		}
-	}
-
-	protected void toolItemScheduleWidgedSelected(SelectionEvent evt) {
-		ProfileManager profileManager = guiController.getProfileManager();
-		if (profileManager.isSchedulerEnabled()) {
-			profileManager.stopScheduler();
-		}
-		else {
-			profileManager.startScheduler();
-		}
-		// updateTimerEnabled();
 	}
 }

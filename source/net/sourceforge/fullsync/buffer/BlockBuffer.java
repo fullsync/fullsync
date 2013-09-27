@@ -211,9 +211,4 @@ public class BlockBuffer implements ExecutionBuffer {
 	public void addEntryFinishedListener(final EntryFinishedListener listener) {
 		finishedListeners.add(listener);
 	}
-
-	@Override
-	public void removeEntryFinishedListener(final EntryFinishedListener listener) {
-		finishedListeners.remove(listener);
-	}
 }

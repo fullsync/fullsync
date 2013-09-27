@@ -296,10 +296,6 @@ public class TaskDecisionList extends Composite {
 		return image;
 	}
 
-	protected Image getTaskImage(Action a) {
-		return getTaskImage(null, a);
-	}
-
 	protected Image getTaskImage(Task t) {
 		return getTaskImage(t, t.getCurrentAction());
 	}

@@ -183,9 +183,4 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 	public void addTaskFinishedListener(TaskFinishedListener listener) {
 		listeners.add(listener);
 	}
-
-	@Override
-	public void removeTaskFinishedListener(TaskFinishedListener listener) {
-		listeners.remove(listener);
-	}
 }

@@ -334,10 +334,6 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		scheduleListeners.add(listener);
 	}
 
-	public void removeSchedulerListener(ProfileSchedulerListener listener) {
-		scheduleListeners.remove(listener);
-	}
-
 	protected void fireProfileSchedulerEvent(Profile profile) {
 		for (ProfileSchedulerListener schedulerListener : scheduleListeners) {
 			schedulerListener.profileExecutionScheduled(profile);

@@ -22,14 +22,12 @@ package net.sourceforge.fullsync.ui;
 import net.sourceforge.fullsync.ExceptionHandler;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 public class StatusLine extends Composite {
-	private Label labelIcon;
 	private Label labelMessage;
 
 	public StatusLine(Composite parent, int style) {
@@ -40,13 +38,6 @@ public class StatusLine extends Composite {
 			thisLayout.marginWidth = 2;
 			thisLayout.numColumns = 3;
 			this.setLayout(thisLayout);
-
-			labelIcon = new Label(this, SWT.NONE);
-			GridData labelIconLData = new GridData();
-			labelIconLData.widthHint = 16;
-			labelIconLData.heightHint = 16;
-			labelIconLData.verticalAlignment = GridData.END;
-			labelIcon.setLayoutData(labelIconLData);
 
 			labelMessage = new Label(this, SWT.NONE);
 			GridData labelMessageLData = new GridData();
@@ -63,16 +54,7 @@ public class StatusLine extends Composite {
 
 	public void setMessage(final String message) {
 		getDisplay().asyncExec(() -> {
-			labelIcon.setImage(null);
 			labelMessage.setText(message == null ? "" : message); //$NON-NLS-1$
 		});
 	}
-
-	public void setMessage(final Image icon, final String message) {
-		getDisplay().asyncExec(() -> {
-			labelIcon.setImage(icon);
-			labelMessage.setText(message);
-		});
-	}
-
 }

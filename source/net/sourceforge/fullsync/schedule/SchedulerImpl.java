@@ -60,11 +60,6 @@ public class SchedulerImpl implements Scheduler, Runnable {
 		schedulerListeners.add(listener);
 	}
 
-	@Override
-	public void removeSchedulerChangeListener(SchedulerChangeListener listener) {
-		schedulerListeners.remove(listener);
-	}
-
 	protected void fireSchedulerChangedEvent() {
 		for (int i = 0; i < schedulerListeners.size(); i++) {
 			(schedulerListeners.get(i)).schedulerStatusChanged(enabled);

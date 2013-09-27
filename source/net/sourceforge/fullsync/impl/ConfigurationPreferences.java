@@ -111,16 +111,6 @@ public class ConfigurationPreferences implements Preferences {
 	}
 
 	@Override
-	public boolean systemTrayEnabled() {
-		return config.getBoolean("Interface.SystemTray.Enabled", true);
-	}
-
-	@Override
-	public void setSystemTrayEnabled(final boolean bool) {
-		config.setProperty("Interface.SystemTray.Enabled", Boolean.valueOf(bool));
-	}
-
-	@Override
 	public String getProfileListStyle() {
 		return config.getString("Interface.ProfileList.Style", "NiceListView");
 	}

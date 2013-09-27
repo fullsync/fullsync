@@ -43,34 +43,9 @@ import net.sourceforge.fullsync.fs.Site;
 
 public abstract class AbstractTaskGenerator implements TaskGenerator {
 	protected FileSystemManager fsm;
-	protected boolean active; // resume/suspend
-	protected boolean cancelled; // cancel
 
 	public AbstractTaskGenerator() {
 		this.fsm = new FileSystemManager();
-		active = true;
-		cancelled = false;
-	}
-
-	@Override
-	public boolean isActive() {
-		return active && !cancelled;
-	}
-
-	@Override
-	public void suspend() {
-		active = false;
-	}
-
-	@Override
-	public void resume() {
-		active = true;
-	}
-
-	@Override
-	public void cancel() {
-		cancelled = true;
-		active = false;
 	}
 
 	@Override

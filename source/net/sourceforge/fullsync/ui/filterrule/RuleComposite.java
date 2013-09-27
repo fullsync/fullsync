@@ -40,10 +40,6 @@ abstract class RuleComposite extends Composite {
 		}
 	}
 
-	public void removeValueChangedListener(ValueChangedListener listener) {
-		listeners.remove(listener);
-	}
-
 	protected void valueChanged(final ValueChangedEvent evt) {
 		for (ValueChangedListener listener : listeners) {
 			listener.onValueChanged(evt);

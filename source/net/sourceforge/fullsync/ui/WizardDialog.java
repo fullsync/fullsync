@@ -265,10 +265,6 @@ public abstract class WizardDialog {
 		}
 	}
 
-	public void removeWizardDialogListener(WizardDialogListener listener) {
-		dialogListeners.remove(listener);
-	}
-
 	/**
 	 * enable or disable the ok button.
 	 * @param enabled

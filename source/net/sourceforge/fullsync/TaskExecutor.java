@@ -33,6 +33,4 @@ public interface TaskExecutor {
 
 	// listeners
 	void addTaskFinishedListener(TaskFinishedListener listener);
-
-	void removeTaskFinishedListener(TaskFinishedListener listener);
 }

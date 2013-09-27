@@ -36,6 +36,4 @@ public interface ExecutionBuffer {
 	// public void writeEntryTo( Entry entry, OutputStream out ) throws IOException;
 
 	public void addEntryFinishedListener(EntryFinishedListener listener);
-
-	public void removeEntryFinishedListener(EntryFinishedListener listener);
 }

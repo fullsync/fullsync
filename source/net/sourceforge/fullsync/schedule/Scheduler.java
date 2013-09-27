@@ -38,6 +38,4 @@ public interface Scheduler {
 	public ScheduleTaskSource getSource();
 
 	public void addSchedulerChangeListener(SchedulerChangeListener listener);
-
-	public void removeSchedulerChangeListener(SchedulerChangeListener listener);
 }
