@@ -35,5 +35,7 @@
 	<classpathentry kind="lib" path="lib-tests/org.hamcrest.library_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="lib" path="lib-tests/org.hamcrest.text_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="var" path="SWT_LIB"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/dsar/Desktop/jsoup-1.7.2.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

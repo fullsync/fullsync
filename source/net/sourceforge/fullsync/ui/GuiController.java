@@ -66,7 +66,7 @@ public class GuiController implements Runnable {
 		singleton = this;
 	}
 
-	protected void createMainShell(boolean minimized) {
+	private void createMainShell(boolean minimized) {
 		try {
 			mainShell = new Shell(display);
 			mainWindow = new MainWindow(mainShell, SWT.NULL, this);
@@ -75,6 +75,7 @@ public class GuiController implements Runnable {
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText("FullSync"); //$NON-NLS-1$
 			mainShell.setImage(getImage("fullsync48.png")); //$NON-NLS-1$
+			WelcomeScreen w = new WelcomeScreen(mainShell);
 			if (!minimized) {
 				mainShell.setVisible(true);
 			}
@@ -95,10 +96,6 @@ public class GuiController implements Runnable {
 
 	public MainWindow getMainWindow() {
 		return mainWindow;
-	}
-
-	public SystemTrayItem getSystemTrayItem() {
-		return systemTrayItem;
 	}
 
 	public Preferences getPreferences() {
