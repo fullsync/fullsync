@@ -25,6 +25,7 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
+import net.sourceforge.fullsync.cli.Main;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
@@ -57,6 +58,8 @@ public class GuiController implements Runnable {
 	private Shell mainShell;
 	private MainWindow mainWindow;
 	private SystemTrayItem systemTrayItem;
+	
+	public WelcomeScreen welcomeScreen;
 
 	public GuiController(Preferences preferences, ProfileManager profileManager, Synchronizer synchronizer) {
 		this.preferences = preferences;
@@ -75,7 +78,6 @@ public class GuiController implements Runnable {
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText("FullSync"); //$NON-NLS-1$
 			mainShell.setImage(getImage("fullsync48.png")); //$NON-NLS-1$
-			WelcomeScreen w = new WelcomeScreen(mainShell);
 			if (!minimized) {
 				mainShell.setVisible(true);
 			}
@@ -118,7 +120,7 @@ public class GuiController implements Runnable {
 		return imageRepository.getImage(imageName);
 	}
 
-	public void startGui(boolean minimized) {
+	public void startGui(boolean minimized) throws IOException {
 		display = Display.getDefault();
 		imageRepository = new ImageRepository(display);
 		fontRepository = new FontRepository(display);
@@ -135,6 +137,18 @@ public class GuiController implements Runnable {
 						new ExceptionDialog(mainShell, message, exception);
 					}
 				});
+			}
+		});
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				try{
+				if(Main.welcomeScreenAgain){
+					createWelcomeScreen();
+					Main.upadateWelcomeScreenAgain();
+				}
+				}catch(Exception e){
+				}
 			}
 		});
 	}
@@ -251,5 +265,13 @@ public class GuiController implements Runnable {
 	}
 	public Font getFont(String name, int height, int style) {
 		return fontRepository.getFont(name, height, style);
+	}
+	
+	private void createWelcomeScreen() throws IOException{
+		try{
+			welcomeScreen = new WelcomeScreen(getMainShell());
+		}catch(Exception e){
+			ExceptionHandler.reportException(e);
+		}
 	}
 }

@@ -68,4 +68,9 @@ public interface Preferences {
 	boolean getHelpShown();
 
 	void setHelpShown(boolean shown);
+	
+	boolean getWelcomeScreenShown();
+	
+	void setWelcomeScreenShown(final boolean shown);
+	
 }

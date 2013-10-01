@@ -51,8 +51,11 @@ import org.slf4j.LoggerFactory;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class Main { // NO_UCD
+public class Main{ // NO_UCD
 	private static Options options;
+	
+	public static Boolean welcomeScreenAgain;
+	static ConfigurationPreferences preferences = null;
 
 	private static void initOptions() {
 		options = new Options();
@@ -159,9 +162,9 @@ public class Main { // NO_UCD
 				printHelp();
 				return;
 			}
-
+			
 			// Initialize basic facilities
-
+			
 			// upgrade code...
 			do {
 				File newPreferences = new File(configDir + "preferences.properties");
@@ -171,8 +174,14 @@ public class Main { // NO_UCD
 				}
 			}
 			while (false); // variable scope
-			final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
-
+			//final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
+			preferences = new ConfigurationPreferences(configDir + "preferences.properties");
+			if(preferences.getWelcomeScreenShown()){
+				welcomeScreenAgain = false;
+			}else{
+				welcomeScreenAgain = true;
+			}
+			
 			String profilesFile = "profiles.xml";
 			if (line.hasOption("P")) {
 				profilesFile = line.getOptionValue("P");
@@ -273,6 +282,8 @@ public class Main { // NO_UCD
 				try {
 					GuiController guiController = new GuiController(preferences, profileManager, sync);
 					guiController.startGui(line.hasOption('m'));
+					Boolean welcomeScreenDisplayAgain = guiController.welcomeScreen.welcomeScreenShown;
+					preferences.setWelcomeScreenShown(welcomeScreenDisplayAgain);
 
 					if (!line.hasOption('P') && !preferences.getHelpShown() && (null == System.getProperty("net.sourceforge.fullsync.skipHelp"))) {
 						preferences.setHelpShown(true);
@@ -311,6 +322,14 @@ public class Main { // NO_UCD
 		}
 		catch (Exception exp) {
 			ExceptionHandler.reportException(exp);
+		}
+	}
+	
+	public static void upadateWelcomeScreenAgain(){
+		if(preferences.getWelcomeScreenShown()){
+			welcomeScreenAgain = false;
+		}else{
+			welcomeScreenAgain = true;
 		}
 	}
 }

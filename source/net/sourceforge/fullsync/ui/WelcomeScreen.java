@@ -1,132 +1,189 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ *
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
+
 package net.sourceforge.fullsync.ui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Dialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 
-import org.eclipse.swt.widgets.Shell;
 
-public class WelcomeScreen {
+public class WelcomeScreen extends Dialog implements DisposeListener {
+
+	private Shell dialogShell;
+	private Label labelPicture;
+	private Composite compositeBottom;
+	private Button buttonOk;
+	private Button checkbox;
 	
-	private JFrame frame;
-	private JButton okButton;
-	private JCheckBox displayAgain;
-	private JLabel title;
-	private JLabel img;
-	private JLabel releases;
-	private JLabel releasesTitle;
+	public Boolean welcomeScreenShown;
 	
-	private String JLabelTitle = "Welcome to FullSync";
-	private String releasesText = "<html>";//doc.body().select("li").select("ul")
-	
-	private java.awt.Container pane;
-	
-	public WelcomeScreen(final Shell shell) throws IOException{
-		//shell.setEnabled(false);
-		initComponents(shell);
-		initJFrame();
-		initJFrameLayout();
-		okButton.addActionListener(new ActionListener() {
-			 
-            public void actionPerformed(ActionEvent e)
-            {
-            	okButton(shell);
-            }
-		});
-	}
-	
-	private void okButton(Shell shell){
-    	frame.dispose();
-        //shell.setEnabled(true);
-	}
-	
-	private void initJFrame(){
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setVisible(true);
-		frame.setResizable(false);
-		frame.setLocation(140, 130);
-	}
-	
-	private void initComponents(final Shell shell) throws IOException{
-		frame = new JFrame("Welcome to FullSync");
-		okButton = new JButton("Close");
-		title = new JLabel(JLabelTitle + " - " + getVersion());
-		img = new JLabel(new ImageIcon("images/About.png"));
-		releases = new JLabel(releasesText + getReleases());
-		releasesTitle = new JLabel("<html><br>FullSync / News: Recent posts </html>");
-		displayAgain = new JCheckBox("do not display again");
+	public WelcomeScreen(Shell parent) throws IOException {
+		super(parent);
+		welcomeScreenShown = true;
+		dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		dialogShell.setBackground(UISettings.COLOR_WHITE);
+		dialogShell.setBackgroundMode(SWT.INHERIT_DEFAULT);
+
+		dialogShell.addDisposeListener(this);
 		
-		pane = frame.getContentPane();
-	}
-	
-	private void initJFrameLayout(){
-		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
-		pane.add(img);
-		img.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pane.add(title);
-		title.setAlignmentX(Component.CENTER_ALIGNMENT);
-		title.setForeground(Color.BLUE);
-		title.setFont (title.getFont ().deriveFont (15.0f));
-		pane.add(releasesTitle);
-		releasesTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-		releasesTitle.setForeground(Color.RED);
-		pane.add(releases);
-		releases.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pane.add(okButton);
-		okButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pane.add(displayAgain);
-		displayAgain.setAlignmentX(Component.CENTER_ALIGNMENT);
-		displayAgain.setForeground(Color.GRAY);
-		frame.pack();
-	}
-	
-	private String getReleases() throws IOException{
-		String releases  = "";
-		String url = "http://fullsync.sourceforge.net/";
-		try{
-			Document doc = Jsoup.connect(url).get();
-			releases = parseReleases(doc.body().select("li").select("ul"));
-		}catch(IOException e){
-			releases = "connection error(!)";
-		}
-		return releases;
-	}
-	
-	private String parseReleases(Elements el){
-		String allReleases = el.toString();
-		String tokens[] = allReleases.split(" ");
-		int i = 1;
-		while(!tokens[i].contains("</ul>")){
-			if(tokens[i].contains("<li>")){
-				//tokens[i].replace("<li>", " ");
-				releasesText += tokens[i] + " ";
+		GridLayout dialogShellLayout = new GridLayout();
+		dialogShell.setLayout(dialogShellLayout);
+		dialogShellLayout.verticalSpacing = 0;
+		dialogShellLayout.marginHeight = 0;
+		dialogShellLayout.marginWidth = 0;
+		dialogShellLayout.horizontalSpacing = 0;
+		dialogShell.setText(Messages.getString("WelcomeScreen.WelcomeMessage"));
+		
+		labelPicture = new Label(dialogShell, SWT.NONE);
+		GridData labelPictureLData = new GridData();
+		labelPictureLData.grabExcessHorizontalSpace = true;
+		labelPictureLData.grabExcessVerticalSpace = true;
+		labelPictureLData.horizontalAlignment = SWT.FILL;
+		labelPictureLData.verticalAlignment = SWT.FILL;
+		labelPicture.setLayoutData(labelPictureLData);
+		Image aboutImg = GuiController.getInstance().getImage("About.png");
+		Rectangle r = aboutImg.getBounds();
+		labelPicture.setSize(r.width, r.height);
+		labelPicture.setImage(aboutImg);
+		
+		// version label
+		Label labelVersion = new Label(dialogShell, SWT.FILL);
+		labelVersion.setForeground(UISettings.COLOR_LIGHT_GREY);
+		labelVersion.setText(Messages.getString("WelcomeScreen.WelcomeMessage") + " - " + getVersion());
+		GridData lvd = new GridData(SWT.FILL);
+		lvd.grabExcessHorizontalSpace = true;
+		lvd.horizontalIndent = 17;
+		lvd.widthHint = 400;
+		lvd.heightHint = 18;
+		labelVersion.setLayoutData(lvd);
+		
+		//separator
+		Label labelSeparator2 = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
+		GridData labelSeparator2LData = new GridData();
+		labelSeparator2LData.grabExcessHorizontalSpace = true;
+		labelSeparator2LData.horizontalAlignment = SWT.FILL;
+		labelSeparator2.setLayoutData(labelSeparator2LData);
+		
+		//releases label
+		Label labelReleases = new Label(dialogShell, SWT.FILL | SWT.WRAP);
+		labelReleases.setForeground(UISettings.COLOR_LIGHT_GREY);
+		labelReleases.setText(Messages.getString("WelcomeScreen.NewReleases")+":"+getReleases());
+		GridData lrel = new GridData(SWT.FILL | SWT.WRAP);
+		lrel.grabExcessHorizontalSpace = true;
+		lrel.horizontalIndent = 17;
+		lrel.widthHint = 400;
+		labelReleases.setLayoutData(lrel);
+		
+		//separator
+		Label labelSeparator3 = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
+		GridData labelSeparator3LData = new GridData();
+		labelSeparator3LData.grabExcessHorizontalSpace = true;
+		labelSeparator3LData.horizontalAlignment = SWT.FILL;
+		labelSeparator3.setLayoutData(labelSeparator2LData);
+		
+		// buttons composite
+		compositeBottom = new Composite(dialogShell, SWT.NONE);
+		GridLayout compositeBottomLayout = new GridLayout();
+		GridData compositeBottomLData = new GridData();
+		compositeBottomLData.horizontalAlignment = SWT.FILL;
+		compositeBottom.setLayoutData(compositeBottomLData);
+		compositeBottomLayout.makeColumnsEqualWidth = true;
+		compositeBottomLayout.numColumns = 2;
+		compositeBottom.setLayout(compositeBottomLayout);
+		
+		// checkbox button
+		checkbox = new Button(compositeBottom, SWT.CHECK | SWT.CENTER);
+		checkbox.setText(Messages.getString("WelcomeScreen.CheckboxMessage")); //$NON-NLS-1$
+		GridData checkboxLData = new GridData();
+		checkbox.addSelectionListener(new SelectionAdapter()
+		{
+		    @Override
+		    public void widgetSelected(SelectionEvent e)
+		    {
+		        Button button = (Button) e.widget;
+		        if (button.getSelection()){
+		        	welcomeScreenShown = true;
+		        }
+		        else{
+		        	welcomeScreenShown = false;
+		        }
+		    }
+		});
+		checkbox.setSelection(true);
+		checkboxLData.widthHint = UISettings.BUTTON_WIDTH;
+		checkboxLData.heightHint = UISettings.BUTTON_HEIGHT;
+		checkboxLData.grabExcessHorizontalSpace = true;
+		checkbox.setLayoutData(checkboxLData);
+		
+		// ok button
+		buttonOk = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
+		buttonOk.setText("Ok"); //$NON-NLS-1$
+		GridData buttonOkLData = new GridData();
+		buttonOk.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent evt) {
+				dialogShell.close();
 			}
-			else if(tokens[i].contains("</li>")){
-				//tokens[i].replace("</li>", " ");
-				releasesText += tokens[i] + "<br>";
-			}else{
-				releasesText += tokens[i] + " ";
+		});
+		buttonOkLData.horizontalAlignment = GridData.END;
+		buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
+		buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
+		buttonOkLData.grabExcessHorizontalSpace = true;
+		buttonOk.setLayoutData(buttonOkLData);
+		
+		// layout the dialog and show it
+		dialogShell.pack();
+		dialogShell.layout(true);
+		dialogShell.open();
+		Display display = dialogShell.getDisplay();
+		
+		while (!dialogShell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
 			}
-			i++;
 		}
-		releasesText += "</html>";
-		return releasesText;
+	}
+
+	@Override
+	public void widgetDisposed(DisposeEvent arg0) {
 	}
 	
 	private String getVersion() throws IOException{
@@ -164,5 +221,40 @@ public class WelcomeScreen {
 		}
 		return version;
 	}
+	
+	private String getReleases() throws IOException{
+		String releases  = "";
+		String url = "http://fullsync.sourceforge.net/";
+		try{
+			Document doc = Jsoup.connect(url).get();
+			releases = parseReleases(doc.body().select("li").select("ul"));
+		}catch(IOException e){
+			releases = "connection error(!)";
+		}
+		return releases;
+	}
+	
+	private String parseReleases(Elements el){
+		String releasesText = "";
+		String allReleases = el.toString();
+		String tokens[] = allReleases.split(" ");
+		int i = 1;
+		while(!tokens[i].contains("</ul>")){
+			if(tokens[i].contains("<li>")){
+				String temp = tokens[i].replace("<li>","-");
+				releasesText += temp + " ";
+			}
+			else if(tokens[i].contains("</li>")){
+				String temp = tokens[i].replace("</li>", "");
+				releasesText += temp;
+			}else{
+				releasesText += tokens[i] + " ";
+			}
+			i++;
+		}
+		return releasesText;
+	}
+	
+	
 
 }
