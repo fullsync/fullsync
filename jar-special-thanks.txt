@@ -9,6 +9,7 @@ Español: Angela Verastegui Desouza
 Français: Pascal Conil-lacoste
 Français: farvardin <farvardin@users.sf.net>
 Italiano: Michele Aiello
+Ελληνικά: Σαρηγιάννης Δημήτρης
 
 
 Patches

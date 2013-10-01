@@ -3,6 +3,11 @@ Version 0.11.0
 * removed bundled implementation of javax.xml
 * removed support for Advanced Rule Sets
 
+Version 0.10.3
+(XX XXXXXXXX 2013)
+* added Greek translation special thanks to Dimitris Sarigiannis <saridimi@gmail.com>
+
+
 Version 0.10.2
 (01 September 2013)
 * improved the formatting of the Size column in the Task Decision dialog

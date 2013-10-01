@@ -49,6 +49,11 @@ Bugs:
 	[ ] FullSync launchers need to be able to accept arbitrary JVM arguments (debugging, RAM, ...)
 	[ ] sockets are treated like directories, and listing their children results in an exception
 	[ ] SMB: does Ntlm authentication with domain accounts work with FullSync?
+	[ ] Hidden files do not remain as Hidden after folder synchronization
+	[ ] Information loss when synchronizing txt files. Summary is missing in destination folder
+	[ ] No Warning message appears after changing the path of destination or source folder
+	[ ] After changing destination folder path, when synchronizing, it creates a new folder in the old path like nothing happened
+	[ ] After changing source folder path, when synchronizing, nothing happens (it is like source folder is empty)
 
 Features:
 	[ ] TaskDecisionDialog:
