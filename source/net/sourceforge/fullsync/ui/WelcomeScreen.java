@@ -210,6 +210,7 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		return releases;
 	}
 	
+	
 	private String parseReleases(Elements el){
 		String releasesText = "";
 		String allReleases = el.toString();
@@ -230,6 +231,7 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		}
 		return releasesText;
 	}
+	
 	
 	
 
