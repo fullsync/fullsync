@@ -143,10 +143,7 @@ public class GuiController implements Runnable {
 			@Override
 			public void run() {
 				try{
-				if(Main.welcomeScreenAgain){
 					createWelcomeScreen();
-					Main.upadateWelcomeScreenAgain();
-				}
 				}catch(Exception e){
 				}
 			}

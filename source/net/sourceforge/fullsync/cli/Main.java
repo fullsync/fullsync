@@ -53,9 +53,6 @@ import org.slf4j.LoggerFactory;
  */
 public class Main{ // NO_UCD
 	private static Options options;
-	
-	public static Boolean welcomeScreenAgain;
-	static ConfigurationPreferences preferences = null;
 
 	private static void initOptions() {
 		options = new Options();
@@ -174,13 +171,7 @@ public class Main{ // NO_UCD
 				}
 			}
 			while (false); // variable scope
-			//final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
-			preferences = new ConfigurationPreferences(configDir + "preferences.properties");
-			if(preferences.getWelcomeScreenShown()){
-				welcomeScreenAgain = false;
-			}else{
-				welcomeScreenAgain = true;
-			}
+			final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
 			
 			String profilesFile = "profiles.xml";
 			if (line.hasOption("P")) {
@@ -322,14 +313,6 @@ public class Main{ // NO_UCD
 		}
 		catch (Exception exp) {
 			ExceptionHandler.reportException(exp);
-		}
-	}
-	
-	public static void upadateWelcomeScreenAgain(){
-		if(preferences.getWelcomeScreenShown()){
-			welcomeScreenAgain = false;
-		}else{
-			welcomeScreenAgain = true;
 		}
 	}
 }

@@ -129,30 +129,6 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		compositeBottomLayout.numColumns = 2;
 		compositeBottom.setLayout(compositeBottomLayout);
 		
-		// checkbox button
-		checkbox = new Button(compositeBottom, SWT.CHECK | SWT.CENTER);
-		checkbox.setText(Messages.getString("WelcomeScreen.CheckboxMessage")); //$NON-NLS-1$
-		GridData checkboxLData = new GridData();
-		checkbox.addSelectionListener(new SelectionAdapter()
-		{
-		    @Override
-		    public void widgetSelected(SelectionEvent e)
-		    {
-		        Button button = (Button) e.widget;
-		        if (button.getSelection()){
-		        	welcomeScreenShown = true;
-		        }
-		        else{
-		        	welcomeScreenShown = false;
-		        }
-		    }
-		});
-		checkbox.setSelection(true);
-		checkboxLData.widthHint = UISettings.BUTTON_WIDTH;
-		checkboxLData.heightHint = UISettings.BUTTON_HEIGHT;
-		checkboxLData.grabExcessHorizontalSpace = true;
-		checkbox.setLayoutData(checkboxLData);
-		
 		// ok button
 		buttonOk = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
 		buttonOk.setText("Ok"); //$NON-NLS-1$
