@@ -25,7 +25,6 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
-import net.sourceforge.fullsync.cli.Main;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
@@ -120,7 +119,7 @@ public class GuiController implements Runnable {
 		return imageRepository.getImage(imageName);
 	}
 
-	public void startGui(boolean minimized) throws IOException {
+	public void startGui(boolean minimized){
 		display = Display.getDefault();
 		imageRepository = new ImageRepository(display);
 		fontRepository = new FontRepository(display);
@@ -264,7 +263,7 @@ public class GuiController implements Runnable {
 		return fontRepository.getFont(name, height, style);
 	}
 	
-	private void createWelcomeScreen() throws IOException{
+	private void createWelcomeScreen(){
 		try{
 			welcomeScreen = new WelcomeScreen(getMainShell());
 		}catch(Exception e){

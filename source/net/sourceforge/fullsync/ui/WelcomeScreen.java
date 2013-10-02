@@ -21,6 +21,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -51,11 +52,10 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 	private Label labelPicture;
 	private Composite compositeBottom;
 	private Button buttonOk;
-	private Button checkbox;
 	
 	public Boolean welcomeScreenShown;
 	
-	public WelcomeScreen(Shell parent) throws IOException {
+	public WelcomeScreen(Shell parent) {
 		super(parent);
 		welcomeScreenShown = true;
 		dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
@@ -162,19 +162,32 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 	public void widgetDisposed(DisposeEvent arg0) {
 	}
 	
-	private String getVersion() throws IOException{
-		String version;
+	private String getVersion(){
+		String version = null;
 		String url = "http://fullsync.sourceforge.net/";
 		try{
 			Document doc = Jsoup.connect(url).get();
 			Elements el = doc.body().select("li");
 			version = parseVersion(el);
 		}catch(IOException e){
-			BufferedReader br = new BufferedReader(new FileReader("CHANGELOG"));
-			try{
+			BufferedReader br = null;
+			try {
+				br = new BufferedReader(new FileReader("CHANGELOG"));
 				version = br.readLine();
-			}finally{
-				br.close();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			finally{
+				try {
+					br.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 		return version;
@@ -198,14 +211,14 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		return version;
 	}
 	
-	private String getReleases() throws IOException{
+	private String getReleases(){
 		String releases  = "";
 		String url = "http://fullsync.sourceforge.net/";
 		try{
 			Document doc = Jsoup.connect(url).get();
 			releases = parseReleases(doc.body().select("li").select("ul"));
 		}catch(IOException e){
-			releases = "connection error(!)";
+			releases = "connection error";
 		}
 		return releases;
 	}
