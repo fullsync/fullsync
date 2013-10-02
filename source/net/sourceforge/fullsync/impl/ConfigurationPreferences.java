@@ -186,14 +186,5 @@ public class ConfigurationPreferences implements Preferences {
 	public void setHelpShown(final boolean shown) {
 		config.setProperty("Interface.HelpShown", Boolean.valueOf(shown));
 	}
-	
-	@Override
-	public boolean getWelcomeScreenShown(){
-		return config.getBoolean("Interface.WelcomeScreenShown", false);
-	}
-	
-	public void setWelcomeScreenShown(final boolean shown){
-		config.setProperty("Interface.WelcomeScreenShown", Boolean.valueOf(shown));
-	}
 
 }

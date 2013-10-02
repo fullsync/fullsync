@@ -273,8 +273,6 @@ public class Main{ // NO_UCD
 				try {
 					GuiController guiController = new GuiController(preferences, profileManager, sync);
 					guiController.startGui(line.hasOption('m'));
-					Boolean welcomeScreenDisplayAgain = guiController.welcomeScreen.welcomeScreenShown;
-					preferences.setWelcomeScreenShown(welcomeScreenDisplayAgain);
 
 					if (!line.hasOption('P') && !preferences.getHelpShown() && (null == System.getProperty("net.sourceforge.fullsync.skipHelp"))) {
 						preferences.setHelpShown(true);
