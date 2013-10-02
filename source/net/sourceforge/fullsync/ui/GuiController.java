@@ -57,6 +57,8 @@ public class GuiController implements Runnable {
 	private Shell mainShell;
 	private MainWindow mainWindow;
 	private SystemTrayItem systemTrayItem;
+	
+	public WelcomeScreen welcomeScreen;
 
 	public GuiController(Preferences preferences, ProfileManager profileManager, Synchronizer synchronizer) {
 		this.preferences = preferences;
@@ -66,7 +68,7 @@ public class GuiController implements Runnable {
 		singleton = this;
 	}
 
-	protected void createMainShell(boolean minimized) {
+	private void createMainShell(boolean minimized) {
 		try {
 			mainShell = new Shell(display);
 			mainWindow = new MainWindow(mainShell, SWT.NULL, this);
@@ -97,10 +99,6 @@ public class GuiController implements Runnable {
 		return mainWindow;
 	}
 
-	public SystemTrayItem getSystemTrayItem() {
-		return systemTrayItem;
-	}
-
 	public Preferences getPreferences() {
 		return preferences;
 	}
@@ -121,7 +119,7 @@ public class GuiController implements Runnable {
 		return imageRepository.getImage(imageName);
 	}
 
-	public void startGui(boolean minimized) {
+	public void startGui(boolean minimized){
 		display = Display.getDefault();
 		imageRepository = new ImageRepository(display);
 		fontRepository = new FontRepository(display);
@@ -138,6 +136,15 @@ public class GuiController implements Runnable {
 						new ExceptionDialog(mainShell, message, exception);
 					}
 				});
+			}
+		});
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				try{
+					createWelcomeScreen();
+				}catch(Exception e){
+				}
 			}
 		});
 	}
@@ -254,5 +261,13 @@ public class GuiController implements Runnable {
 	}
 	public Font getFont(String name, int height, int style) {
 		return fontRepository.getFont(name, height, style);
+	}
+	
+	private void createWelcomeScreen(){
+		try{
+			welcomeScreen = new WelcomeScreen(getMainShell());
+		}catch(Exception e){
+			ExceptionHandler.reportException(e);
+		}
 	}
 }
