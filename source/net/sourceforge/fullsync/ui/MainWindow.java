@@ -76,7 +76,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 	
 	public WelcomeScreen welcomeScreen;
 
-	MainWindow(Composite parent, int style, GuiController initGuiController) throws IOException {
+	MainWindow(Composite parent, int style, GuiController initGuiController){
 		super(parent, style);
 		this.guiController = initGuiController;
 		initGUI();
@@ -96,7 +96,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 	 * Initializes the GUI.
 	 * @throws IOException 
 	 */
-	private void initGUI() throws IOException {
+	private void initGUI(){
 		try {
 			this.setSize(600, 300);
 
