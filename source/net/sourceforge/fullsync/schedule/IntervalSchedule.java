@@ -37,7 +37,7 @@ public class IntervalSchedule extends Schedule {
 	long next;
 	String displayUnit;
 
-	public IntervalSchedule(Element element) {
+	public IntervalSchedule(Element element) { // NO_UCD
 		if (element.hasAttribute("firstinterval")) {
 			this.firstInterval = Long.parseLong(element.getAttribute("firstinterval"));
 		}
