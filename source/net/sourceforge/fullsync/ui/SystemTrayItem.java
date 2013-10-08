@@ -93,7 +93,7 @@ public class SystemTrayItem {
 	}
 
 	@EventHandler
-	public synchronized void taskTreeStarted(final TaskTreeStarted treeStarted) {
+	public synchronized void taskTreeStarted(final TaskTreeStarted treeStarted) { // NO_UCD
 		if (!isBusy) {
 			this.timer = new Timer();
 			isBusy = true;
@@ -111,7 +111,7 @@ public class SystemTrayItem {
 	}
 
 	@EventHandler
-	public synchronized void taskTreeFinished(final TaskTree tree) {
+	public synchronized void taskTreeFinished(final TaskTree tree) { // NO_UCD
 		if (isBusy) {
 			isBusy = false;
 			timer.cancel();

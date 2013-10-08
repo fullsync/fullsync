@@ -442,12 +442,12 @@ class MainWindow extends Composite implements ProfileListControlHandler {
 	}
 
 	@EventHandler
-	public void taskGenerationStarted(final TaskGenerationStarted taskStarted) {
+	public void taskGenerationStarted(final TaskGenerationStarted taskStarted) { // NO_UCD
 		statusDelayString = Messages.getString("MainWindow.Checking_File", taskStarted.src.getPath()); //$NON-NLS-1$
 	}
 
 	@EventHandler
-	public void taskTreeFinished(final TaskTree tree) {
+	public void taskTreeFinished(final TaskTree tree) { // NO_UCD
 		getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
