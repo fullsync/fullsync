@@ -19,44 +19,119 @@
  */
 package net.sourceforge.fullsync;
 
-import com.adamtaft.eb.EventBus;
-import com.adamtaft.eb.EventBusService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.adamtaft.eb.EventBus;
+import com.adamtaft.eb.EventBusService;
+import com.adamtaft.eb.EventHandler;
+
 public class FullSync {
-	private static FullSync m_instance;
+	private static FullSync instance;
 
 	public static FullSync inst() {
-		return m_instance;
+		if (!instance.initialized) {
+			synchronized (instance) {
+				if (!instance.initialized) {
+					try {
+						instance.wait();
+					}
+					catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return instance;
 	}
 
-	private final Preferences m_prefs;
-	private final EventBus m_bus;
+	private Preferences preferences;
+	private EventBus eventBus;
+	private FileSystemManager fileSystemManager;
+	private ExecutorService executorService;
+	private volatile boolean initialized;
+	private FullSyncEventTracer tracer;
 
-	public FullSync(ConfigurationPreferences preferences) {
-		m_instance = this;
-		m_prefs = preferences;
-		m_bus = EventBusService.getInstance();
+	private FullSync(ConfigurationPreferences _preferences) {
+		instance = this;
+		preferences = _preferences;
+		initialized = false;
+		Thread fullsyncInitializer = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					eventBus = EventBusService.getInstance();
+					fileSystemManager = new FileSystemManager();
+					executorService = Executors.newCachedThreadPool(new ThreadFactory() {
+						private final ThreadFactory delegate = Executors.defaultThreadFactory();
+						@Override
+						public Thread newThread(Runnable r) {
+							Thread t = delegate.newThread(r);
+							t.setDaemon(true);
+							return t;
+						}
+					});
+				}
+				finally {
+					synchronized (instance) {
+						initialized = true;
+						notifyAll();
+					}
+					tracer = new FullSyncEventTracer();
+					FullSync.subscribe(tracer);
+				}
+			}
+		});
+		fullsyncInitializer.setDaemon(true);
+		fullsyncInitializer.start();
+	}
+
+	public static void init(ConfigurationPreferences _preferences) {
+		instance = new FullSync(_preferences);
 	}
 
 	public static Preferences prefs() {
-		return inst().m_prefs;
+		return inst().preferences;
 	}
 
 	public static void subscribe(Object subscriber) {
-		inst().m_bus.subscribe(subscriber);
+		inst().eventBus.subscribe(subscriber);
 	}
 
 	public static void unsubscribe(Object subscriber) {
-		inst().m_bus.unsubscribe(subscriber);
+		inst().eventBus.unsubscribe(subscriber);
 	}
 
 	public static void publish(Object event) {
-		inst().m_bus.publish(event);
+		inst().eventBus.publish(event);
 	}
 
 	public static boolean hasPendingEvents() {
-		return inst().m_bus.hasPendingEvents();
+		return inst().eventBus.hasPendingEvents();
+	}
+
+	public static FileSystemManager getFileSystemManager() {
+		return inst().fileSystemManager;
+	}
+
+	public static void submit(final Runnable r) {
+		inst().executorService.submit(r);
+	}
+}
+
+class FullSyncEventTracer {
+	private Logger logger;
+	public FullSyncEventTracer() {
+		logger = LoggerFactory.getLogger("FullSync");
+	}
+	@EventHandler
+	public void onEvent(final Object obj) {
+		logger.debug("Event: {} {}", obj.getClass(), obj);
 	}
 }

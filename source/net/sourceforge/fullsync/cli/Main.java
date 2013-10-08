@@ -49,8 +49,6 @@ import org.apache.commons.cli.PosixParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.adamtaft.eb.EventHandler;
-
 public class Main { // NO_UCD
 	private static Options options;
 
@@ -176,9 +174,7 @@ public class Main { // NO_UCD
 				}
 			} while (false); // variable scope
 			final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
-			final FullSync fs = new FullSync(preferences);
-			FullSyncEventTracer tracer = new FullSyncEventTracer();
-			FullSync.subscribe(tracer);
+			FullSync.init(preferences);
 
 			String profilesFile = "profiles.xml";
 			if (line.hasOption("P")) {
@@ -317,16 +313,5 @@ public class Main { // NO_UCD
 		catch (Exception exp) {
 			ExceptionHandler.reportException(exp);
 		}
-	}
-}
-
-class FullSyncEventTracer {
-	private Logger logger;
-	public FullSyncEventTracer() {
-		logger = LoggerFactory.getLogger("FullSync");
-	}
-	@EventHandler
-	public void onEvent(final Object obj) {
-		logger.debug("Event: {} {}", obj.getClass(), obj);
 	}
 }
