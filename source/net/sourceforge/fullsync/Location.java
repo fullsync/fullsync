@@ -26,7 +26,6 @@ public class Location {
 	public static final int None = 0;
 
 	public static final int Source = 1;
-	public static final int FileSystem = 1;
 	public static final int Destination = 2;
 	public static final int Buffer = 2;
 

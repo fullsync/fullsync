@@ -62,7 +62,7 @@ public class ExactCopyActionDecider implements ActionDecider {
 		switch (state.getType()) {
 			case State.Orphan:
 				if (state.getLocation() == Location.Source) {
-					if (!bsd.getState(dst).equals(State.Orphan, Location.FileSystem)) {
+					if (!bsd.getState(dst).equals(State.Orphan, Location.Source)) {
 						actions.add(addDestination);
 					}
 					else {

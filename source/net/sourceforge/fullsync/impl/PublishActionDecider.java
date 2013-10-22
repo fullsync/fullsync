@@ -28,7 +28,6 @@ import static net.sourceforge.fullsync.Action.Update;
 import static net.sourceforge.fullsync.Location.Both;
 import static net.sourceforge.fullsync.Location.Buffer;
 import static net.sourceforge.fullsync.Location.Destination;
-import static net.sourceforge.fullsync.Location.FileSystem;
 import static net.sourceforge.fullsync.Location.None;
 import static net.sourceforge.fullsync.Location.Source;
 import static net.sourceforge.fullsync.Location.getOpposite;
@@ -69,7 +68,7 @@ public class PublishActionDecider implements ActionDecider {
 		switch (state.getType()) {
 			case State.Orphan:
 				if (state.getLocation() == Source) {
-					if (!bsd.getState(dst).equals(State.Orphan, FileSystem)) {
+					if (!bsd.getState(dst).equals(State.Orphan, Source)) {
 						actions.add(addDestination);
 					}
 					else {
