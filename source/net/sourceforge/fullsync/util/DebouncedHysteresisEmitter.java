@@ -19,82 +19,108 @@
  */
 package net.sourceforge.fullsync.util;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class DebouncedHysteresisEmitter {
-	private final HysteresisReceiver receiver;
-	private final int upDelay;
-	private final int downDelay;
-	private final TimerTask goUpTask;
-	private final TimerTask goDownTask;
-	private Timer timer;
-	private TimerTask allowedTask;
-	private boolean isDown;
+	private static int DELAY_END = -1;
+	class EmitterThread extends Thread {
+		private final DebouncedHysteresisEmitter target;
+		EmitterThread(DebouncedHysteresisEmitter _target) {
+			target = _target;
+		}
+		@Override
+		public void run() {
+			long delay = Integer.MAX_VALUE;
+			for (;;) {
+				try {
+					Integer nextDelay = waitQueue.poll(delay, TimeUnit.MILLISECONDS);
+					if (null != nextDelay) {
+						delay = nextDelay.intValue();
+						if (DELAY_END == delay) {
+							return;
+						}
+					}
+					else {
+						synchronized (target) {
+							if (isDown) {
+								doGoUp();
+							}
+							else {
+								doGoDown();
+							}
+						}
+						delay = Integer.MAX_VALUE;
+					}
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
-	public DebouncedHysteresisEmitter(HysteresisReceiver _receiver, int _upDelay, int _downDelay) {
+	}
+	private final HysteresisReceiver receiver;
+	private final Integer upDelay;
+	private final Integer downDelay;
+	private boolean isDown;
+	private boolean upScheduled;
+	private boolean downScheduled;
+	private BlockingQueue<Integer> waitQueue;
+	private final EmitterThread emitterThread;
+
+	public DebouncedHysteresisEmitter(HysteresisReceiver _receiver, int _upDelayMs, int _downDelayMs) {
 		receiver = _receiver;
-		upDelay = _upDelay;
-		downDelay = _downDelay;
-		goUpTask = new TimerTask() {
-			@Override
-			public void run() {
-				doGoUp();
-			}
-		};
-		goDownTask = new TimerTask() {
-			@Override
-			public void run() {
-				doGoDown();
-			}
-		};
-		timer = new Timer();
-		allowedTask = null;
+		upDelay = Integer.valueOf(_upDelayMs);
+		downDelay = Integer.valueOf(_downDelayMs);
 		isDown = true;
+		upScheduled = false;
+		downScheduled = false;
+		waitQueue = new LinkedBlockingQueue<Integer>();
+		emitterThread = new EmitterThread(this);
+		emitterThread.setDaemon(true);
+		emitterThread.start();
 	}
 
 	public synchronized void up() {
-		if (isDown) {
+		if (isDown && !upScheduled) {
 			cancelInternal();
-			allowedTask = goUpTask;
-			timer.schedule(goUpTask, upDelay);
+			upScheduled = true;
+			waitQueue.add(upDelay);
 		}
 	}
 
 	public synchronized void down() {
-		if (!isDown) {
+		if (!isDown && !downScheduled) {
 			cancelInternal();
-			allowedTask = goDownTask;
-			timer.schedule(goDownTask, downDelay);
+			downScheduled = true;
+			waitQueue.add(downDelay);
 		}
 	}
 
 	public synchronized void cancel() {
 		cancelInternal();
-		timer.cancel();
-		timer = new Timer();
+		waitQueue.add(Integer.valueOf(DELAY_END));
 	}
 
 	private synchronized void cancelInternal() {
-		if (null != allowedTask) {
-			allowedTask.cancel();
-		}
-		allowedTask = null;
-		timer.purge();
+		upScheduled = false;
+		downScheduled = false;
 	}
 
 	private synchronized void doGoUp() {
-		if (allowedTask == goUpTask && isDown) {
+		if (isDown) {
 			isDown = false;
-			allowedTask = null;
+			upScheduled = false;
 			receiver.up();
 		}
 	}
 
 	private synchronized void doGoDown() {
-		if (allowedTask == goDownTask && !isDown) {
+		if (!isDown) {
 			isDown = true;
-			allowedTask = null;
+			downScheduled = false;
 			receiver.down();
 		}
 	}
