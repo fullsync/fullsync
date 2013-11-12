@@ -28,7 +28,13 @@
 
    <plugins>
       <plugin id="net.sourceforge.fullsync.cli"/>
+      <plugin id="net.sourceforge.fullsync.interfaces"/>
+      <plugin id="org.apache.commons.cli"/>
+      <plugin id="org.eclipse.equinox.cm"/>
+      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
+      <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
       <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
    </plugins>
 
    <features>
@@ -36,8 +42,8 @@
    </features>
 
    <configurations>
-      <plugin id="net.sourceforge.fullsync.cli" autoStart="true" startLevel="4" />
-      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+      <plugin id="net.sourceforge.fullsync.cli" autoStart="true" startLevel="7" />
+      <plugin id="org.eclipse.equinox.cm" autoStart="true" startLevel="6" />
    </configurations>
 
 </product>
