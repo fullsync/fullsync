@@ -16,6 +16,7 @@ public class SFTPConnectionTest extends BaseConnectionTest {
 	@Override
 	@Before
 	public void setUp() throws Exception {
+		System.setProperty("vfs.sftp.sshdir", new File("./tests/sshd-config/").getAbsolutePath());
 		super.setUp();
 		ConnectionDescription dst = new ConnectionDescription(new URI("sftp://127.0.0.1:2222/"));
 		dst.setParameter("bufferStrategy", "");
@@ -25,7 +26,6 @@ public class SFTPConnectionTest extends BaseConnectionTest {
 
 		testingDst.delete();
 		testingDst = sshServer.getUserHome();
-		System.setProperty("vfs.sftp.sshdir", new File("./tests/sshd-config/").getAbsolutePath());
 	}
 
 	@Override
