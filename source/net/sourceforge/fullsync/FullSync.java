@@ -81,7 +81,7 @@ public class FullSync {
 				finally {
 					synchronized (instance) {
 						initialized = true;
-						notifyAll();
+						instance.notifyAll();
 					}
 					tracer = new FullSyncEventTracer();
 					FullSync.subscribe(tracer);
