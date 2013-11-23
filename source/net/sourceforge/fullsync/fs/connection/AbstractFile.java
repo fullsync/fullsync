@@ -36,7 +36,6 @@ class AbstractFile implements File {
 
 	protected FileSystemConnection fs;
 	protected String name;
-	protected String path;
 	protected File parent;
 	protected boolean exists;
 	protected boolean directory;
@@ -45,10 +44,9 @@ class AbstractFile implements File {
 	protected long lastModified;
 
 
-	AbstractFile(FileSystemConnection fs, String name, String path, File parent, boolean directory, boolean exists) {
+	AbstractFile(FileSystemConnection fs, String name, File parent, boolean directory, boolean exists) {
 		this.fs = fs;
 		this.name = name;
-		this.path = path;
 		this.parent = parent;
 		this.exists = exists;
 		this.directory = directory;
@@ -68,12 +66,11 @@ class AbstractFile implements File {
 
 	@Override
 	public String getPath() {
-		if (path == null) {
-			return parent.getPath() + "/" + name;
+		String parentPath = null;
+		if (parent != null) {
+			parentPath = parent.getPath();
 		}
-		else {
-			return path;
-		}
+		return null != parentPath ? parentPath + "/" + name : name;
 	}
 
 	@Override
@@ -215,7 +212,7 @@ class AbstractFile implements File {
 					if (!newChildren.containsKey(n.getName())) {
 						if (n.exists()) {
 							newChildren.put(n.getName(),
-									new AbstractFile(getConnection(), n.getName(), null, n.getParent(), n.isDirectory(), false));
+									new AbstractFile(getConnection(), n.getName(), n.getParent(), n.isDirectory(), false));
 						}
 						else {
 							newChildren.put(n.getName(), n);

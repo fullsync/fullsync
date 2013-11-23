@@ -49,7 +49,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 				fs.authSetup(desc, options);
 			}
 			base = VFS.getManager().resolveFile(desc.getUri().toString(), options);
-			root = new AbstractFile(this, ".", ".", null, true, base.exists());
+			root = new AbstractFile(this, ".", null, true, base.exists());
 		}
 		catch (FileSystemException e) {
 			throw new net.sourceforge.fullsync.FileSystemException(e);
@@ -58,15 +58,14 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	@Override
 	public final File createChild(final File parent, final String name, final boolean directory) throws IOException {
-		return new AbstractFile(this, name, null, parent, directory, false);
+		return new AbstractFile(this, name, parent, directory, false);
 
 	}
 
 	private File buildNode(final File parent, final FileObject file) throws FileSystemException {
 		String name = file.getName().getBaseName();
-		// String path = parent.getPath()+"/"+name;
 
-		File n = new AbstractFile(this, name, null, parent, file.getType() == FileType.FOLDER, true);
+		File n = new AbstractFile(this, name, parent, file.getType() == FileType.FOLDER, true);
 		if (file.getType() == FileType.FILE) {
 			FileContent content = file.getContent();
 			n.setLastModified(content.getLastModifiedTime());
