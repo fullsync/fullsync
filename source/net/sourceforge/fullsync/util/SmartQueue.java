@@ -79,6 +79,9 @@ public class SmartQueue<E> {
 	 */
 	public synchronized void offer(final E item) {
 		if (!shutdown) {
+			if (null == item) {
+				throw new IllegalArgumentException();
+			}
 			queue.offer(item);
 			if (!paused) {
 				notify();

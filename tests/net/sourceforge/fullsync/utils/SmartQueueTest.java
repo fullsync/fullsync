@@ -161,4 +161,16 @@ public class SmartQueueTest {
 		consumer1.join(50);
 		Assert.assertEquals(numObjects, consumer1.getReceivedObjects());
 	}
+
+	@Test
+	public void testOfferNullThrows() {
+		IllegalArgumentException illegalArgument = null;
+		try {
+			queue.offer(null);
+		}
+		catch (IllegalArgumentException ex) {
+			illegalArgument = ex;
+		}
+		Assert.assertNotEquals(null, illegalArgument);
+	}
 }
