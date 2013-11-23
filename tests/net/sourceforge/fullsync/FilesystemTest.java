@@ -83,6 +83,7 @@ public class FilesystemTest {
 
 	@Before
 	public void setUp() throws Exception {
+		FullSync.init(null);
 		testingDst = null;
 		testingSrc = null;
 		synchronizer = null;
