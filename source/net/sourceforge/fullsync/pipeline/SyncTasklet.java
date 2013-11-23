@@ -48,6 +48,10 @@ public abstract class SyncTasklet<InputQueueItem, OutputQueueItem> implements Ru
 			try {
 				prepare(inputQueue);
 			}
+			catch (Throwable t) {
+				prepareFailed(t);
+				return;
+			}
 			finally {
 				task.endWork();
 			}
@@ -59,6 +63,9 @@ public abstract class SyncTasklet<InputQueueItem, OutputQueueItem> implements Ru
 				task.startWork();
 				try {
 					processItem(item);
+				}
+				catch (Throwable t) {
+					processingFailed(item, t);
 				}
 				finally {
 					task.endWork();
@@ -73,7 +80,7 @@ public abstract class SyncTasklet<InputQueueItem, OutputQueueItem> implements Ru
 		}
 	}
 
-	protected void prepare(SmartQueue<InputQueueItem> queue) {
+	protected void prepare(SmartQueue<InputQueueItem> queue) throws Exception {
 	}
 
 	protected void cleanup() {
@@ -84,7 +91,15 @@ public abstract class SyncTasklet<InputQueueItem, OutputQueueItem> implements Ru
 		return queue.take();
 	}
 
-	protected abstract void processItem(InputQueueItem item);
+	protected abstract void processItem(InputQueueItem item) throws Exception;
+
+	protected void processingFailed(InputQueueItem item, Throwable t) {
+		//TODO: notify _task
+	}
+
+	protected void prepareFailed(Throwable t) {
+		//TODO: notify _task
+	}
 
 	public abstract void pause();
 

@@ -26,20 +26,25 @@ import net.sourceforge.fullsync.BackgroundTask;
 import net.sourceforge.fullsync.BackgroundTaskState;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.util.DebouncedHysteresisEmitter;
 import net.sourceforge.fullsync.util.HysteresisReceiver;
+import net.sourceforge.fullsync.util.SmartQueue;
 
 public class ProfileSyncTask implements BackgroundTask, HysteresisReceiver {
 	private BackgroundTaskState state;
 	private final Profile profile;
+	private final boolean interactive;
 	private final AtomicInteger workingTasks;
 	private final ArrayList<SyncTasklet<? extends Object, ? extends Object>> subTasks;
 	private final DebouncedHysteresisEmitter debouncer;
+	private SmartQueue<Runnable> cleanupTasks;
 
-	public ProfileSyncTask(final Profile p, final boolean interactive) {
+	public ProfileSyncTask(final Profile _profile, final boolean _interactive) {
 		state = BackgroundTaskState.Initializing;
-		profile = p;
+		profile = _profile;
+		interactive = _interactive;
 		workingTasks = new AtomicInteger();
 		subTasks = new ArrayList<SyncTasklet<? extends Object, ? extends Object>>(5);
 		debouncer = new DebouncedHysteresisEmitter(this, 0, 300);
@@ -87,6 +92,17 @@ public class ProfileSyncTask implements BackgroundTask, HysteresisReceiver {
 		DebugPrintQueue<File> dstDebugPrinter = new DebugPrintQueue<File>(this, dst.getOutput(), "DST");
 		subTasks.add(srcDebugPrinter);
 		subTasks.add(dstDebugPrinter);
+		SyncActionGenerator actionGenerator = new SyncActionGenerator(this, srcDebugPrinter.getOutput(), dstDebugPrinter.getOutput());
+		subTasks.add(actionGenerator.getSourceTask());
+		subTasks.add(actionGenerator.getDestinationTask());
+		DebugPrintQueue<Task> taskDebugPrinter = new DebugPrintQueue<Task>(this, actionGenerator.getOutput(), "Task");
+		subTasks.add(taskDebugPrinter);
+		if (interactive) {
+			//TODO: Queue for the GUI
+		}
+		else {
+			//TODO: Queue for execution
+		}
 		for (SyncTasklet<? extends Object, ? extends Object> task : subTasks) {
 			FullSync.submit(task);
 		}
@@ -122,4 +138,54 @@ public class ProfileSyncTask implements BackgroundTask, HysteresisReceiver {
 		FullSync.publish(this); // FIXME: publish BackgroundTaskIdle() or something
 	}
 
+	@Override
+	public void queueCleanupTask(Runnable task) {
+		cleanupTasks.offer(task);
+	}
+
+	public synchronized void syncEnded() {
+		Runnable r;
+		cleanupTasks.shutdown();
+		for(r = null; null != r; r = cleanupTasks.take()) {
+			try {
+				r.run();
+			}
+			catch(Exception ex) {
+				//TODO: remember / log
+			}
+		}
+	}
+
+}
+
+class SyncEnded extends SyncTasklet<Task, Object> {
+	private ProfileSyncTask task;
+
+	public SyncEnded(ProfileSyncTask _task, SmartQueue<Task> _inputQueue) {
+		super(_task, _inputQueue);
+		task = _task;
+	}
+
+	@Override
+	protected void processItem(Task item) throws Exception {
+	}
+
+	@Override
+	public void pause() {
+	}
+
+	@Override
+	public void resume() {
+	}
+
+	@Override
+	public void cancel() {
+	}
+
+
+	@Override
+	protected void cleanup() {
+		super.cleanup();
+		task.syncEnded();
+	}
 }

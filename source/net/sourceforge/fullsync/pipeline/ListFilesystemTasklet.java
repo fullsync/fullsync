@@ -19,12 +19,9 @@
  */
 package net.sourceforge.fullsync.pipeline;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Collection;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
@@ -33,6 +30,7 @@ import net.sourceforge.fullsync.util.SmartQueue;
 public class ListFilesystemTasklet extends SyncTasklet<File, File> {
 	private final ConnectionDescription location;
 	private final SmartQueue<File> backlog;
+	private Site site;
 
 	public ListFilesystemTasklet(ProfileSyncTask _task, ConnectionDescription _location) {
 		super(_task, new SmartQueue<File>());
@@ -41,28 +39,10 @@ public class ListFilesystemTasklet extends SyncTasklet<File, File> {
 	}
 
 	@Override
-	protected void prepare(SmartQueue<File> queue) {
+	protected void prepare(SmartQueue<File> queue) throws Exception {
 		super.prepare(queue);
-		Site site = null;
-		try {
-			site = FullSync.getFileSystemManager().createConnection(location);
-		}
-		catch (FileSystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (null == site) {
-			getOutput().shutdown();
-			return;
-		}
+		site = FullSync.getFileSystemManager().createConnection(location);
+		//TODO: queue a site.close() for execution on async task cleanup (end of the entire sync)
 		queue.offer(site.getRoot());
 	}
 
@@ -78,36 +58,27 @@ public class ListFilesystemTasklet extends SyncTasklet<File, File> {
 	@Override
 	public void pause() {
 		backlog.pause();
-		getOutput().pause();
 	}
 
 	@Override
 	public void resume() {
 		backlog.resume();
-		getOutput().resume();
 	}
 
 	@Override
 	public void cancel() {
 		backlog.cancel();
-		getOutput().cancel();
 	}
 
 	@Override
-	protected void processItem(File item) {
-		try {
-			if (item.isDirectory()) {
-				Collection<File> children = item.getChildren();
-				for (File c : children) {
-					backlog.offer(c);
-				}
+	protected void processItem(File item) throws Exception {
+		if (item.isDirectory()) {
+			Collection<File> children = item.getChildren();
+			for (File c : children) {
+				backlog.offer(c);
 			}
-			//TODO: does File contain the needed info? (buildNode()?)
-			getOutput().offer(item);
 		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//TODO: does File contain the needed info? (buildNode()?)
+		getOutput().offer(item);
 	}
 }

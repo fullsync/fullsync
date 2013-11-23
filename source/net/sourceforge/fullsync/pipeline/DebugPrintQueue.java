@@ -30,7 +30,7 @@ public class DebugPrintQueue<QueueItem> extends SyncTasklet<QueueItem, QueueItem
 	}
 
 	@Override
-	protected void processItem(QueueItem item) {
+	protected void processItem(QueueItem item) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append(queueName);
 		sb.append(": ");
@@ -41,16 +41,16 @@ public class DebugPrintQueue<QueueItem> extends SyncTasklet<QueueItem, QueueItem
 
 	@Override
 	public void pause() {
-		getOutput().pause();
+		getInput().pause();
 	}
 
 	@Override
 	public void resume() {
-		getOutput().resume();
+		getInput().resume();
 	}
 
 	@Override
 	public void cancel() {
-		getOutput().cancel();
+		getInput().cancel();
 	}
 }

@@ -17,20 +17,32 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync;
+package net.sourceforge.fullsync.pipeline;
 
-public interface BackgroundTask {
-	BackgroundTaskState getState();
+import net.sourceforge.fullsync.Task;
 
-	void pause();
+public class TransferTaskResult {
+	private Task task;
+	private Throwable error;
 
-	void cancel();
+	public TransferTaskResult(Task _task) {
+		task = _task;
+		error = null;
+	}
 
-	void resume();
+	public void setError(Throwable t) {
+		error = t;
+	}
 
-	void restart();
+	public boolean succeeded() {
+		return null == error;
+	}
 
-	void showUI();
+	public Throwable getError() {
+		return error;
+	}
 
-	void queueCleanupTask(Runnable task);
+	public Task getTask() {
+		return task;
+	}
 }
