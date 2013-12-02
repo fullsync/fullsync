@@ -55,6 +55,8 @@ public class GuiController implements Runnable {
 	private Shell mainShell;
 	private MainWindow mainWindow;
 	private SystemTrayItem systemTrayItem;
+	
+	public WelcomeScreen welcomeScreen;
 
 	public GuiController(Preferences preferences, ProfileManager profileManager, Synchronizer synchronizer) {
 		this.preferences = preferences;
@@ -115,7 +117,7 @@ public class GuiController implements Runnable {
 		return imageRepository.getImage(imageName);
 	}
 
-	public void startGui(boolean minimized) {
+	public void startGui(boolean minimized){
 		display = Display.getDefault();
 		imageRepository = new ImageRepository(display);
 		fontRepository = new FontRepository(display);
@@ -132,6 +134,15 @@ public class GuiController implements Runnable {
 						new ExceptionDialog(mainShell, message, exception);
 					}
 				});
+			}
+		});
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				try{
+					createWelcomeScreen();
+				}catch(Exception e){
+				}
 			}
 		});
 	}
@@ -248,5 +259,13 @@ public class GuiController implements Runnable {
 	}
 	public Font getFont(String name, int height, int style) {
 		return fontRepository.getFont(name, height, style);
+	}
+	
+	private void createWelcomeScreen(){
+		try{
+			welcomeScreen = new WelcomeScreen(getMainShell());
+		}catch(Exception e){
+			ExceptionHandler.reportException(e);
+		}
 	}
 }

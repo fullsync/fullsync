@@ -19,6 +19,7 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,6 +34,7 @@ import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.cli.Main;
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 
 import org.eclipse.swt.SWT;
@@ -71,8 +73,10 @@ TaskGenerationListener, SchedulerChangeListener {
 	private GuiController guiController;
 
 	private String statusDelayString;
+	
+	public WelcomeScreen welcomeScreen;
 
-	MainWindow(Composite parent, int style, GuiController initGuiController) {
+	MainWindow(Composite parent, int style, GuiController initGuiController){
 		super(parent, style);
 		this.guiController = initGuiController;
 		initGUI();
@@ -90,8 +94,9 @@ TaskGenerationListener, SchedulerChangeListener {
 
 	/**
 	 * Initializes the GUI.
+	 * @throws IOException 
 	 */
-	private void initGUI() {
+	private void initGUI(){
 		try {
 			this.setSize(600, 300);
 
@@ -212,7 +217,6 @@ TaskGenerationListener, SchedulerChangeListener {
 			ExceptionHandler.reportException(e);
 		}
 	}
-
 	private void createMenu() {
 		// Menu Bar
 		MenuItem menuItemFile = new MenuItem(menuBarMainWindow, SWT.CASCADE);

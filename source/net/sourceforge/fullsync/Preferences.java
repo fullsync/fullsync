@@ -68,4 +68,5 @@ public interface Preferences {
 	boolean getHelpShown();
 
 	void setHelpShown(boolean shown);
+	
 }
