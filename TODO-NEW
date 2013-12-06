@@ -82,6 +82,7 @@ Bugs:
 	[ ] No Warning message appears after changing the path of destination or source folder
 	[ ] After changing destination folder path, when synchronizing, it creates a new folder in the old path like nothing happened
 	[ ] After changing source folder path, when synchronizing, nothing happens (it is like source folder is empty)
+	[ ] Fix missing error handling in net.sourceforge.fullsync.buffer.BlockBuffer.storeBytes(InputStream, long)
 
 Features:
 	[ ] TaskDecisionDialog:
