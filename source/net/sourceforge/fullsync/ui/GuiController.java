@@ -55,8 +55,6 @@ public class GuiController implements Runnable {
 	private Shell mainShell;
 	private MainWindow mainWindow;
 	private SystemTrayItem systemTrayItem;
-	
-	public WelcomeScreen welcomeScreen;
 
 	public GuiController(Preferences preferences, ProfileManager profileManager, Synchronizer synchronizer) {
 		this.preferences = preferences;
@@ -136,15 +134,7 @@ public class GuiController implements Runnable {
 				});
 			}
 		});
-		display.syncExec(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					createWelcomeScreen();
-				}catch(Exception e){
-				}
-			}
-		});
+		createWelcomeScreen();
 	}
 
 	@Override
@@ -260,11 +250,16 @@ public class GuiController implements Runnable {
 	public Font getFont(String name, int height, int style) {
 		return fontRepository.getFont(name, height, style);
 	}
-	
-	private void createWelcomeScreen(){
-		try{
-			welcomeScreen = new WelcomeScreen(getMainShell());
-		}catch(Exception e){
+
+	private void createWelcomeScreen() {
+		if (null != System.getProperty("net.sourceforge.fullsync.skipWelcomeScreen", null) || true == preferences.getSkipWelcomeScreen()) {
+			return;
+		}
+		//TODO: only show if the current version is newer than the last shown version
+		try {
+			new WelcomeScreen(getMainShell());
+		}
+		catch (Exception e) {
 			ExceptionHandler.reportException(e);
 		}
 	}

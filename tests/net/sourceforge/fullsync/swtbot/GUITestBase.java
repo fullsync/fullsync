@@ -49,6 +49,7 @@ public abstract class GUITestBase {
 		System.setProperty("net.sourceforge.fullsync.configDir", tempConfigDir.getRoot().toString());
 		System.setProperty("net.sourceforge.fullsync.skipExit", "true");
 		System.setProperty("net.sourceforge.fullsync.skipHelp", "true");
+		System.setProperty("net.sourceforge.fullsync.skipWelcomeScreen", "true");
 
 		applicationThread = new Thread() {
 			@Override
