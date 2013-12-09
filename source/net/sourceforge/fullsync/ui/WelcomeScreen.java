@@ -26,8 +26,6 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -46,15 +44,15 @@ import org.jsoup.select.Elements;
 
 
 
-public class WelcomeScreen extends Dialog implements DisposeListener {
+public class WelcomeScreen extends Dialog {
 
 	private Shell dialogShell;
 	private Label labelPicture;
 	private Composite compositeBottom;
 	private Button buttonOk;
-	
+
 	public Boolean welcomeScreenShown;
-	
+
 	public WelcomeScreen(Shell parent) {
 		super(parent);
 		welcomeScreenShown = true;
@@ -62,8 +60,6 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		dialogShell.setBackground(UISettings.COLOR_WHITE);
 		dialogShell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
-		dialogShell.addDisposeListener(this);
-		
 		GridLayout dialogShellLayout = new GridLayout();
 		dialogShell.setLayout(dialogShellLayout);
 		dialogShellLayout.verticalSpacing = 0;
@@ -71,7 +67,7 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		dialogShellLayout.marginWidth = 0;
 		dialogShellLayout.horizontalSpacing = 0;
 		dialogShell.setText(Messages.getString("WelcomeScreen.WelcomeMessage"));
-		
+
 		labelPicture = new Label(dialogShell, SWT.NONE);
 		GridData labelPictureLData = new GridData();
 		labelPictureLData.grabExcessHorizontalSpace = true;
@@ -83,7 +79,7 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		Rectangle r = aboutImg.getBounds();
 		labelPicture.setSize(r.width, r.height);
 		labelPicture.setImage(aboutImg);
-		
+
 		// version label
 		Label labelVersion = new Label(dialogShell, SWT.FILL);
 		labelVersion.setForeground(UISettings.COLOR_LIGHT_GREY);
@@ -94,14 +90,14 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		lvd.widthHint = 400;
 		lvd.heightHint = 18;
 		labelVersion.setLayoutData(lvd);
-		
+
 		//separator
 		Label labelSeparator2 = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
 		GridData labelSeparator2LData = new GridData();
 		labelSeparator2LData.grabExcessHorizontalSpace = true;
 		labelSeparator2LData.horizontalAlignment = SWT.FILL;
 		labelSeparator2.setLayoutData(labelSeparator2LData);
-		
+
 		//releases label
 		Label labelReleases = new Label(dialogShell, SWT.FILL | SWT.WRAP);
 		labelReleases.setForeground(UISettings.COLOR_LIGHT_GREY);
@@ -111,14 +107,14 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		lrel.horizontalIndent = 17;
 		lrel.widthHint = 400;
 		labelReleases.setLayoutData(lrel);
-		
+
 		//separator
 		Label labelSeparator3 = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
 		GridData labelSeparator3LData = new GridData();
 		labelSeparator3LData.grabExcessHorizontalSpace = true;
 		labelSeparator3LData.horizontalAlignment = SWT.FILL;
 		labelSeparator3.setLayoutData(labelSeparator2LData);
-		
+
 		// buttons composite
 		compositeBottom = new Composite(dialogShell, SWT.NONE);
 		GridLayout compositeBottomLayout = new GridLayout();
@@ -128,7 +124,7 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		compositeBottomLayout.makeColumnsEqualWidth = true;
 		compositeBottomLayout.numColumns = 2;
 		compositeBottom.setLayout(compositeBottomLayout);
-		
+
 		// ok button
 		buttonOk = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
 		buttonOk.setText("Ok"); //$NON-NLS-1$
@@ -144,13 +140,13 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonOkLData.grabExcessHorizontalSpace = true;
 		buttonOk.setLayoutData(buttonOkLData);
-		
+
 		// layout the dialog and show it
 		dialogShell.pack();
 		dialogShell.layout(true);
 		dialogShell.open();
 		Display display = dialogShell.getDisplay();
-		
+
 		while (!dialogShell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -158,10 +154,6 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		}
 	}
 
-	@Override
-	public void widgetDisposed(DisposeEvent arg0) {
-	}
-	
 	private String getVersion(){
 		String version = null;
 		String url = "http://fullsync.sourceforge.net/";
@@ -192,7 +184,7 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		}
 		return version;
 	}
-	
+
 	private String parseVersion(Elements el){
 		String temp = el.toString();
 		String version = "";
@@ -210,7 +202,7 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		}
 		return version;
 	}
-	
+
 	private String getReleases(){
 		String releases  = "";
 		String url = "http://fullsync.sourceforge.net/";
@@ -222,8 +214,8 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		}
 		return releases;
 	}
-	
-	
+
+
 	private String parseReleases(Elements el){
 		String releasesText = "";
 		String allReleases = el.toString();
@@ -244,8 +236,8 @@ public class WelcomeScreen extends Dialog implements DisposeListener {
 		}
 		return releasesText;
 	}
-	
-	
-	
+
+
+
 
 }
