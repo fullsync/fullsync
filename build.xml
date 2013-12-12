@@ -1,11 +1,15 @@
 <?xml version="1.0"?>
 <project name="FullSync" default="build" basedir=".">
-
-	<property file="build.properties" />
-
-	<!-- Project Properties -->
 	<property name="project" value="FullSync" />
-	<property name="version" value="0.10.2" />
+	<loadfile property="version-raw" srcfile="source/net/sourceforge/fullsync/version.txt" encoding="utf-8" />
+	<script language="javascript" manager="javax">
+	<![CDATA[
+		var version = project.getProperty("version-raw");
+		if (version !== null) {
+			project.setProperty("version", version.trim())
+		}
+	]]>
+	</script>
 	<property name="final.name" value="${project}-${version}" />
 	<property name="final-src.name" value="${project}-${version}-src" />
 	<property name="source.dir" value="${basedir}/source" />
@@ -158,15 +162,10 @@
 	<target name="jar" depends="compile, rmic, copy-libs">
 		<jar destfile="${build.lib.dir}/fullsync.jar">
 			<fileset dir="${classes.dir}" includes="net/**/*" excludes="net/sourceforge/fullsync/launcher/**/*" />
-			<fileset dir="${basedir}">
-				<include name="jar-copyright.txt" />
-				<include name="jar-special-thanks.txt" />
-			</fileset>
 			<manifest>
 				<attribute name="License" value="GPLv2+" />
 				<attribute name="FullSync-Version" value="${version}" />
 				<attribute name="Copyright" value="${jar.copyright}" />
-				<!-- TODO: builddate,... -->
 			</manifest>
 		</jar>
 	</target>
@@ -178,7 +177,6 @@
 				<attribute name="License" value="GPLv2+" />
 				<attribute name="FullSync-Version" value="${version}" />
 				<attribute name="Copyright" value="${jar.copyright}" />
-				<!-- TODO: builddate,... -->
 			</manifest>
 		</jar>
 	</target>
@@ -193,17 +191,12 @@
 		</pathconvert>
 		<jar destfile="${build.dir}/launcher.jar">
 			<fileset dir="${classes.dir}" includes="net/sourceforge/fullsync/launcher/**/*" />
-			<fileset dir="${basedir}">
-				<include name="jar-copyright.txt" />
-				<include name="jar-special-thanks.txt" />
-			</fileset>
 			<manifest>
 				<attribute name="Main-Class" value="net.sourceforge.fullsync.launcher.Launcher" />
 				<attribute name="FullSync-Class-Path" value="${dist.classpath}" />
 				<attribute name="License" value="GPLv2+" />
 				<attribute name="FullSync-Version" value="${version}" />
 				<attribute name="Copyright" value="${jar.copyright}" />
-				<!-- TODO: builddate,... -->
 			</manifest>
 		</jar>
 	</target>

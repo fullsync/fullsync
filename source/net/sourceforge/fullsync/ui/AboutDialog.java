@@ -19,12 +19,8 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.io.InputStream;
-import java.net.JarURLConnection;
-import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.jar.Attributes;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Util;
@@ -92,32 +88,15 @@ class AboutDialog extends Dialog implements DisposeListener {
 			// version label
 			Label labelVersion = new Label(dialogShell, SWT.FILL);
 			labelVersion.setForeground(UISettings.COLOR_LIGHT_GREY);
-			labelVersion.setText("Version: <unknown development version>");
+			labelVersion.setText(Messages.getString("AboutDialog.Version", Util.getResourceAsString("net/sourceforge/fullsync/version.txt")));
 			GridData lvd = new GridData(SWT.FILL);
 			lvd.grabExcessHorizontalSpace = true;
 			lvd.horizontalIndent = 17;
 			labelVersion.setLayoutData(lvd);
-			try {
-				URL fileurl = AboutDialog.class.getProtectionDomain().getCodeSource().getLocation();
-				URL jarurl = new URL("jar:" + fileurl.toString() + "!/");
-				JarURLConnection urlc = (JarURLConnection) jarurl.openConnection();
-				urlc.connect();
-				Attributes jarattrs = urlc.getManifest().getMainAttributes();
-				labelVersion.setText("Version: " + jarattrs.getValue("FullSync-Version"));
-			}
-			catch (Exception e) {
-				/* this will happen during debugging, might happen at runtime too; ignore */
-				e.printStackTrace();
-			}
-			String copyright = "<unable to read copyright of jar file>";
-			InputStream copyrightIS = AboutDialog.class.getResourceAsStream("/jar-copyright.txt");
-			if (null != copyrightIS) {
-				copyright = Util.readStreamAsString(copyrightIS);
-			}
 			// copyright text
 			Label labelCopyright = new Label(dialogShell, SWT.FILL);
 			labelCopyright.setForeground(UISettings.COLOR_LIGHT_GREY);
-			labelCopyright.setText(copyright);
+			labelCopyright.setText(Util.getResourceAsString("net/sourceforge/fullsync/copyright.txt"));
 			GridData lcd = new GridData(SWT.FILL);
 			lcd.grabExcessHorizontalSpace = true;
 			lcd.horizontalIndent = 17;
@@ -149,16 +128,10 @@ class AboutDialog extends Dialog implements DisposeListener {
 			labelThanks.setAlignment(SWT.CENTER);
 			stTimer = new Timer(false);
 			final String[] specialThanks;
-			InputStream specialThanksIS = AboutDialog.class.getResourceAsStream("/jar-special-thanks.txt");
-			if (null != specialThanksIS) {
-				String sp = Util.readStreamAsString(specialThanksIS);
-				String[] res = sp.split("\n");
-				if (null != res) {
-					specialThanks = res;
-				}
-				else {
-					specialThanks = new String[] { "", "", "" };
-				}
+			String sp = Util.getResourceAsString("net/sourceforge/fullsync/special-thanks.txt");
+			String[] res = sp.split("\n");
+			if (null != res) {
+				specialThanks = res;
 			}
 			else {
 				specialThanks = new String[] { "", "", "" };
