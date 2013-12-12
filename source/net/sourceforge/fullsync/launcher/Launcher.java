@@ -47,7 +47,7 @@ public class Launcher {
 				os = "gtk-linux";
 			}
 			else if (-1 != osName.indexOf("windows")) {
-				os = "win32";
+				os = "win32-win32";
 			}
 			else if (-1 != osName.indexOf("mac")) {
 				os = "cocoa-macosx";
