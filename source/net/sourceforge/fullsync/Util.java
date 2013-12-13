@@ -50,7 +50,7 @@ public abstract class Util {
 							out.append(buffer, 0, read);
 						}
 					} while (read >= 0);
-					return out.toString();
+					return out.toString().trim();
 				}
 				catch (Exception e) {
 					e.printStackTrace();
@@ -67,4 +67,9 @@ public abstract class Util {
 		}
 		return "";
 	}
+
+	public static String getFullSyncVersion() {
+		return Util.getResourceAsString("net/sourceforge/fullsync/version.txt");
+	}
+
 }

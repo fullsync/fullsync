@@ -88,7 +88,7 @@ class AboutDialog extends Dialog implements DisposeListener {
 			// version label
 			Label labelVersion = new Label(dialogShell, SWT.FILL);
 			labelVersion.setForeground(UISettings.COLOR_LIGHT_GREY);
-			labelVersion.setText(Messages.getString("AboutDialog.Version", Util.getResourceAsString("net/sourceforge/fullsync/version.txt")));
+			labelVersion.setText(Messages.getString("AboutDialog.Version", Util.getFullSyncVersion()));
 			GridData lvd = new GridData(SWT.FILL);
 			lvd.grabExcessHorizontalSpace = true;
 			lvd.horizontalIndent = 17;
