@@ -72,4 +72,8 @@ public abstract class Util {
 		return Util.getResourceAsString("net/sourceforge/fullsync/version.txt");
 	}
 
+	public static String getTwitterURL() {
+		return Util.getResourceAsString("net/sourceforge/fullsync/twitter-url.txt");
+	}
+
 }

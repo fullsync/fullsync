@@ -32,9 +32,9 @@ import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.cli.Main;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 
 import org.eclipse.swt.SWT;
@@ -73,7 +73,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 	private GuiController guiController;
 
 	private String statusDelayString;
-	
+
 	public WelcomeScreen welcomeScreen;
 
 	MainWindow(Composite parent, int style, GuiController initGuiController){
@@ -94,7 +94,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 
 	/**
 	 * Initializes the GUI.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void initGUI(){
 		try {
@@ -411,10 +411,20 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 			}
 		});
 
+		MenuItem menuItemTwitter = new MenuItem(menuHelp, SWT.PUSH);
+		menuItemTwitter.setImage(guiController.getImage("twitter_bird_blue_16.png")); //$NON-NLS-1$
+		menuItemTwitter.setText(Messages.getString("MainWindow.Menu_Twitter")); //$NON-NLS-1$
+		menuItemTwitter.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(final Event e) {
+				GuiController.launchProgram(Util.getTwitterURL());
+			}
+		});
+
 		new MenuItem(menuHelp, SWT.SEPARATOR);
 
 		MenuItem menuItemSystem = new MenuItem(menuHelp, SWT.PUSH);
-		menuItemSystem.setText("System Information");
+		menuItemSystem.setText(Messages.getString("MainWindow.Menu_SystemInfo"));
 		menuItemSystem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {
