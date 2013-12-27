@@ -20,6 +20,9 @@
 *~
 *.kdev4
 
+*/bin/
+*/*-SDK/
+
 # /resources/images/
 /resources/images/*.ico
 /resources/images/*.png

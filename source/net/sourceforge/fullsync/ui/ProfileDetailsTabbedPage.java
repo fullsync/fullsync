@@ -195,12 +195,12 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 			textProfileDescription.setText(p.getDescription());
 
 			srcConnectionConfiguration.setConnectionDescription(p.getSource());
-			if (null != srcConnectionConfiguration) {
+			if (null != p.getSource()) {
 				srcConnectionConfiguration.setBuffered("syncfiles".equals(p.getSource().getParameter("bufferStrategy"))); //$NON-NLS-1$
 			}
 
 			dstConnectionConfiguration.setConnectionDescription(p.getDestination());
-			if (null != dstConnectionConfiguration) {
+			if (null != p.getDestination()) {
 				dstConnectionConfiguration.setBuffered("syncfiles".equals(p.getDestination().getParameter("bufferStrategy"))); //$NON-NLS-1$
 			}
 

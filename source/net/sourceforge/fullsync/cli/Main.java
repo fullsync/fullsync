@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
-public class Main { // NO_UCD
+public class Main{ // NO_UCD
 	private static Options options;
 
 	private static void initOptions() {
@@ -159,9 +159,9 @@ public class Main { // NO_UCD
 				printHelp();
 				return;
 			}
-
+			
 			// Initialize basic facilities
-
+			
 			// upgrade code...
 			do {
 				File newPreferences = new File(configDir + "preferences.properties");
@@ -172,7 +172,7 @@ public class Main { // NO_UCD
 			}
 			while (false); // variable scope
 			final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
-
+			
 			String profilesFile = "profiles.xml";
 			if (line.hasOption("P")) {
 				profilesFile = line.getOptionValue("P");

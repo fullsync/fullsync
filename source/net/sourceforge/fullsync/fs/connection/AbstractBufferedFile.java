@@ -38,8 +38,8 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	private long fsSize;
 	private long fsLastModified;
 
-	AbstractBufferedFile(BufferedConnection bc, String name, String path, File parent, boolean directory, boolean exists) {
-		super(bc, name, path, parent, directory, exists);
+	AbstractBufferedFile(BufferedConnection bc, String name, File parent, boolean directory, boolean exists) {
+		super(bc, name, parent, directory, exists);
 		this.unbuffered = null;
 		children = new Hashtable<String, File>();
 		fsSize = -1;
@@ -47,7 +47,7 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	}
 
 	AbstractBufferedFile(BufferedConnection bc, File unbuffered, File parent, boolean directory, boolean exists) {
-		this(bc, unbuffered.getName(), unbuffered.getPath(), parent, directory, exists);
+		this(bc, unbuffered.getName(), parent, directory, exists);
 		this.unbuffered = unbuffered;
 	}
 

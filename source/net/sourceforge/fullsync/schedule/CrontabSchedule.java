@@ -44,7 +44,7 @@ public class CrontabSchedule extends Schedule {
 
 	private transient long lastExecution;
 
-	public CrontabSchedule(final Element element) throws DataParseException {
+	public CrontabSchedule(final Element element) throws DataParseException { // NO_UCD
 		String pattern = "* * * * *";
 		if (element.hasAttribute("pattern")) {
 			pattern = element.getAttribute("pattern");

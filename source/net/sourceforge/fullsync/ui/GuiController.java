@@ -22,15 +22,16 @@ package net.sourceforge.fullsync.ui;
 import java.io.IOException;
 
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.ImageRepository;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -38,8 +39,6 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- *
- *         TODO this class should also handle images
  */
 public class GuiController implements Runnable {
 	private static GuiController singleton;
@@ -52,6 +51,7 @@ public class GuiController implements Runnable {
 
 	private Display display;
 	private ImageRepository imageRepository;
+	private FontRepository fontRepository;
 	private Shell mainShell;
 	private MainWindow mainWindow;
 	private SystemTrayItem systemTrayItem;
@@ -68,7 +68,7 @@ public class GuiController implements Runnable {
 		try {
 			mainShell = new Shell(display);
 			mainWindow = new MainWindow(mainShell, SWT.NULL, this);
-			mainShell.setLayout(new org.eclipse.swt.layout.FillLayout());
+			mainShell.setLayout(new FillLayout());
 			Rectangle shellBounds = mainShell.computeTrim(0, 0, mainWindow.getSize().x, mainWindow.getSize().y);
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText("FullSync"); //$NON-NLS-1$
@@ -115,13 +115,10 @@ public class GuiController implements Runnable {
 		return imageRepository.getImage(imageName);
 	}
 
-	public void removeImage(String imageName) {
-		imageRepository.removeImage(imageName);
-	}
-
-	public void startGui(boolean minimized) {
+	public void startGui(boolean minimized){
 		display = Display.getDefault();
 		imageRepository = new ImageRepository(display);
+		fontRepository = new FontRepository(display);
 		createMainShell(minimized);
 		systemTrayItem = new SystemTrayItem(this);
 		oldExceptionHandler = ExceptionHandler.registerExceptionHandler(new ExceptionHandler() {
@@ -137,6 +134,7 @@ public class GuiController implements Runnable {
 				});
 			}
 		});
+		createWelcomeScreen();
 	}
 
 	@Override
@@ -179,6 +177,9 @@ public class GuiController implements Runnable {
 		}
 		if (imageRepository != null) {
 			imageRepository.dispose();
+		}
+		if (fontRepository != null) {
+			fontRepository.dispose();
 		}
 		if ((systemTrayItem != null) && !systemTrayItem.isDisposed()) {
 			systemTrayItem.dispose();
@@ -245,5 +246,21 @@ public class GuiController implements Runnable {
 			}
 		}
 
+	}
+	public Font getFont(String name, int height, int style) {
+		return fontRepository.getFont(name, height, style);
+	}
+
+	private void createWelcomeScreen() {
+		if (null != System.getProperty("net.sourceforge.fullsync.skipWelcomeScreen", null) || true == preferences.getSkipWelcomeScreen()) {
+			return;
+		}
+		//TODO: only show if the current version is newer than the last shown version
+		try {
+			new WelcomeScreen(getMainShell());
+		}
+		catch (Exception e) {
+			ExceptionHandler.reportException(e);
+		}
 	}
 }

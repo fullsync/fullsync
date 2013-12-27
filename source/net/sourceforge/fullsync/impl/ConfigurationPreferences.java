@@ -187,4 +187,14 @@ public class ConfigurationPreferences implements Preferences {
 		config.setProperty("Interface.HelpShown", Boolean.valueOf(shown));
 	}
 
+	@Override
+	public boolean getSkipWelcomeScreen() {
+		return config.getBoolean("Interface.SkipWelcomeScreen", false);
+	}
+
+	@Override
+	public void setSkipWelcomeScreen(boolean skip) {
+		config.setProperty("Interface.SkipWelcomeScreen", Boolean.valueOf(skip));
+	}
+
 }

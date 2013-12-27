@@ -84,7 +84,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 				// File n = current.getUnbuffered().getChild( name );
 				// if( n == null )
 				// n = current.getUnbuffered().createChild( name, true );
-				AbstractBufferedFile newDir = new AbstractBufferedFile(bc, name, current.getPath() + "/" + name, current, true, true);
+				AbstractBufferedFile newDir = new AbstractBufferedFile(bc, name, current, true, true);
 				current.addChild(newDir);
 				current = newDir;
 			}
@@ -92,7 +92,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 				// File n = current.getUnbuffered().getChild( name );
 				// if( n == null )
 				// n = current.getUnbuffered().createChild( name, false );
-				AbstractBufferedFile newFile = new AbstractBufferedFile(bc, name, current.getPath() + "/" + name, current, false, true);
+				AbstractBufferedFile newFile = new AbstractBufferedFile(bc, name, current, false, true);
 				newFile.setSize(Long.parseLong(attributes.getValue("BufferedLength")));
 				newFile.setLastModified(Long.parseLong(attributes.getValue("BufferedLastModified")));
 
@@ -325,9 +325,11 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		}
 		catch (FactoryConfigurationError e) {
 			ExceptionHandler.reportException(e);
-		} catch (TransformerConfigurationException e) {
+		}
+		catch (TransformerConfigurationException e) {
 			ExceptionHandler.reportException(e);
-		} catch (TransformerException e) {
+		}
+		catch (TransformerException e) {
 			ExceptionHandler.reportException(e);
 		}
 		finally {

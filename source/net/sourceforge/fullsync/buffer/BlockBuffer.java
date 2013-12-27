@@ -150,7 +150,7 @@ public class BlockBuffer implements ExecutionBuffer {
 
 		int start = numberBytes;
 		int read = inStream.read(buffer, start, (int) length);
-
+		//FIXME: read might return -1 which subsequently (in flush) throws an exception
 		numberBytes += read;
 		freeBytes -= read;
 
