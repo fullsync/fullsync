@@ -187,7 +187,7 @@ class AboutDialog extends Dialog implements DisposeListener {
 			websiteLink.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent evt) {
-					GuiController.launchProgram("http://fullsync.sourceforge.net/");
+					GuiController.launchProgram(Util.getWebsiteURL());
 				}
 			});
 			websiteLinkLData.grabExcessHorizontalSpace = false;
