@@ -83,7 +83,6 @@ function HtmlHeader($caption, $skip = '') {
 			<a href="index.php">Home</a>
 			<a href="features.php">Features</a>
 			<a href="screenshots.php">Screenshots</a>
-			<!-- <a href="donate.php">Donate</a> -->
 			<a href="docs.php">Documentation</a>
 			<a href="download.php">Download</a>
 			<a href="contribute.php">Contribute</a>
