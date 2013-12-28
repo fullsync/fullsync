@@ -51,12 +51,13 @@ class AboutDialog extends Dialog implements DisposeListener {
 	private Label labelThanks;
 	private Composite composite1;
 	private Button buttonOk;
-	private Button buttonWebsite;
+	private Link websiteLink;
 
 	private static final long delay = 750;
 
 	private int stIndex = 0;
 	private Timer stTimer;
+	private Link twitterLink;
 
 	AboutDialog(Shell parent, int style) {
 		super(parent, style);
@@ -179,23 +180,42 @@ class AboutDialog extends Dialog implements DisposeListener {
 			compositeBottomLayout.makeColumnsEqualWidth = true;
 			compositeBottomLayout.numColumns = 2;
 			compositeBottom.setLayout(compositeBottomLayout);
-			// website button
-			buttonWebsite = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
-			buttonWebsite.setText(Messages.getString("AboutDialog.WebSite")); //$NON-NLS-1$
-			GridData buttonWebsiteLData = new GridData();
-			buttonWebsite.addSelectionListener(new SelectionAdapter() {
+			// website link
+			websiteLink = new Link(compositeBottom, SWT.NONE);
+			websiteLink.setText("<a>" + Messages.getString("AboutDialog.WebSite") + "</a>"); //$NON-NLS-1$
+			GridData websiteLinkLData = new GridData();
+			websiteLink.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent evt) {
-					GuiController.launchProgram("http://fullsync.sourceforge.net");
+					GuiController.launchProgram("http://fullsync.sourceforge.net/");
 				}
 			});
-			buttonWebsiteLData.widthHint = UISettings.BUTTON_WIDTH;
-			buttonWebsiteLData.heightHint = UISettings.BUTTON_HEIGHT;
-			buttonWebsiteLData.grabExcessHorizontalSpace = true;
-			buttonWebsite.setLayoutData(buttonWebsiteLData);
+			websiteLinkLData.grabExcessHorizontalSpace = false;
+			websiteLinkLData.horizontalAlignment = SWT.CENTER;
+			websiteLink.setLayoutData(websiteLinkLData);
+			// twitter link
+			Composite compositeTwitter = new Composite(compositeBottom, SWT.NONE);
+			compositeTwitter.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
+			compositeTwitter.setLayout(new GridLayout(2, false));
+			Image twitterBird = GuiController.getInstance().getImage("twitter_bird_blue_16.png");
+			Label twitterBirdLabel = new Label(compositeTwitter, SWT.NONE);
+			Rectangle twitterBirdBounds = twitterBird.getBounds();
+			twitterBirdLabel.setSize(twitterBirdBounds.width, twitterBirdBounds.height);
+			twitterBirdLabel.setImage(twitterBird);
+			twitterLink = new Link(compositeTwitter, SWT.NONE);
+			twitterLink.setText("<a>@FullSyncNews</a>"); //$NON-NLS-1$
+			GridData twitterLinkLData = new GridData();
+			twitterLink.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent evt) {
+					GuiController.launchProgram(Util.getTwitterURL());
+				}
+			});
+			twitterLink.setLayoutData(twitterLinkLData);
+
 			// ok button
-			buttonOk = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
-			buttonOk.setText("Ok"); //$NON-NLS-1$
+			buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
+			buttonOk.setText("Ok");
 			GridData buttonOkLData = new GridData();
 			buttonOk.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -203,7 +223,7 @@ class AboutDialog extends Dialog implements DisposeListener {
 					dialogShell.close();
 				}
 			});
-			buttonOkLData.horizontalAlignment = GridData.END;
+			buttonOkLData.horizontalAlignment = GridData.CENTER;
 			buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
 			buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
 			buttonOkLData.grabExcessHorizontalSpace = true;
