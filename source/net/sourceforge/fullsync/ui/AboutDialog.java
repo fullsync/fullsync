@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 
 class AboutDialog extends Dialog implements DisposeListener {
@@ -94,13 +95,19 @@ class AboutDialog extends Dialog implements DisposeListener {
 			lvd.horizontalIndent = 17;
 			labelVersion.setLayoutData(lvd);
 			// copyright text
-			Label labelCopyright = new Label(dialogShell, SWT.FILL);
-			labelCopyright.setForeground(UISettings.COLOR_LIGHT_GREY);
-			labelCopyright.setText(Util.getResourceAsString("net/sourceforge/fullsync/copyright.txt"));
+			Link copyright = new Link(dialogShell, SWT.FILL);
+			copyright.setForeground(UISettings.COLOR_LIGHT_GREY);
+			copyright.setText(Util.getResourceAsString("net/sourceforge/fullsync/copyright.txt"));
 			GridData lcd = new GridData(SWT.FILL);
 			lcd.grabExcessHorizontalSpace = true;
 			lcd.horizontalIndent = 17;
-			labelCopyright.setLayoutData(lcd);
+			copyright.setLayoutData(lcd);
+			copyright.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent evt) {
+					GuiController.launchProgram(evt.text);
+				}
+			});
 			// separator
 			Label labelSeparator1 = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
 			GridData labelSeparatorLData = new GridData();
