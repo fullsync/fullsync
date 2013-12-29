@@ -29,7 +29,7 @@
 	<p>
 		The source code of FullSync Version <?php echo $version; ?> can be obtained here:
 		<a href="http://sourceforge.net/projects/fullsync/files/FullSync%20<?php echo $version; ?>/FullSync-<?php echo $version; ?>-src.tar.gz/download">FullSync-<?php echo $version; ?>-src.tar.gz</a><br />
-		To access the FullSync Source repository head over to <a href="http://sourceforge.net/p/fullsync/git/">here</a>.
+		To access the FullSync Source repository head over to <a href="http://sourceforge.net/p/fullsync/git/">the git repository</a>.
 	</p>
 
 	<h2>Older versions</h2>

@@ -64,14 +64,27 @@ function getVersions($count) {
 }
 
 function HtmlHeader($caption, $skip = '') {
+	$script = explode('/', $_SERVER['PHP_SELF']);
+	$script = end($script);
 ?>
 <!doctype html>
 <html>
 	<head>
 		<title>FullSync - <?php echo $caption; ?></title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width" />
 		<link href="style.css" rel="stylesheet" type="text/css" />
 		<link rel="shortcut icon" href="favicon.ico" />
+		<style type="text/css">
+		#menu a[href="<?php echo $script; ?>"] {
+			color: #4477AA;
+		}
+		@media only screen and (max-width: 900px) {
+			#menu a[href="<?php echo $script; ?>"] {
+				display: block !important;
+			}
+		}
+		</style>
 	</head>
 	<body>
 		<div id="header">
@@ -80,6 +93,7 @@ function HtmlHeader($caption, $skip = '') {
 			<span>Publishing, Backup, Synchronization</span>
 		</div>
 		<div id="menu">
+			<a href="#menu" id="mobile-menu-accessor">Menu</a>
 			<a href="index.php">Home</a>
 			<a href="features.php">Features</a>
 			<a href="screenshots.php">Screenshots</a>
