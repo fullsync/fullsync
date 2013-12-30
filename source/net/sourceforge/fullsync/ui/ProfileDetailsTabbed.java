@@ -22,6 +22,9 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -631,7 +634,14 @@ public class ProfileDetailsTabbed implements DisposeListener {
 	}
 
 	private void addChildren(File rootFile, TreeItem item) throws IOException {
-		for (File file : rootFile.getChildren()) {
+		ArrayList<File> children = new ArrayList<File>(rootFile.getChildren());
+		Collections.sort(children, new Comparator<File>() {
+			@Override
+			public int compare(File o1, File o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		for (File file : children) {
 			if (file.isDirectory()) {
 				TreeItem childrenItem = new TreeItem(item, SWT.NULL);
 				childrenItem.setText(file.getName());
