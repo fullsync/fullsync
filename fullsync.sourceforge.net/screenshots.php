@@ -41,8 +41,6 @@ if (false !== $d) {
 }
 usort($screenshots, 'versionComparator');
 
-echo "<h2>Screenshots</h2>";
-
 foreach($screenshots as $version) {
 	if (empty($version['screenshots'])) {
 		continue;

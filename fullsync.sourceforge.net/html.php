@@ -94,7 +94,7 @@ function HtmlHeader($caption, $skip = '') {
 		</div>
 		<div id="menu">
 			<a href="#menu" id="mobile-menu-accessor">Menu</a>
-			<a href="index.php">Home</a>
+			<a href="index.php">Welcome</a>
 			<a href="features.php">Features</a>
 			<a href="screenshots.php">Screenshots</a>
 			<a href="docs.php">Documentation</a>
@@ -110,6 +110,8 @@ function HtmlHeader($caption, $skip = '') {
 		</div>
 <?php } ?>
 		<div id="content">
+			<a style="float:right" href="https://twitter.com/intent/user?user_id=1937864551" class="twitter-link" target="_blank" title="view @FullSyncNews on Twitter">@FullSyncNews</a>
+			<h1><?php echo $caption; ?></h1>
 <?php
 }
 

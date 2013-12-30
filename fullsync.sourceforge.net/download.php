@@ -1,11 +1,9 @@
 <?php
 	include( "html.php" );
-	HtmlHeader( "Download" );
+	HtmlHeader( "Download FullSync" );
 	$version = getVersions(1);
 	$version = $version[0]['version'];
 ?>
-	<h1>Download FullSync</h1>
-
 	<h2>for Windows</h2>
 	<p>
 		Tested with Windows XP, and Windows 7. <a href="http://sourceforge.net/projects/fullsync/files/FullSync%20<?php echo $version; ?>/FullSync-<?php echo $version; ?>-Windows.msi/download">Download FullSync for Windows</a><br />
