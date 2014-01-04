@@ -222,7 +222,14 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 				if (n.getNodeType() == Node.ELEMENT_NODE) {
 					try {
 						//TODO: importing many profiles might become CPU intensive here, create a way to make the updates bulk aware
-						addProfile(Profile.unserialize((Element) n));
+						Profile p = Profile.unserialize((Element) n);
+						String name = p.getName();
+						int j = 1;
+						while (null != getProfile(name)) {
+							name = p.getName() + " (" + (j++) + ")";
+						}
+						p.setName(name);
+						addProfile(p);
 					}
 					catch (Throwable t) {
 						ExceptionHandler.reportException("Failed to load a Profile, ignoring and continuing with the rest", t);
