@@ -251,6 +251,22 @@ class AbstractFile implements File {
 
 	@Override
 	public String toString() {
-		return name + "; " + size + " Bytes " + new Date(lastModified);
+		StringBuilder sb = new StringBuilder();
+		sb.append(name);
+		sb.append("; ");
+		if (size >= 0 || lastModified > 0) {
+			if (size >= 0) {
+				sb.append(size);
+				sb.append(" Bytes");
+			}
+			if (lastModified > 0) {
+				sb.append(' ');
+				sb.append(new Date(lastModified));
+			}
+		}
+		else {
+			sb.append('-');
+		}
+		return sb.toString();
 	}
 }
