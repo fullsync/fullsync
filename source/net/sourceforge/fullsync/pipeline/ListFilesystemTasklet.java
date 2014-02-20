@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.pipeline;
 import java.util.Collection;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.FileFilterChain;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
@@ -31,11 +32,13 @@ public class ListFilesystemTasklet extends SyncTasklet<File, File> {
 	private final ConnectionDescription location;
 	private final SmartQueue<File> backlog;
 	private Site site;
+	private FileFilterChain filterChain;
 
-	public ListFilesystemTasklet(ProfileSyncTask _task, ConnectionDescription _location) {
+	public ListFilesystemTasklet(ProfileSyncTask _task, ConnectionDescription _location, FileFilterChain _filterChain) {
 		super(_task, new SmartQueue<File>());
 		backlog = getInput();
 		location = _location;
+		filterChain = _filterChain;
 	}
 
 	@Override
@@ -72,13 +75,15 @@ public class ListFilesystemTasklet extends SyncTasklet<File, File> {
 
 	@Override
 	protected void processItem(File item) throws Exception {
-		if (item.isDirectory()) {
-			Collection<File> children = item.getChildren();
-			for (File c : children) {
-				backlog.offer(c);
+		if (filterChain.accept(item)) {
+			if (item.isDirectory()) {
+				Collection<File> children = item.getChildren();
+				for (File c : children) {
+					backlog.offer(c);
+				}
 			}
+			//TODO: does File contain the needed info? (buildNode()?)
+			getOutput().offer(item);
 		}
-		//TODO: does File contain the needed info? (buildNode()?)
-		getOutput().offer(item);
 	}
 }

@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import net.sourceforge.fullsync.BackgroundTask;
 import net.sourceforge.fullsync.BackgroundTaskState;
+import net.sourceforge.fullsync.FileFilterChain;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.Task;
@@ -83,8 +84,9 @@ public class ProfileSyncTask implements BackgroundTask, HysteresisReceiver {
 		cancel();
 		state = BackgroundTaskState.Running;
 		subTasks.clear();
-		ListFilesystemTasklet src = new ListFilesystemTasklet(this, profile.getSource());
-		ListFilesystemTasklet dst = new ListFilesystemTasklet(this, profile.getDestination());
+		FileFilterChain filterChain = WeightedFilterChain.fromProfile(profile);
+		ListFilesystemTasklet src = new ListFilesystemTasklet(this, profile.getSource(), filterChain);
+		ListFilesystemTasklet dst = new ListFilesystemTasklet(this, profile.getDestination(), filterChain);
 		subTasks.add(src);
 		subTasks.add(dst);
 		//TODO: decide if src and target use the same location and thus should avoid multiple connections
