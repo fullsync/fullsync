@@ -1,8 +1,7 @@
 <?php
 	include( "html.php" );
-	HtmlHeader( "Press Releases" );
+	HtmlHeader( "FullSync Changelog" );
 ?>
-	<h2>FullSync Changelog</h2>
 	<ol>
 <?php
 		$versions = getVersions(0);

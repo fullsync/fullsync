@@ -3,16 +3,8 @@
 /build
 /build-tests
 /dist
-/logs
-/archive
-/art in process
-/notes.txt
 /.externalToolBuilders
 /.settings
-/build.properties
-/CHANGED
-/testing
-/tags
 /dependencies
 
 # everywhere

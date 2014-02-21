@@ -32,9 +32,9 @@ import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.cli.Main;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 
 import org.eclipse.swt.SWT;
@@ -73,7 +73,7 @@ TaskGenerationListener, SchedulerChangeListener {
 	private GuiController guiController;
 
 	private String statusDelayString;
-	
+
 	public WelcomeScreen welcomeScreen;
 
 	MainWindow(Composite parent, int style, GuiController initGuiController){
@@ -94,7 +94,7 @@ TaskGenerationListener, SchedulerChangeListener {
 
 	/**
 	 * Initializes the GUI.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void initGUI(){
 		try {
@@ -396,22 +396,30 @@ TaskGenerationListener, SchedulerChangeListener {
 		menuItemHelpContent.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {
-				// TODO help contents
 				java.io.File helpIndex = new java.io.File("docs/manual/manual.html").getAbsoluteFile(); //$NON-NLS-1$
 				if (helpIndex.exists()) {
 					GuiController.launchProgram(helpIndex.getAbsolutePath());
 				}
 				else {
-					//FIXME: upload the new manual to the homepage (in a versioned directory)!!
-					GuiController.launchProgram("http://fullsync.sourceforge.net/docs/manual/index.html"); //$NON-NLS-1$
+					GuiController.launchProgram(Util.getWebsiteURL() + "docs/manual-" + Util.getFullSyncVersion() + "/manual.html"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
+			}
+		});
+
+		MenuItem menuItemTwitter = new MenuItem(menuHelp, SWT.PUSH);
+		menuItemTwitter.setImage(guiController.getImage("twitter_bird_blue_16.png")); //$NON-NLS-1$
+		menuItemTwitter.setText(Messages.getString("MainWindow.Menu_Twitter")); //$NON-NLS-1$
+		menuItemTwitter.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(final Event e) {
+				GuiController.launchProgram(Util.getTwitterURL());
 			}
 		});
 
 		new MenuItem(menuHelp, SWT.SEPARATOR);
 
 		MenuItem menuItemSystem = new MenuItem(menuHelp, SWT.PUSH);
-		menuItemSystem.setText("System Information");
+		menuItemSystem.setText(Messages.getString("MainWindow.Menu_SystemInfo"));
 		menuItemSystem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event e) {

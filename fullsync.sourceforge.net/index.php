@@ -1,8 +1,7 @@
 <?php
 	include( "html.php" );
-	HtmlHeader( "Home" );
+	HtmlHeader( "Welcome to FullSync" );
 ?>
-	<h1>Welcome to FullSync</h1>
 	<p>
 	FullSync is a universal file synchronization and backup tool which is highly customizable and expandable. 
 	It is especially for developers, but the basic functionality is easy enough for everyone.

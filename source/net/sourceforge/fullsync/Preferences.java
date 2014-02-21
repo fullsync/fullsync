@@ -73,6 +73,6 @@ public interface Preferences {
 
 	void setSkipWelcomeScreen(boolean skip);
 
-
+	String getLastVersion();
 
 }

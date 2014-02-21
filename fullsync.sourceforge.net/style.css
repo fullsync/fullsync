@@ -6,7 +6,9 @@ body {
 	background-color: #f0f0f0;
 	padding: 1em;
 	margin: 0 auto;
-	width: 900px;
+	min-width: 900px;
+	max-width: 1024px;
+	width: 90%;
 }
 
 a {
@@ -19,7 +21,7 @@ a:link, a:visited, a:active {
 	color: #003366;
 }
 
-a:hover {
+a:hover, a:focus {
 	color: #336699;
 }
 
@@ -29,54 +31,6 @@ dt {
 
 dd {
 	padding-bottom: 15px;
-}
-
-ul.donationlist {
-	line-height: 2em;
-}
-
-ul.donationlist label {
-	display: inline-block;
-}
-
-ul.donationlist label span.amount {
-	width: 7em;
-	font-weight: bold;
-	display: inline-block;
-}
-
-ul.donationlist input[type="radio"] {
-	margin: 0;
-	display: inline-block;
-}
-
-ul.donationlist label span.description {
-	display: inline-block;
-}
-
-ul.donationlist li * {
-	margin: 0;
-	display: inline-block;
-	vertical-align: middle;
-}
-
-ul.donationlist li {
-	list-style: none;
-	padding: .3em 0;
-}
-
-ul.donationlist li:hover {
-	background-color: #F0F5FF;
-}
-
-span.donateIcon {
-	display: block;
-	float: right;
-}
-
-#donate-button {
-	margin: 0 auto;
-	display: block;
 }
 
 #header {
@@ -110,6 +64,10 @@ span.donateIcon {
 	line-height: 1.8em;
 }
 
+#mobile-menu-accessor {
+	display: none;
+}
+
 #menu a:after {
 	content: " - ";
 	font-size: 80%;
@@ -137,6 +95,24 @@ span.donateIcon {
 #content {
 	background-color: #fff;
 	padding: 1em;
+}
+
+#content > h1 {
+	margin-top: 0;
+}
+
+a.twitter-link {
+	position: relative;
+	padding-left: 32px;
+	line-height: 25px;
+	display: inline-block;
+}
+
+a.twitter-link:before {
+	content: url("img/twitter_bird_blue_32.png");
+	position: absolute;
+	left: 0;
+	top: 0;
 }
 
 ol {
@@ -213,4 +189,33 @@ ol ul {
 	background-color: #C1CCD6;
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
+}
+
+@media only screen and (max-width: 900px) {
+	body {
+		width: auto;
+		min-width: inherit;
+		max-width: inherit;
+		padding: 3px;
+	}
+
+	#menu a:not(#mobile-menu-accessor) {
+		display: none;
+	}
+
+	#menu a:after {
+		content: none;
+	}
+
+	#content > img {
+		max-width: 100%;
+	}
+
+	#menu:target a:not(#mobile-menu-accessor) {
+		display: block;
+	}
+
+	#menu a#mobile-menu-accessor {
+		display: block;
+	}
 }

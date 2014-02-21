@@ -25,6 +25,7 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
+import net.sourceforge.fullsync.Util;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
@@ -255,7 +256,11 @@ public class GuiController implements Runnable {
 		if (null != System.getProperty("net.sourceforge.fullsync.skipWelcomeScreen", null) || true == preferences.getSkipWelcomeScreen()) {
 			return;
 		}
-		//TODO: only show if the current version is newer than the last shown version
+		if (preferences.getLastVersion().equals(Util.getFullSyncVersion())) {
+			return;
+		}
+		// update the stored version number
+		preferences.save();
 		try {
 			new WelcomeScreen(getMainShell());
 		}

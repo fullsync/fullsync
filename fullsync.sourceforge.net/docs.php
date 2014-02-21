@@ -1,7 +1,6 @@
 <?php
 include( "html.php" );
-HtmlHeader( "Download" );
-echo '<h1>Documentation</h1>';
+HtmlHeader( "Documentation" );
 
 $versions = getVersions(3);
 foreach ($versions as $v) {

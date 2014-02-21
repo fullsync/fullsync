@@ -1,11 +1,9 @@
 <?php
 	include( "html.php" );
-	HtmlHeader( "Download" );
+	HtmlHeader( "Download FullSync" );
 	$version = getVersions(1);
 	$version = $version[0]['version'];
 ?>
-	<h1>Download FullSync</h1>
-
 	<h2>for Windows</h2>
 	<p>
 		Tested with Windows XP, and Windows 7. <a href="http://sourceforge.net/projects/fullsync/files/FullSync%20<?php echo $version; ?>/FullSync-<?php echo $version; ?>-Windows.msi/download">Download FullSync for Windows</a><br />
@@ -29,7 +27,7 @@
 	<p>
 		The source code of FullSync Version <?php echo $version; ?> can be obtained here:
 		<a href="http://sourceforge.net/projects/fullsync/files/FullSync%20<?php echo $version; ?>/FullSync-<?php echo $version; ?>-src.tar.gz/download">FullSync-<?php echo $version; ?>-src.tar.gz</a><br />
-		To access the FullSync Source repository head over to <a href="http://sourceforge.net/p/fullsync/git/">here</a>.
+		To access the FullSync Source repository head over to <a href="http://sourceforge.net/p/fullsync/git/">the git repository</a>.
 	</p>
 
 	<h2>Older versions</h2>
