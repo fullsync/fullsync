@@ -2,7 +2,6 @@
 	include( "html.php" );
 	HtmlHeader( "Features" );
 ?>
-	<h1>Features</h1>
 	<dl>
 		<dt>Publication and update of websites, synchronization of local directories and making backups of your data.</dt>
 		<dd>Because of the large amount of options provided, you can use FullSync to publish

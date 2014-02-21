@@ -26,6 +26,7 @@ import javax.xml.parsers.FactoryConfigurationError;
 import net.sourceforge.fullsync.Crypt;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
+import net.sourceforge.fullsync.Util;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -38,6 +39,8 @@ public class ConfigurationPreferences implements Preferences {
 	 * configuration object.
 	 */
 	private PropertiesConfiguration config;
+
+	private String lastFullSyncVersion;
 
 	/**
 	 * constructor.
@@ -54,6 +57,7 @@ public class ConfigurationPreferences implements Preferences {
 			if (file.exists()) {
 				config.load();
 			}
+			lastFullSyncVersion = config.getString("FullSync.Version", "");
 		}
 		catch (ConfigurationException e) {
 			ExceptionHandler.reportException(e);
@@ -61,12 +65,16 @@ public class ConfigurationPreferences implements Preferences {
 		catch (FactoryConfigurationError e) {
 			ExceptionHandler.reportException(e);
 		}
-
+		if (null == lastFullSyncVersion) {
+			lastFullSyncVersion = "";
+		}
 	}
 
 	@Override
 	public void save() {
 		try {
+			String currentFullSyncVersion = Util.getFullSyncVersion();
+			config.setProperty("FullSync.Version", currentFullSyncVersion);
 			config.save();
 		}
 		catch (ConfigurationException e) {
@@ -195,6 +203,11 @@ public class ConfigurationPreferences implements Preferences {
 	@Override
 	public void setSkipWelcomeScreen(boolean skip) {
 		config.setProperty("Interface.SkipWelcomeScreen", Boolean.valueOf(skip));
+	}
+
+	@Override
+	public String getLastVersion() {
+		return lastFullSyncVersion;
 	}
 
 }

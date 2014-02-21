@@ -1,8 +1,7 @@
 <?php
 	include("html.php");
-	HtmlHeader("Contribute", 'help-banner');
+	HtmlHeader("Contribute to FullSync", 'help-banner');
 ?>
-	<h1>Contribute to FullSync</h1>
 	FullSync is looking for:<br />
 	<ul>
 		<li>Translators<br />
@@ -13,7 +12,7 @@
 			A few things that might happen:
 			<ul>
 				<li>porting to OSGi/Equinox</li>
-				<li>or maybe maven</li>
+				<li>or maybe adopting maven</li>
 				<li>splitting the GUI and the core into separate processes (SWT is too unstable for my taste)</li>
 				<li>your idea here</li>
 			</ul>

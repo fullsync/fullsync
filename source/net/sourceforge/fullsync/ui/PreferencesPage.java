@@ -49,7 +49,7 @@ public class PreferencesPage extends WizardDialog {
 	/**
 	 * supported language codes.
 	 */
-	private static String[] languageCodes = { "en", "it", "de", "fr", "es", "ar", "gr" };
+	private static String[] languageCodes = { "en", "it", "de", "fr", "es", "ar", "el" };
 	/**
 	 * supported language names.
 	 */

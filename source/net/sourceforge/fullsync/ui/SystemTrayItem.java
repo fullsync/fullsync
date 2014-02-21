@@ -45,25 +45,20 @@ import org.eclipse.swt.widgets.TrayItem;
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class SystemTrayItem implements TaskGenerationListener {
-	private GuiController guiController;
-	private Tray tray;
 	private TrayItem trayItem;
 	private Menu menu;
-
 	private Image[] imageList;
 	private int imageActive;
-
 	private Timer timer;
 	private boolean isBusy;
 
-	public SystemTrayItem(GuiController gui) {
-		this.guiController = gui;
-		this.tray = guiController.getDisplay().getSystemTray();
+	public SystemTrayItem(final GuiController guiController) {
+		Tray tray = guiController.getDisplay().getSystemTray();
 		this.trayItem = new TrayItem(tray, SWT.NULL);
 
 		imageList = new Image[2];
-		imageList[0] = GuiController.getInstance().getImage("fullsync48.png"); //$NON-NLS-1$
-		imageList[1] = GuiController.getInstance().getImage("fullsync48_r.png"); //$NON-NLS-1$
+		imageList[0] = guiController.getImage("fullsync48.png"); //$NON-NLS-1$
+		imageList[1] = guiController.getImage("fullsync48_r.png"); //$NON-NLS-1$
 		imageActive = 0;
 
 		// initialize trayItem
@@ -91,6 +86,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 		menu = new Menu(guiController.getMainShell(), SWT.POP_UP);
 		MenuItem item;
 		item = new MenuItem(menu, SWT.NULL);
+		item.setImage(guiController.getImage("fullsync16.png"));
 		item.setText(Messages.getString("SystemTrayItem.OpenFullSync")); //$NON-NLS-1$
 		item.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -123,19 +119,14 @@ public class SystemTrayItem implements TaskGenerationListener {
 	public void dispose() {
 		trayItem.dispose();
 		menu.dispose();
-		for (Image element : imageList) {
-			element.dispose();
-		}
 	}
 
 	@Override
 	public void taskGenerationStarted(File source, File destination) {
-
 	}
 
 	@Override
 	public void taskGenerationFinished(Task task) {
-
 	}
 
 	@Override
@@ -167,7 +158,6 @@ public class SystemTrayItem implements TaskGenerationListener {
 			isBusy = false;
 			timer.cancel();
 			timer = null;
-
 			imageActive = 0;
 			trayItem.getDisplay().asyncExec(new Runnable() {
 				@Override
