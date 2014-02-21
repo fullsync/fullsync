@@ -25,6 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import net.sourceforge.fullsync.Util;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -156,7 +158,7 @@ public class WelcomeScreen extends Dialog {
 
 	private String getVersion(){
 		String version = null;
-		String url = "http://fullsync.sourceforge.net/";
+		String url = Util.getWebsiteURL();
 		try{
 			Document doc = Jsoup.connect(url).get();
 			Elements el = doc.body().select("li");
@@ -205,7 +207,7 @@ public class WelcomeScreen extends Dialog {
 
 	private String getReleases(){
 		String releases  = "";
-		String url = "http://fullsync.sourceforge.net/";
+		String url = Util.getWebsiteURL();
 		try{
 			Document doc = Jsoup.connect(url).get();
 			releases = parseReleases(doc.body().select("li").select("ul"));

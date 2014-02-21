@@ -258,8 +258,11 @@ class AbstractFile implements File, Comparable<AbstractFile> {
 		if (-1 != size) {
 			sb.append("; ");
 			sb.append(size);
-			sb.append(" Bytes ");
-			sb.append(new DateTime(DateTimeZone.getDefault().convertUTCToLocal(lastModified)));
+			sb.append(" Bytes");
+			if (lastModified > 0) {
+				sb.append(" ");
+				sb.append(new DateTime(DateTimeZone.getDefault().convertUTCToLocal(lastModified)));
+			}
 		}
 		else {
 			sb.append("; ~");

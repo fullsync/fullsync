@@ -154,6 +154,7 @@
 				<include name="manual/**/*" />
 			</fileset>
 		</copy>
+		<copy file="${basedir}/resources/fullsync.ico" tofile="${build.dir}/docs/manual/favicon.ico" />
 		<replaceregexp match="@VERSION@" replace="${version}" flags="g" byline="true" file="${build.dir}/docs/manual/manual.html" />
 		<copy file="${basedir}/CHANGELOG" tofile="${build.dir}/CHANGELOG" />
 		<copy file="${basedir}/LICENSE" tofile="${build.dir}/LICENSE" />

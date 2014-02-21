@@ -1,8 +1,7 @@
 <?php
 	include( "html.php" );
-	HtmlHeader( "Press Releases" );
+	HtmlHeader( "FullSync in the Press" );
 ?>
-	<h1>FullSync in the Press</h1>
 	<dl>
 		<dt>Softpedia 02/2006</dt>
 		<dd>
