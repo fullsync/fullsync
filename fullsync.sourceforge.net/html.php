@@ -110,7 +110,6 @@ function HtmlHeader($caption, $skip = '') {
 		</div>
 <?php } ?>
 		<div id="content">
-			<a style="float:right" href="https://twitter.com/intent/user?user_id=1937864551" class="twitter-link" target="_blank" title="view @FullSyncNews on Twitter">@FullSyncNews</a>
 			<h1><?php echo $caption; ?></h1>
 <?php
 }
@@ -118,6 +117,8 @@ function HtmlHeader($caption, $skip = '') {
 function HtmlFooter() {
 ?>
 			<a href="download.php" id="global-download-button">Get it now!</a>
+			<a href="https://twitter.com/FullSyncNews" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @FullSyncNews</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 			<div id="footer-copyright">
 				<span style="font-size: 10pt; color: #999999;">Copyright &copy; 2004-2013 The FullSync Authors. All Rights Reserved.</span>
 				<a href="http://sourceforge.net" style="float: right;"><img src="http://sourceforge.net/sflogo.php?group_id=115436&amp;type=1" alt="SourceForge Logo"/></a>
