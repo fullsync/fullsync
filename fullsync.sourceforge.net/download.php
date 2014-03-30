@@ -36,4 +36,4 @@
 	</p>
 
 <?php
-	HtmlFooter();
+	HtmlFooter('download-button');

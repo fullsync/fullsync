@@ -114,9 +114,11 @@ function HtmlHeader($caption, $skip = '') {
 <?php
 }
 
-function HtmlFooter() {
+function HtmlFooter($skip = '') {
 ?>
-			<a href="download.php" id="global-download-button">Get it now!</a>
+<?php if ('download-button' !== $skip) : ?>
+			<a href="download.php" id="global-download-button">Get FullSync now for free &rarr;</a>
+<?php endif; ?>
 			<a href="https://twitter.com/FullSyncNews" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @FullSyncNews</a>
 			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 			<div id="footer-copyright">
