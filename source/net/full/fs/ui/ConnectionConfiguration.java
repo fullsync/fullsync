@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Label;
 
 public class ConnectionConfiguration implements ModifyListener {
 	private Composite m_parent; // the tabs content
-	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" };
+	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb", "webdav" };
 	private static HashMap<String, Class<? extends ProtocolSpecificComposite>> composites;
 	private Label labelProtocol = null;
 	private Combo comboProtocol = null;
@@ -53,6 +53,7 @@ public class ConnectionConfiguration implements ModifyListener {
 		composites.put("ftp", FTPSpecificComposite.class);
 		composites.put("sftp", SFTPSpecificComposite.class);
 		composites.put("smb", SMBSpecificComposite.class);
+		composites.put("webdav", WebDavSpecificComposite.class);
 	}
 
 	public ConnectionConfiguration(Composite parent) {

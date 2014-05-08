@@ -47,6 +47,8 @@
 		<include name="jsch.jar" />
 		<include name="swtcalendar.jar" />
 		<include name="jsoup.jar" />
+		<include name="commons-httpclient-3.1.jar" />
+		<include name="jackrabbit-standalone-2.6.5.jar" />
 	</fileset>
 	<path id="compile.classpath">
 		<fileset refid="dependentJars" />

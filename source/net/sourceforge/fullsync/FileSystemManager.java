@@ -33,6 +33,7 @@ import net.sourceforge.fullsync.fs.filesystems.FTPFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.WebDavFileSystem;
 
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
@@ -47,6 +48,7 @@ public class FileSystemManager {
 		schemes.put("ftp", new FTPFileSystem());
 		schemes.put("sftp", new SFTPFileSystem());
 		schemes.put("smb", new SmbFileSystem());
+		schemes.put("webdav", new WebDavFileSystem());
 
 		buffering = new Hashtable<String, SyncFilesBufferingProvider>();
 		buffering.put("syncfiles", new SyncFilesBufferingProvider());

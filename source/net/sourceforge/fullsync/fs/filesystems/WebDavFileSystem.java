@@ -31,12 +31,15 @@ import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder;
+import org.apache.commons.vfs2.provider.webdav.WebdavFileSystemConfigBuilder;
 
 public class WebDavFileSystem implements FileSystem {
 
 	@Override
 	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws FileSystemException {
 		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME), description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
+		WebdavFileSystemConfigBuilder.getInstance().setMaxConnectionsPerHost(options, 2);
+		WebdavFileSystemConfigBuilder.getInstance().setMaxTotalConnections(options, 100);
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 	}
 
