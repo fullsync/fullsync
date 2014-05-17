@@ -34,8 +34,8 @@ public class ListFilesystemTasklet extends SyncTasklet<File, File> {
 	private Site site;
 	private FileFilterChain filterChain;
 
-	public ListFilesystemTasklet(ProfileSyncTask _task, ConnectionDescription _location, FileFilterChain _filterChain) {
-		super(_task, new SmartQueue<File>());
+	public ListFilesystemTasklet(TaskletWorkNotificationTarget _workNotificationTarget, ConnectionDescription _location, FileFilterChain _filterChain) {
+		super(_workNotificationTarget, new SmartQueue<File>());
 		backlog = getInput();
 		location = _location;
 		filterChain = _filterChain;

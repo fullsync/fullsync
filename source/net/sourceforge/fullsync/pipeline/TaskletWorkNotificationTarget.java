@@ -19,38 +19,11 @@
  */
 package net.sourceforge.fullsync.pipeline;
 
-import net.sourceforge.fullsync.util.SmartQueue;
+public interface TaskletWorkNotificationTarget {
 
-public class DebugPrintQueue<QueueItem> extends SyncTasklet<QueueItem, QueueItem> {
-	private final String queueName;
+	void startWork();
 
-	public DebugPrintQueue(TaskletWorkNotificationTarget _workNotificationTarget, SmartQueue<QueueItem> _inputQueue, String _queueName) {
-		super(_workNotificationTarget, _inputQueue);
-		queueName = _queueName;
-	}
+	void endWork();
 
-	@Override
-	protected void processItem(QueueItem item) throws Exception {
-		StringBuilder sb = new StringBuilder();
-		sb.append(queueName);
-		sb.append(": ");
-		sb.append(item);
-		System.out.println(sb.toString());
-		getOutput().offer(item);
-	}
-
-	@Override
-	public void pause() {
-		getInput().pause();
-	}
-
-	@Override
-	public void resume() {
-		getInput().resume();
-	}
-
-	@Override
-	public void cancel() {
-		getInput().cancel();
-	}
+	void syncEnded();
 }

@@ -13,8 +13,8 @@ import net.sourceforge.fullsync.util.SmartQueue;
 public class TransferTaskExecutor extends SyncTasklet<Task, TransferTaskResult> {
 	private byte[] buffer;
 
-	public TransferTaskExecutor(ProfileSyncTask _task, SmartQueue<Task> _inputQueue) {
-		super(_task, _inputQueue);
+	public TransferTaskExecutor(TaskletWorkNotificationTarget _workNotificationTarget, SmartQueue<Task> _inputQueue) {
+		super(_workNotificationTarget, _inputQueue);
 		buffer = new byte[8 * 1024];
 	}
 

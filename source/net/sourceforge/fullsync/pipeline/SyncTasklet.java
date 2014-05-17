@@ -23,12 +23,12 @@ import net.sourceforge.fullsync.util.SmartQueue;
 
 
 public abstract class SyncTasklet<InputQueueItem, OutputQueueItem> implements Runnable {
-	private final ProfileSyncTask task;
+	private final TaskletWorkNotificationTarget workNotificationTarget;
 	private final SmartQueue<InputQueueItem> inputQueue;
 	private final SmartQueue<OutputQueueItem> outputQueue;
 
-	public SyncTasklet(ProfileSyncTask _task, SmartQueue<InputQueueItem> _inputQueue) {
-		task = _task;
+	public SyncTasklet(TaskletWorkNotificationTarget _workNotificationTarget, SmartQueue<InputQueueItem> _inputQueue) {
+		workNotificationTarget = _workNotificationTarget;
 		inputQueue = _inputQueue;
 		outputQueue = new SmartQueue<OutputQueueItem>();
 	}
@@ -44,7 +44,7 @@ public abstract class SyncTasklet<InputQueueItem, OutputQueueItem> implements Ru
 	@Override
 	public void run() {
 		try {
-			task.startWork();
+			workNotificationTarget.startWork();
 			try {
 				prepare(inputQueue);
 			}
@@ -53,14 +53,14 @@ public abstract class SyncTasklet<InputQueueItem, OutputQueueItem> implements Ru
 				return;
 			}
 			finally {
-				task.endWork();
+				workNotificationTarget.endWork();
 			}
 			for (;;) {
 				InputQueueItem item = getNextItem(inputQueue);
 				if (null == item) {
 					return;
 				}
-				task.startWork();
+				workNotificationTarget.startWork();
 				try {
 					processItem(item);
 				}
@@ -68,7 +68,7 @@ public abstract class SyncTasklet<InputQueueItem, OutputQueueItem> implements Ru
 					processingFailed(item, t);
 				}
 				finally {
-					task.endWork();
+					workNotificationTarget.endWork();
 				}
 			}
 		}
@@ -94,10 +94,12 @@ public abstract class SyncTasklet<InputQueueItem, OutputQueueItem> implements Ru
 	protected abstract void processItem(InputQueueItem item) throws Exception;
 
 	protected void processingFailed(InputQueueItem item, Throwable t) {
+		t.printStackTrace(); //FIXME: actually do something useful with this exception
 		//TODO: notify _task
 	}
 
 	protected void prepareFailed(Throwable t) {
+		t.printStackTrace(); //FIXME: actually do something useful with this exception
 		//TODO: notify _task
 	}
 

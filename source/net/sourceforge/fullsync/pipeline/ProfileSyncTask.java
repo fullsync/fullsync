@@ -33,7 +33,7 @@ import net.sourceforge.fullsync.util.DebouncedHysteresisEmitter;
 import net.sourceforge.fullsync.util.HysteresisReceiver;
 import net.sourceforge.fullsync.util.SmartQueue;
 
-public class ProfileSyncTask implements BackgroundTask, HysteresisReceiver {
+public class ProfileSyncTask implements BackgroundTask, HysteresisReceiver, TaskletWorkNotificationTarget {
 	private BackgroundTaskState state;
 	private final Profile profile;
 	private final boolean interactive;
@@ -116,14 +116,16 @@ public class ProfileSyncTask implements BackgroundTask, HysteresisReceiver {
 
 	}
 
-	void startWork() {
+	@Override
+	public void startWork() {
 		int working = workingTasks.incrementAndGet();
 		if (1 == working) {
 			debouncer.up();
 		}
 	}
 
-	void endWork() {
+	@Override
+	public void endWork() {
 		int working = workingTasks.decrementAndGet();
 		if (0 == working) {
 			debouncer.down();
@@ -145,6 +147,7 @@ public class ProfileSyncTask implements BackgroundTask, HysteresisReceiver {
 		cleanupTasks.offer(task);
 	}
 
+	@Override
 	public synchronized void syncEnded() {
 		Runnable r;
 		cleanupTasks.shutdown();
@@ -161,11 +164,11 @@ public class ProfileSyncTask implements BackgroundTask, HysteresisReceiver {
 }
 
 class SyncEnded extends SyncTasklet<Task, Object> {
-	private ProfileSyncTask task;
+	private TaskletWorkNotificationTarget workNotificationTarget;
 
-	public SyncEnded(ProfileSyncTask _task, SmartQueue<Task> _inputQueue) {
-		super(_task, _inputQueue);
-		task = _task;
+	public SyncEnded(TaskletWorkNotificationTarget _workNotificationTarget, SmartQueue<Task> _inputQueue) {
+		super(_workNotificationTarget, _inputQueue);
+		workNotificationTarget = _workNotificationTarget;
 	}
 
 	@Override
@@ -188,6 +191,6 @@ class SyncEnded extends SyncTasklet<Task, Object> {
 	@Override
 	protected void cleanup() {
 		super.cleanup();
-		task.syncEnded();
+		workNotificationTarget.syncEnded();
 	}
 }
