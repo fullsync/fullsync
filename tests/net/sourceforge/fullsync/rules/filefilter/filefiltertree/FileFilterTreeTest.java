@@ -26,7 +26,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
-import net.sourceforge.fullsync.rules.filefilter.TestNode;
 
 import org.junit.Test;
 
@@ -35,14 +34,6 @@ public class FileFilterTreeTest {
 	@Test
 	public void testBasic() {
 		FileFilterTree tree = new FileFilterTree();
-
-		new TestNode("a", "./a", true, true, 0, 0);
-		new TestNode("b", "./b", true, true, 0, 0);
-		new TestNode("c", "./a/c", true, true, 0, 0);
-		new TestNode("d", "./a/c/d", true, true, 0, 0);
-		new TestNode("e", "./b/e", true, true, 0, 0);
-		new TestNode("f", "./a/f", true, true, 0, 0);
-		new TestNode("g", "./a/c/d/g", true, true, 0, 0);
 
 		FileFilter filter1 = new FileFilter();
 		FileFilter filter2 = new FileFilter();
