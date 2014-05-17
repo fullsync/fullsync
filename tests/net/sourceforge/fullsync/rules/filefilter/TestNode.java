@@ -28,17 +28,16 @@ import net.sourceforge.fullsync.fs.File;
 
 public class TestNode implements File {
 	private static final long serialVersionUID = 2L;
-
+	private File parent;
 	private String name;
-	private String path;
 	private boolean directory;
 	private boolean exists;
 	private long lastModified;
 	private long size;
 
-	public TestNode(String name, String path, boolean exists, boolean directory, long length, long lm) {
+	public TestNode(String name, File parent, boolean exists, boolean directory, long length, long lm) {
 		this.name = name;
-		this.path = path;
+		this.parent = parent;
 		this.exists = exists;
 		this.directory = directory;
 		this.lastModified = lm;
@@ -61,7 +60,7 @@ public class TestNode implements File {
 
 	@Override
 	public File getParent() {
-		return null;
+		return parent;
 	}
 
 	@Override
@@ -94,7 +93,17 @@ public class TestNode implements File {
 
 	@Override
 	public String getPath() {
-		return path;
+		StringBuilder sb = new StringBuilder();
+		if (null != parent) {
+			sb.append(parent.getPath());
+		}
+		// root has parent = null, name = "" and path = /
+		// this check avoids all paths starting with //
+		if (sb.length() != 1) {
+			sb.append('/');
+		}
+		sb.append(name);
+		return sb.toString();
 	}
 
 	@Override
@@ -161,10 +170,6 @@ public class TestNode implements File {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
 	}
 
 	@Override

@@ -25,62 +25,66 @@ package net.sourceforge.fullsync.rules.filefilter;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 import org.junit.Test;
 
 public class FileTypeFileNameFilterRuleTest {
 
+	private File root = new TestNode("root", null, true, true, 0, 0);
+
+	@Test
 	public void testWrongType() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(5), FileTypeFileFilterRule.OP_IS);
-		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, System.currentTimeMillis())));
-		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
 	}
 
 	@Test
 	public void testIsFile() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.FILE_TYPE), FileTypeFileFilterRule.OP_IS);
-		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, System.currentTimeMillis())));
-		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
+		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
 
 		filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.FILE_TYPE), FileTypeFileFilterRule.OP_IS);
-		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, System.currentTimeMillis())));
-		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
+		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
 	}
 
 	@Test
 	public void testIsntFile() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.FILE_TYPE), FileTypeFileFilterRule.OP_ISNT);
-		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, System.currentTimeMillis())));
-		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
+		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
 
 		filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.FILE_TYPE), FileTypeFileFilterRule.OP_ISNT);
-		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, System.currentTimeMillis())));
-		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
+		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
 	}
 
 	@Test
 	public void testIsDirectory() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.DIRECTORY_TYPE),
 				FileTypeFileFilterRule.OP_IS);
-		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, System.currentTimeMillis())));
-		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
+		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
 
 		filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.DIRECTORY_TYPE), FileTypeFileFilterRule.OP_IS);
-		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, System.currentTimeMillis())));
-		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
+		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
 	}
 
 	@Test
 	public void testIsntDirectory() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.DIRECTORY_TYPE),
 				FileTypeFileFilterRule.OP_ISNT);
-		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, System.currentTimeMillis())));
-		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
+		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
 
 		filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.DIRECTORY_TYPE), FileTypeFileFilterRule.OP_ISNT);
-		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, System.currentTimeMillis())));
-		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
+		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
 	}
 
 }

@@ -33,6 +33,8 @@ import org.junit.Test;
 
 public class FileFilterTest {
 
+	private File root = new TestNode("root", null, true, true, 0, 0);
+
 	private static class AlwaysTrueFileFilterRule extends FileFilterRule {
 		private static final long serialVersionUID = 2L;
 
@@ -105,10 +107,10 @@ public class FileFilterTest {
 	public void testEmptyFilter() {
 		FileFilter filter = new FileFilter();
 		filter.setMatchType(FileFilter.MATCH_ALL);
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setMatchType(FileFilter.MATCH_ANY);
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 	}
 
 	@Test
@@ -117,17 +119,17 @@ public class FileFilterTest {
 		filter.setMatchType(FileFilter.MATCH_ALL);
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule() });
 
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setMatchType(FileFilter.MATCH_ANY);
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule() });
 
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setMatchType(FileFilter.MATCH_ANY);
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 	}
 
 	@Test
@@ -136,51 +138,51 @@ public class FileFilterTest {
 		filter.setMatchType(FileFilter.MATCH_ALL);
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
 				new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
 				new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
 				new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
 				new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 	}
 
@@ -190,41 +192,41 @@ public class FileFilterTest {
 		filter.setMatchType(FileFilter.MATCH_ANY);
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
 				new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
 				new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
 				new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 	}
 
 	@Test
@@ -236,9 +238,9 @@ public class FileFilterTest {
 				new FileFilterRule[] { new FileNameFileFilterRule(new TextValue(".txt"), FileNameFileFilterRule.OP_ENDS_WITH),
 						new FileSizeFileFilterRule(new SizeValue("1024 Bytes"), FileSizeFileFilterRule.OP_IS_LESS_THAN) });
 
-		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
-		assertTrue(filter.match(new TestNode("foobar.txt.", "somedir/foobar.txt", true, false, 0, 0)));
-		assertTrue(!filter.match(new TestNode("foobar.txt.", "somedir/foobar.txt", true, false, 2048, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt.", root, true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt.", root, true, false, 2048, 0)));
 	}
 
 	@Test
@@ -250,9 +252,9 @@ public class FileFilterTest {
 				new FileFilterRule[] { new FileNameFileFilterRule(new TextValue(".txt"), FileNameFileFilterRule.OP_ENDS_WITH),
 						new FileSizeFileFilterRule(new SizeValue("1024 Bytes"), FileSizeFileFilterRule.OP_IS_LESS_THAN) });
 
-		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
-		assertTrue(!filter.match(new TestNode("foobar.txt.", "somedir/foobar.txt", true, false, 0, 0)));
-		assertTrue(filter.match(new TestNode("foobar.txt.", "somedir/foobar.txt", true, false, 2048, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
+		assertTrue(!filter.match(new TestNode("foobar.txt.", root, true, false, 0, 0)));
+		assertTrue(filter.match(new TestNode("foobar.txt.", root, true, false, 2048, 0)));
 	}
 
 	// public void testSerialization() {
@@ -269,7 +271,7 @@ public class FileFilterTest {
 	// filter.setFileFilterRules(new FileFilterRule[] {new FileNameFileFilterRule(".txt", FileNameFileFilterRule.OP_ENDS_WITH),
 	// new FileSizeFileFilterRule(1024, FileSizeFileFilterRule.OP_IS_LESS_THAN)});
 	//
-	// assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+	// assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 	// assertTrue(filter.match(new File("somedir/foobar.txt")));
 	//
 	// System.out.println("Serializzato:");
@@ -293,7 +295,7 @@ public class FileFilterTest {
 	//
 	// FileFilter filter = fileFilterManager.unserializeFileFilter(doc.getDocumentElement());
 	//
-	// assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
+	// assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 	// assertTrue(filter.match(new File("somedir/foobar.txt")));
 	//
 	// System.out.println("Deserializzato:");
