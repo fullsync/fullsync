@@ -23,8 +23,10 @@ package net.sourceforge.fullsync.swtbot;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class ProfileDialogTest extends GUITestBase {
 
 	@Override
