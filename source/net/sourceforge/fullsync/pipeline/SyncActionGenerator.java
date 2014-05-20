@@ -260,19 +260,23 @@ class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 	@Override
 	protected void cleanup() {
 		synchronized (generator) {
-			boolean otherSideEnded = other.hasEnded();
-			parentState = ParentState.ParentsDiffer;
-			for (Map.Entry<String, WorkingSet> entry : workingSetMap.entrySet()) {
-				entry.getValue().setActive(false);
-				if (otherSideEnded) {
-					flushWorkingset(entry.getKey(), entry.getValue());
-				}
-			}
-			running = false;
-			if (otherSideEnded) {
-				other.cleanup();
-			}
+			cleanup(true);
 			generator.notifyEnd();
+		}
+	}
+
+	void cleanup(boolean callOther) {
+		boolean otherSideEnded = other.hasEnded();
+		parentState = ParentState.ParentsDiffer;
+		for (Map.Entry<String, WorkingSet> entry : workingSetMap.entrySet()) {
+			entry.getValue().setActive(false);
+			if (otherSideEnded) {
+				flushWorkingset(entry.getKey(), entry.getValue());
+			}
+		}
+		running = false;
+		if (otherSideEnded && callOther) {
+			other.cleanup(false);
 		}
 	}
 
