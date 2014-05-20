@@ -23,7 +23,6 @@
 package net.sourceforge.fullsync.impl;
 
 import net.sourceforge.fullsync.DataParseException;
-import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
@@ -165,15 +164,15 @@ public class SimplyfiedSyncRules implements RuleSet {
 	@Override
 	public State compareFiles(final File src, final File dst) throws DataParseException {
 		if (Math.floor(src.getLastModified() / 1000.0) > Math.floor(dst.getLastModified() / 1000.0)) {
-			return new State(State.FileChange, Location.Source);
+			return State.FileChangeSource;
 		}
 		else if (Math.floor(src.getLastModified() / 1000.0) < Math.floor(dst.getLastModified() / 1000.0)) {
-			return new State(State.FileChange, Location.Destination);
+			return State.FileChangeDestination;
 		}
 		if (src.getSize() != dst.getSize()) {
-			return new State(State.FileChange, Location.None);
+			return State.FileChangeUnknown;
 		}
-		return new State(State.NodeInSync, Location.Both);
+		return State.InSync;
 	}
 
 	/**
