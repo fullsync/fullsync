@@ -47,7 +47,7 @@ public class SyncActionGenerator {
 
 	public void doDecideOne(File srcParent, File src, File dstParent, File dst) {
 		//FIXME: make an actual decision (state decider, check source / destination, ...)
-		Task t = new Task(src, dst, new State(State.NodeInSync, Location.Both), new Action[] { new Action(Action.Nothing, Location.Destination, BufferUpdate.None, "") });
+		Task t = new Task(src, dst, State.InSync, new Action[] { new Action(Action.Nothing, Location.Destination, BufferUpdate.None, "") });
 		getOutput().offer(t);
 	}
 

@@ -21,7 +21,6 @@ package net.sourceforge.fullsync.impl;
 
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileComparer;
-import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
 
@@ -30,13 +29,6 @@ import org.slf4j.LoggerFactory;
 
 public class StateDecider implements net.sourceforge.fullsync.StateDecider {
 	private static final Logger logger = LoggerFactory.getLogger(StateDecider.class.getSimpleName());
-	private static final State inSyncNone = new State(State.NodeInSync, Location.None);
-	private static final State orphanSrc = new State(State.Orphan, Location.Source);
-	private static final State orphanDst = new State(State.Orphan, Location.Destination);
-	private static final State inSyncBoth = new State(State.NodeInSync, Location.Both);
-	private static final State dirFileSrc = new State(State.DirHereFileThere, Location.Source);
-	private static final State dirFileDst = new State(State.DirHereFileThere, Location.Destination);
-
 	protected FileComparer comparer;
 
 	public StateDecider(FileComparer comparer) {
@@ -49,31 +41,31 @@ public class StateDecider implements net.sourceforge.fullsync.StateDecider {
 		if (!source.exists()) {
 			if (!destination.exists()) {
 				logger.debug("both missing"); // FIXME: impossible?!
-				return inSyncNone;
+				return State.InSync;
 			}
 			else {
 				logger.debug("source missing");
-				return orphanDst;
+				return State.OrphanDestination;
 			}
 		}
 		else if (!destination.exists()) {
 			logger.debug("destination missing");
-			return orphanSrc;
+			return State.OrphanSource;
 		}
 
 		if (source.isDirectory()) {
 			if (destination.isDirectory()) {
 				logger.debug("both are dirs");
-				return inSyncBoth;
+				return State.InSync;
 			}
 			else {
 				logger.debug("source directory, destination file");
-				return dirFileSrc;
+				return State.DirSourceFileDestination;
 			}
 		}
 		else if (destination.isDirectory()) {
 			logger.debug("source file, destination directory");
-			return dirFileDst;
+			return State.FileSourceDirDestination;
 		}
 
 		return comparer.compareFiles(source, destination);

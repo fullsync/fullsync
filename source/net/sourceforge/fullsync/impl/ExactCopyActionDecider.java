@@ -19,9 +19,6 @@
  */
 package net.sourceforge.fullsync.impl;
 
-import static net.sourceforge.fullsync.Location.Destination;
-import static net.sourceforge.fullsync.Location.Source;
-
 import java.io.IOException;
 import java.util.Vector;
 
@@ -58,67 +55,72 @@ public class ExactCopyActionDecider implements ActionDecider {
 			throws DataParseException, IOException {
 		Vector<Action> actions = new Vector<Action>(3);
 		State state = sd.getState(src, dst);
-		switch (state.getType()) {
-			case State.Orphan:
-				if (state.getLocation() == Location.Source) {
-					if (!bsd.getState(dst).equals(State.Orphan, Location.Source)) {
-						actions.add(addDestination);
-					}
-					else {
-						actions.add(overwriteDestination);
-					}
-				}
-				else if (state.getLocation() == Location.Destination) {
-					actions.add(deleteDestinationOrphan);
-				}
-				break;
-			case State.DirHereFileThere:
-				State buff = bsd.getState(dst);
-				if (buff.equals(State.Orphan, Location.Buffer)) {
-					actions.add(new Action(Action.Add, Location.Destination, BufferUpdate.Destination,
-							"There was a node in buff, but its orphan, so add"));
-				}
-				else if (buff.equals(State.DirHereFileThere, state.getLocation())) {
-					if (state.getLocation() == Location.Source) {
-						actions.add(new Action(Action.Nothing, Location.None, BufferUpdate.Destination,
-								"dirherefilethere, but there is a dir instead of file, so its in sync"));
-					}
-					else {
-						actions.add(new Action(Action.DirHereFileThereError, Location.Destination, BufferUpdate.None,
-								"file changed from/to dir, can't overwrite"));
-						// TODO ^ recompare here
-					}
-				}
-				else {
-					actions.add(new Action(Action.DirHereFileThereError, state.getLocation(), BufferUpdate.None,
-							"cant update, dir here file there error occured"));
-				}
-				break;
-			case State.FileChange:
-				if (bsd.getState(dst).equals(State.NodeInSync, Location.Both)) {
-					if (state.getLocation() == Source) {
-						actions.add(updateDestination);
-					}
-					else if (state.getLocation() == Destination) {
-						actions.add(overwriteDestination);
-					}
+		switch (state) {
+			case OrphanSource:
+				if (!bsd.getState(dst).equals(State.OrphanSource)) {
+					actions.add(addDestination);
 				}
 				else {
 					actions.add(overwriteDestination);
 				}
 				break;
-			case State.NodeInSync:
+			case OrphanDestination:
+				actions.add(deleteDestinationOrphan);
+				break;
+			case DirSourceFileDestination:
+				State buff = bsd.getState(dst);
+				if (buff.equals(State.OrphanSource)) {
+					actions.add(new Action(Action.Add, Location.Destination, BufferUpdate.Destination,
+							"There was a node in buff, but its orphan, so add"));
+				}
+				else if (buff.equals(State.DirSourceFileDestination)) {
+					actions.add(new Action(Action.Nothing, Location.None, BufferUpdate.Destination,
+							"dirherefilethere, but there is a dir instead of file, so its in sync"));
+				}
+				else {
+					actions.add(new Action(Action.DirHereFileThereError, Location.Source, BufferUpdate.None,
+							"cant update, dir here file there error occured"));
+				}
+				break;
+			case FileSourceDirDestination:
+				State buff1 = bsd.getState(dst);
+				if (buff1.equals(State.OrphanSource)) {
+					actions.add(new Action(Action.Add, Location.Destination, BufferUpdate.Destination,
+							"There was a node in buff, but its orphan, so add"));
+				}
+				else if (buff1.equals(State.FileSourceDirDestination)) {
+					actions.add(new Action(Action.DirHereFileThereError, Location.Destination, BufferUpdate.None,
+							"file changed from/to dir, can't overwrite"));
+					// TODO ^ recompare here
+				}
+				else {
+					actions.add(new Action(Action.DirHereFileThereError, Location.Destination, BufferUpdate.None,
+							"cant update, dir here file there error occured"));
+				}
+				break;
+			case FileChangeSource:
+				if (bsd.getState(dst).equals(State.InSync)) {
+					actions.add(updateDestination);
+				}
+				else {
+					actions.add(overwriteDestination);
+				}
+				break;
+			case FileChangeDestination:
+				if (bsd.getState(dst).equals(State.InSync)) {
+					actions.add(overwriteDestination);
+				}
+				else {
+					actions.add(overwriteDestination);
+				}
+				break;
+			case InSync:
 				// TODO this check is not neccessary, check rules whether to do or not
 				// if( bsd.getState( dst ).equals( State.NodeInSync, Location.Both ) || bsd.getState( dst ).equals( State.NodeInSync,
 				// Location.None ) )
-				//{
 				actions.add(inSync);
 				actions.add(overwriteDestination);
-				//}
-				break;
-			default:
-				actions.add(new Action(Action.NotDecidableError, Location.None, BufferUpdate.None, "no rule found"));
-				break;
+			break;
 		}
 
 		actions.add(ignore);

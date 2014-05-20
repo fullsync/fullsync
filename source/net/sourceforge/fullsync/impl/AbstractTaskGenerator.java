@@ -112,8 +112,8 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		}
 
 		TaskTree tree = new TaskTree(source, destination);
-		Task root = new Task(null, null, new State(State.NodeInSync, Location.None),
-				new Action[] { new Action(Action.Nothing, Location.None, BufferUpdate.None, "Root") });
+		Task root = new Task(null, null, State.InSync, new Action[] { new Action(Action.Nothing,
+				Location.None, BufferUpdate.None, "Root") });
 		tree.setRoot(root);
 
 		FullSync.publish(new TaskTreeStarted(tree));

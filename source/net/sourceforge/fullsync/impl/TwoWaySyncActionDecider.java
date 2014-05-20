@@ -61,41 +61,39 @@ public class TwoWaySyncActionDecider implements ActionDecider {
 	public Task getTask(final File src, final File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
 		Vector<Action> actions = new Vector<Action>(3);
 		State state = sd.getState(src, dst);
-		switch (state.getType()) {
-			case State.Orphan:
-				if (state.getLocation() == Location.Source) {
-					actions.add(addToDestination);
-					actions.add(deleteSourceOrphan);
-				}
-				else if (state.getLocation() == Location.Destination) {
-					actions.add(addToSource);
-					actions.add(deleteDestinationOrphan);
-				}
+		switch (state) {
+			case OrphanSource:
+				actions.add(addToDestination);
+				actions.add(deleteSourceOrphan);
 				break;
-			case State.DirHereFileThere:
-				actions.add(new Action(Action.DirHereFileThereError, state.getLocation(), BufferUpdate.None,
+			case OrphanDestination:
+				actions.add(addToSource);
+				actions.add(deleteDestinationOrphan);
+				break;
+			case DirSourceFileDestination:
+				actions.add(new Action(Action.DirHereFileThereError, Location.Destination, BufferUpdate.None,
 						"file changed from/to dir, can't overwrite"));
 				break;
-			case State.FileChange:
-				if (state.getLocation() == Location.Source) {
-					actions.add(updateDestination);
-					actions.add(overwriteSource);
-				}
-				else if (state.getLocation() == Location.Destination) {
-					actions.add(updateSource);
-					actions.add(overwriteDestination);
-				}
-				else {
-					// TODO a change but we can't tell which file is 'better' (just size changed)
-				}
+			case FileSourceDirDestination:
+				actions.add(new Action(Action.DirHereFileThereError, Location.Source, BufferUpdate.None,
+						"file changed from/to dir, can't overwrite"));
 				break;
-			case State.NodeInSync:
+			case FileChangeSource:
+				actions.add(updateDestination);
+				actions.add(overwriteSource);
+				break;
+			case FileChangeDestination:
+				actions.add(updateSource);
+				actions.add(overwriteDestination);
+				break;
+
+			case FileChangeUnknown:
+				// TODO a change but we can't tell which file is 'better' (just size changed)
+				break;
+			case InSync:
 				actions.add(inSync);
 				actions.add(overwriteDestination);
 				actions.add(overwriteSource);
-				break;
-			default:
-				actions.add(new Action(Action.NotDecidableError, Location.None, BufferUpdate.None, "no rule found"));
 				break;
 		}
 

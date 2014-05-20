@@ -23,7 +23,6 @@ import java.io.IOException;
 
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileComparer;
-import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
@@ -36,7 +35,7 @@ public class BufferStateDecider extends StateDecider implements net.sourceforge.
 	@Override
 	public State getState(File buffered) throws DataParseException, IOException {
 		if (!buffered.isBuffered()) {
-			return new State(State.NodeInSync, buffered.exists() ? Location.Both : Location.None);
+			return State.InSync;
 		}
 
 		File source = buffered.getUnbuffered();
@@ -44,26 +43,26 @@ public class BufferStateDecider extends StateDecider implements net.sourceforge.
 
 		if (!source.exists()) {
 			if (!destination.exists()) {
-				return new State(State.NodeInSync, Location.None);
+				return State.InSync;
 			}
 			else {
-				return new State(State.Orphan, Location.Destination);
+				return State.OrphanDestination;
 			}
 		}
 		else if (!destination.exists()) {
-			return new State(State.Orphan, Location.Source);
+			return State.OrphanSource;
 		}
 
 		if (source.isDirectory()) {
 			if (destination.isDirectory()) {
-				return new State(State.NodeInSync, Location.Both);
+				return State.InSync;
 			}
 			else {
-				return new State(State.DirHereFileThere, Location.Source);
+				return State.DirSourceFileDestination;
 			}
 		}
 		else if (destination.isDirectory()) {
-			return new State(State.DirHereFileThere, Location.Destination);
+			return State.FileSourceDirDestination;
 		}
 
 		return comparer.compareFiles(source, destination);
