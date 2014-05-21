@@ -19,20 +19,9 @@
  */
 package net.sourceforge.fullsync;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
-public class BufferUpdate {
-	public static final int None = 0;
-
-	public static final int Source = 1;
-	public static final int Destination = 2;
-
-	public static final int Both = 3;
-
-	public static final String[] names = new String[] { "None", "Source", "Destination", "Both" };
-
-	public static String toString(int location) {
-		return names[location];
-	}
+public enum BufferUpdate {
+	None,
+	Source,
+	Destination,
+	Both
 }

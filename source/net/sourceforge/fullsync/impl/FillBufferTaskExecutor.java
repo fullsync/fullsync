@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.Action;
+import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Location;
@@ -159,7 +160,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 				default:
 					break;
 			}
-			if ((action.getBufferUpdate() > 0) && !statisticsOnly) {
+			if ((action.getBufferUpdate() != BufferUpdate.None) && !statisticsOnly) {
 				buffer.storeEntry(new BufferUpdateEntryDescriptor(source, destination, action.getBufferUpdate()));
 			}
 		}

@@ -26,15 +26,15 @@ public class Action implements Serializable {
 
 	private ActionType type;
 	private Location location;
-	private int bufferUpdate;
+	private BufferUpdate bufferUpdate;
 	private boolean beforeRecursion;
 	private String explanation;
 
-	public Action(ActionType type, Location location, int bufferUpdate, String explanation) {
+	public Action(ActionType type, Location location, BufferUpdate bufferUpdate, String explanation) {
 		this(type, location, bufferUpdate, explanation, true);
 	}
 
-	public Action(ActionType type, Location location, int bufferUpdate, String explanation, boolean beforeRecursion) {
+	public Action(ActionType type, Location location, BufferUpdate bufferUpdate, String explanation, boolean beforeRecursion) {
 		this.type = type;
 		this.location = location;
 		this.bufferUpdate = bufferUpdate;
@@ -50,7 +50,7 @@ public class Action implements Serializable {
 		return location;
 	}
 
-	public int getBufferUpdate() {
+	public BufferUpdate getBufferUpdate() {
 		return bufferUpdate;
 	}
 
@@ -70,7 +70,7 @@ public class Action implements Serializable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[" + type.toString() + "(" + getLocation().toString() + ") BU: ");
-		sb.append(BufferUpdate.toString(getBufferUpdate()) + "; Rec: ");
+		sb.append(bufferUpdate.toString() + "; Rec: ");
 		sb.append(isBeforeRecursion());
 		sb.append(" - " + explanation + "]");
 		return sb.toString();
