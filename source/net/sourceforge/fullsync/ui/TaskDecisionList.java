@@ -186,7 +186,7 @@ public class TaskDecisionList extends Composite {
 		super.dispose();
 	}
 
-	protected void drawSide(GC g, Task t, Action a, int location) {
+	protected void drawSide(GC g, Task t, Action a, Location location) {
 		File n;
 		if (t == null) {
 			n = null;
@@ -213,7 +213,7 @@ public class TaskDecisionList extends Composite {
 		}
 		// TODO draw some not-existing image ?
 
-		if ((a.getLocation() & location) > 0) {
+		if (a.getLocation() != Location.None) {
 			Image actionImage = actionImages.get(Integer.valueOf(a.getType()));
 			if (actionImage != null) {
 				g.drawImage(actionImage, x, 0);
@@ -229,13 +229,13 @@ public class TaskDecisionList extends Composite {
 
 	protected void drawLocation(GC g, Action a) {
 		switch (a.getLocation()) {
-			case Location.Source:
+			case Source:
 				g.drawImage(locationSource, 16 + 2, 0);
 				break;
-			case Location.Destination:
+			case Destination:
 				g.drawImage(locationDestination, 16 + 2, 0);
 				break;
-			case Location.Both:
+			case Both:
 				g.drawImage(locationBoth, 16 + 2, 0);
 				break;
 		}
@@ -266,7 +266,7 @@ public class TaskDecisionList extends Composite {
 		}
 
 		// using 2+ bits for action
-		hash |= (a.getLocation() << 6);
+		hash |= (a.getLocation().ordinal() << 6);
 		hash |= (a.getType() << 8);
 
 		return Integer.valueOf(hash);
@@ -339,10 +339,10 @@ public class TaskDecisionList extends Composite {
 		final Action action = t.getCurrentAction();
 		if ((action.getType() == Action.Add) || (action.getType() == Action.Update)) {
 			switch (action.getLocation()) {
-				case Location.Source:
+				case Source:
 					size = t.getDestination().getSize();
 					break;
-				case Location.Destination:
+				case Destination:
 					size = t.getSource().getSize();
 					break;
 				default:
