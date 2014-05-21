@@ -37,16 +37,16 @@ public class Action implements Serializable {
 	public static final String[] errorNames = new String[] { "NotDecidableError", "UnexpectedChangeError", "DirHereFileThereError" };
 
 	private int type;
-	private int location;
+	private Location location;
 	private int bufferUpdate;
 	private boolean beforeRecursion;
 	private String explanation;
 
-	public Action(int type, int location, int bufferUpdate, String explanation) {
+	public Action(int type, Location location, int bufferUpdate, String explanation) {
 		this(type, location, bufferUpdate, explanation, true);
 	}
 
-	public Action(int type, int location, int bufferUpdate, String explanation, boolean beforeRecursion) {
+	public Action(int type, Location location, int bufferUpdate, String explanation, boolean beforeRecursion) {
 		this.type = type;
 		this.location = location;
 		this.bufferUpdate = bufferUpdate;
@@ -58,7 +58,7 @@ public class Action implements Serializable {
 		return type;
 	}
 
-	public int getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 
@@ -90,7 +90,7 @@ public class Action implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[" + toString(getType()) + "(" + Location.toString(getLocation()) + ") BU: ");
+		sb.append("[" + toString(getType()) + "(" + getLocation().toString() + ") BU: ");
 		sb.append(BufferUpdate.toString(getBufferUpdate()) + "; Rec: ");
 		sb.append(isBeforeRecursion());
 		sb.append(" - " + explanation + "]");
