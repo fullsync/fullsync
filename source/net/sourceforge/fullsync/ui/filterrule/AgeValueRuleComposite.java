@@ -23,6 +23,7 @@
 package net.sourceforge.fullsync.ui.filterrule;
 
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
+import net.sourceforge.fullsync.rules.filefilter.values.AgeValue.Unit;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -67,18 +68,18 @@ class AgeValueRuleComposite extends RuleComposite {
 		textValue.addListener(SWT.KeyUp, numbersOnlyKeyboardListener);
 
 		comboUnits.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		for (String unit : AgeValue.getAllUnits()) {
-			comboUnits.add(unit);
+		for (Unit unit : AgeValue.Unit.values()) {
+			comboUnits.add(unit.name()); // FIXME: TRANSLATE!!
 		}
-		comboUnits.select(value.getUnit());
+		comboUnits.select(value.getUnit().ordinal());
 
 		comboUnits.addListener(SWT.Selection, e -> {
-			value.setUnit(comboUnits.getSelectionIndex());
+			value.setUnit(AgeValue.Unit.values()[comboUnits.getSelectionIndex()]);
 			valueChanged(new ValueChangedEvent(value));
 		});
 
 		comboUnits.addListener(SWT.DefaultSelection, e -> {
-			value.setUnit(comboUnits.getSelectionIndex());
+			value.setUnit(AgeValue.Unit.values()[comboUnits.getSelectionIndex()]);
 			valueChanged(new ValueChangedEvent(value));
 		});
 	}

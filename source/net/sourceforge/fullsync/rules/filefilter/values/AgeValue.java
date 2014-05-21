@@ -23,32 +23,29 @@
 package net.sourceforge.fullsync.rules.filefilter.values;
 
 public class AgeValue implements OperandValue {
+	public enum Unit {
+		SECONDS,
+		MINUTES,
+		HOURS,
+		DAYS
+	}
 
 	private static final long serialVersionUID = 2L;
+	private static final long SECONDS_PER_DAY = 60 * 60 * 24;
+
 	private double value;
-	private int unit;
-
-	public static final int SECONDS = 0;
-	public static final int MINUTES = 1;
-	public static final int HOURS = 2;
-	public static final int DAYS = 3;
-
-	private static final String[] allUnits = new String[] { "seconds", "minutes", "hours", "days" };
-
-	public static String[] getAllUnits() {
-		return allUnits;
-	}
+	private Unit unit;
 
 	public AgeValue() {
 		this.value = 0;
-		this.unit = SECONDS;
+		this.unit = Unit.SECONDS;
 	}
 
 	public AgeValue(String age) {
 		fromString(age);
 	}
 
-	public AgeValue(double value, int unit) {
+	public AgeValue(double value, Unit unit) {
 		this.value = value;
 		this.unit = unit;
 	}
@@ -57,16 +54,19 @@ public class AgeValue implements OperandValue {
 		return value;
 	}
 
-	public int getUnit() {
+	public Unit getUnit() {
 		return unit;
 	}
 
-	public void setUnit(int unit) {
+	public void setUnit(Unit unit) {
 		this.unit = unit;
 	}
 
 	public long getSeconds() {
-		return (long) Math.floor(value * Math.pow(60, unit));
+		if (Unit.DAYS.ordinal() > unit.ordinal()) {
+			return (long) Math.floor(value * Math.pow(60, unit.ordinal()));
+		}
+		return (long) Math.floor(value * SECONDS_PER_DAY);
 	}
 
 	@Override
@@ -79,17 +79,17 @@ public class AgeValue implements OperandValue {
 		}
 	}
 
-	public int getUnitFromString(String unitName) {
-		for (int i = 0; i < allUnits.length; i++) {
-			if (allUnits[i].equalsIgnoreCase(unitName)) {
-				return i;
+	public Unit getUnitFromString(String unitName) {
+		for (Unit u : Unit.values()) {
+			if (u.name().equalsIgnoreCase(unitName)) {
+				return u;
 			}
 		}
-		return -1;
+		return Unit.SECONDS;
 	}
 
 	@Override
 	public String toString() {
-		return String.valueOf(value) + " " + allUnits[unit];
+		return String.valueOf(value) + " " + unit.toString();
 	}
 }
