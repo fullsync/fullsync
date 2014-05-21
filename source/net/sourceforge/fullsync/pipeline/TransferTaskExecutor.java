@@ -25,8 +25,8 @@ public class TransferTaskExecutor extends SyncTasklet<Task, TransferTaskResult> 
 		File destination = item.getDestination();
 
 		switch (action.getType()) {
-			case Action.Add:
-			case Action.Update:
+			case Add:
+			case Update:
 				if (action.getLocation() == Location.Destination) {
 					if (source.isDirectory()) {
 						destination.makeDirectory();
@@ -44,7 +44,7 @@ public class TransferTaskExecutor extends SyncTasklet<Task, TransferTaskResult> 
 					}
 				}
 				break;
-			case Action.Delete:
+			case Delete:
 				if (action.getLocation() == Location.Destination) {
 					destination.delete();
 				}

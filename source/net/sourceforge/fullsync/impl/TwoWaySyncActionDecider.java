@@ -24,6 +24,7 @@ import java.util.Vector;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
+import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferStateDecider;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.DataParseException;
@@ -40,22 +41,22 @@ import net.sourceforge.fullsync.fs.File;
 public class TwoWaySyncActionDecider implements ActionDecider {
 	// TODO param keep orphans/exact copy
 
-	private static final Action addToDestination = new Action(Action.Add, Location.Destination, BufferUpdate.Destination, "Add");
-	private static final Action addToSource = new Action(Action.Add, Location.Source, BufferUpdate.Source, "Add");
-	private static final Action updateDestination = new Action(Action.Update, Location.Destination, BufferUpdate.Destination,
+	private static final Action addToDestination = new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, "Add");
+	private static final Action addToSource = new Action(ActionType.Add, Location.Source, BufferUpdate.Source, "Add");
+	private static final Action updateDestination = new Action(ActionType.Update, Location.Destination, BufferUpdate.Destination,
 			"source changed, update destination");
-	private static final Action updateSource = new Action(Action.Update, Location.Source, BufferUpdate.Source,
+	private static final Action updateSource = new Action(ActionType.Update, Location.Source, BufferUpdate.Source,
 			"destination changed, update source");
-	private static final Action overwriteDestination = new Action(Action.Update, Location.Destination, BufferUpdate.Destination,
+	private static final Action overwriteDestination = new Action(ActionType.Update, Location.Destination, BufferUpdate.Destination,
 			"overwrite destination changes");
-	private static final Action overwriteSource = new Action(Action.Update, Location.Source, BufferUpdate.Source,
+	private static final Action overwriteSource = new Action(ActionType.Update, Location.Source, BufferUpdate.Source,
 			"overwrite source changes");
-	private static final Action deleteDestinationOrphan = new Action(Action.Delete, Location.Destination, BufferUpdate.Destination,
+	private static final Action deleteDestinationOrphan = new Action(ActionType.Delete, Location.Destination, BufferUpdate.Destination,
 			"Delete orphan in destination", false);
-	private static final Action deleteSourceOrphan = new Action(Action.Delete, Location.Source, BufferUpdate.Source,
+	private static final Action deleteSourceOrphan = new Action(ActionType.Delete, Location.Source, BufferUpdate.Source,
 			"Delete orphan in source", false);
-	private static final Action inSync = new Action(Action.Nothing, Location.None, BufferUpdate.None, "In Sync");
-	private static final Action ignore = new Action(Action.Nothing, Location.None, BufferUpdate.None, "Ignore");
+	private static final Action inSync = new Action(ActionType.Nothing, Location.None, BufferUpdate.None, "In Sync");
+	private static final Action ignore = new Action(ActionType.Nothing, Location.None, BufferUpdate.None, "Ignore");
 
 	@Override
 	public Task getTask(final File src, final File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
@@ -71,11 +72,11 @@ public class TwoWaySyncActionDecider implements ActionDecider {
 				actions.add(deleteDestinationOrphan);
 				break;
 			case DirSourceFileDestination:
-				actions.add(new Action(Action.DirHereFileThereError, Location.Destination, BufferUpdate.None,
+				actions.add(new Action(ActionType.DirHereFileThereError, Location.Destination, BufferUpdate.None,
 						"file changed from/to dir, can't overwrite"));
 				break;
 			case FileSourceDirDestination:
-				actions.add(new Action(Action.DirHereFileThereError, Location.Source, BufferUpdate.None,
+				actions.add(new Action(ActionType.DirHereFileThereError, Location.Source, BufferUpdate.None,
 						"file changed from/to dir, can't overwrite"));
 				break;
 			case FileChangeSource:

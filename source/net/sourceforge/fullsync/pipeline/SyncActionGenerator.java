@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.fullsync.Action;
+import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.State;
@@ -47,7 +48,7 @@ public class SyncActionGenerator {
 
 	public void doDecideOne(File srcParent, File src, File dstParent, File dst) {
 		//FIXME: make an actual decision (state decider, check source / destination, ...)
-		Task t = new Task(src, dst, State.InSync, new Action[] { new Action(Action.Nothing, Location.Destination, BufferUpdate.None, "") });
+		Task t = new Task(src, dst, State.InSync, new Action[] { new Action(ActionType.Nothing, Location.Destination, BufferUpdate.None, "") });
 		getOutput().offer(t);
 	}
 

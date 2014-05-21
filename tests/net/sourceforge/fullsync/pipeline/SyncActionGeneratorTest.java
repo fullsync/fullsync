@@ -23,7 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import net.sourceforge.fullsync.Action;
+import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.fs.File;
@@ -88,7 +88,7 @@ public class SyncActionGeneratorTest {
 		Task t = generator.getOutput().take();
 		Assert.assertNotNull(t);
 		Assert.assertFalse(t.getCurrentAction().isError());
-		Assert.assertTrue(t.getCurrentAction().getType() == Action.Add);
+		Assert.assertTrue(t.getCurrentAction().getType() == ActionType.Add);
 		Assert.assertTrue(t.getCurrentAction().getLocation() == Location.Destination);
 		Assert.assertEquals("/a", t.getSource().getPath());
 	}

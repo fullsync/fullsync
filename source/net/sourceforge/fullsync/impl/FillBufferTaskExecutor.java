@@ -128,8 +128,8 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 			File destination = task.getDestination();
 
 			switch (action.getType()) {
-				case Action.Add:
-				case Action.Update:
+				case Add:
+				case Update:
 					if (action.getLocation() == Location.Destination) {
 						if (source.isDirectory()) {
 							storeDirCreation(task, destination);
@@ -147,7 +147,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 						}
 					}
 					break;
-				case Action.Delete:
+				case Delete:
 					if (action.getLocation() == Location.Destination) {
 						storeDeleteNode(task, destination);
 					}

@@ -19,11 +19,6 @@
  */
 package net.sourceforge.fullsync.impl;
 
-import static net.sourceforge.fullsync.Action.Add;
-import static net.sourceforge.fullsync.Action.DirHereFileThereError;
-import static net.sourceforge.fullsync.Action.Nothing;
-import static net.sourceforge.fullsync.Action.UnexpectedChangeError;
-import static net.sourceforge.fullsync.Action.Update;
 import static net.sourceforge.fullsync.Location.Destination;
 import static net.sourceforge.fullsync.Location.None;
 import static net.sourceforge.fullsync.Location.Source;
@@ -33,6 +28,7 @@ import java.util.Vector;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
+import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferStateDecider;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.DataParseException;
@@ -45,18 +41,15 @@ import net.sourceforge.fullsync.fs.File;
  * An ActionDecider for destination buffered Publish/Update.
  */
 public class PublishActionDecider implements ActionDecider {
-	private static final Action addDestination = new Action(Add, Destination, BufferUpdate.Destination, "Add");
-	private static final Action ignoreDestinationExists = new Action(UnexpectedChangeError, Destination, BufferUpdate.None,
-			"will not add, destination already exists");
-	private static final Action overwriteSource = new Action(Update, Source, BufferUpdate.Destination, "overwrite source");
-	private static final Action overwriteDestination = new Action(Update, Destination, BufferUpdate.Destination, "overwrite destination");
-	private static final Action updateDestination = new Action(Update, Destination, BufferUpdate.Destination, "Source changed");
-	private static final Action unexpectedDestinationChanged = new Action(UnexpectedChangeError, Destination, BufferUpdate.None,
-			"Destination changed");
-	private static final Action unexpectedBothChanged = new Action(UnexpectedChangeError, Destination, BufferUpdate.None,
-			"Source changed, but changed remotely too");
-	private static final Action inSync = new Action(Nothing, None, BufferUpdate.None, "In Sync");
-	private static final Action ignore = new Action(Nothing, None, BufferUpdate.None, "Ignore");
+	private static final Action addDestination = new Action(ActionType.Add, Destination, BufferUpdate.Destination, "Add");
+	private static final Action ignoreDestinationExists = new Action(ActionType.UnexpectedChangeError, Destination, BufferUpdate.None, "will not add, destination already exists");
+	private static final Action overwriteSource = new Action(ActionType.Update, Source, BufferUpdate.Destination, "overwrite source");
+	private static final Action overwriteDestination = new Action(ActionType.Update, Destination, BufferUpdate.Destination, "overwrite destination");
+	private static final Action updateDestination = new Action(ActionType.Update, Destination, BufferUpdate.Destination, "Source changed");
+	private static final Action unexpectedDestinationChanged = new Action(ActionType.UnexpectedChangeError, Destination, BufferUpdate.None, "Destination changed");
+	private static final Action unexpectedBothChanged = new Action(ActionType.UnexpectedChangeError, Destination, BufferUpdate.None, "Source changed, but changed remotely too");
+	private static final Action inSync = new Action(ActionType.Nothing, None, BufferUpdate.None, "In Sync");
+	private static final Action ignore = new Action(ActionType.Nothing, None, BufferUpdate.None, "Ignore");
 
 	@Override
 	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd)
@@ -77,31 +70,31 @@ public class PublishActionDecider implements ActionDecider {
 			case DirSourceFileDestination:
 				State buff = bsd.getState(dst);
 				if (buff.equals(State.OrphanSource)) {
-					actions.add(new Action(Add, Destination, BufferUpdate.Destination,
+					actions.add(new Action(ActionType.Add, Destination, BufferUpdate.Destination,
 							"There was a node in buff, but its orphan, so add"));
 				}
 				else if (buff.equals(State.DirSourceFileDestination)) {
-					actions.add(new Action(Nothing, None, BufferUpdate.None,
+					actions.add(new Action(ActionType.Nothing, None, BufferUpdate.None,
 							"dirherefilethere, but there is a dir instead of file, so its in sync"));
 				}
 				else {
-					actions.add(new Action(DirHereFileThereError, Source, BufferUpdate.None,
+					actions.add(new Action(ActionType.DirHereFileThereError, Source, BufferUpdate.None,
 							"cant update, dir here file there error occured"));
 				}
 				break;
 			case FileSourceDirDestination:
 				State buff1 = bsd.getState(dst);
 				if (buff1.equals(State.OrphanSource)) {
-					actions.add(new Action(Add, Source, BufferUpdate.Destination,
+					actions.add(new Action(ActionType.Add, Source, BufferUpdate.Destination,
 							"There was a node in buff, but its orphan, so add"));
 				}
 				else if (buff1.equals(State.FileSourceDirDestination)) {
-					actions.add(new Action(UnexpectedChangeError, Destination, BufferUpdate.None,
+					actions.add(new Action(ActionType.UnexpectedChangeError, Destination, BufferUpdate.None,
 							"dirherefilethere, but there is a file instead of dir, so unexpected change"));
 					// TODO ^ recompare here
 				}
 				else {
-					actions.add(new Action(DirHereFileThereError, Destination, BufferUpdate.None,
+					actions.add(new Action(ActionType.DirHereFileThereError, Destination, BufferUpdate.None,
 							"cant update, dir here file there error occured"));
 				}
 				break;

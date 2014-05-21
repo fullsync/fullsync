@@ -24,6 +24,7 @@ import java.util.Vector;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
+import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferStateDecider;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.DataParseException;
@@ -40,15 +41,15 @@ import net.sourceforge.fullsync.fs.File;
 public class ExactCopyActionDecider implements ActionDecider {
 	// TODO param keep orphans/exact copy
 
-	private static final Action addDestination = new Action(Action.Add, Location.Destination, BufferUpdate.Destination, "Add");
-	private static final Action overwriteDestination = new Action(Action.Update, Location.Destination, BufferUpdate.Destination,
+	private static final Action addDestination = new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, "Add");
+	private static final Action overwriteDestination = new Action(ActionType.Update, Location.Destination, BufferUpdate.Destination,
 			"overwrite destination");
-	private static final Action updateDestination = new Action(Action.Update, Location.Destination, BufferUpdate.Destination,
+	private static final Action updateDestination = new Action(ActionType.Update, Location.Destination, BufferUpdate.Destination,
 			"Source changed");
-	private static final Action deleteDestinationOrphan = new Action(Action.Delete, Location.Destination, BufferUpdate.Destination,
+	private static final Action deleteDestinationOrphan = new Action(ActionType.Delete, Location.Destination, BufferUpdate.Destination,
 			"Delete orphan in destination", false);
-	private static final Action inSync = new Action(Action.Nothing, Location.None, BufferUpdate.None, "In Sync");
-	private static final Action ignore = new Action(Action.Nothing, Location.None, BufferUpdate.None, "Ignore");
+	private static final Action inSync = new Action(ActionType.Nothing, Location.None, BufferUpdate.None, "In Sync");
+	private static final Action ignore = new Action(ActionType.Nothing, Location.None, BufferUpdate.None, "Ignore");
 
 	@Override
 	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd)
@@ -70,31 +71,31 @@ public class ExactCopyActionDecider implements ActionDecider {
 			case DirSourceFileDestination:
 				State buff = bsd.getState(dst);
 				if (buff.equals(State.OrphanSource)) {
-					actions.add(new Action(Action.Add, Location.Destination, BufferUpdate.Destination,
+					actions.add(new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination,
 							"There was a node in buff, but its orphan, so add"));
 				}
 				else if (buff.equals(State.DirSourceFileDestination)) {
-					actions.add(new Action(Action.Nothing, Location.None, BufferUpdate.Destination,
+					actions.add(new Action(ActionType.Nothing, Location.None, BufferUpdate.Destination,
 							"dirherefilethere, but there is a dir instead of file, so its in sync"));
 				}
 				else {
-					actions.add(new Action(Action.DirHereFileThereError, Location.Source, BufferUpdate.None,
+					actions.add(new Action(ActionType.DirHereFileThereError, Location.Source, BufferUpdate.None,
 							"cant update, dir here file there error occured"));
 				}
 				break;
 			case FileSourceDirDestination:
 				State buff1 = bsd.getState(dst);
 				if (buff1.equals(State.OrphanSource)) {
-					actions.add(new Action(Action.Add, Location.Destination, BufferUpdate.Destination,
+					actions.add(new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination,
 							"There was a node in buff, but its orphan, so add"));
 				}
 				else if (buff1.equals(State.FileSourceDirDestination)) {
-					actions.add(new Action(Action.DirHereFileThereError, Location.Destination, BufferUpdate.None,
+					actions.add(new Action(ActionType.DirHereFileThereError, Location.Destination, BufferUpdate.None,
 							"file changed from/to dir, can't overwrite"));
 					// TODO ^ recompare here
 				}
 				else {
-					actions.add(new Action(Action.DirHereFileThereError, Location.Destination, BufferUpdate.None,
+					actions.add(new Action(ActionType.DirHereFileThereError, Location.Destination, BufferUpdate.None,
 							"cant update, dir here file there error occured"));
 				}
 				break;

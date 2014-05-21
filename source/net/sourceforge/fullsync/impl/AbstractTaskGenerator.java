@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
+import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.DataParseException;
@@ -112,7 +113,7 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		}
 
 		TaskTree tree = new TaskTree(source, destination);
-		Task root = new Task(null, null, State.InSync, new Action[] { new Action(Action.Nothing,
+		Task root = new Task(null, null, State.InSync, new Action[] { new Action(ActionType.Nothing,
 				Location.None, BufferUpdate.None, "Root") });
 		tree.setRoot(root);
 
