@@ -29,11 +29,11 @@ import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
 public class BufferUpdateEntryDescriptor implements EntryDescriptor {
-	private int bufferUpdate;
+	private BufferUpdate bufferUpdate;
 	private File src;
 	private File dst;
 
-	public BufferUpdateEntryDescriptor(File src, File dst, int bufferUpdate) {
+	public BufferUpdateEntryDescriptor(File src, File dst, BufferUpdate bufferUpdate) {
 		this.bufferUpdate = bufferUpdate;
 		this.src = src;
 		this.dst = dst;
@@ -65,10 +65,10 @@ public class BufferUpdateEntryDescriptor implements EntryDescriptor {
 
 	@Override
 	public void finishWrite() throws IOException {
-		if ((bufferUpdate & BufferUpdate.Source) > 0) {
+		if (bufferUpdate == BufferUpdate.Source || bufferUpdate == BufferUpdate.Both) {
 			src.refreshBuffer();
 		}
-		if ((bufferUpdate & BufferUpdate.Destination) > 0) {
+		if (bufferUpdate == BufferUpdate.Destination || bufferUpdate == BufferUpdate.Both) {
 			dst.refreshBuffer();
 		}
 	}
