@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import net.sourceforge.fullsync.Action;
+import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Profile;
@@ -159,11 +160,8 @@ public class TaskDecisionList extends Composite {
 		locationBoth = gui.getImage("Location_Both.png"); //$NON-NLS-1$
 
 		actionImages = new Hashtable<Integer, Image>();
-		for (int i = 0; i < Action.names.length; i++) {
-			actionImages.put(Integer.valueOf(i), gui.getImage("Action_" + Action.names[i] + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		for (int i = 0; i < Action.errorNames.length; i++) {
-			actionImages.put(Integer.valueOf(i + 10), gui.getImage("Action_" + Action.errorNames[i] + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
+		for (ActionType action : ActionType.values()) {
+			actionImages.put(Integer.valueOf(action.ordinal()), gui.getImage("Action_" + action.name() + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		taskImages = new Hashtable<Integer, Image>();
@@ -214,7 +212,7 @@ public class TaskDecisionList extends Composite {
 		// TODO draw some not-existing image ?
 
 		if (a.getLocation() != Location.None) {
-			Image actionImage = actionImages.get(Integer.valueOf(a.getType()));
+			Image actionImage = actionImages.get(Integer.valueOf(a.getType().ordinal()));
 			if (actionImage != null) {
 				g.drawImage(actionImage, x, 0);
 			}
@@ -267,7 +265,7 @@ public class TaskDecisionList extends Composite {
 
 		// using 2+ bits for action
 		hash |= (a.getLocation().ordinal() << 6);
-		hash |= (a.getType() << 8);
+		hash |= (a.getType().ordinal() << 8);
 
 		return Integer.valueOf(hash);
 	}
@@ -311,7 +309,7 @@ public class TaskDecisionList extends Composite {
 	}
 
 	protected void addTask(Task t) {
-		if (!onlyChanges || (t.getCurrentAction().getType() != Action.Nothing)) {
+		if (!onlyChanges || (t.getCurrentAction().getType() != ActionType.Nothing)) {
 			Image image = getTaskImage(t);
 
 			TableItem item;
@@ -337,7 +335,7 @@ public class TaskDecisionList extends Composite {
 	private String formatSize(final Task t) {
 		long size = -1;
 		final Action action = t.getCurrentAction();
-		if ((action.getType() == Action.Add) || (action.getType() == Action.Update)) {
+		if ((action.getType() == ActionType.Add) || (action.getType() == ActionType.Update)) {
 			switch (action.getLocation()) {
 				case Source:
 					size = t.getDestination().getSize();
@@ -451,7 +449,7 @@ public class TaskDecisionList extends Composite {
 			Image image = getTaskImage(referenceTask, action);
 			mi = new MenuItem(m, SWT.NULL);
 			mi.setImage(image);
-			mi.setText(Action.toString(action.getType()) + " - " + action.getExplanation()); //$NON-NLS-1$
+			mi.setText(action.getType().toString() + " - " + action.getExplanation()); //$NON-NLS-1$
 			mi.setData(action);
 			mi.addListener(SWT.Selection, selListener);
 		}

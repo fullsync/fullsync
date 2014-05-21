@@ -298,11 +298,11 @@ public class FilesystemTest {
 		createNewFileWithContents(testingDst, "-strangeFolder/sub folder/sourceFile3.txt", lm, "this is a test\ncontent3");
 
 		expectation.clear();
-		expectation.put("sourceFile1.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
-		expectation.put("sourceFile2.txt", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
-		expectation.put("sourceFile3.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
-		expectation.put("-strangeFolder", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
-		expectation.put("sub folder", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("sourceFile1.txt", new Action(ActionType.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("sourceFile2.txt", new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, ""));
+		expectation.put("sourceFile3.txt", new Action(ActionType.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("-strangeFolder", new Action(ActionType.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("sub folder", new Action(ActionType.Nothing, Location.None, BufferUpdate.None, ""));
 		verifyExpectations(expectation);
 
 		lm = prepareForTest();
@@ -312,16 +312,16 @@ public class FilesystemTest {
 		createNewFileWithContents(testingDst, "-strangeFolder2/sub2 folder/sourceFile4.txt", lm, "this is a test\ncontent4");
 
 		expectation.clear();
-		expectation.put("sub - folder", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
-		expectation.put("sub2 - folder", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
-		expectation.put("sourceFile1.txt", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
-		expectation.put("sourceFile2.txt", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
-		expectation.put("-strangeFolder", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
-		expectation.put("sub folder", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
-		expectation.put("sourceFile3.txt", new Action(Action.Add, Location.Destination, BufferUpdate.Destination, ""));
-		expectation.put("-strangeFolder2", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
-		expectation.put("sub2 folder", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
-		expectation.put("sourceFile4.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("sub - folder", new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, ""));
+		expectation.put("sub2 - folder", new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, ""));
+		expectation.put("sourceFile1.txt", new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, ""));
+		expectation.put("sourceFile2.txt", new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, ""));
+		expectation.put("-strangeFolder", new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, ""));
+		expectation.put("sub folder", new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, ""));
+		expectation.put("sourceFile3.txt", new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, ""));
+		expectation.put("-strangeFolder2", new Action(ActionType.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("sub2 folder", new Action(ActionType.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("sourceFile4.txt", new Action(ActionType.Nothing, Location.None, BufferUpdate.None, ""));
 		verifyExpectations(expectation);
 
 		lm = prepareForTest();
@@ -331,8 +331,8 @@ public class FilesystemTest {
 		createNewFileWithContents(testingDst, "sourceFile2.txt", lm, "this is a test\ncontent2");
 
 		expectation.clear();
-		expectation.put("sourceFile1.txt", new Action(Action.Nothing, Location.None, BufferUpdate.None, ""));
-		expectation.put("sourceFile2.txt", new Action(Action.Update, Location.Destination, BufferUpdate.Destination, ""));
+		expectation.put("sourceFile1.txt", new Action(ActionType.Nothing, Location.None, BufferUpdate.None, ""));
+		expectation.put("sourceFile2.txt", new Action(ActionType.Update, Location.Destination, BufferUpdate.Destination, ""));
 		verifyExpectations(expectation);
 	}
 }

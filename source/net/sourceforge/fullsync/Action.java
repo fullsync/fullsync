@@ -24,29 +24,17 @@ import java.io.Serializable;
 public class Action implements Serializable {
 	private static final long serialVersionUID = 2L;
 
-	public static final int Nothing = 0;
-	public static final int Add = 1;
-	public static final int Update = 2;
-	public static final int Delete = 3;
-
-	public static final int NotDecidableError = 10;
-	public static final int UnexpectedChangeError = 11;
-	public static final int DirHereFileThereError = 12;
-
-	public static final String[] names = new String[] { "Nothing", "Add", "Update", "Delete" };
-	public static final String[] errorNames = new String[] { "NotDecidableError", "UnexpectedChangeError", "DirHereFileThereError" };
-
-	private int type;
+	private ActionType type;
 	private Location location;
 	private int bufferUpdate;
 	private boolean beforeRecursion;
 	private String explanation;
 
-	public Action(int type, Location location, int bufferUpdate, String explanation) {
+	public Action(ActionType type, Location location, int bufferUpdate, String explanation) {
 		this(type, location, bufferUpdate, explanation, true);
 	}
 
-	public Action(int type, Location location, int bufferUpdate, String explanation, boolean beforeRecursion) {
+	public Action(ActionType type, Location location, int bufferUpdate, String explanation, boolean beforeRecursion) {
 		this.type = type;
 		this.location = location;
 		this.bufferUpdate = bufferUpdate;
@@ -54,7 +42,7 @@ public class Action implements Serializable {
 		this.explanation = explanation;
 	}
 
-	public int getType() {
+	public ActionType getType() {
 		return type;
 	}
 
@@ -75,22 +63,13 @@ public class Action implements Serializable {
 	}
 
 	public boolean isError() {
-		return (type >= 10);
-	}
-
-	public static String toString(int type) {
-		if (type >= 10) {
-			return errorNames[type - 10];
-		}
-		else {
-			return names[type];
-		}
+		return type.isError();
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[" + toString(getType()) + "(" + getLocation().toString() + ") BU: ");
+		sb.append("[" + type.toString() + "(" + getLocation().toString() + ") BU: ");
 		sb.append(BufferUpdate.toString(getBufferUpdate()) + "; Rec: ");
 		sb.append(isBeforeRecursion());
 		sb.append(" - " + explanation + "]");
