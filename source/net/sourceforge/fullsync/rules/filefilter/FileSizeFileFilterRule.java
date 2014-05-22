@@ -51,10 +51,6 @@ public class FileSizeFileFilterRule extends FileFilterRule {
 		return allOperators;
 	}
 
-	public static String[] getAllUnits() {
-		return SizeValue.getAllUnits();
-	}
-
 	public FileSizeFileFilterRule(SizeValue size, int operator) {
 		this.size = size;
 		this.op = operator;
