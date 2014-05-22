@@ -68,18 +68,18 @@ class SizeValueRuleComposite extends RuleComposite {
 		textValue.addListener(SWT.KeyUp, numbersOnlyKeyboardListener);
 
 		comboUnits.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		for (String unit : SizeValue.getAllUnits()) {
-			comboUnits.add(unit);
+		for (SizeValue.Unit unit : SizeValue.Unit.values()) {
+			comboUnits.add(unit.name()); //FIXME: TRANSLATE!!
 		}
-		comboUnits.select(value.getUnit());
+		comboUnits.select(value.getUnit().ordinal());
 
 		comboUnits.addListener(SWT.Selection, e -> {
-			value.setUnit(comboUnits.getSelectionIndex());
+			value.setUnit(SizeValue.Unit.values()[comboUnits.getSelectionIndex()]);
 			valueChanged(new ValueChangedEvent(value));
 		});
 
 		comboUnits.addListener(SWT.DefaultSelection, e -> {
-			value.setUnit(comboUnits.getSelectionIndex());
+			value.setUnit(SizeValue.Unit.values()[comboUnits.getSelectionIndex()]);
 			valueChanged(new ValueChangedEvent(value));
 		});
 	}

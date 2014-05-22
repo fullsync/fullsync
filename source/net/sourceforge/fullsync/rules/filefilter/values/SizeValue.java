@@ -23,37 +23,30 @@
 package net.sourceforge.fullsync.rules.filefilter.values;
 
 public class SizeValue implements OperandValue {
+	public enum Unit {
+		BYTES,
+		KBYTES,
+		MBYTES,
+		GBYTES
+	}
 
 	private static final long serialVersionUID = 2L;
 
 	private double value;
-	private int unit;
-
-	public static final int BYTES = 0;
-	public static final int KILOBYTES = 1;
-	public static final int MEGABYTES = 2;
-	public static final int GIGABYTES = 3;
-
-	private static final String[] allUnits = new String[] { "bytes", "KBytes", "MBytes", "GBytes" };
-
-	public static String[] getAllUnits() {
-		return allUnits;
-	}
+	private Unit unit;
 
 	public SizeValue() {
 		this.value = 0;
-		this.unit = BYTES;
+		this.unit = Unit.BYTES;
 	}
 
 	public SizeValue(String size) {
-		this.value = 0;
-		this.unit = BYTES;
-
+		this();
 		fromString(size);
 	}
 
 	public long getBytes() {
-		return (long) Math.floor(value * Math.pow(1024, unit));
+		return (long) Math.floor(value * Math.pow(1024, unit.ordinal()));
 	}
 
 	public double getValue() {
@@ -72,11 +65,11 @@ public class SizeValue implements OperandValue {
 		}
 	}
 
-	public int getUnit() {
+	public Unit getUnit() {
 		return unit;
 	}
 
-	public void setUnit(int unit) {
+	public void setUnit(Unit unit) {
 		this.unit = unit;
 	}
 
@@ -90,17 +83,17 @@ public class SizeValue implements OperandValue {
 		}
 	}
 
-	private int getUnitFromString(String unitName) {
-		for (int i = 0; i < allUnits.length; i++) {
-			if (allUnits[i].equalsIgnoreCase(unitName)) {
-				return i;
+	private Unit getUnitFromString(String unitName) {
+		for (Unit u : Unit.values()) {
+			if (u.name().equalsIgnoreCase(unitName)) {
+				return u;
 			}
 		}
-		return -1;
+		return Unit.BYTES;
 	}
 
 	@Override
 	public String toString() {
-		return String.valueOf(value) + " " + allUnits[unit];
+		return String.valueOf(value) + " " + unit.toString();
 	}
 }
