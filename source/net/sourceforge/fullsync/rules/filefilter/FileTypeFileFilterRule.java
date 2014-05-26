@@ -49,10 +49,6 @@ public class FileTypeFileFilterRule extends FileFilterRule {
 		return allOperators;
 	}
 
-	public static String[] getAllOperands() {
-		return TypeValue.getAllTypes();
-	}
-
 	public FileTypeFileFilterRule(TypeValue type, int operator) {
 		this.type = type;
 		this.op = operator;

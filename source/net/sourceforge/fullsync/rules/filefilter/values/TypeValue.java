@@ -23,21 +23,20 @@
 package net.sourceforge.fullsync.rules.filefilter.values;
 
 public class TypeValue implements OperandValue {
+	public enum Type {
+		FILE,
+		DIRECTORY
+	}
 
 	private static final long serialVersionUID = 2L;
 
-	public static final int FILE_TYPE = 0;
-	public static final int DIRECTORY_TYPE = 1;
-
-	private static final String[] valueNames = new String[] { "file", "directory" };
-
-	private int type;
+	private Type type;
 
 	public TypeValue() {
-		this.type = FILE_TYPE;
+		this.type = Type.FILE;
 	}
 
-	public TypeValue(int type) {
+	public TypeValue(Type type) {
 		this.type = type;
 	}
 
@@ -45,22 +44,19 @@ public class TypeValue implements OperandValue {
 		fromString(type);
 	}
 
-	public void setType(int fileType) {
-		if ((fileType < FILE_TYPE) || (fileType > DIRECTORY_TYPE)) {
-			// TODO exception?
-		}
+	public void setType(Type fileType) {
 		this.type = fileType;
 	}
 
-	public int getType() {
+	public Type getType() {
 		return this.type;
 	}
 
 	@Override
 	public void fromString(String str) {
-		for (int i = 0; i < valueNames.length; i++) {
-			if (valueNames[i].equalsIgnoreCase(str)) {
-				this.type = i;
+		for (Type t : Type.values()) {
+			if (t.name().equalsIgnoreCase(str)) {
+				this.type = t;
 				return;
 			}
 		}
@@ -68,19 +64,15 @@ public class TypeValue implements OperandValue {
 
 	@Override
 	public String toString() {
-		return valueNames[type];
+		return type.toString();
 	}
 
 	public boolean isFile() {
-		return (type == FILE_TYPE);
+		return (type == Type.FILE);
 	}
 
 	public boolean isDirectory() {
-		return (type == DIRECTORY_TYPE);
-	}
-
-	public static String[] getAllTypes() {
-		return valueNames;
+		return (type == Type.DIRECTORY);
 	}
 
 }
