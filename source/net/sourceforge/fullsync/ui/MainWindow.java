@@ -494,11 +494,11 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		Timer statusDelayTimer = null;
 		try {
 			guiController.showBusyCursor(true);
+			// REVISIT wow, a timer here is pretty much overhead / specific for
+			// this generell problem
+			// FIXME: do we really need this Timer?
+			statusDelayTimer = new Timer(true);
 			try {
-				// REVISIT wow, a timer here is pretty much overhead / specific for
-				// this generell problem
-				// FIXME: do we really need this Timer?
-				statusDelayTimer = new Timer(true);
 				statusDelayTimer.schedule(new TimerTask() {
 					@Override
 					public void run() {

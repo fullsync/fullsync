@@ -56,12 +56,10 @@ public class GuiController implements Runnable {
 	private SystemTrayItem systemTrayItem;
 	private final ScheduledThreadPoolExecutor executorService;
 
-	public GuiController(Preferences preferences, ProfileManager profileManager, Synchronizer synchronizer) {
+	private GuiController(Preferences preferences, ProfileManager profileManager, Synchronizer synchronizer) {
 		this.preferences = preferences;
 		this.profileManager = profileManager;
 		this.synchronizer = synchronizer;
-
-		singleton = this;
 		executorService = new ScheduledThreadPoolExecutor(1);
 	}
 
@@ -235,6 +233,11 @@ public class GuiController implements Runnable {
 	}
 
 	public static GuiController getInstance() {
+		return singleton;
+	}
+
+	public static GuiController initialize(Preferences preferences, ProfileManager profileManager, Synchronizer synchronizer) {
+		singleton = new GuiController(preferences, profileManager, synchronizer);
 		return singleton;
 	}
 
