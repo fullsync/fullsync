@@ -47,12 +47,12 @@ class TypeValueRuleComposite extends RuleComposite {
 		comboTypesLData.horizontalAlignment = SWT.FILL;
 		comboTypesLData.grabExcessHorizontalSpace = true;
 		comboTypes.setLayoutData(comboTypesLData);
-		for (String type : TypeValue.getAllTypes()) {
-			comboTypes.add(type);
+		for (TypeValue.Type type : TypeValue.Type.values()) {
+			comboTypes.add(type.name());
 		}
-		comboTypes.select(value.getType());
+		comboTypes.select(value.getType().ordinal());
 		Listener comboSelectionListener = e -> {
-			value.setType(comboTypes.getSelectionIndex());
+			value.setType(TypeValue.Type.values()[comboTypes.getSelectionIndex()]);
 			valueChanged(new ValueChangedEvent(value));
 		};
 		comboTypes.addListener(SWT.Selection, comboSelectionListener);
