@@ -79,7 +79,7 @@ public class FileAgeFileFilterRule extends FileFilterRule {
 			throw new FilterRuleNotAppliableException("The file or directory doesn't have any modification date");
 		}
 		long now = SystemDate.getInstance().currentTimeMillis();
-		double delta = (Math.floor(now / 1000.0) - Math.floor(lastModified / 1000.0));
+		long delta = (long) (Math.floor(now / 1000.0) - Math.floor(lastModified / 1000.0));
 		switch (op) {
 			case OP_IS:
 				return delta == age.getSeconds();

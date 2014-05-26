@@ -100,29 +100,22 @@ public class SmartQueue<E> {
 	public synchronized E take() {
 		E item = null;
 		while (!queue.isEmpty() || !shutdown) {
-			if (paused) {
-				doWait();
+			if (!paused) {
+				item = queue.poll();
+			}
+			if (null == item) {
+				try {
+					wait();
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 			else {
-				item = queue.poll();
-				if (null == item) {
-					doWait();
-				}
-				else {
-					break;
-				}
+				break;
 			}
 		}
 		return item;
-	}
-
-	private void doWait() {
-		try {
-			wait();
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public synchronized boolean isEmpty() {

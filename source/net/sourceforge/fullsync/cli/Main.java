@@ -271,7 +271,7 @@ public class Main { // NO_UCD
 			}
 			else {
 				try {
-					GuiController guiController = new GuiController(preferences, profileManager, sync);
+					GuiController guiController = GuiController.initialize(preferences, profileManager, sync);
 					guiController.startGui(line.hasOption('m'));
 
 					if (!line.hasOption('P') && !preferences.getHelpShown()

@@ -38,7 +38,7 @@ public class FullSync {
 	public static FullSync inst() {
 		if (!instance.initialized) {
 			synchronized (instance) {
-				if (!instance.initialized) {
+				while (!instance.initialized) {
 					try {
 						instance.wait();
 					}
