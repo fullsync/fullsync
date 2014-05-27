@@ -24,7 +24,7 @@ package net.sourceforge.fullsync.schedule;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 
@@ -41,10 +41,10 @@ public abstract class Schedule implements Serializable {
 
 	public abstract Element serialize(Element element);
 
-	private final static Hashtable<String, Class<? extends Schedule>> scheduleRegister;
+	private final static HashMap<String, Class<? extends Schedule>> scheduleRegister;
 
 	static {
-		scheduleRegister = new Hashtable<String, Class<? extends Schedule>>(2);
+		scheduleRegister = new HashMap<String, Class<? extends Schedule>>(2);
 		scheduleRegister.put(IntervalSchedule.SCHEDULE_TYPE, IntervalSchedule.class);
 		scheduleRegister.put(CrontabSchedule.SCHEDULE_TYPE, CrontabSchedule.class);
 	}

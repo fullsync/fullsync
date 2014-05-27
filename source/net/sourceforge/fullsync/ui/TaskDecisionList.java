@@ -20,7 +20,6 @@
 package net.sourceforge.fullsync.ui;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionType;
@@ -59,8 +58,8 @@ public class TaskDecisionList extends Composite {
 	private int tableLogLinesFillIndex;
 	private int tableLogLinesFillCount;
 
-	private Hashtable<Integer, Image> actionImages;
-	private Hashtable<Integer, Image> taskImages;
+	private HashMap<Integer, Image> actionImages;
+	private HashMap<Integer, Image> taskImages;
 	private Image locationSource;
 	private Image locationDestination;
 	private Image locationBoth;
@@ -159,12 +158,12 @@ public class TaskDecisionList extends Composite {
 		locationDestination = gui.getImage("Location_Destination.png"); //$NON-NLS-1$
 		locationBoth = gui.getImage("Location_Both.png"); //$NON-NLS-1$
 
-		actionImages = new Hashtable<Integer, Image>();
+		actionImages = new HashMap<Integer, Image>();
 		for (ActionType action : ActionType.values()) {
 			actionImages.put(Integer.valueOf(action.ordinal()), gui.getImage("Action_" + action.name() + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		taskImages = new Hashtable<Integer, Image>();
+		taskImages = new HashMap<Integer, Image>();
 	}
 
 	@Override

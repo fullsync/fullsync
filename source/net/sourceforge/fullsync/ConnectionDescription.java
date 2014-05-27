@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -39,8 +39,8 @@ public class ConnectionDescription implements Serializable {
 	public static final String PARAMETER_INTERACTIVE = "interactive";
 
 	private URI uri = null;
-	private Hashtable<String, String> parameters = new Hashtable<String, String>();
-	private Hashtable<String, String> secretParameters = new Hashtable<String, String>();
+	private HashMap<String, String> parameters = new HashMap<String, String>();
+	private HashMap<String, String> secretParameters = new HashMap<String, String>();
 
 	public Element serialize(String name, Document doc) {
 		Element elem = doc.createElement(name);

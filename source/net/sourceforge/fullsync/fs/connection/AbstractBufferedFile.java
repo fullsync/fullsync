@@ -22,7 +22,7 @@ package net.sourceforge.fullsync.fs.connection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
@@ -38,7 +38,7 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	AbstractBufferedFile(BufferedConnection bc, String name, File parent, boolean directory, boolean exists) {
 		super(bc, name, parent, directory, exists);
 		this.unbuffered = null;
-		children = new Hashtable<String, File>();
+		children = new HashMap<String, File>();
 		fsSize = -1;
 		fsLastModified = -1;
 	}

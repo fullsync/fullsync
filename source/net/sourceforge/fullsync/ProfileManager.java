@@ -26,8 +26,8 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -88,14 +88,14 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	private String configFile;
-	private Vector<Profile> profiles;
-	private Vector<ProfileListChangeListener> changeListeners;
-	private Vector<ProfileSchedulerListener> scheduleListeners;
+	private ArrayList<Profile> profiles;
+	private ArrayList<ProfileListChangeListener> changeListeners;
+	private ArrayList<ProfileSchedulerListener> scheduleListeners;
 	private boolean remoteConnected = false;
 
 	// FIXME this list is only needed because we need to give feedback from
 	// the local scheduler and a remote scheduler.
-	private Vector<SchedulerChangeListener> schedulerChangeListeners;
+	private ArrayList<SchedulerChangeListener> schedulerChangeListeners;
 
 	// TODO the scheduler shouldn't reside within the profile manager
 	// but just use it as task source
@@ -108,10 +108,10 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	private ProfileListChangeListener remoteListener;
 
 	protected ProfileManager() {
-		this.profiles = new Vector<Profile>();
-		this.changeListeners = new Vector<ProfileListChangeListener>();
-		this.scheduleListeners = new Vector<ProfileSchedulerListener>();
-		this.schedulerChangeListeners = new Vector<SchedulerChangeListener>();
+		this.profiles = new ArrayList<Profile>();
+		this.changeListeners = new ArrayList<ProfileListChangeListener>();
+		this.scheduleListeners = new ArrayList<ProfileSchedulerListener>();
+		this.schedulerChangeListeners = new ArrayList<SchedulerChangeListener>();
 		this.scheduler = new SchedulerImpl(this);
 		this.scheduler.addSchedulerChangeListener(this);
 	}
@@ -145,7 +145,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	private void updateRemoteProfiles() {
-		this.profiles = new Vector<Profile>();
+		this.profiles = new ArrayList<Profile>();
 
 		Profile[] remoteprofiles = remoteManager.getProfiles();
 		for (Profile remoteprofile : remoteprofiles) {
@@ -168,7 +168,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 			}
 			remoteManager = null;
 
-			this.profiles = new Vector<Profile>();
+			this.profiles = new ArrayList<Profile>();
 
 			try {
 				loadProfiles(configFile);
@@ -247,7 +247,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		fireProfilesChangeEvent();
 	}
 
-	public Vector<Profile> getProfiles() {
+	public ArrayList<Profile> getProfiles() {
 		return profiles;
 	}
 

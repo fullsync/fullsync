@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -89,7 +88,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private Button buttonRemoveFilter;
 
 	private Tree directoryTree;
-	private final Vector<TreeItem> treeItemsWithFilter = new Vector<TreeItem>();
+	private final ArrayList<TreeItem> treeItemsWithFilter = new ArrayList<TreeItem>();
 	private HashMap<String, FileFilter> itemsMap = new HashMap<String, FileFilter>();
 	private Site sourceSite;
 	private final FileSystemManager fsm = new FileSystemManager();
