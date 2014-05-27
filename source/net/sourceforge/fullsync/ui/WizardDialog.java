@@ -19,7 +19,7 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 
@@ -51,12 +51,11 @@ public abstract class WizardDialog {
 	private final Shell parent;
 	private final int style;
 
-	private final Vector<WizardDialogListener> dialogListeners;
+	private final ArrayList<WizardDialogListener> dialogListeners = new ArrayList<WizardDialogListener>();
 
 	public WizardDialog(Shell parent) {
 		this.parent = parent;
 		this.style = SWT.DIALOG_TRIM | SWT.RESIZE | SWT.APPLICATION_MODAL;
-		this.dialogListeners = new Vector<WizardDialogListener>();
 	}
 
 	public boolean checkAndApply() {

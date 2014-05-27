@@ -22,13 +22,13 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.eclipse.swt.widgets.Composite;
 
 abstract class RuleComposite extends Composite {
 
-	private Vector<ValueChangedListener> listeners = new Vector<ValueChangedListener>();
+	private ArrayList<ValueChangedListener> listeners = new ArrayList<ValueChangedListener>();
 
 	protected RuleComposite(Composite parent, int style) {
 		super(parent, style);

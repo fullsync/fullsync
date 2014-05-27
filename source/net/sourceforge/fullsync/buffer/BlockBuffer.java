@@ -25,8 +25,8 @@ package net.sourceforge.fullsync.buffer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Vector;
 
 import org.slf4j.Logger;
 
@@ -44,7 +44,7 @@ public class BlockBuffer implements ExecutionBuffer {
 
 	int flushes;
 
-	Vector<EntryFinishedListener> finishedListeners;
+	ArrayList<EntryFinishedListener> finishedListeners;
 
 	public BlockBuffer(Logger logger) {
 		this.logger = logger;
@@ -60,7 +60,7 @@ public class BlockBuffer implements ExecutionBuffer {
 
 		flushes = 0;
 
-		finishedListeners = new Vector<EntryFinishedListener>();
+		finishedListeners = new ArrayList<EntryFinishedListener>();
 	}
 
 	@Override

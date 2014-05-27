@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
@@ -35,17 +35,17 @@ import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 
 public class FileSystemManager {
-	private Hashtable<String, FileSystem> schemes;
-	private Hashtable<String, SyncFilesBufferingProvider> buffering;
+	private HashMap<String, FileSystem> schemes;
+	private HashMap<String, SyncFilesBufferingProvider> buffering;
 
 	public FileSystemManager() {
-		schemes = new Hashtable<String, FileSystem>();
+		schemes = new HashMap<String, FileSystem>();
 		schemes.put("file", new LocalFileSystem());
 		schemes.put("ftp", new FTPFileSystem());
 		schemes.put("sftp", new SFTPFileSystem());
 		schemes.put("smb", new SmbFileSystem());
 
-		buffering = new Hashtable<String, SyncFilesBufferingProvider>();
+		buffering = new HashMap<String, SyncFilesBufferingProvider>();
 		buffering.put("syncfiles", new SyncFilesBufferingProvider());
 	}
 

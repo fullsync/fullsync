@@ -22,7 +22,7 @@ package net.sourceforge.fullsync.fs.connection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.fs.File;
@@ -80,9 +80,9 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public final Hashtable<String, File> getChildren(final File dir) throws IOException {
+	public final HashMap<String, File> getChildren(final File dir) throws IOException {
 		try {
-			Hashtable<String, File> children = new Hashtable<String, File>();
+			HashMap<String, File> children = new HashMap<String, File>();
 
 			FileObject obj = base.resolveFile(dir.getPath());
 			if (obj.exists() && (obj.getType() == FileType.FOLDER)) {

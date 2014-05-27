@@ -22,7 +22,7 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.rules.filefilter.FileAgeFileFilterRule;
@@ -56,9 +56,9 @@ import org.eclipse.swt.widgets.ToolItem;
 
 public class FilterRuleListItem {
 
-	private static Hashtable<String, Class<? extends FileFilterRule>> rulesTable;
-	private static Hashtable<String, String> ruleNamesConversionTable;
-	private static Hashtable<String, String> reverseRuleNamesConversionTable;
+	private static HashMap<String, Class<? extends FileFilterRule>> rulesTable;
+	private static HashMap<String, String> ruleNamesConversionTable;
+	private static HashMap<String, String> reverseRuleNamesConversionTable;
 	private static String[] ruleTypeNames;
 	private static boolean initDone = false;
 
@@ -95,7 +95,7 @@ public class FilterRuleListItem {
 		ruleTypeNames[5] = Messages.getString("FilterRuleListItem.FileAgeFilter");
 		ruleTypeNames[6] = Messages.getString("FilterRuleListItem.NestedFilter");
 
-		rulesTable = new Hashtable<String, Class<? extends FileFilterRule>>(15, 0.75f);
+		rulesTable = new HashMap<String, Class<? extends FileFilterRule>>(15, 0.75f);
 		rulesTable.put(Messages.getString("FilterRuleListItem.FileNameFilter"), FileNameFileFilterRule.class); //$NON-NLS-1$
 		rulesTable.put(Messages.getString("FilterRuleListItem.FilePathFilter"), FilePathFileFilterRule.class); //$NON-NLS-1$
 		rulesTable.put(Messages.getString("FilterRuleListItem.FileTypeFilter"), FileTypeFileFilterRule.class); //$NON-NLS-1$
@@ -104,7 +104,7 @@ public class FilterRuleListItem {
 		rulesTable.put(Messages.getString("FilterRuleListItem.FileAgeFilter"), FileAgeFileFilterRule.class); //$NON-NLS-1$
 		rulesTable.put(Messages.getString("FilterRuleListItem.NestedFilter"), SubfilterFileFilerRule.class); //$NON-NLS-1$
 
-		ruleNamesConversionTable = new Hashtable<String, String>(15, 0.75f);
+		ruleNamesConversionTable = new HashMap<String, String>(15, 0.75f);
 		ruleNamesConversionTable.put(FileNameFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileNameFilter")); //$NON-NLS-1$
 		ruleNamesConversionTable.put(FilePathFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FilePathFilter")); //$NON-NLS-1$
 		ruleNamesConversionTable.put(FileTypeFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileTypeFilter")); //$NON-NLS-1$
@@ -114,7 +114,7 @@ public class FilterRuleListItem {
 		ruleNamesConversionTable.put(FileAgeFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileAgeFilter")); //$NON-NLS-1$
 		ruleNamesConversionTable.put(SubfilterFileFilerRule.typeName, Messages.getString("FilterRuleListItem.NestedFilter")); //$NON-NLS-1$
 
-		reverseRuleNamesConversionTable = new Hashtable<String, String>(15, 0.75f);
+		reverseRuleNamesConversionTable = new HashMap<String, String>(15, 0.75f);
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileNameFilter"), FileNameFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FilePathFilter"), FilePathFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileTypeFilter"), FileTypeFileFilterRule.typeName); //$NON-NLS-1$

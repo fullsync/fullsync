@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -153,7 +153,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	}
 
 	@Override
-	public Hashtable<String, File> getChildren(File dir) {
+	public HashMap<String, File> getChildren(File dir) {
 		return null;
 	}
 

@@ -22,7 +22,7 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.FileFilterManager;
@@ -54,7 +54,7 @@ public class FileFilterPage extends WizardDialog {
 	private FileFilterManager fileFilterManager = new FileFilterManager();
 	private FileFilter fileFilter;
 
-	private Vector<FilterRuleListItem> ruleItems = new Vector<FilterRuleListItem>();
+	private ArrayList<FilterRuleListItem> ruleItems = new ArrayList<FilterRuleListItem>();
 
 	public FileFilterPage(Shell parent, FileFilter filter) {
 		super(parent);

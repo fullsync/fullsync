@@ -22,7 +22,7 @@ package net.sourceforge.fullsync.fs.connection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
@@ -31,7 +31,7 @@ public interface FileSystemConnection extends Site {
 	public File createChild(File parent, String name, boolean directory) throws IOException;
 
 	// public Directory getParent( File node );
-	public Hashtable<String, File> getChildren(File dir) throws IOException;
+	public HashMap<String, File> getChildren(File dir) throws IOException;
 
 	// refresh file, refresh directory ?
 

@@ -20,7 +20,7 @@
 package net.sourceforge.fullsync.impl;
 
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.BufferUpdate;
@@ -36,13 +36,13 @@ import net.sourceforge.fullsync.buffer.ExecutionBuffer;
 import net.sourceforge.fullsync.fs.File;
 
 public class FillBufferTaskExecutor implements TaskExecutor {
-	private Vector<TaskFinishedListener> listeners;
+	private ArrayList<TaskFinishedListener> listeners;
 	private boolean statisticsOnly;
 	private IoStatisticsImpl stats;
 	private ExecutionBuffer buffer;
 
 	public FillBufferTaskExecutor(ExecutionBuffer buffer) {
-		this.listeners = new Vector<TaskFinishedListener>();
+		this.listeners = new ArrayList<TaskFinishedListener>();
 		this.statisticsOnly = false;
 		this.buffer = buffer;
 		buffer.addEntryFinishedListener((entry, ioe) -> {
