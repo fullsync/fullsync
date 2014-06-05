@@ -21,8 +21,6 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FullSync;
@@ -67,11 +65,9 @@ class MainWindow extends Composite implements ProfileListControlHandler {
 	private ProfileListComposite profileList;
 	private GuiController guiController;
 
-	private String statusDelayString;
-
 	public WelcomeScreen welcomeScreen;
 
-	MainWindow(Composite parent, int style, GuiController initGuiController) {
+	MainWindow(final Composite parent, final int style, final GuiController initGuiController) {
 		super(parent, style);
 		this.guiController = initGuiController;
 		Shell shell = getShell();
@@ -443,7 +439,7 @@ class MainWindow extends Composite implements ProfileListControlHandler {
 
 	@EventHandler
 	public void taskGenerationStarted(final TaskGenerationStarted taskStarted) { // NO_UCD
-		statusDelayString = Messages.getString("MainWindow.Checking_File", taskStarted.src.getPath()); //$NON-NLS-1$
+		statusLine.setMessage(Messages.getString("MainWindow.Checking_File", taskStarted.src.getPath())); //$NON-NLS-1$
 	}
 
 	@EventHandler
@@ -488,22 +484,10 @@ class MainWindow extends Composite implements ProfileListControlHandler {
 
 	private synchronized void doRunProfile(Profile p, boolean interactive) {
 		TaskTree t = null;
-		Timer statusDelayTimer = null;
 		try {
 			guiController.showBusyCursor(true);
-			// REVISIT wow, a timer here is pretty much overhead / specific for
-			// this generell problem
-			// FIXME: do we really need this Timer?
-			statusDelayTimer = new Timer(true);
 			try {
-				statusDelayTimer.schedule(new TimerTask() {
-					@Override
-					public void run() {
-						statusLine.setMessage(statusDelayString);
-					}
-				}, 10, 100);
-				statusDelayString = Messages.getString("MainWindow.Starting_Profile") + p.getName() + "..."; //$NON-NLS-1$ //$NON-NLS-2$
-				statusLine.setMessage(statusDelayString);
+				statusLine.setMessage(Messages.getString("MainWindow.Starting_Profile") + p.getName() + "..."); //$NON-NLS-1$ //$NON-NLS-2$
 				t = guiController.getSynchronizer().executeProfile(p, interactive);
 				if (t == null) {
 					p.setLastError(1, Messages.getString("MainWindow.Error_Comparing_Filesystems")); //$NON-NLS-1$
@@ -517,7 +501,6 @@ class MainWindow extends Composite implements ProfileListControlHandler {
 				ExceptionHandler.reportException(e);
 			}
 			finally {
-				statusDelayTimer.cancel();
 				guiController.showBusyCursor(false);
 			}
 			if (t != null) {

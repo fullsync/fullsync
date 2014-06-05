@@ -19,42 +19,43 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.ExceptionHandler;
+import java.util.LinkedList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
-public class StatusLine extends Composite {
+class StatusLine extends Composite {
 	private Label labelMessage;
+	private GUIUpdateQueue<String> updateQueue;
 
 	public StatusLine(Composite parent, int style) {
 		super(parent, style);
-		try {
-			GridLayout thisLayout = new GridLayout();
-			thisLayout.marginHeight = 1;
-			thisLayout.marginWidth = 2;
-			thisLayout.numColumns = 3;
-			this.setLayout(thisLayout);
+		GridLayout thisLayout = new GridLayout(3, false);
+		thisLayout.marginHeight = 1;
+		thisLayout.marginWidth = 2;
+		this.setLayout(thisLayout);
 
-			labelMessage = new Label(this, SWT.NONE);
-			GridData labelMessageLData = new GridData();
-			labelMessageLData.grabExcessHorizontalSpace = true;
-			labelMessageLData.horizontalAlignment = SWT.FILL;
-			labelMessageLData.verticalAlignment = SWT.END;
-			labelMessage.setLayoutData(labelMessageLData);
-			this.layout();
-		}
-		catch (Exception e) {
-			ExceptionHandler.reportException(e);
-		}
+		labelMessage = new Label(this, SWT.NONE);
+		GridData labelMessageLData = new GridData(SWT.FILL, SWT.END, true, false);
+		labelMessage.setLayoutData(labelMessageLData);
+		this.layout();
+		updateQueue = new GUIUpdateQueue<String>(parent.getDisplay(), new GUIUpdateQueue.GUIUpdateTask<String>(){
+			@Override
+			public void doUpdate(Display display, LinkedList<String> items) {
+				String message = items.getLast();
+				if (null == message) {
+					message = ""; //$NON-NLS-1$
+				}
+				labelMessage.setText(message);
+			}
+		});
 	}
 
 	public void setMessage(final String message) {
-		getDisplay().asyncExec(() -> {
-			labelMessage.setText(message == null ? "" : message); //$NON-NLS-1$
-		});
+		updateQueue.add(message);
 	}
 }
