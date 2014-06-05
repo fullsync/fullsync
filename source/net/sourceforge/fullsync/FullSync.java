@@ -36,15 +36,15 @@ public class FullSync {
 	private static FullSync instance;
 
 	public static FullSync inst() {
-		if (!instance.initialized) {
-			synchronized (instance) {
-				while (!instance.initialized) {
-					try {
-						instance.wait();
+		if (null == instance) {
+			synchronized (FullSync.class) {
+				try {
+					while (null == instance) {
+						FullSync.class.wait();
 					}
-					catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
 		}
@@ -55,13 +55,11 @@ public class FullSync {
 	private EventBus eventBus;
 	private FileSystemManager fileSystemManager;
 	private ExecutorService executorService;
-	private volatile boolean initialized;
 	private FullSyncEventTracer tracer;
 
 	private FullSync(ConfigurationPreferences _preferences) {
-		instance = this;
+		final FullSync singleton = this;
 		preferences = _preferences;
-		initialized = false;
 		Thread fullsyncInitializer = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -79,9 +77,9 @@ public class FullSync {
 					});
 				}
 				finally {
-					synchronized (instance) {
-						initialized = true;
-						instance.notifyAll();
+					synchronized (FullSync.class) {
+						instance = singleton;
+						FullSync.class.notifyAll();
 					}
 					tracer = new FullSyncEventTracer();
 					FullSync.subscribe(tracer);
@@ -93,7 +91,7 @@ public class FullSync {
 	}
 
 	public static void init(ConfigurationPreferences _preferences) {
-		instance = new FullSync(_preferences);
+		new FullSync(_preferences);
 	}
 
 	public static Preferences prefs() {
