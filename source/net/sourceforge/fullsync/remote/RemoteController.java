@@ -42,7 +42,7 @@ public class RemoteController {
 	private String password;
 	private boolean isActive = false;
 
-	private Registry registry = null;
+	private Registry registry;
 
 	public static RemoteController getInstance() {
 		if (instance == null) {

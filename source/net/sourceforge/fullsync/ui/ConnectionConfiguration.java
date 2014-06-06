@@ -38,9 +38,9 @@ public class ConnectionConfiguration {
 	private Composite m_parent; // the tabs content
 	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" };
 	private static HashMap<String, Class<? extends ProtocolSpecificComposite>> composites;
-	private Label labelProtocol = null;
-	private Combo comboProtocol = null;
-	private Composite compositeProtocolSpecific = null;
+	private Label labelProtocol;
+	private Combo comboProtocol;
+	private Composite compositeProtocolSpecific;
 	private ProtocolSpecificComposite compositeSpecific;
 	private String selectedScheme;
 	private boolean bufferedEnabled = true;

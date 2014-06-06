@@ -97,7 +97,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 	private FileFilter filter;
 	private Composite m_parent;
-	private String lastSourceLoaded = null;
+	private String lastSourceLoaded;
 
 	public ProfileDetailsTabbedPage(Shell parent, ProfileManager profileManager, String profileName) {
 		super(parent);

@@ -38,7 +38,7 @@ public class ConnectionDescription implements Serializable {
 	public static final String PARAMETER_PASSWORD = "password";
 	public static final String PARAMETER_INTERACTIVE = "interactive";
 
-	private URI uri = null;
+	private URI uri;
 	private HashMap<String, String> parameters = new HashMap<String, String>();
 	private HashMap<String, String> secretParameters = new HashMap<String, String>();
 

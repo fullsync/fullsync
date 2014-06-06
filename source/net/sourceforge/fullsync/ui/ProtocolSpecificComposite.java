@@ -38,10 +38,10 @@ import org.eclipse.swt.widgets.Text;
 
 class ProtocolSpecificComposite {
 
-	private Label labelPath = null;
+	private Label labelPath;
 	protected Text textPath = null;
-	private Button buttonBrowse = null;
-	private Button buttonBuffered = null;
+	private Button buttonBrowse;
+	private Button buttonBuffered;
 	protected String m_scheme = null;
 	protected Composite m_parent = null;
 
