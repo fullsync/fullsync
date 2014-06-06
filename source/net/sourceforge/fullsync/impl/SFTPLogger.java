@@ -23,8 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * SFTPLogger class implementing the com.jcraft.jsch.Logger interface
- * that enables the logging of the SSH library below the
+ * SFTPLogger class implementing the com.jcraft.jsch.Logger interface that enables the logging of the SSH library below the
  * org.apache.commons.vfs2 SFTP implementation.
  */
 public class SFTPLogger implements com.jcraft.jsch.Logger {

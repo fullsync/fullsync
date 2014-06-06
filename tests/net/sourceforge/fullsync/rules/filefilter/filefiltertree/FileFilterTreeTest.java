@@ -17,9 +17,6 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-/*
- * Created on Jun 20, 2005
- */
 package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
 
 import static org.junit.Assert.assertEquals;

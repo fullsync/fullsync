@@ -17,9 +17,6 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-/*
- * Created on Jun 4, 2005
- */
 package net.sourceforge.fullsync.ui.filterrule;
 
 import java.util.HashMap;

@@ -121,7 +121,7 @@ public class ExactCopyActionDecider implements ActionDecider {
 				// Location.None ) )
 				actions.add(inSync);
 				actions.add(overwriteDestination);
-			break;
+				break;
 		}
 
 		actions.add(ignore);

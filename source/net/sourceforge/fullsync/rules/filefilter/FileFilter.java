@@ -17,9 +17,6 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-/*
- * Created on May 28, 2005
- */
 package net.sourceforge.fullsync.rules.filefilter;
 
 import java.io.Serializable;
@@ -35,34 +32,34 @@ public class FileFilter implements Serializable {
 	public static final int INCLUDE = 0;
 	public static final int EXCLUDE = 1;
 
-	private int match_type;
-	private int filter_type;
+	private int matchType;
+	private int filterType;
 
 	private boolean appliesToDir;
 
 	private FileFilterRule[] rules;
 
 	public FileFilter() {
-		match_type = 0;
-		filter_type = 0;
+		matchType = 0;
+		filterType = 0;
 		appliesToDir = true;
 		rules = new FileFilterRule[0];
 	}
 
-	public void setMatchType(int match_type) {
-		this.match_type = match_type;
+	public void setMatchType(int _matchType) {
+		this.matchType = _matchType;
 	}
 
 	public int getMatchType() {
-		return match_type;
+		return matchType;
 	}
 
-	public void setFilterType(int filter_type) {
-		this.filter_type = filter_type;
+	public void setFilterType(int _filterType) {
+		this.filterType = _filterType;
 	}
 
 	public int getFilterType() {
-		return this.filter_type;
+		return this.filterType;
 	}
 
 	public void setFileFilterRules(FileFilterRule[] rules) {
@@ -83,7 +80,7 @@ public class FileFilter implements Serializable {
 
 	public boolean match(final File file) {
 		boolean result = doMmatch(file);
-		return (filter_type == INCLUDE) ? result : !result;
+		return (filterType == INCLUDE) ? result : !result;
 	}
 
 	private boolean doMmatch(final File file) {
@@ -91,7 +88,7 @@ public class FileFilter implements Serializable {
 			return true;
 		}
 
-		switch (match_type) {
+		switch (matchType) {
 			case MATCH_ALL:
 				for (FileFilterRule rule : rules) {
 					if ((!appliesToDir) && (file.isDirectory())) {
@@ -138,7 +135,7 @@ public class FileFilter implements Serializable {
 		}
 		StringBuffer buff = new StringBuffer(25 + (30 * rules.length));
 
-		switch (filter_type) {
+		switch (filterType) {
 			case INCLUDE:
 				buff.append("Include");
 				break;
@@ -151,7 +148,7 @@ public class FileFilter implements Serializable {
 
 		for (int i = 0; i < (rules.length - 1); i++) {
 			buff.append(rules[i].toString());
-			switch (match_type) {
+			switch (matchType) {
 				case MATCH_ALL:
 					buff.append(" and ");
 					break;
