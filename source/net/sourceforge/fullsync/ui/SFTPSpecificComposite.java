@@ -164,17 +164,4 @@ class SFTPSpecificComposite extends ProtocolSpecificComposite {
 		textKeyPassphrase.setEnabled(false);
 		labelKeyPassphrase.setEnabled(false);
 	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		labelHost.dispose();
-		textHost.dispose();
-		labelPort.dispose();
-		spinnerPort.dispose();
-		labelUsername.dispose();
-		textUsername.dispose();
-		labelPassword.dispose();
-		textPassword.dispose();
-	}
 }

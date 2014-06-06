@@ -133,20 +133,5 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 		textPassword.setText("");
 	}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		labelHost.dispose();
-		textHost.dispose();
-		if (null != spinnerPort) {
-			labelPort.dispose();
-			spinnerPort.dispose();
-		}
-		labelUsername.dispose();
-		textUsername.dispose();
-		labelPassword.dispose();
-		textPassword.dispose();
-	}
-
 	abstract public int getDefaultPort();
 }
