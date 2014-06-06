@@ -74,7 +74,6 @@ class ProtocolSpecificComposite {
 		buttonBuffered.setVisible(false); //FIXME: [BUFFERING] remove to restore buffering
 	}
 
-
 	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
 		String path = textPath.getText();
 		if ((null == path) || (0 == path.length())) {
@@ -163,16 +162,5 @@ class ProtocolSpecificComposite {
 	 */
 	public void setBufferedEnabled(final boolean enabled) {
 		buttonBuffered.setEnabled(enabled);
-	}
-
-	/**
-	 * dispose
-	 * dispose all created controls.
-	 */
-	public void dispose() {
-		labelPath.dispose();
-		textPath.dispose();
-		buttonBrowse.dispose();
-		buttonBuffered.dispose();
 	}
 }

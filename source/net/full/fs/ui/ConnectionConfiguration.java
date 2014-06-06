@@ -33,6 +33,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 public class ConnectionConfiguration implements ModifyListener {
@@ -86,17 +87,18 @@ public class ConnectionConfiguration implements ModifyListener {
 		comboProtocol.addModifyListener(this);
 
 		selectedScheme = comboProtocol.getText();
-		compositeSpecific = createProtocolSpecificComposite();
+		createProtocolSpecificComposite();
 	}
 
 	@Override
 	public void modifyText(final ModifyEvent e) {
-		if (compositeSpecific != null) {
-			compositeSpecific.dispose();
+		selectedScheme = comboProtocol.getText();
+		for (Control c : m_parent.getChildren()) {
+			if (!c.isDisposed()) {
+				c.dispose();
+			}
 		}
 
-		selectedScheme = comboProtocol.getText();
-		compositeProtocolSpecific.dispose();
 		initialize();
 
 		m_parent.layout(true);
@@ -116,15 +118,14 @@ public class ConnectionConfiguration implements ModifyListener {
 		return compositeSpecific.getConnectionDescription();
 	}
 
-	private ProtocolSpecificComposite createProtocolSpecificComposite() {
-		ProtocolSpecificComposite composite = null;
+	private void createProtocolSpecificComposite() {
 		Class<? extends ProtocolSpecificComposite> com = composites.get(selectedScheme);
 		try {
-			composite = com.newInstance();
-			composite.createGUI(compositeProtocolSpecific);
-			composite.reset(selectedScheme);
-			composite.setBufferedEnabled(bufferedEnabled);
-			composite.setBuffered(bufferedActive);
+			compositeSpecific = com.newInstance();
+			compositeSpecific.createGUI(compositeProtocolSpecific);
+			compositeSpecific.reset(selectedScheme);
+			compositeSpecific.setBufferedEnabled(bufferedEnabled);
+			compositeSpecific.setBuffered(bufferedActive);
 		}
 		catch (InstantiationException e) {
 			ExceptionHandler.reportException(e);
@@ -134,7 +135,6 @@ public class ConnectionConfiguration implements ModifyListener {
 			ExceptionHandler.reportException(e);
 			e.printStackTrace();
 		}
-		return composite;
 	}
 
 	public boolean getBuffered() {
