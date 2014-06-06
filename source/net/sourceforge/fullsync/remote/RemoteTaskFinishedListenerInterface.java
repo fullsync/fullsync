@@ -17,9 +17,6 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-/*
- * Created on Nov 29, 2004
- */
 package net.sourceforge.fullsync.remote;
 
 import java.rmi.Remote;

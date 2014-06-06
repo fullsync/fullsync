@@ -17,9 +17,6 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-/*
- * Created on 18.07.2004
- */
 package net.sourceforge.fullsync.buffer;
 
 import java.io.IOException;

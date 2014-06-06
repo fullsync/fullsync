@@ -17,9 +17,6 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-/*
- * Created on Nov 5, 2004
- */
 package net.sourceforge.fullsync.impl;
 
 import java.util.HashMap;
@@ -182,8 +179,9 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 						fileFilter.setMatchType(FileFilter.MATCH_ALL);
 						fileFilter.setFilterType(FileFilter.EXCLUDE);
 						FileFilterRule[] rules = new FileFilterRule[] {
-								new FileNameFileFilterRule(new TextValue(ignorePattern), FileNameFileFilterRule.OP_MATCHES_REGEXP),
-								new FileNameFileFilterRule(new TextValue(takePattern), FileNameFileFilterRule.OP_DOESNT_MATCHES_REGEXP) };
+							new FileNameFileFilterRule(new TextValue(ignorePattern), FileNameFileFilterRule.OP_MATCHES_REGEXP),
+							new FileNameFileFilterRule(new TextValue(takePattern), FileNameFileFilterRule.OP_DOESNT_MATCHES_REGEXP),
+						};
 						fileFilter.setFileFilterRules(rules);
 						useFilter = true;
 					}

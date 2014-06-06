@@ -17,9 +17,6 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-/*
- * Created on Nov 4, 2004
- */
 package net.sourceforge.fullsync.impl;
 
 import net.sourceforge.fullsync.DataParseException;
