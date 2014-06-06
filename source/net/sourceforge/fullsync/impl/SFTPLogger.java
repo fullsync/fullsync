@@ -31,7 +31,7 @@ public class SFTPLogger implements com.jcraft.jsch.Logger {
 	/**
 	 * reference to the FullSync logger.
 	 */
-	private Logger logger = null;
+	private Logger logger;
 
 	/**
 	 * Constructor of the SFTPLogger implementation.

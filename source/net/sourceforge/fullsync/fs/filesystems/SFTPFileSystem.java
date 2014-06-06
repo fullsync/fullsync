@@ -45,10 +45,10 @@ import com.jcraft.jsch.UserInfo;
 
 public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserInfo {
 	private static boolean loggerSetupCompleted = false;
-	private static String sshDirName = null;
+	private static String sshDirName;
 
 	private Logger logger = LoggerFactory.getLogger("FullSync");
-	private ConnectionDescription desc = null;
+	private ConnectionDescription desc;
 
 	public SFTPFileSystem() {
 		if (!loggerSetupCompleted) {

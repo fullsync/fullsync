@@ -32,14 +32,14 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
-	private Label labelHost = null;
-	private Text textHost = null;
-	private Label labelPort = null;
-	private Spinner spinnerPort = null;
-	private Label labelUsername = null;
-	private Text textUsername = null;
-	private Label labelPassword = null;
-	private Text textPassword = null;
+	private Label labelHost;
+	private Text textHost;
+	private Label labelPort;
+	private Spinner spinnerPort;
+	private Label labelUsername;
+	private Text textUsername;
+	private Label labelPassword;
+	private Text textPassword;
 
 	@Override
 	public void createGUI(final Composite parent) {

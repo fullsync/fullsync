@@ -36,17 +36,17 @@ import org.eclipse.swt.widgets.Text;
 class SFTPSpecificComposite extends ProtocolSpecificComposite {
 	private static final int DEFAULT_SFTP_PORT = 22;
 
-	private Label labelHost = null;
-	private Text textHost = null;
-	private Label labelPort = null;
-	private Spinner spinnerPort = null;
-	private Label labelUsername = null;
-	private Text textUsername = null;
-	private Label labelPassword = null;
-	private Text textPassword = null;
-	private Button buttonKeybased = null;
-	private Label labelKeyPassphrase = null;
-	private Text textKeyPassphrase = null;
+	private Label labelHost;
+	private Text textHost;
+	private Label labelPort;
+	private Spinner spinnerPort;
+	private Label labelUsername;
+	private Text textUsername;
+	private Label labelPassword;
+	private Text textPassword;
+	private Button buttonKeybased;
+	private Label labelKeyPassphrase;
+	private Text textKeyPassphrase;
 
 	@Override
 	public void createGUI(final Composite parent) {
