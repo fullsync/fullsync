@@ -37,9 +37,6 @@ import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 
-/**
- * @author Michele Aiello
- */
 public class RemoteManager {
 
 	private RemoteInterface remoteInterface;

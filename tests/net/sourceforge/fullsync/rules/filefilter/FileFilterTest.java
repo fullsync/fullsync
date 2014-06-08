@@ -28,9 +28,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
-/**
- * @author Michele Aiello
- */
 public class FileFilterTest extends TestCase {
 
 	private static class AlwaysTrueFileFilterRule extends FileFilterRule {

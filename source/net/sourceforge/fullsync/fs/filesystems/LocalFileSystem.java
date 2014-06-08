@@ -32,9 +32,6 @@ import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
 import org.apache.commons.vfs2.FileSystemOptions;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class LocalFileSystem implements FileSystem {
 
 	@Override

@@ -28,9 +28,6 @@ import java.util.Map.Entry;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
-/**
- * @author Michele Aiello
- */
 class FileFilterTreeItem implements Serializable {
 
 	private static final long serialVersionUID = 2L;

@@ -27,9 +27,6 @@ import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class DirCreationEntryDescriptor implements EntryDescriptor {
 	private Task reference;
 	private File dst;

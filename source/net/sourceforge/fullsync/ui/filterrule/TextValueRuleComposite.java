@@ -32,9 +32,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-/**
- * @author Michele Aiello
- */
 public class TextValueRuleComposite extends RuleComposite {
 	private Text textValue;
 

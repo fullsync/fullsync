@@ -56,9 +56,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-/**
- * @author Michele Aiello
- */
 public class FilterRuleListItem implements ValueChangedListener {
 
 	private static Hashtable<String, Class<? extends FileFilterRule>> rulesTable;

@@ -45,9 +45,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.TableItem;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class TaskDecisionPage implements WizardPage, Serializable {
 	private static final long serialVersionUID = 2L;
 	private transient WizardDialog dialog;

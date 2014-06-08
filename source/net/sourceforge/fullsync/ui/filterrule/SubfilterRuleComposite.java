@@ -37,9 +37,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-/**
- * @author Michele Aiello
- */
 public class SubfilterRuleComposite extends RuleComposite {
 	private Text textValue;
 	private Button buttonFilter;

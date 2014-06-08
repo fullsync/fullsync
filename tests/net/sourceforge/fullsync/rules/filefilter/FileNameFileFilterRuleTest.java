@@ -25,9 +25,6 @@ package net.sourceforge.fullsync.rules.filefilter;
 import junit.framework.TestCase;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
-/**
- * @author Michele Aiello
- */
 public class FileNameFileFilterRuleTest extends TestCase {
 
 	public void testOpIs() {

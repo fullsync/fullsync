@@ -28,9 +28,6 @@ import net.sourceforge.fullsync.fs.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class StateDecider implements net.sourceforge.fullsync.StateDecider {
 	private static final Logger logger = LoggerFactory.getLogger(StateDecider.class.getSimpleName());
 	private static final State inSyncNone = new State(State.NodeInSync, Location.None);

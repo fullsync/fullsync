@@ -34,9 +34,6 @@ import org.mockftpserver.fake.filesystem.FileEntry;
 import org.mockftpserver.fake.filesystem.FileSystem;
 import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class FtpConnectionTest extends BaseConnectionTest {
 	private static final int TEST_FTP_PORT = 16131;
 	private FakeFtpServer m_fakeServer;

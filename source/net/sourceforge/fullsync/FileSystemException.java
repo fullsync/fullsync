@@ -21,8 +21,6 @@ package net.sourceforge.fullsync;
 
 /**
  * Thrown when an error occured while accessing a file system.
- *
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class FileSystemException extends NestedException {
 

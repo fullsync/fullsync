@@ -28,9 +28,6 @@ import java.util.Hashtable;
 
 import net.sourceforge.fullsync.fs.File;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 class AbstractFile implements File {
 	private static final long serialVersionUID = 3L;
 

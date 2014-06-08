@@ -42,9 +42,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class NiceListViewProfileListComposite extends ProfileListComposite implements ProfileListChangeListener {
 	class ContentComposite extends Composite {
 		private Profile profile;

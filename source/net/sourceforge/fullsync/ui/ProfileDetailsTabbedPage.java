@@ -26,9 +26,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class ProfileDetailsTabbedPage implements WizardPage {
 	private ProfileManager profileManager;
 	private String profileName;

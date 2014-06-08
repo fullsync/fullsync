@@ -30,8 +30,6 @@ import net.sourceforge.fullsync.ui.Messages;
  * TODO the eights day of week should be wrapped to the first! (in cron: 0 == 7)
  * if( daysOfWeek.bArray[8] )
  * daysOfWeek.bArray[1] = true;
- *
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class CrontabPart implements Serializable {
 	private static final long serialVersionUID = 2L;

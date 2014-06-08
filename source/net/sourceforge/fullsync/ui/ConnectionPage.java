@@ -26,9 +26,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-/**
- * @author Michele Aiello
- */
 public class ConnectionPage implements WizardPage {
 
 	private ConnectionComposite composite;

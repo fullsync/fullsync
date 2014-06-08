@@ -28,9 +28,6 @@ import java.rmi.server.UnicastRemoteObject;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 
-/**
- * @author Michele Aiello
- */
 public class RemoteTaskFinishedListener extends UnicastRemoteObject implements RemoteTaskFinishedListenerInterface {
 
 	private static final long serialVersionUID = 2L;

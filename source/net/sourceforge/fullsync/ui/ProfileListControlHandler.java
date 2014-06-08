@@ -23,9 +23,6 @@ import java.util.EventListener;
 
 import net.sourceforge.fullsync.Profile;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface ProfileListControlHandler extends EventListener {
 	public void createNewProfile();
 

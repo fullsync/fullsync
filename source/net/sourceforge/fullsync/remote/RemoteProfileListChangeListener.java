@@ -28,9 +28,6 @@ import java.rmi.server.UnicastRemoteObject;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileListChangeListener;
 
-/**
- * @author Michele Aiello
- */
 public class RemoteProfileListChangeListener extends UnicastRemoteObject implements RemoteProfileListChangeListenerInterface {
 
 	private static final long serialVersionUID = 2L;

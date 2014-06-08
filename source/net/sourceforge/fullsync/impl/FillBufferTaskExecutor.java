@@ -36,9 +36,6 @@ import net.sourceforge.fullsync.buffer.EntryFinishedListener;
 import net.sourceforge.fullsync.buffer.ExecutionBuffer;
 import net.sourceforge.fullsync.fs.File;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListener {
 	private Vector<TaskFinishedListener> listeners;
 	private boolean statisticsOnly;

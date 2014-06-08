@@ -32,9 +32,6 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.eclipse.swt.graphics.Rectangle;
 
-/**
- * @author Michele Aiello
- */
 public class ConfigurationPreferences implements Preferences {
 	/**
 	 * configuration object.

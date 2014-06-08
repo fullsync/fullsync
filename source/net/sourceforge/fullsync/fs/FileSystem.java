@@ -29,9 +29,6 @@ import net.sourceforge.fullsync.FileSystemException;
 
 import org.apache.commons.vfs2.FileSystemOptions;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface FileSystem {
 	public Site createConnection(ConnectionDescription description) throws FileSystemException, IOException;
 

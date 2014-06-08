@@ -34,9 +34,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-/**
- * @author Michele Aiello
- */
 public class FileFilterManager {
 
 	public Element serializeFileFilter(FileFilter fileFilter, Document document, String elementName, String ruleElementName) {

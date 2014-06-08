@@ -26,9 +26,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * @author Michele Aiello
- */
 public class DateValue implements OperandValue {
 
 	private static final long serialVersionUID = 2L;

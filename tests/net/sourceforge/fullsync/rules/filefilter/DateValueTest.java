@@ -29,9 +29,6 @@ import java.util.Date;
 import junit.framework.TestCase;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
-/**
- * @author Michele Aiello
- */
 public class DateValueTest extends TestCase {
 
 	public void testFromString() {

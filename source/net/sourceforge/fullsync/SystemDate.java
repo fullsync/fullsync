@@ -22,9 +22,6 @@
  */
 package net.sourceforge.fullsync;
 
-/**
- * @author Michele Aiello
- */
 public class SystemDate {
 
 	private static SystemDate instance;

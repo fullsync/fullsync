@@ -25,9 +25,6 @@ package net.sourceforge.fullsync.schedule;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class IntervalSchedule extends Schedule {
 	public static final String SCHEDULE_TYPE = "interval";
 

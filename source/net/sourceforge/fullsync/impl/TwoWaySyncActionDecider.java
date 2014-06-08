@@ -37,8 +37,6 @@ import net.sourceforge.fullsync.fs.File;
 /**
  * An ActionDecider for two way sync.
  * This one is not aware of buffers !
- *
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class TwoWaySyncActionDecider implements ActionDecider {
 	// TODO param keep orphans/exact copy

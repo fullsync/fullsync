@@ -28,9 +28,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-/**
- * @author Michele Aiello
- */
 public class FileFilterPage implements WizardPage {
 
 	private FileFilterDetails details;

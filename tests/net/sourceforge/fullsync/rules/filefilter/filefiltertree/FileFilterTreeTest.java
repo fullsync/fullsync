@@ -26,9 +26,6 @@ import junit.framework.TestCase;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.TestNode;
 
-/**
- * @author Michele Aiello
- */
 public class FileFilterTreeTest extends TestCase {
 
 	public void testBasic() {

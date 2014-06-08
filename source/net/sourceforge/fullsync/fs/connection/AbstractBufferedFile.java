@@ -27,9 +27,6 @@ import java.util.Hashtable;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	private static final long serialVersionUID = 2L;
 

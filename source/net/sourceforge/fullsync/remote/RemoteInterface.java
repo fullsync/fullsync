@@ -31,8 +31,6 @@ import net.sourceforge.fullsync.TaskTree;
 
 /**
  * FullSync Remote RMI Interface.
- *
- * @author Michele Aiello
  */
 public interface RemoteInterface extends Remote {
 

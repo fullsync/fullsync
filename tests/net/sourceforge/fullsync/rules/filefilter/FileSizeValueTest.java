@@ -25,9 +25,6 @@ package net.sourceforge.fullsync.rules.filefilter;
 import junit.framework.TestCase;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
-/**
- * @author Michele Aiello
- */
 public class FileSizeValueTest extends TestCase {
 
 	public void testFromString() {

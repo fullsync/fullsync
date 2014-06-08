@@ -33,9 +33,6 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-/**
- * @author Michele Aiello
- */
 public class SWTCalendarDialog {
 	private Shell shell;
 	private Calendar calendar;

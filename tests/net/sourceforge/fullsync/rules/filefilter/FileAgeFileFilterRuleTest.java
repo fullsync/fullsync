@@ -29,9 +29,6 @@ import junit.framework.TestCase;
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 
-/**
- * @author Michele Aiello
- */
 public class FileAgeFileFilterRuleTest extends TestCase {
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

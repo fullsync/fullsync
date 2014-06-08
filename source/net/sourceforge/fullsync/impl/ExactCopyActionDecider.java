@@ -40,8 +40,6 @@ import net.sourceforge.fullsync.fs.File;
 /**
  * An ActionDecider for source to destination exact copy.
  * FIXME actually this one is the backup one with one line less :-/
- *
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class ExactCopyActionDecider implements ActionDecider {
 	// TODO param keep orphans/exact copy

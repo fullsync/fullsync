@@ -28,9 +28,6 @@ import java.text.SimpleDateFormat;
 import junit.framework.TestCase;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
-/**
- * @author Michele Aiello
- */
 public class FileModificationDateFileFilterRuleTest extends TestCase {
 
 	public void testOpIs() throws ParseException, FilterRuleNotAppliableException {

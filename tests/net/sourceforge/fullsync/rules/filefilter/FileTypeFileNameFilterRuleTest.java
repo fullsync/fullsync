@@ -25,9 +25,6 @@ package net.sourceforge.fullsync.rules.filefilter;
 import junit.framework.TestCase;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
-/**
- * @author Michele Aiello
- */
 public class FileTypeFileNameFilterRuleTest extends TestCase {
 
 	public void testWrongType() {

@@ -27,9 +27,6 @@ import java.rmi.RemoteException;
 
 import net.sourceforge.fullsync.Profile;
 
-/**
- * @author Michele Aiello
- */
 public interface RemoteProfileListChangeListenerInterface extends Remote {
 
 	void profileListChanged() throws RemoteException;

@@ -21,9 +21,6 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface TaskExecutor extends Phase {
 	// we are much more a TaskExecutor
 	public IoStatistics createStatistics(TaskTree tree);

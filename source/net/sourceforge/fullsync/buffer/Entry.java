@@ -24,9 +24,6 @@ package net.sourceforge.fullsync.buffer;
 
 import java.util.Formatter;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class Entry {
 	public int start;
 	public int length;

@@ -24,9 +24,6 @@ import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.eclipse.swt.widgets.Composite;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public abstract class ScheduleOptions extends Composite {
 	public ScheduleOptions(Composite parent, int style) {
 		super(parent, style);

@@ -35,9 +35,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-/**
- * @author Michele Aiello
- */
 public class DateValueRuleComposite extends RuleComposite {
 
 	private Text textValue;

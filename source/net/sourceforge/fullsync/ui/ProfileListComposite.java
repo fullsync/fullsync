@@ -24,9 +24,6 @@ import net.sourceforge.fullsync.ProfileManager;
 
 import org.eclipse.swt.widgets.Composite;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public abstract class ProfileListComposite extends Composite {
 	public ProfileListComposite(Composite parent, int style) {
 		super(parent, style);

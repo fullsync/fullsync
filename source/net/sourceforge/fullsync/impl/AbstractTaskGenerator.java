@@ -41,9 +41,6 @@ import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public abstract class AbstractTaskGenerator implements TaskGenerator {
 	protected FileSystemManager fsm;
 	protected ArrayList<TaskGenerationListener> taskGenerationListeners;

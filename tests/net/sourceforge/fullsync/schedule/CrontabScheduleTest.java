@@ -24,9 +24,6 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class CrontabScheduleTest extends TestCase {
 	private Calendar now;
 	private Calendar expectedResult;

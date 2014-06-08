@@ -32,9 +32,6 @@ import net.sourceforge.fullsync.schedule.Schedule;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class Profile implements Serializable, Comparable<Profile> {
 	private static final long serialVersionUID = 2L;
 

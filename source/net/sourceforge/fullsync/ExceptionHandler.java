@@ -19,9 +19,6 @@
  */
 package net.sourceforge.fullsync;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public abstract class ExceptionHandler {
 	private static ExceptionHandler singleton = new ExceptionHandler() {
 		@Override

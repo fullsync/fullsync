@@ -26,9 +26,6 @@ import java.util.Collection;
 
 import net.sourceforge.fullsync.fs.File;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class TestNode implements File {
 	private static final long serialVersionUID = 2L;
 

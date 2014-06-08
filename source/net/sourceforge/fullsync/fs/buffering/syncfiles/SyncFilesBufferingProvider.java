@@ -25,9 +25,6 @@ import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
 import net.sourceforge.fullsync.fs.connection.SyncFileBufferedConnection;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class SyncFilesBufferingProvider implements BufferingProvider {
 
 	@Override

@@ -27,9 +27,6 @@ import java.rmi.server.UnicastRemoteObject;
 
 import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 
-/**
- * @author Michele Aiello
- */
 public class RemoteSchedulerChangeListener extends UnicastRemoteObject implements RemoteSchedulerChangeListenerInterface {
 
 	private static final long serialVersionUID = 2L;

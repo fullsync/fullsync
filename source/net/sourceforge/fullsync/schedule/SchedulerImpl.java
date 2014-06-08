@@ -27,9 +27,6 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class SchedulerImpl implements Scheduler, Runnable {
 	private Logger logger = LoggerFactory.getLogger(Scheduler.class);
 	private ScheduleTaskSource scheduleSource;

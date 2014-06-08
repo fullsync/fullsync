@@ -31,9 +31,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class ListViewProfileListComposite extends ProfileListComposite implements ProfileListChangeListener {
 	private Table tableProfiles;
 	private TableColumn tableColumnName;
