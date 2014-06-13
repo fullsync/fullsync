@@ -22,9 +22,10 @@ package net.sourceforge.fullsync;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import net.sourceforge.fullsync.schedule.Schedule;
 
@@ -66,9 +67,11 @@ public class Profile implements Serializable {
 		}
 
 		try {
-			p.setLastUpdate(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).parse(element.getAttribute("lastUpdate")));
+			Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+			c.setTimeInMillis(Integer.parseInt(element.getAttribute("lastUpdate")));
+			p.setLastUpdate(c.getTime());
 		}
-		catch (ParseException e) {
+		catch (NumberFormatException e) {
 			p.setLastUpdate(null);
 		}
 
@@ -164,7 +167,7 @@ public class Profile implements Serializable {
 			return "never";
 		}
 		else {
-			return DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(lastUpdate);
+			return DateFormat.getDateTimeInstance().format(lastUpdate);
 		}
 	}
 
@@ -178,10 +181,7 @@ public class Profile implements Serializable {
 			return "not enabled";
 		}
 		else {
-			// if( lastUpdate == null )
-			return DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(
-					new Date(schedule.getNextOccurrence(new Date().getTime())));
-			// else return new Date( schedule.getNextOccurrence(lastUpdate.getTime()) ).toString();
+			return DateFormat.getDateTimeInstance().format(new Date(schedule.getNextOccurrence(new Date().getTime())));
 		}
 	}
 
@@ -288,7 +288,7 @@ public class Profile implements Serializable {
 		elem.setAttribute("lastErrorLevel", String.valueOf(lastErrorLevel));
 		elem.setAttribute("lastErrorString", lastErrorString);
 		if (null != lastUpdate) {
-			elem.setAttribute("lastUpdate", DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(lastUpdate));
+			elem.setAttribute("lastUpdate", Long.valueOf(lastUpdate.getTime()).toString());
 		}
 
 		elem.appendChild(RuleSetDescriptor.serialize(ruleSet, "RuleSetDescriptor", doc));
