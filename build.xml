@@ -45,7 +45,6 @@
 		<include name="commons-vfs2.jar" />
 		<include name="commons-vfs2-sandbox.jar" />
 		<include name="jsch.jar" />
-		<include name="swtcalendar.jar" />
 		<include name="jsoup.jar" />
 	</fileset>
 	<path id="compile.classpath">

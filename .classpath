@@ -8,7 +8,6 @@
 	<classpathentry kind="lib" path="lib/commons-net.jar" sourcepath="/windows/D/Christoph/Source/org.apache.commons.net/trunk/src/main/java"/>
 	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib/jcifs.jar"/>
-	<classpathentry kind="lib" path="lib/swtcalendar.jar"/>
 	<classpathentry kind="lib" path="lib/jsch.jar" sourcepath="/home/cobexer/projects/FullSync/Downloads/jsch-0.1.44"/>
 	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="lib/commons-configuration.jar"/>
