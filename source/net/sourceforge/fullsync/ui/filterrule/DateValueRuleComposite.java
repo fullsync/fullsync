@@ -22,6 +22,8 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
+import java.text.DateFormat;
+
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 import org.eclipse.swt.SWT;
@@ -40,16 +42,18 @@ class DateValueRuleComposite extends RuleComposite {
 
 	private Text textValue;
 	private Button buttonCalendar;
+	private DateFormat dateFormat;
 
 	DateValueRuleComposite(Composite parent, int style, final DateValue value) {
 		super(parent, style);
 		this.setLayout(new GridLayout(2, true));
+		dateFormat = DateFormat.getDateInstance();
 
 		textValue = new Text(this, SWT.BORDER);
 		textValue.setEditable(false);
 		textValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		if (value != null) {
-			textValue.setText(value.toString());
+			textValue.setText(dateFormat.format(value.getDate()));
 		}
 
 		buttonCalendar = new Button(this, SWT.PUSH | SWT.CENTER);
@@ -58,12 +62,10 @@ class DateValueRuleComposite extends RuleComposite {
 		buttonCalendar.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent evt) {
-				SWTCalendarDialog swtCalDialog = new SWTCalendarDialog(getDisplay());
-				swtCalDialog.setDate(value.getDate());
-				//TODO: position this dialog somewhere sane
+				SWTCalendarDialog swtCalDialog = new SWTCalendarDialog(getDisplay().getActiveShell(), value.getDate());
 				swtCalDialog.open();
-				value.setDate(swtCalDialog.getCalendar().getTime());
-				textValue.setText(value.toString());
+				value.setDate(swtCalDialog.getDate());
+				textValue.setText(dateFormat.format(value.getDate()));
 				valueChanged(new ValueChangedEvent(value));
 			}
 		});

@@ -26,28 +26,38 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.vafada.swtcalendar.SWTCalendar;
 
 /**
  * @author Michele Aiello
  */
 class SWTCalendarDialog {
 	private Shell shell;
-	private SWTCalendar swtcal;
-	private Display display;
+	private Calendar calendar;
 
-	SWTCalendarDialog(Display display) {
-		this.display = display;
-		shell = new Shell(display, SWT.APPLICATION_MODAL | SWT.CLOSE);
+	public SWTCalendarDialog(Shell parent, Date date) {
+		shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setText("Choose Date...");
-		shell.setLayout(new RowLayout());
-		swtcal = new SWTCalendar(shell, SWT.NONE | SWTCalendar.RED_WEEKEND);
+		shell.setLayout(new GridLayout());
+		final DateTime dateTime = new DateTime(shell, SWT.CALENDAR | SWT.BORDER);
+		calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		shell.addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				calendar.set(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+			}
+		});
+		dateTime.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 	}
 
 	public void open() {
+		final Display display = shell.getDisplay();
 		shell.pack();
 		shell.open();
 		while (!shell.isDisposed()) {
@@ -57,13 +67,8 @@ class SWTCalendarDialog {
 		}
 	}
 
-	public Calendar getCalendar() {
-		return swtcal.getCalendar();
+	public Date getDate() {
+		return calendar.getTime();
 	}
 
-	public void setDate(Date date) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		swtcal.setCalendar(calendar);
-	}
 }

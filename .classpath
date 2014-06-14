@@ -7,7 +7,6 @@
 	<classpathentry kind="lib" path="lib/commons-cli.jar"/>
 	<classpathentry kind="lib" path="lib/commons-net.jar" sourcepath="/home/cobexer/Source/commons-net.git/src/main/java"/>
 	<classpathentry kind="lib" path="lib/jcifs.jar"/>
-	<classpathentry kind="lib" path="lib/swtcalendar.jar"/>
 	<classpathentry kind="lib" path="lib/jsch.jar" sourcepath="/home/cobexer/projects/FullSync/Downloads/jsch-0.1.44"/>
 	<classpathentry kind="lib" path="lib/commons-collections.jar"/>
 	<classpathentry kind="lib" path="lib/jsoup.jar"/>
