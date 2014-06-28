@@ -88,9 +88,10 @@ class AboutDialog extends Dialog implements DisposeListener {
 			labelPicture.setSize(r.width, r.height);
 			labelPicture.setImage(aboutImg);
 			// version label
+			String version = Util.getFullSyncVersion();
 			Label labelVersion = new Label(dialogShell, SWT.FILL);
 			labelVersion.setForeground(UISettings.COLOR_LIGHT_GREY);
-			labelVersion.setText(Messages.getString("AboutDialog.Version", Util.getFullSyncVersion()));
+			labelVersion.setText(Messages.getString("AboutDialog.Version", version));
 			GridData lvd = new GridData(SWT.FILL);
 			lvd.grabExcessHorizontalSpace = true;
 			lvd.horizontalIndent = 17;
@@ -98,7 +99,9 @@ class AboutDialog extends Dialog implements DisposeListener {
 			// copyright text
 			Link copyright = new Link(dialogShell, SWT.FILL);
 			copyright.setForeground(UISettings.COLOR_LIGHT_GREY);
-			copyright.setText(Util.getResourceAsString("net/sourceforge/fullsync/copyright.txt"));
+			String copyrightText = Util.getResourceAsString("net/sourceforge/fullsync/copyright.txt");
+			copyrightText = copyrightText.replaceAll("\\{version\\}", version);
+			copyright.setText(copyrightText);
 			GridData lcd = new GridData(SWT.FILL);
 			lcd.grabExcessHorizontalSpace = true;
 			lcd.horizontalIndent = 17;
