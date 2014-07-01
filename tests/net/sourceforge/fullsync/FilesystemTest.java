@@ -253,12 +253,11 @@ public class FilesystemTest {
 	}
 
 	protected TaskTree assertPhaseOneActions(final Map<String, Action> expectation) throws Exception {
-		TaskGenerator processor = synchronizer.getTaskGenerator();
 		FullSync.subscribe(this);
 		TaskTree tree;
 		try {
 			m_expectation = expectation;
-			tree = processor.execute(profile, false);
+			tree = synchronizer.executeProfile(profile, false);
 		}
 		finally {
 			FullSync.unsubscribe(this);

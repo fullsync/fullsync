@@ -20,48 +20,118 @@
 package net.sourceforge.fullsync.impl;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
+import net.sourceforge.fullsync.ActionType;
+import net.sourceforge.fullsync.BufferUpdate;
+import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.DataParseException;
+import net.sourceforge.fullsync.FileSystemException;
+import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.IgnoreDecider;
+import net.sourceforge.fullsync.Location;
+import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.RuleSet;
+import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskGenerator;
+import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.events.TaskGenerationStarted;
+import net.sourceforge.fullsync.events.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.Site;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TaskGeneratorImpl extends AbstractTaskGenerator {
+public class TaskGeneratorImpl implements TaskGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
-	// TODO this should be execution local so the class
-	// itself is multithreadable
-	// so maybe just put them all into a inmutable
-	// state container
-	private IgnoreDecider takeIgnoreDecider;
-	private StateDecider stateDecider;
-	private BufferStateDecider bufferStateDecider;
+	private FileSystemManager fsm;
 
 	public TaskGeneratorImpl() {
-		super();
+		this.fsm = new FileSystemManager();
 	}
 
-	protected RuleSet updateRules(File src, File dst, RuleSet rules) throws DataParseException, IOException {
-		rules = rules.createChild(src, dst);
+	@Override
+	public TaskTree execute(Profile profile, boolean interactive) throws FileSystemException, URISyntaxException, DataParseException, IOException {
+		Site src = null, dst = null;
 
-		/* HACK OMG, that is utterly wrong !! */
-		this.takeIgnoreDecider = rules;
-		this.stateDecider = new StateDecider(rules);
-		this.bufferStateDecider = new BufferStateDecider(rules);
-		// this.actionDecider = new BackupActionDecider();
+		RuleSet rules = profile.getRuleSet().createRuleSet();
 
-		return rules;
+		ActionDecider actionDecider;
+		if (profile.getSynchronizationType().equals("Publish/Update")) {
+			actionDecider = new PublishActionDecider();
+		}
+		else if (profile.getSynchronizationType().equals("Publish/Update Overwrite")) {
+			actionDecider = new PublishOverwriteActionDecider();
+		}
+		else if (profile.getSynchronizationType().equals("Backup Copy")) {
+			actionDecider = new BackupActionDecider();
+		}
+		else if (profile.getSynchronizationType().equals("Exact Copy")) {
+			actionDecider = new ExactCopyActionDecider();
+		}
+		else if (profile.getSynchronizationType().equals("Two Way Sync")) {
+			actionDecider = new TwoWaySyncActionDecider();
+		}
+		else {
+			throw new IllegalArgumentException("Profile has unknown synchronization type.");
+		}
+
+		try {
+			ConnectionDescription srcDesc = profile.getSource();
+			ConnectionDescription dstDesc = profile.getDestination();
+			if (interactive) {
+				srcDesc.setParameter("interactive", "true");
+				dstDesc.setParameter("interactive", "true");
+			}
+			src = fsm.createConnection(srcDesc);
+			dst = fsm.createConnection(dstDesc);
+			return execute(src, dst, actionDecider, rules);
+		}
+		catch (FileSystemException ex) {
+			if (src != null) {
+				src.close();
+			}
+			if (dst != null) {
+				dst.close();
+			}
+			throw ex;
+		}
 	}
 
-	protected void recurse(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException {
+	private TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules) throws DataParseException, FileSystemException, IOException {
+		if (!source.isAvailable()) {
+			throw new FileSystemException("source is unavailable");
+		}
+		if (!destination.isAvailable()) {
+			throw new FileSystemException("destination is unavailable");
+		}
+
+		TaskTree tree = new TaskTree(source, destination);
+		Task root = new Task(null, null, State.InSync, new Action[] { new Action(ActionType.Nothing,
+				Location.None, BufferUpdate.None, "Root") });
+		tree.setRoot(root);
+
+		FullSync.publish(new TaskTreeStarted(tree));
+
+		// TODO use syncnodes here [?]
+		// TODO get traversal type and start correct traversal action
+		synchronizeDirectories(source.getRoot(), destination.getRoot(), rules, root, actionDecider);
+
+		// TODO this would be better, but we need the rules to sync Nodes :-/
+		// synchronizeNodes( source.getRoot(), destination.getRoot(), rules, root );
+
+		FullSync.publish(tree);
+		return tree;
+	}
+
+	private void recurse(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException {
 		if (src.isDirectory() && dst.isDirectory()) {
 			synchronizeDirectories(src, dst, rules, parent, actionDecider);
 		}
@@ -69,27 +139,17 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 		// handle case where src is dir but dst is file
 	}
 
-	/**
-	 *
-	 * @param src
-	 * @param dst
-	 * @param rules
-	 * @return true if node is affected, false if ignored
-	 * @throws DataParseException
-	 * @throws FileSystemException
-	 */
-	@Override
-	public void synchronizeNodes(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException {
-		if (!takeIgnoreDecider.isNodeIgnored(src)) {
+	private void synchronizeNodes(File src, File dst, SyncDeciders deciders, Task parent) throws DataParseException, IOException {
+		if (!deciders.takeIgnoreDecider.isNodeIgnored(src)) {
 			FullSync.publish(new TaskGenerationStarted(src,  dst));
 
-			Task task = actionDecider.getTask(src, dst, stateDecider, bufferStateDecider);
+			Task task = deciders.actionDecider.getTask(src, dst, deciders.stateDecider, deciders.bufferStateDecider);
 			logger.debug(src.getName() + ": " + task);
 
 			FullSync.publish(task);
 
-			if (rules.isUsingRecursion()) {
-				recurse(src, dst, rules, task, actionDecider);
+			if (deciders.rules.isUsingRecursion()) {
+				recurse(src, dst, deciders.rules, task, deciders.actionDecider);
 			}
 			parent.addChild(task);
 		}
@@ -99,11 +159,8 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	 * we could updateRules in synchronizeNodes and apply synchronizeDirectories
 	 * to the given src and dst if they are directories
 	 */
-	@Override
-	public void synchronizeDirectories(File src, File dst, RuleSet oldrules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException {
-		// update rules to current directory
-		RuleSet rules = updateRules(src, dst, oldrules);
-
+	private void synchronizeDirectories(File src, File dst, RuleSet oldrules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException {
+		SyncDeciders deciders = new SyncDeciders(actionDecider, oldrules.createChild(src, dst));
 		Collection<File> srcFiles = src.getChildren();
 		Collection<File> dstFiles = new ArrayList<File>(dst.getChildren());
 
@@ -116,7 +173,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 				dstFiles.remove(dfile);
 			}
 
-			synchronizeNodes(sfile, dfile, rules, parent, actionDecider);
+			synchronizeNodes(sfile, dfile, deciders, parent);
 		}
 
 		for (File dfile : dstFiles) {
@@ -125,13 +182,22 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 				sfile = src.createChild(dfile.getName(), dfile.isDirectory());
 			}
 
-			synchronizeNodes(sfile, dfile, rules, parent, actionDecider);
+			synchronizeNodes(sfile, dfile, deciders, parent);
 		}
+	}
+}
 
-		/* HACK OMG, that is utterly wrong !! */
-		this.takeIgnoreDecider = oldrules;
-		this.stateDecider = new StateDecider(oldrules);
-		this.bufferStateDecider = new BufferStateDecider(oldrules);
-		// this.actionDecider = new PublishActionDecider();
+class SyncDeciders {
+	public RuleSet rules;
+	public IgnoreDecider takeIgnoreDecider;
+	public StateDecider stateDecider;
+	public BufferStateDecider bufferStateDecider;
+	public ActionDecider actionDecider;
+	public SyncDeciders(ActionDecider _actionDecider, RuleSet _rules) {
+		rules = _rules;
+		takeIgnoreDecider = _rules;
+		stateDecider = new StateDecider(_rules);
+		bufferStateDecider = new BufferStateDecider(_rules);
+		actionDecider = _actionDecider;
 	}
 }

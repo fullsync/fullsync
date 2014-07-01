@@ -35,18 +35,11 @@ import org.slf4j.LoggerFactory;
  * like synchronizing a profile or perfoming a task tree.
  */
 public class Synchronizer {
-	private TaskGenerator taskGenerator;
 	private RemoteManager remoteManager;
 
 	private Logger logger = LoggerFactory.getLogger("FullSync");
 
 	public Synchronizer() {
-		taskGenerator = new TaskGeneratorImpl();
-	}
-
-	// TODO we should hide the taskgenerator we use
-	public TaskGenerator getTaskGenerator() {
-		return taskGenerator;
 	}
 
 	public synchronized TaskTree executeProfile(Profile profile, boolean interactive) {
@@ -60,6 +53,7 @@ public class Synchronizer {
 		}
 		else {
 			try {
+				TaskGenerator taskGenerator = new TaskGeneratorImpl();
 				return taskGenerator.execute(profile, interactive);
 			}
 			catch (Exception e) {

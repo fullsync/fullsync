@@ -22,13 +22,7 @@ package net.sourceforge.fullsync;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import net.sourceforge.fullsync.fs.Site;
-
 public interface TaskGenerator {
-	// main functionallity
 	public TaskTree execute(Profile profile, boolean interactive)
 			throws FileSystemException, DataParseException, URISyntaxException, IOException;
-
-	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet initialRules)
-			throws FileSystemException, DataParseException, IOException;
 }
