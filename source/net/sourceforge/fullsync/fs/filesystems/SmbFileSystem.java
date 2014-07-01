@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.fs.filesystems;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.FileSystem;
+import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
@@ -33,33 +34,27 @@ import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
 
 public class SmbFileSystem implements FileSystem {
-	private static boolean initialized = false;
-
-	private static synchronized void init() {
+	static {
 		//FIXME: no longer needed after update past [VFS-552][sandbox] include vfs-providers.xml in JAR for dynamic registration of mime and smb providers.
-		if (!initialized) {
-			try {
-				FileSystemManager fsm = VFS.getManager();
-				if (!fsm.hasProvider("smb") && (fsm instanceof DefaultFileSystemManager)) {
-					DefaultFileSystemManager dfsm = (DefaultFileSystemManager) fsm;
-					dfsm.addProvider("smb", new org.apache.commons.vfs2.provider.smb.SmbFileProvider());
-				}
+		try {
+			FileSystemManager fsm = VFS.getManager();
+			if (!fsm.hasProvider("smb") && (fsm instanceof DefaultFileSystemManager)) {
+				DefaultFileSystemManager dfsm = (DefaultFileSystemManager) fsm;
+				dfsm.addProvider("smb", new org.apache.commons.vfs2.provider.smb.SmbFileProvider());
 			}
-			catch (org.apache.commons.vfs2.FileSystemException e) {
-				e.printStackTrace();
-			}
-			initialized = true;
+		}
+		catch (org.apache.commons.vfs2.FileSystemException e) {
+			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public final Site createConnection(final ConnectionDescription description) throws FileSystemException {
-		if (!initialized) {
-			init();
-		}
-		return new CommonsVfsConnection(description, this);
+		return new CommonsVfsConnection(description, new SmbAuthProvider());
 	}
+}
 
+class SmbAuthProvider implements FileSystemAuthProvider {
 	@Override
 	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options)
 			throws org.apache.commons.vfs2.FileSystemException {

@@ -19,11 +19,19 @@
  */
 package net.sourceforge.fullsync.fs;
 
-import java.io.IOException;
-
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.FileSystemException;
 
-public interface FileSystem {
-	public Site createConnection(ConnectionDescription description) throws FileSystemException, IOException;
+import org.apache.commons.vfs2.FileSystemOptions;
+
+public interface FileSystemAuthProvider {
+	/**
+	 * authSetup
+	 * Setup the scheme specific authentication options.
+	 * @param description the connection configuration
+	 * @param options the commons.vfs2 options object to configure
+	 * @throws FileSystemException
+	 */
+	void authSetup(ConnectionDescription description, FileSystemOptions options)
+			throws org.apache.commons.vfs2.FileSystemException;
+
 }

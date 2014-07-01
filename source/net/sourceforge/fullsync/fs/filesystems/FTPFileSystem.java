@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.fs.FileSystem;
+import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
@@ -35,17 +36,18 @@ import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder;
 public class FTPFileSystem implements FileSystem {
 
 	@Override
+	public final Site createConnection(final ConnectionDescription description) throws net.sourceforge.fullsync.FileSystemException, IOException {
+		return new CommonsVfsConnection(description, new FTPAuthenticationProvider());
+	}
+
+}
+
+class FTPAuthenticationProvider implements FileSystemAuthProvider {
+	@Override
 	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws FileSystemException {
 		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME),
 				description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
 		FtpFileSystemConfigBuilder.getInstance().setPassiveMode(options, true);
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 	}
-
-	@Override
-	public final Site createConnection(final ConnectionDescription description)
-			throws net.sourceforge.fullsync.FileSystemException, IOException {
-		return new CommonsVfsConnection(description, this);
-	}
-
 }

@@ -25,6 +25,7 @@ import java.util.Arrays;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.FileSystem;
+import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 import net.sourceforge.fullsync.impl.SFTPLogger;
@@ -43,35 +44,42 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UIKeyboardInteractive;
 import com.jcraft.jsch.UserInfo;
 
-public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserInfo {
-	private static boolean loggerSetupCompleted = false;
-	private static String sshDirName;
+public class SFTPFileSystem implements FileSystem {
+	@Override
+	public final Site createConnection(final ConnectionDescription description) throws FileSystemException {
+		return new CommonsVfsConnection(description, new SFTPAuthProvider(description));
+	}
+}
 
-	private Logger logger = LoggerFactory.getLogger("FullSync");
-	private ConnectionDescription desc;
+class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive, UserInfo {
+	private static final String sshDirName;
+	private static final Logger logger = LoggerFactory.getLogger("FullSync");
 
-	public SFTPFileSystem() {
-		if (!loggerSetupCompleted) {
-			JSch.setLogger(new SFTPLogger());
+	static {
+		JSch.setLogger(new SFTPLogger());
+		String sshDirPath = System.getProperty("vfs.sftp.sshdir");
+		if (sshDirPath == null) {
+			sshDirPath = System.getProperty("user.home") + File.separator + ".ssh";
 		}
-		if (null == sshDirName) {
-			String sshDirPath = System.getProperty("vfs.sftp.sshdir");
-			if (sshDirPath == null) {
-				sshDirPath = System.getProperty("user.home") + File.separator + ".ssh";
-			}
-			File sshDir = new File(sshDirPath);
-			if (!sshDir.exists() && !sshDir.mkdirs()) {
-				logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... (tried: "
-						+ sshDir.getAbsolutePath().toString() + ")");
-				sshDir = null;
-			}
-			else {
-				sshDirName = sshDirPath;
-			}
-			if (null != sshDir) {
-				System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath());
-			}
+		File sshDir = new File(sshDirPath);
+		if (!sshDir.exists() && !sshDir.mkdirs()) {
+			logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... (tried: "
+					+ sshDir.getAbsolutePath().toString() + ")");
+			sshDir = null;
+			sshDirName = null;
 		}
+		else {
+			sshDirName = sshDirPath;
+		}
+		if (null != sshDir) {
+			System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath());
+		}
+	}
+
+	private final ConnectionDescription desc;
+
+	public SFTPAuthProvider(final ConnectionDescription _desc) {
+		desc = _desc;
 	}
 
 	@Override
@@ -94,12 +102,6 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 		else {
 			cfg.setPreferredAuthentications(options, "password,keyboard-interactive");
 		}
-	}
-
-	@Override
-	public final Site createConnection(final ConnectionDescription description) throws FileSystemException {
-		this.desc = description;
-		return new CommonsVfsConnection(description, this);
 	}
 
 	@Override

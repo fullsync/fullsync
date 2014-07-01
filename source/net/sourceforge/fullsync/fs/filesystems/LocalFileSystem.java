@@ -27,17 +27,10 @@ import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
-import org.apache.commons.vfs2.FileSystemOptions;
-
 public class LocalFileSystem implements FileSystem {
 
 	@Override
 	public final Site createConnection(final ConnectionDescription description) throws FileSystemException, IOException {
-		return new CommonsVfsConnection(description, this);
-	}
-
-	@Override
-	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options)
-			throws org.apache.commons.vfs2.FileSystemException {
+		return new CommonsVfsConnection(description, null);
 	}
 }
