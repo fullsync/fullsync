@@ -26,7 +26,7 @@ import java.util.HashMap;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.FileSystem;
+import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 
 import org.apache.commons.vfs2.Capability;
 import org.apache.commons.vfs2.FileContent;
@@ -44,12 +44,12 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	private FileObject base; //FIXME FileObject is not serializable?!
 	private File root;
 
-	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystem fs) throws net.sourceforge.fullsync.FileSystemException {
+	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystemAuthProvider fsAuthProvider) throws net.sourceforge.fullsync.FileSystemException {
 		try {
 			this.desc = desc;
 			FileSystemOptions options = new FileSystemOptions();
-			if (null != fs) {
-				fs.authSetup(desc, options);
+			if (null != fsAuthProvider) {
+				fsAuthProvider.authSetup(desc, options);
 			}
 			base = VFS.getManager().resolveFile(desc.getUri().toString(), options);
 			root = new AbstractFile(this, ".", null, true, base.exists());
@@ -94,7 +94,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 			return children;
 		}
 		catch (FileSystemException fse) {
-			throw new IOException(fse.getMessage());
+			throw new IOException(fse.getMessage(), fse);
 		}
 	}
 
