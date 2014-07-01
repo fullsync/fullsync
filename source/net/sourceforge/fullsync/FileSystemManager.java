@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 
 import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
@@ -35,35 +34,35 @@ import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 
 public class FileSystemManager {
-	private HashMap<String, FileSystem> schemes;
-	private HashMap<String, SyncFilesBufferingProvider> buffering;
 
-	public FileSystemManager() {
-		schemes = new HashMap<String, FileSystem>();
-		schemes.put("file", new LocalFileSystem());
-		schemes.put("ftp", new FTPFileSystem());
-		schemes.put("sftp", new SFTPFileSystem());
-		schemes.put("smb", new SmbFileSystem());
-
-		buffering = new HashMap<String, SyncFilesBufferingProvider>();
-		buffering.put("syncfiles", new SyncFilesBufferingProvider());
+	private FileSystem getFilesystem(final String scheme) {
+		if ("file".equals(scheme)) {
+			return new LocalFileSystem();
+		}
+		if ("ftp".equals(scheme)) {
+			return new FTPFileSystem();
+		}
+		if ("sftp".equals(scheme)) {
+			return new SFTPFileSystem();
+		}
+		if ("smb".equals(scheme)) {
+			return new SmbFileSystem();
+		}
+		return null;
 	}
 
 	public final Site createConnection(final ConnectionDescription desc) throws FileSystemException, IOException, URISyntaxException {
-		FileSystem fs = null;
-
 		URI url = desc.getUri();
 		String scheme = url.getScheme();
 
-		if (scheme != null) {
-			fs = schemes.get(scheme);
-		}
+		FileSystem fs = getFilesystem(scheme);
+
 		if (fs == null) {
 			// TODO maybe we should test and correct this in profile dialog !?
 			// no fs found, test for native path
 			File f = new File(url.toString()); // ignore query as local won't need query
 			if (f.exists()) {
-				fs = schemes.get("file");
+				fs = getFilesystem("file");
 				url = f.toURI();
 				desc.setUri(url);
 			}
@@ -82,8 +81,11 @@ public class FileSystemManager {
 		return s;
 	}
 
-	public Site resolveBuffering(Site dir, String bufferStrategy) throws FileSystemException, IOException {
-		BufferingProvider p = buffering.get(bufferStrategy);
+	public Site resolveBuffering(final Site dir, final String bufferStrategy) throws FileSystemException, IOException {
+		BufferingProvider p = null;
+		if ("syncfiles".equals(bufferStrategy)) {
+			p = new SyncFilesBufferingProvider();
+		}
 
 		if (p == null) {
 			throw new FileSystemException("BufferStrategy '" + bufferStrategy + "' not found");
