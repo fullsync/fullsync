@@ -37,8 +37,8 @@ public class SyncActionGenerator {
 	private final SyncActionGeneratorTask destinationTask;
 	SyncActionGenerator(TaskletWorkNotificationTarget _workNotificationTarget, SmartQueue<File> _sourceQueue, SmartQueue<File> _destinationQueue) {
 		outputQueue = new SmartQueue<Task>();
-		sourceTask = new SyncActionGeneratorTask(_workNotificationTarget, this, Origin.Source, _sourceQueue);
-		destinationTask = new SyncActionGeneratorTask(_workNotificationTarget, this, Origin.Destination, _destinationQueue);
+		sourceTask = new SyncActionGeneratorTask(_workNotificationTarget, this, Location.Source, _sourceQueue);
+		destinationTask = new SyncActionGeneratorTask(_workNotificationTarget, this, Location.Destination, _destinationQueue);
 		sourceTask.setOther(destinationTask);
 		destinationTask.setOther(sourceTask);
 	}
@@ -46,7 +46,7 @@ public class SyncActionGenerator {
 	public void doDecideOne(File srcParent, File src, File dstParent, File dst) {
 		//FIXME: make an actual decision (state decider, check source / destination, ...)
 		Task t = new Task(src, dst, State.InSync, new Action[] { new Action(ActionType.Nothing, Location.Destination, BufferUpdate.None, "") });
-		getOutput().offer(t);
+		outputQueue.offer(t);
 	}
 
 	public SmartQueue<Task> getOutput() {
@@ -83,11 +83,6 @@ public class SyncActionGenerator {
 			}
 		}
 	}
-}
-
-enum Origin {
-	Source,
-	Destination
 }
 
 class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
@@ -135,15 +130,15 @@ class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 		}
 	}
 	private final SyncActionGenerator generator;
-	private final Origin origin;
+	private final Location location;
 	private WorkingSet currentWorkingSet;
 	private final HashMap<String, WorkingSet> workingSetMap;
 	private SyncActionGeneratorTask other;
 	private volatile boolean running;
-	public SyncActionGeneratorTask(TaskletWorkNotificationTarget _workNotificationTarget, SyncActionGenerator _generator, Origin _origin, SmartQueue<File> _inputQueue) {
+	public SyncActionGeneratorTask(TaskletWorkNotificationTarget _workNotificationTarget, SyncActionGenerator _generator, Location _location, SmartQueue<File> _inputQueue) {
 		super(_workNotificationTarget, _inputQueue);
 		generator = _generator;
-		origin = _origin;
+		location = _location;
 		workingSetMap = new HashMap<String, WorkingSet>();
 		running = true;
 	}
@@ -180,7 +175,7 @@ class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 
 	private void doDecideOne(File item, File twin) {
 		final File twinParent = (null != twin) ? twin.getParent() : null;
-		if (Origin.Source == origin) {
+		if (Location.Source == location) {
 			generator.doDecideOne(item.getParent(), item, twinParent, twin);
 		}
 		else {
