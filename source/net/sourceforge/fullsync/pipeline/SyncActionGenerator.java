@@ -20,9 +20,6 @@
 package net.sourceforge.fullsync.pipeline;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.fullsync.Action;
@@ -35,11 +32,11 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.util.SmartQueue;
 
 public class SyncActionGenerator {
-	private final SmartQueue<Task> queue;
+	private final SmartQueue<Task> outputQueue;
 	private final SyncActionGeneratorTask sourceTask;
 	private final SyncActionGeneratorTask destinationTask;
 	SyncActionGenerator(TaskletWorkNotificationTarget _workNotificationTarget, SmartQueue<File> _sourceQueue, SmartQueue<File> _destinationQueue) {
-		queue = new SmartQueue<Task>();
+		outputQueue = new SmartQueue<Task>();
 		sourceTask = new SyncActionGeneratorTask(_workNotificationTarget, this, Origin.Source, _sourceQueue);
 		destinationTask = new SyncActionGeneratorTask(_workNotificationTarget, this, Origin.Destination, _destinationQueue);
 		sourceTask.setOther(destinationTask);
@@ -53,7 +50,7 @@ public class SyncActionGenerator {
 	}
 
 	public SmartQueue<Task> getOutput() {
-		return queue;
+		return outputQueue;
 	}
 
 	public SyncTasklet<File, Task> getSourceTask() {
@@ -78,7 +75,12 @@ public class SyncActionGenerator {
 
 	public synchronized void notifyEnd() {
 		if (sourceTask.hasEnded() && destinationTask.hasEnded()) {
-			getOutput().shutdown();
+			try {
+				getOutput().shutdown();
+			}
+			catch (IllegalStateException iex) {
+				// ignore, Queue might have been cancelled already
+			}
 		}
 	}
 }
@@ -89,14 +91,16 @@ enum Origin {
 }
 
 class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
-	enum ParentState {
-		Pending,
-		ParentsMatch,
-		ParentsDiffer
-	}
 	private class WorkingSet {
+		private final File parent;
+		private final String path;
 		private HashMap<String, File> map = new HashMap<String, File>();
 		private boolean isActive = true;
+
+		public WorkingSet(File _parent) {
+			parent = _parent;
+			path = parent.getPath();
+		}
 
 		public void put(String name, File file) {
 			map.put(name, file);
@@ -121,101 +125,67 @@ class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 		public Set<String> keySet() {
 			return map.keySet();
 		}
+
+		public String getPath() {
+			return path;
+		}
+
+		public File getParent() {
+			return parent;
+		}
 	}
 	private final SyncActionGenerator generator;
 	private final Origin origin;
-	private final List<File> backlog;
-	private final List<File> possibleParents;
-	private File currentParent;
+	private WorkingSet currentWorkingSet;
 	private final HashMap<String, WorkingSet> workingSetMap;
 	private SyncActionGeneratorTask other;
-	private ParentState parentState;
 	private volatile boolean running;
 	public SyncActionGeneratorTask(TaskletWorkNotificationTarget _workNotificationTarget, SyncActionGenerator _generator, Origin _origin, SmartQueue<File> _inputQueue) {
 		super(_workNotificationTarget, _inputQueue);
 		generator = _generator;
 		origin = _origin;
-		backlog = new LinkedList<File>();
-		possibleParents = new LinkedList<File>();
-		currentParent = null;
 		workingSetMap = new HashMap<String, WorkingSet>();
-		parentState = ParentState.Pending;
 		running = true;
-	}
-
-	@Override
-	protected void processItem(File item) throws Exception {
-		synchronized (generator) {
-			if (ParentState.Pending == parentState) {
-				currentParent = item.getParent();
-				parentState = ParentState.ParentsMatch;
-			}
-			if (item.getParent() != currentParent) {
-				backlog.add(item);
-				parentState = ParentState.ParentsDiffer;
-				WorkingSet workingSet = workingSetMap.get(currentParent.getPath());
-				if (null != workingSet) {
-					workingSet.setActive(false);
-				}
-			}
-			else {
-				File twin = other.poll(currentParent.getPath(), item.getName());
-				if (null != twin) {
-					doDecideOne(item, twin);
-				}
-				else {
-					String parentPath = item.getParent().getPath();
-					WorkingSet workingSet = workingSetMap.get(parentPath);
-					if (null == workingSet) {
-						workingSet = new WorkingSet();
-						workingSetMap.put(parentPath, workingSet);
-					}
-					workingSet.put(item.getName(), item);
-				}
-			}
-			/*
-			if (ParentState.ParentsDiffer == parentState && ParentState.ParentsDiffer == other.getState()) {
-				nextWorkingSet(true);
-			}
-			*/
-		}
-	}
-/*
-	private void nextWorkingSet(boolean notifyOther) {
-		for (Entry<String, File> entry : workingSet.entrySet()) {
-			doDecideOne(entry.getValue(), other.poll(entry.getKey()));
-		}
-		workingSet.clear();
-		other.nextWorkingSet(false);
-		if (!backlog.isEmpty()) {
-			currentParent = backlog.get(0).getParent();
-			while (!backlog.isEmpty() && backlog.get(0).getParent() == currentParent) {
-				File item = backlog.remove(0);
-				workingSet.put(item.getName(), item);
-			}
-			parentState = ParentState.ParentsMatch;
-		}
-		else {
-			currentParent = null;
-			parentState = ParentState.Pending;
-		}
-	}
-*/
-	private void doDecideOne(File item, File twin) {
-		if (Origin.Source == origin) {
-			generator.doDecideOne(currentParent, item, other.getParent(), twin);
-		}
-		else {
-			generator.doDecideOne(other.getParent(), twin, currentParent, item);
-		}
 	}
 
 	public void setOther(SyncActionGeneratorTask _other) {
 		other = _other;
 	}
 
-	private ParentState getState() {
-		return parentState;
+	@Override
+	protected void processItem(File item) throws Exception {
+		synchronized (generator) {
+			final File currentParent = item.getParent();
+			if ((null != currentWorkingSet) && (currentParent != currentWorkingSet.getParent())) {
+				currentWorkingSet.setActive(false);
+				if (other.isWorkingsetInactive(currentWorkingSet.getPath())) {
+					flushWorkingset(currentWorkingSet);
+					other.flushWorkingset(currentWorkingSet.getPath());
+				}
+			}
+			if ((null == currentWorkingSet) || (currentParent != currentWorkingSet.getParent())) {
+				currentWorkingSet = new WorkingSet(currentParent);
+				workingSetMap.put(currentWorkingSet.getPath(), currentWorkingSet);
+			}
+			File twin = other.poll(currentWorkingSet.getPath(), item.getName());
+			if (null != twin) {
+				doDecideOne(item, twin);
+				currentWorkingSet.remove(item.getName());
+			}
+			else {
+				currentWorkingSet.put(item.getName(), item);
+			}
+		}
+	}
+
+	private void doDecideOne(File item, File twin) {
+		final File twinParent = (null != twin) ? twin.getParent() : null;
+		if (Origin.Source == origin) {
+			generator.doDecideOne(item.getParent(), item, twinParent, twin);
+		}
+		else {
+			generator.doDecideOne(twinParent, twin, item.getParent(), item);
+		}
 	}
 
 	private File poll(String path, String name) {
@@ -230,8 +200,13 @@ class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 		return f;
 	}
 
-	private File getParent() {
-		return currentParent;
+	private boolean isWorkingsetInactive(String path) {
+		boolean active = false;
+		WorkingSet workingSet = workingSetMap.get(path);
+		if (null != workingSet) {
+			active = !workingSet.isActive();
+		}
+		return active;
 	}
 
 	@Override
@@ -252,10 +227,15 @@ class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 		}
 	}
 
-	private void flushWorkingset(String path, WorkingSet workingSet) {
+	private void flushWorkingset(WorkingSet workingSet) {
+		final String path = workingSet.getPath();
 		for (String name : workingSet.keySet()) {
 			doDecideOne(workingSet.remove(name), other.poll(path, name));
 		}
+	}
+
+	private void flushWorkingset(String path) {
+		flushWorkingset(workingSetMap.get(path));
 	}
 
 	@Override
@@ -266,13 +246,12 @@ class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 		}
 	}
 
-	void cleanup(boolean callOther) {
+	private void cleanup(boolean callOther) {
 		boolean otherSideEnded = other.hasEnded();
-		parentState = ParentState.ParentsDiffer;
-		for (Map.Entry<String, WorkingSet> entry : workingSetMap.entrySet()) {
-			entry.getValue().setActive(false);
+		for (WorkingSet workingSet : workingSetMap.values()) {
+			workingSet.setActive(false);
 			if (otherSideEnded) {
-				flushWorkingset(entry.getKey(), entry.getValue());
+				flushWorkingset(workingSet);
 			}
 		}
 		running = false;
