@@ -218,7 +218,6 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 		if (t != null) {
 			t.printStackTrace(System.err);
 		}
-		// System.err.flush();
 	}
 
 	/**

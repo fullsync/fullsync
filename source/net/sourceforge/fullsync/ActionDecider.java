@@ -24,7 +24,5 @@ import java.io.IOException;
 import net.sourceforge.fullsync.fs.File;
 
 public interface ActionDecider {
-	// needed ?
-	// public Action getDefaultAction( File src, File dst, StateDecider sd, BufferStateDecider bsd ) throws DataParseException;
 	public Task getTask(File src, File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException;
 }

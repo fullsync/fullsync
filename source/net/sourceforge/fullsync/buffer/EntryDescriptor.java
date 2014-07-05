@@ -39,7 +39,6 @@ public interface EntryDescriptor {
 	public void finishStore() throws IOException; // into buffer
 
 	public void finishWrite() throws IOException; // to target
-	// public void flush( Buffer buffer, Entry entry ) throws IOException;
 
 	public String getOperationDescription();
 }

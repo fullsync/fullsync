@@ -81,12 +81,9 @@ public class BlockBuffer implements ExecutionBuffer {
 			EntryDescriptor desc = e.descriptor;
 			IOException ioe = null;
 			try {
-				// desc.flush( this, e );
 				OutputStream out = desc.getOutputStream();
 				if (out != null) {
 					out.write(buffer, e.start, e.length);
-					// if( (e.internalSegment & Segment.Last) > 0 )
-					// out.close();
 				}
 				if ((e.internalSegment & Segment.Last) > 0) {
 					desc.finishWrite();
@@ -183,7 +180,6 @@ public class BlockBuffer implements ExecutionBuffer {
 			alreadyRead += read;
 			lengthLeft -= read;
 		} while (lengthLeft > 0);
-		// data.close();
 	}
 
 	@Override

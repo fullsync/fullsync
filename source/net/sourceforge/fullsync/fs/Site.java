@@ -29,11 +29,6 @@ import org.apache.commons.vfs2.FileObject;
 public interface Site extends Serializable {
 	public File getRoot();
 
-	/*
-	 * public boolean isBuffered();
-	 * public File getUnbuffered();
-	 */
-
 	// open ?
 	public void flush() throws IOException;
 
@@ -46,6 +41,4 @@ public interface Site extends Serializable {
 	FileObject getBase();
 
 	ConnectionDescription getConnectionDescription();
-
-	// public File getFile( String path );
 }

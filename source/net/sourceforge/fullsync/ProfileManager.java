@@ -134,7 +134,6 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 
 			@Override
 			public void profileChanged(Profile p) {
-				// ProfileManager.this.profileChanged(p);
 				updateRemoteProfiles();
 			}
 		};

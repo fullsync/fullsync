@@ -78,17 +78,11 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 				if ("/".equals(name) || ".".equals(name)) {
 					return;
 				}
-				// File n = current.getUnbuffered().getChild( name );
-				// if( n == null )
-				// n = current.getUnbuffered().createChild( name, true );
 				AbstractBufferedFile newDir = new AbstractBufferedFile(bc, name, current, true, true);
 				current.addChild(newDir);
 				current = newDir;
 			}
 			else if ("File".equals(qName)) {
-				// File n = current.getUnbuffered().getChild( name );
-				// if( n == null )
-				// n = current.getUnbuffered().createChild( name, false );
 				AbstractBufferedFile newFile = new AbstractBufferedFile(bc, name, current, false, true);
 				newFile.setSize(Long.parseLong(attributes.getValue("BufferedLength")));
 				newFile.setLastModified(Long.parseLong(attributes.getValue("BufferedLastModified")));
