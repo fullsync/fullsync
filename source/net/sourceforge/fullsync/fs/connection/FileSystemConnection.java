@@ -30,7 +30,6 @@ import net.sourceforge.fullsync.fs.Site;
 public interface FileSystemConnection extends Site {
 	public File createChild(File parent, String name, boolean directory) throws IOException;
 
-	// public Directory getParent( File node );
 	public HashMap<String, File> getChildren(File dir) throws IOException;
 
 	// refresh file, refresh directory ?

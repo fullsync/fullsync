@@ -147,8 +147,6 @@ public class CrontabSchedule extends Schedule {
 
 		if (months.all && daysOfMonth.all && !daysOfWeek.all) {
 			gotoNextOrStay(daysOfWeek.bArray, cal, Calendar.DAY_OF_WEEK);
-			// else if( !allDaysOfMonth )
-			// gotoNextOrStay( bDaysOfMonth, cal, Calendar.DAY_OF_MONTH );
 		}
 		else {
 			gotoNextOrStay(daysOfMonth.bArray, cal, Calendar.DAY_OF_MONTH);
@@ -156,7 +154,6 @@ public class CrontabSchedule extends Schedule {
 			// !allDaysOfWeek + !allDaysOfMonth
 		}
 
-		// gotoNextOrStay( bDaysOfWeek, cal, Calendar.DAY_OF_WEEK );
 		gotoNextOrStay(hours.bArray, cal, Calendar.HOUR_OF_DAY);
 		gotoNextOrStay(minutes.bArray, cal, Calendar.MINUTE);
 		if ((cal.get(Calendar.SECOND) != 0) || (cal.get(Calendar.MILLISECOND) != 0)) {
@@ -185,8 +182,6 @@ public class CrontabSchedule extends Schedule {
 		while ((now > max) || !bArray[now]) {
 			now++;
 			if (now > max) {
-				// cal.set( field, now );
-
 				switch (field) {
 					case Calendar.MONTH:
 						cal.add(Calendar.YEAR, 1);

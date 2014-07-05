@@ -30,7 +30,5 @@ public interface ExecutionBuffer {
 
 	public void storeEntry(EntryDescriptor descriptor) throws IOException;
 
-	// public void writeEntryTo( Entry entry, OutputStream out ) throws IOException;
-
 	public void addEntryFinishedListener(EntryFinishedListener listener);
 }

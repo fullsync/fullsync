@@ -124,9 +124,6 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		// TODO get traversal type and start correct traversal action
 		synchronizeDirectories(source.getRoot(), destination.getRoot(), rules, root, actionDecider);
 
-		// TODO this would be better, but we need the rules to sync Nodes :-/
-		// synchronizeNodes( source.getRoot(), destination.getRoot(), rules, root );
-
 		FullSync.publish(tree);
 		return tree;
 	}

@@ -179,7 +179,6 @@ class FileObjectChooser extends Dialog {
 			compositeBottom = new Composite(dialogShell, SWT.NONE);
 			GridLayout compositeBottomLayout = new GridLayout();
 			compositeBottomLayout.numColumns = 3;
-//			compositeBottomLayout.horizontalSpacing = 15;
 			GridData compositeBottomLData = new GridData();
 			compositeBottomLData.horizontalAlignment = SWT.FILL;
 			compositeBottom.setLayoutData(compositeBottomLData);
