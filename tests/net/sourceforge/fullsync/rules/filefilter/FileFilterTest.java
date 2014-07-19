@@ -29,8 +29,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 import org.junit.Test;
 
 public class FileFilterTest {
-
-	private File root = new TestNode("root", null, true, true, 0, 0);
+	private File root = TestNode.createRoot(true, true, 0, 0);
 
 	private static class AlwaysTrueFileFilterRule extends FileFilterRule {
 		private static final long serialVersionUID = 2L;

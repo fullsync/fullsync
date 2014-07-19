@@ -51,6 +51,10 @@ class AbstractFile implements File {
 		this.lastModified = -1;
 	}
 
+	public static AbstractFile createRoot(FileSystemConnection fs, boolean directory, boolean exists) {
+		return new AbstractFile(fs, "", null, directory, exists);
+	}
+
 	public FileSystemConnection getConnection() {
 		return fs;
 	}
@@ -62,11 +66,17 @@ class AbstractFile implements File {
 
 	@Override
 	public String getPath() {
-		String parentPath = null;
-		if (parent != null) {
-			parentPath = parent.getPath();
+		StringBuilder sb = new StringBuilder();
+		if (null != parent) {
+			sb.append(parent.getPath());
 		}
-		return null != parentPath ? parentPath + "/" + name : name;
+		// root has parent = null, name = "" and path = ""
+		// this check avoids all paths starting with /
+		if (sb.length() > 0) {
+			sb.append('/');
+		}
+		sb.append(name);
+		return sb.toString();
 	}
 
 	@Override

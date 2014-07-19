@@ -36,7 +36,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class SyncActionGeneratorTest {
-	File root = new TestNode("", null, true, true, 0, 0);
+	File root = TestNode.createRoot(true, true, 0, 0);
 
 	Thread sourceThread;
 	Thread destinationThread;

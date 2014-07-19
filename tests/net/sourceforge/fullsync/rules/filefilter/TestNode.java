@@ -44,6 +44,10 @@ public class TestNode implements File {
 		this.size = length;
 	}
 
+	public static TestNode createRoot(boolean exists, boolean directory, long length, long lm) {
+		return new TestNode("", null, exists, directory, length, lm);
+	}
+
 	public File getDirectory() {
 		return null;
 	}
@@ -97,9 +101,9 @@ public class TestNode implements File {
 		if (null != parent) {
 			sb.append(parent.getPath());
 		}
-		// root has parent = null, name = "" and path = /
-		// this check avoids all paths starting with //
-		if (sb.length() != 1) {
+		// root has parent = null, name = "" and path = ""
+		// this check avoids all paths starting with /
+		if (sb.length() > 0) {
 			sb.append('/');
 		}
 		sb.append(name);

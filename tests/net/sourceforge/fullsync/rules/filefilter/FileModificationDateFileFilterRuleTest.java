@@ -30,8 +30,8 @@ import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 import org.junit.Test;
 
 public class FileModificationDateFileFilterRuleTest {
+	private File root = TestNode.createRoot(true, true, 0, 0);
 
-	private File root = new TestNode("root", null, true, true, 0, 0);
 	@Test
 	public void testOpIs() throws ParseException, FilterRuleNotAppliableException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

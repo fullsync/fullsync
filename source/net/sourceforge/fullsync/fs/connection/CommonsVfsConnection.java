@@ -52,7 +52,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 				fsAuthProvider.authSetup(desc, options);
 			}
 			base = VFS.getManager().resolveFile(desc.getUri().toString(), options);
-			root = new AbstractFile(this, ".", null, true, base.exists());
+			root = AbstractFile.createRoot(this, true, base.exists());
 			canSetLastModifiedFile = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FILE);
 			canSetLastModifiedFolder = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FOLDER);
 		}

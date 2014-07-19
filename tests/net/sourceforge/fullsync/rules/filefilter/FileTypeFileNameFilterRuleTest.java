@@ -28,8 +28,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 import org.junit.Test;
 
 public class FileTypeFileNameFilterRuleTest {
-
-	private File root = new TestNode("root", null, true, true, 0, 0);
+	private File root = TestNode.createRoot(true, true, 0, 0);
 
 	@Test
 	public void testIsFile() {
