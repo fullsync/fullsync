@@ -58,7 +58,7 @@ public class TaskDecisionList extends Composite {
 	private int tableLogLinesFillIndex;
 	private int tableLogLinesFillCount;
 
-	private HashMap<Integer, Image> actionImages;
+	private HashMap<ActionType, Image> actionImages;
 	private HashMap<Integer, Image> taskImages;
 	private Image locationSource;
 	private Image locationDestination;
@@ -158,9 +158,9 @@ public class TaskDecisionList extends Composite {
 		locationDestination = gui.getImage("Location_Destination.png"); //$NON-NLS-1$
 		locationBoth = gui.getImage("Location_Both.png"); //$NON-NLS-1$
 
-		actionImages = new HashMap<Integer, Image>();
+		actionImages = new HashMap<ActionType, Image>();
 		for (ActionType action : ActionType.values()) {
-			actionImages.put(Integer.valueOf(action.ordinal()), gui.getImage("Action_" + action.name() + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
+			actionImages.put(action, gui.getImage("Action_" + action.name() + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		taskImages = new HashMap<Integer, Image>();
@@ -210,8 +210,8 @@ public class TaskDecisionList extends Composite {
 		}
 		// TODO draw some not-existing image ?
 
-		if (a.getLocation() != Location.None) {
-			Image actionImage = actionImages.get(Integer.valueOf(a.getType().ordinal()));
+		if ((a.getLocation() == location) || (a.getLocation() == Location.Both)) {
+			Image actionImage = actionImages.get(a.getType());
 			if (actionImage != null) {
 				g.drawImage(actionImage, x, 0);
 			}
@@ -234,6 +234,10 @@ public class TaskDecisionList extends Composite {
 				break;
 			case Both:
 				g.drawImage(locationBoth, 16 + 2, 0);
+				break;
+			case Buffer:
+				break;
+			case None:
 				break;
 		}
 	}
