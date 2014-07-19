@@ -118,7 +118,8 @@ public class GuiController implements Runnable {
 		return imageRepository.getImage(imageName);
 	}
 
-	public void startGui(boolean minimized){
+	public void startGui(boolean minimized) {
+		Display.setAppName("FullSync");
 		display = Display.getDefault();
 		imageRepository = new ImageRepository(display);
 		fontRepository = new FontRepository(display);
@@ -255,7 +256,7 @@ public class GuiController implements Runnable {
 	}
 
 	private void createWelcomeScreen() {
-		if (null != System.getProperty("net.sourceforge.fullsync.skipWelcomeScreen", null) || true == preferences.getSkipWelcomeScreen()) {
+		if ((null != System.getProperty("net.sourceforge.fullsync.skipWelcomeScreen", null)) || (true == preferences.getSkipWelcomeScreen())) {
 			return;
 		}
 		if (preferences.getLastVersion().equals(Util.getFullSyncVersion())) {
