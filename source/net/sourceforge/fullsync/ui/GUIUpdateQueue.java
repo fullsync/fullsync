@@ -46,15 +46,20 @@ public class GUIUpdateQueue<Item> {
 			m_display.asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					m_updateScheduled.set(false);
 					LinkedList<Item> items = new LinkedList<Item>();
-					Item item;
-					while(null != (item = m_queue.poll())) {
-						items.add(item);
+					getItems(items);
+					if (!items.isEmpty()) {
+						m_updateTask.doUpdate(m_display, items);
 					}
-					m_updateTask.doUpdate(m_display, items);
 				}
 			});
 		}
+	}
+	private synchronized void getItems(LinkedList<Item> items) {
+		Item item;
+		while(null != (item = m_queue.poll())) {
+			items.add(item);
+		}
+		m_updateScheduled.set(false);
 	}
 }
