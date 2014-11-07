@@ -1,0 +1,6 @@
+
+# fix 404 from http://www.commentcamarche.net/forum/affich-28610058-je-voudrais-changer-de-disque-dur-externe
+Redirect 301 /, http://fullsync.sourceforge.net/
+
+# some legacy links from forum.html.it
+Redirect 301 /features.html http://fullsync.sourceforge.net/features.php

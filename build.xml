@@ -1,27 +1,21 @@
 <?xml version="1.0"?>
 <project name="FullSync" default="build" basedir=".">
-	<property name="project" value="FullSync" />
-	<loadfile property="version-raw" srcfile="source/net/sourceforge/fullsync/version.txt" encoding="utf-8" />
-	<script language="javascript" manager="javax">
-	<![CDATA[
-		var version = project.getProperty("version-raw");
-		if (version !== null) {
-			project.setProperty("version", version.trim())
-		}
-	]]>
-	</script>
-	<property name="final.name" value="${project}-${version}" />
-	<property name="final-src.name" value="${project}-${version}-src" />
+	<loadfile property="version" srcfile="source/net/sourceforge/fullsync/version.txt" encoding="utf-8">
+		<filterchain>
+			<headfilter lines="1"/>
+			<striplinebreaks/>
+		</filterchain>
+	</loadfile>
+	<property name="final.name" value="${ant.project.name}-${version}" />
+	<property name="final-src.name" value="${final.name}-src" />
 	<property name="source.dir" value="${basedir}/source" />
 	<property name="tests.dir" value="${basedir}/tests" />
-	<property name="res.dir" value="${basedir}/resources" />
 	<property name="build.dir" value="${basedir}/build" />
 	<property name="build.lib.dir" value="${build.dir}/lib" />
 	<property name="classes.dir" value="${build.dir}/classes" />
-	<property name="build-tests.dir" value="${basedir}/build-tests" />
-	<property name="classes-tests.dir" value="${build-tests.dir}/classes" />
+	<property name="classes-tests.dir" value="${basedir}/build-tests/classes" />
 	<property name="dist.dir" value="${basedir}/dist" />
-	<property name="jar.copyright" value="Copyright (c) 2013 the ${project} Team" />
+	<property name="jar.copyright" value="Copyright (c) 2014 the ${ant.project.name} Team" />
 	<property name="debug" value="on" />
 	<property name="java.source.version" value="1.6" />
 	<property name="java.target.version" value="1.6" />
@@ -65,7 +59,7 @@
 
 	<!-- Targets building a plain, working version into {build.dir} -->
 	<target name="detect" description="Display configuration and conditional compilation flags">
-		<echo message="--- ${project} ${version} Build ---" />
+		<echo message="--- ${ant.project.name} ${version} Build ---" />
 	</target>
 
 	<target name="clean" description="cleans project files">
@@ -140,6 +134,8 @@
 		<replaceregexp match="@VERSION@" replace="${version}" flags="g" byline="true" file="${build.dir}/docs/manual/manual.html" />
 		<copy file="${basedir}/CHANGELOG" tofile="${build.dir}/CHANGELOG" />
 		<copy file="${basedir}/LICENSE" tofile="${build.dir}/LICENSE" />
+		<mkdir dir="${build.dir}/mac"/>
+		<copy file="${basedir}/resources/fullsync.mac.sh" tofile="${build.dir}/mac/fullsync" />
 		<!-- copy readme and so on -->
 	</target>
 
@@ -191,34 +187,37 @@
 	<target name="dist" description="creates a zip and tar.gz files ready for distribution" depends="build">
 		<mkdir dir="${dist.dir}" />
 		<tar destfile="${dist.dir}/${final.name}-linux.tar.gz" compression="gzip">
-			<tarfileset dir="${build.dir}" prefix="${project}-${version}" includes="**/*">
+			<tarfileset dir="${build.dir}" prefix="${final.name}" includes="**/*">
 				<exclude name="classes/**" />
+				<exclude name="mac/**"/>
 				<exclude name="fullsync" />
 				<exclude name="lib/swt-cocoa-*" />
 				<exclude name="lib/swt-win32-*" />
 				<exclude name="*.exe" />
 				<exclude name="*.ini" />
 			</tarfileset>
-			<tarfileset dir="${build.dir}" prefix="${project}-${version}" mode="755">
+			<tarfileset dir="${build.dir}" prefix="${final.name}" mode="755">
 				<include name="fullsync"/>
 			</tarfileset>
 		</tar>
 		<tar destfile="${dist.dir}/${final.name}-mac.tar.gz" compression="gzip">
-			<tarfileset dir="${build.dir}" prefix="${project}-${version}" includes="**/*">
+			<tarfileset dir="${build.dir}" prefix="${final.name}" includes="**/*">
 				<exclude name="classes/**" />
+				<exclude name="mac/**"/>
 				<exclude name="fullsync" />
 				<exclude name="lib/swt-gtk-*" />
 				<exclude name="lib/swt-win32-*" />
 				<exclude name="*.exe" />
 				<exclude name="*.ini" />
 			</tarfileset>
-			<tarfileset dir="${build.dir}" prefix="${project}-${version}" mode="755">
+			<tarfileset dir="${build.dir}/mac" prefix="${final.name}" mode="755">
 				<include name="fullsync"/>
 			</tarfileset>
 		</tar>
 		<zip zipfile="${dist.dir}/${final.name}-win.zip">
-			<zipfileset dir="${build.dir}" prefix="${project}-${version}" includes="**/*">
+			<zipfileset dir="${build.dir}" prefix="${final.name}" includes="**/*">
 				<exclude name="classes/**" />
+				<exclude name="mac/**"/>
 				<exclude name="fullsync" />
 				<exclude name="lib/swt-cocoa-*" />
 				<exclude name="lib/swt-gtk-*" />
