@@ -156,6 +156,8 @@
 		<replaceregexp match="@VERSION@" replace="${version}" flags="g" byline="true" file="${build.dir}/docs/manual/manual.html" />
 		<copy file="${basedir}/CHANGELOG" tofile="${build.dir}/CHANGELOG" />
 		<copy file="${basedir}/LICENSE" tofile="${build.dir}/LICENSE" />
+		<mkdir dir="${build.dir}/mac"/>
+		<copy file="${basedir}/resources/fullsync.mac.sh" tofile="${build.dir}/mac/fullsync" />
 		<!-- copy readme and so on -->
 	</target>
 
@@ -207,34 +209,37 @@
 	<target name="dist" description="creates a zip and tar.gz files ready for distribution" depends="build">
 		<mkdir dir="${dist.dir}" />
 		<tar destfile="${dist.dir}/${final.name}-linux.tar.gz" compression="gzip">
-			<tarfileset dir="${build.dir}" prefix="${project}-${version}" includes="**/*">
+			<tarfileset dir="${build.dir}" prefix="${final.name}" includes="**/*">
 				<exclude name="classes/**" />
+				<exclude name="mac/**"/>
 				<exclude name="fullsync" />
 				<exclude name="lib/swt-cocoa-*" />
 				<exclude name="lib/swt-win32-*" />
 				<exclude name="*.exe" />
 				<exclude name="*.ini" />
 			</tarfileset>
-			<tarfileset dir="${build.dir}" prefix="${project}-${version}" mode="755">
+			<tarfileset dir="${build.dir}" prefix="${final.name}" mode="755">
 				<include name="fullsync"/>
 			</tarfileset>
 		</tar>
 		<tar destfile="${dist.dir}/${final.name}-mac.tar.gz" compression="gzip">
-			<tarfileset dir="${build.dir}" prefix="${project}-${version}" includes="**/*">
+			<tarfileset dir="${build.dir}" prefix="${final.name}" includes="**/*">
 				<exclude name="classes/**" />
+				<exclude name="mac/**"/>
 				<exclude name="fullsync" />
 				<exclude name="lib/swt-gtk-*" />
 				<exclude name="lib/swt-win32-*" />
 				<exclude name="*.exe" />
 				<exclude name="*.ini" />
 			</tarfileset>
-			<tarfileset dir="${build.dir}" prefix="${project}-${version}" mode="755">
+			<tarfileset dir="${build.dir}/mac" prefix="${final.name}" mode="755">
 				<include name="fullsync"/>
 			</tarfileset>
 		</tar>
 		<zip zipfile="${dist.dir}/${final.name}-win.zip">
-			<zipfileset dir="${build.dir}" prefix="${project}-${version}" includes="**/*">
+			<zipfileset dir="${build.dir}" prefix="${final.name}" includes="**/*">
 				<exclude name="classes/**" />
+				<exclude name="mac/**"/>
 				<exclude name="fullsync" />
 				<exclude name="lib/swt-cocoa-*" />
 				<exclude name="lib/swt-gtk-*" />
