@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.Date;
 
 import net.sourceforge.fullsync.fs.File;
 
@@ -150,6 +151,11 @@ public class TestNode implements File {
 	}
 
 	@Override
+	public File buildChildNode(String name, boolean directory, boolean exists) {
+		return new TestNode(name, this, exists, directory, 0, -1);
+	}
+
+	@Override
 	public boolean isFile() {
 		return !directory;
 	}
@@ -178,15 +184,27 @@ public class TestNode implements File {
 
 	@Override
 	public String toString() {
-		if (!exists) {
-			return "not exists";
+		StringBuilder sb = new StringBuilder();
+		if (null != parent) {
+			sb.append(parent.getPath());
+			sb.append("/");
 		}
-		else if (directory) {
-			return "Directory";
+		sb.append(name);
+		sb.append("; ");
+		if ((size >= 0) || (lastModified > 0)) {
+			if (size >= 0) {
+				sb.append(size);
+				sb.append(" Bytes");
+			}
+			if (lastModified > 0) {
+				sb.append(' ');
+				sb.append(new Date(lastModified));
+			}
 		}
 		else {
-			return "File (" + size + "," + lastModified + ")";
+			sb.append('-');
 		}
+		return sb.toString();
 	}
 
 	@Override

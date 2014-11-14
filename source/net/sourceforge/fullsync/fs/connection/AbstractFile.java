@@ -142,6 +142,11 @@ class AbstractFile implements File {
 	}
 
 	@Override
+	public File buildChildNode(final String name, final boolean directory, final boolean exists) {
+		return new AbstractFile(getConnection(), name, this, directory, exists);
+	}
+
+	@Override
 	public File getChild(final String name) throws IOException {
 		if (children == null) {
 			refresh();

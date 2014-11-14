@@ -63,14 +63,14 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	@Override
 	public final File createChild(final File parent, final String name, final boolean directory) throws IOException {
-		return new AbstractFile(this, name, parent, directory, false);
+		return parent.buildChildNode(name, directory, false);
 
 	}
 
 	private File buildNode(final File parent, final FileObject file) throws FileSystemException {
 		String name = file.getName().getBaseName();
 
-		File n = new AbstractFile(this, name, parent, file.getType() == FileType.FOLDER, true);
+		File n = parent.buildChildNode(name, file.getType() == FileType.FOLDER, true);
 		if (file.getType() == FileType.FILE) {
 			FileContent content = file.getContent();
 			n.setLastModified(content.getLastModifiedTime());

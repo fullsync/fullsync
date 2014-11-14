@@ -72,6 +72,8 @@ public interface File extends Serializable {
 
 	public boolean delete() throws IOException;
 
+	public File buildChildNode(String name, boolean directory, boolean exists);
+
 	@Override
 	public String toString();
 }
