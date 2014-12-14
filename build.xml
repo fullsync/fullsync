@@ -233,7 +233,7 @@
 		</exec>
 	</target>
 
-	<target name="tests" depends="build, compile-tests">
+	<target name="test" depends="build, compile-tests">
 		<junit fork="true" printsummary="true" includeantruntime="true">
 			<classpath refid="tests.classpath"/>
 		</junit>
