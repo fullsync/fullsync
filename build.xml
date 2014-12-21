@@ -26,6 +26,7 @@
 
 	<fileset id="dependentJars" dir="${basedir}/lib" includesfile="${source.dir}/net/sourceforge/fullsync/launcher/dependencies.txt">
 	</fileset>
+
 	<path id="compile.classpath">
 		<fileset refid="dependentJars" />
 		<pathelement location="${classes.dir}" />
@@ -33,15 +34,14 @@
 		<pathelement location="${build.lib.dir}/swt-gtk-linux-x86_64.jar" />
 	</path>
 
-	<fileset id="dependentJars-tests" dir="${basedir}/lib-tests" includes="*.jar">
-	</fileset>
-
 	<path id="tests.classpath">
 		<path refid="compile.classpath" />
-		<fileset refid="dependentJars-tests" />
-		<pathelement location="${basedir}/tests" />
+		<fileset dir="${basedir}/lib-tests">
+			<include name="*.jar"/>
+		</fileset>
 		<pathelement location="${classes-tests.dir}" />
-		<pathelement location="/usr/share/java/junit4.jar"/>
+		<!-- for the sshd_config -->
+		<pathelement location="${basedir}/tests" />
 	</path>
 
 	<!-- Targets building a plain, working version into {build.dir} -->
@@ -56,7 +56,16 @@
 
 	<target name="compile">
 		<mkdir dir="${classes.dir}" />
-		<javac debug="${debug}" srcdir="${source.dir}" destdir="${classes.dir}" classpathref="compile.classpath" includeantruntime="false" target="${java.target.version}" source="${java.source.version}" encoding="utf-8"/>
+		<javac
+			debug="${debug}"
+			srcdir="${source.dir}"
+			destdir="${classes.dir}"
+			classpathref="compile.classpath"
+			includeantruntime="false"
+			target="${java.target.version}"
+			source="${java.source.version}"
+			encoding="utf-8"
+		/>
 		<copy todir="${classes.dir}" verbose="true">
 			<fileset dir="${source.dir}">
 				<exclude name="**/*.java" />
@@ -68,7 +77,16 @@
 		<mkdir dir="${classes-tests.dir}" />
 		<property name="classpath-debug" refid="tests.classpath"></property>
 		<echo>${classpath-debug}</echo>
-		<javac debug="${debug}" srcdir="${tests.dir}" destdir="${classes-tests.dir}" classpathref="tests.classpath" includeantruntime="true" target="${java.target.version}" source="${java.source.version}"/>
+		<javac
+			debug="${debug}"
+			srcdir="${tests.dir}"
+			destdir="${classes-tests.dir}"
+			classpathref="tests.classpath"
+			includeantruntime="true"
+			target="${java.target.version}"
+			source="${java.source.version}"
+			encoding="utf-8"
+		/>
 	</target>
 
 	<target name="javadoc">
@@ -234,8 +252,18 @@
 	</target>
 
 	<target name="test" depends="build, compile-tests">
-		<junit fork="true" printsummary="true" includeantruntime="true">
-			<classpath refid="tests.classpath"/>
+		<mkdir dir="${build.dir}/junit"/>
+		<junit fork="true" printsummary="yes" includeantruntime="true" threads="2">
+			<formatter type="plain" usefile="false" />
+			<formatter type="xml" usefile="true"/>
+			<classpath>
+				<path refid="tests.classpath"/>
+			</classpath>
+			<batchtest todir="${build.dir}/junit" skipNonTests="true">
+				<fileset dir="${tests.dir}">
+					<include name="**/*.java"/>
+				</fileset>
+			</batchtest>
 		</junit>
 	</target>
 </project>
