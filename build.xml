@@ -24,6 +24,17 @@
 	<property name="final-src.name" value="${final.name}-src" />
 	<property name="jar.copyright" value="Copyright (c) ${current.year} the ${ant.project.name} Team" />
 
+	<path id="classpath.junit">
+		<fileset dir="${basedir}/lib-tests">
+			<include name="junit-*.jar" />
+			<include name="hamcrest-core-*.jar" />
+		</fileset>
+	</path>
+
+	<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">
+		<classpath refid="classpath.junit" />
+	</taskdef>
+
 	<fileset id="dependentJars" dir="${basedir}/lib" includesfile="${source.dir}/net/sourceforge/fullsync/launcher/dependencies.txt">
 	</fileset>
 
@@ -253,7 +264,7 @@
 
 	<target name="test" depends="build, compile-tests">
 		<mkdir dir="${build.dir}/junit"/>
-		<junit fork="true" printsummary="yes" includeantruntime="true">
+		<junit fork="true" printsummary="yes" includeantruntime="true" threads="2">
 			<formatter type="plain" usefile="false" />
 			<formatter type="xml" usefile="true"/>
 			<classpath>
