@@ -28,6 +28,7 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileSystem;
 
+import org.apache.commons.vfs2.Capability;
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -37,6 +38,8 @@ import org.apache.commons.vfs2.VFS;
 
 public class CommonsVfsConnection implements FileSystemConnection {
 	private static final long serialVersionUID = 2L;
+	private final boolean canSetLastModifiedFile;
+	private final boolean canSetLastModifiedFolder;
 	private ConnectionDescription desc;
 	private FileObject base; //FIXME FileObject is not serializable?!
 	private File root;
@@ -50,6 +53,8 @@ public class CommonsVfsConnection implements FileSystemConnection {
 			}
 			base = VFS.getManager().resolveFile(desc.getUri().toString(), options);
 			root = new AbstractFile(this, ".", ".", null, true, base.exists());
+			canSetLastModifiedFile = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FILE);
+			canSetLastModifiedFolder = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FOLDER);
 		}
 		catch (FileSystemException e) {
 			throw new net.sourceforge.fullsync.FileSystemException(e);
@@ -105,7 +110,16 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	public final boolean writeFileAttributes(final File file) throws IOException {
 		FileObject obj = base.resolveFile(file.getPath());
 		FileContent content = obj.getContent();
-		content.setLastModifiedTime(file.getLastModified());
+		boolean setLastModified;
+		if (FileType.FOLDER == obj.getType()) {
+			setLastModified = canSetLastModifiedFolder;
+		}
+		else {
+			setLastModified = canSetLastModifiedFile;
+		}
+		if (setLastModified) {
+			content.setLastModifiedTime(file.getLastModified());
+		}
 		return true;
 	}
 
