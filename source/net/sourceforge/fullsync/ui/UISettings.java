@@ -40,13 +40,13 @@ public abstract class UISettings {
 			return "";
 		}
 		if (size > (1024 * 1024 * 1024)) {
-			return ((long)(Math.ceil(size / (1024 * 1024 * 1024)))) + " GiB";
+			return ((long)(Math.ceil(size / (1024f * 1024f * 1024f)))) + " GiB";
 		}
 		if (size > (1024 * 1024)) {
-			return ((long)(Math.ceil(size / (1024 * 1024)))) + " MiB";
+			return ((long)(Math.ceil(size / (1024f * 1024f)))) + " MiB";
 		}
 		if (size > 1024) {
-			return ((long)(Math.ceil(size / 1024))) + " KiB";
+			return ((long)(Math.ceil(size / 1024f))) + " KiB";
 		}
 		return size + " B";
 	}
