@@ -9,7 +9,7 @@ JAVA_BIN=`which java`
 if [ "x$JAVA_BIN" = "x" ]; then
 	MESSAGE="Java could not be found! Please install a Java runtime first!"
 	echo "$MESSAGE"
-	xmessage -center --text "$MESSAGE"
+	xmessage -center "$MESSAGE"
 	exit 1
 else
 	exec "${JAVA_BIN}" ${JAVA_OPTS} -jar "${REAL_FULLSYNC_DIR}/launcher.jar" "$@"
