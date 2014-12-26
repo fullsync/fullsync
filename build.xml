@@ -266,7 +266,7 @@
 
 	<target name="test" depends="build, compile-tests">
 		<mkdir dir="${build.dir}/junit"/>
-		<fullsyncjunit fork="true" printsummary="yes" includeantruntime="true" threads="2">
+		<fullsyncjunit fork="true" printsummary="yes" includeantruntime="true">
 			<formatter type="plain" usefile="false" />
 			<formatter type="xml" usefile="true"/>
 			<classpath>
