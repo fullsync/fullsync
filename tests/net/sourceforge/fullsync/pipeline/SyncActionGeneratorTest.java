@@ -23,10 +23,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import net.sourceforge.fullsync.ActionDecider;
 import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.Location;
+import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
+import net.sourceforge.fullsync.impl.StateDecider;
+import net.sourceforge.fullsync.impl.TwoWaySyncActionDecider;
 import net.sourceforge.fullsync.rules.filefilter.TestNode;
 import net.sourceforge.fullsync.util.SmartQueue;
 
@@ -60,7 +65,9 @@ public class SyncActionGeneratorTest {
 		sourceQueue = new SmartQueue<File>();
 		destinationQueue = new SmartQueue<File>();
 		TestNotificationTarget workNotificationTarget = new TestNotificationTarget();
-		generator = new SyncActionGenerator(workNotificationTarget, sourceQueue, destinationQueue);
+		StateDecider stateDecider = new StateDecider(new SimplyfiedRuleSetDescriptor(true, null, false, null).createRuleSet());
+		ActionDecider actionDecider = new TwoWaySyncActionDecider();
+		generator = new SyncActionGenerator(workNotificationTarget, sourceQueue, destinationQueue, stateDecider, actionDecider);
 		sourceThread = new Thread(generator.getSourceTask());
 		sourceThread.start();
 		destinationThread = new Thread(generator.getDestinationTask());
@@ -82,15 +89,23 @@ public class SyncActionGeneratorTest {
 
 	@Test(timeout = 10000)
 	public void testGeneratesTasks() {
-		sourceQueue.offer(new TestNode("a", root, true, false, 5, now));
+		sourceQueue.offer(srcRoot);
+		sourceQueue.offer(new TestNode("a", srcRoot, true, false, 5, now));
 		sourceQueue.shutdown();
+		destinationQueue.offer(dstRoot);
 		destinationQueue.shutdown();
+		Task root = generator.getOutput().take();
+		Assert.assertTrue(root.getSource().exists());
+		Assert.assertTrue(root.getDestination().exists());
+		Assert.assertEquals(ActionType.Nothing, root.getCurrentAction().getType());
+		Assert.assertEquals(State.InSync, root.getState());
 		Task t = generator.getOutput().take();
 		Assert.assertNotNull(t);
 		Assert.assertFalse(t.getCurrentAction().isError());
-		Assert.assertTrue(t.getCurrentAction().getType() == ActionType.Add);
-		Assert.assertTrue(t.getCurrentAction().getLocation() == Location.Destination);
-		Assert.assertEquals("/a", t.getSource().getPath());
+		Assert.assertEquals(State.OrphanSource, t.getState());
+		Assert.assertEquals(ActionType.Add, t.getCurrentAction().getType());
+		Assert.assertEquals(Location.Destination, t.getCurrentAction().getLocation());
+		Assert.assertEquals("a", t.getSource().getPath());
 	}
 }
 

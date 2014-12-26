@@ -19,14 +19,14 @@
  */
 package net.sourceforge.fullsync.pipeline;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 
-import net.sourceforge.fullsync.Action;
-import net.sourceforge.fullsync.ActionType;
-import net.sourceforge.fullsync.BufferUpdate;
+import net.sourceforge.fullsync.ActionDecider;
+import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.Location;
-import net.sourceforge.fullsync.State;
+import net.sourceforge.fullsync.StateDecider;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.util.SmartQueue;
@@ -35,18 +35,31 @@ public class SyncActionGenerator {
 	private final SmartQueue<Task> outputQueue;
 	private final SyncActionGeneratorTask sourceTask;
 	private final SyncActionGeneratorTask destinationTask;
-	SyncActionGenerator(TaskletWorkNotificationTarget _workNotificationTarget, SmartQueue<File> _sourceQueue, SmartQueue<File> _destinationQueue) {
+	private final StateDecider stateDecider;
+	private final ActionDecider actionDecider;
+	SyncActionGenerator(TaskletWorkNotificationTarget _workNotificationTarget, SmartQueue<File> _sourceQueue, SmartQueue<File> _destinationQueue, StateDecider _stateDecider, ActionDecider _actionDecider) {
 		outputQueue = new SmartQueue<Task>();
 		sourceTask = new SyncActionGeneratorTask(_workNotificationTarget, this, Location.Source, _sourceQueue);
 		destinationTask = new SyncActionGeneratorTask(_workNotificationTarget, this, Location.Destination, _destinationQueue);
 		sourceTask.setOther(destinationTask);
 		destinationTask.setOther(sourceTask);
+		stateDecider = _stateDecider;
+		actionDecider = _actionDecider;
 	}
 
 	public void doDecideOne(File srcParent, File src, File dstParent, File dst) {
-		//FIXME: make an actual decision (state decider, check source / destination, ...)
-		Task t = new Task(src, dst, State.InSync, new Action[] { new Action(ActionType.Nothing, Location.Destination, BufferUpdate.None, "") });
-		outputQueue.offer(t);
+		try {
+			Task t = actionDecider.getTask(src, dst, stateDecider, null);
+			outputQueue.offer(t);
+		}
+		catch (DataParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public SmartQueue<Task> getOutput() {
@@ -85,50 +98,56 @@ public class SyncActionGenerator {
 	}
 }
 
-class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
-	private class WorkingSet {
-		private final File parent;
-		private final String path;
-		private HashMap<String, File> map = new HashMap<String, File>();
-		private boolean isActive = true;
+class WorkingSet {
+	private final File parent;
+	private final String path;
+	private HashMap<String, File> map = new HashMap<String, File>();
+	private boolean isActive = true;
 
-		public WorkingSet(File _parent) {
-			parent = _parent;
+	public WorkingSet(File _parent) {
+		parent = _parent;
+		if (null != parent) {
 			path = parent.getPath();
 		}
-
-		public void put(String name, File file) {
-			map.put(name, file);
-		}
-
-		public File remove(String name) {
-			return map.remove(name);
-		}
-
-		public boolean isEmpty() {
-			return map.isEmpty();
-		}
-
-		public boolean isActive() {
-			return isActive;
-		}
-
-		public void setActive(boolean active) {
-			isActive = active;
-		}
-
-		public Set<String> keySet() {
-			return map.keySet();
-		}
-
-		public String getPath() {
-			return path;
-		}
-
-		public File getParent() {
-			return parent;
+		else {
+			path = "";
 		}
 	}
+
+	public void put(String name, File file) {
+		map.put(name, file);
+	}
+
+	public File remove(String name) {
+		return map.remove(name);
+	}
+
+	public boolean isEmpty() {
+		return map.isEmpty();
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean active) {
+		isActive = active;
+	}
+
+	public Set<String> keySet() {
+		return map.keySet();
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public File getParent() {
+		return parent;
+	}
+}
+
+class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 	private final SyncActionGenerator generator;
 	private final Location location;
 	private WorkingSet currentWorkingSet;
@@ -150,6 +169,7 @@ class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 	@Override
 	protected void processItem(File item) throws Exception {
 		synchronized (generator) {
+			// first node to be processed, store it's parent as the root
 			final File currentParent = item.getParent();
 			if ((null != currentWorkingSet) && (currentParent != currentWorkingSet.getParent())) {
 				currentWorkingSet.setActive(false);
@@ -157,9 +177,10 @@ class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 					flushWorkingset(currentWorkingSet);
 					other.flushWorkingset(currentWorkingSet.getPath());
 				}
+				currentWorkingSet = null;
 			}
-			if ((null == currentWorkingSet) || (currentParent != currentWorkingSet.getParent())) {
-				currentWorkingSet = new WorkingSet(currentParent);
+			if (null == currentWorkingSet) {
+				currentWorkingSet = new WorkingSet((null == currentParent) ? item : currentParent);
 				workingSetMap.put(currentWorkingSet.getPath(), currentWorkingSet);
 			}
 			File twin = other.poll(currentWorkingSet.getPath(), item.getName());
@@ -188,9 +209,6 @@ class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 		WorkingSet workingSet = workingSetMap.get(path);
 		if (null != workingSet) {
 			f = workingSet.remove(name);
-			if (workingSet.isEmpty()) {
-				workingSetMap.remove(path);
-			}
 		}
 		return f;
 	}
@@ -225,8 +243,40 @@ class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 	private void flushWorkingset(WorkingSet workingSet) {
 		final String path = workingSet.getPath();
 		for (String name : workingSet.keySet()) {
-			doDecideOne(workingSet.remove(name), other.poll(path, name));
+			File srcFile = workingSet.remove(name);
+			File dstFile = other.poll(path, name);
+			if (null == dstFile) {
+				dstFile = other.createFile(path, name, srcFile.isDirectory());
+			}
+			doDecideOne(srcFile, dstFile);
 		}
+	}
+
+	// path must be normalized and start with a /
+	public File createFile(String path, String name, boolean directory) {
+		WorkingSet workingSet = workingSetMap.get(path);
+		if (null == workingSet) {
+			String[] dirs = path.split("/");
+			String parentDir = "";
+			WorkingSet grandparentWorkingSet = workingSetMap.get("");
+			if (null == grandparentWorkingSet) {
+
+			}
+			for (String dir : dirs) {
+				parentDir += (parentDir.isEmpty() ? "" : "/") + dir;
+				workingSet = workingSetMap.get(parentDir);
+				if (null == workingSet) {
+					File parent = grandparentWorkingSet.getParent().buildChildNode(dir, true, false);
+					workingSet = new WorkingSet(parent);
+					workingSetMap.put(parentDir, workingSet);
+				}
+				grandparentWorkingSet = workingSet;
+			}
+		}
+		if (null != workingSet) {
+			return workingSet.getParent().buildChildNode(name, directory, false);
+		}
+		return null;
 	}
 
 	private void flushWorkingset(String path) {

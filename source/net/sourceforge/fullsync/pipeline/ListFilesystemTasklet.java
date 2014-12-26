@@ -45,7 +45,7 @@ public class ListFilesystemTasklet extends SyncTasklet<File, File> {
 	protected void prepare(SmartQueue<File> queue) throws Exception {
 		super.prepare(queue);
 		site = FullSync.getFileSystemManager().createConnection(location);
-		//TODO: queue a site.close() for execution on async task cleanup (end of the entire sync)
+		//FIXME: queue a site.close() for execution on async task cleanup (end of the entire sync)
 		queue.offer(site.getRoot());
 	}
 
@@ -74,7 +74,7 @@ public class ListFilesystemTasklet extends SyncTasklet<File, File> {
 	}
 
 	@Override
-	protected void processItem(File item) throws Exception {
+	protected void processItem(final File item) throws Exception {
 		if (filterChain.accept(item)) {
 			if (item.isDirectory()) {
 				Collection<File> children = item.getChildren();

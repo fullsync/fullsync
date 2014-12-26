@@ -185,10 +185,6 @@ public class TestNode implements File {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		if (null != parent) {
-			sb.append(parent.getPath());
-			sb.append("/");
-		}
 		sb.append(name);
 		sb.append("; ");
 		if ((size >= 0) || (lastModified > 0)) {

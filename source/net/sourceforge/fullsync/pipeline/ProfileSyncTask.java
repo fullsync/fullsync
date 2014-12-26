@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.pipeline;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import net.sourceforge.fullsync.ActionDecider;
 import net.sourceforge.fullsync.BackgroundTask;
 import net.sourceforge.fullsync.BackgroundTaskState;
 import net.sourceforge.fullsync.FileFilterChain;
@@ -29,6 +30,12 @@ import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.impl.BackupActionDecider;
+import net.sourceforge.fullsync.impl.ExactCopyActionDecider;
+import net.sourceforge.fullsync.impl.PublishActionDecider;
+import net.sourceforge.fullsync.impl.PublishOverwriteActionDecider;
+import net.sourceforge.fullsync.impl.StateDecider;
+import net.sourceforge.fullsync.impl.TwoWaySyncActionDecider;
 import net.sourceforge.fullsync.util.DebouncedHysteresisEmitter;
 import net.sourceforge.fullsync.util.HysteresisReceiver;
 import net.sourceforge.fullsync.util.SmartQueue;
@@ -94,7 +101,27 @@ public class ProfileSyncTask implements BackgroundTask, HysteresisReceiver, Task
 		DebugPrintQueue<File> dstDebugPrinter = new DebugPrintQueue<File>(this, dst.getOutput(), "DST");
 		subTasks.add(srcDebugPrinter);
 		subTasks.add(dstDebugPrinter);
-		SyncActionGenerator actionGenerator = new SyncActionGenerator(this, srcDebugPrinter.getOutput(), dstDebugPrinter.getOutput());
+		StateDecider stateDecider = new StateDecider(profile.getRuleSet().createRuleSet());
+		ActionDecider actionDecider;
+		if (profile.getSynchronizationType().equals("Publish/Update")) {
+			actionDecider = new PublishActionDecider();
+		}
+		else if (profile.getSynchronizationType().equals("Publish/Update Overwrite")) {
+			actionDecider = new PublishOverwriteActionDecider();
+		}
+		else if (profile.getSynchronizationType().equals("Backup Copy")) {
+			actionDecider = new BackupActionDecider();
+		}
+		else if (profile.getSynchronizationType().equals("Exact Copy")) {
+			actionDecider = new ExactCopyActionDecider();
+		}
+		else if (profile.getSynchronizationType().equals("Two Way Sync")) {
+			actionDecider = new TwoWaySyncActionDecider();
+		}
+		else {
+			throw new IllegalArgumentException("Profile has unknown synchronization type.");
+		}
+		SyncActionGenerator actionGenerator = new SyncActionGenerator(this, srcDebugPrinter.getOutput(), dstDebugPrinter.getOutput(), stateDecider, actionDecider);
 		subTasks.add(actionGenerator.getSourceTask());
 		subTasks.add(actionGenerator.getDestinationTask());
 		DebugPrintQueue<Task> taskDebugPrinter = new DebugPrintQueue<Task>(this, actionGenerator.getOutput(), "Task");
