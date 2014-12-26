@@ -28,11 +28,11 @@
 		<fileset dir="${basedir}/lib-tests">
 			<include name="junit-*.jar" />
 			<include name="hamcrest-core-*.jar" />
+			<include name="ant-junit-*.jar" />
 		</fileset>
 	</path>
 
-	<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">
-		<classpath refid="classpath.junit" />
+	<taskdef name="fullsyncjunit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="classpath.junit" onerror="fail">
 	</taskdef>
 
 	<fileset id="dependentJars" dir="${basedir}/lib" includesfile="${source.dir}/net/sourceforge/fullsync/launcher/dependencies.txt">
@@ -264,7 +264,7 @@
 
 	<target name="test" depends="build, compile-tests">
 		<mkdir dir="${build.dir}/junit"/>
-		<junit fork="true" printsummary="yes" includeantruntime="true" threads="2">
+		<fullsyncjunit fork="true" printsummary="yes" includeantruntime="true" threads="2">
 			<formatter type="plain" usefile="false" />
 			<formatter type="xml" usefile="true"/>
 			<classpath>
@@ -275,6 +275,6 @@
 					<include name="**/*.java"/>
 				</fileset>
 			</batchtest>
-		</junit>
+		</fullsyncjunit>
 	</target>
 </project>
