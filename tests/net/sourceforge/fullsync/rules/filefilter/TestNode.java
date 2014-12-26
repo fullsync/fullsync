@@ -45,8 +45,8 @@ public class TestNode implements File {
 		this.size = length;
 	}
 
-	public static TestNode createRoot(boolean exists, boolean directory, long length, long lm) {
-		return new TestNode("", null, exists, directory, length, lm);
+	public static TestNode createRoot(boolean exists, long lm) {
+		return new TestNode("", null, exists, true, 0, lm);
 	}
 
 	public File getDirectory() {

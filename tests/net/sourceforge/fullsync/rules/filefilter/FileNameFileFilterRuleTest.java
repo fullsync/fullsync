@@ -26,7 +26,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 import org.junit.Test;
 
 public class FileNameFileFilterRuleTest {
-	private File root = TestNode.createRoot(true, true, 0, 0);
+	private File root = TestNode.createRoot(true, 0);
 
 	@Test
 	public void testOpIs() {

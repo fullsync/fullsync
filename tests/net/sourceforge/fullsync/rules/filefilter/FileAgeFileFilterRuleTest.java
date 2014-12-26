@@ -33,7 +33,7 @@ import org.junit.After;
 import org.junit.Test;
 
 public class FileAgeFileFilterRuleTest {
-	private File root = TestNode.createRoot(true, true, 0, 0);
+	private File root = TestNode.createRoot(true, 0);
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	@After
