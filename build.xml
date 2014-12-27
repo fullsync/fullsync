@@ -24,22 +24,7 @@
 	<property name="final-src.name" value="${final.name}-src" />
 	<property name="jar.copyright" value="Copyright (c) ${current.year} the ${ant.project.name} Team" />
 
-	<fileset id="dependentJars" dir="${basedir}/lib">
-		<include name="commons-cli.jar" />
-		<include name="commons-configuration.jar" />
-		<include name="commons-collections.jar" />
-		<include name="commons-lang.jar" />
-		<include name="commons-net.jar" />
-		<include name="jcifs.jar" />
-		<include name="slf4j-api.jar" />
-		<include name="log4j-over-slf4j.jar" />
-		<include name="jcl-over-slf4j.jar" />
-		<include name="fullsync-logger.jar" />
-		<!-- can't be done because the swt jar is added to the class path at runtime... -->
-		<!-- <include name="swt-*.jar"/> -->
-		<include name="commons-vfs2.jar" />
-		<include name="commons-vfs2-sandbox.jar" />
-		<include name="jsch.jar" />
+	<fileset id="dependentJars" dir="${basedir}/lib" includesfile="${source.dir}/net/sourceforge/fullsync/launcher/dependencies.txt">
 	</fileset>
 	<path id="compile.classpath">
 		<fileset refid="dependentJars" />
@@ -198,18 +183,10 @@
 	</target>
 
 	<target name="launcher-jar" depends="compile">
-		<fileset dir="${build.lib.dir}" id="lib.dist.fileset">
-			<include name="**/*.jar" />
-			<exclude name="swt-*.jar" />
-		</fileset>
-		<pathconvert pathsep=" " property="dist.classpath" refid="lib.dist.fileset" dirsep="">
-			<map from="${build.lib.dir}" to="" />
-		</pathconvert>
 		<jar destfile="${build.dir}/launcher.jar">
 			<fileset dir="${classes.dir}" includes="net/sourceforge/fullsync/launcher/**/*" />
 			<manifest>
 				<attribute name="Main-Class" value="net.sourceforge.fullsync.launcher.Launcher" />
-				<attribute name="FullSync-Class-Path" value="${dist.classpath}" />
 				<attribute name="License" value="GPLv2+" />
 				<attribute name="FullSync-Version" value="${version}" />
 				<attribute name="Copyright" value="${jar.copyright}" />
