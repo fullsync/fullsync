@@ -36,8 +36,6 @@
 	</taskdef>
 
 	<fileset id="dependentJars" dir="${basedir}/lib" includesfile="${source.dir}/net/sourceforge/fullsync/launcher/dependencies.txt">
-		<include name="swtcalendar.jar" />
-		<include name="simpleeventbus.jar" />
 	</fileset>
 
 	<path id="compile.classpath">
