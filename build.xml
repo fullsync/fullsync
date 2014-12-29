@@ -254,7 +254,7 @@
 		</exec>
 	</target>
 
-	<target name="test" depends="compile-tests, jars">
+	<target name="test" depends="jars,compile-tests">
 		<mkdir dir="${build.dir}/junit"/>
 		<fullsyncjunit fork="true" printsummary="yes" includeantruntime="true" forkmode="once">
 			<formatter type="plain" usefile="false" />
