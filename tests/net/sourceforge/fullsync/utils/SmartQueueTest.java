@@ -69,7 +69,7 @@ public class SmartQueueTest {
 		for (int i = 0; i < numObjects; ++i) {
 			queue.offer(this);
 		}
-		Assert.assertTrue(!queue.isEmpty());
+		Assert.assertFalse(queue.isEmpty());
 		queue.shutdown();
 		consumer1.start();
 		consumer2.start();
@@ -89,37 +89,23 @@ public class SmartQueueTest {
 		consumer1.start();
 		consumer1.join(500);
 		Assert.assertTrue(consumer1.isAlive());
-		Assert.assertTrue(!consumer2.isAlive());
+		Assert.assertFalse(consumer2.isAlive());
 		queue.shutdown();
 		consumer1.join(500);
-		Assert.assertTrue(!consumer1.isAlive());
-		Assert.assertTrue(!consumer2.isAlive());
+		Assert.assertFalse(consumer1.isAlive());
+		Assert.assertFalse(consumer2.isAlive());
 	}
 
-	@Test
+	@Test(expected=IllegalStateException.class)
 	public void testShutdownThrows() {
-		IllegalStateException illegalState = null;
 		queue.shutdown();
-		try {
-			queue.shutdown();
-		}
-		catch (IllegalStateException ex) {
-			illegalState = ex;
-		}
-		Assert.assertNotEquals(null, illegalState);
+		queue.shutdown();
 	}
 
-	@Test
+	@Test(expected=IllegalStateException.class)
 	public void testOfferAfterShutdownThrows() {
-		IllegalStateException illegalState = null;
 		queue.shutdown();
-		try {
-			queue.offer(this);
-		}
-		catch (IllegalStateException ex) {
-			illegalState = ex;
-		}
-		Assert.assertNotEquals(null, illegalState);
+		queue.offer(this);
 	}
 
 	@Test
@@ -162,15 +148,8 @@ public class SmartQueueTest {
 		Assert.assertEquals(numObjects, consumer1.getReceivedObjects());
 	}
 
-	@Test
+	@Test(expected=IllegalArgumentException.class)
 	public void testOfferNullThrows() {
-		IllegalArgumentException illegalArgument = null;
-		try {
-			queue.offer(null);
-		}
-		catch (IllegalArgumentException ex) {
-			illegalArgument = ex;
-		}
-		Assert.assertNotEquals(null, illegalArgument);
+		queue.offer(null);
 	}
 }
