@@ -43,7 +43,7 @@
 		<fileset refid="dependentJars" />
 		<pathelement location="${classes.dir}" />
 		<!-- only used for compilation -->
-		<pathelement location="${build.lib.dir}/swt-gtk-linux-x86_64.jar" />
+		<pathelement location="${basedir}/lib/swt-gtk-linux-x86_64.jar" />
 	</path>
 
 	<path id="tests.classpath">
@@ -87,8 +87,6 @@
 
 	<target name="compile-tests">
 		<mkdir dir="${classes-tests.dir}" />
-		<property name="classpath-debug" refid="tests.classpath"></property>
-		<echo>${classpath-debug}</echo>
 		<javac
 			debug="${debug}"
 			srcdir="${tests.dir}"
@@ -122,7 +120,6 @@
 	</target>
 
 	<target name="copy-resources" depends="compile">
-		<echo>copy images, README and so on</echo>
 		<copy todir="${build.dir}/images">
 			<fileset dir="${basedir}/images">
 				<include name="*.*" />
@@ -173,21 +170,19 @@
 		<!-- copy readme and so on -->
 	</target>
 
-	<target name="jar" depends="compile, copy-libs">
-		<jar destfile="${build.lib.dir}/fullsync.jar">
+	<target name="jars" depends="compile, copy-libs, copy-resources">
+		<jar destfile="${build.dir}/launcher.jar">
 			<fileset dir="${classes.dir}" includes="net/**/*">
 				<exclude name="net/sourceforge/fullsync/launcher/**/*"/>
 				<exclude name="net/sourceforge/fullsync/build/**/*"/>
 			</fileset>
 			<manifest>
+				<attribute name="Main-Class" value="net.sourceforge.fullsync.launcher.Launcher" />
 				<attribute name="License" value="GPLv2+" />
 				<attribute name="FullSync-Version" value="${version}" />
 				<attribute name="Copyright" value="${jar.copyright}" />
 			</manifest>
 		</jar>
-	</target>
-
-	<target name="logger-jar" depends="compile, copy-libs, jar">
 		<jar destfile="${build.lib.dir}/fullsync-logger.jar">
 			<fileset dir="${classes.dir}" includes="org/slf4j/impl/**/*" />
 			<manifest>
@@ -196,13 +191,9 @@
 				<attribute name="Copyright" value="${jar.copyright}" />
 			</manifest>
 		</jar>
-	</target>
-
-	<target name="launcher-jar" depends="compile">
-		<jar destfile="${build.dir}/launcher.jar">
-			<fileset dir="${classes.dir}" includes="net/sourceforge/fullsync/launcher/**/*" />
+		<jar destfile="${build.lib.dir}/fullsync.jar">
+			<fileset dir="${classes.dir}" includes="net/**/*" excludes="net/sourceforge/fullsync/launcher/**/*" />
 			<manifest>
-				<attribute name="Main-Class" value="net.sourceforge.fullsync.launcher.Launcher" />
 				<attribute name="License" value="GPLv2+" />
 				<attribute name="FullSync-Version" value="${version}" />
 				<attribute name="Copyright" value="${jar.copyright}" />
@@ -210,7 +201,7 @@
 		</jar>
 	</target>
 
-	<target name="build" depends="detect, clean, copy-libs, copy-resources, javadoc, jar, logger-jar, launcher-jar">
+	<target name="build" depends="detect, clean, javadoc, jars">
 	</target>
 
 	<target name="dist" description="creates a zip and tar.gz files ready for distribution" depends="build">
@@ -263,7 +254,7 @@
 		</exec>
 	</target>
 
-	<target name="test" depends="build, compile-tests">
+	<target name="test" depends="compile-tests, jars">
 		<mkdir dir="${build.dir}/junit"/>
 		<fullsyncjunit fork="true" printsummary="yes" includeantruntime="true" forkmode="once">
 			<formatter type="plain" usefile="false" />
