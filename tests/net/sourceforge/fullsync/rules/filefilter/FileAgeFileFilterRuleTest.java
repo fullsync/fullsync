@@ -22,23 +22,28 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import junit.framework.TestCase;
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 
-public class FileAgeFileFilterRuleTest extends TestCase {
+import org.junit.After;
+import org.junit.Test;
+
+public class FileAgeFileFilterRuleTest {
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		SystemDate.getInstance().setUseSystemTime();
 	}
 
+	@Test
 	public void testOpIs() throws FilterRuleNotAppliableException, ParseException {
 		SystemDate.getInstance().setTimeSpeed(0);
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:01").getTime());
@@ -53,6 +58,7 @@ public class FileAgeFileFilterRuleTest extends TestCase {
 				"01/02/2005 10:00:00").getTime())));
 	}
 
+	@Test
 	public void testOpIsnt() throws FilterRuleNotAppliableException, ParseException {
 		SystemDate.getInstance().setTimeSpeed(0);
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:01").getTime());
@@ -67,6 +73,7 @@ public class FileAgeFileFilterRuleTest extends TestCase {
 				"01/02/2005 10:00:00").getTime())));
 	}
 
+	@Test
 	public void testOpIsGreaterThan() throws FilterRuleNotAppliableException, ParseException {
 		SystemDate.getInstance().setTimeSpeed(0);
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:00").getTime());
@@ -94,6 +101,7 @@ public class FileAgeFileFilterRuleTest extends TestCase {
 				"01/01/2005 09:59:58").getTime())));
 	}
 
+	@Test
 	public void testOpIsLessThan() throws FilterRuleNotAppliableException, ParseException {
 		SystemDate.getInstance().setTimeSpeed(0);
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:00").getTime());

@@ -22,14 +22,18 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
+import static org.junit.Assert.assertTrue;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import junit.framework.TestCase;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
-public class FileModificationDateFileFilterRuleTest extends TestCase {
+import org.junit.Test;
 
+public class FileModificationDateFileFilterRuleTest {
+
+	@Test
 	public void testOpIs() throws ParseException, FilterRuleNotAppliableException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 

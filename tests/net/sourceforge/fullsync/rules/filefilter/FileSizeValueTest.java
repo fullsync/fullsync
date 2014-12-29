@@ -22,11 +22,13 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import junit.framework.TestCase;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
-public class FileSizeValueTest extends TestCase {
+import org.junit.Test;
 
+public class FileSizeValueTest {
+
+	@Test
 	public void testFromString() {
 		SizeValue value = new SizeValue();
 

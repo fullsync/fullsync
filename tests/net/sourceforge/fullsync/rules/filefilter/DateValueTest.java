@@ -22,15 +22,20 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import junit.framework.TestCase;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
-public class DateValueTest extends TestCase {
+import org.junit.Test;
 
+public class DateValueTest {
+
+	@Test
 	public void testFromString() {
 		DateValue value = new DateValue();
 		value.fromString("10/08/1994");
@@ -38,6 +43,7 @@ public class DateValueTest extends TestCase {
 		assertEquals(value.toString(), "10/08/1994");
 	}
 
+	@Test
 	public void testEquals() throws ParseException {
 		DateValue value = new DateValue();
 		value.fromString("10/08/1994");
@@ -59,6 +65,7 @@ public class DateValueTest extends TestCase {
 		assertTrue(!value.equals(date.getTime()));
 	}
 
+	@Test
 	public void testIsBefore() throws ParseException {
 		DateValue value = new DateValue();
 		value.fromString("10/08/1994");
@@ -80,6 +87,7 @@ public class DateValueTest extends TestCase {
 		assertTrue(value.isBefore(date.getTime()));
 	}
 
+	@Test
 	public void testIsAfter() throws ParseException {
 		DateValue value = new DateValue();
 		value.fromString("10/08/1994");

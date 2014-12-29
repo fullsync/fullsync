@@ -22,11 +22,14 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
-public class FileSizeFileFilterRuleTest extends TestCase {
+import org.junit.Test;
 
+public class FileSizeFileFilterRuleTest {
+
+	@Test
 	public void testOpIs() throws FilterRuleNotAppliableException {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue(1000, SizeValue.BYTES), FileSizeFileFilterRule.OP_IS);
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, 0);
@@ -37,6 +40,7 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 		assertTrue(!filterRule.match(file));
 	}
 
+	@Test
 	public void testOpIsnt() throws FilterRuleNotAppliableException {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue(1000, SizeValue.BYTES), FileSizeFileFilterRule.OP_ISNT);
 		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, 0);
@@ -46,6 +50,7 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 		assertTrue(filterRule.match(file));
 	}
 
+	@Test
 	public void testOpIsGreaterThan() throws FilterRuleNotAppliableException {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue(1000, SizeValue.BYTES),
 				FileSizeFileFilterRule.OP_IS_GREATER_THAN);
@@ -60,6 +65,7 @@ public class FileSizeFileFilterRuleTest extends TestCase {
 		assertTrue(!filterRule.match(file));
 	}
 
+	@Test
 	public void testOpIsLessThan() throws FilterRuleNotAppliableException {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue(1000, SizeValue.BYTES),
 				FileSizeFileFilterRule.OP_IS_LESS_THAN);
