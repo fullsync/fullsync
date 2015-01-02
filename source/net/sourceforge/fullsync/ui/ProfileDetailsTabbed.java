@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import net.full.fs.ui.ConnectionConfiguration;
@@ -610,8 +611,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 		directoryTree.setRedraw(false);
 		directoryTree.removeAll();
 		try {
-			File rootFile = sourceSite.getRoot();
-			for (File file : rootFile.getChildren()) {
+			for (File file : getOrderedChildren(sourceSite.getRoot())) {
 				if (file.isDirectory()) {
 					TreeItem item = new TreeItem(directoryTree, SWT.NULL);
 					item.setText(file.getName());
@@ -634,14 +634,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 	}
 
 	private void addChildren(File rootFile, TreeItem item) throws IOException {
-		ArrayList<File> children = new ArrayList<File>(rootFile.getChildren());
-		Collections.sort(children, new Comparator<File>() {
-			@Override
-			public int compare(File o1, File o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
-		for (File file : children) {
+		for (File file : getOrderedChildren(rootFile)) {
 			if (file.isDirectory()) {
 				TreeItem childrenItem = new TreeItem(item, SWT.NULL);
 				childrenItem.setText(file.getName());
@@ -654,6 +647,17 @@ public class ProfileDetailsTabbed implements DisposeListener {
 				}
 			}
 		}
+	}
+
+	private List<File> getOrderedChildren(File rootFile) throws IOException {
+		ArrayList<File> children = new ArrayList<File>(rootFile.getChildren());
+		Collections.sort(children, new Comparator<File>() {
+			@Override
+			public int compare(File o1, File o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		return children;
 	}
 
 	private void markItem(TreeItem item) {
