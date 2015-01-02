@@ -69,11 +69,13 @@ class AboutDialog extends Dialog implements DisposeListener {
 			dialogShell.addDisposeListener(this);
 
 			GridLayout dialogShellLayout = new GridLayout();
-			dialogShell.setLayout(dialogShellLayout);
-			dialogShellLayout.verticalSpacing = 0;
+			dialogShellLayout.marginTop = 0;
 			dialogShellLayout.marginHeight = 0;
 			dialogShellLayout.marginWidth = 0;
+			dialogShellLayout.marginBottom = 5;
+			dialogShellLayout.verticalSpacing = 5;
 			dialogShellLayout.horizontalSpacing = 0;
+			dialogShell.setLayout(dialogShellLayout);
 			dialogShell.setText(Messages.getString("AboutDialog.About_FullSync")); //$NON-NLS-1$
 			// the fullsync picture
 			labelPicture = new Label(dialogShell, SWT.NONE);
@@ -168,12 +170,6 @@ class AboutDialog extends Dialog implements DisposeListener {
 					});
 				}
 			}, delay, delay);
-			// separator
-			Label labelSeparator2 = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
-			GridData labelSeparator2LData = new GridData();
-			labelSeparator2LData.grabExcessHorizontalSpace = true;
-			labelSeparator2LData.horizontalAlignment = SWT.FILL;
-			labelSeparator2.setLayoutData(labelSeparator2LData);
 			// buttons composite
 			compositeBottom = new Composite(dialogShell, SWT.NONE);
 			GridLayout compositeBottomLayout = new GridLayout();
@@ -219,13 +215,13 @@ class AboutDialog extends Dialog implements DisposeListener {
 			// ok button
 			buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
 			buttonOk.setText("Ok");
-			GridData buttonOkLData = new GridData();
 			buttonOk.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent evt) {
 					dialogShell.close();
 				}
 			});
+			GridData buttonOkLData = new GridData();
 			buttonOkLData.horizontalAlignment = GridData.CENTER;
 			buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
 			buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
@@ -235,6 +231,7 @@ class AboutDialog extends Dialog implements DisposeListener {
 			dialogShell.pack();
 			dialogShell.layout(true);
 			dialogShell.open();
+			buttonOk.setFocus();
 			Display display = dialogShell.getDisplay();
 			while (!dialogShell.isDisposed()) {
 				if (!display.readAndDispatch()) {
