@@ -25,8 +25,6 @@ import java.io.Reader;
 
 /**
  * various utilities.
- *
- * @author cobexer
  */
 public abstract class Util {
 	/**

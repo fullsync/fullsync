@@ -30,10 +30,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.rules.TemporaryFolder;
 
-/**
- * @author cobexer
- *
- */
 public abstract class GUITestBase {
 	private static final long GUI_STARTUP_TIMEOUT = 7000;
 
