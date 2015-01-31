@@ -26,7 +26,6 @@
 		<include name="commons-collections.jar" />
 		<include name="commons-lang.jar" />
 		<include name="commons-net.jar" />
-		<include name="jakarta-oro.jar" />
 		<include name="jcifs.jar" />
 		<include name="slf4j-api.jar" />
 		<include name="log4j-over-slf4j.jar" />

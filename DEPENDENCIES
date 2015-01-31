@@ -8,8 +8,6 @@ Versions of dependent libraries in distributions:
  * commons-net.jar               2.2               2010-11-17
  * commons-vfs2.jar              2.0               2010-12-21
  * commons-vfs2-sandbox.jar      2.0               2010-12-21
- * j2ssh-core.jar                0.2.9             2007-09-07
- * jakarta-oro.jar               2.0.8             2003-12-28
  * jcifs.jar                     1.3.15            2010-10-07
  * swt-*.jar                     4.427 (aka 4.4)   2014-06-06
  * jsch.jar                      0.1.45            2011-11-01
@@ -73,7 +71,7 @@ commons-lang.jar
 
 commons-net.jar
 	Dependencies:
-		jakarta-oro.jar
+		none
 	Used in:
 		net.sourceforge.fullsync.fs.connection.FtpConnection
 
@@ -82,13 +80,6 @@ j2ssh-core.jar
 		none
 	Used in:
 		net.sourceforge.fullsync.fs.connection.SftpConnection
-
-jakarta-oro.jar
-	Regular expressions
-	Dependencies:
-		none
-	Used by:
-		commons-net.jar
 
 jcifs.jar
 	Used in:
