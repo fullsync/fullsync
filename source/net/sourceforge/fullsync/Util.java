@@ -48,7 +48,7 @@ public abstract class Util {
 							out.append(buffer, 0, read);
 						}
 					} while (read >= 0);
-					return out.toString().trim();
+					return out.toString();
 				}
 				catch (Exception e) {
 					e.printStackTrace();
@@ -67,15 +67,15 @@ public abstract class Util {
 	}
 
 	public static String getFullSyncVersion() {
-		return Util.getResourceAsString("net/sourceforge/fullsync/version.txt");
+		return Util.getResourceAsString("net/sourceforge/fullsync/version.txt").trim();
 	}
 
 	public static String getTwitterURL() {
-		return Util.getResourceAsString("net/sourceforge/fullsync/twitter-url.txt");
+		return Util.getResourceAsString("net/sourceforge/fullsync/twitter-url.txt").trim();
 	}
 
 	public static String getWebsiteURL() {
-		return Util.getResourceAsString("net/sourceforge/fullsync/website-url.txt");
+		return Util.getResourceAsString("net/sourceforge/fullsync/website-url.txt").trim();
 	}
 
 }
