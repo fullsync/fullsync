@@ -1,13 +1,8 @@
 <?xml version="1.0"?>
 <project name="FullSync" default="build" basedir=".">
-	<loadfile property="version" srcfile="source/net/sourceforge/fullsync/version.txt" encoding="utf-8">
-		<filterchain>
-			<headfilter lines="1"/>
-			<striplinebreaks/>
-		</filterchain>
-	</loadfile>
-	<property name="final.name" value="${ant.project.name}-${version}" />
-	<property name="final-src.name" value="${final.name}-src" />
+	<property name="debug" value="on" />
+	<property name="java.source.version" value="1.6" />
+	<property name="java.target.version" value="1.6" />
 	<property name="source.dir" value="${basedir}/source" />
 	<property name="tests.dir" value="${basedir}/tests" />
 	<property name="build.dir" value="${basedir}/build" />
@@ -15,10 +10,18 @@
 	<property name="classes.dir" value="${build.dir}/classes" />
 	<property name="classes-tests.dir" value="${basedir}/build-tests/classes" />
 	<property name="dist.dir" value="${basedir}/dist" />
-	<property name="jar.copyright" value="Copyright (c) 2015 the ${ant.project.name} Team" />
-	<property name="debug" value="on" />
-	<property name="java.source.version" value="1.6" />
-	<property name="java.target.version" value="1.6" />
+	<loadfile property="version" srcfile="${source.dir}/net/sourceforge/fullsync/version.txt" encoding="utf-8">
+		<filterchain>
+			<headfilter lines="1"/>
+			<striplinebreaks/>
+		</filterchain>
+	</loadfile>
+	<tstamp>
+		<format property="current.year" pattern="yyyy"/>
+	</tstamp>
+	<property name="final.name" value="${ant.project.name}-${version}" />
+	<property name="final-src.name" value="${final.name}-src" />
+	<property name="jar.copyright" value="Copyright (c) ${current.year} the ${ant.project.name} Team" />
 
 	<fileset id="dependentJars" dir="${basedir}/lib">
 		<include name="commons-cli.jar" />
