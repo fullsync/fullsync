@@ -60,17 +60,15 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 				sshDirPath = System.getProperty("user.home") + File.separator + ".ssh";
 			}
 			File sshDir = new File(sshDirPath);
-			if (!sshDir.exists()) {
-				if (sshDir.mkdirs()) {
-					System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath());
-					sshDirName = sshDirPath;
-				}
-				else {
-					logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... (tried: " + sshDir.getAbsolutePath().toString() + ")");
-				}
+			if (!sshDir.exists() && !sshDir.mkdirs()) {
+				logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... (tried: " + sshDir.getAbsolutePath().toString() + ")");
+				sshDir = null;
 			}
 			else {
 				sshDirName = sshDirPath;
+			}
+			if (null != sshDir) {
+				System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath());
 			}
 		}
 	}
