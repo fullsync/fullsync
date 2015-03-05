@@ -78,6 +78,7 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME), description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 		SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
+		//TODO: add cfg.setUserDirIsRoot(opts, false); and handle profile updates
 		if (null != sshDirName) {
 			cfg.setKnownHosts(options, new File(sshDirName, "known_hosts"));
 		}
