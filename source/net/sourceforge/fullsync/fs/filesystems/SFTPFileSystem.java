@@ -127,7 +127,7 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 	@Override
 	public final boolean promptYesNo(final String message) {
 		final boolean[] arr = new boolean[] { false };
-		if (null != desc.getParameter("interactive")) {
+		if (null != desc.getParameter(ConnectionDescription.PARAMETER_INTERACTIVE)) {
 			GuiController.getInstance().getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {

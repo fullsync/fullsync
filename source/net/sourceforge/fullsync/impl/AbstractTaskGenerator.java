@@ -124,8 +124,12 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 			ConnectionDescription srcDesc = profile.getSource();
 			ConnectionDescription dstDesc = profile.getDestination();
 			if (interactive) {
-				srcDesc.setParameter("interactive", "true");
-				dstDesc.setParameter("interactive", "true");
+				srcDesc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
+				dstDesc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
+			}
+			else {
+				srcDesc.clearParameter(ConnectionDescription.PARAMETER_INTERACTIVE);
+				dstDesc.clearParameter(ConnectionDescription.PARAMETER_INTERACTIVE);
 			}
 			d1 = fsm.createConnection(srcDesc);
 			d2 = fsm.createConnection(dstDesc);

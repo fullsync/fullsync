@@ -39,6 +39,7 @@ public class ConnectionDescription implements Serializable {
 
 	public static final String PARAMETER_USERNAME = "username";
 	public static final String PARAMETER_PASSWORD = "password";
+	public static final String PARAMETER_INTERACTIVE = "interactive";
 
 	private URI uri = null;
 	private Hashtable<String, String> parameters = new Hashtable<String, String>();
@@ -118,6 +119,10 @@ public class ConnectionDescription implements Serializable {
 
 	public void setParameter(final String name, final String value) {
 		parameters.put(name, value);
+	}
+
+	public void clearParameter(final String name) {
+		parameters.remove(name);
 	}
 
 	public String getSecretParameter(final String name) {
