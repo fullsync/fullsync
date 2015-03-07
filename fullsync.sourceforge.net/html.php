@@ -1,5 +1,4 @@
 <?php
-header( "Content-Type: text/html; charset=UTF-8" );
 /*
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -83,6 +82,7 @@ function getVersions($count) {
 }
 
 function HtmlHeader($caption, $skip = '') {
+	header( "Content-Type: text/html; charset=UTF-8" );
 	$script = explode('/', $_SERVER['PHP_SELF']);
 	$script = end($script);
 ?>
