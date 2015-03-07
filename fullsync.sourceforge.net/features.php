@@ -1,11 +1,31 @@
 <?php
-	include( "html.php" );
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ *
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
+
+include( "html.php" );
 	HtmlHeader( "Features" );
 ?>
 	<dl>
 		<dt>Publication and update of websites, synchronization of local directories and making backups of your data.</dt>
 		<dd>Because of the large amount of options provided, you can use FullSync to publish
-			and update websites, synchronize files between your pc and your notebook or even 
+			and update websites, synchronize files between your pc and your notebook or even
 			backup files to a storage device every few hours.<br/><br/></dd>
 		<dt>multiple modes: update destination, synchronize source with destination</dt>
 		<dd>FullSync can be configured to look for changes in different ways. you can
@@ -16,7 +36,7 @@
 		<dd>The rules that can be defined are very powerful. For example pattern matches
 			can be regular expressions and you can first tell FullSync which files to take
 			and can then define exceptions. Additionally you can configure criterias
-			which decide whether a file has changed or not. This is good when using 
+			which decide whether a file has changed or not. This is good when using
 			filesystems which can not set modification times or where the size changes
 			while transferring from the source to destination (ftp).<br/><br/></dd>
 		<dt>configuration and rule-rewriting per directory possible</dt>
@@ -25,7 +45,7 @@
 			change the synchronization direction for a single directory, or you could
 			change filters or even disallow rule rewriting.<br/><br/></dd>
 		<dt>buffered filesystems (so the tool only sees files it created itself)</dt>
-		<dd>To allow updating just the important parts or a directory tree, FullSync 
+		<dd>To allow updating just the important parts or a directory tree, FullSync
 			can buffer the view of the destination filesystem and keeps track which
 			files it transferred. This way additional files on the destination are ignored and
 			changes on destination files can be reported. Reporting or finding changes
