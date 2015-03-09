@@ -4,6 +4,11 @@ Copyright (c) 2011-2015 Christoph Obexer. All Rights Reserved.
 Jan Kopcsek, Project Admin and Developer
 Michele Aiello, Developer
 Norbert Kopcsek, Artist
-Christoph Obexer, Developer
+Christoph Obexer, Project Admin and Developer
 
 Support Mailing List: <a href="mailto:fullsync-users@lists.sourceforge.net?body=FullSync%20Version%3a{version}">fullsync-users@lists.sourceforge.net</a>
+
+If you have a Sourceforge.net account or want to save time for me please use the links below instead:
+Discussion Forum: <a href="https://sourceforge.net/p/fullsync/discussion/">https://sourceforge.net/p/fullsync/discussion/</a>
+Report Problems: <a href="https://sourceforge.net/p/fullsync/bugs/">https://sourceforge.net/p/fullsync/bugs/</a>
+Request new Features: <a href="https://sourceforge.net/p/fullsync/feature-requests/">https://sourceforge.net/p/fullsync/feature-requests/</a>
