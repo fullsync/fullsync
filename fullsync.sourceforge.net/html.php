@@ -43,24 +43,28 @@ function readVersion($major, $minor, $patch, $file) {
 	return null;
 }
 
+function compareVersionComponent($a, $b) {
+	$a = intval($a, 10);
+	$b = intval($b, 10);
+	if ($a > $b) {
+		return 1;
+	}
+	if ($a < $b) {
+		return -1;
+	}
+	return 0;
+}
+
 // sort version numbers, newest first
 function versionComparator($a, $b) {
-	if ($a['major'] === $b['major']) {
-		if ($a['minor'] === $b['minor']) {
-			if ($a['patch'] === $b['patch']) {
-				return 0;
-			}
-			else {
-				return $b['patch'] - $a['patch'];
-			}
-		}
-		else {
-			return $b['minor'] - $a['minor'];
+	$components = array('major', 'minor', 'patch');
+	foreach ($components as $component) {
+		$result = compareVersionComponent($b[$component], $a[$component]);
+		if (0 !== $result) {
+			return $result;
 		}
 	}
-	else {
-		return $b['major'] - $a['major'];
-	}
+	return 0;
 }
 
 function getVersions($count) {
