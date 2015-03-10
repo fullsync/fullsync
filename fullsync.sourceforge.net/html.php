@@ -19,8 +19,8 @@
  * at the AUTHORS file in the root of this project.
  */
 
-function readVersion($major, $minor, $patch, $file) {
-	$content = file_get_contents($file);
+function readVersion($major, $minor, $patch) {
+	$content = file_get_contents("versions/$major.$minor.$patch.html");
 	if ($content) {
 		$entry = array(
 			'version' => "$major.$minor.$patch",
@@ -73,7 +73,11 @@ function getVersions($count) {
 	if (false !== $d) {
 		while (false !== ($entry = $d->read())) {
 			if (preg_match('/^(\d+)\.(\d+)\.(\d+)\.html$/', $entry, $version)) {
-				$versions[] = readVersion($version[1], $version[2], $version[3], 'versions/' . $entry);
+				$versions[] = array(
+					'major' => $version[1],
+					'minor' => $version[2],
+					'patch' => $version[3],
+				);
 			}
 		}
 		$d->close();
@@ -81,6 +85,9 @@ function getVersions($count) {
 	usort($versions, 'versionComparator');
 	if ($count > 0) {
 		$versions = array_splice($versions, 0, $count);
+	}
+	foreach($versions as $idx => $v) {
+		$versions[$idx] = readVersion($v['major'], $v['minor'], $v['patch']);
 	}
 	return $versions;
 }
