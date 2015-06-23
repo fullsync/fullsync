@@ -233,6 +233,7 @@
 				<exclude name="lib/swt-win32-*" />
 				<exclude name="*.exe" />
 				<exclude name="*.ini" />
+				<exclude name="**/*/WinRun4J.txt"/>
 			</tarfileset>
 			<tarfileset dir="${build.dir}" prefix="${final.name}" mode="755">
 				<include name="fullsync"/>
@@ -247,6 +248,7 @@
 				<exclude name="lib/swt-win32-*" />
 				<exclude name="*.exe" />
 				<exclude name="*.ini" />
+				<exclude name="**/*/WinRun4J.txt"/>
 			</tarfileset>
 			<tarfileset dir="${build.dir}/mac" prefix="${final.name}" mode="755">
 				<include name="fullsync"/>
