@@ -12,7 +12,7 @@
       <addToCreateFolder>false</addToCreateFolder>
     </components>
     <components componentId="ID1005" componentGuid="47551c3a-d515-4935-b930-49c84d596406">
-      <componentFiles fileId="ID_72275c6b_cb94_4dda_b193_c61ed03a306b" srcName="CHANGELOG" srcDirectory="build" dstName="CHANGELOG" dstPath="" isTrueTypeFont="false" isComModule="false" typelibGuid="" menuName="CHANGELOG" shortcutInProgramFilesMenu="false" shortcutOnDesktop="false" shortcutInQuickLaunch="false" shortcutInStartupFolder="false" shortcutWorkingDirectory="" shortcutCommandArguments="" shortcutDescription="">
+      <componentFiles fileId="ID_72275c6b_cb94_4dda_b193_c61ed03a306b" srcName="ChangeLog.txt" srcDirectory="build" dstName="ChangeLog.txt" dstPath="" isTrueTypeFont="false" isComModule="false" typelibGuid="" menuName="CHANGELOG" shortcutInProgramFilesMenu="false" shortcutOnDesktop="false" shortcutInQuickLaunch="false" shortcutInStartupFolder="false" shortcutWorkingDirectory="" shortcutCommandArguments="" shortcutDescription="">
         <service StartWhenInstalled="true" Remove="both" id="ID1004" isService="false" userAccount="" userPassword="" cmdLineArguments="" errorControl="normal" interactive="false" loadOrderGroup="" serviceName="" startMode="auto" vital="true" />
       </componentFiles>
       <addToCreateFolder>false</addToCreateFolder>

@@ -79,7 +79,7 @@ install -d -m 755 $RPM_BUILD_ROOT%{_desktopdir}/
 install -d -m 755 $RPM_BUILD_ROOT%{_bindir}/
 install -m 644 launcher.jar $RPM_BUILD_ROOT%{fsdir}/launcher.jar
 install -m 644 LICENSE $RPM_BUILD_ROOT%{fsdir}/LICENSE
-install -m 644 CHANGELOG $RPM_BUILD_ROOT%{fsdir}/CHANGELOG
+install -m 644 ChangeLog.txt $RPM_BUILD_ROOT%{fsdir}/ChangeLog.txt
 install -m 755 %{exename} $RPM_BUILD_ROOT%{fsdir}/%{exename}
 ln -s %{fsdir}/%{exename} $RPM_BUILD_ROOT%{_bindir}/%{exename}
 install -m 644 lib/*.jar $RPM_BUILD_ROOT%{fsdir}/lib/
@@ -103,7 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{fsdir}/lib
 %dir %{fsdir}/images
 %doc %{fsdir}/LICENSE
-%doc %{fsdir}/CHANGELOG
+%doc %{fsdir}/ChangeLog.txt
 %{fsdir}/launcher.jar
 %attr(0755 root root) %{fsdir}/%{exename}
 %{_bindir}/%{exename}

@@ -9,6 +9,7 @@
 	<property name="build.lib.dir" value="${build.dir}/lib" />
 	<property name="classes.dir" value="${build.dir}/classes" />
 	<property name="classes-tests.dir" value="${basedir}/build-tests/classes" />
+	<property name="changelog.dir" value="${basedir}/versions/"/>
 	<property name="dist.dir" value="${basedir}/dist" />
 	<loadfile property="version" srcfile="${source.dir}/net/sourceforge/fullsync/version.txt" encoding="utf-8">
 		<filterchain>
@@ -69,7 +70,6 @@
 	<target name="clean" description="cleans project files">
 		<delete dir="${build.dir}" />
 		<delete dir="${dist.dir}" />
-		<delete dir="${classes.dir}" />
 	</target>
 
 	<target name="compile">
@@ -118,13 +118,12 @@
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.lib.dir}" />
 		<copy todir="${build.lib.dir}">
-			<fileset refid="dependentJars">
-			</fileset>
+			<fileset refid="dependentJars" />
 			<fileset dir="${basedir}/lib" includes="swt-*.jar" excludes="swt-*-debug.jar" />
 		</copy>
 	</target>
 
-	<target name="copy-resources">
+	<target name="copy-resources" depends="compile">
 		<echo>copy images, README and so on</echo>
 		<copy todir="${build.dir}/images">
 			<fileset dir="${basedir}/images">
@@ -150,16 +149,38 @@
 		</copy>
 		<copy file="${basedir}/resources/fullsync.ico" tofile="${build.dir}/docs/manual/favicon.ico" />
 		<replaceregexp match="@VERSION@" replace="${version}" flags="g" byline="true" file="${build.dir}/docs/manual/manual.html" />
-		<copy file="${basedir}/CHANGELOG" tofile="${build.dir}/CHANGELOG" />
 		<copy file="${basedir}/LICENSE" tofile="${build.dir}/LICENSE" />
+		<mkdir dir="${build.dir}/versions" />
+		<copy todir="${build.dir}/versions">
+			<fileset dir="${changelog.dir}">
+				<include name="*.html" />
+			</fileset>
+		</copy>
 		<mkdir dir="${build.dir}/mac"/>
 		<copy file="${basedir}/resources/fullsync.mac.sh" tofile="${build.dir}/mac/fullsync" />
+		<java
+			classname="net.sourceforge.fullsync.build.tools.ChangeLogGenerator"
+			classpath="${classes.dir}"
+			dir="${basedir}"
+			fork="true"
+			failonerror="yes"
+			>
+			<arg value="--src-dir"/>
+			<arg value="${changelog.dir}"/>
+			<arg value="--pattern"/>
+			<arg value=".+\.html"/>
+			<arg value="--changelog"/>
+			<arg value="${build.dir}/ChangeLog.txt"/>
+		</java>
 		<!-- copy readme and so on -->
 	</target>
 
 	<target name="jar" depends="compile, rmic, copy-libs">
 		<jar destfile="${build.lib.dir}/fullsync.jar">
-			<fileset dir="${classes.dir}" includes="net/**/*" excludes="net/sourceforge/fullsync/launcher/**/*" />
+			<fileset dir="${classes.dir}" includes="net/**/*">
+				<exclude name="net/sourceforge/fullsync/launcher/**/*"/>
+				<exclude name="net/sourceforge/fullsync/build/**/*"/>
+			</fileset>
 			<manifest>
 				<attribute name="License" value="GPLv2+" />
 				<attribute name="FullSync-Version" value="${version}" />
