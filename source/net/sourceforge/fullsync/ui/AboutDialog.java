@@ -39,7 +39,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -62,7 +61,6 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 	private static final long delay = 750;
 	private int stIndex = 0;
 	private Timer stTimer;
-	private Color headerBackgroundColor;
 	private Combo componentCombo;
 	StyledText licenseText;
 	private List<String> licenseNames;
@@ -84,36 +82,11 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 			dialogShell.setLayout(dialogShellLayout);
 			dialogShell.setText(Messages.getString("AboutDialog.About_FullSync")); //$NON-NLS-1$
 
-			// the FullSync header
-			Composite logoComposite = new Composite(dialogShell, SWT.FILL);
-			GridLayout headerLayout = new GridLayout(2, false);
-			headerLayout.marginRight = 14; // 14px padding as reserved in the About.png
-			logoComposite.setLayout(headerLayout);
+			Composite logoComposite = new LogoHeaderComposite(dialogShell, SWT.FILL);
 			GridData logoCompositeLData = new GridData();
 			logoCompositeLData.grabExcessHorizontalSpace = true;
 			logoCompositeLData.horizontalAlignment = GridData.FILL;
 			logoComposite.setLayoutData(logoCompositeLData);
-			headerBackgroundColor = new Color(dialogShell.getDisplay(), 192, 204, 214);
-			logoComposite.setBackground(headerBackgroundColor);
-			logoComposite.setBackgroundMode(SWT.INHERIT_DEFAULT);
-
-			Label labelPicture = new Label(logoComposite, SWT.NONE);
-			GridData labelPictureLData = new GridData();
-			labelPictureLData.horizontalAlignment = SWT.FILL;
-			labelPicture.setLayoutData(labelPictureLData);
-			Image aboutImg = GuiController.getInstance().getImage("About.png"); //$NON-NLS-1$
-			Rectangle r = aboutImg.getBounds();
-			labelPicture.setSize(r.width, r.height);
-			labelPicture.setImage(aboutImg);
-
-			Label labelLogo = new Label(logoComposite, SWT.TRANSPARENT);
-			GridData labelLogoLData = new GridData();
-			labelLogoLData.grabExcessHorizontalSpace = true;
-			labelLogoLData.horizontalAlignment = GridData.END;
-			labelLogoLData.verticalAlignment = GridData.VERTICAL_ALIGN_CENTER;
-			labelLogo.setLayoutData(labelLogoLData);
-			Image logoImg = GuiController.getInstance().getImage("fullsync72.png"); //$NON-NLS-1$
-			labelLogo.setImage(logoImg);
 
 			final TabFolder tabs = new TabFolder(dialogShell, SWT.FILL);
 			GridData tabLData = new GridData(GridData.FILL_BOTH);
@@ -135,7 +108,7 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 					height = dlgSize.y + height;
 					dialogShell.setSize(width, height);
 					Rectangle parentBounds = parent.getBounds();
-					dialogShell.setLocation(parentBounds.x + (parentBounds.width / 2) - (width / 2), parentBounds.y + (parentBounds.height / 2) - (height / 2));
+					dialogShell.setLocation((parentBounds.x + (parentBounds.width / 2)) - (width / 2), (parentBounds.y + (parentBounds.height / 2)) - (height / 2));
 				}
 			});
 
@@ -182,7 +155,6 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 		if (stTimer != null) {
 			stTimer.cancel();
 		}
-		headerBackgroundColor.dispose();
 	}
 
 	private Composite initAboutTab(Composite parent) {
@@ -346,7 +318,7 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws Throwable {
 		int numLicenses = 0;
 		List<LicenseEntry> licenses = new ArrayList<LicenseEntry>();
 		BufferedReader rdr = new BufferedReader(new InputStreamReader(AboutDialog.class.getResourceAsStream("/net/sourceforge/fullsync/licenses/"))); //$NON-NLS-1$
