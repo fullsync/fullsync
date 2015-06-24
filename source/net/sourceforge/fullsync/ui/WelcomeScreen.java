@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class WelcomeScreen extends Dialog implements AsyncUIUpdate {
 
+	private String lastFullSyncVersion = GuiController.getInstance().getPreferences().getLastVersion();
 	private List<ChangeLogEntry> changelog;
 	private StyledText changelogText;
 
@@ -61,6 +62,7 @@ public class WelcomeScreen extends Dialog implements AsyncUIUpdate {
 		GridData logoCompositeLData = new GridData();
 		logoCompositeLData.grabExcessHorizontalSpace = true;
 		logoCompositeLData.horizontalAlignment = GridData.FILL;
+		logoCompositeLData.widthHint = 600;
 		logoComposite.setLayoutData(logoCompositeLData);
 
 		// version label
@@ -68,21 +70,19 @@ public class WelcomeScreen extends Dialog implements AsyncUIUpdate {
 		labelVersion.setText(title);
 		GridData lvd = new GridData(SWT.FILL);
 		lvd.grabExcessHorizontalSpace = true;
-		lvd.widthHint = 400;
 		labelVersion.setLayoutData(lvd);
 
 		//releases label
-		Label labelReleases = new Label(dialogShell, SWT.FILL | SWT.WRAP);
+		Label labelReleases = new Label(dialogShell, SWT.FILL);
 		labelReleases.setText(Messages.getString("WelcomeScreen.ReadBelow")); //$NON-NLS-1$
-		GridData lrel = new GridData(SWT.FILL | SWT.WRAP);
+		GridData lrel = new GridData(SWT.FILL);
 		lrel.grabExcessHorizontalSpace = true;
-		lrel.widthHint = 400;
 		labelReleases.setLayoutData(lrel);
 
 		changelogText = new StyledText(dialogShell, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 		changelogText.setAlwaysShowScrollBars(false);
 		GridData changelogTextLData = new GridData(GridData.FILL_BOTH);
-		changelogTextLData.heightHint = 200;
+		changelogTextLData.heightHint = 300;
 		changelogText.setLayoutData(changelogTextLData);
 
 		// ok button
@@ -118,22 +118,24 @@ public class WelcomeScreen extends Dialog implements AsyncUIUpdate {
 	@Override
 	public void execute() throws Throwable {
 		ChangeLogLoader loader = new ChangeLogLoader();
-		changelog = loader.load(Util.getInstalllocation(), ".+\\.html"); //$NON-NLS-1$
+		changelog = ChangeLogLoader.filterAfter(loader.load(Util.getInstalllocation(), ".+\\.html"), lastFullSyncVersion); //$NON-NLS-1$
 	}
 
 	@Override
 	public void updateUI(boolean succeeded) {
-		if (succeeded) {
-			StringWriter sw = new StringWriter();
-			DateFormat dateFormat = SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM, Locale.getDefault());
-			for(ChangeLogEntry entry : changelog) {
-				entry.write("FullSync %s released on %s", " - %s", sw, dateFormat);
+		if (!changelogText.isDisposed()) {
+			if (succeeded) {
+				StringWriter sw = new StringWriter();
+				DateFormat dateFormat = SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM, Locale.getDefault());
+				for(ChangeLogEntry entry : changelog) {
+					entry.write("FullSync %s released on %s", " - %s", sw, dateFormat);
+				}
+				sw.flush();
+				changelogText.setText(sw.toString());
 			}
-			sw.flush();
-			changelogText.setText(sw.toString());
-		}
-		else {
-			changelogText.setText("Failed to load Changelogs.");
+			else {
+				changelogText.setText("Failed to load Changelogs.");
+			}
 		}
 	}
 }

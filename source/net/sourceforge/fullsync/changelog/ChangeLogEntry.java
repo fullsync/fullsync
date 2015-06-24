@@ -77,4 +77,8 @@ public class ChangeLogEntry implements Comparable<ChangeLogEntry> {
 	public int compareTo(ChangeLogEntry o) {
 		return o.date.compareTo(date);
 	}
+
+	public String getVersion() {
+		return version;
+	}
 }
