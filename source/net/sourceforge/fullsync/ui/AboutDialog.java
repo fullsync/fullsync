@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
@@ -343,7 +344,7 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		licenses.sort(new Comparator<LicenseEntry>() {
+		Collections.sort(licenses, new Comparator<LicenseEntry>() {
 			@Override
 			public int compare(LicenseEntry o1, LicenseEntry o2) {
 				return o1.name.compareTo(o2.name);
