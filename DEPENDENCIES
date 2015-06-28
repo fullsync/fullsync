@@ -11,8 +11,6 @@ Versions of dependent libraries in distributions:
  * jcifs.jar                     1.3.15            2010-10-07
  * swt-*.jar                     4.427 (aka 4.4)   2014-06-06
  * jsch.jar                      0.1.45            2011-11-01
- * xercesImpl.jar                2.9.1             2007-09-15
- * xml-apis.jar                  2.9.1             2007-09-15
  * jcl-over-slf4j.jar            1.6.4             2011-10-31
  * log4j-over-slf4j.jar          1.6.4             2011-10-31
  * slf4j-api.jar                 1.6.4             2011-10-31
@@ -96,10 +94,6 @@ jsch.jar
 	Used in:
 		net.sourceforge.fullsync.fs.connection.CommonsVfsConnection
 	
-
-xercesImpl.jar + xml-apis.jar
-	Used in:
-		direct xml reading/writing (Profiles, XmlProperties)
 
 jcl-over-slf4j.jar
 	Dependensies:

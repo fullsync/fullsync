@@ -22,19 +22,22 @@ package net.sourceforge.fullsync;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import net.sourceforge.fullsync.remote.RemoteManager;
 import net.sourceforge.fullsync.schedule.Schedule;
@@ -44,8 +47,6 @@ import net.sourceforge.fullsync.schedule.Scheduler;
 import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 import net.sourceforge.fullsync.schedule.SchedulerImpl;
 
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -93,13 +94,6 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		}
 	}
 
-	class ProfileComparator implements Comparator<Profile> {
-		@Override
-		public int compare(Profile p1, Profile p2) {
-			return p1.getName().compareTo(p2.getName());
-		}
-	}
-
 	private String configFile;
 	private Vector<Profile> profiles;
 	private Vector<ProfileListChangeListener> changeListeners;
@@ -133,7 +127,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		this();
 		this.configFile = configFile;
 		loadProfiles(configFile);
-		Collections.sort(profiles, new ProfileComparator());
+		Collections.sort(profiles);
 	}
 
 	public void setRemoteConnection(RemoteManager remoteManager) throws MalformedURLException, RemoteException, NotBoundException {
@@ -229,22 +223,29 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 							name = p.getName() + " (" + (j++) + ")";
 						}
 						p.setName(name);
-						addProfile(p);
+						doAddProfile(p, false);
 					}
 					catch (Throwable t) {
 						ExceptionHandler.reportException("Failed to load a Profile, ignoring and continuing with the rest", t);
 					}
 				}
 			}
+			fireProfilesChangeEvent();
 			return true;
 		}
 		return false;
 	}
 
-	public void addProfile(Profile profile) {
+	private void doAddProfile(Profile profile, boolean fireChangedEvent) {
 		profiles.add(profile);
 		profile.addProfileChangeListener(this);
-		fireProfilesChangeEvent();
+		if (fireChangedEvent) {
+			fireProfilesChangeEvent();
+		}
+	}
+
+	public void addProfile(Profile profile) {
+		doAddProfile(profile, true);
 	}
 
 	public void removeProfile(Profile profile) {
@@ -288,9 +289,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		if (remoteManager != null) {
 			return remoteManager.isSchedulerEnabled();
 		}
-		else {
-			return scheduler.isEnabled();
-		}
+		return scheduler.isEnabled();
 	}
 
 	@Override
@@ -299,9 +298,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		long nextTime = Long.MAX_VALUE;
 		Profile nextProfile = null;
 
-		Enumeration<Profile> e = profiles.elements();
-		while (e.hasMoreElements()) {
-			Profile p = e.nextElement();
+		for (Profile p : profiles) {
 			Schedule s = p.getSchedule();
 			if (p.isEnabled() && (s != null)) {
 				long o = s.getNextOccurrence(now);
@@ -315,9 +312,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		if (nextProfile != null) {
 			return new ProfileManagerSchedulerTask(nextProfile, nextTime);
 		}
-		else {
-			return null;
-		}
+		return null;
 	}
 
 	public void addProfilesChangeListener(ProfileListChangeListener listener) {
@@ -400,15 +395,21 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 				}
 				doc.appendChild(e);
 
-				//TODO: update profiles.xml generation: don't use deprecated API, don't write to the profiles.xml directly
-				OutputStream out = new FileOutputStream(configFile);
+				TransformerFactory fac = TransformerFactory.newInstance();
+				fac.setAttribute("indent-number", 2);
+				Transformer tf = fac.newTransformer();
+				DOMSource source = new DOMSource(doc);
+				StreamResult out = new StreamResult(new OutputStreamWriter(new FileOutputStream(configFile + ".tmp"), "UTF-8"));
 
-				OutputFormat format = new OutputFormat(doc, "UTF-8", true);
-				XMLSerializer serializer = new XMLSerializer(out, format);
-				serializer.asDOMSerializer();
-				serializer.serialize(doc);
+				tf.setOutputProperty(OutputKeys.METHOD, "xml");
+				tf.setOutputProperty(OutputKeys.VERSION, "1.0");
+				tf.setOutputProperty(OutputKeys.INDENT, "yes");
+				tf.setOutputProperty(OutputKeys.STANDALONE, "no");
+				tf.transform(source, out);
 
-				out.close();
+				new File(configFile + ".tmp").renameTo(new File(configFile));
+
+
 			}
 			catch (Exception e) {
 				// TODO messagebox ?
