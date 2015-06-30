@@ -20,6 +20,7 @@
 
 package net.sourceforge.fullsync.ui;
 
+import java.io.File;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -118,7 +119,7 @@ public class WelcomeScreen extends Dialog implements AsyncUIUpdate {
 	@Override
 	public void execute() throws Throwable {
 		ChangeLogLoader loader = new ChangeLogLoader();
-		changelog = ChangeLogLoader.filterAfter(loader.load(Util.getInstalllocation(), ".+\\.html"), lastFullSyncVersion); //$NON-NLS-1$
+		changelog = ChangeLogLoader.filterAfter(loader.load(new File(Util.getInstalllocation(), "versions"), ".+\\.html"), lastFullSyncVersion); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

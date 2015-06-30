@@ -93,7 +93,7 @@ public abstract class Util {
 		URL codeSource = Util.class.getProtectionDomain().getCodeSource().getLocation();
 		try {
 			URI path = codeSource.toURI();
-			path = path.resolve("../versions");
+			path = path.resolve("../");
 			return new File(path);
 		}
 		catch (URISyntaxException e) {
