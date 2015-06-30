@@ -332,7 +332,7 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 		Collections.sort(licenses, new Comparator<LicenseEntry>() {
 			@Override
 			public int compare(LicenseEntry o1, LicenseEntry o2) {
-				return o1.name.compareTo(o2.name);
+				return o1.name.compareToIgnoreCase(o2.name);
 			}
 		});
 		licenseNames = new ArrayList<String>(numLicenses);
