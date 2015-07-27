@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync;
 
+import org.eclipse.swt.graphics.Rectangle;
+
 /**
  * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
@@ -75,4 +77,15 @@ public interface Preferences {
 
 	String getLastVersion();
 
+	void setWindowMaximized(boolean maximized);
+
+	boolean getWindowMaximized();
+
+	void setWindowMinimized(boolean minimized);
+
+	boolean getWindowMinimized();
+
+	void setWindowBounds(Rectangle b);
+
+	Rectangle getWindowBounds();
 }

@@ -30,6 +30,7 @@ import net.sourceforge.fullsync.Util;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.eclipse.swt.graphics.Rectangle;
 
 /**
  * @author Michele Aiello
@@ -210,4 +211,40 @@ public class ConfigurationPreferences implements Preferences {
 		return lastFullSyncVersion;
 	}
 
+	@Override
+	public void setWindowMaximized(boolean maximized) {
+		config.setProperty("Interface.WindowState.maximized", Boolean.valueOf(maximized));
+	}
+
+	@Override
+	public boolean getWindowMaximized() {
+		return config.getBoolean("Interface.WindowState.maximized", false);
+	}
+
+	@Override
+	public void setWindowMinimized(boolean minimized) {
+		config.setProperty("Interface.WindowState.minimized", Boolean.valueOf(minimized));
+	}
+
+	@Override
+	public boolean getWindowMinimized() {
+		return config.getBoolean("Interface.WindowState.minimized", false);
+	}
+
+	@Override
+	public void setWindowBounds(Rectangle b) {
+		config.setProperty("Interface.WindowState.x", Integer.valueOf(b.x));
+		config.setProperty("Interface.WindowState.y", Integer.valueOf(b.y));
+		config.setProperty("Interface.WindowState.width", Integer.valueOf(b.width));
+		config.setProperty("Interface.WindowState.height", Integer.valueOf(b.height));
+	}
+
+	@Override
+	public Rectangle getWindowBounds() {
+		int x  = config.getInt("Interface.WindowState.x", 0);
+		int y = config.getInt("Interface.WindowState.y", 0);
+		int width  = config.getInt("Interface.WindowState.width", 0);
+		int height = config.getInt("Interface.WindowState.height", 0);
+		return new Rectangle(x, y, width, height);
+	}
 }
