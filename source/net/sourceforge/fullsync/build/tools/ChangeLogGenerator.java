@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 public class ChangeLogGenerator {
 
 	private static void usage() {
-		System.out.println("Usage: [--src-dir source-directory|--pattern file-pattern|--changelog output-file]");
+		System.out.println("Usage: [--src-dir source-directory] [--pattern file-pattern] [--changelog output-file]");
 		System.out.println("  --src-dir ..... directory in which to look for source files");
 		System.out.println("  --pattern ..... pattern of files to consider for the changelog generation");
 		System.out.println("  --changelog ... name of the target file for the changelog");
