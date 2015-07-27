@@ -67,6 +67,12 @@ public class NiceListView extends Composite implements Listener {
 							index = children.length -1;
 						}
 						break;
+					case SWT.PAGE_UP:
+						index = Math.max(0, index - 5);
+						break;
+					case SWT.PAGE_DOWN:
+						index = Math.min(children.length - 1, index + 5);
+						break;
 					default:
 						index = -1;
 						break;
