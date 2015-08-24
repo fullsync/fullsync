@@ -25,6 +25,7 @@ import net.sourceforge.fullsync.ExceptionHandler;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -32,12 +33,31 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 public class NiceListView extends Composite implements Listener {
+	private Color colorDefault;
+	private Color colorHover;
+	private Color colorSelected;
 	private NiceListViewItem selected;
 
 	public NiceListView(Composite parent, int style) {
 		super(parent, style);
+		colorDefault = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+		colorHover = getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
+		colorSelected = getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION);
+
 		addListener(SWT.KeyDown, this);
 		initGUI();
+	}
+
+	public Color getColorDefault() {
+		return colorDefault;
+	}
+
+	public Color getColorHover() {
+		return colorHover;
+	}
+
+	public Color getColorSelected() {
+		return colorSelected;
 	}
 
 	@Override
@@ -97,7 +117,7 @@ public class NiceListView extends Composite implements Listener {
 			thisLayout.horizontalSpacing = 2;
 			thisLayout.verticalSpacing = 0;
 			this.setLayout(thisLayout);
-			this.setBackground(UISettings.COLOR_WHITE);
+			setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 			this.layout();
 		}
 		catch (Exception e) {

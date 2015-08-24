@@ -198,9 +198,9 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		profileList = new NiceListView(scrollPane, SWT.TRANSPARENT);
 		scrollPane.setExpandHorizontal(true);
 		scrollPane.setExpandVertical(false);
-		scrollPane.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		scrollPane.setAlwaysShowScrollBars(true);
 		scrollPane.setContent(profileList);
+		scrollPane.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		scrollPane.getVerticalBar().setIncrement(20);
 		profileList.pack();
 		this.setLayout(new FillLayout());

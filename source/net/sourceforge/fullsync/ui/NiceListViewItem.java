@@ -42,31 +42,15 @@ public class NiceListViewItem extends Canvas implements Listener {
 	private Label labelStatus;
 	private Composite compositeContent;
 
-	private Color colorDefault;
-	private Color colorHover;
-	private Color colorSelectedDefault;
-	private Color colorSelectedFocus;
-
 	private ProfileListControlHandler handler;
 	private Profile profile;
 
 	private boolean mouseOver;
-	private boolean hasFocus;
 	private boolean selected;
 
 	public NiceListViewItem(NiceListView parent, int style) {
 		super(parent, style);
 		this.parent = parent;
-
-		colorDefault = getDisplay().getSystemColor(SWT.COLOR_WHITE);
-		colorHover = new Color(getDisplay(), 248, 252, 255);
-		colorSelectedDefault = new Color(getDisplay(), 236, 233, 216);
-		colorSelectedFocus = new Color(getDisplay(), 230, 240, 255);
-
-		colorDefault = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
-		colorHover = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND); //new Color(getDisplay(), 248, 252, 255);
-		colorSelectedDefault = getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION); //new Color(getDisplay(), 236, 233, 216);
-		colorSelectedFocus = getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION); //new Color(getDisplay(), 230, 240, 255);
 
 		GridData layoutData = new GridData();
 		layoutData.grabExcessHorizontalSpace = true;
@@ -127,7 +111,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 		labelStatus.addListener(SWT.MouseDown, this);
 		labelStatus.addListener(SWT.MouseDoubleClick, this);
 
-		this.setBackground(colorDefault);
+		this.setBackground(parent.getColorDefault());
 		this.layout();
 	}
 
@@ -156,14 +140,6 @@ public class NiceListViewItem extends Canvas implements Listener {
 			case SWT.KeyDown:
 				parent.handleEvent(event);
 				break;
-			case SWT.FocusIn:
-				hasFocus = true;
-				updateBackground();
-				break;
-			case SWT.FocusOut:
-				hasFocus = false;
-				updateBackground();
-				break;
 			default:
 				break;
 		}
@@ -186,18 +162,13 @@ public class NiceListViewItem extends Canvas implements Listener {
 
 	public void updateBackground() {
 		if (selected) {
-			if (hasFocus) {
-				setBackground(colorSelectedFocus);
-			}
-			else {
-				setBackground(colorSelectedDefault);
-			}
+			setBackground(parent.getColorSelected());
 		}
 		else if (mouseOver) {
-			setBackground(colorHover);
+			setBackground(parent.getColorHover());
 		}
 		else {
-			setBackground(colorDefault);
+			setBackground(parent.getColorDefault());
 		}
 	}
 
