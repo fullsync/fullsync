@@ -130,4 +130,25 @@ public abstract class Util {
 		}
 		return new String[]{};
 	}
+
+	public static void fileRenameToPortableLegacy(String from, String to) throws Exception {
+		File srcFile = new File(from);
+		File dstFile = new File(to);
+		if (!srcFile.renameTo(dstFile)) {
+			File tmpFile = File.createTempFile("fullsync", "tmp", dstFile.getParentFile());
+			tmpFile.delete();
+			if (dstFile.renameTo(tmpFile)) {
+				if (srcFile.renameTo(dstFile)) {
+					tmpFile.delete();
+				}
+				else {
+					tmpFile.renameTo(dstFile);
+					throw new Exception("File.renameTo failed (cannot rename file)");
+				}
+			}
+			else {
+				throw new Exception("File.renameTo failed (cannot move old file away)");
+			}
+		}
+	}
 }

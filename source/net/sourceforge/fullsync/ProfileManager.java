@@ -384,6 +384,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 			}
 		}
 		else {
+			OutputStreamWriter osw = null;
 			try {
 				DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				Document doc = docBuilder.newDocument();
@@ -399,20 +400,33 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 				fac.setAttribute("indent-number", 2);
 				Transformer tf = fac.newTransformer();
 				DOMSource source = new DOMSource(doc);
-				StreamResult out = new StreamResult(new OutputStreamWriter(new FileOutputStream(configFile + ".tmp"), "UTF-8"));
+				osw = new OutputStreamWriter(new FileOutputStream(configFile + ".tmp"), "UTF-8");
+				StreamResult out = new StreamResult(osw);
 
 				tf.setOutputProperty(OutputKeys.METHOD, "xml");
 				tf.setOutputProperty(OutputKeys.VERSION, "1.0");
 				tf.setOutputProperty(OutputKeys.INDENT, "yes");
 				tf.setOutputProperty(OutputKeys.STANDALONE, "no");
 				tf.transform(source, out);
+				osw.flush();
+				osw.close();
 
-				new File(configFile + ".tmp").renameTo(new File(configFile));
+				File newCfgFile = new File(configFile + ".tmp");
+				if (0 == newCfgFile.length()) {
+					throw new Exception("Storing profiles failed (size = 0)");
+				}
 
-
+				Util.fileRenameToPortableLegacy(configFile + ".tmp", configFile);
 			}
 			catch (Exception e) {
-				// TODO messagebox ?
+				if (null != osw) {
+					try {
+						osw.close();
+						new File(configFile + ".tmp").delete();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
 				ExceptionHandler.reportException(e);
 			}
 		}
