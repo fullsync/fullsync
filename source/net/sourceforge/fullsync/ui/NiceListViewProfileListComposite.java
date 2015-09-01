@@ -30,6 +30,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -172,6 +173,32 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 
 		public Profile getProfile() {
 			return profile;
+		}
+
+		@Override
+		public void setBackground(Color color) {
+			super.setBackground(color);
+			for (Control c : this.getChildren()) {
+				if (c instanceof Composite) {
+					for (Control child : ((Composite)c).getChildren()) {
+						child.setBackground(color);
+					}
+				}
+				c.setBackground(color);
+			}
+		}
+
+		@Override
+		public void setForeground(Color color) {
+			super.setForeground(color);
+			for (Control c : this.getChildren()) {
+				if (c instanceof Composite) {
+					for (Control child : ((Composite)c).getChildren()) {
+						child.setForeground(color);
+					}
+				}
+				c.setForeground(color);
+			}
 		}
 	}
 

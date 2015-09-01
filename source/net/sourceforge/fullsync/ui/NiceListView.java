@@ -36,6 +36,9 @@ public class NiceListView extends Composite implements Listener {
 	private Color colorDefault;
 	private Color colorHover;
 	private Color colorSelected;
+	private Color colorForeground;
+	private Color colorSelectedForegroud;
+
 	private NiceListViewItem selected;
 
 	public NiceListView(Composite parent, int style) {
@@ -43,6 +46,8 @@ public class NiceListView extends Composite implements Listener {
 		colorDefault = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 		colorHover = getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
 		colorSelected = getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION);
+		colorForeground = getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
+		colorSelectedForegroud = getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT);
 
 		addListener(SWT.KeyDown, this);
 		initGUI();
@@ -58,6 +63,14 @@ public class NiceListView extends Composite implements Listener {
 
 	public Color getColorSelected() {
 		return colorSelected;
+	}
+
+	public Color getColorForeground() {
+		return colorForeground;
+	}
+
+	public Color getColorSelectedForegroud() {
+		return colorSelectedForegroud;
 	}
 
 	@Override

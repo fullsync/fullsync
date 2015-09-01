@@ -112,6 +112,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 		labelStatus.addListener(SWT.MouseDoubleClick, this);
 
 		this.setBackground(parent.getColorDefault());
+		this.setForeground(parent.getForeground());
 		this.layout();
 	}
 
@@ -152,11 +153,14 @@ public class NiceListViewItem extends Canvas implements Listener {
 		for (Control element : this.getChildren()) {
 			element.setBackground(color);
 		}
+	}
 
-		if (compositeContent != null) {
-			for (Control element : compositeContent.getChildren()) {
-				element.setBackground(color);
-			}
+	@Override
+	public void setForeground(Color color) {
+		super.setForeground(color);
+
+		for (Control element : this.getChildren()) {
+			element.setForeground(color);
 		}
 	}
 
@@ -164,12 +168,10 @@ public class NiceListViewItem extends Canvas implements Listener {
 		if (selected) {
 			setBackground(parent.getColorSelected());
 		}
-		else if (mouseOver) {
-			setBackground(parent.getColorHover());
-		}
 		else {
-			setBackground(parent.getColorDefault());
+			setBackground(mouseOver ? parent.getColorHover() : parent.getColorDefault());
 		}
+		setForeground(selected ? parent.getColorSelectedForegroud() : parent.getColorForeground());
 	}
 
 	public void setImage(Image image) {
