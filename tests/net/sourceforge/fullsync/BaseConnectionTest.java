@@ -86,11 +86,14 @@ public class BaseConnectionTest {
 	 * @param dir directory to clear
 	 */
 	protected void clearDirectory(final File dir) {
-		for (File file : dir.listFiles()) {
-			if (file.isDirectory()) {
-				clearDirectory(file);
+		File[] children = dir.listFiles();
+		if (null != children) {
+			for (File file : children) {
+				if (file.isDirectory()) {
+					clearDirectory(file);
+				}
+				assertTrue("File.delete failed for: " + file.getAbsolutePath(), file.delete());
 			}
-			assertTrue("File.delete failed for: " + file.getAbsolutePath(), file.delete());
 		}
 	}
 

@@ -49,10 +49,13 @@ public class ChangeLogLoader {
 	public List<ChangeLogEntry> load(File srcDir, String pattern) throws ParserConfigurationException, SAXException, IOException, ParseException {
 		Pattern p = Pattern.compile(pattern);
 		List<ChangeLogEntry> changelogEntries = new LinkedList<ChangeLogEntry>();
-		for (String file : srcDir.list()) {
-			Matcher m = p.matcher(file);
-			if (m.matches()) {
-				changelogEntries.add(loadChangeLogFile(new File(srcDir, file)));
+		String[] children = srcDir.list();
+		if (null != children) {
+			for (String file : children) {
+				Matcher m = p.matcher(file);
+				if (m.matches()) {
+					changelogEntries.add(loadChangeLogFile(new File(srcDir, file)));
+				}
 			}
 		}
 		Collections.sort(changelogEntries);
