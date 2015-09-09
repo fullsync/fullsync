@@ -93,15 +93,20 @@ public class ConnectionConfiguration implements ModifyListener {
 	@Override
 	public void modifyText(final ModifyEvent e) {
 		selectedScheme = comboProtocol.getText();
-		for (Control c : m_parent.getChildren()) {
-			if (!c.isDisposed()) {
-				c.dispose();
+		m_parent.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				for (Control c : m_parent.getChildren()) {
+					if (!c.isDisposed()) {
+						c.dispose();
+					}
+				}
+
+				initialize();
+
+				m_parent.layout(true);
 			}
-		}
-
-		initialize();
-
-		m_parent.layout(true);
+		});
 	}
 
 
