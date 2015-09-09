@@ -61,7 +61,13 @@ public class FTPSpecificComposite extends UserPasswordSpecificComposite {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
-		comboAuthentication.select(0);
+		comboAuthentication.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				setUserPasswordEnabled(false);
+				comboAuthentication.select(0);
+			}
+		});
 	}
 
 	@Override
