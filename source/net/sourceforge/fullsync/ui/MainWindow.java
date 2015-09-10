@@ -592,7 +592,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 	@Override
 	public void createNewProfile() {
 		try {
-			WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL | SWT.RESIZE);
+			WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
 			new ProfileDetailsTabbedPage(dialog, guiController.getProfileManager(), null);
 			dialog.show();
 		}
@@ -676,7 +676,7 @@ class MainWindow extends Composite implements ShellListener, ProfileSchedulerLis
 			return;
 		}
 		try {
-			WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL | SWT.RESIZE);
+			WizardDialog dialog = new WizardDialog(getShell(), SWT.APPLICATION_MODAL);
 			new ProfileDetailsTabbedPage(dialog, guiController.getProfileManager(), p.getName());
 			dialog.show();
 		}

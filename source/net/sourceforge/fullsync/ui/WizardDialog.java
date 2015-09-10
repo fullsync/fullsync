@@ -60,7 +60,7 @@ public class WizardDialog extends SelectionAdapter implements ShellListener {
 
 	public WizardDialog(Shell parent, int style) {
 		this.parent = parent;
-		this.style = SWT.DIALOG_TRIM | style;
+		this.style = SWT.DIALOG_TRIM | SWT.RESIZE | style;
 		this.dialogListeners = new Vector<WizardDialogListener>();
 	}
 

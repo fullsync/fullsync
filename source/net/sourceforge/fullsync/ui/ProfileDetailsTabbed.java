@@ -354,7 +354,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 			@Override
 			public void widgetSelected(final SelectionEvent evt) {
 				try {
-					WizardDialog dialog = new WizardDialog(m_parent.getShell(), SWT.APPLICATION_MODAL | SWT.RESIZE);
+					WizardDialog dialog = new WizardDialog(m_parent.getShell(), SWT.APPLICATION_MODAL);
 					FileFilterPage page = new FileFilterPage(dialog, filter);
 					dialog.show();
 					FileFilter newfilter = page.getFileFilter();
@@ -489,7 +489,7 @@ public class ProfileDetailsTabbed implements DisposeListener {
 				if (selectedItems.length > 0) {
 					TreeItem selectedItem = selectedItems[0];
 					FileFilter currentItemFilter = (FileFilter) selectedItem.getData(FILTER_KEY);
-					WizardDialog dialog = new WizardDialog(m_parent.getShell(), SWT.APPLICATION_MODAL | SWT.RESIZE);
+					WizardDialog dialog = new WizardDialog(m_parent.getShell(), SWT.APPLICATION_MODAL);
 					FileFilterPage page = new FileFilterPage(dialog, currentItemFilter);
 					dialog.show();
 					FileFilter newfilter = page.getFileFilter();
