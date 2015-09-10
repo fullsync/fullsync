@@ -175,7 +175,7 @@ public class ScheduleSelectionDialog extends Dialog {
 			addScheduleOptions(new CrontabScheduleOptions(groupOptions, SWT.NULL));
 
 			Display display = dialogShell.getDisplay();
-			dialogShell.setSize(350, 300);
+			dialogShell.setSize(350, 350);
 
 			Rectangle rect = getParent().getBounds();
 			dialogShell.setLocation(rect.x + (rect.width / 2) - dialogShell.getSize().x / 2,
