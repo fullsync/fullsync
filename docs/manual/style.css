@@ -10,7 +10,7 @@ body {
 	font-family: Verdana;
 }
 #header {
-	height: 5em;
+	height: 6em;
 	border-bottom: 1px solid black;
 	position: relative;
 	background-color: #C1CCD6;
@@ -35,7 +35,7 @@ body {
 	line-height: 1.5em;
 	position: absolute;
 	left: 0;
-	top: 5em;
+	top: 6em;
 	overflow: auto;
 	width: 17em;
 	bottom: 0;
@@ -54,7 +54,7 @@ body {
 #content {
 	position: absolute;
 	left: 17em;
-	top: 5em;
+	top: 6em;
 	right: 0;
 	bottom: 0;
 	border-left: 1px solid black;
