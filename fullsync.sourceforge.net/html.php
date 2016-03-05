@@ -160,7 +160,7 @@ function HtmlFooter() {
 ?>
 			<a href="download.php" id="global-download-button">Get it now!</a>
 			<div id="footer-copyright">
-				<span style="font-size: 10pt; color: #999999;">Copyright &copy; 2004-2015 The FullSync Authors. All Rights Reserved.</span>
+				<span style="font-size: 10pt; color: #999999;">Copyright &copy; 2004-2016 The FullSync Authors. All Rights Reserved.</span>
 				<a href="http://sourceforge.net" style="float: right;"><img src="http://sourceforge.net/sflogo.php?group_id=115436&amp;type=1" alt="SourceForge Logo"/></a>
 			</div>
 		</div>
