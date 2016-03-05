@@ -1,13 +1,13 @@
-<!-- Date: 3. December 2012 -->
-<!-- Manual: manual.html -->
-<ul>
-	<li>updated all bundled libraries to their latest version.</li>
-	<li>added 64-bit support.</li>
-	<li>initial attempt at mac support (needs testers!).</li>
-	<li>added support for public key authentication for SFTP connections.</li>
-	<li>moved the profiles, preferences and log file to ~/.config/fullsync/ ($XDG_CONFIG_HOME) or C:\Documents and Settings\&lt;username&gt;\.config\fullsync\ for Windows.</li>
-	<li>new commons-vfs source and destination browser should work now, certainly not fine, but it works.</li>
-	<li>added a file filter for simplyfied ruleset. The filter is a replacement for the ignore/accept patterns.</li>
-	<li>added wildcards as ignore/accept patterns (regexp was default till now) in simplyfied syncrules.</li>
-	<li>changed the ignore/accept pattern behaviour. Now if the ignore pattern is empty but the accept is not empty, then everything is ignored but what matches the accept pattern</li>
+<ul data-version="0.10.0" data-date="20121203" data-manual="manual.html">
+	<li>Updated all bundled libraries to their latest version.</li>
+	<li>Added 64-bit support.</li>
+	<li>Initial attempt at mac support (needs testers!).</li>
+	<li>Added support for public key authentication for SFTP connections.</li>
+	<li>Removed exit confirmation if there are no tasks scheduled.</li>
+	<li>Added FullSync Launcher, since FullSync now uses the current SWT implementation it needs to have a launcher to select the correct SWT implementation at runtime.</li>
+	<li>Moved the profiles, preferences and log file to ~/.config/fullsync/ (XDG_CONFIG_HOME) or C:\Documents and Settings\&lt;username&gt;\.config\fullsync\ for Windows.</li>
+	<li>New commons-vfs source and destination browser should work now, certainly not fine, but it works.</li>
+	<li>Added a file filter for simplyfied ruleset. The filter is a replacement for the ignore/accept patterns. Old profiles with regexp patterns are automatically converted to this new file filter.</li>
+	<li>Added wildcards as ignore/accept patterns (regexp was default till now) in simplyfied syncrules.</li>
+	<li>Changed the ignore/accept pattern behaviour. Now if the ignore pattern is empty but the accept is not empty, then everything is ignored but what matches the accept pattern.</li>
 </ul>

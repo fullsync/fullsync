@@ -1,0 +1,59 @@
+<ul data-version="0.8" data-date="20041212">
+	<li>fixed problem with scheduler calling profiles sometimes multiple times.</li>
+	<li>reduced memory consumption by using static actions in actionDeciders, static states in StateDecider and not saving path field in files..</li>
+	<li>fixed bug in Task Decision List updating the wrong items.</li>
+	<li>added an option for autostarting scheduler in gui mode (for autostart).</li>
+	<li>the gui version will now popup the "getting started" manual page if there was no profiles.xml found.</li>
+	<li>added -m option, that starts fullsync minimized (for autostart).</li>
+	<li>extracted scheduler from profile manager, it's still too tightly connected as the remote stuff is like a second scheduler both encapsuled by the profile manager.</li>
+	<li>improved remote interface. now almost every feature of fullsync is available using the remote interface.</li>
+	<li>added -P option, taking a filename which will overwrite the default profiles.xml.</li>
+	<li>added popup menu to nicelistview.</li>
+	<li>added exact copy action decider.</li>
+	<li>added way better exception reporting.</li>
+	<li>added new profile icons in nicelistview, which is default now.</li>
+	<li>added option to reset error flag.</li>
+	<li>added a simple error reporting for scheduled executions.</li>
+	<li>added enabled property to profiles, enabling scheduled execution for now.</li>
+	<li>added crontab scheduler gui.</li>
+	<li>verified scheduler and lastUpdate/nextUpdate functionality.</li>
+	<li>added scheduling property to profile dialog.</li>
+	<li>added initial update support.</li>
+	<li>added an abstract InstableConnection -> now ftp and sftp connections reconnect on demand.</li>
+	<li>added a Remote Connection menu to connect the running instance to a remote server.</li>
+	<li>changed ftp to use passive mode.</li>
+	<li>added FullSync Installer for Windows and Linux systems.</li>
+	<li>fixed not correct file comparison and last modified update changes seem to generate a lot of new updates !?.</li>
+	<li>added systemtray showing activity.</li>
+	<li>fixed renaming of profiles and description in profile details dialog.</li>
+	<li>changed feedback of task generation phase to poll instead of push which took a lot of time.</li>
+	<li>added TaskFinishedEvent, which allows unsuccessful feedback.</li>
+	<li>changed ActionFinishedListener to TaskFinishedListener.</li>
+	<li>changed the buffer, so file larger than the buffersize are working too.</li>
+	<li>added BackupActionDecider.</li>
+	<li>added new profile field type, saying which action decider to use.</li>
+	<li>changed most dialogs to wizard style.</li>
+	<li>added new images and icons.</li>
+	<li>added AboutDialog.</li>
+	<li>added new preference: profile list.</li>
+	<li>added NiceListView -> alternative profile list.</li>
+	<li>added ProfileChange listener to profile.</li>
+	<li>added a main menu bar.</li>
+	<li>LogWindow: now caching and disposing images.</li>
+	<li>LogWindow: tableitems are reused, action change does not rebuilt table.</li>
+	<li>LogWindow: multi select and multi action change possible.</li>
+	<li>added RuleSetDescriptor and divided into simple rulesets and advanced.</li>
+	<li>added changing background color of finished actions in logwindow.</li>
+	<li>added busy indicator for sync and execution phases.</li>
+	<li>added context menu for profile actions.</li>
+	<li>added initial preferences dialog.</li>
+	<li>added initial preferences manager.</li>
+	<li>now number of tasks that must be performed is correct.</li>
+	<li>added traversal types, so source buffer&lt;-&gt;fs check is now implementable.</li>
+	<li>added feedback in synchronization phase .</li>
+	<li>added initial cli support (try -h option).</li>
+	<li>added tray icon, now normally minimizing to tray when window is closed.</li>
+	<li>added initial sheduler support.</li>
+	<li>verified linux functionality.</li>
+	<li>added jsmooth exe wrapper and application icon.</li>
+</ul>
