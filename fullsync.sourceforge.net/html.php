@@ -31,13 +31,13 @@ function readVersion($major, $minor, $patch) {
 			'releaseDate' => '',
 			'manual' => 'manual.html'
 		);
-		if (preg_match('/<!--\s*Date:\s*(.*?)\s*-->/', $content, $releaseDate)) {
-			$entry['releaseDate'] = $releaseDate[1];
+		if (preg_match('/<ul.*data-date="([^"]*)"/', $content, $releaseDate)) {
+			$d = DateTime::createFromFormat("!Ymd", $releaseDate[1], new DateTimeZone('UTC'));
+			$entry['releaseDate'] = $d->format("j F Y");
 		}
-		if (preg_match('/<!--\s*Manual:\s*(.*?)\s*-->/', $content, $manual)) {
+		if (preg_match('/<ul.*data-manual="([^"]*)"/', $content, $manual)) {
 			$entry['manual'] = $manual[1];
 		}
-		$entry['changes'] = preg_replace('/(<!--.*?-->)/', '', $entry['changes']);
 		return $entry;
 	}
 	return null;
@@ -67,7 +67,7 @@ function versionComparator($a, $b) {
 	return 0;
 }
 
-function getVersions($count) {
+function getVersions($countOrCallback) {
 	$versions = array();
 	$d = dir("versions");
 	if (false !== $d) {
@@ -83,11 +83,22 @@ function getVersions($count) {
 		$d->close();
 	}
 	usort($versions, 'versionComparator');
-	if ($count > 0) {
-		$versions = array_splice($versions, 0, $count);
+	if (is_numeric($countOrCallback)) {
+		if ($countOrCallback > 0) {
+			$versions = array_splice($versions, 0, $countOrCallback);
+		}
 	}
-	foreach($versions as $idx => $v) {
-		$versions[$idx] = readVersion($v['major'], $v['minor'], $v['patch']);
+	else {
+		$allVersions = $versions;
+		$versions = array();
+		foreach ($allVersions as $v) {
+			if (true === $countOrCallback($v)) {
+				$versions[] = $v;
+			}
+		}
+	}
+	foreach ($versions as $idx => $allVersions) {
+		$versions[$idx] = readVersion($allVersions['major'], $allVersions['minor'], $allVersions['patch']);
 	}
 	return $versions;
 }
