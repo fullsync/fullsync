@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WarSetup-Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" projectRunAfterInstall="true" mainTargetApp="ID_0cd43746_79a8_4288_a103_ba2ce347b847" nextUniqueId="2770" projectName="FullSync" projectUuid="0956ff27-1ac8-45c8-bbaf-0e9ffb301e9a" projectUpgradeUuid="1cb98a4c-c929-424f-ab60-50c5badb7504" projectVersion="0.10.2" projectOrganization="FullSync" projectFromWindowsVersion="Windows XP" projectMustBeAdministratorToInstall="false" project64BitTarget="false" projectTargetDirectory="dist" projectTargetName="FullSync" projectType="0" projectUserInterface="WixUI_InstallDir">
+<WarSetup-Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" projectRunAfterInstall="true" mainTargetApp="ID_0cd43746_79a8_4288_a103_ba2ce347b847" nextUniqueId="3028" projectName="FullSync" projectUuid="d1929e3a-c210-4a94-9c87-868e337608c6" projectUpgradeUuid="1cb98a4c-c929-424f-ab60-50c5badb7504" projectVersion="0.10.3" projectOrganization="FullSync" projectFromWindowsVersion="Windows XP" projectMustBeAdministratorToInstall="true" project64BitTarget="false" projectTargetDirectory="dist" projectTargetName="FullSync" projectType="0" projectUserInterface="WixUI_InstallDir">
   <LicencePaths>
     <string>C:\Program Files (x86)\Jgaa's Internet\War Setup\Licenses</string>
   </LicencePaths>
@@ -12,7 +12,7 @@
       <addToCreateFolder>false</addToCreateFolder>
     </components>
     <components componentId="ID1005" componentGuid="47551c3a-d515-4935-b930-49c84d596406">
-      <componentFiles fileId="ID_72275c6b_cb94_4dda_b193_c61ed03a306b" srcName="ChangeLog.txt" srcDirectory="build" dstName="ChangeLog.txt" dstPath="" isTrueTypeFont="false" isComModule="false" typelibGuid="" menuName="CHANGELOG" shortcutInProgramFilesMenu="false" shortcutOnDesktop="false" shortcutInQuickLaunch="false" shortcutInStartupFolder="false" shortcutWorkingDirectory="" shortcutCommandArguments="" shortcutDescription="">
+      <componentFiles fileId="ID_72275c6b_cb94_4dda_b193_c61ed03a306b" srcName="ChangeLog.txt" srcDirectory="build" dstName="ChangeLog.txt" dstPath="" isTrueTypeFont="false" isComModule="false" typelibGuid="" menuName="ChangeLog" shortcutInProgramFilesMenu="false" shortcutOnDesktop="false" shortcutInQuickLaunch="false" shortcutInStartupFolder="false" shortcutWorkingDirectory="" shortcutCommandArguments="" shortcutDescription="">
         <service StartWhenInstalled="true" Remove="both" id="ID1004" isService="false" userAccount="" userPassword="" cmdLineArguments="" errorControl="normal" interactive="false" loadOrderGroup="" serviceName="" startMode="auto" vital="true" />
       </componentFiles>
       <addToCreateFolder>false</addToCreateFolder>
@@ -54,6 +54,11 @@
     </directories>
     <directories dirId="ID1395" srcPath="build\docs" dstPath="docs" patterns=".*" excludePatterns="" recurse="true" preventEmptyDirectories="false" addToPath="false" ideHeaderFiles="false" ideExecutables="false" ideLibrary="false" ideMicrosoftVisualStudio2003="false" ideMicrosoftVisualStudio2005="false">
       <pathComponent componentId="ID1394" componentGuid="b6fb640e-29f9-4ee7-9e8b-98e4976fdb08">
+        <addToCreateFolder>false</addToCreateFolder>
+      </pathComponent>
+    </directories>
+    <directories dirId="ID2771" srcPath="build\versions" dstPath="versions" patterns=".*" excludePatterns="" recurse="false" preventEmptyDirectories="false" addToPath="false" ideHeaderFiles="false" ideExecutables="false" ideLibrary="false" ideMicrosoftVisualStudio2003="false" ideMicrosoftVisualStudio2005="false">
+      <pathComponent componentId="ID2770" componentGuid="e3c55ef2-f5ea-4057-b30c-26056a155fe9">
         <addToCreateFolder>false</addToCreateFolder>
       </pathComponent>
     </directories>
