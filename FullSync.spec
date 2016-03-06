@@ -15,33 +15,41 @@
 # Boston, MA 02110-1301, USA.
 #
 
+%define java_version 1.8.0
+%define gtk_version 2.4.1
+# disbale debuginfo subpackage generation - there is nothing here that has debuginfos
+%global debug_package %{nil}
+
 Name:           FullSync
-Version:        0.10.2
+Version:        0.10.3
 Release:        0
 Summary:        Easy file synchronization for everyone
 License:        GPL-2.0+
 Group:          Productivity/Archiving/Backup
 URL:            http://fullsync.sourceforge.net/
 Source0:        %{name}-%{version}-src.tar.gz
+AutoReqProv:    no
+
 %ifarch x86_64
-%if 0%{?fedora} > 0
-Requires:       java >= 1.6.0
+%if 0%{?fedora}%{defined el7} > 0
+Requires:       jre >= %{java_version}
 %else
-Requires:       java-64 >= 1.6.0
+Requires:       jre-64 >= %{java_version}
 %endif
 %else
-Requires:       java >= 1.6.0
+Requires:       jre >= %{java_version}
 %endif
-%if 0%{?fedora} > 0
-Requires:       gtk2%{_isa} >= 2.4.1
+
+%if 0%{?fedora}%{defined el7} > 0
+Requires:       gtk2%{_isa} >= %{gtk_version}
 %else
-Requires:       libgtk-2_0-0%{_isa} >= 2.4.1
+Requires:       libgtk-2_0-0%{_isa} >= %{gtk_version}
 %endif
 Requires:       xdg-utils
 Requires:       xdg-user-dirs
 Requires:       desktop-file-utils
 BuildRequires:  ant
-BuildRequires:  java-devel >= 1.6.0
+BuildRequires:  java-devel >= %{java_version}
 BuildRequires:  hicolor-icon-theme
 BuildRequires:  desktop-file-utils
 BuildRequires:  dos2unix
@@ -49,9 +57,10 @@ ExclusiveArch:  x86_64 i386 i486 i586 i686
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %define fsdir %{_javadir}/%{name}-%{version}
-# tell RPM not to generate provides for the contained jar files, they are not installed in a public dir
-%define _use_internal_dependency_generator 0
+# disbale debuginfo subpackage generation - there is nothing here that has debuginfos
+%global debug_package %{nil}
 %define exename fullsync
+%define icondir %{_datadir}/icons/hicolor/scalable/apps/
 
 %description
 FullSync is a universal file synchronization and backup tool
@@ -74,14 +83,16 @@ dos2unix fullsync
 install -d -m 755 $RPM_BUILD_ROOT%{fsdir}/
 install -d -m 755 $RPM_BUILD_ROOT%{fsdir}/lib/
 install -d -m 755 $RPM_BUILD_ROOT%{fsdir}/images/
-install -d -m 755 $RPM_BUILD_ROOT%{_iconsscaldir}
-install -d -m 755 $RPM_BUILD_ROOT%{_desktopdir}/
+install -d -m 755 $RPM_BUILD_ROOT%{fsdir}/versions/
+install -d -m 755 $RPM_BUILD_ROOT%{icondir}
+install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/applications
 install -d -m 755 $RPM_BUILD_ROOT%{_bindir}/
 install -m 644 launcher.jar $RPM_BUILD_ROOT%{fsdir}/launcher.jar
 install -m 644 LICENSE $RPM_BUILD_ROOT%{fsdir}/LICENSE
 install -m 644 ChangeLog.txt $RPM_BUILD_ROOT%{fsdir}/ChangeLog.txt
 install -m 755 %{exename} $RPM_BUILD_ROOT%{fsdir}/%{exename}
 ln -s %{fsdir}/%{exename} $RPM_BUILD_ROOT%{_bindir}/%{exename}
+install -m 644 versions/*.html $RPM_BUILD_ROOT%{fsdir}/versions/
 install -m 644 lib/*.jar $RPM_BUILD_ROOT%{fsdir}/lib/
 rm -rf $RPM_BUILD_ROOT%{fsdir}/lib/swt-*
 %ifarch x86_64
@@ -89,8 +100,8 @@ install -m 644 lib/swt-gtk-linux-x86_64.jar $RPM_BUILD_ROOT%{fsdir}/lib/swt-gtk-
 %else
 install -m 644 lib/swt-gtk-linux-x86.jar $RPM_BUILD_ROOT%{fsdir}/lib/swt-gtk-linux-x86.jar
 %endif
-install -m 644 %{exename}.svg $RPM_BUILD_ROOT%{_iconsscaldir}/%{exename}.svg
-install -m 644 %{exename}.desktop $RPM_BUILD_ROOT%{_desktopdir}/%{exename}.desktop
+install -m 644 %{exename}.svg $RPM_BUILD_ROOT%{icondir}/%{exename}.svg
+install -m 644 %{exename}.desktop $RPM_BUILD_ROOT%{_datadir}/applications/%{exename}.desktop
 install -m 644 images/* $RPM_BUILD_ROOT%{fsdir}/images/
 
 
@@ -102,6 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{fsdir}/
 %dir %{fsdir}/lib
 %dir %{fsdir}/images
+%dir %{fsdir}/versions
 %doc %{fsdir}/LICENSE
 %doc %{fsdir}/ChangeLog.txt
 %{fsdir}/launcher.jar
@@ -109,22 +121,34 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{exename}
 %{fsdir}/lib/*.jar
 %{fsdir}/images/*
-%{_desktopdir}/%{exename}.desktop
-%{_iconsscaldir}/%{exename}.svg
+%{fsdir}/versions/*.html
+%{_datadir}/applications/%{exename}.desktop
+%{icondir}/%{exename}.svg
 
 %post
-%if 0%{?fedora} > 0
+%if 0%{?fedora}%{defined el7} > 0
 /usr/bin/update-desktop-database &> /dev/null || :
+touch --no-create %{_datadir}/icons/hicolor/ &>/dev/null || :
 %else
 %desktop_database_post
 %endif
 exit 0
 
 %postun
-%if 0%{?fedora} > 0
+%if 0%{?fedora}%{defined el7} > 0
 /usr/bin/update-desktop-database &> /dev/null || :
+if [ $1 -eq 0 ]; then
+	touch --no-create %{_datadir}/icons/hicolor/ &>/dev/null || :
+	gtk-update-icon-cache %{_datadir}/icons/hicolor/ &>/dev/null || :
+fi
 %else
 %desktop_database_postun
+%endif
+exit 0
+
+%posttrans
+%if 0%{?fedora}%{defined el7} > 0
+gtk-update-icon-cache %{_datadir}/icons/hicolor/ &>/dev/null || :
 %endif
 exit 0
 
