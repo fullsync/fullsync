@@ -19,10 +19,13 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.io.File;
 import java.util.HashMap;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+
+import net.sourceforge.fullsync.Util;
 
 public class ImageRepository {
 	/*
@@ -75,7 +78,7 @@ public class ImageRepository {
 	public Image getImage(String imageName) {
 		Image img = cache.get(imageName);
 		if (img == null) {
-			img = new Image(display, "images/" + imageName);
+			img = new Image(display, Util.getInstalllocation().getAbsolutePath() + File.separator + "images" + File.separator + imageName);
 			cache.put(imageName, img);
 		}
 		return img;
