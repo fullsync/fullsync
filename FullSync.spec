@@ -21,7 +21,7 @@
 %global debug_package %{nil}
 
 Name:           FullSync
-Version:        0.10.3
+Version:        0.10.4
 Release:        0
 Summary:        Easy file synchronization for everyone
 License:        GPL-2.0+
