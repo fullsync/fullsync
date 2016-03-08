@@ -101,20 +101,6 @@ dd {
 	margin-top: 0;
 }
 
-a.twitter-link {
-	position: relative;
-	padding-left: 32px;
-	line-height: 25px;
-	display: inline-block;
-}
-
-a.twitter-link:before {
-	content: url("img/twitter_bird_blue_32.png");
-	position: absolute;
-	left: 0;
-	top: 0;
-}
-
 ol {
 	list-style: disc;
 	padding: 0 0 0 1em;
@@ -142,7 +128,7 @@ ol ul {
 #global-download-button {
 	margin: 2em auto 1em auto;
 	display: block;
-	width: 7em;
+	width: 13em;
 	text-align: center;
 	color: #ffffff;
 	padding: 10px 20px;
@@ -169,6 +155,11 @@ ol ul {
 }
 #global-download-button:hover {
 	opacity: .8;
+}
+
+.twitter-follow-button {
+	display: block;
+	margin: 0 auto;
 }
 
 #footer-copyright {

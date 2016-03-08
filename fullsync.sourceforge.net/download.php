@@ -56,4 +56,4 @@ include( "html.php" );
 	</p>
 
 <?php
-	HtmlFooter();
+	HtmlFooter('download-button');
