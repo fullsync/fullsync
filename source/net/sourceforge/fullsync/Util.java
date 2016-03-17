@@ -20,12 +20,19 @@
 package net.sourceforge.fullsync;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * various utilities.
@@ -86,12 +93,41 @@ public abstract class Util {
 		URL codeSource = Util.class.getProtectionDomain().getCodeSource().getLocation();
 		try {
 			URI path = codeSource.toURI();
-			path = path.resolve("../versions");
+			path = path.resolve("../");
 			return new File(path);
 		}
 		catch (URISyntaxException e) {
 			e.printStackTrace();
 			return new File(".");
 		}
+	}
+
+	public static String[] loadDirectoryFromClasspath(Class<?> clazz, String path) throws URISyntaxException, UnsupportedEncodingException, IOException {
+		URL dirURL = clazz.getProtectionDomain().getCodeSource().getLocation();
+		File src = new File(dirURL.toURI());
+		if (src.isDirectory() && src.exists()) {
+			return new File(new File(dirURL.toURI()), path.replace('/', File.separatorChar)).list();
+		}
+
+		if (src.isFile() && src.exists()) {
+			JarFile jar = new JarFile(src);
+			Enumeration<JarEntry> jarEntries = jar.entries();
+			Set<String> result = new HashSet<String>(); //avoid duplicates in case it is a subdirectory
+			String prefix = path;
+			if ('/' == prefix.charAt(0)) {
+				prefix = prefix.substring(1);
+			}
+			while(jarEntries.hasMoreElements()) {
+				JarEntry entry = jarEntries.nextElement();
+				String name = entry.getName();
+				if (!entry.isDirectory() && name.startsWith(prefix)) { //filter according to the path
+					name = name.substring(prefix.length());
+					result.add(name);
+				}
+			}
+			jar.close();
+			return result.toArray(new String[result.size()]);
+		}
+		return new String[]{};
 	}
 }

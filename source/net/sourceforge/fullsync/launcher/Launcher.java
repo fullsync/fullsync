@@ -66,8 +66,8 @@ public class Launcher {
 			Manifest manifest = jf.getManifest();
 			Attributes attributes = manifest.getMainAttributes();
 			String fsClassPath = attributes.getValue("FullSync-Class-Path");
-			for (String s : fsClassPath.split("\\.jar\\s")) {
-				jars.add(new URL(dot + "/" + s.trim() + ".jar"));
+			for (String s : fsClassPath.split(" ")) {
+				jars.add(new URL(dot + "/lib/" + s.trim()));
 			}
 			jf.close();
 			URL[] urls = new URL[jars.size()];

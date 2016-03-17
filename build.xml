@@ -188,8 +188,8 @@
 			<include name="**/*.jar" />
 			<exclude name="swt-*.jar" />
 		</fileset>
-		<pathconvert pathsep=" " property="dist.classpath" refid="lib.dist.fileset" dirsep="/">
-			<map from="${build.lib.dir}" to="./lib" />
+		<pathconvert pathsep=" " property="dist.classpath" refid="lib.dist.fileset" dirsep="">
+			<map from="${build.lib.dir}" to="" />
 		</pathconvert>
 		<jar destfile="${build.dir}/launcher.jar">
 			<fileset dir="${classes.dir}" includes="net/sourceforge/fullsync/launcher/**/*" />

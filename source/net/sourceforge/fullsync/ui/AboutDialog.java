@@ -19,10 +19,9 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
@@ -321,32 +320,19 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 	public void execute() throws Throwable {
 		int numLicenses = 0;
 		List<LicenseEntry> licenses = new ArrayList<LicenseEntry>();
-		BufferedReader rdr = new BufferedReader(new InputStreamReader(AboutDialog.class.getResourceAsStream("/net/sourceforge/fullsync/licenses/"))); //$NON-NLS-1$
-		String line;
-		try {
-			while ((line = rdr.readLine()) != null) {
-				if (line.endsWith(".txt")) { //$NON-NLS-1$
-					++numLicenses;
-					LicenseEntry entry = new LicenseEntry();
-					entry.name = line.substring(0, line.length() - 4);
-					entry.license = Util.getResourceAsString("net/sourceforge/fullsync/licenses/" + line); //$NON-NLS-1$
-					licenses.add(entry);
-				}
+		for(String name : Util.loadDirectoryFromClasspath(AboutDialog.class, "/net/sourceforge/fullsync/licenses/")) { //$NON-NLS-1$
+			if (name.endsWith(".txt")) { //$NON-NLS-1$
+				++numLicenses;
+				LicenseEntry entry = new LicenseEntry();
+				entry.name = name.substring(0, name.length() - 4);
+				entry.license = Util.getResourceAsString("net/sourceforge/fullsync/licenses/" + name); //$NON-NLS-1$
+				licenses.add(entry);
 			}
 		}
-		catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		try {
-			rdr.close();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		licenses.sort(new Comparator<LicenseEntry>() {
+		Collections.sort(licenses, new Comparator<LicenseEntry>() {
 			@Override
 			public int compare(LicenseEntry o1, LicenseEntry o2) {
-				return o1.name.compareTo(o2.name);
+				return o1.name.compareToIgnoreCase(o2.name);
 			}
 		});
 		licenseNames = new ArrayList<String>(numLicenses);

@@ -59,6 +59,18 @@ public class ChangeLogLoader {
 		return changelogEntries;
 	}
 
+	public static List<ChangeLogEntry> filterAfter(List<ChangeLogEntry> changelogEntries, String version) {
+		List<ChangeLogEntry> newerVersions = new LinkedList<ChangeLogEntry>();
+		VersionComparator vc = new VersionComparator();
+		for(ChangeLogEntry entry : changelogEntries) {
+			if (1 != vc.compare(entry.getVersion(), version)) {
+				break;
+			}
+			newerVersions.add(entry);
+		}
+		return newerVersions;
+	}
+
 	private ChangeLogEntry loadChangeLogFile(File f) throws ParserConfigurationException, SAXException, IOException, ParseException {
 		DocumentBuilder parser = parserFactory.newDocumentBuilder();
 		return new ChangeLogEntry(parser.parse(f));
