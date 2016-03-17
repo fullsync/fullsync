@@ -332,17 +332,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 				out.close();
 			}
 		}
-		catch (TransformerConfigurationException e) {
-			ExceptionHandler.reportException(e);
-		}
-		catch (TransformerException e) {
-			ExceptionHandler.reportException(e);
-		}
-		finally {
-			if (null != out) {
-				out.close();
-			}
-		}
 	}
 
 	@Override

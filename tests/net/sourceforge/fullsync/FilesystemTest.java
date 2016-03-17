@@ -115,13 +115,8 @@ public class FilesystemTest {
 		testingSrc.mkdirs();
 
 		synchronizer = new Synchronizer();
-		profile = new Profile();
-		profile.setName("TestProfile");
 		ConnectionDescription src = new ConnectionDescription(testingSrc.toURI());
 		src.setParameter("bufferStrategy", "");
-		profile.setSource(src);
-
-		profile.setRuleSet(new SimplyfiedRuleSetDescriptor(true, null, false, null));
 
 		String dstUrl = null;
 		if ("file".equals(filesystem)) {
@@ -146,6 +141,8 @@ public class FilesystemTest {
 		dst.setParameter("bufferStrategy", "");
 		dst.setParameter("username", "SampleUser");
 		dst.setSecretParameter("password", "Sample");
+
+		profile = new Profile("TestProfile", src, dst, new SimplyfiedRuleSetDescriptor(true, null, false, null));
 		profile.setSynchronizationType(syncType);
 		profile.setDestination(dst);
 	}
