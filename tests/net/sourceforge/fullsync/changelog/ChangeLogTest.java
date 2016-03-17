@@ -53,6 +53,7 @@ public class ChangeLogTest {
 		assertTrue("0.1.1 > 0.1.0", 1 == vc.compare("0.1.1", "0.1.0"));
 		assertTrue("1.0.0 > 0.5.9", 1 == vc.compare("1.0.0", "0.5.9"));
 		assertTrue("1.0.0 > 0.5.9", 1 == vc.compare("1.0.0", "0.5.9"));
+		assertTrue("1.0.0 > ", 1 == vc.compare("1.0.0", ""));
 	}
 
 	@Test

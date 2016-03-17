@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import org.eclipse.swt.graphics.Color;
 
 /**
  * this Class holds default information about UI elements.
@@ -35,16 +34,6 @@ public abstract class UISettings {
 	 * preferred button height.
 	 */
 	public static final int BUTTON_HEIGHT = 25;
-
-	/**
-	 * white color.
-	 */
-	public static final Color COLOR_WHITE = new Color(null, 255, 255, 255);
-
-	/**
-	 * light grey color.
-	 */
-	public static final Color COLOR_LIGHT_GREY = new Color(null, 51, 51, 51);
 
 	public static String formatSize(long size) {
 		if (size == -1) {

@@ -31,7 +31,7 @@ public interface IoStatistics extends Serializable {
 
 	public int getDeletions();
 
-	public int getBytesTransferred();
+	public long getBytesTransferred();
 
 	public int getCountActions();
 }

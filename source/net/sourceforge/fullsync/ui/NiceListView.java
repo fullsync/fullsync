@@ -24,8 +24,8 @@ import java.util.Arrays;
 import net.sourceforge.fullsync.ExceptionHandler;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -33,50 +33,92 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 public class NiceListView extends Composite implements Listener {
+	private Color colorDefault;
+	private Color colorHover;
+	private Color colorSelected;
+	private Color colorForeground;
+	private Color colorSelectedForegroud;
+
 	private NiceListViewItem selected;
 
 	public NiceListView(Composite parent, int style) {
 		super(parent, style);
-		addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent e) {
-				try {
-					Control[] children = getChildren();
-					int index = Arrays.asList(children).indexOf(selected);
-					if (e.keyCode == SWT.ARROW_UP) {
-						setSelected((NiceListViewItem) children[index - 1]);
-					}
-					else if (e.keyCode == SWT.ARROW_DOWN) {
-						setSelected((NiceListViewItem) children[index + 1]);
-					}
-				}
-				catch (ClassCastException ex) {
-					ExceptionHandler.reportException(ex);
-				}
-			}
-		});
+		colorDefault = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+		colorHover = getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
+		colorSelected = getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION);
+		colorForeground = getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
+		colorSelectedForegroud = getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT);
+
+		addListener(SWT.KeyDown, this);
 		initGUI();
+	}
+
+	public Color getColorDefault() {
+		return colorDefault;
+	}
+
+	public Color getColorHover() {
+		return colorHover;
+	}
+
+	public Color getColorSelected() {
+		return colorSelected;
+	}
+
+	public Color getColorForeground() {
+		return colorForeground;
+	}
+
+	public Color getColorSelectedForegroud() {
+		return colorSelectedForegroud;
 	}
 
 	@Override
 	public void handleEvent(final Event event) {
 		switch (event.type) {
 			case SWT.KeyDown:
+				Control[] children = getChildren();
+				int index = Arrays.asList(children).indexOf(selected);
 				switch (event.keyCode) {
 					case SWT.ARROW_UP:
+						if (index > 0) {
+							index -= 1;
+						}
+						break;
 					case SWT.ARROW_DOWN:
-						Control[] children = getChildren();
-						int index = Arrays.asList(children).indexOf(selected);
-						if ((event.keyCode == SWT.ARROW_UP) && (index > 0)) {
-							setSelected((NiceListViewItem) children[index - 1]);
+						if (index + 1 < children.length) {
+							index += 1;
 						}
-						else if ((event.keyCode == SWT.ARROW_DOWN) && ((index + 1) < children.length)) {
-							setSelected((NiceListViewItem) children[index + 1]);
+						break;
+					case SWT.HOME:
+						if (children.length > 0) {
+							index = 0;
 						}
+						break;
+					case SWT.END:
+						if (children.length > 0) {
+							index = children.length -1;
+						}
+						break;
+					case SWT.PAGE_UP:
+						index = Math.max(0, index - 5);
+						break;
+					case SWT.PAGE_DOWN:
+						index = Math.min(children.length - 1, index + 5);
 						break;
 					default:
+						index = -1;
 						break;
 				}
+				if (index > -1) {
+					setSelected((NiceListViewItem) children[index]);
+					Composite parent = this.getParent();
+					if (parent instanceof ScrolledComposite) {
+						ScrolledComposite sc = (ScrolledComposite)parent;
+						sc.showControl(children[index]);
+					}
+				}
+				break;
 			default:
 				break;
 		}
@@ -88,7 +130,7 @@ public class NiceListView extends Composite implements Listener {
 			thisLayout.horizontalSpacing = 2;
 			thisLayout.verticalSpacing = 0;
 			this.setLayout(thisLayout);
-			this.setBackground(UISettings.COLOR_WHITE);
+			setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 			this.layout();
 		}
 		catch (Exception e) {

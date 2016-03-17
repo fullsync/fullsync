@@ -27,7 +27,9 @@ public class VersionComparator implements Comparator<String> {
 		String[] components = v.split("\\.");
 		int[] numbers = new int[components.length];
 		for (int i = 0; i < components.length; ++i) {
-			numbers[i] = Integer.parseInt(components[i]);
+			if (!components[i].isEmpty()) {
+				numbers[i] = Integer.parseInt(components[i]);
+			}
 		}
 		return numbers;
 	}

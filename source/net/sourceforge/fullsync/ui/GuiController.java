@@ -77,12 +77,30 @@ public class GuiController implements Runnable {
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText("FullSync"); //$NON-NLS-1$
 			mainShell.setImage(getImage("fullsync48.png")); //$NON-NLS-1$
-			if (!minimized) {
-				mainShell.setVisible(true);
+			restoreWindowState(shellBounds);
+			if (minimized) {
+				mainShell.setVisible(false);
 			}
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
+		}
+	}
+
+	private void restoreWindowState(final Rectangle shellBounds) {
+		mainShell.setVisible(true);
+		Rectangle wb = preferences.getWindowBounds();
+		boolean maximized = preferences.getWindowMaximized();
+		boolean minimized = preferences.getWindowMinimized();
+		Rectangle r = display.getBounds();
+		if ((wb.width > 0) && (wb.height > 0) && r.contains(wb.x, wb.y) && r.contains(wb.x + wb.width, wb.y + wb.height)) {
+			mainShell.setBounds(wb);
+		}
+		if (minimized) {
+			mainShell.setMinimized(true);
+		}
+		if (maximized) {
+			mainShell.setMaximized(true);
 		}
 	}
 
@@ -169,10 +187,22 @@ public class GuiController implements Runnable {
 			}
 		}
 
-		GuiController.getInstance().getProfileManager().disconnectRemote();
-		GuiController.getInstance().getSynchronizer().disconnectRemote();
+		profileManager.disconnectRemote();
+		synchronizer.disconnectRemote();
+		storeWindowState();
 
 		disposeGui();
+	}
+
+	private void storeWindowState() {
+		boolean maximized = mainShell.getMaximized();
+		boolean minimized = mainShell.getMinimized();
+		if (!maximized) {
+			preferences.setWindowBounds(mainShell.getBounds());
+		}
+		preferences.setWindowMaximized(maximized);
+		preferences.setWindowMinimized(minimized);
+		preferences.save();
 	}
 
 	public void disposeGui() {
@@ -296,7 +326,7 @@ class ExecuteBackgroundJob implements Runnable {
 				succeeded = true;
 			}
 			catch(Throwable t) {
-				//TODO: logError
+				t.printStackTrace();
 			}
 			executed = true;
 			display.asyncExec(this);

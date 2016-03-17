@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
 
 import org.eclipse.swt.SWT;
@@ -43,94 +42,78 @@ public class NiceListViewItem extends Canvas implements Listener {
 	private Label labelStatus;
 	private Composite compositeContent;
 
-	private Color colorDefault;
-	private Color colorHover;
-	private Color colorSelectedDefault;
-	private Color colorSelectedFocus;
-
 	private ProfileListControlHandler handler;
 	private Profile profile;
 
 	private boolean mouseOver;
-	private boolean hasFocus;
 	private boolean selected;
 
 	public NiceListViewItem(NiceListView parent, int style) {
 		super(parent, style);
 		this.parent = parent;
 
-		colorDefault = getDisplay().getSystemColor(SWT.COLOR_WHITE);
-		colorHover = new Color(getDisplay(), 248, 252, 255);
-		colorSelectedDefault = new Color(getDisplay(), 236, 233, 216);
-		colorSelectedFocus = new Color(getDisplay(), 230, 240, 255);
+		GridData layoutData = new GridData();
+		layoutData.grabExcessHorizontalSpace = true;
+		layoutData.horizontalAlignment = SWT.FILL;
+		this.setLayoutData(layoutData);
 
-		try {
-			GridData layoutData = new GridData();
-			layoutData.grabExcessHorizontalSpace = true;
-			layoutData.horizontalAlignment = SWT.FILL;
-			this.setLayoutData(layoutData);
+		GridLayout thisLayout = new GridLayout();
+		this.addListener(SWT.MouseEnter, this);
+		this.addListener(SWT.MouseExit, this);
+		this.addListener(SWT.MouseUp, this);
+		this.addListener(SWT.MouseDown, this);
+		this.addListener(SWT.MouseDoubleClick, this);
+		this.addListener(SWT.KeyDown, this);
+		this.addListener(SWT.FocusIn, this);
+		this.addListener(SWT.FocusOut, this);
+		this.setLayout(thisLayout);
+		thisLayout.numColumns = 3;
+		thisLayout.marginHeight = 3;
+		thisLayout.marginWidth = 3;
 
-			GridLayout thisLayout = new GridLayout();
-			this.addListener(SWT.MouseEnter, this);
-			this.addListener(SWT.MouseExit, this);
-			this.addListener(SWT.MouseUp, this);
-			this.addListener(SWT.MouseDown, this);
-			this.addListener(SWT.MouseDoubleClick, this);
-			this.addListener(SWT.KeyDown, this);
-			this.addListener(SWT.FocusIn, this);
-			this.addListener(SWT.FocusOut, this);
-			this.setLayout(thisLayout);
-			thisLayout.numColumns = 3;
-			thisLayout.marginHeight = 3;
-			thisLayout.marginWidth = 3;
+		// icon
+		labelIcon = new Label(this, SWT.TRANSPARENT);
+		labelIcon.setSize(16, 16);
+		GridData labelIconLData = new GridData();
+		labelIconLData.grabExcessVerticalSpace = true;
+		labelIconLData.verticalAlignment = GridData.BEGINNING;
+		labelIconLData.widthHint = 16;
+		labelIconLData.heightHint = 16;
+		labelIcon.setLayoutData(labelIconLData);
+		labelIcon.addListener(SWT.MouseEnter, this);
+		labelIcon.addListener(SWT.MouseExit, this);
+		labelIcon.addListener(SWT.MouseUp, this);
+		labelIcon.addListener(SWT.MouseDown, this);
+		labelIcon.addListener(SWT.MouseDoubleClick, this);
 
-			// icon
-			labelIcon = new Label(this, SWT.TRANSPARENT);
-			labelIcon.setSize(16, 16);
-			GridData labelIconLData = new GridData();
-			labelIconLData.grabExcessVerticalSpace = true;
-			labelIconLData.verticalAlignment = GridData.BEGINNING;
-			labelIconLData.verticalSpan = 2;
-			labelIconLData.widthHint = 16;
-			labelIconLData.heightHint = 16;
-			labelIcon.setLayoutData(labelIconLData);
-			labelIcon.addListener(SWT.MouseEnter, this);
-			labelIcon.addListener(SWT.MouseExit, this);
-			labelIcon.addListener(SWT.MouseUp, this);
-			labelIcon.addListener(SWT.MouseDown, this);
-			labelIcon.addListener(SWT.MouseDoubleClick, this);
-
-			// profile name
-			labelCaption = new Label(this, SWT.TRANSPARENT);
-			labelCaption.setFont(GuiController.getInstance().getFont("Tahoma", 9, 1)); //$NON-NLS-1$
-			GridData labelCaptionLData = new GridData();
-			labelCaptionLData.widthHint = -1;
-			labelCaption.setLayoutData(labelCaptionLData);
-			labelCaption.addListener(SWT.MouseEnter, this);
-			labelCaption.addListener(SWT.MouseExit, this);
-			labelCaption.addListener(SWT.MouseUp, this);
-			labelCaption.addListener(SWT.MouseDown, this);
-			labelCaption.addListener(SWT.MouseDoubleClick, this);
+		// profile name
+		labelCaption = new Label(this, SWT.TRANSPARENT);
+		labelCaption.setFont(GuiController.getInstance().getFont("Tahoma", 9, 1)); //$NON-NLS-1$
+		GridData labelCaptionLData = new GridData();
+		labelCaptionLData.widthHint = -1;
+		labelCaption.setLayoutData(labelCaptionLData);
+		labelCaption.addListener(SWT.MouseEnter, this);
+		labelCaption.addListener(SWT.MouseExit, this);
+		labelCaption.addListener(SWT.MouseUp, this);
+		labelCaption.addListener(SWT.MouseDown, this);
+		labelCaption.addListener(SWT.MouseDoubleClick, this);
 
 
-			labelStatus = new Label(this, SWT.TRANSPARENT);
-			GridData labelStatusLData = new GridData();
-			labelStatusLData.grabExcessHorizontalSpace = true;
-			labelStatusLData.horizontalAlignment = SWT.FILL;
-			labelStatusLData.horizontalIndent = 10;
-			labelStatus.setLayoutData(labelStatusLData);
-			labelStatus.addListener(SWT.MouseEnter, this);
-			labelStatus.addListener(SWT.MouseExit, this);
-			labelStatus.addListener(SWT.MouseUp, this);
-			labelStatus.addListener(SWT.MouseDown, this);
-			labelStatus.addListener(SWT.MouseDoubleClick, this);
+		labelStatus = new Label(this, SWT.TRANSPARENT);
+		GridData labelStatusLData = new GridData();
+		labelStatusLData.grabExcessHorizontalSpace = true;
+		labelStatusLData.horizontalAlignment = SWT.FILL;
+		labelStatusLData.horizontalIndent = 10;
+		labelStatus.setLayoutData(labelStatusLData);
+		labelStatus.addListener(SWT.MouseEnter, this);
+		labelStatus.addListener(SWT.MouseExit, this);
+		labelStatus.addListener(SWT.MouseUp, this);
+		labelStatus.addListener(SWT.MouseDown, this);
+		labelStatus.addListener(SWT.MouseDoubleClick, this);
 
-			this.setBackground(colorDefault);
-			this.layout();
-		}
-		catch (Exception e) {
-			ExceptionHandler.reportException(e);
-		}
+		this.setBackground(parent.getColorDefault());
+		this.setForeground(parent.getForeground());
+		this.layout();
 	}
 
 	@Override
@@ -158,14 +141,6 @@ public class NiceListViewItem extends Canvas implements Listener {
 			case SWT.KeyDown:
 				parent.handleEvent(event);
 				break;
-			case SWT.FocusIn:
-				hasFocus = true;
-				updateBackground();
-				break;
-			case SWT.FocusOut:
-				hasFocus = false;
-				updateBackground();
-				break;
 			default:
 				break;
 		}
@@ -178,29 +153,25 @@ public class NiceListViewItem extends Canvas implements Listener {
 		for (Control element : this.getChildren()) {
 			element.setBackground(color);
 		}
+	}
 
-		if (compositeContent != null) {
-			for (Control element : compositeContent.getChildren()) {
-				element.setBackground(color);
-			}
+	@Override
+	public void setForeground(Color color) {
+		super.setForeground(color);
+
+		for (Control element : this.getChildren()) {
+			element.setForeground(color);
 		}
 	}
 
 	public void updateBackground() {
 		if (selected) {
-			if (hasFocus) {
-				setBackground(colorSelectedFocus);
-			}
-			else {
-				setBackground(colorSelectedDefault);
-			}
-		}
-		else if (mouseOver) {
-			setBackground(colorHover);
+			setBackground(parent.getColorSelected());
 		}
 		else {
-			setBackground(colorDefault);
+			setBackground(mouseOver ? parent.getColorHover() : parent.getColorDefault());
 		}
+		setForeground(selected ? parent.getColorSelectedForegroud() : parent.getColorForeground());
 	}
 
 	public void setImage(Image image) {
@@ -256,7 +227,8 @@ public class NiceListViewItem extends Canvas implements Listener {
 	public void setContent(Composite content) {
 		this.compositeContent = content;
 		GridData compositeContentLData = new GridData();
-		compositeContentLData.horizontalSpan = 2;
+		compositeContentLData.horizontalSpan = 3;
+		compositeContentLData.horizontalIndent = labelIcon.getBounds().width + 4;
 		compositeContentLData.grabExcessHorizontalSpace = true;
 		compositeContentLData.horizontalAlignment = SWT.FILL;
 		compositeContentLData.heightHint = 0;

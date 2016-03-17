@@ -46,6 +46,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -500,6 +501,9 @@ TaskGenerationListener, SchedulerChangeListener {
 	}
 
 	void createProfileList() {
+		for (Control c : profileListContainer.getChildren()) {
+			c.dispose();
+		}
 		if ("NiceListView".equals(guiController.getPreferences().getProfileListStyle())) {
 			profileList = new NiceListViewProfileListComposite(profileListContainer, SWT.NULL);
 		}

@@ -30,7 +30,7 @@ public class IoStatisticsImpl implements IoStatistics {
 	public int filesCopied;
 	public int dirsCreated;
 	public int deletions;
-	public int bytesTransferred;
+	public long bytesTransferred;
 
 	@Override
 	public int getFilesCopied() {
@@ -48,7 +48,7 @@ public class IoStatisticsImpl implements IoStatistics {
 	}
 
 	@Override
-	public int getBytesTransferred() {
+	public long getBytesTransferred() {
 		return bytesTransferred;
 	}
 

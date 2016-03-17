@@ -115,6 +115,10 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 			tabLicenses.setText(Messages.getString("AboutDialog.Tab_Licenses")); //$NON-NLS-1$
 			tabLicenses.setControl(initLicensesTab(tabs));
 
+			TabItem tabChangelog = new TabItem(tabs, SWT.NONE);
+			tabChangelog.setText(Messages.getString("AboutDialog.Tab_Changelog")); //$NON-NLS-1$
+			tabChangelog.setControl(initChangelogTab(tabs));
+
 			tabs.setLayoutData(tabLData);
 			// ok button
 			Button buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
@@ -147,6 +151,16 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
 		}
+	}
+
+	private Control initChangelogTab(Composite parent) {
+		final Composite tab = new Composite(parent, SWT.FILL);
+		tab.setLayout(new GridLayout(1, true));
+		ChangeLogBox changeLogBox = new ChangeLogBox(tab, SWT.NONE, "");
+		GridData changelogBoxLData = new GridData(GridData.FILL_BOTH);
+		changelogBoxLData.heightHint = 300;
+		changeLogBox.setLayoutData(changelogBoxLData);
+		return tab;
 	}
 
 	@Override
