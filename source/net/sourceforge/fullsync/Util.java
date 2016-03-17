@@ -19,9 +19,13 @@
  */
 package net.sourceforge.fullsync;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * various utilities.
@@ -78,4 +82,16 @@ public abstract class Util {
 		return Util.getResourceAsString("net/sourceforge/fullsync/website-url.txt").trim();
 	}
 
+	public static File getInstalllocation() {
+		URL codeSource = Util.class.getProtectionDomain().getCodeSource().getLocation();
+		try {
+			URI path = codeSource.toURI();
+			path = path.resolve("../versions");
+			return new File(path);
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+			return new File(".");
+		}
+	}
 }

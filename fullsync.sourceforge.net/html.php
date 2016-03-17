@@ -1,8 +1,26 @@
 <?php
-header( "Content-Type: text/html; charset=UTF-8" );
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ *
+ * For information about the authors of this project Have a look
+ * at the AUTHORS file in the root of this project.
+ */
 
-function readVersion($major, $minor, $patch, $file) {
-	$content = file_get_contents($file);
+function readVersion($major, $minor, $patch) {
+	$content = file_get_contents("versions/$major.$minor.$patch.html");
 	if ($content) {
 		$entry = array(
 			'version' => "$major.$minor.$patch",
@@ -25,24 +43,28 @@ function readVersion($major, $minor, $patch, $file) {
 	return null;
 }
 
+function compareVersionComponent($a, $b) {
+	$a = intval($a, 10);
+	$b = intval($b, 10);
+	if ($a > $b) {
+		return 1;
+	}
+	if ($a < $b) {
+		return -1;
+	}
+	return 0;
+}
+
 // sort version numbers, newest first
 function versionComparator($a, $b) {
-	if ($a['major'] === $b['major']) {
-		if ($a['minor'] === $b['minor']) {
-			if ($a['patch'] === $b['patch']) {
-				return 0;
-			}
-			else {
-				return $b['patch'] - $a['patch'];
-			}
-		}
-		else {
-			return $b['minor'] - $a['minor'];
+	$components = array('major', 'minor', 'patch');
+	foreach ($components as $component) {
+		$result = compareVersionComponent($b[$component], $a[$component]);
+		if (0 !== $result) {
+			return $result;
 		}
 	}
-	else {
-		return $b['major'] - $a['major'];
-	}
+	return 0;
 }
 
 function getVersions($count) {
@@ -51,7 +73,11 @@ function getVersions($count) {
 	if (false !== $d) {
 		while (false !== ($entry = $d->read())) {
 			if (preg_match('/^(\d+)\.(\d+)\.(\d+)\.html$/', $entry, $version)) {
-				$versions[] = readVersion($version[1], $version[2], $version[3], 'versions/' . $entry);
+				$versions[] = array(
+					'major' => $version[1],
+					'minor' => $version[2],
+					'patch' => $version[3],
+				);
 			}
 		}
 		$d->close();
@@ -60,10 +86,14 @@ function getVersions($count) {
 	if ($count > 0) {
 		$versions = array_splice($versions, 0, $count);
 	}
+	foreach($versions as $idx => $v) {
+		$versions[$idx] = readVersion($v['major'], $v['minor'], $v['patch']);
+	}
 	return $versions;
 }
 
 function HtmlHeader($caption, $skip = '') {
+	header( "Content-Type: text/html; charset=UTF-8" );
 	$script = explode('/', $_SERVER['PHP_SELF']);
 	$script = end($script);
 ?>
@@ -122,7 +152,7 @@ function HtmlFooter($skip = '') {
 			<a href="https://twitter.com/FullSyncNews" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @FullSyncNews</a>
 			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 			<div id="footer-copyright">
-				<span style="font-size: 10pt; color: #999999;">Copyright &copy; 2004-2014 The FullSync Authors. All Rights Reserved.</span>
+				<span style="font-size: 10pt; color: #999999;">Copyright &copy; 2004-2015 The FullSync Authors. All Rights Reserved.</span>
 				<a href="http://sourceforge.net" style="float: right;"><img src="http://sourceforge.net/sflogo.php?group_id=115436&amp;type=1" alt="SourceForge Logo"/></a>
 			</div>
 		</div>

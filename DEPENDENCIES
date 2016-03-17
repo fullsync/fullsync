@@ -14,7 +14,6 @@ Versions of dependent libraries in distributions:
  * jcl-over-slf4j.jar            1.7.5             2013-03-25
  * log4j-over-slf4j.jar          1.7.5             2013-03-25
  * slf4j-api.jar                 1.7.5             2013-03-25
- * jsoup.jar                     1.7.3             2013-11-10
 
 Launcher:
  * WinRun4J                      0.4.4             2012-01-30
@@ -104,12 +103,6 @@ slf4j-api.jar
 		fullsync-logger.jar
 	Used in:
 		entire FullSync
-
-jsoup.jar
-	Dependencies:
-		none
-	Used in:
-		net.sourceforge.fullsync.ui.WelcomeScreen
 
 ------------------------------------- TESTS ---------------------------------
 
