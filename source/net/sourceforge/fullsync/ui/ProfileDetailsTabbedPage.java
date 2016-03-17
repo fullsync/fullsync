@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import net.sourceforge.fullsync.ConnectionDescription;
@@ -575,8 +576,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 		directoryTree.setRedraw(false);
 		directoryTree.removeAll();
 		try {
-			File rootFile = sourceSite.getRoot();
-			for (File file : rootFile.getChildren()) {
+			for (File file : getOrderedChildren(sourceSite.getRoot())) {
 				if (file.isDirectory()) {
 					TreeItem item = new TreeItem(directoryTree, SWT.NULL);
 					item.setText(file.getName());
@@ -599,14 +599,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 	}
 
 	private void addChildren(File rootFile, TreeItem item) throws IOException {
-		ArrayList<File> children = new ArrayList<File>(rootFile.getChildren());
-		Collections.sort(children, new Comparator<File>() {
-			@Override
-			public int compare(File o1, File o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
-		for (File file : children) {
+		for (File file : getOrderedChildren(rootFile)) {
 			if (file.isDirectory()) {
 				TreeItem childrenItem = new TreeItem(item, SWT.NULL);
 				childrenItem.setText(file.getName());
@@ -619,6 +612,17 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 				}
 			}
 		}
+	}
+
+	private List<File> getOrderedChildren(File rootFile) throws IOException {
+		ArrayList<File> children = new ArrayList<File>(rootFile.getChildren());
+		Collections.sort(children, new Comparator<File>() {
+			@Override
+			public int compare(File o1, File o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		return children;
 	}
 
 	private void markItem(TreeItem item) {
@@ -728,7 +732,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 							if (null != src) {
 								closeSourceSite();
 								src.setParameter("bufferStrategy", ""); // the subdirs tab should bypass the buffer imo
-								src.setParameter("interactive", "true");
+								src.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
 								sourceSite = fsm.createConnection(src);
 								drawDirectoryTree();
 								lastSourceLoaded = src.getUri().toString();

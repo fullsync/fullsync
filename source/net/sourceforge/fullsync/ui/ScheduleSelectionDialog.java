@@ -80,7 +80,7 @@ public class ScheduleSelectionDialog extends Dialog {
 
 	public void open() {
 		try {
-			dialogShell = new Shell(getParent(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
+			dialogShell = new Shell(getParent(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.RESIZE);
 			dialogShell.setText(Messages.getString("ScheduleSelectionDialog.EditScheduling")); //$NON-NLS-1$
 			dialogShell.setImage(GuiController.getInstance().getImage("Scheduler_Icon.png")); //$NON-NLS-1$
 			GridLayout thisLayout = new GridLayout();
@@ -175,7 +175,7 @@ public class ScheduleSelectionDialog extends Dialog {
 			addScheduleOptions(new CrontabScheduleOptions(groupOptions, SWT.NULL));
 
 			Display display = dialogShell.getDisplay();
-			dialogShell.setSize(350, 300);
+			dialogShell.setSize(350, 350);
 
 			Rectangle rect = getParent().getBounds();
 			dialogShell.setLocation((rect.x + (rect.width / 2)) - (dialogShell.getSize().x / 2),
