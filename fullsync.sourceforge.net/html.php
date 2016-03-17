@@ -163,7 +163,7 @@ function HtmlFooter($skip = '') {
 			<a href="https://twitter.com/FullSyncNews" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @FullSyncNews</a>
 			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 			<div id="footer-copyright">
-				<span style="font-size: 10pt; color: #999999;">Copyright &copy; 2004-2015 The FullSync Authors. All Rights Reserved.</span>
+				<span style="font-size: 10pt; color: #999999;">Copyright &copy; 2004-2016 The FullSync Authors. All Rights Reserved.</span>
 				<a href="http://sourceforge.net" style="float: right;"><img src="http://sourceforge.net/sflogo.php?group_id=115436&amp;type=1" alt="SourceForge Logo"/></a>
 			</div>
 		</div>

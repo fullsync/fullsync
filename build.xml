@@ -224,6 +224,13 @@
 				<exclude name="lib/swt-gtk-*" />
 			</zipfileset>
 		</zip>
+		<exec executable="git" failifexecutionfails="false">
+			<arg value="archive" />
+			<arg value="--format=tar.gz" />
+			<arg value="--prefix=FullSync-${version}/" />
+			<arg value="--output=${dist.dir}/${final-src.name}.tar.gz" />
+			<arg value="HEAD" />
+		</exec>
 	</target>
 
 	<target name="tests" depends="build, compile-tests">
