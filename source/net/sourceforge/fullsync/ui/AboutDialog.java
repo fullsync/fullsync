@@ -27,9 +27,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.Util;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
@@ -56,7 +53,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Util;
+
 class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
+	private static final String FULLSYNC_LICENSES_DIRECTORY = "net/sourceforge/fullsync/licenses/";
 	private static final long delay = 750;
 	private int stIndex = 0;
 	private Timer stTimer;
@@ -334,12 +335,12 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 	public void execute() throws Throwable {
 		int numLicenses = 0;
 		List<LicenseEntry> licenses = new ArrayList<LicenseEntry>();
-		for(String name : Util.loadDirectoryFromClasspath(AboutDialog.class, "/net/sourceforge/fullsync/licenses/")) { //$NON-NLS-1$
+		for(String name : Util.loadDirectoryFromClasspath(AboutDialog.class, FULLSYNC_LICENSES_DIRECTORY)) { //$NON-NLS-1$
 			if (name.endsWith(".txt")) { //$NON-NLS-1$
 				++numLicenses;
 				LicenseEntry entry = new LicenseEntry();
 				entry.name = name.substring(0, name.length() - 4);
-				entry.license = Util.getResourceAsString("net/sourceforge/fullsync/licenses/" + name); //$NON-NLS-1$
+				entry.license = Util.getResourceAsString(FULLSYNC_LICENSES_DIRECTORY + name); //$NON-NLS-1$
 				licenses.add(entry);
 			}
 		}
