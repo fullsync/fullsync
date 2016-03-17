@@ -21,9 +21,6 @@ package net.sourceforge.fullsync;
 
 import java.text.NumberFormat;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class Crypt {
 	private static String m_key = "FULLSYNC1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 

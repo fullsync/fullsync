@@ -22,9 +22,6 @@ package net.sourceforge.fullsync;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class PhaseOneTest extends BaseConnectionTest {
 
 	@Override

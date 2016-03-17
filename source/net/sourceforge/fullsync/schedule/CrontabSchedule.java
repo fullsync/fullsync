@@ -26,9 +26,6 @@ import net.sourceforge.fullsync.DataParseException;
 
 import org.w3c.dom.Element;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class CrontabSchedule extends Schedule {
 	public static final String SCHEDULE_TYPE = "crontab";
 

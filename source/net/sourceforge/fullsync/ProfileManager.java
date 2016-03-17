@@ -57,8 +57,6 @@ import org.xml.sax.SAXException;
 /**
  * A ProfileManager handles persistence of Profiles and provides
  * a scheduler for creating events when a Profile should be executed.
- *
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource, SchedulerChangeListener {
 	class ProfileManagerSchedulerTask implements ScheduleTask {

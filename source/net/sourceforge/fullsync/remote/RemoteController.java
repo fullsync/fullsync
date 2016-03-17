@@ -33,9 +33,6 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
 
-/**
- * @author Michele Aiello
- */
 public class RemoteController {
 
 	private static RemoteController instance;

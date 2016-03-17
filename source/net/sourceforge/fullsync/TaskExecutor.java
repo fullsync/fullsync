@@ -21,9 +21,6 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface TaskExecutor {
 	// we are much more a TaskExecutor
 	IoStatistics createStatistics(TaskTree tree);

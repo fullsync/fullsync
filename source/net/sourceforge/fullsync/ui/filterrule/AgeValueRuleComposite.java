@@ -37,9 +37,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-/**
- * @author Michele Aiello
- */
 class AgeValueRuleComposite extends RuleComposite {
 
 	private Text textValue;

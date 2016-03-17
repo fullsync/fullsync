@@ -19,32 +19,25 @@
  */
 package net.sourceforge.fullsync.schedule;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Calendar;
 import java.util.Date;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
-public class CrontabScheduleTest extends TestCase {
+public class CrontabScheduleTest {
 	private Calendar now;
 	private Calendar expectedResult;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		now = Calendar.getInstance();
 		expectedResult = Calendar.getInstance();
-
-		super.setUp();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
-	protected void assertNextOccurence(String pattern) throws Exception {
+	private void assertNextOccurence(String pattern) throws Exception {
 		Schedule schedule = new CrontabSchedule(pattern);
 
 		long res = schedule.getNextOccurrence(now.getTimeInMillis());
@@ -52,6 +45,7 @@ public class CrontabScheduleTest extends TestCase {
 		assertEquals(new Date(expectedResult.getTimeInMillis()), new Date(res));
 	}
 
+	@Test
 	public void testGetNextOccurrenceMilliseconds() throws Exception {
 		now.set(2004, 0, 1, 0, 0, 0);
 		now.set(Calendar.MILLISECOND, 0);
@@ -68,6 +62,7 @@ public class CrontabScheduleTest extends TestCase {
 		assertNextOccurence("0 0 * * *");
 	}
 
+	@Test
 	public void testGetNextOccurrenceTwice() throws Exception {
 		now.set(2004, 0, 1, 0, 0, 0);
 		now.set(Calendar.MILLISECOND, 0);
@@ -88,6 +83,7 @@ public class CrontabScheduleTest extends TestCase {
 		assertEquals(new Date(expectedResult.getTimeInMillis()), new Date(res));
 	}
 
+	@Test
 	public void testGetNextOccurrenceHour1() throws Exception {
 		now.set(2004, 0, 1, 0, 0, 0);
 		expectedResult.set(2004, 0, 1, 10, 0, 0);
@@ -96,6 +92,7 @@ public class CrontabScheduleTest extends TestCase {
 		assertNextOccurence("0 10,20 * * *");
 	}
 
+	@Test
 	public void testGetNextOccurrenceHour2() throws Exception {
 		now.set(2004, 0, 1, 10, 0, 1);
 		expectedResult.set(2004, 0, 1, 20, 0, 0);
@@ -104,6 +101,7 @@ public class CrontabScheduleTest extends TestCase {
 		assertNextOccurence("0 10,20 * * *");
 	}
 
+	@Test
 	public void testGetNextOccurrenceDayOfMonth1() throws Exception {
 		now.set(2004, 0, 1, 0, 0, 0);
 		expectedResult.set(2004, 0, 10, 10, 0, 0);
@@ -112,6 +110,7 @@ public class CrontabScheduleTest extends TestCase {
 		assertNextOccurence("0 10,20 10,20 * *");
 	}
 
+	@Test
 	public void testGetNextOccurrenceDayOfMonth2() throws Exception {
 		now.set(2004, 0, 1, 15, 0, 0);
 		expectedResult.set(2004, 0, 10, 10, 0, 0);
@@ -120,6 +119,7 @@ public class CrontabScheduleTest extends TestCase {
 		assertNextOccurence("0 10,20 10,20 * *");
 	}
 
+	@Test
 	public void testGetNextOccurrenceDayOfMonth3() throws Exception {
 		now.set(2004, 0, 10, 20, 0, 1);
 		expectedResult.set(2004, 0, 20, 10, 0, 0);
@@ -128,6 +128,7 @@ public class CrontabScheduleTest extends TestCase {
 		assertNextOccurence("0 10,20 10,20 * *");
 	}
 
+	@Test
 	public void testGetNextOccurrenceDayOfWeek() throws Exception {
 		now.set(2004, 0, 1, 0, 0, 1);
 		expectedResult.set(2004, 0, 4, 10, 0, 0); // saturday

@@ -34,9 +34,6 @@ import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class FileSystemManager {
 	private Hashtable<String, FileSystem> schemes;
 	private Hashtable<String, SyncFilesBufferingProvider> buffering;

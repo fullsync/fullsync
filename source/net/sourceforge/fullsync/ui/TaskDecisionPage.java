@@ -45,9 +45,6 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class TaskDecisionPage extends WizardDialog {
 	private GuiController guiController;
 	private TaskTree taskTree;

@@ -26,9 +26,6 @@ import java.io.IOException;
 
 import net.sourceforge.fullsync.fs.File;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface BufferedFile extends File {
 	public long getFsLastModified();
 

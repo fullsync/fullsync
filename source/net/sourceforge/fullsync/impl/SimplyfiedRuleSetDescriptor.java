@@ -39,9 +39,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-/**
- * @author Michele Aiello
- */
 public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	public static final String RULESET_TYPE = "simple";
 

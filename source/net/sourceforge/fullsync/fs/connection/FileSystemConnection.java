@@ -27,9 +27,6 @@ import java.util.Hashtable;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface FileSystemConnection extends Site {
 	public File createChild(File parent, String name, boolean directory) throws IOException;
 

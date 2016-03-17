@@ -24,9 +24,6 @@ package net.sourceforge.fullsync.buffer;
 
 import java.io.IOException;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface ExecutionBuffer {
 	public void load();
 

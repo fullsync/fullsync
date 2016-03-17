@@ -21,9 +21,6 @@ package net.sourceforge.fullsync.impl;
 
 import net.sourceforge.fullsync.IoStatistics;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class IoStatisticsImpl implements IoStatistics {
 	private static final long serialVersionUID = 2L;
 

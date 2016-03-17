@@ -28,9 +28,6 @@ import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class BufferStateDecider extends StateDecider implements net.sourceforge.fullsync.BufferStateDecider {
 	public BufferStateDecider(FileComparer comparer) {
 		super(comparer);

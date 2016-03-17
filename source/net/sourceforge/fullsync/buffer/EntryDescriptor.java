@@ -28,9 +28,6 @@ import java.io.OutputStream;
 
 import net.sourceforge.fullsync.Task;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface EntryDescriptor {
 	public Task getTask();
 

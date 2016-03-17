@@ -22,9 +22,6 @@
  */
 package net.sourceforge.fullsync.schedule;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface Scheduler {
 	public void start();
 

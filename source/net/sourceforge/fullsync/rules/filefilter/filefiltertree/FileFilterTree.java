@@ -28,9 +28,6 @@ import java.util.StringTokenizer;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
-/**
- * @author Michele Aiello
- */
 public class FileFilterTree implements Serializable {
 	private static final long serialVersionUID = 2L;
 

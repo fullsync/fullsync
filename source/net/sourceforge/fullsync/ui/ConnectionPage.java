@@ -35,9 +35,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-/**
- * @author Michele Aiello
- */
 class ConnectionPage extends WizardDialog {
 	public ConnectionPage(Shell parent) {
 		super(parent);

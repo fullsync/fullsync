@@ -69,9 +69,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeListener {
 	private TabFolder tabs;
 	private Text textProfileName;

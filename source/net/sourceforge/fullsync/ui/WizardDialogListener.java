@@ -22,9 +22,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-/**
- * @author Michele Aiello
- */
 interface WizardDialogListener {
 	void dialogOpened();
 }

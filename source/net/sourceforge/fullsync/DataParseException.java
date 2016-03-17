@@ -21,8 +21,6 @@ package net.sourceforge.fullsync;
 
 /**
  * Thrown when an error occured while parsing a file.
- *
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class DataParseException extends NestedException {
 	private static final long serialVersionUID = 2L;

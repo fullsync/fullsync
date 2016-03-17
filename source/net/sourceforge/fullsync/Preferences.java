@@ -21,9 +21,6 @@ package net.sourceforge.fullsync;
 
 import org.eclipse.swt.graphics.Rectangle;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface Preferences {
 	void save();
 

@@ -46,8 +46,6 @@ import net.sourceforge.fullsync.fs.File;
 
 /**
  * An ActionDecider for source to destination backup.
- *
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class BackupActionDecider implements ActionDecider {
 	// TODO param keep orphans/exact copy

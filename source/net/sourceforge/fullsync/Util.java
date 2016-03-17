@@ -43,6 +43,7 @@ public abstract class Util {
 	 */
 	private static final int IOBUFFERSIZE = 0x1000;
 
+	// keep in sync with net.sourceforge.fullsync.launcher.Launcher.getResourceAsString(String)
 	public static String getResourceAsString(final String name) {
 		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
 		if (null != is) {

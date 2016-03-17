@@ -35,8 +35,6 @@ import net.sourceforge.fullsync.fs.File;
 
 /**
  * An ActionDecider for destination buffered Publish/Update.
- *
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class PublishOverwriteActionDecider implements ActionDecider {
 	private static final Action addDestination = new Action(Action.Add, Location.Destination, BufferUpdate.Destination, "Add");

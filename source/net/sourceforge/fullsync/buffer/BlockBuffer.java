@@ -31,9 +31,6 @@ import java.util.Vector;
 import org.slf4j.Logger;
 
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class BlockBuffer implements ExecutionBuffer {
 	Logger logger;
 

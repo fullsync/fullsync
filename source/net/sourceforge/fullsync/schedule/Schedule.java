@@ -31,9 +31,6 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public abstract class Schedule implements Serializable {
 	private static final long serialVersionUID = 2L;
 	private static final String ELEMENT_NAME = "Schedule";

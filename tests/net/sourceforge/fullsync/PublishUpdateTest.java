@@ -26,9 +26,6 @@ import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class PublishUpdateTest extends BaseConnectionTest {
 	protected Hashtable<String, Action> expectation = new Hashtable<String, Action>();
 

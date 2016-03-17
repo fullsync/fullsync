@@ -30,9 +30,6 @@ import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- * @author Michele Aiello
- */
 public abstract class RuleSetDescriptor implements Serializable {
 
 	private static final long serialVersionUID = 2L;

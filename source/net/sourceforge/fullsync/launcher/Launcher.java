@@ -20,14 +20,14 @@
 
 package net.sourceforge.fullsync.launcher;
 
-import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.CodeSource;
 import java.util.ArrayList;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 
 public class Launcher {
 	/**
@@ -52,29 +52,22 @@ public class Launcher {
 			else if (-1 != osName.indexOf("mac")) {
 				os = "cocoa-macosx";
 			}
-			String dot = new File(".").getAbsoluteFile().toURI().toString();
+			CodeSource cs = Launcher.class.getProtectionDomain().getCodeSource();
+			String installlocation = cs.getLocation().toURI().toString().replaceAll("launcher\\.jar$", "");
+			System.out.println("launching FullSync... OS=" + os + "; ARCH=" + arch + "; INSTALLLOCATION=" + installlocation);
+
 			ArrayList<URL> jars = new ArrayList<URL>();
-
-			System.out.println("launching FullSync... OS=" + os + "; ARCH=" + arch + "; DOT=" + dot);
-
+			jars.add(new URL(installlocation + "lib/fullsync.jar"));
 			// add correct SWT implementation to the class-loader
-			jars.add(new URL(dot + "/lib/swt-" + os + "-" + arch + ".jar"));
+			jars.add(new URL(installlocation + "lib/swt-" + os + "-" + arch + ".jar"));
 
-			// read out the "fake" class-path set on the launcher jar
-			File launcher = new File("./launcher.jar");
-			JarFile jf = new JarFile(launcher);
-			Manifest manifest = jf.getManifest();
-			Attributes attributes = manifest.getMainAttributes();
-			String fsClassPath = attributes.getValue("FullSync-Class-Path");
-			for (String s : fsClassPath.split(" ")) {
-				jars.add(new URL(dot + "/lib/" + s.trim()));
+			String dependencies = getResourceAsString("net/sourceforge/fullsync/launcher/dependencies.txt");
+			for (String s : dependencies.split("\r?\n")) {
+				jars.add(new URL(installlocation + "lib/" + s.trim()));
 			}
-			jf.close();
-			URL[] urls = new URL[jars.size()];
-			System.arraycopy(jars.toArray(), 0, urls, 0, urls.length);
 
 			// instantiate an URL class-loader with the constructed class-path and load the real main class
-			URLClassLoader cl = new URLClassLoader(urls, Launcher.class.getClassLoader());
+			URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Launcher.class.getClassLoader());
 			Class<?> cls = cl.loadClass("net.sourceforge.fullsync.cli.Main");
 			Method main = cls.getDeclaredMethod("main", new Class<?>[] { String[].class });
 
@@ -86,5 +79,42 @@ public class Launcher {
 			// TODO: tell the user
 			e.printStackTrace();
 		}
+		System.exit(1);
+	}
+
+	// keep in sync with net.sourceforge.fullsync.Util.getResourceAsString(String)
+	private static final int IOBUFFERSIZE = 0x1000;
+	public static String getResourceAsString(final String name) {
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+		if (null != is) {
+			try {
+				final char[] buffer = new char[IOBUFFERSIZE];
+				StringBuilder out = new StringBuilder();
+				Reader in;
+				try {
+					in = new InputStreamReader(is, "UTF-8");
+					int read;
+					do {
+						read = in.read(buffer, 0, buffer.length);
+						if (read > 0) {
+							out.append(buffer, 0, read);
+						}
+					} while (read >= 0);
+					return out.toString().trim();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			finally {
+				try {
+					is.close();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return "";
 	}
 }

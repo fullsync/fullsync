@@ -26,9 +26,6 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
-/**
- * @author Michele Aiello
- */
 public class FileTypeFileFilterRule extends FileFilterRule {
 
 	private static final long serialVersionUID = 2L;

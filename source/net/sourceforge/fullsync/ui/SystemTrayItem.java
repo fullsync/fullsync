@@ -41,9 +41,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class SystemTrayItem implements TaskGenerationListener {
 	private TrayItem trayItem;
 	private Menu menu;

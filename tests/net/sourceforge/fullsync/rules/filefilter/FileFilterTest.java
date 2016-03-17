@@ -22,16 +22,15 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
-/**
- * @author Michele Aiello
- */
-public class FileFilterTest extends TestCase {
+import org.junit.Test;
+
+public class FileFilterTest {
 
 	private static class AlwaysTrueFileFilterRule extends FileFilterRule {
 		private static final long serialVersionUID = 2L;
@@ -101,6 +100,7 @@ public class FileFilterTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testEmptyFilter() {
 		FileFilter filter = new FileFilter();
 		filter.setMatchType(FileFilter.MATCH_ALL);
@@ -110,6 +110,7 @@ public class FileFilterTest extends TestCase {
 		assertTrue(filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
 	}
 
+	@Test
 	public void testOneRuleFilter() {
 		FileFilter filter = new FileFilter();
 		filter.setMatchType(FileFilter.MATCH_ALL);
@@ -128,6 +129,7 @@ public class FileFilterTest extends TestCase {
 		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
 	}
 
+	@Test
 	public void testFilterAllBasic() {
 		FileFilter filter = new FileFilter();
 		filter.setMatchType(FileFilter.MATCH_ALL);
@@ -181,6 +183,7 @@ public class FileFilterTest extends TestCase {
 
 	}
 
+	@Test
 	public void testFilterAnyBasic() {
 		FileFilter filter = new FileFilter();
 		filter.setMatchType(FileFilter.MATCH_ANY);
@@ -223,6 +226,7 @@ public class FileFilterTest extends TestCase {
 		assertTrue(!filter.match(new TestNode("foobar.txt", "foobar.txt", true, false, 0, 0)));
 	}
 
+	@Test
 	public void testFilterInclude() {
 		FileFilter filter = new FileFilter();
 		filter.setMatchType(FileFilter.MATCH_ANY);
@@ -236,6 +240,7 @@ public class FileFilterTest extends TestCase {
 		assertTrue(!filter.match(new TestNode("foobar.txt.", "somedir/foobar.txt", true, false, 2048, 0)));
 	}
 
+	@Test
 	public void testFilterExclude() {
 		FileFilter filter = new FileFilter();
 		filter.setMatchType(FileFilter.MATCH_ANY);

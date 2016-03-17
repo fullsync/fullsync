@@ -22,9 +22,6 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
-/**
- * @author Michele Aiello
- */
 interface ValueChangedListener {
 
 	void onValueChanged(ValueChangedEvent evt);

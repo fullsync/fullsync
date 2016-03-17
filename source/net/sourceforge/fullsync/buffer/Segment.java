@@ -19,9 +19,6 @@
  */
 package net.sourceforge.fullsync.buffer;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public final class Segment {
 	public final static int First = 1;
 	public final static int Middle = 2;

@@ -36,9 +36,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class SystemStatusPage extends WizardDialog {
 	private Label totalMemory;
 	private Label maxMemory;

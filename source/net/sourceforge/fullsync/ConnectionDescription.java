@@ -31,9 +31,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class ConnectionDescription implements Serializable {
 	private static final long serialVersionUID = 2L;
 

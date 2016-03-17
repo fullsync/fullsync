@@ -30,9 +30,6 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 
-/**
- * @author Michele Aiello
- */
 public class SimplyfiedSyncRules implements RuleSet {
 
 	private String name;

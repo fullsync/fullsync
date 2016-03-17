@@ -19,9 +19,11 @@
  */
 package net.sourceforge.fullsync.connection;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class CommonsVfsConnectionTest extends TestCase {
+
+public class CommonsVfsConnectionTest {
+	@Test
 	public void testLocal() throws Exception {
 		// FIXME: throws InvalidURLException...
 		/*

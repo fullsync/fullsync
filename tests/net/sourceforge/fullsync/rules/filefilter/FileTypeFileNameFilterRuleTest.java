@@ -22,13 +22,13 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
-/**
- * @author Michele Aiello
- */
-public class FileTypeFileNameFilterRuleTest extends TestCase {
+import org.junit.Test;
+
+public class FileTypeFileNameFilterRuleTest {
 
 	public void testWrongType() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(5), FileTypeFileFilterRule.OP_IS);
@@ -36,6 +36,7 @@ public class FileTypeFileNameFilterRuleTest extends TestCase {
 		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
 	}
 
+	@Test
 	public void testIsFile() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.FILE_TYPE), FileTypeFileFilterRule.OP_IS);
 		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, System.currentTimeMillis())));
@@ -46,6 +47,7 @@ public class FileTypeFileNameFilterRuleTest extends TestCase {
 		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
 	}
 
+	@Test
 	public void testIsntFile() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.FILE_TYPE), FileTypeFileFilterRule.OP_ISNT);
 		assertFalse(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1024, System.currentTimeMillis())));
@@ -56,6 +58,7 @@ public class FileTypeFileNameFilterRuleTest extends TestCase {
 		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
 	}
 
+	@Test
 	public void testIsDirectory() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.DIRECTORY_TYPE),
 				FileTypeFileFilterRule.OP_IS);
@@ -67,6 +70,7 @@ public class FileTypeFileNameFilterRuleTest extends TestCase {
 		assertTrue(filterRule.match(new TestNode("foobar.txt", "/root/foobar.txt", true, true, 1024, System.currentTimeMillis())));
 	}
 
+	@Test
 	public void testIsntDirectory() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.DIRECTORY_TYPE),
 				FileTypeFileFilterRule.OP_ISNT);

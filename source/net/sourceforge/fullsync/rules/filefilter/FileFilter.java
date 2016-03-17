@@ -26,9 +26,6 @@ import java.io.Serializable;
 
 import net.sourceforge.fullsync.fs.File;
 
-/**
- * @author Michele Aiello
- */
 public class FileFilter implements Serializable {
 
 	private static final long serialVersionUID = 2L;

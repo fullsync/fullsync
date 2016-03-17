@@ -28,9 +28,6 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface File extends Serializable {
 	public String getName();
 

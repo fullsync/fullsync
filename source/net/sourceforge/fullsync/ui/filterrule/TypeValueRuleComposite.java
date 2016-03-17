@@ -32,9 +32,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
-/**
- * @author Michele Aiello
- */
 class TypeValueRuleComposite extends RuleComposite {
 	private Combo comboTypes;
 

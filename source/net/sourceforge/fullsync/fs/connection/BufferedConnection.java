@@ -20,9 +20,6 @@
 package net.sourceforge.fullsync.fs.connection;
 
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface BufferedConnection extends FileSystemConnection {
 	boolean isMonitoringFileSystem();
 }

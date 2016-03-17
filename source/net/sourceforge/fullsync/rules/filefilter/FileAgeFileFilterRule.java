@@ -27,9 +27,6 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
-/**
- * @author Michele Aiello
- */
 public class FileAgeFileFilterRule extends FileFilterRule {
 
 	private static final long serialVersionUID = 2L;

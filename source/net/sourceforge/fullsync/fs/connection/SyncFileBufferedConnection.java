@@ -58,9 +58,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class SyncFileBufferedConnection implements BufferedConnection {
 	private static final long serialVersionUID = 2L;
 

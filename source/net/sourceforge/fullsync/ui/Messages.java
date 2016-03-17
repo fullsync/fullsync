@@ -28,9 +28,6 @@ import java.util.ResourceBundle;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 
-/**
- * @author Michele Aiello
- */
 public class Messages {
 	private static final String BUNDLE_NAME = "net.sourceforge.fullsync.ui.messages";//$NON-NLS-1$
 	private ResourceBundle RESOURCE_BUNDLE;

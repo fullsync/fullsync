@@ -26,9 +26,6 @@ import net.sourceforge.fullsync.ConnectionDescription;
 
 import org.apache.commons.vfs2.FileObject;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface Site extends Serializable {
 	public File getRoot();
 

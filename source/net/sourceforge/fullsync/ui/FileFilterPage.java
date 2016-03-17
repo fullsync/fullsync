@@ -41,9 +41,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-/**
- * @author Michele Aiello
- */
 public class FileFilterPage extends WizardDialog {
 
 	private Combo comboFilterType;

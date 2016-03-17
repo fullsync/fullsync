@@ -22,15 +22,16 @@
  */
 package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.TestNode;
 
-/**
- * @author Michele Aiello
- */
-public class FileFilterTreeTest extends TestCase {
+import org.junit.Test;
 
+public class FileFilterTreeTest {
+
+	@Test
 	public void testBasic() {
 		FileFilterTree tree = new FileFilterTree();
 

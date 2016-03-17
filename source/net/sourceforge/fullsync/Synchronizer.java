@@ -33,8 +33,6 @@ import org.slf4j.LoggerFactory;
 /**
  * This class should provide wrappers for most common synchronization tasks
  * like synchronizing a profile or perfoming a task tree.
- *
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
  */
 public class Synchronizer {
 	private TaskGenerator taskGenerator;

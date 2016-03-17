@@ -24,9 +24,6 @@ import java.util.HashMap;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public class ImageRepository {
 	/*
 	 * TODO for now we'll create/dispose mixed pictures in place, but

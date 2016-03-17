@@ -22,9 +22,6 @@
  */
 package net.sourceforge.fullsync.rules.filefilter.values;
 
-/**
- * @author Michele Aiello
- */
 public class TypeValue implements OperandValue {
 
 	private static final long serialVersionUID = 2L;

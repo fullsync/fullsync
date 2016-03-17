@@ -46,8 +46,6 @@ import org.slf4j.LoggerFactory;
  * This class is the server for remote connections.
  * It handles remote connections to the running instance of FullSync, allowing
  * Profile Management, Scheduling and Execution with user Iteraction.
- *
- * @author Michele Aiello
  */
 public class RemoteServer extends UnicastRemoteObject implements RemoteInterface {
 
