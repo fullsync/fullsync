@@ -23,8 +23,6 @@ import org.eclipse.swt.graphics.Color;
 
 /**
  * this Class holds default information about UI elements.
- *
- * @author cobexer
  */
 public abstract class UISettings {
 

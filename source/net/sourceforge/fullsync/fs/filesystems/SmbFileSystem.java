@@ -39,6 +39,7 @@ public class SmbFileSystem implements FileSystem {
 	private static boolean initialized = false;
 
 	private static synchronized void init() {
+		//FIXME: no longer needed after update past [VFS-552][sandbox] include vfs-providers.xml in JAR for dynamic registration of mime and smb providers.
 		if (!initialized) {
 			try {
 				FileSystemManager fsm = VFS.getManager();

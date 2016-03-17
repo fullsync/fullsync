@@ -1,7 +1,9 @@
 Copyright (c) 2005 Jan Kopcsek. All Rights Reserved.
-Copyright (c) 2014 Christoph Obexer. All Rights Reserved.
+Copyright (c) 2011-2015 Christoph Obexer. All Rights Reserved.
 
 Jan Kopcsek, Project Admin and Developer
 Michele Aiello, Developer
 Norbert Kopcsek, Artist
-Christoph Obexer(<a href="mailto:cobexer@users.sourceforge.net?subject=FullSync%20Version%3a{version}">cobexer@users.sourceforge.net</a>), Developer
+Christoph Obexer, Developer
+
+Support Mailing List: <a href="mailto:fullsync-users@lists.sourceforge.net?body=FullSync%20Version%3a{version}">fullsync-users@lists.sourceforge.net</a>

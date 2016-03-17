@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
@@ -56,6 +57,7 @@ public class GuiController implements Runnable {
 	private Shell mainShell;
 	private MainWindow mainWindow;
 	private SystemTrayItem systemTrayItem;
+	private final ScheduledThreadPoolExecutor executorService;
 
 	public GuiController(Preferences preferences, ProfileManager profileManager, Synchronizer synchronizer) {
 		this.preferences = preferences;
@@ -63,6 +65,7 @@ public class GuiController implements Runnable {
 		this.synchronizer = synchronizer;
 
 		singleton = this;
+		executorService = new ScheduledThreadPoolExecutor(1);
 	}
 
 	private void createMainShell(boolean minimized) {
@@ -267,6 +270,39 @@ public class GuiController implements Runnable {
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
+		}
+	}
+
+	public static void backgroundExec(AsyncUIUpdate job) {
+		GuiController gc = getInstance();
+		gc.executorService.execute(new ExecuteBackgroundJob(job, gc.display));
+	}
+}
+
+class ExecuteBackgroundJob implements Runnable {
+	private final AsyncUIUpdate job;
+	private final Display display;
+	private boolean executed;
+	private boolean succeeded;
+	public ExecuteBackgroundJob(AsyncUIUpdate _job, Display _display) {
+		job = _job;
+		display = _display;
+	}
+	@Override
+	public void run() {
+		if (!executed) {
+			try {
+				job.execute();
+				succeeded = true;
+			}
+			catch(Throwable t) {
+				//TODO: logError
+			}
+			executed = true;
+			display.asyncExec(this);
+		}
+		else {
+			job.updateUI(succeeded);
 		}
 	}
 }

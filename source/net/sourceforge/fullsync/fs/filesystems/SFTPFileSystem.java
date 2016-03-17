@@ -60,17 +60,15 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 				sshDirPath = System.getProperty("user.home") + File.separator + ".ssh";
 			}
 			File sshDir = new File(sshDirPath);
-			if (!sshDir.exists()) {
-				if (sshDir.mkdirs()) {
-					System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath());
-					sshDirName = sshDirPath;
-				}
-				else {
-					logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... (tried: " + sshDir.getAbsolutePath().toString() + ")");
-				}
+			if (!sshDir.exists() && !sshDir.mkdirs()) {
+				logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... (tried: " + sshDir.getAbsolutePath().toString() + ")");
+				sshDir = null;
 			}
 			else {
 				sshDirName = sshDirPath;
+			}
+			if (null != sshDir) {
+				System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath());
 			}
 		}
 	}
@@ -80,6 +78,7 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME), description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 		SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
+		//TODO: add cfg.setUserDirIsRoot(opts, false); and handle profile updates
 		if (null != sshDirName) {
 			cfg.setKnownHosts(options, new File(sshDirName, "known_hosts"));
 		}
@@ -127,7 +126,7 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 	@Override
 	public final boolean promptYesNo(final String message) {
 		final boolean[] arr = new boolean[] { false };
-		if (null != desc.getParameter("interactive")) {
+		if (null != desc.getParameter(ConnectionDescription.PARAMETER_INTERACTIVE)) {
 			GuiController.getInstance().getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
