@@ -62,22 +62,16 @@ public class StatusLine extends Composite {
 	}
 
 	public void setMessage(final String message) {
-		getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				labelIcon.setImage(null);
-				labelMessage.setText(message == null ? "" : message); //$NON-NLS-1$
-			}
+		getDisplay().asyncExec(() -> {
+			labelIcon.setImage(null);
+			labelMessage.setText(message == null ? "" : message); //$NON-NLS-1$
 		});
 	}
 
 	public void setMessage(final Image icon, final String message) {
-		getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				labelIcon.setImage(icon);
-				labelMessage.setText(message);
-			}
+		getDisplay().asyncExec(() -> {
+			labelIcon.setImage(icon);
+			labelMessage.setText(message);
 		});
 	}
 

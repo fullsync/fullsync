@@ -25,8 +25,6 @@ package net.sourceforge.fullsync.ui.filterrule;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -48,12 +46,9 @@ class TextValueRuleComposite extends RuleComposite {
 		text1LData.horizontalAlignment = SWT.FILL;
 		text1LData.grabExcessHorizontalSpace = true;
 		textValue.setLayoutData(text1LData);
-		textValue.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(final ModifyEvent evt) {
-				value.setValue(textValue.getText());
-				valueChanged(new ValueChangedEvent(value));
-			}
+		textValue.addModifyListener(e -> {
+			value.setValue(textValue.getText());
+			valueChanged(new ValueChangedEvent(value));
 		});
 		if (value != null) {
 			textValue.setText(value.toString());

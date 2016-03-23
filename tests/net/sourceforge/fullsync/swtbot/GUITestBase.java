@@ -68,12 +68,7 @@ public abstract class GUITestBase {
 	public void tearDownAfter() throws Exception {
 		final Display d = Display.findDisplay(applicationThread);
 		if ((null != d) && !d.isDisposed()) {
-			d.syncExec(new Runnable() {
-				@Override
-				public void run() {
-					d.close();
-				}
-			});
+			d.syncExec(() -> d.close());
 		}
 		applicationThread.join();
 

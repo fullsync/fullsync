@@ -25,12 +25,11 @@ package net.sourceforge.fullsync.ui.filterrule;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Listener;
 
 class TypeValueRuleComposite extends RuleComposite {
 	private Combo comboTypes;
@@ -52,17 +51,11 @@ class TypeValueRuleComposite extends RuleComposite {
 			comboTypes.add(type);
 		}
 		comboTypes.select(value.getType());
-		comboTypes.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				value.setType(comboTypes.getSelectionIndex());
-				valueChanged(new ValueChangedEvent(value));
-			}
-			@Override
-			public void widgetDefaultSelected(final SelectionEvent evt) {
-				value.setType(comboTypes.getSelectionIndex());
-				valueChanged(new ValueChangedEvent(value));
-			}
-		});
+		Listener comboSelectionListener = e -> {
+			value.setType(comboTypes.getSelectionIndex());
+			valueChanged(new ValueChangedEvent(value));
+		};
+		comboTypes.addListener(SWT.Selection, comboSelectionListener);
+		comboTypes.addListener(SWT.DefaultSelection, comboSelectionListener);
 	}
 }

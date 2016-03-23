@@ -26,8 +26,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
@@ -44,12 +42,7 @@ class SWTCalendarDialog {
 		final DateTime dateTime = new DateTime(shell, SWT.CALENDAR | SWT.BORDER);
 		calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		shell.addDisposeListener(new DisposeListener() {
-			@Override
-			public void widgetDisposed(DisposeEvent e) {
-				calendar.set(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
-			}
-		});
+		shell.addDisposeListener(e -> calendar.set(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay()));
 		dateTime.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 	}
 

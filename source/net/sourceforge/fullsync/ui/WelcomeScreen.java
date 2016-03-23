@@ -23,8 +23,6 @@ package net.sourceforge.fullsync.ui;
 import net.sourceforge.fullsync.Util;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -75,12 +73,7 @@ public class WelcomeScreen extends Dialog {
 		Button buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
 		buttonOk.setText(Messages.getString("WelcomeScreen.Ok")); //$NON-NLS-1$
 		GridData buttonOkLData = new GridData();
-		buttonOk.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				dialogShell.close();
-			}
-		});
+		buttonOk.addListener(SWT.Selection, e -> dialogShell.close());
 		buttonOkLData.horizontalAlignment = GridData.CENTER;
 		buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
 		buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;

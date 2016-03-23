@@ -25,8 +25,6 @@ import java.net.URISyntaxException;
 import net.sourceforge.fullsync.ConnectionDescription;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -52,21 +50,10 @@ public class FTPSpecificComposite extends UserPasswordSpecificComposite {
 		comboAuthentication.setLayoutData(comboAuthenticationData);
 		comboAuthentication.add(Messages.getString("ProtocolSpecificComposite.FTPAuthTypeAnonymous"));
 		comboAuthentication.add(Messages.getString("ProtocolSpecificComposite.FTPAuthTypeUserPassword"));
-		comboAuthentication.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				setUserPasswordEnabled(comboAuthentication.getSelectionIndex() == 1);
-			}
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-		comboAuthentication.getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				setUserPasswordEnabled(false);
-				comboAuthentication.select(0);
-			}
+		comboAuthentication.addListener(SWT.Selection, e -> setUserPasswordEnabled(comboAuthentication.getSelectionIndex() == 1));
+		comboAuthentication.getDisplay().asyncExec(() -> {
+			setUserPasswordEnabled(false);
+			comboAuthentication.select(0);
 		});
 	}
 

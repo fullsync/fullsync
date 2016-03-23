@@ -22,7 +22,6 @@ package net.sourceforge.fullsync.ui;
 import java.io.File;
 import java.io.StringWriter;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,7 +55,7 @@ public class ChangeLogBox extends StyledText implements AsyncUIUpdate {
 		if (!isDisposed()) {
 			if (succeeded) {
 				StringWriter sw = new StringWriter();
-				DateFormat dateFormat = SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM, Locale.getDefault());
+				DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
 				for(ChangeLogEntry entry : changelog) {
 					entry.write("FullSync %s released on %s", " - %s", sw, dateFormat);
 				}

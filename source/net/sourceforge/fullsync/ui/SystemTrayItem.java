@@ -31,11 +31,7 @@ import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.fs.File;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Tray;
@@ -61,23 +57,9 @@ public class SystemTrayItem implements TaskGenerationListener {
 		// initialize trayItem
 		trayItem.setImage(imageList[0]);
 		trayItem.setToolTipText("FullSync"); //$NON-NLS-1$
-		trayItem.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				guiController.setMainShellVisible(true);
-			}
-
-			@Override
-			public void widgetDefaultSelected(final SelectionEvent e) {
-				guiController.setMainShellVisible(true);
-			}
-		});
-		trayItem.addListener(SWT.MenuDetect, new Listener() {
-			@Override
-			public void handleEvent(final Event evt) {
-				menu.setVisible(true);
-			}
-		});
+		trayItem.addListener(SWT.Selection, e -> guiController.setMainShellVisible(true));
+		trayItem.addListener(SWT.DefaultSelection, e -> guiController.setMainShellVisible(true));
+		trayItem.addListener(SWT.MenuDetect, e -> menu.setVisible(true));
 
 		// initialize popup menu
 		menu = new Menu(guiController.getMainShell(), SWT.POP_UP);
@@ -85,22 +67,11 @@ public class SystemTrayItem implements TaskGenerationListener {
 		item = new MenuItem(menu, SWT.NULL);
 		item.setImage(guiController.getImage("fullsync16.png"));
 		item.setText(Messages.getString("SystemTrayItem.OpenFullSync")); //$NON-NLS-1$
-		item.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				guiController.setMainShellVisible(true);
-			}
-		});
+		item.addListener(SWT.Selection, e -> guiController.setMainShellVisible(true));
 
 		item = new MenuItem(menu, SWT.NULL);
 		item.setText(Messages.getString("SystemTrayItem.Exit")); //$NON-NLS-1$
-		item.addListener(SWT.Selection, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				guiController.closeGui();
-			}
-		});
+		item.addListener(SWT.Selection, e -> guiController.closeGui());
 
 		guiController.getSynchronizer().getTaskGenerator().addTaskGenerationListener(this);
 	}
@@ -138,12 +109,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 					if (imageActive >= imageList.length) {
 						imageActive = 0;
 					}
-					trayItem.getDisplay().asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							trayItem.setImage(imageList[imageActive]);
-						}
-					});
+					trayItem.getDisplay().asyncExec(() -> trayItem.setImage(imageList[imageActive]));
 				}
 			}, 0, 500);
 		}
@@ -156,12 +122,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 			timer.cancel();
 			timer = null;
 			imageActive = 0;
-			trayItem.getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					trayItem.setImage(imageList[imageActive]);
-				}
-			});
+			trayItem.getDisplay().asyncExec(() -> trayItem.setImage(imageList[imageActive]));
 		}
 	}
 }

@@ -25,16 +25,11 @@ package net.sourceforge.fullsync.ui.filterrule;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 class SizeValueRuleComposite extends RuleComposite {
@@ -56,35 +51,21 @@ class SizeValueRuleComposite extends RuleComposite {
 			textValue.setText(String.valueOf(value.getValue()));
 		}
 
-		textValue.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(final ModifyEvent evt) {
-				value.fromString(textValue.getText() + " " + comboUnits.getText());
-				valueChanged(new ValueChangedEvent(value));
-			}
+		textValue.addModifyListener(e -> {
+			value.fromString(textValue.getText() + " " + comboUnits.getText());
+			valueChanged(new ValueChangedEvent(value));
 		});
 
-		textValue.addKeyListener(new KeyListener() {
-			@Override
-			public void keyPressed(final KeyEvent evt) {
-				// FIXME: the dot should be language specific, find a better way to achieve the same
-				if (((evt.character < '0') || (evt.character > '9')) && (evt.character != '.') && (evt.keyCode != SWT.DEL)
-						&& (evt.keyCode != SWT.BS) && (evt.keyCode != SWT.ARROW_LEFT) && (evt.keyCode != SWT.ARROW_UP)
-						&& (evt.keyCode != SWT.ARROW_DOWN) && (evt.keyCode != SWT.ARROW_RIGHT)) {
-					evt.doit = false;
-				}
+		Listener numbersOnlyKeyboardListener = e -> {
+			// FIXME: the dot should be language specific, find a better way to achieve the same
+			if (((e.character < '0') || (e.character > '9')) && (e.character != '.') && (e.keyCode != SWT.DEL)
+					&& (e.keyCode != SWT.BS) && (e.keyCode != SWT.ARROW_LEFT) && (e.keyCode != SWT.ARROW_UP)
+					&& (e.keyCode != SWT.ARROW_DOWN) && (e.keyCode != SWT.ARROW_RIGHT)) {
+				e.doit = false;
 			}
-
-			@Override
-			public void keyReleased(final KeyEvent evt) {
-				// FIXME: the dot should be language specific, find a better way to achieve the same
-				if (((evt.character < '0') || (evt.character > '9')) && (evt.character != '.') && (evt.keyCode != SWT.DEL)
-						&& (evt.keyCode != SWT.BS) && (evt.keyCode != SWT.ARROW_LEFT) && (evt.keyCode != SWT.ARROW_UP)
-						&& (evt.keyCode != SWT.ARROW_DOWN) && (evt.keyCode != SWT.ARROW_RIGHT)) {
-					evt.doit = false;
-				}
-			}
-		});
+		};
+		textValue.addListener(SWT.KeyDown, numbersOnlyKeyboardListener);
+		textValue.addListener(SWT.KeyUp, numbersOnlyKeyboardListener);
 
 		comboUnits.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		for (String unit : SizeValue.getAllUnits()) {
@@ -92,19 +73,14 @@ class SizeValueRuleComposite extends RuleComposite {
 		}
 		comboUnits.select(value.getUnit());
 
-		comboUnits.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				value.setUnit(comboUnits.getSelectionIndex());
-				valueChanged(new ValueChangedEvent(value));
-			}
-
-			@Override
-			public void widgetDefaultSelected(final SelectionEvent evt) {
-				value.setUnit(comboUnits.getSelectionIndex());
-				valueChanged(new ValueChangedEvent(value));
-			}
+		comboUnits.addListener(SWT.Selection, e -> {
+			value.setUnit(comboUnits.getSelectionIndex());
+			valueChanged(new ValueChangedEvent(value));
 		});
 
+		comboUnits.addListener(SWT.DefaultSelection, e -> {
+			value.setUnit(comboUnits.getSelectionIndex());
+			valueChanged(new ValueChangedEvent(value));
+		});
 	}
 }

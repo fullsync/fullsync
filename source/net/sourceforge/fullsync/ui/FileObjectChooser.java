@@ -21,21 +21,15 @@ package net.sourceforge.fullsync.ui;
 
 import java.text.DateFormat;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.ui.GuiController;
 
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileType;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -118,22 +112,12 @@ class FileObjectChooser extends Dialog {
 			// folder up
 			toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
 			toolItemParent.setImage(GuiController.getInstance().getImage("FS_LevelUp.gif"));
-			toolItemParent.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent evt) {
-					toolItemParentWidgetSelected(evt);
-				}
-			});
+			toolItemParent.addListener(SWT.Selection, e -> toolItemParentWidgetSelected());
 			// new folder
 			toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
 			toolItemNewFolder.setImage(GuiController.getInstance().getImage("FS_Folder_New.gif"));
 			toolItemNewFolder.setDisabledImage(GuiController.getInstance().getImage("FS_Folder_New_disabled.gif"));
-			toolItemNewFolder.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent evt) {
-					toolItemNewFolderWidgetSelected(evt);
-				}
-			});
+			toolItemNewFolder.addListener(SWT.Selection, e -> toolItemNewFolderWidgetSelected());
 			toolItemNewFolder.setEnabled(false);
 
 			// table showing files and folders
@@ -145,14 +129,33 @@ class FileObjectChooser extends Dialog {
 			tableItems = new Table(dialogShell, SWT.SINGLE | SWT.BORDER);
 			tableItems.setHeaderVisible(true);
 			tableItems.setLayoutData(tableItemsLData);
-			tableItems.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDown(final MouseEvent evt) {
-					tableItemsMouseDown(evt);
+			tableItems.addListener(SWT.MouseDown, e -> {
+				TableItem[] items = tableItems.getSelection();
+				if (items.length > 0) {
+					try {
+						TableItem item = items[0];
+						FileObject file = (FileObject) item.getData();
+						// FIXME if we are looking for files, just take files, otherwise just take dirs
+						setSelectedFileObject(file);
+					}
+					catch (FileSystemException fse) {
+						fse.printStackTrace();
+					}
 				}
-				@Override
-				public void mouseDoubleClick(final MouseEvent evt) {
-					tableItemsMouseDoubleClick(evt);
+			});
+			tableItems.addListener(SWT.MouseDoubleClick, e -> {
+				TableItem[] items = tableItems.getSelection();
+				if (items.length > 0) {
+					try {
+						TableItem item = items[0];
+						FileObject file = (FileObject) item.getData();
+						if (file.getType().hasChildren()) {
+							setActiveFileObject(file);
+						}
+					}
+					catch (FileSystemException fse) {
+						fse.printStackTrace();
+					}
 				}
 			});
 
@@ -198,13 +201,10 @@ class FileObjectChooser extends Dialog {
 			buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
 			buttonOk.setLayoutData(buttonOkLData);
 			buttonOk.setText("Open");
-			buttonOk.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent evt) {
-					buttonOkWidgetSelected(evt);
-				}
+			buttonOk.addListener(SWT.Selection, e -> {
+				result = true;
+				dialogShell.dispose();
 			});
-
 			// file filter
 			Label labelFileFilter = new Label(compositeBottom, SWT.NONE);
 			labelFileFilter.setText("Files of type:");
@@ -222,11 +222,9 @@ class FileObjectChooser extends Dialog {
 			buttonCancelLData.heightHint = UISettings.BUTTON_HEIGHT;
 			buttonCancel.setLayoutData(buttonCancelLData);
 			buttonCancel.setText("Cancel");
-			buttonCancel.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent evt) {
-					buttonCancelWidgetSelected(evt);
-				}
+			buttonCancel.addListener(SWT.Selection, e -> {
+				result = false;
+				dialogShell.dispose();
 			});
 
 			updateActiveFileObject();
@@ -248,22 +246,19 @@ class FileObjectChooser extends Dialog {
 
 	private void populateList() throws FileSystemException {
 		FileObject[] children = activeFileObject.getChildren();
-		Arrays.sort(children, new Comparator<FileObject>() {
-			@Override
-			public int compare(final FileObject o1, final FileObject o2) {
-				try {
-					if ((o1.getType() == FileType.FOLDER) && (o2.getType() == FileType.FILE)) {
-						return -1;
-					}
-					else if ((o1.getType() == FileType.FILE) && (o2.getType() == FileType.FOLDER)) {
-						return 1;
-					}
-					return o1.getName().getBaseName().compareTo(o2.getName().getBaseName());
+		Arrays.sort(children, (o1, o2) -> {
+			try {
+				if ((o1.getType() == FileType.FOLDER) && (o2.getType() == FileType.FILE)) {
+					return -1;
 				}
-				catch (FileSystemException fse) {
-					fse.printStackTrace();
-					return 0;
+				else if ((o1.getType() == FileType.FILE) && (o2.getType() == FileType.FOLDER)) {
+					return 1;
 				}
+				return o1.getName().getBaseName().compareTo(o2.getName().getBaseName());
+			}
+			catch (FileSystemException fse) {
+				fse.printStackTrace();
+				return 0;
 			}
 		});
 
@@ -364,7 +359,7 @@ class FileObjectChooser extends Dialog {
 		return selectedFileObject;
 	}
 
-	private void toolItemParentWidgetSelected(final SelectionEvent evt) {
+	private void toolItemParentWidgetSelected() {
 		try {
 			FileObject parent = activeFileObject.getParent();
 			if (parent != null) {
@@ -376,49 +371,7 @@ class FileObjectChooser extends Dialog {
 		}
 	}
 
-	private void toolItemNewFolderWidgetSelected(final SelectionEvent evt) {
+	private void toolItemNewFolderWidgetSelected() {
 		//FIXME: create new folder
-	}
-
-	private void tableItemsMouseDoubleClick(final MouseEvent evt) {
-		TableItem[] items = tableItems.getSelection();
-		if (items.length > 0) {
-			try {
-				TableItem item = items[0];
-				FileObject file = (FileObject) item.getData();
-				if (file.getType().hasChildren()) {
-					setActiveFileObject(file);
-				}
-			}
-			catch (FileSystemException fse) {
-				fse.printStackTrace();
-			}
-		}
-	}
-
-	private void tableItemsMouseDown(final MouseEvent evt) {
-		TableItem[] items = tableItems.getSelection();
-		if (items.length > 0) {
-			try {
-				TableItem item = items[0];
-				FileObject file = (FileObject) item.getData();
-
-				// FIXME if we are looking for files, just take files, otherwise just take dirs
-				setSelectedFileObject(file);
-			}
-			catch (FileSystemException fse) {
-				fse.printStackTrace();
-			}
-		}
-	}
-
-	private void buttonOkWidgetSelected(final SelectionEvent evt) {
-		result = true;
-		dialogShell.dispose();
-	}
-
-	private void buttonCancelWidgetSelected(final SelectionEvent evt) {
-		result = false;
-		dialogShell.dispose();
 	}
 }

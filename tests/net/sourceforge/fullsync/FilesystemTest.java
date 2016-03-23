@@ -153,7 +153,7 @@ public class FilesystemTest {
 	 * @param dir directory to clear
 	 */
 	protected void clearDirectory(final File dir) {
-		if (testingDst == dir && "ftp".equals(filesystem)) {
+		if ((testingDst == dir) && "ftp".equals(filesystem)) {
 			FileSystem fs = new UnixFakeFileSystem();
 			fs.add(new DirectoryEntry("/sampleuser"));
 			m_fakeServer.setFileSystem(fs);
@@ -232,7 +232,7 @@ public class FilesystemTest {
 	}
 
 	protected void createNewFileWithContents(File dir, String filename, long lm, String content) throws IOException {
-		if (dir == testingDst && "ftp".equals(filesystem)) {
+		if ((dir == testingDst) && "ftp".equals(filesystem)) {
 			FileEntry file = new FileEntry("/sampleuser/" + filename, content);
 			file.setLastModified(new Date(lm));
 			m_fakeServer.getFileSystem().add(file);

@@ -24,8 +24,6 @@ import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -35,10 +33,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 public class ScheduleSelectionDialog extends Dialog {
@@ -107,15 +103,12 @@ public class ScheduleSelectionDialog extends Dialog {
 			cbTypeLData.horizontalAlignment = SWT.FILL;
 			cbTypeLData.grabExcessHorizontalSpace = true;
 			cbType.setLayoutData(cbTypeLData);
-			cbType.addListener(SWT.Modify, new Listener() {
-				@Override
-				public void handleEvent(final Event arg0) {
-					Control[] children = groupOptions.getChildren();
-					if ((cbType.getSelectionIndex() > -1) && (cbType.getSelectionIndex() < children.length)) {
-						Control c = children[cbType.getSelectionIndex()];
-						((StackLayout) groupOptions.getLayout()).topControl = c;
-						groupOptions.layout();
-					}
+			cbType.addListener(SWT.Modify, e -> {
+				Control[] children = groupOptions.getChildren();
+				if ((cbType.getSelectionIndex() > -1) && (cbType.getSelectionIndex() < children.length)) {
+					Control c = children[cbType.getSelectionIndex()];
+					((StackLayout) groupOptions.getLayout()).topControl = c;
+					groupOptions.layout();
 				}
 			});
 
@@ -142,16 +135,13 @@ public class ScheduleSelectionDialog extends Dialog {
 			buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
 			buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
 			buttonOk.setLayoutData(buttonOkLData);
-			buttonOk.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent evt) {
-					try {
-						schedule = ((ScheduleOptions) ((StackLayout) groupOptions.getLayout()).topControl).getSchedule();
-						dialogShell.dispose();
-					}
-					catch (Exception ex) {
-						ExceptionHandler.reportException(ex);
-					}
+			buttonOk.addListener(SWT.Selection, e -> {
+				try {
+					schedule = ((ScheduleOptions) ((StackLayout) groupOptions.getLayout()).topControl).getSchedule();
+					dialogShell.dispose();
+				}
+				catch (Exception ex) {
+					ExceptionHandler.reportException(ex);
 				}
 			});
 
@@ -162,12 +152,7 @@ public class ScheduleSelectionDialog extends Dialog {
 			buttonCancelLData.heightHint = UISettings.BUTTON_HEIGHT;
 			buttonCancelLData.widthHint = UISettings.BUTTON_WIDTH;
 			buttonCancel.setLayoutData(buttonCancelLData);
-			buttonCancel.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent evt) {
-					dialogShell.dispose();
-				}
-			});
+			buttonCancel.addListener(SWT.Selection, e -> dialogShell.dispose());
 
 			addScheduleOptions(new NullScheduleOptions(groupOptions, SWT.NULL));
 			cbType.select(0);

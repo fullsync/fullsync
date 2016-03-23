@@ -23,8 +23,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -121,12 +119,7 @@ public class SystemStatusPage extends WizardDialog {
 			Button buttonMemoryGc = new Button(groupMemory, SWT.PUSH | SWT.CENTER);
 			buttonMemoryGc.setText("Clean up");
 			GridData buttonMemoryGcLData = new GridData();
-			buttonMemoryGc.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent evt) {
-					System.gc();
-				}
-			});
+			buttonMemoryGc.addListener(SWT.Selection, e -> System.gc());
 			buttonMemoryGcLData.horizontalAlignment = SWT.END;
 			buttonMemoryGcLData.horizontalSpan = 2;
 			buttonMemoryGc.setLayoutData(buttonMemoryGcLData);

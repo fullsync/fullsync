@@ -27,8 +27,6 @@ import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -254,12 +252,7 @@ public class PreferencesPage extends WizardDialog {
 		cbListenForIncomming = new Button(groupRemoteConnection, SWT.CHECK | SWT.LEFT);
 		cbListenForIncomming.setText(Messages.getString("PreferencesComposite.EnableRemoteConnections")); //$NON-NLS-1$
 		GridData cbListenForIncommingLData = new GridData();
-		cbListenForIncomming.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				updateRemoteConnectionGroup();
-			}
-		});
+		cbListenForIncomming.addListener(SWT.Selection, e -> updateRemoteConnectionGroup());
 		cbListenForIncommingLData.horizontalSpan = 2;
 		cbListenForIncomming.setLayoutData(cbListenForIncommingLData);
 

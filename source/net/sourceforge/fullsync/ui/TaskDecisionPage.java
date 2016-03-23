@@ -20,19 +20,15 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
-import java.util.LinkedList;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskFinishedEvent;
-import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -97,14 +93,11 @@ public class TaskDecisionPage extends WizardDialog {
 		comboFilter.add(Messages.getString("TaskDecisionPage.Everything")); //$NON-NLS-1$
 		comboFilter.add(Messages.getString("TaskDecisionPage.ChangesOnly")); //$NON-NLS-1$
 		comboFilter.select(1);
-		comboFilter.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(final ModifyEvent evt) {
-				if (!processing) {
-					list.setOnlyChanges(comboFilter.getSelectionIndex() == 1);
-					if (taskTree != null) {
-						list.rebuildActionList();
-					}
+		comboFilter.addModifyListener(e -> {
+			if (!processing) {
+				list.setOnlyChanges(comboFilter.getSelectionIndex() == 1);
+				if (taskTree != null) {
+					list.rebuildActionList();
 				}
 			}
 		});
@@ -162,87 +155,68 @@ public class TaskDecisionPage extends WizardDialog {
 	}
 
 	void performActions() {
-		Thread worker = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				guiController.showBusyCursor(true);
-				final Display display = getDisplay();
-				try {
-					processing = true;
-					list.setChangeAllowed(false);
+		Thread worker = new Thread((Runnable) () -> {
+			guiController.showBusyCursor(true);
+			final Display display = getDisplay();
+			try {
+				processing = true;
+				list.setChangeAllowed(false);
 
-					Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
-					IoStatistics stats = synchronizer.getIoStatistics(taskTree);
-					tasksTotal = stats.getCountActions();
-					tasksFinished = 0;
+				Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
+				IoStatistics stats = synchronizer.getIoStatistics(taskTree);
+				tasksTotal = stats.getCountActions();
+				tasksFinished = 0;
 
-					final Color colorFinishedSuccessful = new Color(null, 150, 255, 150);
-					final Color colorFinishedUnsuccessful = new Color(null, 255, 150, 150);
+				final Color colorFinishedSuccessful = new Color(null, 150, 255, 150);
+				final Color colorFinishedUnsuccessful = new Color(null, 255, 150, 150);
 
-					display.syncExec(new Runnable() {
-						@Override
-						public void run() {
-							setOkButtonEnabled(false);
-						}
-					});
+				display.syncExec(() -> setOkButtonEnabled(false));
 
-					final GUIUpdateQueue<TaskFinishedEvent> updateQueue = new GUIUpdateQueue<TaskFinishedEvent>(display, new GUIUpdateQueue.GUIUpdateTask<TaskFinishedEvent>(){
-						@Override
-						public void doUpdate(Display display, LinkedList<TaskFinishedEvent> items) {
-							TableItem item = null;
-							System.err.println("GUIUpdateQueue<TaskFinishedEvent>::doUpdate: " + items.size());
-							for (TaskFinishedEvent event : items) {
-								tasksFinished++;
-								// TODO: move this into one translatable string with arguments
-								labelProgress
-									.setText(tasksFinished
-											+ " " + Messages.getString("TaskDecisionPage.of") + " " + tasksTotal + " " + Messages.getString("TaskDecisionPage.tasksFinished")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-								Task task = event.getTask();
-								item = list.getTableItemForTask(task);
-								// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item
-								// the item is colored with the "successful" color.
-								if (item != null) {
-									if (event.isSuccessful()) {
-										item.setBackground(colorFinishedSuccessful);
-									}
-									else {
-										item.setBackground(colorFinishedUnsuccessful);
-									}
-								}
+				final GUIUpdateQueue<TaskFinishedEvent> updateQueue = new GUIUpdateQueue<TaskFinishedEvent>(display, (display1, items) -> {
+					TableItem item = null;
+					System.err.println("GUIUpdateQueue<TaskFinishedEvent>::doUpdate: " + items.size());
+					for (TaskFinishedEvent event : items) {
+						tasksFinished++;
+						// TODO: move this into one translatable string with arguments
+						labelProgress
+							.setText(tasksFinished
+									+ " " + Messages.getString("TaskDecisionPage.of") + " " + tasksTotal + " " + Messages.getString("TaskDecisionPage.tasksFinished")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+						Task task = event.getTask();
+						item = list.getTableItemForTask(task);
+						// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item
+						// the item is colored with the "successful" color.
+						if (item != null) {
+							if (event.isSuccessful()) {
+								item.setBackground(colorFinishedSuccessful);
 							}
-							if (null != item) {
-								list.showItem(item);
+							else {
+								item.setBackground(colorFinishedUnsuccessful);
 							}
 						}
-					});
+					}
+					if (null != item) {
+						list.showItem(item);
+					}
+				});
 
-					synchronizer.performActions(taskTree, new TaskFinishedListener() {
-						@Override
-						public void taskFinished(final TaskFinishedEvent event) {
-							updateQueue.add(event);
-						}
-					});
+				synchronizer.performActions(taskTree, e -> updateQueue.add(e));
 
-					display.asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							// Notification Window.
-							MessageBox mb = new MessageBox(getShell(), SWT.ICON_INFORMATION | SWT.OK);
-							mb.setText(Messages.getString("TaskDecisionPage.Finished")); //$NON-NLS-1$
-							mb.setMessage(Messages.getString("TaskDecisionPage.ProfileFinished")); //$NON-NLS-1$
-							mb.open();
-							widgetSelected(null);
-						}
-					});
-				}
-				catch (Exception e) {
-					ExceptionHandler.reportException(e);
-				}
-				finally {
-					guiController.showBusyCursor(false);
-					processing = false;
-					list.setChangeAllowed(true);
-				}
+				display.asyncExec(() -> {
+					// Notification Window.
+					MessageBox mb = new MessageBox(getShell(), SWT.ICON_INFORMATION | SWT.OK);
+					mb.setText(Messages.getString("TaskDecisionPage.Finished")); //$NON-NLS-1$
+					mb.setMessage(Messages.getString("TaskDecisionPage.ProfileFinished")); //$NON-NLS-1$
+					mb.open();
+					checkAndCancel();
+				});
+			}
+			catch (Exception e) {
+				ExceptionHandler.reportException(e);
+			}
+			finally {
+				guiController.showBusyCursor(false);
+				processing = false;
+				list.setChangeAllowed(true);
 			}
 		}, "ActionPerformer"); //$NON-NLS-1$
 		worker.start();

@@ -47,8 +47,6 @@ import net.sourceforge.fullsync.ui.GuiController;
 import net.sourceforge.fullsync.ui.Messages;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -56,7 +54,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-public class FilterRuleListItem implements ValueChangedListener {
+public class FilterRuleListItem {
 
 	private static Hashtable<String, Class<? extends FileFilterRule>> rulesTable;
 	private static Hashtable<String, String> ruleNamesConversionTable;
@@ -152,22 +150,14 @@ public class FilterRuleListItem implements ValueChangedListener {
 		return value;
 	}
 
-	@Override
-	public void onValueChanged(ValueChangedEvent evt) {
-		value = evt.getValue();
-	}
-
 	public void init(final Composite composite) {
 		final FilterRuleListItem ruleItem = this;
 
 		final Combo comboRuleTypes = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 
-		comboRuleTypes.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				ruleType = getRuleTypeName(comboRuleTypes.getText());
-				root.recreateRuleList();
-			}
+		comboRuleTypes.addListener(SWT.Selection, e -> {
+			ruleType = getRuleTypeName(comboRuleTypes.getText());
+			root.recreateRuleList();
 		});
 
 		comboRuleTypes.removeAll();
@@ -189,12 +179,9 @@ public class FilterRuleListItem implements ValueChangedListener {
 			comboOperators = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 			comboOperators.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			final Combo comboOp = comboOperators;
-			comboOperators.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent evt) {
-					op = comboOp.getSelectionIndex();
-					comboOp.getParent().layout();
-				}
+			comboOperators.addListener(SWT.Selection, e -> {
+				op = comboOp.getSelectionIndex();
+				comboOp.getParent().layout();
 			});
 		}
 
@@ -219,7 +206,6 @@ public class FilterRuleListItem implements ValueChangedListener {
 			}
 
 			ruleComposite = new TextValueRuleComposite(composite, SWT.NULL, (TextValue) value);
-			ruleComposite.addValueChangedListener(this);
 		}
 		else if (ruleClass.equals(FileTypeFileFilterRule.class)) {
 			if (!(value instanceof TypeValue)) {
@@ -227,7 +213,6 @@ public class FilterRuleListItem implements ValueChangedListener {
 			}
 
 			ruleComposite = new TypeValueRuleComposite(composite, SWT.NULL, (TypeValue) value);
-			ruleComposite.addValueChangedListener(this);
 		}
 		else if (ruleClass.equals(FileSizeFileFilterRule.class)) {
 			if (!(value instanceof SizeValue)) {
@@ -235,7 +220,6 @@ public class FilterRuleListItem implements ValueChangedListener {
 			}
 
 			ruleComposite = new SizeValueRuleComposite(composite, SWT.NULL, (SizeValue) value);
-			ruleComposite.addValueChangedListener(this);
 		}
 		else if (ruleClass.equals(FileAgeFileFilterRule.class)) {
 			if (!(value instanceof AgeValue)) {
@@ -243,7 +227,6 @@ public class FilterRuleListItem implements ValueChangedListener {
 			}
 
 			ruleComposite = new AgeValueRuleComposite(composite, SWT.NULL, (AgeValue) value);
-			ruleComposite.addValueChangedListener(this);
 		}
 		else if (ruleClass.equals(FileModificationDateFileFilterRule.class)) {
 			if (!(value instanceof DateValue)) {
@@ -251,14 +234,12 @@ public class FilterRuleListItem implements ValueChangedListener {
 			}
 
 			ruleComposite = new DateValueRuleComposite(composite, SWT.NULL, (DateValue) value);
-			ruleComposite.addValueChangedListener(this);
 		}
 		else if (ruleClass.equals(SubfilterFileFilerRule.class)) {
 			if (!(value instanceof FilterValue)) {
 				value = new FilterValue(new FileFilter());
 			}
 			ruleComposite = new SubfilterRuleComposite(composite, SWT.NULL, (FilterValue) value);
-			ruleComposite.addValueChangedListener(this);
 		}
 		else {
 			Composite valueComposite = new Composite(composite, SWT.NULL);
@@ -268,26 +249,19 @@ public class FilterRuleListItem implements ValueChangedListener {
 			textValue.setText("Missing Rule Composite");
 			textValue.setEditable(false);
 		}
+		if (null != ruleComposite) {
+			ruleComposite.addValueChangedListener(e -> value = e.getValue());
+		}
 
 		ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
 		ToolItem toolItemDelete = new ToolItem(toolBar, SWT.PUSH);
 		toolItemDelete.setImage(GuiController.getInstance().getImage("Rule_Delete.png")); //$NON-NLS-1$
 		toolItemDelete.setToolTipText(Messages.getString("FilterRuleListItem.Delete")); //$NON-NLS-1$
-		toolItemDelete.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				root.deleteRule(ruleItem);
-			}
-		});
+		toolItemDelete.addListener(SWT.Selection, e -> root.deleteRule(ruleItem));
 
 		ToolItem toolItemAdd = new ToolItem(toolBar, SWT.PUSH);
 		toolItemAdd.setImage(GuiController.getInstance().getImage("Rule_Add.png")); //$NON-NLS-1$
 		toolItemAdd.setToolTipText(Messages.getString("FilterRuleListItem.Add")); //$NON-NLS-1$
-		toolItemAdd.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				root.addRuleRow();
-			}
-		});
+		toolItemAdd.addListener(SWT.Selection, e -> root.addRuleRow());
 	}
 }

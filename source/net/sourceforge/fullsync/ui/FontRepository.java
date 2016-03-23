@@ -52,7 +52,7 @@ public class FontRepository {
 
 	private Device dev;
 	private HashMap<FontRepository.Key, Font> cache;
-	
+
 	public FontRepository(Device _device) {
 		dev = _device;
 		cache = new HashMap<FontRepository.Key, Font>(5);

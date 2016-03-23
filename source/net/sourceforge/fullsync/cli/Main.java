@@ -31,7 +31,6 @@ import java.util.Date;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
-import net.sourceforge.fullsync.ProfileSchedulerListener;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
@@ -156,9 +155,9 @@ public class Main{ // NO_UCD
 				printHelp();
 				return;
 			}
-			
+
 			// Initialize basic facilities
-			
+
 			// upgrade code...
 			do {
 				File newPreferences = new File(configDir + "preferences.properties");
@@ -169,7 +168,7 @@ public class Main{ // NO_UCD
 			}
 			while (false); // variable scope
 			final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
-			
+
 			String profilesFile = "profiles.xml";
 			if (line.hasOption("P")) {
 				profilesFile = line.getOptionValue("P");
@@ -240,21 +239,18 @@ public class Main{ // NO_UCD
 			}
 
 			if (line.hasOption("d")) {
-				profileManager.addSchedulerListener(new ProfileSchedulerListener() {
-					@Override
-					public void profileExecutionScheduled(Profile profile) {
-						TaskTree tree = sync.executeProfile(profile, false);
-						if (tree == null) {
-							profile.setLastError(1, "An error occured while comparing filesystems.");
+				profileManager.addSchedulerListener(profile -> {
+					TaskTree tree = sync.executeProfile(profile, false);
+					if (tree == null) {
+						profile.setLastError(1, "An error occured while comparing filesystems.");
+					}
+					else {
+						int errorLevel = sync.performActions(tree);
+						if (errorLevel > 0) {
+							profile.setLastError(errorLevel, "An error occured while copying files.");
 						}
 						else {
-							int errorLevel = sync.performActions(tree);
-							if (errorLevel > 0) {
-								profile.setLastError(errorLevel, "An error occured while copying files.");
-							}
-							else {
-								profile.setLastUpdate(new Date());
-							}
+							profile.setLastUpdate(new Date());
 						}
 					}
 				});

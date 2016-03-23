@@ -127,16 +127,13 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 	public final boolean promptYesNo(final String message) {
 		final boolean[] arr = new boolean[] { false };
 		if (null != desc.getParameter(ConnectionDescription.PARAMETER_INTERACTIVE)) {
-			GuiController.getInstance().getDisplay().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					OptionsDialog od = new OptionsDialog(GuiController.getInstance().getMainShell(), SWT.ICON_QUESTION);
-					od.setText("Question - FullSync"); //FIXME: translate
-					od.setMessage(message); //FIXE: translate message
-					od.setOptions(new String[] { "Yes", "No" }); //FIXME: translate
-					if ("Yes".equals(od.open())) { //FIXME: translate
-						arr[0] = true;
-					}
+			GuiController.getInstance().getDisplay().syncExec(() -> {
+				OptionsDialog od = new OptionsDialog(GuiController.getInstance().getMainShell(), SWT.ICON_QUESTION);
+				od.setText("Question - FullSync"); //FIXME: translate
+				od.setMessage(message); //FIXE: translate message
+				od.setOptions(new String[] { "Yes", "No" }); //FIXME: translate
+				if ("Yes".equals(od.open())) { //FIXME: translate
+					arr[0] = true;
 				}
 			});
 		}

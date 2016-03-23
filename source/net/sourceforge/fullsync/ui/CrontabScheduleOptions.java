@@ -26,17 +26,13 @@ import net.sourceforge.fullsync.schedule.CrontabSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -56,12 +52,9 @@ class CrontabScheduleOptions extends ScheduleOptions {
 			cbAll = new Button(CrontabScheduleOptions.this, SWT.CHECK);
 			cbAll.setText(Messages.getString("CrontabScheduleOptions.all")); //$NON-NLS-1$
 			cbAll.setSelection(true);
-			cbAll.addListener(SWT.Selection, new Listener() {
-				@Override
-				public void handleEvent(final Event event) {
-					text.setEnabled(!cbAll.getSelection());
-					buttonChoose.setEnabled(!cbAll.getSelection());
-				}
+			cbAll.addListener(SWT.Selection, e -> {
+				text.setEnabled(!cbAll.getSelection());
+				buttonChoose.setEnabled(!cbAll.getSelection());
 			});
 
 			text = new Text(CrontabScheduleOptions.this, SWT.BORDER);
@@ -72,69 +65,57 @@ class CrontabScheduleOptions extends ScheduleOptions {
 			buttonChoose = new Button(CrontabScheduleOptions.this, SWT.NULL);
 			buttonChoose.setText("..."); //$NON-NLS-1$
 			buttonChoose.setEnabled(false);
-			buttonChoose.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent arg0) {
-					final Shell shell = new Shell(getShell(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.TOOL);
-					shell.setLayout(new GridLayout(2, false));
-					shell.setText(Messages.getString("CrontabScheduleOptions.Select") + part.name); //$NON-NLS-1$
+			buttonChoose.addListener(SWT.Selection, e -> {
+				final Shell shell = new Shell(getShell(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.TOOL);
+				shell.setLayout(new GridLayout(2, false));
+				shell.setText(Messages.getString("CrontabScheduleOptions.Select") + part.name); //$NON-NLS-1$
 
-					final List table = new List(shell, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
-					GridData data = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
-					table.setLayoutData(data);
-					for (int i = part.low; i <= part.high; ++i) {
-						table.add(String.valueOf(i));
-					}
-					try {
-						table.select(part.createInstance(text.getText()).getIntArray(-part.low));
-					}
-					catch (DataParseException dpe) {
-						ExceptionHandler.reportException(dpe);
-					}
+				final List table = new List(shell, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
+				GridData data = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+				table.setLayoutData(data);
+				for (int i = part.low; i <= part.high; ++i) {
+					table.add(String.valueOf(i));
+				}
+				try {
+					table.select(part.createInstance(text.getText()).getIntArray(-part.low));
+				}
+				catch (DataParseException dpe) {
+					ExceptionHandler.reportException(dpe);
+				}
 
-					Button buttonOk = new Button(shell, SWT.NULL);
-					GridData buttonOkLData = new GridData();
-					buttonOkLData.grabExcessHorizontalSpace = true;
-					buttonOkLData.horizontalAlignment = SWT.RIGHT;
-					buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
-					buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
-					buttonOk.setLayoutData(buttonOkLData);
-					buttonOk.setText(Messages.getString("CrontabScheduleOptions.Ok")); //$NON-NLS-1$
-					buttonOk.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(final SelectionEvent e) {
-							text.setText(part.createInstance(table.getSelectionIndices(), -part.low).pattern);
-							shell.dispose();
-						}
-					});
+				Button buttonOk = new Button(shell, SWT.NULL);
+				GridData buttonOkLData = new GridData();
+				buttonOkLData.grabExcessHorizontalSpace = true;
+				buttonOkLData.horizontalAlignment = SWT.RIGHT;
+				buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
+				buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
+				buttonOk.setLayoutData(buttonOkLData);
+				buttonOk.setText(Messages.getString("CrontabScheduleOptions.Ok")); //$NON-NLS-1$
+				buttonOk.addListener(SWT.Selection, evt -> {
+					text.setText(part.createInstance(table.getSelectionIndices(), -part.low).pattern);
+					shell.dispose();
+				});
 
-					Button buttonClose = new Button(shell, SWT.NULL);
-					GridData buttonCloseLData = new GridData();
-					buttonCloseLData.horizontalAlignment = SWT.FILL;
-					buttonCloseLData.widthHint = UISettings.BUTTON_WIDTH;
-					buttonCloseLData.heightHint = UISettings.BUTTON_HEIGHT;
-					buttonClose.setLayoutData(buttonCloseLData);
-					buttonClose.setText(Messages.getString("CrontabScheduleOptions.Close")); //$NON-NLS-1$
-					buttonClose.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(final SelectionEvent e) {
-							shell.dispose();
-						}
-					});
+				Button buttonClose = new Button(shell, SWT.NULL);
+				GridData buttonCloseLData = new GridData();
+				buttonCloseLData.horizontalAlignment = SWT.FILL;
+				buttonCloseLData.widthHint = UISettings.BUTTON_WIDTH;
+				buttonCloseLData.heightHint = UISettings.BUTTON_HEIGHT;
+				buttonClose.setLayoutData(buttonCloseLData);
+				buttonClose.setText(Messages.getString("CrontabScheduleOptions.Close")); //$NON-NLS-1$
+				buttonClose.addListener(SWT.Selection, evt -> shell.dispose());
 
-					shell.setLocation(buttonChoose.toDisplay(0, 0));
-					shell.setSize(UISettings.BUTTON_WIDTH * 3, 300);
-					shell.layout();
-					shell.open();
-					Display display = getDisplay();
-					while (!shell.isDisposed()) {
-						if (!display.readAndDispatch()) {
-							display.sleep();
-						}
+				shell.setLocation(buttonChoose.toDisplay(0, 0));
+				shell.setSize(UISettings.BUTTON_WIDTH * 3, 300);
+				shell.layout();
+				shell.open();
+				Display display = getDisplay();
+				while (!shell.isDisposed()) {
+					if (!display.readAndDispatch()) {
+						display.sleep();
 					}
 				}
 			});
-
 		}
 
 		public void setInstance(final CrontabPart.Instance instance) {

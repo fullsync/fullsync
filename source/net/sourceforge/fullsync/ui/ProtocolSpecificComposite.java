@@ -30,8 +30,6 @@ import net.sourceforge.fullsync.fs.Site;
 
 import org.apache.commons.vfs2.FileObject;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -59,12 +57,7 @@ class ProtocolSpecificComposite {
 		textPath.setLayoutData(gridData);
 		buttonBrowse = new Button(parent, SWT.NONE);
 		buttonBrowse.setText("...");
-		buttonBrowse.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				onBrowse();
-			}
-		});
+		buttonBrowse.addListener(SWT.Selection, e -> onBrowse());
 		buttonBuffered = new Button(parent, SWT.CHECK | SWT.LEFT);
 		GridData buttonDestinationBufferedData = new GridData();
 		buttonDestinationBufferedData.horizontalSpan = 3;

@@ -86,7 +86,7 @@ public class NiceListView extends Composite implements Listener {
 						}
 						break;
 					case SWT.ARROW_DOWN:
-						if (index + 1 < children.length) {
+						if ((index + 1) < children.length) {
 							index += 1;
 						}
 						break;

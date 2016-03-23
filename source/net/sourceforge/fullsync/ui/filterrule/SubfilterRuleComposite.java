@@ -28,8 +28,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.FilterValue;
 import net.sourceforge.fullsync.ui.FileFilterPage;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -60,22 +58,19 @@ class SubfilterRuleComposite extends RuleComposite {
 		buttonFilter = new Button(this, SWT.PUSH);
 		buttonFilter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		buttonFilter.setText("Set Filter...");
-		buttonFilter.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				try {
-					FileFilterPage dialog = new FileFilterPage(getShell(), filterValue.getValue());
-					dialog.show();
-					FileFilter newfilter = dialog.getFileFilter();
-					if (newfilter != null) {
-						filterValue.setValue(newfilter);
-						textValue.setText(filterValue.toString());
-						textValue.setToolTipText(filterValue.toString());
-					}
+		buttonFilter.addListener(SWT.Selection, evt -> {
+			try {
+				FileFilterPage dialog = new FileFilterPage(getShell(), filterValue.getValue());
+				dialog.show();
+				FileFilter newfilter = dialog.getFileFilter();
+				if (newfilter != null) {
+					filterValue.setValue(newfilter);
+					textValue.setText(filterValue.toString());
+					textValue.setToolTipText(filterValue.toString());
 				}
-				catch (Exception e) {
-					ExceptionHandler.reportException(e);
-				}
+			}
+			catch (Exception e) {
+				ExceptionHandler.reportException(e);
 			}
 		});
 	}

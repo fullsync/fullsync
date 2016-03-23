@@ -20,8 +20,6 @@
 package net.sourceforge.fullsync.ui;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -30,11 +28,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-public class LogoHeaderComposite extends Composite implements DisposeListener {
+public class LogoHeaderComposite extends Composite {
 	private Color headerBackgroundColor;
 	public LogoHeaderComposite(final Composite parent, final int style) {
 		super(parent, style);
-		addDisposeListener(this);
+		addDisposeListener(e -> headerBackgroundColor.dispose());
 		headerBackgroundColor = new Color(getDisplay(), 192, 204, 214);
 		GridLayout headerLayout = new GridLayout(2, false);
 		headerLayout.marginRight = 14; // 14px padding as reserved in the About.png
@@ -59,10 +57,5 @@ public class LogoHeaderComposite extends Composite implements DisposeListener {
 		labelLogo.setLayoutData(labelLogoLData);
 		Image logoImg = GuiController.getInstance().getImage("fullsync72.png"); //$NON-NLS-1$
 		labelLogo.setImage(logoImg);
-	}
-
-	@Override
-	public void widgetDisposed(DisposeEvent arg0) {
-		headerBackgroundColor.dispose();
 	}
 }

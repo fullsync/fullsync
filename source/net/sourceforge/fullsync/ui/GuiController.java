@@ -146,12 +146,7 @@ public class GuiController implements Runnable {
 			protected void doReportException(final String message, final Throwable exception) {
 				exception.printStackTrace();
 
-				display.syncExec(new Runnable() {
-					@Override
-					public void run() {
-						new ExceptionDialog(mainShell, message, exception);
-					}
-				});
+				display.syncExec(() -> new ExceptionDialog(mainShell, message, exception));
 			}
 		});
 		createWelcomeScreen();
@@ -224,20 +219,17 @@ public class GuiController implements Runnable {
 	// TODO the busy cursor should be applied only to the window that is busy
 	// difficulty: getShell() can only be accessed by the display thread :-/
 	public void showBusyCursor(final boolean show) {
-		display.asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Cursor cursor = show ? display.getSystemCursor(SWT.CURSOR_WAIT) : null;
-					Shell[] shells = display.getShells();
+		display.asyncExec(() -> {
+			try {
+				Cursor cursor = show ? display.getSystemCursor(SWT.CURSOR_WAIT) : null;
+				Shell[] shells = display.getShells();
 
-					for (Shell shell : shells) {
-						shell.setCursor(cursor);
-					}
+				for (Shell shell : shells) {
+					shell.setCursor(cursor);
 				}
-				catch (Exception ex) {
-					ExceptionHandler.reportException(ex);
-				}
+			}
+			catch (Exception ex) {
+				ExceptionHandler.reportException(ex);
 			}
 		});
 	}

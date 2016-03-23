@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -44,11 +43,6 @@ import net.sourceforge.fullsync.schedule.Schedule;
 
 import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.TreeAdapter;
@@ -69,7 +63,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeListener {
+public class ProfileDetailsTabbedPage extends WizardDialog {
 	private TabFolder tabs;
 	private Text textProfileName;
 	private Text textProfileDescription;
@@ -145,7 +139,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 	@Override
 	public void createContent(Composite content) {
 		m_parent = content;
-		content.addDisposeListener(this);
+		content.addDisposeListener(e -> closeSourceSite());
 		try {
 			tabs = new TabFolder(content, SWT.NULL);
 			GridData tabsData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -273,24 +267,21 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 		GridData comboTypeData = new GridData(SWT.FILL);
 		comboTypeData.horizontalAlignment = SWT.FILL;
 		comboType.setLayoutData(comboTypeData);
-		comboType.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(final ModifyEvent evt) {
-				srcConnectionConfiguration.setBuffered(false);
-				dstConnectionConfiguration.setBuffered(false);
-				if (comboType.getText().equals("Publish/Update")) {
-					labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.Publish")); //$NON-NLS-1$
-					srcConnectionConfiguration.setBuffered(true);
-				}
-				else if (comboType.getText().equals("Backup Copy")) {
-					labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.BackupCopy")); //$NON-NLS-1$
-				}
-				else if (comboType.getText().equals("Exact Copy")) {
-					labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.ExactCopy")); //$NON-NLS-1$
-				}
-				else if (comboType.getText().equals("Two Way Sync")) {
-					labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.TwoWaySync")); //$NON-NLS-1$
-				}
+		comboType.addModifyListener(evt -> {
+			srcConnectionConfiguration.setBuffered(false);
+			dstConnectionConfiguration.setBuffered(false);
+			if (comboType.getText().equals("Publish/Update")) {
+				labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.Publish")); //$NON-NLS-1$
+				srcConnectionConfiguration.setBuffered(true);
+			}
+			else if (comboType.getText().equals("Backup Copy")) {
+				labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.BackupCopy")); //$NON-NLS-1$
+			}
+			else if (comboType.getText().equals("Exact Copy")) {
+				labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.ExactCopy")); //$NON-NLS-1$
+			}
+			else if (comboType.getText().equals("Two Way Sync")) {
+				labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.TwoWaySync")); //$NON-NLS-1$
 			}
 		});
 		comboType.add("Publish/Update");
@@ -312,14 +303,11 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 		new Label(c, SWT.NONE); // area below the automated execution label should be empty
 		buttonScheduling = new Button(c, SWT.PUSH | SWT.CENTER);
 		buttonScheduling.setText(Messages.getString("ProfileDetails.Edit_Scheduling")); //$NON-NLS-1$
-		buttonScheduling.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(m_parent.getShell(), SWT.NULL);
-				dialog.setSchedule((Schedule) buttonScheduling.getData());
-				dialog.open();
-				buttonScheduling.setData(dialog.getSchedule());
-			}
+		buttonScheduling.addListener(SWT.Selection, e -> {
+			ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(m_parent.getShell(), SWT.NULL);
+			dialog.setSchedule((Schedule) buttonScheduling.getData());
+			dialog.open();
+			buttonScheduling.setData(dialog.getSchedule());
 		});
 		new Label(c, SWT.NONE); // area below the automated execution label should be empty
 		buttonResetError = new Button(c, SWT.CHECK | SWT.RIGHT); // TODO: make this a button?
@@ -401,12 +389,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 		buttonUseFileFilter.setLayoutData(buttonUseFileFilterData);
 		buttonUseFileFilter.setText("Use file filter");
 		buttonUseFileFilter.setSelection(false);
-		buttonUseFileFilter.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				enableFilterControls(buttonUseFileFilter.getSelection());
-			}
-		});
+		buttonUseFileFilter.addListener(SWT.Selection, e -> enableFilterControls(buttonUseFileFilter.getSelection()));
 
 		labelFilesFilter = new Label(c, SWT.NONE);
 		labelFilesFilter.setText("Files Filter: ");
@@ -416,21 +399,18 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 		buttonFileFilterData.grabExcessHorizontalSpace = true;
 		buttonFileFilterData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonFileFilter.setLayoutData(buttonFileFilterData);
-		buttonFileFilter.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				try {
-					FileFilterPage dialog = new FileFilterPage(m_parent.getShell(), filter);
-					dialog.show();
-					FileFilter newfilter = dialog.getFileFilter();
-					if (newfilter != null) {
-						filter = newfilter;
-						textFilterDescription.setText(filter.toString());
-					}
+		buttonFileFilter.addListener(SWT.Selection, e -> {
+			try {
+				FileFilterPage dialog = new FileFilterPage(m_parent.getShell(), filter);
+				dialog.show();
+				FileFilter newfilter = dialog.getFileFilter();
+				if (newfilter != null) {
+					filter = newfilter;
+					textFilterDescription.setText(filter.toString());
 				}
-				catch (Exception e) {
-					ExceptionHandler.reportException(e);
-				}
+			}
+			catch (Exception ex) {
+				ExceptionHandler.reportException(ex);
 			}
 		});
 
@@ -486,19 +466,11 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 				}
 			}
 		});
-		directoryTree.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				buttonSetFilter.setEnabled(true);
-				TreeItem item = (TreeItem) evt.item;
-				FileFilter currentItemFilter = (FileFilter) item.getData(FILTER_KEY);
-				if (currentItemFilter != null) {
-					buttonRemoveFilter.setEnabled(true);
-				}
-				else {
-					buttonRemoveFilter.setEnabled(false);
-				}
-			}
+		directoryTree.addListener(SWT.Selection, e -> {
+			buttonSetFilter.setEnabled(true);
+			TreeItem item = (TreeItem) e.item;
+			FileFilter currentItemFilter = (FileFilter) item.getData(FILTER_KEY);
+			buttonRemoveFilter.setEnabled(null != currentItemFilter);
 		});
 		// buttons next to the tree
 		Composite compositeButtons = new Composite(c, SWT.NONE);
@@ -516,24 +488,21 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 		buttonSetFilterData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonSetFilter.setLayoutData(buttonSetFilterData);
 		buttonSetFilter.setText("Set Filter...");
-		buttonSetFilter.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				TreeItem[] selectedItems = directoryTree.getSelection();
-				if (selectedItems.length > 0) {
-					TreeItem selectedItem = selectedItems[0];
-					FileFilter currentItemFilter = (FileFilter) selectedItem.getData(FILTER_KEY);
-					FileFilterPage dialog = new FileFilterPage(m_parent.getShell(), currentItemFilter);
-					dialog.show();
-					FileFilter newfilter = dialog.getFileFilter();
-					if (newfilter != null) {
-						selectedItem.setData(FILTER_KEY, newfilter);
-						treeItemsWithFilter.add(selectedItem);
-						File file = (File) selectedItem.getData();
-						itemsMap.put(file.getPath(), newfilter);
-						markItem(selectedItem);
-						buttonRemoveFilter.setEnabled(true);
-					}
+		buttonSetFilter.addListener(SWT.Selection, e -> {
+			TreeItem[] selectedItems = directoryTree.getSelection();
+			if (selectedItems.length > 0) {
+				TreeItem selectedItem = selectedItems[0];
+				FileFilter currentItemFilter = (FileFilter) selectedItem.getData(FILTER_KEY);
+				FileFilterPage dialog = new FileFilterPage(m_parent.getShell(), currentItemFilter);
+				dialog.show();
+				FileFilter newfilter = dialog.getFileFilter();
+				if (newfilter != null) {
+					selectedItem.setData(FILTER_KEY, newfilter);
+					treeItemsWithFilter.add(selectedItem);
+					File file = (File) selectedItem.getData();
+					itemsMap.put(file.getPath(), newfilter);
+					markItem(selectedItem);
+					buttonRemoveFilter.setEnabled(true);
 				}
 			}
 		});
@@ -545,17 +514,14 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 		buttonRemoveFilter.setLayoutData(buttonRemoveFilterData);
 		buttonRemoveFilter.setText("Remove Filter");
 		buttonRemoveFilter.setEnabled(false);
-		buttonRemoveFilter.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				TreeItem[] selectedItems = directoryTree.getSelection();
-				if (selectedItems.length > 0) {
-					TreeItem selectedItem = selectedItems[0];
-					treeItemsWithFilter.remove(selectedItem);
-					File file = (File) selectedItem.getData();
-					itemsMap.remove(file.getPath());
-					unmarkItem(selectedItem);
-				}
+		buttonRemoveFilter.addListener(SWT.Selection, e -> {
+			TreeItem[] selectedItems = directoryTree.getSelection();
+			if (selectedItems.length > 0) {
+				TreeItem selectedItem = selectedItems[0];
+				treeItemsWithFilter.remove(selectedItem);
+				File file = (File) selectedItem.getData();
+				itemsMap.remove(file.getPath());
+				unmarkItem(selectedItem);
 			}
 		});
 
@@ -613,12 +579,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 
 	private List<File> getOrderedChildren(File rootFile) throws IOException {
 		ArrayList<File> children = new ArrayList<File>(rootFile.getChildren());
-		Collections.sort(children, new Comparator<File>() {
-			@Override
-			public int compare(File o1, File o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
+		Collections.sort(children, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 		return children;
 	}
 
@@ -722,57 +683,54 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 				loadingIem.setImage(GuiController.getInstance().getImage("Node_Directory.png"));
 
 				Display display = Display.getCurrent();
-				display.asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							if (null != src) {
-								closeSourceSite();
-								src.setParameter("bufferStrategy", ""); // the subdirs tab should bypass the buffer imo
-								src.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
-								sourceSite = fsm.createConnection(src);
-								drawDirectoryTree();
-								lastSourceLoaded = src.getUri().toString();
-							}
-							else {
-								TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
-								loadingIem.setText("Unable to load source dir");
-								loadingIem.setImage(GuiController.getInstance().getImage("Error.png"));
-							}
+				display.asyncExec(() -> {
+					try {
+						if (null != src) {
+							closeSourceSite();
+							src.setParameter("bufferStrategy", ""); // the subdirs tab should bypass the buffer imo
+							src.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
+							sourceSite = fsm.createConnection(src);
+							drawDirectoryTree();
+							lastSourceLoaded = src.getUri().toString();
 						}
-						catch (FileSystemException e) {
-							ExceptionHandler.reportException(e);
-							directoryTree.removeAll();
-							TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
-							loadingIem.setText("Unable to load source dir");
-							loadingIem.setImage(GuiController.getInstance().getImage("Error.png"));
+						else {
+							TreeItem loadingIem1 = new TreeItem(directoryTree, SWT.NULL);
+							loadingIem1.setText("Unable to load source dir");
+							loadingIem1.setImage(GuiController.getInstance().getImage("Error.png"));
 						}
-						catch (IOException e) {
-							ExceptionHandler.reportException(e);
-							directoryTree.removeAll();
-							TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
-							loadingIem.setText("Unable to load source dir");
-							loadingIem.setImage(GuiController.getInstance().getImage("Error.png"));
-						}
-						catch (URISyntaxException e) {
-							ExceptionHandler.reportException(e);
-							directoryTree.removeAll();
-							TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
-							loadingIem.setText("Unable to load source dir");
-							loadingIem.setImage(GuiController.getInstance().getImage("Error.png"));
-						}
-						catch (net.sourceforge.fullsync.FileSystemException e) {
-							// FIXME Jan can you check this? I had to add it after an update. I have probably
-							// made a mess with the merge.
-							ExceptionHandler.reportException(e);
-							directoryTree.removeAll();
-							TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
-							loadingIem.setText("Unable to load source dir");
-							loadingIem.setImage(GuiController.getInstance().getImage("Error.png"));
-						}
-						catch (Exception ex) {
-							ex.printStackTrace();
-						}
+					}
+					catch (FileSystemException e1) {
+						ExceptionHandler.reportException(e1);
+						directoryTree.removeAll();
+						TreeItem loadingIem2 = new TreeItem(directoryTree, SWT.NULL);
+						loadingIem2.setText("Unable to load source dir");
+						loadingIem2.setImage(GuiController.getInstance().getImage("Error.png"));
+					}
+					catch (IOException e2) {
+						ExceptionHandler.reportException(e2);
+						directoryTree.removeAll();
+						TreeItem loadingIem3 = new TreeItem(directoryTree, SWT.NULL);
+						loadingIem3.setText("Unable to load source dir");
+						loadingIem3.setImage(GuiController.getInstance().getImage("Error.png"));
+					}
+					catch (URISyntaxException e3) {
+						ExceptionHandler.reportException(e3);
+						directoryTree.removeAll();
+						TreeItem loadingIem4 = new TreeItem(directoryTree, SWT.NULL);
+						loadingIem4.setText("Unable to load source dir");
+						loadingIem4.setImage(GuiController.getInstance().getImage("Error.png"));
+					}
+					catch (net.sourceforge.fullsync.FileSystemException e4) {
+						// FIXME Jan can you check this? I had to add it after an update. I have probably
+						// made a mess with the merge.
+						ExceptionHandler.reportException(e4);
+						directoryTree.removeAll();
+						TreeItem loadingIem5 = new TreeItem(directoryTree, SWT.NULL);
+						loadingIem5.setText("Unable to load source dir");
+						loadingIem5.setImage(GuiController.getInstance().getImage("Error.png"));
+					}
+					catch (Exception ex) {
+						ex.printStackTrace();
 					}
 				});
 			}
@@ -799,11 +757,6 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 				e.printStackTrace();
 			}
 		}
-	}
-
-	@Override
-	public final void widgetDisposed(final DisposeEvent e) {
-		closeSourceSite();
 	}
 
 	@Override

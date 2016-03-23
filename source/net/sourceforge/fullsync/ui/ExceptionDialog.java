@@ -23,9 +23,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -38,7 +35,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-class ExceptionDialog extends Dialog implements SelectionListener {
+class ExceptionDialog extends Dialog {
 	private Shell dialogShell;
 	private Composite compositeBase;
 	private Button buttonDetails;
@@ -101,12 +98,7 @@ class ExceptionDialog extends Dialog implements SelectionListener {
 			Button buttonOk = new Button(compositeBase, SWT.PUSH | SWT.CENTER);
 			buttonOk.setText(Messages.getString("ExceptionDialog.Ok")); //$NON-NLS-1$
 			GridData buttonOkLData = new GridData();
-			buttonOk.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent evt) {
-					dialogShell.dispose();
-				}
-			});
+			buttonOk.addListener(SWT.Selection, e -> dialogShell.dispose());
 			buttonOkLData.horizontalAlignment = SWT.END;
 			buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
 			buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
@@ -118,7 +110,17 @@ class ExceptionDialog extends Dialog implements SelectionListener {
 			buttonDetails = new Button(compositeBase, SWT.PUSH | SWT.CENTER);
 			buttonDetails.setText(Messages.getString("ExceptionDialog.Details")); //$NON-NLS-1$
 			GridData buttonDetailsLData = new GridData();
-			buttonDetails.addSelectionListener(this);
+			buttonDetails.addListener(SWT.Selection, e -> {
+				if (expanded) {
+					Rectangle r = dialogShell.computeTrim(0, 0, compositeBase.getSize().x, compositeBase.getSize().y);
+					dialogShell.setSize(r.width, r.height);
+				}
+				else {
+					dialogShell.setSize(dialogShell.getSize().x, dialogShell.getSize().y + 350);
+				}
+				expanded = !expanded;
+				buttonDetails.setText(Messages.getString("ExceptionDialog.Details") + (expanded ? " <<" : " >>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			});
 			buttonDetailsLData.horizontalAlignment = SWT.END;
 			buttonDetailsLData.grabExcessVerticalSpace = true;
 			buttonDetailsLData.verticalAlignment = SWT.END;
@@ -152,7 +154,7 @@ class ExceptionDialog extends Dialog implements SelectionListener {
 
 			dialogShell.layout();
 			expanded = true;
-			widgetSelected(null);
+			buttonDetails.notifyListeners(SWT.Selection, null);
 			dialogShell.open();
 			while (!dialogShell.isDisposed()) {
 				if (!display.readAndDispatch()) {
@@ -166,22 +168,4 @@ class ExceptionDialog extends Dialog implements SelectionListener {
 			// TODO: show a message box
 		}
 	}
-
-	@Override
-	public void widgetSelected(final SelectionEvent evt) {
-		if (expanded) {
-			Rectangle r = dialogShell.computeTrim(0, 0, compositeBase.getSize().x, compositeBase.getSize().y);
-			dialogShell.setSize(r.width, r.height);
-		}
-		else {
-			dialogShell.setSize(dialogShell.getSize().x, dialogShell.getSize().y + 350);
-		}
-		expanded = !expanded;
-		buttonDetails.setText(Messages.getString("ExceptionDialog.Details") + (expanded ? " <<" : " >>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	}
-
-	@Override
-	public void widgetDefaultSelected(SelectionEvent e) {
-	}
-
 }

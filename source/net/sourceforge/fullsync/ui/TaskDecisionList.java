@@ -33,9 +33,6 @@ import net.sourceforge.fullsync.fs.File;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -45,6 +42,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
@@ -133,24 +131,16 @@ public class TaskDecisionList extends Composite {
 
 	public static void show(final GuiController guiController, final Profile profile, final TaskTree task, final boolean interactive) {
 		final Display display = Display.getDefault();
-		display.asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					final TaskDecisionPage dialog = new TaskDecisionPage(guiController.getMainShell(), guiController, task);
-					if (!interactive) {
-						dialog.addWizardDialogListener(new WizardDialogListener() {
-							@Override
-							public void dialogOpened() {
-								dialog.performActions();
-							}
-						});
-					}
-					dialog.show();
+		display.asyncExec(() -> {
+			try {
+				final TaskDecisionPage dialog = new TaskDecisionPage(guiController.getMainShell(), guiController, task);
+				if (!interactive) {
+					dialog.addWizardDialogListener(() -> dialog.performActions());
 				}
-				catch (Exception ex) {
-					ExceptionHandler.reportException(ex);
-				}
+				dialog.show();
+			}
+			catch (Exception ex) {
+				ExceptionHandler.reportException(ex);
 			}
 		});
 	}
@@ -350,7 +340,7 @@ public class TaskDecisionList extends Composite {
 	private String formatSize(final Task t) {
 		long size = -1;
 		final Action action = t.getCurrentAction();
-		if (action.getType() == Action.Add || action.getType() == Action.Update) {
+		if ((action.getType() == Action.Add) || (action.getType() == Action.Update)) {
 			switch(action.getLocation()) {
 				case Location.Source:
 					size = t.getDestination().getSize();
@@ -395,26 +385,23 @@ public class TaskDecisionList extends Composite {
 			return;
 		}
 
-		SelectionListener selListener = new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Action targetAction = (Action) e.widget.getData();
+		Listener selListener = e -> {
+			Action targetAction = (Action) e.widget.getData();
 
-				for (TableItem item : tableItemList) {
-					Task task = (Task) item.getData();
-					Action[] actions = task.getActions();
+			for (TableItem item : tableItemList) {
+				Task task = (Task) item.getData();
+				Action[] actions = task.getActions();
 
-					for (int iAction = 0; iAction < actions.length; iAction++) {
-						Action a = actions[iAction];
-						if ((a.getType() == targetAction.getType()) && (a.getLocation() == targetAction.getLocation())
-								&& a.getExplanation().equals(targetAction.getExplanation())) {
-							task.setCurrentAction(iAction);
-							break;
-						}
+				for (int iAction = 0; iAction < actions.length; iAction++) {
+					Action a = actions[iAction];
+					if ((a.getType() == targetAction.getType()) && (a.getLocation() == targetAction.getLocation())
+							&& a.getExplanation().equals(targetAction.getExplanation())) {
+						task.setCurrentAction(iAction);
+						break;
 					}
-
-					updateTask(item);
 				}
+
+				updateTask(item);
 			}
 		};
 
@@ -470,7 +457,7 @@ public class TaskDecisionList extends Composite {
 			mi.setImage(image);
 			mi.setText(Action.toString(action.getType()) + " - " + action.getExplanation()); //$NON-NLS-1$
 			mi.setData(action);
-			mi.addSelectionListener(selListener);
+			mi.addListener(SWT.Selection, selListener);
 		}
 
 		m.setLocation(tableLogLines.toDisplay(x, y));

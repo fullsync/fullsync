@@ -236,7 +236,7 @@ class AbstractFile implements File {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name);
 		sb.append("; ");
-		if (size >= 0 || lastModified > 0) {
+		if ((size >= 0) || (lastModified > 0)) {
 			if (size >= 0) {
 				sb.append(size);
 				sb.append(" Bytes");

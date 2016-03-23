@@ -22,19 +22,15 @@ package net.sourceforge.fullsync.ui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Util;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -53,10 +49,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.Util;
-
-class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
+class AboutDialog extends Dialog implements AsyncUIUpdate {
 	private static final String FULLSYNC_LICENSES_DIRECTORY = "net/sourceforge/fullsync/licenses/";
 	private static final long delay = 750;
 	private int stIndex = 0;
@@ -70,7 +63,6 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 		super(parent, style);
 		try {
 			final Shell dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
-			dialogShell.addDisposeListener(this);
 
 			GridLayout dialogShellLayout = new GridLayout(1, true);
 			dialogShellLayout.marginTop = 0;
@@ -94,22 +86,21 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 
 			final TabItem tabGeneral = new TabItem(tabs, SWT.NONE);
 			tabGeneral.setText(Messages.getString("AboutDialog.Tab_About")); //$NON-NLS-1$
+			stTimer = new Timer(false);
 			tabGeneral.setControl(initAboutTab(tabs));
-			dialogShell.getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					// fix the size of the General tab to show all child elements
-					Point generalTabSize = tabGeneral.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT);
-					Rectangle tabsClientSize = tabs.getClientArea();
-					int width = generalTabSize.x - tabsClientSize.width;
-					int height = generalTabSize.y - tabsClientSize.height;
-					Point dlgSize = dialogShell.getSize();
-					width = dlgSize.x + width;
-					height = dlgSize.y + height;
-					dialogShell.setSize(width, height);
-					Rectangle parentBounds = parent.getBounds();
-					dialogShell.setLocation((parentBounds.x + (parentBounds.width / 2)) - (width / 2), (parentBounds.y + (parentBounds.height / 2)) - (height / 2));
-				}
+			dialogShell.addDisposeListener(e -> stTimer.cancel());
+			dialogShell.getDisplay().asyncExec(() -> {
+				// fix the size of the General tab to show all child elements
+				Point generalTabSize = tabGeneral.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+				Rectangle tabsClientSize = tabs.getClientArea();
+				int width = generalTabSize.x - tabsClientSize.width;
+				int height = generalTabSize.y - tabsClientSize.height;
+				Point dlgSize = dialogShell.getSize();
+				width = dlgSize.x + width;
+				height = dlgSize.y + height;
+				dialogShell.setSize(width, height);
+				Rectangle parentBounds = parent.getBounds();
+				dialogShell.setLocation((parentBounds.x + (parentBounds.width / 2)) - (width / 2), (parentBounds.y + (parentBounds.height / 2)) - (height / 2));
 			});
 
 			TabItem tabLicenses = new TabItem(tabs, SWT.NONE);
@@ -124,12 +115,7 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 			// ok button
 			Button buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
 			buttonOk.setText(Messages.getString("AboutDialog.Ok")); //$NON-NLS-1$
-			buttonOk.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent evt) {
-					dialogShell.close();
-				}
-			});
+			buttonOk.addListener(SWT.Selection, e -> dialogShell.close());
 			GridData buttonOkLData = new GridData();
 			buttonOkLData.horizontalAlignment = GridData.CENTER;
 			buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
@@ -164,13 +150,6 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 		return tab;
 	}
 
-	@Override
-	public final void widgetDisposed(final DisposeEvent e) {
-		if (stTimer != null) {
-			stTimer.cancel();
-		}
-	}
-
 	private Composite initAboutTab(Composite parent) {
 		final Composite tab = new Composite(parent, SWT.FILL);
 		tab.setLayout(new GridLayout(1, true));
@@ -190,12 +169,7 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 		GridData lcd = new GridData(SWT.FILL);
 		lcd.grabExcessHorizontalSpace = true;
 		copyright.setLayoutData(lcd);
-		copyright.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				GuiController.launchProgram(evt.text);
-			}
-		});
+		copyright.addListener(SWT.Selection, e -> GuiController.launchProgram(e.text));
 		// separator
 		Label labelSeparator1 = new Label(tab, SWT.SEPARATOR | SWT.HORIZONTAL);
 		GridData labelSeparatorLData = new GridData();
@@ -210,7 +184,6 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 		labelThanks.setLayoutData(labelThanksLData);
 		labelThanks.setText("\n\n\n"); //$NON-NLS-1$
 		labelThanks.setAlignment(SWT.CENTER);
-		stTimer = new Timer(false);
 		final String[] specialThanks;
 		String sp = Util.getResourceAsString("net/sourceforge/fullsync/special-thanks.txt"); //$NON-NLS-1$
 		String[] res = sp.split("\n"); //$NON-NLS-1$
@@ -225,21 +198,18 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 			@Override
 			public void run() {
 				Display display = Display.getDefault();
-				display.syncExec(new Runnable() {
-					@Override
-					public void run() {
-						if (!labelThanks.isDisposed()) {
-							int firstLine = (stIndex) % specialThanks.length;
-							int secondLine = (stIndex + 1) % specialThanks.length;
-							int thirdLine = (stIndex + 2) % specialThanks.length;
+				display.syncExec(() -> {
+					if (!labelThanks.isDisposed()) {
+						int firstLine = (stIndex) % specialThanks.length;
+						int secondLine = (stIndex + 1) % specialThanks.length;
+						int thirdLine = (stIndex + 2) % specialThanks.length;
 
-							labelThanks.setText(specialThanks[firstLine] + '\n' + specialThanks[secondLine] + '\n'
-									+ specialThanks[thirdLine]);
-							labelThanks.pack(true);
-							tab.layout(new Control[]{ labelThanks });
-							stIndex++;
-							stIndex %= specialThanks.length;
-						}
+						labelThanks.setText(specialThanks[firstLine] + '\n' + specialThanks[secondLine] + '\n'
+								+ specialThanks[thirdLine]);
+						labelThanks.pack(true);
+						tab.layout(new Control[]{ labelThanks });
+						stIndex++;
+						stIndex %= specialThanks.length;
 					}
 				});
 			}
@@ -263,12 +233,7 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 		Link websiteLink = new Link(compositeBottom, SWT.NONE);
 		websiteLink.setText(String.format("<a>%s</a>", Messages.getString("AboutDialog.WebSite"))); //$NON-NLS-1$ //$NON-NLS-2$
 		GridData websiteLinkLData = new GridData();
-		websiteLink.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				GuiController.launchProgram(Util.getWebsiteURL());
-			}
-		});
+		websiteLink.addListener(SWT.Selection, e -> GuiController.launchProgram(Util.getWebsiteURL()));
 		websiteLinkLData.grabExcessHorizontalSpace = false;
 		websiteLinkLData.horizontalAlignment = SWT.CENTER;
 		websiteLink.setLayoutData(websiteLinkLData);
@@ -284,12 +249,7 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 		Link twitterLink = new Link(compositeTwitter, SWT.NONE);
 		twitterLink.setText("<a>@FullSyncNews</a>"); //$NON-NLS-1$
 		GridData twitterLinkLData = new GridData();
-		twitterLink.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				GuiController.launchProgram(Util.getTwitterURL());
-			}
-		});
+		twitterLink.addListener(SWT.Selection, e -> GuiController.launchProgram(Util.getTwitterURL()));
 		twitterLink.setLayoutData(twitterLinkLData);
 		tab.pack();
 		tab.layout();
@@ -313,13 +273,10 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 		licenseTextLData.horizontalSpan = 2;
 		licenseText.setLayoutData(licenseTextLData);
 
-		componentCombo.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent arg0) {
-				if (null != licenseTexts) {
-					int index = componentCombo.getSelectionIndex();
-					licenseText.setText(licenseTexts.get(index));
-				}
+		componentCombo.addModifyListener(e -> {
+			if (null != licenseTexts) {
+				int index = componentCombo.getSelectionIndex();
+				licenseText.setText(licenseTexts.get(index));
 			}
 		});
 		GuiController.backgroundExec(this);
@@ -335,21 +292,16 @@ class AboutDialog extends Dialog implements DisposeListener, AsyncUIUpdate  {
 	public void execute() throws Throwable {
 		int numLicenses = 0;
 		List<LicenseEntry> licenses = new ArrayList<LicenseEntry>();
-		for(String name : Util.loadDirectoryFromClasspath(AboutDialog.class, FULLSYNC_LICENSES_DIRECTORY)) { //$NON-NLS-1$
+		for(String name : Util.loadDirectoryFromClasspath(AboutDialog.class, FULLSYNC_LICENSES_DIRECTORY)) {
 			if (name.endsWith(".txt")) { //$NON-NLS-1$
 				++numLicenses;
 				LicenseEntry entry = new LicenseEntry();
 				entry.name = name.substring(0, name.length() - 4);
-				entry.license = Util.getResourceAsString(FULLSYNC_LICENSES_DIRECTORY + name); //$NON-NLS-1$
+				entry.license = Util.getResourceAsString(FULLSYNC_LICENSES_DIRECTORY + name);
 				licenses.add(entry);
 			}
 		}
-		Collections.sort(licenses, new Comparator<LicenseEntry>() {
-			@Override
-			public int compare(LicenseEntry o1, LicenseEntry o2) {
-				return o1.name.compareToIgnoreCase(o2.name);
-			}
-		});
+		Collections.sort(licenses, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
 		licenseNames = new ArrayList<String>(numLicenses);
 		licenseTexts = new ArrayList<String>(numLicenses);
 		for (LicenseEntry lic : licenses) {

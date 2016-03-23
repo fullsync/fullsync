@@ -33,7 +33,6 @@ import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
-import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
@@ -119,15 +118,12 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 
 	@Override
 	public void addSchedulerChangeListener(final RemoteSchedulerChangeListenerInterface remotelistener) throws RemoteException {
-		SchedulerChangeListener listener = new SchedulerChangeListener() {
-			@Override
-			public void schedulerStatusChanged(boolean status) {
-				try {
-					remotelistener.schedulerStatusChanged(status);
-				}
-				catch (RemoteException e) {
-					// ExceptionHandler.reportException(e);
-				}
+		SchedulerChangeListener listener = status -> {
+			try {
+				remotelistener.schedulerStatusChanged(status);
+			}
+			catch (RemoteException e) {
+				// ExceptionHandler.reportException(e);
 			}
 		};
 		profileManager.addSchedulerChangeListener(listener);
@@ -171,15 +167,12 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	public void performActions(TaskTree tree, final RemoteTaskFinishedListenerInterface remoteListener) throws RemoteException {
 		TaskFinishedListener listener = null;
 		if (remoteListener != null) {
-			listener = new TaskFinishedListener() {
-				@Override
-				public void taskFinished(TaskFinishedEvent event) {
-					try {
-						remoteListener.taskFinished(event);
-					}
-					catch (RemoteException e) {
-						ExceptionHandler.reportException(e);
-					}
+			listener = event -> {
+				try {
+					remoteListener.taskFinished(event);
+				}
+				catch (RemoteException e) {
+					ExceptionHandler.reportException(e);
 				}
 			};
 		}

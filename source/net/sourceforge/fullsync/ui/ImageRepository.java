@@ -22,10 +22,10 @@ package net.sourceforge.fullsync.ui;
 import java.io.File;
 import java.util.HashMap;
 
+import net.sourceforge.fullsync.Util;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-
-import net.sourceforge.fullsync.Util;
 
 public class ImageRepository {
 	/*

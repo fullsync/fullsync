@@ -70,12 +70,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 
 		@Override
 		public void run() {
-			Thread worker = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					fireProfileSchedulerEvent(profile);
-				}
-			});
+			Thread worker = new Thread(() -> fireProfileSchedulerEvent(profile));
 			worker.start();
 			profile.getSchedule().setLastOccurrence(System.currentTimeMillis());
 			Thread.yield();

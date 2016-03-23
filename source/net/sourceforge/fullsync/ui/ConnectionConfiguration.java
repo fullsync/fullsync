@@ -27,8 +27,6 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -36,7 +34,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-public class ConnectionConfiguration implements ModifyListener {
+public class ConnectionConfiguration {
 	private Composite m_parent; // the tabs content
 	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" };
 	private static HashMap<String, Class<? extends ProtocolSpecificComposite>> composites;
@@ -84,18 +82,9 @@ public class ConnectionConfiguration implements ModifyListener {
 			++i;
 		}
 		comboProtocol.select(selectedIndex);
-		comboProtocol.addModifyListener(this);
-
-		selectedScheme = comboProtocol.getText();
-		createProtocolSpecificComposite();
-	}
-
-	@Override
-	public void modifyText(final ModifyEvent e) {
-		selectedScheme = comboProtocol.getText();
-		m_parent.getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
+		comboProtocol.addModifyListener(e -> {
+			selectedScheme = comboProtocol.getText();
+			m_parent.getDisplay().asyncExec(() -> {
 				for (Control c : m_parent.getChildren()) {
 					if (!c.isDisposed()) {
 						c.dispose();
@@ -105,10 +94,12 @@ public class ConnectionConfiguration implements ModifyListener {
 				initialize();
 
 				m_parent.layout(true);
-			}
+			});
 		});
-	}
 
+		selectedScheme = comboProtocol.getText();
+		createProtocolSpecificComposite();
+	}
 
 	public void setConnectionDescription(ConnectionDescription location) {
 		URI uri = null;

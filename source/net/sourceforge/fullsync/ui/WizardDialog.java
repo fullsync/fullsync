@@ -24,10 +24,6 @@ import java.util.Vector;
 import net.sourceforge.fullsync.ExceptionHandler;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -40,7 +36,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public abstract class WizardDialog extends SelectionAdapter implements ShellListener {
+public abstract class WizardDialog {
 
 	private Shell dialogShell;
 	private Composite compositeTop;
@@ -63,10 +59,26 @@ public abstract class WizardDialog extends SelectionAdapter implements ShellList
 		this.dialogListeners = new Vector<WizardDialogListener>();
 	}
 
+	public boolean checkAndApply() {
+		boolean applied = apply();
+		if (applied) {
+			dialogShell.dispose();
+		}
+		return applied;
+	}
+
+	public boolean checkAndCancel() {
+		boolean closed = cancel();
+		if (closed) {
+			dialogShell.dispose();
+		}
+		return closed;
+	}
+
 	public void show() {
 		try {
 			dialogShell = new Shell(parent, style);
-			dialogShell.addShellListener(this);
+			dialogShell.addListener(SWT.Close, e -> e.doit = !checkAndCancel());
 			Display display = dialogShell.getDisplay();
 
 			Color white = display.getSystemColor(SWT.COLOR_WHITE);
@@ -172,7 +184,7 @@ public abstract class WizardDialog extends SelectionAdapter implements ShellList
 			compositeBottom.setLayout(new GridLayout(2, false));
 			okButton = new Button(compositeBottom, SWT.PUSH);
 			okButton.setText(Messages.getString("ProfileDetailsPage.Ok")); //$NON-NLS-1$
-			okButton.addSelectionListener(this);
+			okButton.addListener(SWT.Selection, e -> checkAndApply());
 			GridData okButtonLayoutData = new GridData(SWT.END, SWT.CENTER, true, true);
 			okButtonLayoutData.widthHint = UISettings.BUTTON_WIDTH;
 			okButtonLayoutData.heightHint = UISettings.BUTTON_HEIGHT;
@@ -180,7 +192,7 @@ public abstract class WizardDialog extends SelectionAdapter implements ShellList
 
 			cancelButton = new Button(compositeBottom, SWT.PUSH);
 			cancelButton.setText(Messages.getString("ProfileDetailsPage.Cancel")); //$NON-NLS-1$
-			cancelButton.addSelectionListener(this);
+			cancelButton.addListener(SWT.Selection, e -> checkAndCancel());
 			GridData cancelButtonLayoutData = new GridData(SWT.END, SWT.CENTER, false, true);
 			cancelButtonLayoutData.widthHint = UISettings.BUTTON_WIDTH;
 			cancelButtonLayoutData.heightHint = UISettings.BUTTON_HEIGHT;
@@ -257,20 +269,6 @@ public abstract class WizardDialog extends SelectionAdapter implements ShellList
 		dialogListeners.remove(listener);
 	}
 
-	@Override
-	public void widgetSelected(final SelectionEvent e) {
-		if ((null != e) && (e.widget == okButton)) {
-			if (apply()) {
-				dialogShell.dispose();
-			}
-		}
-		else {
-			if (cancel()) {
-				dialogShell.dispose();
-			}
-		}
-	}
-
 	/**
 	 * enable or disable the ok button.
 	 * @param enabled
@@ -285,32 +283,6 @@ public abstract class WizardDialog extends SelectionAdapter implements ShellList
 	 */
 	public final void setCancelButtonEnabled(final boolean enabled) {
 		cancelButton.setEnabled(enabled);
-	}
-
-	@Override
-	public void shellActivated(ShellEvent e) {
-	}
-
-	@Override
-	public void shellClosed(ShellEvent e) {
-		if (cancel()) {
-			dialogShell.dispose();
-		}
-		else {
-			e.doit = false;
-		}
-	}
-
-	@Override
-	public void shellDeactivated(ShellEvent e) {
-	}
-
-	@Override
-	public void shellDeiconified(ShellEvent e) {
-	}
-
-	@Override
-	public void shellIconified(ShellEvent e) {
 	}
 
 	public abstract String getTitle();

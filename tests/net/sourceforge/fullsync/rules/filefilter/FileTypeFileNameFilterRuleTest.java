@@ -24,6 +24,7 @@ package net.sourceforge.fullsync.rules.filefilter;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 import org.junit.Test;

@@ -25,12 +25,11 @@ import java.net.URISyntaxException;
 import net.sourceforge.fullsync.ConnectionDescription;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
@@ -95,20 +94,14 @@ class SFTPSpecificComposite extends ProtocolSpecificComposite {
 		GridData radioKeybasedData = new GridData();
 		radioKeybasedData.horizontalSpan = 3;
 		buttonKeybased.setLayoutData(radioKeybasedData);
-		buttonKeybased.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				boolean enabled = buttonKeybased.getSelection();
-				labelKeyPassphrase.setEnabled(enabled);
-				textKeyPassphrase.setEnabled(enabled);
-			}
-			@Override
-			public void widgetDefaultSelected(final SelectionEvent e) {
-				boolean enabled = buttonKeybased.getSelection();
-				labelKeyPassphrase.setEnabled(enabled);
-				textKeyPassphrase.setEnabled(enabled);
-			}
-		});
+		Listener keybasedSelectionListener = e -> {
+			boolean enabled = buttonKeybased.getSelection();
+			labelKeyPassphrase.setEnabled(enabled);
+			textKeyPassphrase.setEnabled(enabled);
+		};
+
+		buttonKeybased.addListener(SWT.Selection, keybasedSelectionListener);
+		buttonKeybased.addListener(SWT.DefaultSelection, keybasedSelectionListener);
 
 		labelKeyPassphrase = new Label(m_parent, SWT.NONE);
 		labelKeyPassphrase.setText(Messages.getString("ProtocolSpecificComposite.KeyPassphrase"));

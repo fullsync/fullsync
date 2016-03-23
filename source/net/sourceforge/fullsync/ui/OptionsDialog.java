@@ -115,7 +115,7 @@ public class OptionsDialog extends Dialog implements SelectionListener {
 	}
 
 	@Override
-	public void widgetDefaultSelected(SelectionEvent arg0) {
+	public void widgetDefaultSelected(SelectionEvent e) {
 		result = options[0];
 		dialogShell.close();
 		dialogShell.dispose();

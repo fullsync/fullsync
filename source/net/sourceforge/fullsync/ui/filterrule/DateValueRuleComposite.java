@@ -27,8 +27,6 @@ import java.text.DateFormat;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -56,15 +54,12 @@ class DateValueRuleComposite extends RuleComposite {
 		buttonCalendar = new Button(this, SWT.PUSH | SWT.CENTER);
 		buttonCalendar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		buttonCalendar.setText("Choose Date...");
-		buttonCalendar.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				SWTCalendarDialog swtCalDialog = new SWTCalendarDialog(getDisplay().getActiveShell(), value.getDate());
-				swtCalDialog.open();
-				value.setDate(swtCalDialog.getDate());
-				textValue.setText(dateFormat.format(value.getDate()));
-				valueChanged(new ValueChangedEvent(value));
-			}
+		buttonCalendar.addListener(SWT.Selection, e -> {
+			SWTCalendarDialog swtCalDialog = new SWTCalendarDialog(getDisplay().getActiveShell(), value.getDate());
+			swtCalDialog.open();
+			value.setDate(swtCalDialog.getDate());
+			textValue.setText(dateFormat.format(value.getDate()));
+			valueChanged(new ValueChangedEvent(value));
 		});
 	}
 }

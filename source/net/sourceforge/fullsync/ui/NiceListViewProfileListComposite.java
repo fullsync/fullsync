@@ -28,8 +28,6 @@ import net.sourceforge.fullsync.ProfileManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
@@ -118,39 +116,19 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 
 			ToolItem t = new ToolItem(toolbar, SWT.PUSH);
 			t.setImage(imageRun);
-			t.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent e) {
-					handler.runProfile(profile, true);
-				}
-			});
+			t.addListener(SWT.Selection, e -> handler.runProfile(profile, true));
 
 			t = new ToolItem(toolbar, SWT.PUSH);
 			t.setImage(imageRunNonInter);
-			t.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent e) {
-					handler.runProfile(profile, false);
-				}
-			});
+			t.addListener(SWT.Selection, e -> handler.runProfile(profile, false));
 
 			t = new ToolItem(toolbar, SWT.PUSH);
 			t.setImage(imageEdit);
-			t.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent e) {
-					handler.editProfile(profile);
-				}
-			});
+			t.addListener(SWT.Selection, e -> handler.editProfile(profile));
 
 			t = new ToolItem(toolbar, SWT.PUSH);
 			t.setImage(imageDelete);
-			t.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(final SelectionEvent e) {
-					handler.deleteProfile(profile);
-				}
-			});
+			t.addListener(SWT.Selection, e -> handler.deleteProfile(profile));
 		}
 
 		public void updateComponent() {
@@ -374,29 +352,21 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	@Override
 	public void profileListChanged() {
 		// use something like a de-bounced setTimeout
-		getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				populateProfileList();
-			}
-		});
+		getDisplay().syncExec(() -> populateProfileList());
 	}
 
 	@Override
 	public void profileChanged(final Profile p) {
-		getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				Object composite = profilesToItems.get(p);
-				if (composite == null) {
-					populateProfileList();
-				}
-				else {
-					NiceListViewItem item = (NiceListViewItem) composite;
-					ContentComposite content = (ContentComposite) item.getContent();
-					updateItem(item, content.getProfile());
-					content.updateComponent();
-				}
+		getDisplay().syncExec(() -> {
+			Object composite = profilesToItems.get(p);
+			if (composite == null) {
+				populateProfileList();
+			}
+			else {
+				NiceListViewItem item = (NiceListViewItem) composite;
+				ContentComposite content = (ContentComposite) item.getContent();
+				updateItem(item, content.getProfile());
+				content.updateComponent();
 			}
 		});
 	}

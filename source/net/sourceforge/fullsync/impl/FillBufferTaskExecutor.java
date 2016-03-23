@@ -31,12 +31,10 @@ import net.sourceforge.fullsync.TaskExecutor;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.buffer.EntryDescriptor;
-import net.sourceforge.fullsync.buffer.EntryFinishedListener;
 import net.sourceforge.fullsync.buffer.ExecutionBuffer;
 import net.sourceforge.fullsync.fs.File;
 
-public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListener {
+public class FillBufferTaskExecutor implements TaskExecutor {
 	private Vector<TaskFinishedListener> listeners;
 	private boolean statisticsOnly;
 	private IoStatisticsImpl stats;
@@ -46,7 +44,17 @@ public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListen
 		this.listeners = new Vector<TaskFinishedListener>();
 		this.statisticsOnly = false;
 		this.buffer = buffer;
-		buffer.addEntryFinishedListener(this);
+		buffer.addEntryFinishedListener((entry, ioe) -> {
+			Task task = entry.getTask();
+			if (null != task) {
+				if (null != ioe) {
+					fireTaskFinished(new TaskFinishedEvent(task, ioe.getLocalizedMessage()));
+				}
+				else {
+					fireTaskFinished(new TaskFinishedEvent(task, 0));
+				}
+			}
+		});
 	}
 
 	@Override
@@ -163,19 +171,6 @@ public class FillBufferTaskExecutor implements TaskExecutor, EntryFinishedListen
 	@Override
 	public void flush() throws IOException {
 		buffer.flush();
-	}
-
-	@Override
-	public void entryFinished(EntryDescriptor entry, IOException ioe) {
-		Task task = entry.getTask();
-		if (null != task) {
-			if (null != ioe) {
-				fireTaskFinished(new TaskFinishedEvent(task, ioe.getLocalizedMessage()));
-			}
-			else {
-				fireTaskFinished(new TaskFinishedEvent(task, 0));
-			}
-		}
 	}
 
 	protected void fireTaskFinished(TaskFinishedEvent event) {

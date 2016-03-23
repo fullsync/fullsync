@@ -25,8 +25,6 @@ import java.io.IOException;
 import net.sourceforge.fullsync.ExceptionHandler;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -84,33 +82,26 @@ public class ImportProfilesPage extends WizardDialog {
 		textPath.setLayoutData(textData);
 		buttonBrowse = new Button(content, SWT.NONE);
 		buttonBrowse.setText("...");
-		buttonBrowse.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent evt) {
-				FileDialog fd = new FileDialog(content.getShell());
-				fd.setFileName("profiles.xml"); //$NON-NLS-1$
-				fd.setFilterExtensions(new String[] {
-						"profiles.xml", //$NON-NLS-1$
-						"*.xml", //$NON-NLS-1$
-						"*" //$NON-NLS-1$
-				});
-				fd.setFilterIndex(0);
-				fd.setFilterPath(textPath.getText());
-				String file = fd.open();
-				if (file != null) {
-					File f = new File(file);
-					try {
-						textPath.setText(f.getCanonicalPath());
-					}
-					catch (IOException e) {
-						textPath.setText(""); //$NON-NLS-1$
-						e.printStackTrace();
-					}
+		buttonBrowse.addListener(SWT.Selection, e -> {
+			FileDialog fd = new FileDialog(content.getShell());
+			fd.setFileName("profiles.xml"); //$NON-NLS-1$
+			fd.setFilterExtensions(new String[] {
+					"profiles.xml", //$NON-NLS-1$
+					"*.xml", //$NON-NLS-1$
+					"*" //$NON-NLS-1$
+			});
+			fd.setFilterIndex(0);
+			fd.setFilterPath(textPath.getText());
+			String file = fd.open();
+			if (file != null) {
+				File f = new File(file);
+				try {
+					textPath.setText(f.getCanonicalPath());
 				}
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent evt) {
+				catch (IOException ex) {
+					textPath.setText(""); //$NON-NLS-1$
+					ex.printStackTrace();
+				}
 			}
 		});
 	}
