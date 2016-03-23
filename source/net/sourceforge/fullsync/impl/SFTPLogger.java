@@ -22,7 +22,6 @@ package net.sourceforge.fullsync.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * SFTPLogger class implementing the com.jcraft.jsch.Logger interface
  * that enables the logging of the SSH library below the
@@ -33,6 +32,7 @@ public class SFTPLogger implements com.jcraft.jsch.Logger {
 	 * reference to the FullSync logger.
 	 */
 	private Logger logger = null;
+
 	/**
 	 * Constructor of the SFTPLogger implementation.
 	 */
@@ -48,12 +48,24 @@ public class SFTPLogger implements com.jcraft.jsch.Logger {
 	@Override
 	public final void log(final int level, final String message) {
 		switch (level) {
-			case DEBUG: logger.debug(message); break;
-			case INFO:  logger.info(message);  break;
-			case WARN:  logger.warn(message);  break;
-			case ERROR: logger.error(message); break;
-			case FATAL: logger.error(message); break;
-			default:    logger.debug(message); break;
+			case DEBUG:
+				logger.debug(message);
+				break;
+			case INFO:
+				logger.info(message);
+				break;
+			case WARN:
+				logger.warn(message);
+				break;
+			case ERROR:
+				logger.error(message);
+				break;
+			case FATAL:
+				logger.error(message);
+				break;
+			default:
+				logger.debug(message);
+				break;
 		}
 	}
 

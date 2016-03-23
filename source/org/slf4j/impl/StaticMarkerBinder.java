@@ -66,5 +66,4 @@ public final class StaticMarkerBinder implements MarkerFactoryBinder { // NO_UCD
 		return BasicMarkerFactory.class.getName();
 	}
 
-
 }

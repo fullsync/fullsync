@@ -100,12 +100,12 @@ public class PublishOverwriteActionDecider implements ActionDecider {
 				// TODO this check is not neccessary, check rules whether to do or not
 				// if( bsd.getState( dst ).equals( State.NodeInSync, Location.Both ) || bsd.getState( dst ).equals( State.NodeInSync,
 				// Location.None ) )
-			{
+				//{
 				actions.add(inSync);
 				actions.add(overwriteDestination);
 				actions.add(overwriteSource);
-			}
-			break;
+				//}
+				break;
 			default:
 				actions.add(new Action(Action.NotDecidableError, Location.None, BufferUpdate.None, "no rule found"));
 				break;

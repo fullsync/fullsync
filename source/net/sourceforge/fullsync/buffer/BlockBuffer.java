@@ -30,7 +30,6 @@ import java.util.Vector;
 
 import org.slf4j.Logger;
 
-
 public class BlockBuffer implements ExecutionBuffer {
 	Logger logger;
 

@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-
 import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.ConnectionDescription;
@@ -33,6 +32,7 @@ import org.eclipse.swt.widgets.Label;
 public class FTPSpecificComposite extends UserPasswordSpecificComposite {
 	private static final String FTP_ANONYMOUS_USERNAME = "Anonymous";
 	Combo comboAuthentication;
+
 	@Override
 	public int getDefaultPort() {
 		return 21;

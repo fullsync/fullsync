@@ -21,5 +21,6 @@ package net.sourceforge.fullsync.ui;
 
 interface AsyncUIUpdate {
 	void execute() throws Throwable;
+
 	void updateUI(boolean succeeded);
 }

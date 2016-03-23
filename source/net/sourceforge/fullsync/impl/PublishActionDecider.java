@@ -50,17 +50,21 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class PublishActionDecider implements ActionDecider {
 	private static final Action addDestination = new Action(Add, Destination, BufferUpdate.Destination, "Add");
-	private static final Action ignoreDestinationExists = new Action(UnexpectedChangeError, Destination, BufferUpdate.None, "will not add, destination already exists");
+	private static final Action ignoreDestinationExists = new Action(UnexpectedChangeError, Destination, BufferUpdate.None,
+			"will not add, destination already exists");
 	private static final Action overwriteSource = new Action(Update, Source, BufferUpdate.Destination, "overwrite source");
 	private static final Action overwriteDestination = new Action(Update, Destination, BufferUpdate.Destination, "overwrite destination");
 	private static final Action updateDestination = new Action(Update, Destination, BufferUpdate.Destination, "Source changed");
-	private static final Action unexpectedDestinationChanged = new Action(UnexpectedChangeError, Destination, BufferUpdate.None, "Destination changed");
-	private static final Action unexpectedBothChanged = new Action(UnexpectedChangeError, Destination, BufferUpdate.None, "Source changed, but changed remotely too");
+	private static final Action unexpectedDestinationChanged = new Action(UnexpectedChangeError, Destination, BufferUpdate.None,
+			"Destination changed");
+	private static final Action unexpectedBothChanged = new Action(UnexpectedChangeError, Destination, BufferUpdate.None,
+			"Source changed, but changed remotely too");
 	private static final Action inSync = new Action(Nothing, None, BufferUpdate.None, "In Sync");
 	private static final Action ignore = new Action(Nothing, None, BufferUpdate.None, "Ignore");
 
 	@Override
-	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd) throws DataParseException, IOException {
+	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd)
+			throws DataParseException, IOException {
 		Vector<Action> actions = new Vector<Action>(3);
 		State state = sd.getState(src, dst);
 		switch (state.getType()) {
@@ -116,12 +120,12 @@ public class PublishActionDecider implements ActionDecider {
 				// TODO this check is not neccessary, check rules whether to do or not
 				// if( bsd.getState( dst ).equals( State.NodeInSync, Both ) || bsd.getState( dst ).equals( State.NodeInSync,
 				// None ) )
-			{
+				//{
 				actions.add(inSync);
 				actions.add(overwriteDestination);
 				actions.add(overwriteSource);
-			}
-			break;
+				//}
+				break;
 			default:
 				actions.add(new Action(NotDecidableError, None, BufferUpdate.None, "no rule found"));
 				break;

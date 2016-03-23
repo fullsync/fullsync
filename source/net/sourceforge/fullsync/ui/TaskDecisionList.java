@@ -325,10 +325,7 @@ public class TaskDecisionList extends Composite {
 				tableLogLinesFillCount++;
 			}
 			item.setImage(2, image);
-			item.setText(new String[] {
-					t.getSource().getPath(),
-					formatSize(t),
-					"", //$NON-NLS-1$
+			item.setText(new String[] { t.getSource().getPath(), formatSize(t), "", //$NON-NLS-1$
 					t.getCurrentAction().getExplanation() });
 			item.setData(t);
 
@@ -341,7 +338,7 @@ public class TaskDecisionList extends Composite {
 		long size = -1;
 		final Action action = t.getCurrentAction();
 		if ((action.getType() == Action.Add) || (action.getType() == Action.Update)) {
-			switch(action.getLocation()) {
+			switch (action.getLocation()) {
 				case Location.Source:
 					size = t.getDestination().getSize();
 					break;
@@ -404,7 +401,6 @@ public class TaskDecisionList extends Composite {
 				updateTask(item);
 			}
 		};
-
 
 		Task[] taskList = new Task[tableItemList.length];
 		for (int i = 0; i < tableItemList.length; i++) {

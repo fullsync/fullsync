@@ -113,6 +113,7 @@ class SchedulingIntervalItem {
 	public String unit;
 	public String name;
 	public long factor;
+
 	public SchedulingIntervalItem(String unit, String name, long factor) {
 		this.unit = unit;
 		this.name = name;

@@ -100,7 +100,6 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private Composite m_parent;
 	private String lastSourceLoaded = null;
 
-
 	public ProfileDetailsTabbedPage(Shell parent, ProfileManager profileManager, String profileName) {
 		super(parent);
 		this.profileManager = profileManager;
@@ -231,7 +230,6 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			ExceptionHandler.reportException(e);
 		}
 	}
-
 
 	/**
 	 * initGenralTab creates all controls of the first tab.
@@ -528,7 +526,6 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		return c;
 	}
 
-
 	private void enableFilterControls(final boolean enable) {
 		labelFilesFilter.setEnabled(enable);
 		buttonFileFilter.setEnabled(enable);
@@ -597,7 +594,6 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		}
 	}
 
-
 	@Override
 	public boolean apply() {
 		closeSourceSite();
@@ -658,7 +654,6 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		profileManager.save();
 		return true; //FIXME: return false if failed
 	}
-
 
 	private ConnectionDescription getConnectionDescription(final ConnectionConfiguration cfg) {
 		ConnectionDescription dst = null;

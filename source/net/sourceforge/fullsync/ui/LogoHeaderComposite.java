@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Label;
 
 public class LogoHeaderComposite extends Composite {
 	private Color headerBackgroundColor;
+
 	public LogoHeaderComposite(final Composite parent, final int style) {
 		super(parent, style);
 		addDisposeListener(e -> headerBackgroundColor.dispose());

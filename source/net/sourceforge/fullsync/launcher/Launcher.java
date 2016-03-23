@@ -84,6 +84,7 @@ public class Launcher {
 
 	// keep in sync with net.sourceforge.fullsync.Util.getResourceAsString(String)
 	private static final int IOBUFFERSIZE = 0x1000;
+
 	public static String getResourceAsString(final String name) {
 		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
 		if (null != is) {

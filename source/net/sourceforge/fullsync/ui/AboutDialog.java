@@ -100,7 +100,9 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 				height = dlgSize.y + height;
 				dialogShell.setSize(width, height);
 				Rectangle parentBounds = parent.getBounds();
-				dialogShell.setLocation((parentBounds.x + (parentBounds.width / 2)) - (width / 2), (parentBounds.y + (parentBounds.height / 2)) - (height / 2));
+				int dlgX = (parentBounds.x + (parentBounds.width / 2)) - (width / 2);
+				int dlgY = (parentBounds.y + (parentBounds.height / 2)) - (height / 2);
+				dialogShell.setLocation(dlgX, dlgY);
 			});
 
 			TabItem tabLicenses = new TabItem(tabs, SWT.NONE);
@@ -204,10 +206,9 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 						int secondLine = (stIndex + 1) % specialThanks.length;
 						int thirdLine = (stIndex + 2) % specialThanks.length;
 
-						labelThanks.setText(specialThanks[firstLine] + '\n' + specialThanks[secondLine] + '\n'
-								+ specialThanks[thirdLine]);
+						labelThanks.setText(specialThanks[firstLine] + '\n' + specialThanks[secondLine] + '\n' + specialThanks[thirdLine]);
 						labelThanks.pack(true);
-						tab.layout(new Control[]{ labelThanks });
+						tab.layout(new Control[] { labelThanks });
 						stIndex++;
 						stIndex %= specialThanks.length;
 					}
@@ -292,7 +293,7 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 	public void execute() throws Throwable {
 		int numLicenses = 0;
 		List<LicenseEntry> licenses = new ArrayList<LicenseEntry>();
-		for(String name : Util.loadDirectoryFromClasspath(AboutDialog.class, FULLSYNC_LICENSES_DIRECTORY)) {
+		for (String name : Util.loadDirectoryFromClasspath(AboutDialog.class, FULLSYNC_LICENSES_DIRECTORY)) {
 			if (name.endsWith(".txt")) { //$NON-NLS-1$
 				++numLicenses;
 				LicenseEntry entry = new LicenseEntry();

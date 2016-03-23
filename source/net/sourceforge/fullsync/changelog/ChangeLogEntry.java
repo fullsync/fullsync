@@ -37,12 +37,13 @@ public class ChangeLogEntry implements Comparable<ChangeLogEntry> {
 	private String manual;
 	private Date date;
 	private String version;
+
 	public ChangeLogEntry(Document doc) throws ParseException {
 		ul = doc.getFirstChild();
 		NamedNodeMap attrs = ul.getAttributes();
 		version = attr(attrs, "data-version");
 		manual = attr(attrs, "data-manual");
-		String d  = attr(attrs, "data-date");
+		String d = attr(attrs, "data-date");
 		if ("00000000".equals(d)) {
 			date = new Date();
 		}

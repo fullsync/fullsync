@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-
 /**
  * this Class holds default information about UI elements.
  */
@@ -40,13 +39,13 @@ public abstract class UISettings {
 			return "";
 		}
 		if (size > (1024 * 1024 * 1024)) {
-			return ((long)(Math.ceil(size / (1024f * 1024f * 1024f)))) + " GiB";
+			return ((long) (Math.ceil(size / (1024f * 1024f * 1024f)))) + " GiB";
 		}
 		if (size > (1024 * 1024)) {
-			return ((long)(Math.ceil(size / (1024f * 1024f)))) + " MiB";
+			return ((long) (Math.ceil(size / (1024f * 1024f)))) + " MiB";
 		}
 		if (size > 1024) {
-			return ((long)(Math.ceil(size / 1024f))) + " KiB";
+			return ((long) (Math.ceil(size / 1024f))) + " KiB";
 		}
 		return size + " B";
 	}

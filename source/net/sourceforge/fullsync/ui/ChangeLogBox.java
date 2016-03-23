@@ -47,7 +47,8 @@ public class ChangeLogBox extends StyledText implements AsyncUIUpdate {
 	@Override
 	public void execute() throws Throwable {
 		ChangeLogLoader loader = new ChangeLogLoader();
-		changelog = ChangeLogLoader.filterAfter(loader.load(new File(Util.getInstalllocation(), "versions"), ".+\\.html"), lastFullSyncVersion); //$NON-NLS-1$ //$NON-NLS-2$
+		changelog = ChangeLogLoader.filterAfter(loader.load(new File(Util.getInstalllocation(), "versions"), ".+\\.html"), //$NON-NLS-1$//$NON-NLS-2$
+				lastFullSyncVersion);
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class ChangeLogBox extends StyledText implements AsyncUIUpdate {
 			if (succeeded) {
 				StringWriter sw = new StringWriter();
 				DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
-				for(ChangeLogEntry entry : changelog) {
+				for (ChangeLogEntry entry : changelog) {
 					entry.write("FullSync %s released on %s", " - %s", sw, dateFormat);
 				}
 				sw.flush();

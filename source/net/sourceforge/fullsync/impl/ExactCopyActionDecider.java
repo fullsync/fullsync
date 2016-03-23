@@ -54,7 +54,8 @@ public class ExactCopyActionDecider implements ActionDecider {
 	private static final Action ignore = new Action(Action.Nothing, Location.None, BufferUpdate.None, "Ignore");
 
 	@Override
-	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd) throws DataParseException, IOException {
+	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd)
+			throws DataParseException, IOException {
 		Vector<Action> actions = new Vector<Action>(3);
 		State state = sd.getState(src, dst);
 		switch (state.getType()) {
@@ -110,11 +111,11 @@ public class ExactCopyActionDecider implements ActionDecider {
 				// TODO this check is not neccessary, check rules whether to do or not
 				// if( bsd.getState( dst ).equals( State.NodeInSync, Location.Both ) || bsd.getState( dst ).equals( State.NodeInSync,
 				// Location.None ) )
-			{
+				//{
 				actions.add(inSync);
 				actions.add(overwriteDestination);
-			}
-			break;
+				//}
+				break;
 			default:
 				actions.add(new Action(Action.NotDecidableError, Location.None, BufferUpdate.None, "no rule found"));
 				break;

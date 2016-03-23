@@ -40,7 +40,6 @@ class AbstractFile implements File {
 	protected long size;
 	protected long lastModified;
 
-
 	AbstractFile(FileSystemConnection fs, String name, File parent, boolean directory, boolean exists) {
 		this.fs = fs;
 		this.name = name;

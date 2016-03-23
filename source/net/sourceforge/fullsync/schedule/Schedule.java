@@ -49,7 +49,6 @@ public abstract class Schedule implements Serializable {
 		scheduleRegister.put(CrontabSchedule.SCHEDULE_TYPE, CrontabSchedule.class);
 	}
 
-
 	public static final Schedule unserialize(final Element element) {
 		if (element == null) {
 			return null;

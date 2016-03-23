@@ -21,7 +21,6 @@ package net.sourceforge.fullsync.connection;
 
 import org.junit.Test;
 
-
 public class CommonsVfsConnectionTest {
 	@Test
 	public void testLocal() throws Exception {

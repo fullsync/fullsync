@@ -40,7 +40,6 @@ import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * This class is the server for remote connections.
  * It handles remote connections to the running instance of FullSync, allowing

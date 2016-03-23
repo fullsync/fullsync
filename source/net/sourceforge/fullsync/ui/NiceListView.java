@@ -97,7 +97,7 @@ public class NiceListView extends Composite implements Listener {
 						break;
 					case SWT.END:
 						if (children.length > 0) {
-							index = children.length -1;
+							index = children.length - 1;
 						}
 						break;
 					case SWT.PAGE_UP:
@@ -114,7 +114,7 @@ public class NiceListView extends Composite implements Listener {
 					setSelected((NiceListViewItem) children[index]);
 					Composite parent = this.getParent();
 					if (parent instanceof ScrolledComposite) {
-						ScrolledComposite sc = (ScrolledComposite)parent;
+						ScrolledComposite sc = (ScrolledComposite) parent;
 						sc.showControl(children[index]);
 					}
 				}

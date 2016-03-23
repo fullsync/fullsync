@@ -92,7 +92,8 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 	}
 
 	@Override
-	public TaskTree execute(Profile profile, boolean interactive) throws FileSystemException, URISyntaxException, DataParseException, IOException {
+	public TaskTree execute(Profile profile, boolean interactive)
+			throws FileSystemException, URISyntaxException, DataParseException, IOException {
 		Site d1 = null, d2 = null;
 
 		RuleSet rules = profile.getRuleSet().createRuleSet();
@@ -144,8 +145,8 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 	}
 
 	@Override
-	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules) throws DataParseException,
-	FileSystemException, IOException {
+	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules)
+			throws DataParseException, FileSystemException, IOException {
 		if (!source.isAvailable()) {
 			throw new FileSystemException("source is unavailable");
 		}
@@ -156,8 +157,8 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		this.actionDecider = actionDecider;
 
 		TaskTree tree = new TaskTree(source, destination);
-		Task root = new Task(null, null, new State(State.NodeInSync, Location.None), new Action[] { new Action(Action.Nothing,
-				Location.None, BufferUpdate.None, "Root") });
+		Task root = new Task(null, null, new State(State.NodeInSync, Location.None),
+				new Action[] { new Action(Action.Nothing, Location.None, BufferUpdate.None, "Root") });
 		tree.setRoot(root);
 
 		for (TaskGenerationListener listener : taskGenerationListeners) {

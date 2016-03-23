@@ -29,16 +29,19 @@ public class GUIUpdateQueue<Item> {
 	public static interface GUIUpdateTask<Item> {
 		void doUpdate(Display display, LinkedList<Item> items);
 	}
+
 	private Display m_display;
 	private ConcurrentLinkedQueue<Item> m_queue;
 	private AtomicBoolean m_updateScheduled;
 	private GUIUpdateTask<Item> m_updateTask;
+
 	public GUIUpdateQueue(Display display, GUIUpdateTask<Item> guiUpdateTask) {
 		m_display = display;
 		m_queue = new ConcurrentLinkedQueue<Item>();
 		m_updateScheduled = new AtomicBoolean(false);
 		m_updateTask = guiUpdateTask;
 	}
+
 	public synchronized void add(Item item) {
 		m_queue.add(item);
 		if (!m_updateScheduled.get()) {
@@ -52,9 +55,10 @@ public class GUIUpdateQueue<Item> {
 			});
 		}
 	}
+
 	private synchronized void getItems(LinkedList<Item> items) {
 		Item item;
-		while(null != (item = m_queue.poll())) {
+		while (null != (item = m_queue.poll())) {
 			items.add(item);
 		}
 		m_updateScheduled.set(false);

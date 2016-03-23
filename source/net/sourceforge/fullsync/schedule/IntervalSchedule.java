@@ -64,7 +64,6 @@ public class IntervalSchedule extends Schedule {
 		return element;
 	}
 
-
 	@Override
 	public long getNextOccurrence(long now) {
 		return next > now ? next : now;

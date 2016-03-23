@@ -33,7 +33,6 @@ import net.sourceforge.fullsync.fs.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
 	// TODO this should be execution local so the class

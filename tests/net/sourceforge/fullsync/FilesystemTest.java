@@ -60,14 +60,9 @@ public class FilesystemTest {
 
 	@Parameterized.Parameters
 	public static Iterable<Object[]> data() {
-		return Arrays.asList(
-			new Object[][] {
-				{"file"},
-				{"ftp"},
-				{"sftp"},
+		return Arrays.asList(new Object[][] { { "file" }, { "ftp" }, { "sftp" },
 				//{"smb"}, // no server for smb/cifs
-			}
-		);
+		});
 	}
 
 	@Parameter
@@ -106,8 +101,6 @@ public class FilesystemTest {
 		tmpFolder.delete();
 	}
 
-
-
 	void prepareProfile(String syncType) throws Exception {
 		testingDst = tmpFolder.newFolder("destination");
 		testingDst.mkdirs();
@@ -130,7 +123,7 @@ public class FilesystemTest {
 			m_fakeServer.start();
 			dstUrl = "ftp://127.0.0.1:" + TEST_FTP_PORT + "/sampleuser";
 		}
-		if("sftp".equals(filesystem)) {
+		if ("sftp".equals(filesystem)) {
 			System.setProperty("vfs.sftp.sshdir", new File("./tests/sshd-config/").getAbsolutePath());
 			testingDst.delete();
 			testingDst = m_sshServer.getUserHome();
@@ -254,12 +247,13 @@ public class FilesystemTest {
 				Object ex = expectation.get(task.getSource().getName());
 
 				assertNotNull("Unexpected generated Task for file: " + task.getSource().getName(), ex);
-				assertTrue("Action was " + task.getCurrentAction() + ", expected: " + ex + " for File " + task.getSource().getName(), task
-						.getCurrentAction().equalsExceptExplanation((Action) ex));
+				assertTrue("Action was " + task.getCurrentAction() + ", expected: " + ex + " for File " + task.getSource().getName(),
+						task.getCurrentAction().equalsExceptExplanation((Action) ex));
 			}
 
 			@Override
-			public void taskGenerationStarted(final net.sourceforge.fullsync.fs.File source, final net.sourceforge.fullsync.fs.File destination) {
+			public void taskGenerationStarted(final net.sourceforge.fullsync.fs.File source,
+					final net.sourceforge.fullsync.fs.File destination) {
 			}
 
 			@Override
@@ -284,12 +278,10 @@ public class FilesystemTest {
 		return getLastModified();
 	}
 
-
 	private void verifyExpectations(Map<String, Action> expectation) throws Exception {
 		TaskTree tree = assertPhaseOneActions(expectation);
 		synchronizer.performActions(tree);
 	}
-
 
 	@Test
 	public void testPublishUpdate() throws Exception {

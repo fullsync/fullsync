@@ -103,7 +103,8 @@ public abstract class Util {
 		}
 	}
 
-	public static String[] loadDirectoryFromClasspath(Class<?> clazz, String path) throws URISyntaxException, UnsupportedEncodingException, IOException {
+	public static String[] loadDirectoryFromClasspath(Class<?> clazz, String path)
+			throws URISyntaxException, UnsupportedEncodingException, IOException {
 		URL dirURL = clazz.getProtectionDomain().getCodeSource().getLocation();
 		File src = new File(dirURL.toURI());
 		if (src.isDirectory() && src.exists()) {
@@ -118,7 +119,7 @@ public abstract class Util {
 			if ('/' == prefix.charAt(0)) {
 				prefix = prefix.substring(1);
 			}
-			while(jarEntries.hasMoreElements()) {
+			while (jarEntries.hasMoreElements()) {
 				JarEntry entry = jarEntries.nextElement();
 				String name = entry.getName();
 				if (!entry.isDirectory() && name.startsWith(prefix)) { //filter according to the path
@@ -129,7 +130,7 @@ public abstract class Util {
 			jar.close();
 			return result.toArray(new String[result.size()]);
 		}
-		return new String[]{};
+		return new String[] {};
 	}
 
 	public static void fileRenameToPortableLegacy(String from, String to) throws Exception {

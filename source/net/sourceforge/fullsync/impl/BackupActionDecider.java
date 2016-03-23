@@ -53,13 +53,15 @@ public class BackupActionDecider implements ActionDecider {
 	private static final Action addDestination = new Action(Add, Destination, BufferUpdate.Destination, "Add");
 	private static final Action overwriteDestination = new Action(Update, Destination, BufferUpdate.Destination, "overwrite destination");
 	private static final Action updateDestination = new Action(Update, Destination, BufferUpdate.Destination, "Source changed");
-	private static final Action deleteDestinationOrphan = new Action(Delete, Destination, BufferUpdate.Destination, "Delete orphan in destination", false);
+	private static final Action deleteDestinationOrphan = new Action(Delete, Destination, BufferUpdate.Destination,
+			"Delete orphan in destination", false);
 	private static final Action ignoreDestinationOrphan = new Action(Nothing, None, BufferUpdate.None, "Ignoring orphan in destination");
 	private static final Action inSync = new Action(Nothing, None, BufferUpdate.None, "In Sync");
 	private static final Action ignore = new Action(Nothing, None, BufferUpdate.None, "Ignore");
 
 	@Override
-	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd) throws DataParseException, IOException {
+	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd)
+			throws DataParseException, IOException {
 		Vector<Action> actions = new Vector<Action>(3);
 		State state = sd.getState(src, dst);
 		switch (state.getType()) {
@@ -80,8 +82,7 @@ public class BackupActionDecider implements ActionDecider {
 			case State.DirHereFileThere:
 				State buff = bsd.getState(dst);
 				if (buff.equals(State.Orphan, Buffer)) {
-					actions.add(new Action(Add, Destination, BufferUpdate.Destination,
-							"There was a node in buff, but its orphan, so add"));
+					actions.add(new Action(Add, Destination, BufferUpdate.Destination, "There was a node in buff, but its orphan, so add"));
 				}
 				else if (buff.equals(State.DirHereFileThere, state.getLocation())) {
 					if (state.getLocation() == Source) {
@@ -116,11 +117,11 @@ public class BackupActionDecider implements ActionDecider {
 				// TODO this check is not neccessary, check rules whether to do or not
 				// if( bsd.getState( dst ).equals( State.NodeInSync, Both ) || bsd.getState( dst ).equals( State.NodeInSync,
 				// None ) )
-			{
+				//{
 				actions.add(inSync);
 				actions.add(overwriteDestination);
-			}
-			break;
+				//}
+				break;
 			default:
 				actions.add(new Action(NotDecidableError, None, BufferUpdate.None, "no rule found"));
 				break;

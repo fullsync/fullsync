@@ -148,7 +148,6 @@ public class SystemStatusPage extends WizardDialog {
 		return true;
 	}
 
-
 	public void updateView() {
 		if (!content.isDisposed()) {
 			Display display = getDisplay();
@@ -160,6 +159,7 @@ public class SystemStatusPage extends WizardDialog {
 			display.syncExec(new Runnable() {
 				private final String[] units = { "B", "KiB", "MiB", "GiB", "TiB" };
 				private final long kilo = 1024;
+
 				private void setFormattedText(final Label l, final long origValue) {
 					long unit = 0, value = origValue;
 					while (value > kilo) {
@@ -168,6 +168,7 @@ public class SystemStatusPage extends WizardDialog {
 					}
 					l.setText(String.valueOf(value) + " " + units[(int) unit]);
 				}
+
 				@Override
 				public void run() {
 					Runtime rt = Runtime.getRuntime();

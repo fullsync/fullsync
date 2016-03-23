@@ -36,13 +36,15 @@ public class FTPFileSystem implements FileSystem {
 
 	@Override
 	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws FileSystemException {
-		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME), description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
+		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME),
+				description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
 		FtpFileSystemConfigBuilder.getInstance().setPassiveMode(options, true);
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 	}
 
 	@Override
-	public final Site createConnection(final ConnectionDescription description) throws net.sourceforge.fullsync.FileSystemException, IOException {
+	public final Site createConnection(final ConnectionDescription description)
+			throws net.sourceforge.fullsync.FileSystemException, IOException {
 		return new CommonsVfsConnection(description, this);
 	}
 

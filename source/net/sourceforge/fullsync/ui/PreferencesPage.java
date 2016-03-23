@@ -232,10 +232,9 @@ public class PreferencesPage extends WizardDialog {
 		new Label(groupInterface, SWT.NONE);
 		Label labelNeedsRestart = new Label(groupInterface, SWT.NONE);
 		labelNeedsRestart.setText(Messages.getString("PreferencesComposite.NeedsRestart")); //$NON-NLS-1$
-		GridData labelNeedsRestartLData =  new GridData();
+		GridData labelNeedsRestartLData = new GridData();
 		labelNeedsRestartLData.horizontalAlignment = SWT.FILL;
 		labelNeedsRestart.setLayoutData(labelNeedsRestartLData);
-
 
 		groupRemoteConnection = new Group(content, SWT.NONE);
 		GridLayout groupRemoteConnectionLayout = new GridLayout();

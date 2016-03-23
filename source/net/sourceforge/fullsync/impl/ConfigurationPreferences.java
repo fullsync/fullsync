@@ -238,9 +238,9 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public Rectangle getWindowBounds() {
-		int x  = config.getInt("Interface.WindowState.x", 0);
+		int x = config.getInt("Interface.WindowState.x", 0);
 		int y = config.getInt("Interface.WindowState.y", 0);
-		int width  = config.getInt("Interface.WindowState.width", 0);
+		int width = config.getInt("Interface.WindowState.width", 0);
 		int height = config.getInt("Interface.WindowState.height", 0);
 		return new Rectangle(x, y, width, height);
 	}

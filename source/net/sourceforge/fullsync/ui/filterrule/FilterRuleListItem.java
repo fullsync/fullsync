@@ -119,8 +119,8 @@ public class FilterRuleListItem {
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FilePathFilter"), FilePathFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileTypeFilter"), FileTypeFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FilSizeFilter"), FileSizeFileFilterRule.typeName); //$NON-NLS-1$
-		reverseRuleNamesConversionTable.put(
-				Messages.getString("FilterRuleListItem.FileModificationDateFilter"), FileModificationDateFileFilterRule.typeName); //$NON-NLS-1$
+		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileModificationDateFilter"), //$NON-NLS-1$
+				FileModificationDateFileFilterRule.typeName);
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileAgeFilter"), FileAgeFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.NestedFilter"), SubfilterFileFilerRule.typeName); //$NON-NLS-1$
 		initDone = true;

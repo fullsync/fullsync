@@ -56,8 +56,6 @@ public class CrontabSchedule extends Schedule {
 		return element;
 	}
 
-
-
 	public CrontabSchedule() throws DataParseException {
 		read("* * * * *");
 	}

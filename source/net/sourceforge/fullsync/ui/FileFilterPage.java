@@ -56,7 +56,6 @@ public class FileFilterPage extends WizardDialog {
 
 	private Vector<FilterRuleListItem> ruleItems = new Vector<FilterRuleListItem>();
 
-
 	public FileFilterPage(Shell parent, FileFilter filter) {
 		super(parent);
 		fileFilter = filter;

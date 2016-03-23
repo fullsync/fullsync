@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.fs.connection;
 
-
 public interface BufferedConnection extends FileSystemConnection {
 	boolean isMonitoringFileSystem();
 }

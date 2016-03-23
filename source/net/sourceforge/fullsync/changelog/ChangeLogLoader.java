@@ -46,7 +46,8 @@ public class ChangeLogLoader {
 		parserFactory.setExpandEntityReferences(false);
 	}
 
-	public List<ChangeLogEntry> load(File srcDir, String pattern) throws ParserConfigurationException, SAXException, IOException, ParseException {
+	public List<ChangeLogEntry> load(File srcDir, String pattern)
+			throws ParserConfigurationException, SAXException, IOException, ParseException {
 		Pattern p = Pattern.compile(pattern);
 		List<ChangeLogEntry> changelogEntries = new LinkedList<ChangeLogEntry>();
 		String[] children = srcDir.list();
@@ -65,7 +66,7 @@ public class ChangeLogLoader {
 	public static List<ChangeLogEntry> filterAfter(List<ChangeLogEntry> changelogEntries, String version) {
 		List<ChangeLogEntry> newerVersions = new LinkedList<ChangeLogEntry>();
 		VersionComparator vc = new VersionComparator();
-		for(ChangeLogEntry entry : changelogEntries) {
+		for (ChangeLogEntry entry : changelogEntries) {
 			if (1 != vc.compare(entry.getVersion(), version)) {
 				break;
 			}

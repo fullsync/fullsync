@@ -155,7 +155,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 			super.setBackground(color);
 			for (Control c : this.getChildren()) {
 				if (c instanceof Composite) {
-					for (Control child : ((Composite)c).getChildren()) {
+					for (Control child : ((Composite) c).getChildren()) {
 						child.setBackground(color);
 					}
 				}
@@ -168,7 +168,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 			super.setForeground(color);
 			for (Control c : this.getChildren()) {
 				if (c instanceof Composite) {
-					for (Control child : ((Composite)c).getChildren()) {
+					for (Control child : ((Composite) c).getChildren()) {
 						child.setForeground(color);
 					}
 				}

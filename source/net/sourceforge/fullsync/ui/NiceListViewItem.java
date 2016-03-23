@@ -98,7 +98,6 @@ public class NiceListViewItem extends Canvas implements Listener {
 		labelCaption.addListener(SWT.MouseDown, this);
 		labelCaption.addListener(SWT.MouseDoubleClick, this);
 
-
 		labelStatus = new Label(this, SWT.TRANSPARENT);
 		GridData labelStatusLData = new GridData();
 		labelStatusLData.grabExcessHorizontalSpace = true;

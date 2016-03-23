@@ -42,7 +42,6 @@ public class ConnectionDescription implements Serializable {
 	private Hashtable<String, String> parameters = new Hashtable<String, String>();
 	private Hashtable<String, String> secretParameters = new Hashtable<String, String>();
 
-
 	public Element serialize(String name, Document doc) {
 		Element elem = doc.createElement(name);
 		elem.setAttribute("uri", uri.toString());

@@ -58,9 +58,9 @@ class SizeValueRuleComposite extends RuleComposite {
 
 		Listener numbersOnlyKeyboardListener = e -> {
 			// FIXME: the dot should be language specific, find a better way to achieve the same
-			if (((e.character < '0') || (e.character > '9')) && (e.character != '.') && (e.keyCode != SWT.DEL)
-					&& (e.keyCode != SWT.BS) && (e.keyCode != SWT.ARROW_LEFT) && (e.keyCode != SWT.ARROW_UP)
-					&& (e.keyCode != SWT.ARROW_DOWN) && (e.keyCode != SWT.ARROW_RIGHT)) {
+			if (((e.character < '0') || (e.character > '9')) && (e.character != '.') && (e.keyCode != SWT.DEL) && (e.keyCode != SWT.BS)
+					&& (e.keyCode != SWT.ARROW_LEFT) && (e.keyCode != SWT.ARROW_UP) && (e.keyCode != SWT.ARROW_DOWN)
+					&& (e.keyCode != SWT.ARROW_RIGHT)) {
 				e.doit = false;
 			}
 		};

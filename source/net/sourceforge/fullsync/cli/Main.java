@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.channels.FileChannel;
+import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.util.Date;
 
@@ -47,7 +48,7 @@ import org.apache.commons.cli.PosixParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Main{ // NO_UCD
+public class Main { // NO_UCD
 	private static Options options;
 
 	private static void initOptions() {
@@ -101,10 +102,15 @@ public class Main{ // NO_UCD
 			configDir = System.getProperty("user.home") + File.separator + ".config";
 		}
 		configDir = configDir + File.separator + "fullsync" + File.separator;
-		if (!new File(configDir).exists()) {
-			new File(configDir).mkdirs();
+		File dir = new File(configDir);
+		if (!dir.exists()) {
+			dir.mkdirs();
 		}
 		return configDir;
+	}
+
+	public static String getLogFileName() {
+		return Paths.get(getConfigDir(), "fullsync.log").toFile().getAbsolutePath();
 	}
 
 	private static void backupFile(final File old, final File current, final String backupName) throws IOException {
@@ -148,7 +154,7 @@ public class Main{ // NO_UCD
 
 			// Apply modifying options
 			if (!line.hasOption("v")) {
-				System.setErr(new PrintStream(new FileOutputStream(configDir + "fullsync.log")));
+				System.setErr(new PrintStream(new FileOutputStream(getLogFileName())));
 			}
 
 			if (line.hasOption("h")) {
@@ -165,8 +171,7 @@ public class Main{ // NO_UCD
 				if (!newPreferences.exists() && oldPreferences.exists()) {
 					backupFile(oldPreferences, newPreferences, "preferences_old.properties");
 				}
-			}
-			while (false); // variable scope
+			} while (false); // variable scope
 			final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
 
 			String profilesFile = "profiles.xml";
@@ -267,7 +272,8 @@ public class Main{ // NO_UCD
 					GuiController guiController = new GuiController(preferences, profileManager, sync);
 					guiController.startGui(line.hasOption('m'));
 
-					if (!line.hasOption('P') && !preferences.getHelpShown() && (null == System.getProperty("net.sourceforge.fullsync.skipHelp"))) {
+					if (!line.hasOption('P') && !preferences.getHelpShown()
+							&& (null == System.getProperty("net.sourceforge.fullsync.skipHelp"))) {
 						preferences.setHelpShown(true);
 						preferences.save();
 						File f = new File("docs/manual/manual.html");

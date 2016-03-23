@@ -61,7 +61,8 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 			}
 			File sshDir = new File(sshDirPath);
 			if (!sshDir.exists() && !sshDir.mkdirs()) {
-				logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... (tried: " + sshDir.getAbsolutePath().toString() + ")");
+				logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... (tried: "
+						+ sshDir.getAbsolutePath().toString() + ")");
 				sshDir = null;
 			}
 			else {
@@ -74,8 +75,10 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 	}
 
 	@Override
-	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws org.apache.commons.vfs2.FileSystemException {
-		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME), description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
+	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options)
+			throws org.apache.commons.vfs2.FileSystemException {
+		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME),
+				description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 		SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
 		//TODO: add cfg.setUserDirIsRoot(opts, false); and handle profile updates
@@ -149,7 +152,8 @@ public class SFTPFileSystem implements FileSystem, UIKeyboardInteractive, UserIn
 	}
 
 	@Override
-	public final String[] promptKeyboardInteractive(final String destination, final String name, final String instruction, final String[] prompt, final boolean[] echo) {
+	public final String[] promptKeyboardInteractive(final String destination, final String name, final String instruction,
+			final String[] prompt, final boolean[] echo) {
 		logger.warn("Suppressed promptKeyboardInteractive:");
 		logger.warn("Destination: " + destination);
 		logger.warn("Name: " + name);

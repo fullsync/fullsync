@@ -271,12 +271,14 @@ public class GuiController implements Runnable {
 		}
 
 	}
+
 	public Font getFont(String name, int height, int style) {
 		return fontRepository.getFont(name, height, style);
 	}
 
 	private void createWelcomeScreen() {
-		if ((null != System.getProperty("net.sourceforge.fullsync.skipWelcomeScreen", null)) || (true == preferences.getSkipWelcomeScreen())) {
+		if ((null != System.getProperty("net.sourceforge.fullsync.skipWelcomeScreen", null))
+				|| (true == preferences.getSkipWelcomeScreen())) {
 			return;
 		}
 		if (preferences.getLastVersion().equals(Util.getFullSyncVersion())) {
@@ -303,10 +305,12 @@ class ExecuteBackgroundJob implements Runnable {
 	private final Display display;
 	private boolean executed;
 	private boolean succeeded;
+
 	public ExecuteBackgroundJob(AsyncUIUpdate _job, Display _display) {
 		job = _job;
 		display = _display;
 	}
+
 	@Override
 	public void run() {
 		if (!executed) {
@@ -314,7 +318,7 @@ class ExecuteBackgroundJob implements Runnable {
 				job.execute();
 				succeeded = true;
 			}
-			catch(Throwable t) {
+			catch (Throwable t) {
 				t.printStackTrace();
 			}
 			executed = true;

@@ -70,7 +70,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 
 	public WelcomeScreen welcomeScreen;
 
-	MainWindow(Composite parent, int style, GuiController initGuiController){
+	MainWindow(Composite parent, int style, GuiController initGuiController) {
 		super(parent, style);
 		this.guiController = initGuiController;
 		Shell shell = getShell();
@@ -131,7 +131,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 	 * Initializes the GUI.
 	 * @throws IOException
 	 */
-	private void initGUI(Shell shell){
+	private void initGUI(Shell shell) {
 		try {
 			this.setSize(600, 300);
 
@@ -217,6 +217,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 			ExceptionHandler.reportException(e);
 		}
 	}
+
 	private void createMenu(final Shell shell) {
 		// Menu Bar
 		MenuItem menuItemFile = new MenuItem(menuBarMainWindow, SWT.CASCADE);
@@ -271,7 +272,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		MenuItem logItem = new MenuItem(menuEdit, SWT.PUSH);
 		logItem.setText(Messages.getString("MainWindow.Show_Log_Menu")); //$NON-NLS-1$
 		logItem.setAccelerator(SWT.CTRL | (SWT.SHIFT + 'L'));
-		logItem.addListener(SWT.Selection, e -> GuiController.launchProgram(new java.io.File(Main.getConfigDir() + "fullsync.log").getAbsolutePath()));
+		logItem.addListener(SWT.Selection, e -> GuiController.launchProgram(Main.getLogFileName()));
 
 		MenuItem preferencesItem = new MenuItem(menuEdit, SWT.PUSH);
 		preferencesItem.setText(Messages.getString("MainWindow.Preferences_Menu")); //$NON-NLS-1$

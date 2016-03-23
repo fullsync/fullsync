@@ -179,6 +179,7 @@ class CrontabScheduleOptions extends ScheduleOptions {
 
 	@Override
 	public Schedule getSchedule() throws DataParseException {
-		return new CrontabSchedule(parts[0].getInstance(), parts[1].getInstance(), parts[2].getInstance(), parts[3].getInstance(), parts[4].getInstance());
+		return new CrontabSchedule(parts[0].getInstance(), parts[1].getInstance(), parts[2].getInstance(), parts[3].getInstance(),
+				parts[4].getInstance());
 	}
 }

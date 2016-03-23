@@ -55,8 +55,7 @@ public class Profile implements Serializable, Comparable<Profile> {
 	private transient ArrayList<ProfileChangeListener> listeners;
 
 	static Profile unserialize(Element element) {
-		Profile p = new Profile(
-				element.getAttribute("name"),
+		Profile p = new Profile(element.getAttribute("name"),
 				ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)),
 				ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)),
 				RuleSetDescriptor.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)));

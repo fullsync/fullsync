@@ -30,20 +30,23 @@ public class FontRepository {
 		private int height;
 		private int style;
 		private int hash;
+
 		Key(String _name, int _height, int _style) {
 			name = _name;
 			height = _height;
 			style = _style;
 			hash = (name + "#" + height + "#" + style).hashCode();
 		}
+
 		@Override
 		public int hashCode() {
 			return hash;
 		}
+
 		@Override
 		public boolean equals(Object obj) {
 			if (obj instanceof Key) {
-				Key k = (Key)obj;
+				Key k = (Key) obj;
 				return (height == k.height) && (style == k.style) && (0 == name.compareTo(k.name));
 			}
 			return false;

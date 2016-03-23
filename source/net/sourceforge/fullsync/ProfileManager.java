@@ -197,7 +197,8 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		return remoteConnected;
 	}
 
-	public boolean loadProfiles(String profilesFileName) throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
+	public boolean loadProfiles(String profilesFileName)
+			throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
 		File file = new File(profilesFileName);
 		if (file.exists()) {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -415,7 +416,8 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 					try {
 						osw.close();
 						new File(configFile + ".tmp").delete();
-					} catch (IOException e1) {
+					}
+					catch (IOException e1) {
 						e1.printStackTrace();
 					}
 				}

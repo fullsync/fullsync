@@ -112,7 +112,6 @@ public class ScheduleSelectionDialog extends Dialog {
 				}
 			});
 
-
 			// scheduling options
 			groupOptions = new Group(dialogShell, SWT.FILL);
 			StackLayout groupOptionsLayout = new StackLayout();

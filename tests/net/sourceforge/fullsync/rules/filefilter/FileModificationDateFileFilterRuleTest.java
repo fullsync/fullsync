@@ -37,10 +37,11 @@ public class FileModificationDateFileFilterRuleTest {
 	public void testOpIs() throws ParseException, FilterRuleNotAppliableException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(new DateValue(
-				dateFormat.parse("01/06/2005 06:00:00").getTime()), FileModificationDateFileFilterRule.OP_IS);
+		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(
+				new DateValue(dateFormat.parse("01/06/2005 06:00:00").getTime()), FileModificationDateFileFilterRule.OP_IS);
 
-		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000, dateFormat.parse("01/06/2005 10:00:00").getTime());
+		TestNode file = new TestNode("foobar.txt", "/root/foobar.txt", true, false, 1000,
+				dateFormat.parse("01/06/2005 10:00:00").getTime());
 
 		assertTrue(filterRule.match(file));
 		file.setLastModified(dateFormat.parse("02/06/2005 10:00:00").getTime());
