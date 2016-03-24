@@ -200,7 +200,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	public boolean loadProfiles(String profilesFileName)
 			throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
 		File file = new File(profilesFileName);
-		if (file.exists()) {
+		if (file.exists() && (file.length() > 0)) {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = builder.parse(file);
 
