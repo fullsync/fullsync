@@ -36,8 +36,6 @@ import org.eclipse.swt.widgets.TrayItem;
 import com.adamtaft.eb.EventHandler;
 
 public class SystemTrayItem {
-	private GuiController guiController;
-	private Tray tray;
 	private TrayItem trayItem;
 	private Menu menu;
 	private Image[] imageList;

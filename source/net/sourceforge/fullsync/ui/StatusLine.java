@@ -19,13 +19,10 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.util.LinkedList;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
 class StatusLine extends Composite {
@@ -43,15 +40,12 @@ class StatusLine extends Composite {
 		GridData labelMessageLData = new GridData(SWT.FILL, SWT.END, true, false);
 		labelMessage.setLayoutData(labelMessageLData);
 		this.layout();
-		updateQueue = new GUIUpdateQueue<String>(parent.getDisplay(), new GUIUpdateQueue.GUIUpdateTask<String>() {
-			@Override
-			public void doUpdate(Display display, LinkedList<String> items) {
-				String message = items.getLast();
-				if (null == message) {
-					message = ""; //$NON-NLS-1$
-				}
-				labelMessage.setText(message);
+		updateQueue = new GUIUpdateQueue<String>(parent.getDisplay(), (display, items) -> {
+			String message = items.getLast();
+			if (null == message) {
+				message = ""; //$NON-NLS-1$
 			}
+			labelMessage.setText(message);
 		});
 	}
 

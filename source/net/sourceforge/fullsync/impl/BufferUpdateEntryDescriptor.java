@@ -65,10 +65,10 @@ public class BufferUpdateEntryDescriptor implements EntryDescriptor {
 
 	@Override
 	public void finishWrite() throws IOException {
-		if (bufferUpdate == BufferUpdate.Source || bufferUpdate == BufferUpdate.Both) {
+		if ((bufferUpdate == BufferUpdate.Source) || (bufferUpdate == BufferUpdate.Both)) {
 			src.refreshBuffer();
 		}
-		if (bufferUpdate == BufferUpdate.Destination || bufferUpdate == BufferUpdate.Both) {
+		if ((bufferUpdate == BufferUpdate.Destination) || (bufferUpdate == BufferUpdate.Both)) {
 			dst.refreshBuffer();
 		}
 	}

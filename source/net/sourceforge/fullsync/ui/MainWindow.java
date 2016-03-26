@@ -444,12 +444,7 @@ class MainWindow extends Composite implements ProfileListControlHandler {
 
 	@EventHandler
 	public void taskTreeFinished(final TaskTree tree) { // NO_UCD
-		getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				statusLine.setMessage(Messages.getString("MainWindow.Sync_Finished")); //$NON-NLS-1$
-			}
-		});
+		getDisplay().asyncExec(() -> statusLine.setMessage(Messages.getString("MainWindow.Sync_Finished")));
 	}
 
 	@Override

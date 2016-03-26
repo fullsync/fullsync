@@ -60,31 +60,28 @@ public class FullSync {
 	private FullSync(ConfigurationPreferences _preferences) {
 		final FullSync singleton = this;
 		preferences = _preferences;
-		Thread fullsyncInitializer = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					eventBus = EventBusService.getInstance();
-					fileSystemManager = new FileSystemManager();
-					executorService = Executors.newCachedThreadPool(new ThreadFactory() {
-						private final ThreadFactory delegate = Executors.defaultThreadFactory();
+		Thread fullsyncInitializer = new Thread(() -> {
+			try {
+				eventBus = EventBusService.getInstance();
+				fileSystemManager = new FileSystemManager();
+				executorService = Executors.newCachedThreadPool(new ThreadFactory() {
+					private final ThreadFactory delegate = Executors.defaultThreadFactory();
 
-						@Override
-						public Thread newThread(Runnable r) {
-							Thread t = delegate.newThread(r);
-							t.setDaemon(true);
-							return t;
-						}
-					});
-				}
-				finally {
-					synchronized (FullSync.class) {
-						instance = singleton;
-						FullSync.class.notifyAll();
+					@Override
+					public Thread newThread(Runnable r) {
+						Thread t = delegate.newThread(r);
+						t.setDaemon(true);
+						return t;
 					}
-					tracer = new FullSyncEventTracer();
-					FullSync.subscribe(tracer);
+				});
+			}
+			finally {
+				synchronized (FullSync.class) {
+					instance = singleton;
+					FullSync.class.notifyAll();
 				}
+				tracer = new FullSyncEventTracer();
+				FullSync.subscribe(tracer);
 			}
 		});
 		fullsyncInitializer.setDaemon(true);
