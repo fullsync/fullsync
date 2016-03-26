@@ -44,7 +44,8 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	private FileObject base; //FIXME FileObject is not serializable?!
 	private File root;
 
-	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystemAuthProvider fsAuthProvider) throws net.sourceforge.fullsync.FileSystemException {
+	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystemAuthProvider fsAuthProvider)
+			throws net.sourceforge.fullsync.FileSystemException {
 		try {
 			this.desc = desc;
 			FileSystemOptions options = new FileSystemOptions();

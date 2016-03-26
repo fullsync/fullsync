@@ -70,8 +70,10 @@ public class TaskDecisionPage extends WizardDialog {
 
 	@Override
 	public String getDescription() {
-		return Messages.getString("TaskDecisionPage.Source") + ": " + taskTree.getSource().getConnectionDescription().getDisplayPath() + "\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				+ Messages.getString("TaskDecisionPage.Destination") + ": " + taskTree.getDestination().getConnectionDescription().getDisplayPath(); //$NON-NLS-1$ //$NON-NLS-2$
+		return Messages.getString("TaskDecisionPage.Source") + ": " + taskTree.getSource().getConnectionDescription().getDisplayPath() //$NON-NLS-1$//$NON-NLS-2$
+				+ "\n" //$NON-NLS-1$
+				+ Messages.getString("TaskDecisionPage.Destination") + ": " //$NON-NLS-1$//$NON-NLS-2$
+				+ taskTree.getDestination().getConnectionDescription().getDisplayPath();
 	}
 
 	@Override
@@ -178,9 +180,8 @@ public class TaskDecisionPage extends WizardDialog {
 					for (TaskFinishedEvent event : items) {
 						tasksFinished++;
 						// TODO: move this into one translatable string with arguments
-						labelProgress
-							.setText(tasksFinished
-									+ " " + Messages.getString("TaskDecisionPage.of") + " " + tasksTotal + " " + Messages.getString("TaskDecisionPage.tasksFinished")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+						labelProgress.setText(tasksFinished + " " + Messages.getString("TaskDecisionPage.of") + " " + tasksTotal + " " //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+								+ Messages.getString("TaskDecisionPage.tasksFinished")); //$NON-NLS-1$
 						Task task = event.getTask();
 						item = list.getTableItemForTask(task);
 						// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item

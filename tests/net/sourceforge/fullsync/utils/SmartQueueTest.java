@@ -10,6 +10,7 @@ import org.junit.Test;
 public class SmartQueueTest {
 	private class ConsumerThread extends Thread {
 		private int receivedObjects;
+
 		@Override
 		public void run() {
 			receivedObjects = 0;
@@ -21,10 +22,12 @@ public class SmartQueueTest {
 				}
 			} while (o != null);
 		}
+
 		public int getReceivedObjects() {
 			return receivedObjects;
 		}
 	}
+
 	private SmartQueue<Object> queue;
 	private ConsumerThread consumer1;
 	private ConsumerThread consumer2;
@@ -96,13 +99,13 @@ public class SmartQueueTest {
 		Assert.assertFalse(consumer2.isAlive());
 	}
 
-	@Test(expected=IllegalStateException.class)
+	@Test(expected = IllegalStateException.class)
 	public void testShutdownThrows() {
 		queue.shutdown();
 		queue.shutdown();
 	}
 
-	@Test(expected=IllegalStateException.class)
+	@Test(expected = IllegalStateException.class)
 	public void testOfferAfterShutdownThrows() {
 		queue.shutdown();
 		queue.offer(this);
@@ -148,7 +151,7 @@ public class SmartQueueTest {
 		Assert.assertEquals(numObjects, consumer1.getReceivedObjects());
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testOfferNullThrows() {
 		queue.offer(null);
 	}

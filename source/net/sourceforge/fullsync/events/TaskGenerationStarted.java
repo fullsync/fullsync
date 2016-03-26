@@ -24,6 +24,7 @@ import net.sourceforge.fullsync.fs.File;
 public class TaskGenerationStarted {
 	public final File src;
 	public final File dst;
+
 	public TaskGenerationStarted(final File _src, final File _dst) {
 		src = _src;
 		dst = _dst;

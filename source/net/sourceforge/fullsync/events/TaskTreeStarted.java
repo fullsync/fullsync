@@ -23,6 +23,7 @@ import net.sourceforge.fullsync.TaskTree;
 
 public class TaskTreeStarted {
 	public final TaskTree tree;
+
 	public TaskTreeStarted(final TaskTree _tree) {
 		tree = _tree;
 	}

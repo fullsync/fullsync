@@ -68,6 +68,7 @@ public class FullSync {
 					fileSystemManager = new FileSystemManager();
 					executorService = Executors.newCachedThreadPool(new ThreadFactory() {
 						private final ThreadFactory delegate = Executors.defaultThreadFactory();
+
 						@Override
 						public Thread newThread(Runnable r) {
 							Thread t = delegate.newThread(r);
@@ -125,9 +126,11 @@ public class FullSync {
 
 class FullSyncEventTracer {
 	private Logger logger;
+
 	public FullSyncEventTracer() {
 		logger = LoggerFactory.getLogger("FullSync");
 	}
+
 	@EventHandler
 	public void onEvent(final Object obj) {
 		logger.debug("Event: {} {}", obj.getClass(), obj);

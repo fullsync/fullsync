@@ -58,7 +58,8 @@ public class TaskGeneratorImpl implements TaskGenerator {
 	}
 
 	@Override
-	public TaskTree execute(Profile profile, boolean interactive) throws FileSystemException, URISyntaxException, DataParseException, IOException {
+	public TaskTree execute(Profile profile, boolean interactive)
+			throws FileSystemException, URISyntaxException, DataParseException, IOException {
 		Site src = null, dst = null;
 
 		RuleSet rules = profile.getRuleSet().createRuleSet();
@@ -105,7 +106,8 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		}
 	}
 
-	private TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules) throws DataParseException, FileSystemException, IOException {
+	private TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules)
+			throws DataParseException, FileSystemException, IOException {
 		if (!source.isAvailable()) {
 			throw new FileSystemException("source is unavailable");
 		}
@@ -114,8 +116,8 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		}
 
 		TaskTree tree = new TaskTree(source, destination);
-		Task root = new Task(null, null, State.InSync, new Action[] { new Action(ActionType.Nothing,
-				Location.None, BufferUpdate.None, "Root") });
+		Task root = new Task(null, null, State.InSync,
+				new Action[] { new Action(ActionType.Nothing, Location.None, BufferUpdate.None, "Root") });
 		tree.setRoot(root);
 
 		FullSync.publish(new TaskTreeStarted(tree));
@@ -128,7 +130,8 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		return tree;
 	}
 
-	private void recurse(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException {
+	private void recurse(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
+			throws DataParseException, IOException {
 		if (src.isDirectory() && dst.isDirectory()) {
 			synchronizeDirectories(src, dst, rules, parent, actionDecider);
 		}
@@ -138,7 +141,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 
 	private void synchronizeNodes(File src, File dst, SyncDeciders deciders, Task parent) throws DataParseException, IOException {
 		if (!deciders.takeIgnoreDecider.isNodeIgnored(src)) {
-			FullSync.publish(new TaskGenerationStarted(src,  dst));
+			FullSync.publish(new TaskGenerationStarted(src, dst));
 
 			Task task = deciders.actionDecider.getTask(src, dst, deciders.stateDecider, deciders.bufferStateDecider);
 			logger.debug(src.getName() + ": " + task);
@@ -156,7 +159,8 @@ public class TaskGeneratorImpl implements TaskGenerator {
 	 * we could updateRules in synchronizeNodes and apply synchronizeDirectories
 	 * to the given src and dst if they are directories
 	 */
-	private void synchronizeDirectories(File src, File dst, RuleSet oldrules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException {
+	private void synchronizeDirectories(File src, File dst, RuleSet oldrules, Task parent, ActionDecider actionDecider)
+			throws DataParseException, IOException {
 		SyncDeciders deciders = new SyncDeciders(actionDecider, oldrules.createChild(src, dst));
 		Collection<File> srcFiles = src.getChildren();
 		Collection<File> dstFiles = new ArrayList<File>(dst.getChildren());
@@ -190,6 +194,7 @@ class SyncDeciders {
 	public StateDecider stateDecider;
 	public BufferStateDecider bufferStateDecider;
 	public ActionDecider actionDecider;
+
 	public SyncDeciders(ActionDecider _actionDecider, RuleSet _rules) {
 		rules = _rules;
 		takeIgnoreDecider = _rules;

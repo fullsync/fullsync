@@ -179,9 +179,8 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 						fileFilter.setMatchType(FileFilter.MATCH_ALL);
 						fileFilter.setFilterType(FileFilter.EXCLUDE);
 						FileFilterRule[] rules = new FileFilterRule[] {
-							new FileNameFileFilterRule(new TextValue(ignorePattern), FileNameFileFilterRule.OP_MATCHES_REGEXP),
-							new FileNameFileFilterRule(new TextValue(takePattern), FileNameFileFilterRule.OP_DOESNT_MATCHES_REGEXP),
-						};
+								new FileNameFileFilterRule(new TextValue(ignorePattern), FileNameFileFilterRule.OP_MATCHES_REGEXP),
+								new FileNameFileFilterRule(new TextValue(takePattern), FileNameFileFilterRule.OP_DOESNT_MATCHES_REGEXP), };
 						fileFilter.setFileFilterRules(rules);
 						useFilter = true;
 					}

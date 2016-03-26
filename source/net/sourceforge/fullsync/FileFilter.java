@@ -21,7 +21,6 @@ package net.sourceforge.fullsync;
 
 import net.sourceforge.fullsync.fs.File;
 
-
 public interface FileFilter extends Comparable<FileFilter> {
 	enum FilterState {
 		UNDECIDED,

@@ -44,10 +44,13 @@ public class BackupActionDecider implements ActionDecider {
 	// TODO param keep orphans/exact copy
 
 	private static final Action addDestination = new Action(ActionType.Add, Destination, BufferUpdate.Destination, "Add");
-	private static final Action overwriteDestination = new Action(ActionType.Update, Destination, BufferUpdate.Destination, "overwrite destination");
+	private static final Action overwriteDestination = new Action(ActionType.Update, Destination, BufferUpdate.Destination,
+			"overwrite destination");
 	private static final Action updateDestination = new Action(ActionType.Update, Destination, BufferUpdate.Destination, "Source changed");
-	private static final Action deleteDestinationOrphan = new Action(ActionType.Delete, Destination, BufferUpdate.Destination, "Delete orphan in destination", false);
-	private static final Action ignoreDestinationOrphan = new Action(ActionType.Nothing, None, BufferUpdate.None, "Ignoring orphan in destination");
+	private static final Action deleteDestinationOrphan = new Action(ActionType.Delete, Destination, BufferUpdate.Destination,
+			"Delete orphan in destination", false);
+	private static final Action ignoreDestinationOrphan = new Action(ActionType.Nothing, None, BufferUpdate.None,
+			"Ignoring orphan in destination");
 	private static final Action inSync = new Action(ActionType.Nothing, None, BufferUpdate.None, "In Sync");
 	private static final Action ignore = new Action(ActionType.Nothing, None, BufferUpdate.None, "Ignore");
 
@@ -89,10 +92,12 @@ public class BackupActionDecider implements ActionDecider {
 				}
 				else {
 					if (state.equals(State.DirSourceFileDestination)) {
-						actions.add(new Action(ActionType.DirHereFileThereError, Source, BufferUpdate.None, "cant update, dir here file there error occured"));
+						actions.add(new Action(ActionType.DirHereFileThereError, Source, BufferUpdate.None,
+								"cant update, dir here file there error occured"));
 					}
 					else {
-						actions.add(new Action(ActionType.DirHereFileThereError, Destination, BufferUpdate.None, "cant update, dir here file there error occured"));
+						actions.add(new Action(ActionType.DirHereFileThereError, Destination, BufferUpdate.None,
+								"cant update, dir here file there error occured"));
 					}
 				}
 				break;

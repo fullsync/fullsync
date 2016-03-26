@@ -43,7 +43,7 @@ class StatusLine extends Composite {
 		GridData labelMessageLData = new GridData(SWT.FILL, SWT.END, true, false);
 		labelMessage.setLayoutData(labelMessageLData);
 		this.layout();
-		updateQueue = new GUIUpdateQueue<String>(parent.getDisplay(), new GUIUpdateQueue.GUIUpdateTask<String>(){
+		updateQueue = new GUIUpdateQueue<String>(parent.getDisplay(), new GUIUpdateQueue.GUIUpdateTask<String>() {
 			@Override
 			public void doUpdate(Display display, LinkedList<String> items) {
 				String message = items.getLast();

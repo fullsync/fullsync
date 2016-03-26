@@ -37,7 +37,9 @@ public class SyncActionGenerator {
 	private final SyncActionGeneratorTask destinationTask;
 	private final StateDecider stateDecider;
 	private final ActionDecider actionDecider;
-	SyncActionGenerator(TaskletWorkNotificationTarget _workNotificationTarget, SmartQueue<File> _sourceQueue, SmartQueue<File> _destinationQueue, StateDecider _stateDecider, ActionDecider _actionDecider) {
+
+	SyncActionGenerator(TaskletWorkNotificationTarget _workNotificationTarget, SmartQueue<File> _sourceQueue,
+			SmartQueue<File> _destinationQueue, StateDecider _stateDecider, ActionDecider _actionDecider) {
 		outputQueue = new SmartQueue<Task>();
 		sourceTask = new SyncActionGeneratorTask(_workNotificationTarget, this, Location.Source, _sourceQueue);
 		destinationTask = new SyncActionGeneratorTask(_workNotificationTarget, this, Location.Destination, _destinationQueue);
@@ -154,7 +156,9 @@ class SyncActionGeneratorTask extends SyncTasklet<File, Task> {
 	private final HashMap<String, WorkingSet> workingSetMap;
 	private SyncActionGeneratorTask other;
 	private volatile boolean running;
-	public SyncActionGeneratorTask(TaskletWorkNotificationTarget _workNotificationTarget, SyncActionGenerator _generator, Location _location, SmartQueue<File> _inputQueue) {
+
+	public SyncActionGeneratorTask(TaskletWorkNotificationTarget _workNotificationTarget, SyncActionGenerator _generator,
+			Location _location, SmartQueue<File> _inputQueue) {
 		super(_workNotificationTarget, _inputQueue);
 		generator = _generator;
 		location = _location;

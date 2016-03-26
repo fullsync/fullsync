@@ -97,8 +97,6 @@ public class TransferTaskExecutor extends SyncTasklet<Task, TransferTaskResult> 
 		}
 	}
 
-
-
 	@Override
 	protected void processingFailed(Task item, Throwable t) {
 		TransferTaskResult result = new TransferTaskResult(item);

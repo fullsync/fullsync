@@ -25,11 +25,14 @@ import java.util.concurrent.TimeUnit;
 
 public class DebouncedHysteresisEmitter {
 	private static int DELAY_END = -1;
+
 	class EmitterThread extends Thread {
 		private final DebouncedHysteresisEmitter target;
+
 		EmitterThread(DebouncedHysteresisEmitter _target) {
 			target = _target;
 		}
+
 		@Override
 		public void run() {
 			long delay = Integer.MAX_VALUE;
@@ -61,6 +64,7 @@ public class DebouncedHysteresisEmitter {
 		}
 
 	}
+
 	private final HysteresisReceiver receiver;
 	private final Integer upDelay;
 	private final Integer downDelay;

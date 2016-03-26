@@ -31,7 +31,6 @@ public interface FileSystemAuthProvider {
 	 * @param options the commons.vfs2 options object to configure
 	 * @throws FileSystemException
 	 */
-	void authSetup(ConnectionDescription description, FileSystemOptions options)
-			throws org.apache.commons.vfs2.FileSystemException;
+	void authSetup(ConnectionDescription description, FileSystemOptions options) throws org.apache.commons.vfs2.FileSystemException;
 
 }

@@ -248,8 +248,8 @@ public class FilesystemTest {
 		Object ex = m_expectation.get(task.getSource().getName());
 
 		assertNotNull("Unexpected generated Task for file: " + task.getSource().getName(), ex);
-		assertTrue("Action was " + task.getCurrentAction() + ", expected: " + ex + " for File " + task.getSource().getName(), task
-				.getCurrentAction().equalsExceptExplanation((Action) ex));
+		assertTrue("Action was " + task.getCurrentAction() + ", expected: " + ex + " for File " + task.getSource().getName(),
+				task.getCurrentAction().equalsExceptExplanation((Action) ex));
 	}
 
 	protected TaskTree assertPhaseOneActions(final Map<String, Action> expectation) throws Exception {

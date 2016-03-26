@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync;
 
-
 public enum State {
 	InSync,
 	OrphanSource,

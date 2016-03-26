@@ -121,7 +121,8 @@ public class ProfileSyncTask implements BackgroundTask, HysteresisReceiver, Task
 		else {
 			throw new IllegalArgumentException("Profile has unknown synchronization type.");
 		}
-		SyncActionGenerator actionGenerator = new SyncActionGenerator(this, srcDebugPrinter.getOutput(), dstDebugPrinter.getOutput(), stateDecider, actionDecider);
+		SyncActionGenerator actionGenerator = new SyncActionGenerator(this, srcDebugPrinter.getOutput(), dstDebugPrinter.getOutput(),
+				stateDecider, actionDecider);
 		subTasks.add(actionGenerator.getSourceTask());
 		subTasks.add(actionGenerator.getDestinationTask());
 		DebugPrintQueue<Task> taskDebugPrinter = new DebugPrintQueue<Task>(this, actionGenerator.getOutput(), "Task");
@@ -178,11 +179,11 @@ public class ProfileSyncTask implements BackgroundTask, HysteresisReceiver, Task
 	public synchronized void syncEnded() {
 		Runnable r;
 		cleanupTasks.shutdown();
-		for(r = null; null != r; r = cleanupTasks.take()) {
+		for (r = null; null != r; r = cleanupTasks.take()) {
 			try {
 				r.run();
 			}
-			catch(Exception ex) {
+			catch (Exception ex) {
 				//TODO: remember / log
 			}
 		}
@@ -213,7 +214,6 @@ class SyncEnded extends SyncTasklet<Task, Object> {
 	@Override
 	public void cancel() {
 	}
-
 
 	@Override
 	protected void cleanup() {

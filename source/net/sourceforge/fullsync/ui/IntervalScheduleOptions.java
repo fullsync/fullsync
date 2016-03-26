@@ -34,10 +34,9 @@ import org.eclipse.swt.widgets.Text;
 public class IntervalScheduleOptions extends ScheduleOptions {
 	// TODO sadly we can't support "days","months" as the interval is starting with program startup
 	private static SchedulingIntervalItem[] schedulingIntervals = new SchedulingIntervalItem[] {
-		new SchedulingIntervalItem("seconds", Messages.getString("IntervalScheduleOptions.seconds"), 1000),
-		new SchedulingIntervalItem("minutes", Messages.getString("IntervalScheduleOptions.minutes"), 60*1000),
-		new SchedulingIntervalItem("hours", Messages.getString("IntervalScheduleOptions.hours"), 60*60*1000),
-	};
+			new SchedulingIntervalItem("seconds", Messages.getString("IntervalScheduleOptions.seconds"), 1000),
+			new SchedulingIntervalItem("minutes", Messages.getString("IntervalScheduleOptions.minutes"), 60 * 1000),
+			new SchedulingIntervalItem("hours", Messages.getString("IntervalScheduleOptions.hours"), 60 * 60 * 1000), };
 
 	private Text textCount;
 	private Combo cbUnit;

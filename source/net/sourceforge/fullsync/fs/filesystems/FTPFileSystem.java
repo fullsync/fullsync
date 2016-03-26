@@ -36,7 +36,8 @@ import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder;
 public class FTPFileSystem implements FileSystem {
 
 	@Override
-	public final Site createConnection(final ConnectionDescription description) throws net.sourceforge.fullsync.FileSystemException, IOException {
+	public final Site createConnection(final ConnectionDescription description)
+			throws net.sourceforge.fullsync.FileSystemException, IOException {
 		return new CommonsVfsConnection(description, new FTPAuthenticationProvider());
 	}
 

@@ -30,7 +30,7 @@ import net.sourceforge.fullsync.fs.File;
 public class WeightedFilterChain implements FileFilterChain {
 	private SortedSet<FileFilter> filters;
 
-	public WeightedFilterChain(FileFilter ..._filters) {
+	public WeightedFilterChain(FileFilter... _filters) {
 		filters = new TreeSet<FileFilter>();
 		for (FileFilter filter : _filters) {
 			filters.add(filter);
@@ -50,7 +50,7 @@ public class WeightedFilterChain implements FileFilterChain {
 	@Override
 	public boolean accept(File file) {
 		for (FileFilter filter : filters) {
-			switch(filter.getState(file)) {
+			switch (filter.getState(file)) {
 				case ACCEPT:
 					return true;
 				case DROP:

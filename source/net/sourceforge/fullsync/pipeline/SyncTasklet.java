@@ -21,7 +21,6 @@ package net.sourceforge.fullsync.pipeline;
 
 import net.sourceforge.fullsync.util.SmartQueue;
 
-
 public abstract class SyncTasklet<InputQueueItem, OutputQueueItem> implements Runnable {
 	private final TaskletWorkNotificationTarget workNotificationTarget;
 	private final SmartQueue<InputQueueItem> inputQueue;
