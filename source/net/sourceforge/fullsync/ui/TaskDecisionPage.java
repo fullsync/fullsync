@@ -155,7 +155,7 @@ public class TaskDecisionPage extends WizardDialog {
 	}
 
 	void performActions() {
-		Thread worker = new Thread((Runnable) () -> {
+		Thread worker = new Thread(() -> {
 			guiController.showBusyCursor(true);
 			final Display display = getDisplay();
 			try {

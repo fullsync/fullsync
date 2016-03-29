@@ -240,21 +240,15 @@ public class GuiController implements Runnable {
 
 	public static void launchProgram(final String uri) {
 		if (System.getProperty("os.name").toLowerCase().indexOf("linux") > -1) {
-			Thread t = new Thread() {
-				@Override
-				public void run() {
-					try {
-						Process p = Runtime.getRuntime().exec(new String[] { "xdg-open", uri });
-						p.waitFor();
-					}
-					catch (IOException e) {
-						ExceptionHandler.reportException("Error opening " + uri + ".", e);
-					}
-					catch (InterruptedException e) {
-						ExceptionHandler.reportException("Error opening " + uri + ".", e);
-					}
-				};
-			};
+			Thread t = new Thread(() -> {
+				try {
+					Process p = Runtime.getRuntime().exec(new String[] { "xdg-open", uri });
+					p.waitFor();
+				}
+				catch (IOException | InterruptedException e) {
+					ExceptionHandler.reportException("Error opening " + uri + ".", e);
+				}
+			});
 			// set this thread as a daemon to avoid hanging the FullSync shutdown
 			// this might happen if xdg-open opens the browser directly and the
 			// browser is still running

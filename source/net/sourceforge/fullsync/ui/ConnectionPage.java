@@ -147,9 +147,9 @@ class ConnectionPage extends WizardDialog {
 				throw new Exception("The FullSync instance you tried to connect to is already connected to another FullSync instance");
 			}
 		}
-		catch (Exception e1) {
+		catch (Exception ex) {
 			GuiController.getInstance().getProfileManager().setRemoteConnected(false);
-			ExceptionHandler.reportException(Messages.getString("ConnectionComposite.Unable_To_Connect"), e1); //$NON-NLS-1$
+			ExceptionHandler.reportException(Messages.getString("ConnectionComposite.Unable_To_Connect"), ex); //$NON-NLS-1$
 		}
 		return true; //FIXME: return false if failed
 	}

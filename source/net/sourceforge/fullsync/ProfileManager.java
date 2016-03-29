@@ -364,8 +364,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		}
 	}
 
-	public void save()// throws ParserConfigurationException, FactoryConfigurationError, IOException
-	{
+	public void save() {
 		if (remoteManager != null) {
 			try {
 				remoteManager.removeProfileListChangeListener(remoteListener);

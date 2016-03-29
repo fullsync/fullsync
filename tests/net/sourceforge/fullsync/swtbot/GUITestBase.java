@@ -47,17 +47,14 @@ public abstract class GUITestBase {
 		System.setProperty("net.sourceforge.fullsync.skipHelp", "true");
 		System.setProperty("net.sourceforge.fullsync.skipWelcomeScreen", "true");
 
-		applicationThread = new Thread() {
-			@Override
-			public void run() {
-				try {
-					net.sourceforge.fullsync.cli.Main.main(new String[] { "-v" });
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
+		applicationThread = new Thread(() -> {
+			try {
+				net.sourceforge.fullsync.cli.Main.main(new String[] { "-v" });
 			}
-		};
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 		applicationThread.setName("FullSync GUI");
 		applicationThread.start();
 		assertTrue("GUI startup failed, Display not found", null != waitForDisplayToAppear(GUI_STARTUP_TIMEOUT));

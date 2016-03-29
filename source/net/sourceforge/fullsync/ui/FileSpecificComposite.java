@@ -39,7 +39,7 @@ class FileSpecificComposite extends ProtocolSpecificComposite {
 		else {
 			textPath.setText("");
 		}
-	};
+	}
 
 	@Override
 	public ConnectionDescription getConnectionDescription() throws URISyntaxException {

@@ -78,8 +78,8 @@ public class ConnectionDescription implements Serializable {
 		try {
 			desc.setUri(new URI(element.getAttribute("uri")));
 		}
-		catch (URISyntaxException e1) {
-			e1.printStackTrace();
+		catch (URISyntaxException ex) {
+			ex.printStackTrace();
 		}
 		desc.parameters.put("bufferStrategy", element.getAttribute("buffer"));
 		desc.parameters.put(PARAMETER_USERNAME, element.getAttribute(PARAMETER_USERNAME));
