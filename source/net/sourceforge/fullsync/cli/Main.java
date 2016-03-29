@@ -34,6 +34,7 @@ import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 import net.sourceforge.fullsync.ui.GuiController;
@@ -55,6 +56,7 @@ public class Main { // NO_UCD
 		options = new Options();
 		options.addOption("h", "help", false, "this help");
 		options.addOption("v", "verbose", false, "verbose output to stdout");
+		options.addOption("V", "version", false, "display the version and exit");
 		options.addOption("m", "minimized", false, "starts fullsync gui in system tray ");
 
 		OptionBuilder.withLongOpt("profiles-file");
@@ -150,6 +152,11 @@ public class Main { // NO_UCD
 				System.err.println(pe.getMessage());
 				printHelp();
 				return;
+			}
+
+			if (line.hasOption('V')) {
+				System.out.println(String.format("FullSync version %s", Util.getFullSyncVersion()));
+				System.exit(0);
 			}
 
 			// Apply modifying options
