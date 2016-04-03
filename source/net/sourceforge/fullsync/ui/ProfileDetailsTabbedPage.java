@@ -100,24 +100,24 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 	private Site sourceSite;
 	private final FileSystemManager fsm = new FileSystemManager();
 
-	private String profileName;
+	private Profile profile;
 
 	private FileFilter filter;
 	private Composite m_parent;
 	private String lastSourceLoaded = null;
 
 
-	public ProfileDetailsTabbedPage(Shell parent, ProfileManager profileManager, String profileName) {
+	public ProfileDetailsTabbedPage(Shell parent, ProfileManager profileManager, Profile profile) {
 		super(parent);
 		this.profileManager = profileManager;
-		this.profileName = profileName;
+		this.profile = profile;
 	}
 
 	@Override
 	public String getTitle() {
 		String title = Messages.getString("ProfileDetailsPage.Profile"); //$NON-NLS-1$
-		if (this.profileName != null) {
-			title = title + " " + profileName; //$NON-NLS-1$
+		if (this.profile != null) {
+			title = title + " " + profile.getName(); //$NON-NLS-1$
 		}
 		return title;
 	}
@@ -183,36 +183,31 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 			});
 			comboType.select(0);
 
-			if (this.profileName == null) {
+			if (this.profile == null) {
 				return;
 			}
 
-			Profile p = profileManager.getProfile(profileName);
-			if (p == null) {
-				throw new IllegalArgumentException(Messages.getString("ProfileDetails.profile_does_not_exist")); //$NON-NLS-1$
+			textProfileName.setText(profile.getName());
+			textProfileDescription.setText(profile.getDescription());
+
+			srcConnectionConfiguration.setConnectionDescription(profile.getSource());
+			if (null != profile.getSource()) {
+				srcConnectionConfiguration.setBuffered("syncfiles".equals(profile.getSource().getParameter("bufferStrategy"))); //$NON-NLS-1$
 			}
 
-			textProfileName.setText(p.getName());
-			textProfileDescription.setText(p.getDescription());
-
-			srcConnectionConfiguration.setConnectionDescription(p.getSource());
-			if (null != p.getSource()) {
-				srcConnectionConfiguration.setBuffered("syncfiles".equals(p.getSource().getParameter("bufferStrategy"))); //$NON-NLS-1$
+			dstConnectionConfiguration.setConnectionDescription(profile.getDestination());
+			if (null != profile.getDestination()) {
+				dstConnectionConfiguration.setBuffered("syncfiles".equals(profile.getDestination().getParameter("bufferStrategy"))); //$NON-NLS-1$
 			}
 
-			dstConnectionConfiguration.setConnectionDescription(p.getDestination());
-			if (null != p.getDestination()) {
-				dstConnectionConfiguration.setBuffered("syncfiles".equals(p.getDestination().getParameter("bufferStrategy"))); //$NON-NLS-1$
+			if ((profile.getSynchronizationType() != null) && (profile.getSynchronizationType().length() > 0)) {
+				comboType.setText(profile.getSynchronizationType());
 			}
 
-			if ((p.getSynchronizationType() != null) && (p.getSynchronizationType().length() > 0)) {
-				comboType.setText(p.getSynchronizationType());
-			}
+			buttonScheduling.setData(profile.getSchedule());
+			buttonEnabled.setSelection(profile.isEnabled());
 
-			buttonScheduling.setData(p.getSchedule());
-			buttonEnabled.setSelection(p.isEnabled());
-
-			RuleSetDescriptor ruleSetDescriptor = p.getRuleSet();
+			RuleSetDescriptor ruleSetDescriptor = profile.getRuleSet();
 			filter = null;
 
 			SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor) ruleSetDescriptor;
@@ -345,10 +340,9 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 		cData.verticalAlignment = SWT.FILL;
 		c.setLayoutData(cData);
 
-		// source
-		srcConnectionConfiguration = new ConnectionConfiguration(c);
+		ConnectionDescription src = null != profile ? profile.getSource() : null;
+		srcConnectionConfiguration = new ConnectionConfiguration(c, src);
 		srcConnectionConfiguration.setBufferedEnabled(false);
-
 		return c;
 	}
 
@@ -369,9 +363,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 		cData.verticalAlignment = SWT.FILL;
 		c.setLayoutData(cData);
 
-		// destination
-		dstConnectionConfiguration = new ConnectionConfiguration(c);
-
+		ConnectionDescription dst = null != profile ? profile.getDestination() : null;
+		dstConnectionConfiguration = new ConnectionConfiguration(c, dst);
 		return c;
 	}
 
@@ -651,7 +644,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 			return false;
 		}
 
-		if ((profileName == null) || !textProfileName.getText().equals(profileName)) {
+		if ((profile == null) || !textProfileName.getText().equals(profile.getName())) {
 			Profile pr = profileManager.getProfile(textProfileName.getText());
 			if (pr != null) {
 				MessageBox mb = new MessageBox(m_parent.getShell(), SWT.ICON_ERROR);
@@ -661,38 +654,36 @@ public class ProfileDetailsTabbedPage extends WizardDialog implements DisposeLis
 				return false;
 			}
 		}
-		Profile p;
 		RuleSetDescriptor ruleSetDescriptor = null;
 		ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), filter, buttonUseFileFilter.getSelection(),
 				getFileFilterTree());
 
-		if (profileName == null) {
-			p = new Profile(textProfileName.getText(), src, dst, ruleSetDescriptor);
-			p.setSynchronizationType(comboType.getText());
-			p.setDescription(textProfileDescription.getText());
-			p.setSchedule((Schedule) buttonScheduling.getData());
-			p.setEnabled(buttonEnabled.getSelection());
+		if (profile == null) {
+			profile = new Profile(textProfileName.getText(), src, dst, ruleSetDescriptor);
+			profile.setSynchronizationType(comboType.getText());
+			profile.setDescription(textProfileDescription.getText());
+			profile.setSchedule((Schedule) buttonScheduling.getData());
+			profile.setEnabled(buttonEnabled.getSelection());
 			if (buttonResetError.getSelection()) {
-				p.setLastError(0, null);
+				profile.setLastError(0, null);
 			}
-			profileManager.addProfile(p);
+			profileManager.addProfile(profile);
 		}
 		else {
-			p = profileManager.getProfile(profileName);
-			p.beginUpdate();
-			p.setName(textProfileName.getText());
-			p.setDescription(textProfileDescription.getText());
-			p.setSynchronizationType(comboType.getText());
-			p.setSource(src);
-			p.setDestination(dst);
-			p.setSchedule((Schedule) buttonScheduling.getData());
-			p.setEnabled(buttonEnabled.getSelection());
+			profile.beginUpdate();
+			profile.setName(textProfileName.getText());
+			profile.setDescription(textProfileDescription.getText());
+			profile.setSynchronizationType(comboType.getText());
+			profile.setSource(src);
+			profile.setDestination(dst);
+			profile.setSchedule((Schedule) buttonScheduling.getData());
+			profile.setEnabled(buttonEnabled.getSelection());
 
-			p.setRuleSet(ruleSetDescriptor);
+			profile.setRuleSet(ruleSetDescriptor);
 			if (buttonResetError.getSelection()) {
-				p.setLastError(0, null);
+				profile.setLastError(0, null);
 			}
-			p.endUpdate();
+			profile.endUpdate();
 		}
 		profileManager.save();
 		return true; //FIXME: return false if failed

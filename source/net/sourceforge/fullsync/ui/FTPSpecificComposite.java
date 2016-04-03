@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 public class FTPSpecificComposite extends UserPasswordSpecificComposite {
-	private static final String FTP_ANONYMOUS_USERNAME = "Anonymous";
+	private static final String FTP_ANONYMOUS_USERNAME = "Anonymous"; //$NON-NLS-1$
 	Combo comboAuthentication;
 	@Override
 	public int getDefaultPort() {
@@ -44,14 +44,21 @@ public class FTPSpecificComposite extends UserPasswordSpecificComposite {
 	protected void onBeforePasswordHook(Composite parent) {
 		super.onBeforePasswordHook(parent);
 		Label labelAuthenticationType = new Label(parent, SWT.NONE);
-		labelAuthenticationType.setText(Messages.getString("ProtocolSpecificComposite.FTPAuthType"));
+		labelAuthenticationType.setText(Messages.getString("ProtocolSpecificComposite.FTPAuthType")); //$NON-NLS-1$
 		comboAuthentication = new Combo(parent, SWT.READ_ONLY);
 		GridData comboAuthenticationData = new GridData();
 		comboAuthenticationData.horizontalSpan = 2;
 		comboAuthenticationData.horizontalAlignment = SWT.FILL;
 		comboAuthentication.setLayoutData(comboAuthenticationData);
-		comboAuthentication.add(Messages.getString("ProtocolSpecificComposite.FTPAuthTypeAnonymous"));
-		comboAuthentication.add(Messages.getString("ProtocolSpecificComposite.FTPAuthTypeUserPassword"));
+		comboAuthentication.add(Messages.getString("ProtocolSpecificComposite.FTPAuthTypeAnonymous")); //$NON-NLS-1$
+		comboAuthentication.add(Messages.getString("ProtocolSpecificComposite.FTPAuthTypeUserPassword")); //$NON-NLS-1$
+	}
+
+	@Override
+	public void createGUI(final Composite parent) {
+		super.createGUI(parent);
+		setUserPasswordEnabled(false);
+		comboAuthentication.select(0);
 		comboAuthentication.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -59,13 +66,6 @@ public class FTPSpecificComposite extends UserPasswordSpecificComposite {
 			}
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-		comboAuthentication.getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				setUserPasswordEnabled(false);
-				comboAuthentication.select(0);
 			}
 		});
 	}
@@ -87,7 +87,7 @@ public class FTPSpecificComposite extends UserPasswordSpecificComposite {
 		ConnectionDescription connection = super.getConnectionDescription();
 		if (comboAuthentication.getSelectionIndex() == 0) {
 			connection.setParameter(ConnectionDescription.PARAMETER_USERNAME, FTP_ANONYMOUS_USERNAME);
-			connection.setSecretParameter(ConnectionDescription.PARAMETER_PASSWORD, "");
+			connection.setSecretParameter(ConnectionDescription.PARAMETER_PASSWORD, ""); //$NON-NLS-1$
 		}
 		return connection;
 	}

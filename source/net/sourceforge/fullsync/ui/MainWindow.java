@@ -670,7 +670,7 @@ TaskGenerationListener, SchedulerChangeListener {
 			return;
 		}
 		try {
-			WizardDialog dialog = new ProfileDetailsTabbedPage(getShell(), guiController.getProfileManager(), p.getName());
+			WizardDialog dialog = new ProfileDetailsTabbedPage(getShell(), guiController.getProfileManager(), p);
 			dialog.show();
 		}
 		catch (Exception e) {
