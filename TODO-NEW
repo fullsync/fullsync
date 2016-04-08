@@ -1,6 +1,5 @@
 Roadmap:
 	[ ] finish started work
-	[ ] GUI cleanup
 	[ ] check all contained configuration files
 	[ ] get some communication going, motivate others to join
 	[ ] extend automated testsuite
@@ -9,7 +8,6 @@ Roadmap:
 	[ ] get code coverage > 70% -> Alpha release
 	[ ] get code coverage > 80% -> Beta Release
 	[ ] fix all bugs along the way
-	[ ] check all reported bugs, comment / close as apropriate
 	[ ] re-add the installer (windows/linux/(mac?))
 		[ ] Windows X86_64
 		[ ] Linux DEB
@@ -26,10 +24,9 @@ Roadmap:
 	[ ] exception handling: look up ways to minimize exception handling code, should also allow to specify that we don't want to handle them and just rethrow them (debugging)
 		[ ] move most Exceptions to RuntimeExceptions?
 	[ ] review & improve documentation of the commandline arguments
-	[ ] increase maximum allowed RAM for FullSync, 1G?
 
 Roadmap 0.11.0:
-	[X] restore handling of buffering = syncfiles (search for [BUFFERING])
+	[ ] restore handling of buffering = syncfiles (search for [BUFFERING])
 	[ ] make sure everything is translatable
 	[ ] make shortcuts configurable
 
@@ -52,10 +49,6 @@ Bugs:
 	[ ] Hidden files do not remain as Hidden after folder synchronization
 	[ ] Information loss when synchronizing txt files. Summary is missing in destination folder
 	[ ] No Warning message appears after changing the path of destination or source folder
-	[X] After changing destination folder path, when synchronizing, it creates a new folder in the old path like nothing happened
-		can not reproduce
-	[X] After changing source folder path, when synchronizing, nothing happens (it is like source folder is empty)
-		can not reproduce
 	[ ] Fix missing error handling in net.sourceforge.fullsync.buffer.BlockBuffer.storeBytes(InputStream, long)
 
 Features:
