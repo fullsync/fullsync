@@ -2,9 +2,6 @@ Versions of dependent libraries in distributions:
 
                                                    YYYY-MM-DD
  * commons-cli.jar               1.2               2009-03-19
- * commons-collections.jar       3.2.1             2008-04-10
- * commons-configuration.jar     1.9               2012-08-22
- * commons-lang.jar              2.6               2011-01-12
  * commons-net.jar               3.3               2013-06-08
  * commons-vfs2.jar              2.0               2010-12-21
  * commons-vfs2-sandbox.jar      2.0               2010-12-21
@@ -42,26 +39,6 @@ commons-cli.jar
 		none
 	Used in:
 		initial startup of application
-
-commons-collections.jar
-	Dependencies:
-		none
-	Used by:
-		commons-configuration.jar
-
-commons-configuration.jar
-	Dependencies:
-		*Core: Java 5, commons-logging (provided by jcl-over-slf4j), commons-lang
-	Used in:
-		loading properties from file
-
-commons-lang.jar
-	Dependencies:
-		none
-	Used by:
-		commons-configuration.jar (requires version 2.6)
-	Used in:
-		none
 
 commons-net.jar
 	Dependencies:

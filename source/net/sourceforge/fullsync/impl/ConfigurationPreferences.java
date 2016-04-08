@@ -20,139 +20,174 @@
 package net.sourceforge.fullsync.impl;
 
 import java.io.File;
-
-import javax.xml.parsers.FactoryConfigurationError;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.Properties;
 
 import net.sourceforge.fullsync.Crypt;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.eclipse.swt.graphics.Rectangle;
 
 public class ConfigurationPreferences implements Preferences {
-	/**
-	 * configuration object.
-	 */
-	private PropertiesConfiguration config;
+	private static final String PREFERENCE_DEFAULT_PROFILE_LIST_STYLE = "NiceListView";
+	private static final String PREFERENCE_DEFAULT_LANGUAGE_CODE = "en";
+	private static final String PREFERENCE_WINDOW_STATE_HEIGHT = "Interface.WindowState.height";
+	private static final String PREFERENCE_WINDOW_STATE_WIDTH = "Interface.WindowState.width";
+	private static final String PREFERENCE_WINDOW_STATE_Y = "Interface.WindowState.y";
+	private static final String PREFERENCE_WINDOW_STATE_X = "Interface.WindowState.x";
+	private static final String PREFERENCE_WINDOW_STATE_MINIMIZED = "Interface.WindowState.minimized";
+	private static final String PREFERENCE_WINDOW_STATE_MAXIMIZED = "Interface.WindowState.maximized";
+	private static final String PREFERENCE_SKIP_WELCOME_SCREEN = "Interface.SkipWelcomeScreen";
+	private static final String PREFERENCE_HELP_SHOWN = "Interface.HelpShown";
+	private static final String PREFERENCE_LANGUAGE_CODE = "Interface.LanguageCode";
+	private static final String PREFERENCE_AUTOSTART_SCHEDULER = "Interface.AutostartScheduler";
+	private static final String PREFERENCE_REMOTE_CONNECTION_PASSWORD = "RemoteConnection.password";
+	private static final String PREFERENCE_REMOTE_CONNECTION_PORT = "RemoteConnection.port";
+	private static final String PREFERENCE_REMOTE_CONNECTION_ACTIVE = "RemoteConnection.active";
+	private static final String PREFERENCE_PROFILE_LIST_STYLE = "Interface.ProfileList.Style";
+	private static final String PREFERENCE_SYSTEM_TRAY_ENABLED = "Interface.SystemTray.Enabled";
+	private static final String PREFERENCE_MINIMIZE_MINIMIZES_TO_SYSTEM_TRAY = "Interface.MinimizeMinimizesToSystemTray";
+	private static final String PREFERENCE_CLOSE_MINIMIZES_TO_SYSTEM_TRAY = "Interface.CloseMinimizesToSystemTray";
+	private static final String PREFERENCE_CONFIRM_EXIT = "Interface.ConfirmExit";
+	private static final String PREFERENCE_FULLSYNC_VERSION = "FullSync.Version";
+	private final String configFileName;
+	private final Properties props;
+	private final String lastFullSyncVersion;
 
-	private String lastFullSyncVersion;
-
-	/**
-	 * constructor.
-	 *
-	 * @param configFile
-	 *            config file name
-	 */
 	public ConfigurationPreferences(final String configFile) {
-		this.config = new PropertiesConfiguration();
+		configFileName = configFile;
+		props = new Properties();
 
-		try {
-			File file = new File(configFile);
-			config.setFile(file);
-			if (file.exists()) {
-				config.load();
+		File file = new File(configFileName);
+		if (file.exists()) {
+			try (Reader reader = new FileReader(file)) {
+				props.load(reader);
 			}
-			lastFullSyncVersion = config.getString("FullSync.Version", "");
+			catch (IOException e) {
+				ExceptionHandler.reportException(e);
+			}
 		}
-		catch (ConfigurationException e) {
-			ExceptionHandler.reportException(e);
-		}
-		catch (FactoryConfigurationError e) {
-			ExceptionHandler.reportException(e);
-		}
-		if (null == lastFullSyncVersion) {
-			lastFullSyncVersion = "";
-		}
+		lastFullSyncVersion = props.getProperty(PREFERENCE_FULLSYNC_VERSION, "");
+	}
+
+	private boolean getProperty(String name, boolean defaultValue) {
+		String sValue = props.getProperty(name);
+		return null == sValue ? defaultValue : Boolean.parseBoolean(sValue);
+	}
+
+	private String getProperty(String name, String defaultValue) {
+		return props.getProperty(name, defaultValue);
+	}
+
+	private int getProperty(String name, int defaultValue) {
+		String sValue = props.getProperty(name);
+		return null == sValue ? defaultValue : Integer.parseInt(sValue, 10);
+	}
+
+	private void setProperty(String name, boolean value) {
+		props.setProperty(name, Boolean.toString(value));
+	}
+
+	private void setProperty(String name, int value) {
+		props.setProperty(name, Integer.toString(value));
+	}
+
+	private void setProperty(String name, String value) {
+		props.setProperty(name, value);
 	}
 
 	@Override
 	public void save() {
-		try {
-			String currentFullSyncVersion = Util.getFullSyncVersion();
-			config.setProperty("FullSync.Version", currentFullSyncVersion);
-			config.save();
+		String currentFullSyncVersion = Util.getFullSyncVersion();
+		props.setProperty(PREFERENCE_FULLSYNC_VERSION, currentFullSyncVersion);
+		try (Writer writer = new FileWriter(configFileName)) {
+			props.store(writer, null);
+			writer.flush();
 		}
-		catch (ConfigurationException e) {
+		catch (IOException e) {
 			ExceptionHandler.reportException(e);
 		}
 	}
 
 	@Override
 	public boolean confirmExit() {
-		return config.getBoolean("Interface.ConfirmExit", true);
+		return getProperty(PREFERENCE_CONFIRM_EXIT, true);
 	}
 
 	@Override
 	public void setConfirmExit(final boolean bool) {
-		config.setProperty("Interface.ConfirmExit", Boolean.valueOf(bool));
+		setProperty(PREFERENCE_CONFIRM_EXIT, bool);
 	}
 
 	@Override
 	public boolean closeMinimizesToSystemTray() {
-		return config.getBoolean("Interface.CloseMinimizesToSystemTray", false);
+		return getProperty(PREFERENCE_CLOSE_MINIMIZES_TO_SYSTEM_TRAY, false);
 	}
 
 	@Override
 	public void setCloseMinimizesToSystemTray(final boolean bool) {
-		config.setProperty("Interface.CloseMinimizesToSystemTray", Boolean.valueOf(bool));
+		setProperty(PREFERENCE_CLOSE_MINIMIZES_TO_SYSTEM_TRAY, bool);
 	}
 
 	@Override
 	public boolean minimizeMinimizesToSystemTray() {
-		return config.getBoolean("Interface.MinimizeMinimizesToSystemTray", false);
+		return getProperty(PREFERENCE_MINIMIZE_MINIMIZES_TO_SYSTEM_TRAY, false);
 	}
 
 	@Override
 	public void setMinimizeMinimizesToSystemTray(final boolean bool) {
-		config.setProperty("Interface.MinimizeMinimizesToSystemTray", Boolean.valueOf(bool));
+		setProperty(PREFERENCE_MINIMIZE_MINIMIZES_TO_SYSTEM_TRAY, bool);
 	}
 
 	@Override
 	public boolean systemTrayEnabled() {
-		return config.getBoolean("Interface.SystemTray.Enabled", true);
+		return getProperty(PREFERENCE_SYSTEM_TRAY_ENABLED, true);
 	}
 
 	@Override
 	public void setSystemTrayEnabled(final boolean bool) {
-		config.setProperty("Interface.SystemTray.Enabled", Boolean.valueOf(bool));
+		setProperty(PREFERENCE_SYSTEM_TRAY_ENABLED, bool);
 	}
 
 	@Override
 	public String getProfileListStyle() {
-		return config.getString("Interface.ProfileList.Style", "NiceListView");
+		return getProperty(PREFERENCE_PROFILE_LIST_STYLE, PREFERENCE_DEFAULT_PROFILE_LIST_STYLE);
 	}
 
 	@Override
 	public void setProfileListStyle(final String profileListStyle) {
-		config.setProperty("Interface.ProfileList.Style", profileListStyle);
+		setProperty(PREFERENCE_PROFILE_LIST_STYLE, profileListStyle);
 	}
 
 	@Override
 	public boolean listeningForRemoteConnections() {
-		return config.getBoolean("RemoteConnection.active", false);
+		return getProperty(PREFERENCE_REMOTE_CONNECTION_ACTIVE, false);
 	}
 
 	@Override
 	public void setListeningForRemoteConnections(final boolean bool) {
-		config.setProperty("RemoteConnection.active", Boolean.valueOf(bool));
+		setProperty(PREFERENCE_REMOTE_CONNECTION_ACTIVE, bool);
 	}
 
 	@Override
 	public int getRemoteConnectionsPort() {
-		return config.getInt("RemoteConnection.port", 10000);
+		return getProperty(PREFERENCE_REMOTE_CONNECTION_PORT, 10000);
 	}
 
 	@Override
 	public void setRemoteConnectionsPort(final int port) {
-		config.setProperty("RemoteConnection.port", Integer.valueOf(port));
+		setProperty(PREFERENCE_REMOTE_CONNECTION_PORT, port);
 	}
 
 	@Override
 	public String getRemoteConnectionsPassword() {
-		String passwd = config.getString("RemoteConnection.password", "admin");
+		String passwd = getProperty(PREFERENCE_REMOTE_CONNECTION_PASSWORD, "");
 		String decryptedPassword = Crypt.decrypt(passwd);
 		return decryptedPassword;
 	}
@@ -160,47 +195,47 @@ public class ConfigurationPreferences implements Preferences {
 	@Override
 	public void setRemoteConnectionsPassword(final String password) {
 		String encryptedPasswd = Crypt.encrypt(password);
-		config.setProperty("RemoteConnection.password", encryptedPasswd);
+		setProperty(PREFERENCE_REMOTE_CONNECTION_PASSWORD, encryptedPasswd);
 	}
 
 	@Override
 	public boolean getAutostartScheduler() {
-		return config.getBoolean("Interface.AutostartScheduler", false);
+		return getProperty(PREFERENCE_AUTOSTART_SCHEDULER, false);
 	}
 
 	@Override
 	public void setAutostartScheduler(final boolean bool) {
-		config.setProperty("Interface.AutostartScheduler", Boolean.valueOf(bool));
+		setProperty(PREFERENCE_AUTOSTART_SCHEDULER, bool);
 	}
 
 	@Override
 	public String getLanguageCode() {
-		return config.getString("Interface.LanguageCode", "en");
+		return getProperty(PREFERENCE_LANGUAGE_CODE, PREFERENCE_DEFAULT_LANGUAGE_CODE);
 	}
 
 	@Override
 	public void setLanguageCode(final String code) {
-		config.setProperty("Interface.LanguageCode", code);
+		setProperty(PREFERENCE_LANGUAGE_CODE, code);
 	}
 
 	@Override
 	public boolean getHelpShown() {
-		return config.getBoolean("Interface.HelpShown", false);
+		return getProperty(PREFERENCE_HELP_SHOWN, false);
 	}
 
 	@Override
 	public void setHelpShown(final boolean shown) {
-		config.setProperty("Interface.HelpShown", Boolean.valueOf(shown));
+		setProperty(PREFERENCE_HELP_SHOWN, shown);
 	}
 
 	@Override
 	public boolean getSkipWelcomeScreen() {
-		return config.getBoolean("Interface.SkipWelcomeScreen", false);
+		return getProperty(PREFERENCE_SKIP_WELCOME_SCREEN, false);
 	}
 
 	@Override
 	public void setSkipWelcomeScreen(boolean skip) {
-		config.setProperty("Interface.SkipWelcomeScreen", Boolean.valueOf(skip));
+		setProperty(PREFERENCE_SKIP_WELCOME_SCREEN, skip);
 	}
 
 	@Override
@@ -210,38 +245,38 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public void setWindowMaximized(boolean maximized) {
-		config.setProperty("Interface.WindowState.maximized", Boolean.valueOf(maximized));
+		setProperty(PREFERENCE_WINDOW_STATE_MAXIMIZED, maximized);
 	}
 
 	@Override
 	public boolean getWindowMaximized() {
-		return config.getBoolean("Interface.WindowState.maximized", false);
+		return getProperty(PREFERENCE_WINDOW_STATE_MAXIMIZED, false);
 	}
 
 	@Override
 	public void setWindowMinimized(boolean minimized) {
-		config.setProperty("Interface.WindowState.minimized", Boolean.valueOf(minimized));
+		setProperty(PREFERENCE_WINDOW_STATE_MINIMIZED, minimized);
 	}
 
 	@Override
 	public boolean getWindowMinimized() {
-		return config.getBoolean("Interface.WindowState.minimized", false);
+		return getProperty(PREFERENCE_WINDOW_STATE_MINIMIZED, false);
 	}
 
 	@Override
 	public void setWindowBounds(Rectangle b) {
-		config.setProperty("Interface.WindowState.x", Integer.valueOf(b.x));
-		config.setProperty("Interface.WindowState.y", Integer.valueOf(b.y));
-		config.setProperty("Interface.WindowState.width", Integer.valueOf(b.width));
-		config.setProperty("Interface.WindowState.height", Integer.valueOf(b.height));
+		setProperty(PREFERENCE_WINDOW_STATE_X, b.x);
+		setProperty(PREFERENCE_WINDOW_STATE_Y, b.y);
+		setProperty(PREFERENCE_WINDOW_STATE_WIDTH, b.width);
+		setProperty(PREFERENCE_WINDOW_STATE_HEIGHT, b.height);
 	}
 
 	@Override
 	public Rectangle getWindowBounds() {
-		int x = config.getInt("Interface.WindowState.x", 0);
-		int y = config.getInt("Interface.WindowState.y", 0);
-		int width = config.getInt("Interface.WindowState.width", 0);
-		int height = config.getInt("Interface.WindowState.height", 0);
+		int x = getProperty(PREFERENCE_WINDOW_STATE_X, 0);
+		int y = getProperty(PREFERENCE_WINDOW_STATE_Y, 0);
+		int width = getProperty(PREFERENCE_WINDOW_STATE_WIDTH, 0);
+		int height = getProperty(PREFERENCE_WINDOW_STATE_HEIGHT, 0);
 		return new Rectangle(x, y, width, height);
 	}
 }
