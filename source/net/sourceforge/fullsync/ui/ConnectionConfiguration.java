@@ -54,8 +54,14 @@ public class ConnectionConfiguration {
 		composites.put("smb", SMBSpecificComposite.class);
 	}
 
-	public ConnectionConfiguration(Composite parent) {
+	public ConnectionConfiguration(Composite parent, ConnectionDescription desc) {
 		m_parent = parent;
+		if (null != desc) {
+			URI uri = desc.getUri();
+			if (null != uri) {
+				selectedScheme = uri.getScheme();
+			}
+		}
 		initialize();
 	}
 
@@ -100,13 +106,7 @@ public class ConnectionConfiguration {
 		selectedScheme = comboProtocol.getText();
 		createProtocolSpecificComposite();
 	}
-
 	public void setConnectionDescription(ConnectionDescription location) {
-		URI uri = null;
-		if (null != location) {
-			uri = location.getUri();
-		}
-		comboProtocol.setText((null != uri) ? uri.getScheme() : "");
 		compositeSpecific.setConnectionDescription(location);
 	}
 
