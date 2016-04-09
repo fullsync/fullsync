@@ -62,7 +62,7 @@ public class Launcher {
 			// add correct SWT implementation to the class-loader
 			jars.add(new URL(installlocation + "lib/swt-" + os + "-" + arch + ".jar"));
 
-			String dependencies = getResourceAsString("net/sourceforge/fullsync/launcher/dependencies.txt");
+			String dependencies = getResourceAsString("net/sourceforge/fullsync/launcher/dependencies.txt").trim();
 			for (String s : dependencies.split("\r?\n")) {
 				jars.add(new URL(installlocation + "lib/" + s.trim()));
 			}
@@ -87,22 +87,23 @@ public class Launcher {
 	private static final int IOBUFFERSIZE = 0x1000;
 
 	public static String getResourceAsString(final String name) {
+		StringBuilder out = new StringBuilder();
 		try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name)) {
-			final char[] buffer = new char[IOBUFFERSIZE];
-			StringBuilder out = new StringBuilder();
-			Reader in = new InputStreamReader(is, "UTF-8");
-			int read;
-			do {
-				read = in.read(buffer, 0, buffer.length);
-				if (read > 0) {
-					out.append(buffer, 0, read);
-				}
-			} while (read >= 0);
-			return out.toString().trim();
+			if (null != is) {
+				final char[] buffer = new char[IOBUFFERSIZE];
+				Reader in = new InputStreamReader(is, "UTF-8");
+				int read;
+				do {
+					read = in.read(buffer, 0, buffer.length);
+					if (read > 0) {
+						out.append(buffer, 0, read);
+					}
+				} while (read >= 0);
+			}
 		}
 		catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		return "";
+		return out.toString();
 	}
 }

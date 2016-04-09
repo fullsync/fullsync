@@ -44,23 +44,24 @@ public abstract class Util {
 
 	// keep in sync with net.sourceforge.fullsync.launcher.Launcher.getResourceAsString(String)
 	public static String getResourceAsString(final String name) {
+		StringBuilder out = new StringBuilder();
 		try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name)) {
-			final char[] buffer = new char[IOBUFFERSIZE];
-			StringBuilder out = new StringBuilder();
-			Reader in = new InputStreamReader(is, "UTF-8");
-			int read;
-			do {
-				read = in.read(buffer, 0, buffer.length);
-				if (read > 0) {
-					out.append(buffer, 0, read);
-				}
-			} while (read >= 0);
-			return out.toString();
+			if (null != is) {
+				final char[] buffer = new char[IOBUFFERSIZE];
+				Reader in = new InputStreamReader(is, "UTF-8");
+				int read;
+				do {
+					read = in.read(buffer, 0, buffer.length);
+					if (read > 0) {
+						out.append(buffer, 0, read);
+					}
+				} while (read >= 0);
+			}
 		}
 		catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		return "";
+		return out.toString();
 	}
 
 	public static String getFullSyncVersion() {
