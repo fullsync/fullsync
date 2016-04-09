@@ -255,12 +255,6 @@ public class Main { // NO_UCD
 					}
 				});
 				profileManager.startScheduler();
-				/*
-				 * Object mutex = new Object();
-				 * synchronized (mutex) {
-				 * mutex.wait();
-				 * }
-				 */
 			}
 			else {
 				try {

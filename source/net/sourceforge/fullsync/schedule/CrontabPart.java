@@ -147,12 +147,6 @@ public class CrontabPart implements Serializable {
 					int start = Integer.parseInt(token.substring(0, index));
 					int end = Integer.parseInt(token.substring(index + 1));
 
-					/*
-					 * if(bBeginInOne) {
-					 * start--;
-					 * end--;
-					 * }
-					 */
 					for (int j = start; j <= end; j += each) {
 						bArray[j + offset] = true;
 					}
@@ -160,11 +154,6 @@ public class CrontabPart implements Serializable {
 				}
 
 				int iValue = Integer.parseInt(token);
-				/*
-				 * if(bBeginInOne) {
-				 * iValue--;
-				 * }
-				 */
 				bArray[iValue + offset] = true;
 				return false;
 			}
