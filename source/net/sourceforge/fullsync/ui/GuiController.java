@@ -278,16 +278,15 @@ public class GuiController implements Runnable {
 				|| (true == preferences.getSkipWelcomeScreen())) {
 			return;
 		}
-		if (preferences.getLastVersion().equals(Util.getFullSyncVersion())) {
-			return;
-		}
-		// update the stored version number
-		preferences.save();
-		try {
-			new WelcomeScreen(getMainShell());
-		}
-		catch (Exception e) {
-			ExceptionHandler.reportException(e);
+		if (!preferences.getLastVersion().equals(Util.getFullSyncVersion())) {
+			// update the stored version number
+			preferences.save();
+			try {
+				new WelcomeScreen(getMainShell());
+			}
+			catch (Exception e) {
+				ExceptionHandler.reportException(e);
+			}
 		}
 	}
 

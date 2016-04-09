@@ -48,8 +48,7 @@ public class RemoteManager {
 
 	public Profile[] getProfiles() {
 		try {
-			Profile[] remoteprofiles = remoteInterface.getProfiles();
-			return remoteprofiles;
+			return remoteInterface.getProfiles();
 		}
 		catch (RemoteException e) {
 			ExceptionHandler.reportException(e);
@@ -102,13 +101,14 @@ public class RemoteManager {
 	}
 
 	public boolean isSchedulerEnabled() {
+		boolean enabled = false;
 		try {
-			return remoteInterface.isSchedulerEnabled();
+			enabled = remoteInterface.isSchedulerEnabled();
 		}
 		catch (RemoteException e) {
 			ExceptionHandler.reportException(e);
-			return false;
 		}
+		return enabled;
 	}
 
 	public TaskTree executeProfile(String name) throws RemoteException {

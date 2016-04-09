@@ -95,23 +95,21 @@ public class SchedulerImpl implements Scheduler, Runnable {
 
 	@Override
 	public void stop() {
-		if (!enabled || (worker == null)) {
-			return;
+		if (enabled && (null != worker)) {
+			enabled = false;
+			if (running) {
+				worker.interrupt();
+			}
+			try {
+				worker.join();
+			}
+			catch (InterruptedException e) {
+			}
+			finally {
+				worker = null;
+			}
+			fireSchedulerChangedEvent();
 		}
-
-		enabled = false;
-		if (running) {
-			worker.interrupt();
-		}
-		try {
-			worker.join();
-		}
-		catch (InterruptedException e) {
-		}
-		finally {
-			worker = null;
-		}
-		fireSchedulerChangedEvent();
 	}
 
 	@Override
