@@ -29,6 +29,7 @@ import java.util.List;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
@@ -40,7 +41,6 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 import net.sourceforge.fullsync.schedule.Schedule;
 
-import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -684,38 +684,12 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 							loadingIem1.setImage(GuiController.getInstance().getImage("Error.png"));
 						}
 					}
-					catch (FileSystemException e1) {
-						ExceptionHandler.reportException(e1);
+					catch (IOException | URISyntaxException | FileSystemException ex) {
+						ExceptionHandler.reportException(ex);
 						directoryTree.removeAll();
 						TreeItem loadingIem2 = new TreeItem(directoryTree, SWT.NULL);
 						loadingIem2.setText("Unable to load source dir");
 						loadingIem2.setImage(GuiController.getInstance().getImage("Error.png"));
-					}
-					catch (IOException e2) {
-						ExceptionHandler.reportException(e2);
-						directoryTree.removeAll();
-						TreeItem loadingIem3 = new TreeItem(directoryTree, SWT.NULL);
-						loadingIem3.setText("Unable to load source dir");
-						loadingIem3.setImage(GuiController.getInstance().getImage("Error.png"));
-					}
-					catch (URISyntaxException e3) {
-						ExceptionHandler.reportException(e3);
-						directoryTree.removeAll();
-						TreeItem loadingIem4 = new TreeItem(directoryTree, SWT.NULL);
-						loadingIem4.setText("Unable to load source dir");
-						loadingIem4.setImage(GuiController.getInstance().getImage("Error.png"));
-					}
-					catch (net.sourceforge.fullsync.FileSystemException e4) {
-						// FIXME Jan can you check this? I had to add it after an update. I have probably
-						// made a mess with the merge.
-						ExceptionHandler.reportException(e4);
-						directoryTree.removeAll();
-						TreeItem loadingIem5 = new TreeItem(directoryTree, SWT.NULL);
-						loadingIem5.setText("Unable to load source dir");
-						loadingIem5.setImage(GuiController.getInstance().getImage("Error.png"));
-					}
-					catch (Exception ex) {
-						ex.printStackTrace();
 					}
 				});
 			}

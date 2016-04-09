@@ -38,7 +38,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -213,9 +212,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
 			sax.parse(new ByteArrayInputStream(out.toByteArray()), new SyncFileDefaultHandler(this));
 		}
-		catch (IOException ioe) {
-			ExceptionHandler.reportException(ioe);
-		}
 		catch (SAXParseException spe) {
 			StringBuffer sb = new StringBuffer(spe.toString());
 			sb.append("\n Line number: " + spe.getLineNumber());
@@ -224,13 +220,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			sb.append("\n System ID: " + spe.getSystemId() + "\n");
 			System.err.println(sb.toString());
 		}
-		catch (SAXException e) {
-			ExceptionHandler.reportException(e);
-		}
-		catch (ParserConfigurationException e) {
-			ExceptionHandler.reportException(e);
-		}
-		catch (FactoryConfigurationError e) {
+		catch (IOException | SAXException | ParserConfigurationException | FactoryConfigurationError e) {
 			ExceptionHandler.reportException(e);
 		}
 
@@ -288,19 +278,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 				osw.flush();
 			}
 		}
-		catch (IOException ioe) {
-			ExceptionHandler.reportException(ioe);
-		}
-		catch (ParserConfigurationException e) {
-			ExceptionHandler.reportException(e);
-		}
-		catch (FactoryConfigurationError e) {
-			ExceptionHandler.reportException(e);
-		}
-		catch (TransformerConfigurationException e) {
-			ExceptionHandler.reportException(e);
-		}
-		catch (TransformerException e) {
+		catch (IOException | ParserConfigurationException | FactoryConfigurationError | TransformerException e) {
 			ExceptionHandler.reportException(e);
 		}
 	}

@@ -80,10 +80,7 @@ public class RemoteController {
 			Naming.unbind(serverURL);
 			isActive = false;
 		}
-		catch (MalformedURLException e) {
-			ExceptionHandler.reportException(e);
-		}
-		catch (NotBoundException e) {
+		catch (MalformedURLException | NotBoundException e) {
 			ExceptionHandler.reportException(e);
 		}
 	}

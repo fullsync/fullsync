@@ -106,6 +106,7 @@ public class ConnectionConfiguration {
 		selectedScheme = comboProtocol.getText();
 		createProtocolSpecificComposite();
 	}
+
 	public void setConnectionDescription(ConnectionDescription location) {
 		compositeSpecific.setConnectionDescription(location);
 	}
@@ -123,11 +124,7 @@ public class ConnectionConfiguration {
 			compositeSpecific.setBufferedEnabled(bufferedEnabled);
 			compositeSpecific.setBuffered(bufferedActive);
 		}
-		catch (InstantiationException e) {
-			ExceptionHandler.reportException(e);
-			e.printStackTrace();
-		}
-		catch (IllegalAccessException e) {
+		catch (InstantiationException | IllegalAccessException e) {
 			ExceptionHandler.reportException(e);
 			e.printStackTrace();
 		}

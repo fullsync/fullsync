@@ -63,16 +63,11 @@ public abstract class RuleSetDescriptor implements Serializable {
 			RuleSetDescriptor desc = null;
 			try {
 				desc = ruleSetDesctiptorClass.newInstance();
+				desc.unserializeDescriptor(element);
 			}
-			catch (InstantiationException e) {
+			catch (InstantiationException | IllegalAccessException e) {
 				ExceptionHandler.reportException(e);
-				return null;
 			}
-			catch (IllegalAccessException e) {
-				ExceptionHandler.reportException(e);
-				return null;
-			}
-			desc.unserializeDescriptor(element);
 			return desc;
 		}
 	}
