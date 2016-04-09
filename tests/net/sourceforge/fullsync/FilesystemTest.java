@@ -231,11 +231,10 @@ public class FilesystemTest {
 			m_fakeServer.getFileSystem().add(file);
 		}
 		else {
-			PrintStream out = createNewFile(dir, filename);
-			out.print(content);
-			out.close();
+			try (PrintStream out = createNewFile(dir, filename)) {
+				out.print(content);
+			}
 			File f = new File(dir, filename);
-
 			assertTrue("File.setLastModified failed for: " + f.getAbsolutePath(), f.setLastModified(lm));
 		}
 	}

@@ -202,24 +202,16 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			}
 			return;
 		}
-		ByteArrayOutputStream out;
-		InputStream reader = null;
-		try {
-			out = new ByteArrayOutputStream((int) f.getSize());
-
-			InputStream in = new GZIPInputStream(f.getInputStream());
+		try (InputStream in = new GZIPInputStream(f.getInputStream())) {
+			ByteArrayOutputStream out = new ByteArrayOutputStream((int) f.getSize());
 			int i;
-			byte[] block = new byte[1024];
+			byte[] block = new byte[4096];
 			while ((i = in.read(block)) > 0) {
 				out.write(block, 0, i);
 			}
 			in.close();
-			out.close();
-
-			reader = new ByteArrayInputStream(out.toByteArray());
 			SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
-			sax.parse(reader, new SyncFileDefaultHandler(this));
-
+			sax.parse(new ByteArrayInputStream(out.toByteArray()), new SyncFileDefaultHandler(this));
 		}
 		catch (IOException ioe) {
 			ExceptionHandler.reportException(ioe);
@@ -240,16 +232,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		}
 		catch (FactoryConfigurationError e) {
 			ExceptionHandler.reportException(e);
-		}
-		finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-			}
-			catch (IOException e1) {
-				ExceptionHandler.reportException(e1);
-			}
 		}
 
 		if (isMonitoringFileSystem()) {
@@ -284,7 +266,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		if ((node == null) || !node.exists()) {
 			node = root.createChild(".syncfiles", false);
 		}
-		OutputStream out = null;
 
 		try {
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -293,20 +274,19 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			Element e = doc.createElement("SyncFiles");
 			e.appendChild(serializeFile(root, doc));
 			doc.appendChild(e);
-
-			out = new GZIPOutputStream(node.getOutputStream());
-
 			TransformerFactory fac = TransformerFactory.newInstance();
 			fac.setAttribute("indent-number", 2);
 			Transformer tf = fac.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new OutputStreamWriter(out, "UTF-8"));
-
 			tf.setOutputProperty(OutputKeys.METHOD, "xml");
 			tf.setOutputProperty(OutputKeys.VERSION, "1.0");
 			tf.setOutputProperty(OutputKeys.INDENT, "yes");
 			tf.setOutputProperty(OutputKeys.STANDALONE, "no");
-			tf.transform(source, result);
+			DOMSource source = new DOMSource(doc);
+
+			try (OutputStreamWriter osw = new OutputStreamWriter(new GZIPOutputStream(node.getOutputStream()), "UTF-8")) {
+				tf.transform(source, new StreamResult(osw));
+				osw.flush();
+			}
 		}
 		catch (IOException ioe) {
 			ExceptionHandler.reportException(ioe);
@@ -322,11 +302,6 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		}
 		catch (TransformerException e) {
 			ExceptionHandler.reportException(e);
-		}
-		finally {
-			if (null != out) {
-				out.close();
-			}
 		}
 	}
 

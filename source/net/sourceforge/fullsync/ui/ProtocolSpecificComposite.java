@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -97,35 +96,22 @@ class ProtocolSpecificComposite {
 	 * open a browse dialog and let the user choose a path.
 	 */
 	public void onBrowse() {
-		Site conn = null;
 		try {
 			ConnectionDescription desc = getConnectionDescription();
 			FileSystemManager fsm = new FileSystemManager();
 			desc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
-			conn = fsm.createConnection(desc);
-
-			FileObject base = conn.getBase();
-			FileObjectChooser foc = new FileObjectChooser(m_parent.getShell(), SWT.NULL);
-			foc.setBaseFileObject(base);
-			foc.setSelectedFileObject(base);
-			if (foc.open()) {
-				URI uri;
-				uri = new URI(foc.getActiveFileObject().getName().getURI());
-				setPath(uri.getPath());
-			}
-		}
-		catch (Exception e1) {
-			ExceptionHandler.reportException(e1);
-		}
-		finally {
-			if (null != conn) {
-				try {
-					conn.close();
-				}
-				catch (IOException e1) {
-					e1.printStackTrace();
+			try (Site conn = fsm.createConnection(desc)) {
+				FileObject base = conn.getBase();
+				FileObjectChooser foc = new FileObjectChooser(m_parent.getShell(), SWT.NULL);
+				foc.setBaseFileObject(base);
+				foc.setSelectedFileObject(base);
+				if (foc.open()) {
+					setPath(new URI(foc.getActiveFileObject().getName().getURI()).getPath());
 				}
 			}
+		}
+		catch (Exception ex) {
+			ExceptionHandler.reportException(ex);
 		}
 	}
 

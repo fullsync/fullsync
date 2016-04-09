@@ -45,35 +45,21 @@ public abstract class Util {
 
 	// keep in sync with net.sourceforge.fullsync.launcher.Launcher.getResourceAsString(String)
 	public static String getResourceAsString(final String name) {
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
-		if (null != is) {
-			try {
-				final char[] buffer = new char[IOBUFFERSIZE];
-				StringBuilder out = new StringBuilder();
-				Reader in;
-				try {
-					in = new InputStreamReader(is, "UTF-8");
-					int read;
-					do {
-						read = in.read(buffer, 0, buffer.length);
-						if (read > 0) {
-							out.append(buffer, 0, read);
-						}
-					} while (read >= 0);
-					return out.toString();
+		try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name)) {
+			final char[] buffer = new char[IOBUFFERSIZE];
+			StringBuilder out = new StringBuilder();
+			Reader in = new InputStreamReader(is, "UTF-8");
+			int read;
+			do {
+				read = in.read(buffer, 0, buffer.length);
+				if (read > 0) {
+					out.append(buffer, 0, read);
 				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			finally {
-				try {
-					is.close();
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+			} while (read >= 0);
+			return out.toString();
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
 		}
 		return "";
 	}
@@ -112,23 +98,23 @@ public abstract class Util {
 		}
 
 		if (src.isFile() && src.exists()) {
-			JarFile jar = new JarFile(src);
-			Enumeration<JarEntry> jarEntries = jar.entries();
-			Set<String> result = new HashSet<String>(); //avoid duplicates in case it is a subdirectory
-			String prefix = path;
-			if ('/' == prefix.charAt(0)) {
-				prefix = prefix.substring(1);
-			}
-			while (jarEntries.hasMoreElements()) {
-				JarEntry entry = jarEntries.nextElement();
-				String name = entry.getName();
-				if (!entry.isDirectory() && name.startsWith(prefix)) { //filter according to the path
-					name = name.substring(prefix.length());
-					result.add(name);
+			try (JarFile jar = new JarFile(src)) {
+				Enumeration<JarEntry> jarEntries = jar.entries();
+				Set<String> result = new HashSet<String>(); //avoid duplicates in case it is a subdirectory
+				String prefix = path;
+				if ('/' == prefix.charAt(0)) {
+					prefix = prefix.substring(1);
 				}
+				while (jarEntries.hasMoreElements()) {
+					JarEntry entry = jarEntries.nextElement();
+					String name = entry.getName();
+					if (!entry.isDirectory() && name.startsWith(prefix)) { //filter according to the path
+						name = name.substring(prefix.length());
+						result.add(name);
+					}
+				}
+				return result.toArray(new String[result.size()]);
 			}
-			jar.close();
-			return result.toArray(new String[result.size()]);
 		}
 		return new String[] {};
 	}

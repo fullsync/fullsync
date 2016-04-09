@@ -89,7 +89,6 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 	@Override
 	public TaskTree execute(Profile profile, boolean interactive)
 			throws FileSystemException, URISyntaxException, DataParseException, IOException {
-		Site d1 = null, d2 = null;
 
 		RuleSet rules = profile.getRuleSet().createRuleSet();
 
@@ -113,29 +112,18 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 			throw new IllegalArgumentException("Profile has unknown synchronization type.");
 		}
 
-		try {
-			ConnectionDescription srcDesc = profile.getSource();
-			ConnectionDescription dstDesc = profile.getDestination();
-			if (interactive) {
-				srcDesc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
-				dstDesc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
-			}
-			else {
-				srcDesc.clearParameter(ConnectionDescription.PARAMETER_INTERACTIVE);
-				dstDesc.clearParameter(ConnectionDescription.PARAMETER_INTERACTIVE);
-			}
-			d1 = fsm.createConnection(srcDesc);
-			d2 = fsm.createConnection(dstDesc);
-			return execute(d1, d2, actionDecider, rules);
+		ConnectionDescription srcDesc = profile.getSource();
+		ConnectionDescription dstDesc = profile.getDestination();
+		if (interactive) {
+			srcDesc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
+			dstDesc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
 		}
-		catch (FileSystemException ex) {
-			if (d1 != null) {
-				d1.close();
-			}
-			if (d2 != null) {
-				d2.close();
-			}
-			throw ex;
+		else {
+			srcDesc.clearParameter(ConnectionDescription.PARAMETER_INTERACTIVE);
+			dstDesc.clearParameter(ConnectionDescription.PARAMETER_INTERACTIVE);
+		}
+		try (Site d1 = fsm.createConnection(srcDesc); Site d2 = fsm.createConnection(dstDesc)) {
+			return execute(d1, d2, actionDecider, rules);
 		}
 	}
 

@@ -39,16 +39,9 @@ public class Entry {
 	@Override
 	public String toString() {
 		String result;
-		Formatter formatter = null;
-		try {
-			formatter = new Formatter();
+		try (Formatter formatter = new Formatter()) {
 			Formatter format = formatter.format("%10d-%10d: %s", start, (start + length) - 1, descriptor.toString());
 			result = format.out().toString();
-		}
-		finally {
-			if (null != formatter) {
-				formatter.close();
-			}
 		}
 		return result;
 	}

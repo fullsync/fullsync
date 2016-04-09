@@ -20,18 +20,18 @@
 package net.sourceforge.fullsync.fs;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 
 import org.apache.commons.vfs2.FileObject;
 
-public interface Site extends Serializable {
+public interface Site extends AutoCloseable {
 	public File getRoot();
 
 	// open ?
 	public void flush() throws IOException;
 
+	@Override
 	public void close() throws IOException;
 
 	public boolean isCaseSensitive();

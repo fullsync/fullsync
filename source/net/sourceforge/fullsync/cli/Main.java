@@ -116,25 +116,13 @@ public class Main { // NO_UCD
 	}
 
 	private static void backupFile(final File old, final File current, final String backupName) throws IOException {
-		FileInputStream fis = null;
-		FileOutputStream fos = null;
-		try {
-			fis = new FileInputStream(old);
-			fos = new FileOutputStream(current);
+		try (FileInputStream fis = new FileInputStream(old); FileOutputStream fos = new FileOutputStream(current)) {
 			FileChannel in = fis.getChannel();
 			FileChannel out = fos.getChannel();
 			in.transferTo(0, in.size(), out);
 			in.close();
 			out.close();
 			old.renameTo(new File(backupName));
-		}
-		finally {
-			if (null != fis) {
-				fis.close();
-			}
-			if (null != fos) {
-				fos.close();
-			}
 		}
 	}
 

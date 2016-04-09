@@ -20,6 +20,7 @@
 
 package net.sourceforge.fullsync.launcher;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -86,35 +87,21 @@ public class Launcher {
 	private static final int IOBUFFERSIZE = 0x1000;
 
 	public static String getResourceAsString(final String name) {
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
-		if (null != is) {
-			try {
-				final char[] buffer = new char[IOBUFFERSIZE];
-				StringBuilder out = new StringBuilder();
-				Reader in;
-				try {
-					in = new InputStreamReader(is, "UTF-8");
-					int read;
-					do {
-						read = in.read(buffer, 0, buffer.length);
-						if (read > 0) {
-							out.append(buffer, 0, read);
-						}
-					} while (read >= 0);
-					return out.toString().trim();
+		try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name)) {
+			final char[] buffer = new char[IOBUFFERSIZE];
+			StringBuilder out = new StringBuilder();
+			Reader in = new InputStreamReader(is, "UTF-8");
+			int read;
+			do {
+				read = in.read(buffer, 0, buffer.length);
+				if (read > 0) {
+					out.append(buffer, 0, read);
 				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			finally {
-				try {
-					is.close();
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+			} while (read >= 0);
+			return out.toString().trim();
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
 		}
 		return "";
 	}
