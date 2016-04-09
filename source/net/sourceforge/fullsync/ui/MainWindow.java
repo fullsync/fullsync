@@ -535,9 +535,6 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 
 	@Override
 	public void editProfile(final Profile p) {
-		if (p == null) {
-			return;
-		}
 		try {
 			WizardDialog dialog = new ProfileDetailsTabbedPage(getShell(), guiController.getProfileManager(), p);
 			dialog.show();
