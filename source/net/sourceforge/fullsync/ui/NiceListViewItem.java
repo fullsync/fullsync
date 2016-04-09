@@ -184,7 +184,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 	}
 
 	public void setStatusText(String status) {
-		if ((status == null) || (status.length() == 0)) {
+		if ((null == status) || status.isEmpty()) {
 			labelStatus.setText(""); //$NON-NLS-1$
 		}
 		else {

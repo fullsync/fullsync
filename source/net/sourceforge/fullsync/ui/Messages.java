@@ -52,7 +52,7 @@ public class Messages {
 
 		try {
 			value = instance.RESOURCE_BUNDLE.getString(key);
-			if ((null != value) && (value.length() > 0)) {
+			if ((null != value) && (!value.isEmpty())) {
 				return value;
 			}
 			else {
