@@ -42,7 +42,7 @@ class ExceptionDialog extends Dialog {
 
 	private boolean expanded;
 
-	public ExceptionDialog(Shell parent, String message, Throwable throwable) {
+	ExceptionDialog(Shell parent, String message, Throwable throwable) {
 		super(parent, SWT.NULL);
 		try {
 			Display display = parent.getDisplay();

@@ -19,15 +19,21 @@
     <module name="PackageAnnotation"/>
     <module name="SuppressWarnings"/>
     <module name="AnnotationLocation"/>
-    <module name="ConstantName"/>
+    <module name="ConstantName">
+      <property name="applyToPackage" value="false"/>
+      <property name="applyToPrivate" value="false"/>
+    </module>
     <module name="PackageName"/>
     <module name="CatchParameterName"/>
-    <module name="AnonInnerLength"/>
+    <module name="AnonInnerLength">
+      <property name="max" value="30"/>
+    </module>
     <module name="ExecutableStatementCount">
+      <property name="max" value="50"/>
       <property name="tokens" value="INSTANCE_INIT,STATIC_INIT,METHOD_DEF,CTOR_DEF"/>
     </module>
     <module name="LineLength">
-      <property name="max" value="140"/>
+      <property name="max" value="160"/>
       <property name="tabWidth" value="4"/>
     </module>
     <module name="MethodLength"/>
@@ -36,6 +42,18 @@
     </module>
     <module name="OuterTypeNumber"/>
     <module name="MethodCount"/>
+    <module name="ModifierOrder"/>
+    <module name="RedundantModifier"/>
+    <module name="AvoidNestedBlocks"/>
+    <module name="EmptyBlock"/>
+    <module name="EmptyCatchBlock"/>
+    <module name="LeftCurly">
+      <property name="maxLineLength" value="140"/>
+    </module>
+    <module name="NeedBraces"/>
+    <module name="RightCurly">
+      <property name="option" value="alone"/>
+    </module>
   </module>
   <module name="FileLength"/>
 </module>

@@ -71,7 +71,7 @@ class FileObjectChooser extends Dialog {
 	private FileObject activeFileObject;
 	private FileObject selectedFileObject;
 
-	public FileObjectChooser(Shell parent, int style) {
+	FileObjectChooser(Shell parent, int style) {
 		super(parent, style);
 	}
 

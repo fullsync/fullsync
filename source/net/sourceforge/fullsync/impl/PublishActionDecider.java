@@ -125,6 +125,9 @@ public class PublishActionDecider implements ActionDecider {
 				actions.add(overwriteDestination);
 				actions.add(overwriteSource);
 				break;
+
+			case OrphanDestination:
+				break;
 		}
 
 		actions.add(ignore);

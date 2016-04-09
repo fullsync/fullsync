@@ -23,5 +23,5 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface RemoteSchedulerChangeListenerInterface extends Remote {
-	public void schedulerStatusChanged(boolean status) throws RemoteException;
+	void schedulerStatusChanged(boolean status) throws RemoteException;
 }

@@ -295,33 +295,3 @@ public class GuiController implements Runnable {
 		gc.executorService.execute(new ExecuteBackgroundJob(job, gc.display));
 	}
 }
-
-class ExecuteBackgroundJob implements Runnable {
-	private final AsyncUIUpdate job;
-	private final Display display;
-	private boolean executed;
-	private boolean succeeded;
-
-	public ExecuteBackgroundJob(AsyncUIUpdate _job, Display _display) {
-		job = _job;
-		display = _display;
-	}
-
-	@Override
-	public void run() {
-		if (!executed) {
-			try {
-				job.execute();
-				succeeded = true;
-			}
-			catch (Throwable t) {
-				t.printStackTrace();
-			}
-			executed = true;
-			display.asyncExec(this);
-		}
-		else {
-			job.updateUI(succeeded);
-		}
-	}
-}

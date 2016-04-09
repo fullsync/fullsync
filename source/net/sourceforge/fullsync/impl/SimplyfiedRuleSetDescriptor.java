@@ -186,9 +186,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 						useFilter = true;
 					}
 				}
-				else {
-					// TODO Wildcard translation
-				}
 			}
 		}
 	}

@@ -20,7 +20,7 @@
 package net.sourceforge.fullsync;
 
 public interface ProfileListChangeListener {
-	public void profileChanged(Profile p);
+	void profileChanged(Profile p);
 
-	public void profileListChanged();
+	void profileListChanged();
 }

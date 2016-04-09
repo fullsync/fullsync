@@ -64,7 +64,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		BufferedConnection bc;
 		AbstractBufferedFile current;
 
-		public SyncFileDefaultHandler(SyncFileBufferedConnection bc) {
+		SyncFileDefaultHandler(SyncFileBufferedConnection bc) {
 			this.bc = bc;
 			current = (AbstractBufferedFile) bc.getRoot();
 		}

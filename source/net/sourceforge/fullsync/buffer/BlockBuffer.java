@@ -85,7 +85,7 @@ public class BlockBuffer implements ExecutionBuffer {
 				if (out != null) {
 					out.write(buffer, e.start, e.length);
 				}
-				if ((e.internalSegment & Segment.Last) > 0) {
+				if ((e.internalSegment & Segment.LAST) > 0) {
 					desc.finishWrite();
 					String opDesc = desc.getOperationDescription();
 					if (opDesc != null) {
@@ -97,7 +97,7 @@ public class BlockBuffer implements ExecutionBuffer {
 				ioe = ex;
 				logger.error("Exception", ex);
 			}
-			if ((e.internalSegment & Segment.Last) > 0) {
+			if ((e.internalSegment & Segment.LAST) > 0) {
 				for (EntryFinishedListener listener : finishedListeners) {
 					listener.entryFinished(desc, ioe);
 				}
@@ -154,12 +154,12 @@ public class BlockBuffer implements ExecutionBuffer {
 	private int store(InputStream inStream, long alreadyRead, long lengthLeft, EntryDescriptor descriptor) throws IOException {
 		Entry entry = storeBytes(inStream, lengthLeft);
 
-		int s = Segment.Middle;
+		int s = Segment.MIDDLE;
 		if (alreadyRead == 0) {
-			s |= Segment.First;
+			s |= Segment.FIRST;
 		}
 		if (entry.length == lengthLeft) {
-			s |= Segment.Last;
+			s |= Segment.LAST;
 		}
 
 		entry.internalSegment = s;

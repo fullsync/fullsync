@@ -17,9 +17,36 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.schedule;
+package net.sourceforge.fullsync.ui;
 
-public interface ScheduleTaskSource {
-	ScheduleTask getNextScheduleTask();
+import org.eclipse.swt.widgets.Display;
 
+class ExecuteBackgroundJob implements Runnable {
+	private final AsyncUIUpdate job;
+	private final Display display;
+	private boolean executed;
+	private boolean succeeded;
+
+	ExecuteBackgroundJob(AsyncUIUpdate _job, Display _display) {
+		job = _job;
+		display = _display;
+	}
+
+	@Override
+	public void run() {
+		if (!executed) {
+			try {
+				job.execute();
+				succeeded = true;
+			}
+			catch (Throwable t) {
+				t.printStackTrace();
+			}
+			executed = true;
+			display.asyncExec(this);
+		}
+		else {
+			job.updateUI(succeeded);
+		}
+	}
 }

@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.TabItem;
 
 class AboutDialog extends Dialog implements AsyncUIUpdate {
 	private static final String FULLSYNC_LICENSES_DIRECTORY = "net/sourceforge/fullsync/licenses/";
-	private static final long delay = 750;
+	private static final long ANIMATION_DELAY = 750;
 	private int stIndex = 0;
 	private Timer stTimer;
 	private Combo componentCombo;
@@ -214,7 +214,7 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 					}
 				});
 			}
-		}, delay, delay);
+		}, ANIMATION_DELAY, ANIMATION_DELAY);
 		// separator
 		Label labelSeparator2 = new Label(tab, SWT.SEPARATOR | SWT.HORIZONTAL);
 		GridData labelSeparator2LData = new GridData();

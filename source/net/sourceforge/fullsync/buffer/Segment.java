@@ -20,8 +20,8 @@
 package net.sourceforge.fullsync.buffer;
 
 public final class Segment {
-	public final static int First = 1;
-	public final static int Middle = 2;
-	public final static int Last = 4;
-	public final static int Only = 7;
+	public static final int FIRST = 1;
+	public static final int MIDDLE = 2;
+	public static final int LAST = 4;
+	public static final int ONLY = 7;
 }

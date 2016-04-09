@@ -25,5 +25,5 @@ import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.Site;
 
 public interface BufferingProvider {
-	public Site createBufferedSite(Site site) throws FileSystemException, IOException;
+	Site createBufferedSite(Site site) throws FileSystemException, IOException;
 }

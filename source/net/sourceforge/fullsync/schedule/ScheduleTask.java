@@ -20,5 +20,5 @@
 package net.sourceforge.fullsync.schedule;
 
 public interface ScheduleTask extends Runnable {
-	public long getExecutionTime();
+	long getExecutionTime();
 }

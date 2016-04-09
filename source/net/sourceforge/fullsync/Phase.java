@@ -24,11 +24,11 @@ package net.sourceforge.fullsync;
  */
 public interface Phase {
 	// process interaction
-	public boolean isActive();
+	boolean isActive();
 
-	public void suspend();
+	void suspend();
 
-	public void resume();
+	void resume();
 
-	public void cancel();
+	void cancel();
 }

@@ -107,16 +107,16 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 		long interval = Long.parseLong(textCount.getText()) * item.factor;
 		return new IntervalSchedule(interval, interval, item.unit);
 	}
-}
 
-class SchedulingIntervalItem {
-	public String unit;
-	public String name;
-	public long factor;
+	private static class SchedulingIntervalItem {
+		public String unit;
+		public String name;
+		public long factor;
 
-	public SchedulingIntervalItem(String unit, String name, long factor) {
-		this.unit = unit;
-		this.name = name;
-		this.factor = factor;
+		SchedulingIntervalItem(String unit, String name, long factor) {
+			this.unit = unit;
+			this.name = name;
+			this.factor = factor;
+		}
 	}
 }

@@ -20,21 +20,21 @@
 package net.sourceforge.fullsync.schedule;
 
 public interface Scheduler {
-	public void start();
+	void start();
 
-	public void refresh();
+	void refresh();
 
-	public void stop();
+	void stop();
 
-	public boolean isRunning();
+	boolean isRunning();
 
-	public boolean isEnabled();
+	boolean isEnabled();
 
-	public void setSource(ScheduleTaskSource source);
+	void setSource(ScheduleTaskSource source);
 
-	public ScheduleTaskSource getSource();
+	ScheduleTaskSource getSource();
 
-	public void addSchedulerChangeListener(SchedulerChangeListener listener);
+	void addSchedulerChangeListener(SchedulerChangeListener listener);
 
-	public void removeSchedulerChangeListener(SchedulerChangeListener listener);
+	void removeSchedulerChangeListener(SchedulerChangeListener listener);
 }

@@ -43,7 +43,7 @@ class CrontabScheduleOptions extends ScheduleOptions {
 		private Text text;
 		private Button buttonChoose;
 
-		public PartContainer(CrontabPart crontabPart) {
+		PartContainer(CrontabPart crontabPart) {
 			this.part = crontabPart;
 
 			Label label = new Label(CrontabScheduleOptions.this, SWT.NULL);
@@ -141,7 +141,7 @@ class CrontabScheduleOptions extends ScheduleOptions {
 
 	private PartContainer[] parts;
 
-	public CrontabScheduleOptions(Composite parent, int style) {
+	CrontabScheduleOptions(Composite parent, int style) {
 		super(parent, style);
 		try {
 			this.setLayout(new GridLayout(4, false));

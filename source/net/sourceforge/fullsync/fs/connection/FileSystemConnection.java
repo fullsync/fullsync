@@ -28,19 +28,19 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
 
 public interface FileSystemConnection extends Site {
-	public File createChild(File parent, String name, boolean directory) throws IOException;
+	File createChild(File parent, String name, boolean directory) throws IOException;
 
-	public HashMap<String, File> getChildren(File dir) throws IOException;
+	HashMap<String, File> getChildren(File dir) throws IOException;
 
 	// refresh file, refresh directory ?
 
-	public boolean makeDirectory(File dir) throws IOException;
+	boolean makeDirectory(File dir) throws IOException;
 
-	public boolean writeFileAttributes(File file) throws IOException;
+	boolean writeFileAttributes(File file) throws IOException;
 
-	public InputStream readFile(File file) throws IOException;
+	InputStream readFile(File file) throws IOException;
 
-	public OutputStream writeFile(File file) throws IOException;
+	OutputStream writeFile(File file) throws IOException;
 
-	public boolean delete(File node) throws IOException;
+	boolean delete(File node) throws IOException;
 }

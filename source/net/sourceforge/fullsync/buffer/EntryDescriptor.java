@@ -26,19 +26,19 @@ import java.io.OutputStream;
 import net.sourceforge.fullsync.Task;
 
 public interface EntryDescriptor {
-	public Task getTask();
+	Task getTask();
 
-	public long getSize();
+	long getSize();
 
 	// REVISIT if those streams don't get closed, the entry descriptor should
 	// return the same one as before (say the opened one)
-	public InputStream getInputStream() throws IOException;
+	InputStream getInputStream() throws IOException;
 
-	public OutputStream getOutputStream() throws IOException;
+	OutputStream getOutputStream() throws IOException;
 
-	public void finishStore() throws IOException; // into buffer
+	void finishStore() throws IOException; // into buffer
 
-	public void finishWrite() throws IOException; // to target
+	void finishWrite() throws IOException; // to target
 
-	public String getOperationDescription();
+	String getOperationDescription();
 }

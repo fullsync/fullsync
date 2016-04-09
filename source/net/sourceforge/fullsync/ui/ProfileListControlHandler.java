@@ -24,11 +24,11 @@ import java.util.EventListener;
 import net.sourceforge.fullsync.Profile;
 
 public interface ProfileListControlHandler extends EventListener {
-	public void createNewProfile();
+	void createNewProfile();
 
-	public void runProfile(Profile profile, boolean interactive);
+	void runProfile(Profile profile, boolean interactive);
 
-	public void editProfile(Profile profile);
+	void editProfile(Profile profile);
 
-	public void deleteProfile(Profile profile);
+	void deleteProfile(Profile profile);
 }

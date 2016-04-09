@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.eclipse.swt.widgets.Display;
 
 public class GUIUpdateQueue<Item> {
-	public static interface GUIUpdateTask<Item> {
+	public interface GUIUpdateTask<Item> {
 		void doUpdate(Display display, LinkedList<Item> items);
 	}
 

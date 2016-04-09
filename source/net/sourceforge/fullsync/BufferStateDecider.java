@@ -24,5 +24,5 @@ import java.io.IOException;
 import net.sourceforge.fullsync.fs.File;
 
 public interface BufferStateDecider {
-	public State getState(File buffered) throws DataParseException, IOException;
+	State getState(File buffered) throws DataParseException, IOException;
 }

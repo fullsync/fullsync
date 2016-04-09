@@ -22,13 +22,13 @@ package net.sourceforge.fullsync;
 import java.io.Serializable;
 
 public interface IoStatistics extends Serializable {
-	public int getFilesCopied();
+	int getFilesCopied();
 
-	public int getDirsCreated();
+	int getDirsCreated();
 
-	public int getDeletions();
+	int getDeletions();
 
-	public long getBytesTransferred();
+	long getBytesTransferred();
 
-	public int getCountActions();
+	int getCountActions();
 }

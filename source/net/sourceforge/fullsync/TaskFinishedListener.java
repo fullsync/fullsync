@@ -23,5 +23,5 @@ import java.util.EventListener;
 
 public interface TaskFinishedListener extends EventListener {
 	// TODO better use some action class given to the taskexecutor
-	public void taskFinished(TaskFinishedEvent event);
+	void taskFinished(TaskFinishedEvent event);
 }

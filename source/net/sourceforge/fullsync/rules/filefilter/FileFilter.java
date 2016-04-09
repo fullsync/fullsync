@@ -104,7 +104,7 @@ public class FileFilter implements Serializable {
 					}
 				}
 				return true;
-			case MATCH_ANY: {
+			case MATCH_ANY:
 				int applyedRules = 0;
 
 				for (FileFilterRule rule : rules) {
@@ -122,7 +122,6 @@ public class FileFilter implements Serializable {
 					}
 				}
 				return (applyedRules == 0);
-			}
 			default:
 				return true;
 		}

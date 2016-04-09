@@ -38,7 +38,7 @@ public abstract class Schedule implements Serializable {
 
 	public abstract Element serialize(Element element);
 
-	private final static HashMap<String, Class<? extends Schedule>> scheduleRegister;
+	private static final HashMap<String, Class<? extends Schedule>> scheduleRegister;
 
 	static {
 		scheduleRegister = new HashMap<String, Class<? extends Schedule>>(2);

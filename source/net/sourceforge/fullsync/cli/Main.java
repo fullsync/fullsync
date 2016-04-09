@@ -214,6 +214,7 @@ public class Main { // NO_UCD
 					port = Integer.parseInt(portStr);
 				}
 				catch (NumberFormatException e) {
+					e.printStackTrace();
 				}
 
 				if (line.hasOption("a")) {

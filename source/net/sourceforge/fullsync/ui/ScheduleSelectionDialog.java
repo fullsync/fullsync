@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ScheduleSelectionDialog extends Dialog {
 	class NullScheduleOptions extends ScheduleOptions {
-		public NullScheduleOptions(Composite parent, int style) {
+		NullScheduleOptions(Composite parent, int style) {
 			super(parent, style);
 		}
 

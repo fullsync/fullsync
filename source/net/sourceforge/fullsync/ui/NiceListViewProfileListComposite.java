@@ -49,7 +49,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		private Label lLastUpdate;
 		private Label lNextUpdate;
 
-		public ContentComposite(Composite parent, int style) {
+		ContentComposite(Composite parent, int style) {
 			super(parent, style);
 			GridLayout layout = new GridLayout(2, false);
 			layout.marginHeight = 1;

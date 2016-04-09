@@ -133,5 +133,5 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 		textPassword.setText("");
 	}
 
-	abstract public int getDefaultPort();
+	public abstract int getDefaultPort();
 }

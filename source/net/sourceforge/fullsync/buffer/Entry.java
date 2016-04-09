@@ -32,7 +32,7 @@ public class Entry {
 	public Entry(int start, int length) {
 		this.start = start;
 		this.length = length;
-		this.internalSegment = Segment.Only;
+		this.internalSegment = Segment.ONLY;
 		this.descriptor = null;
 	}
 

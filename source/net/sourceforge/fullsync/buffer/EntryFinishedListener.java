@@ -23,6 +23,6 @@ import java.io.IOException;
 import java.util.EventListener;
 
 public interface EntryFinishedListener extends EventListener {
-	public void entryFinished(EntryDescriptor entry, IOException ioe);
+	void entryFinished(EntryDescriptor entry, IOException ioe);
 
 }

@@ -103,7 +103,8 @@ public class SchedulerImpl implements Scheduler, Runnable {
 			try {
 				worker.join();
 			}
-			catch (InterruptedException e) {
+			catch (InterruptedException ex) {
+				ex.printStackTrace();
 			}
 			finally {
 				worker = null;
@@ -150,6 +151,7 @@ public class SchedulerImpl implements Scheduler, Runnable {
 				task.run();
 			}
 			catch (InterruptedException ex) {
+				ex.printStackTrace();
 			}
 
 		}

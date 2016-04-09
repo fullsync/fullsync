@@ -17,27 +17,22 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs;
-
-import java.io.IOException;
+package net.sourceforge.fullsync.fs.filesystems;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
+import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 
-public interface Site extends AutoCloseable {
-	File getRoot();
+class SmbAuthProvider implements FileSystemAuthProvider {
+	@Override
+	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws FileSystemException {
+		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME),
+				description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
+		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
+	}
 
-	// open ?
-	void flush() throws IOException;
-
-	@Override void close() throws IOException;
-
-	boolean isCaseSensitive();
-
-	boolean isAvailable(); // reachable, correct auth,...
-
-	FileObject getBase();
-
-	ConnectionDescription getConnectionDescription();
 }

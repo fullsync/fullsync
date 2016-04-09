@@ -26,52 +26,49 @@ import java.io.Serializable;
 import java.util.Collection;
 
 public interface File extends Serializable {
-	public String getName();
+	String getName();
 
-	public String getPath();
+	String getPath();
 
-	public File getParent();
+	File getParent();
 
-	public boolean isDirectory();
+	boolean isDirectory();
 
-	public boolean isFile();
+	boolean isFile();
 
-	public boolean exists();
+	boolean exists();
 
-	public boolean isBuffered();
+	boolean isBuffered();
 
-	public File getUnbuffered() throws IOException;
+	File getUnbuffered() throws IOException;
 
-	public void refreshBuffer() throws IOException;
+	void refreshBuffer() throws IOException;
 
-	public void writeFileAttributes() throws IOException;
+	void writeFileAttributes() throws IOException;
 
-	public long getLastModified();
+	long getLastModified();
 
-	public void setLastModified(long lastModified);
+	void setLastModified(long lastModified);
 
-	public long getSize();
+	long getSize();
 
-	public void setSize(long size);
+	void setSize(long size);
 
-	public Collection<File> getChildren() throws IOException;
+	Collection<File> getChildren() throws IOException;
 
-	public File getChild(String name) throws IOException;
+	File getChild(String name) throws IOException;
 
 	// TODO currently, 'create' isnt the right word
 	// they do not exist before and may not exists after sync
-	public File createChild(String name, boolean directory) throws IOException;
+	File createChild(String name, boolean directory) throws IOException;
 
-	public void refresh() throws IOException;
+	void refresh() throws IOException;
 
-	public boolean makeDirectory() throws IOException;
+	boolean makeDirectory() throws IOException;
 
-	public InputStream getInputStream() throws IOException;
+	InputStream getInputStream() throws IOException;
 
-	public OutputStream getOutputStream() throws IOException;
+	OutputStream getOutputStream() throws IOException;
 
-	public boolean delete() throws IOException;
-
-	@Override
-	public String toString();
+	boolean delete() throws IOException;
 }

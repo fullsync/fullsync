@@ -63,7 +63,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		private Profile profile;
 		private long executionTime;
 
-		public ProfileManagerSchedulerTask(Profile profile, long executionTime) {
+		ProfileManagerSchedulerTask(Profile profile, long executionTime) {
 			this.profile = profile;
 			this.executionTime = executionTime;
 		}

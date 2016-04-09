@@ -22,5 +22,5 @@ package net.sourceforge.fullsync;
 import java.util.EventListener;
 
 public interface ProfileChangeListener extends EventListener {
-	public void profileChanged(Profile profile);
+	void profileChanged(Profile profile);
 }

@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 class ConnectionPage extends WizardDialog {
-	public ConnectionPage(Shell parent) {
+	ConnectionPage(Shell parent) {
 		super(parent);
 	}
 

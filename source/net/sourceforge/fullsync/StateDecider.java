@@ -22,5 +22,5 @@ package net.sourceforge.fullsync;
 import net.sourceforge.fullsync.fs.File;
 
 public interface StateDecider {
-	public State getState(File src, File dst) throws DataParseException;
+	State getState(File src, File dst) throws DataParseException;
 }

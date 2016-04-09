@@ -20,5 +20,5 @@
 package net.sourceforge.fullsync;
 
 public interface ProfileSchedulerListener {
-	public void profileExecutionScheduled(Profile profile);
+	void profileExecutionScheduled(Profile profile);
 }

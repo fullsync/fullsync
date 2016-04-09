@@ -22,15 +22,15 @@ package net.sourceforge.fullsync.buffer;
 import java.io.IOException;
 
 public interface ExecutionBuffer {
-	public void load();
+	void load();
 
-	public void unload();
+	void unload();
 
-	public void flush() throws IOException;
+	void flush() throws IOException;
 
-	public void storeEntry(EntryDescriptor descriptor) throws IOException;
+	void storeEntry(EntryDescriptor descriptor) throws IOException;
 
-	public void addEntryFinishedListener(EntryFinishedListener listener);
+	void addEntryFinishedListener(EntryFinishedListener listener);
 
-	public void removeEntryFinishedListener(EntryFinishedListener listener);
+	void removeEntryFinishedListener(EntryFinishedListener listener);
 }

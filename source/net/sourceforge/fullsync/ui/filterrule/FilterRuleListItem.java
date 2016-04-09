@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui.filterrule;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.rules.filefilter.FileAgeFileFilterRule;
@@ -52,37 +53,12 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 public class FilterRuleListItem {
+	private static final Map<String, Class<? extends FileFilterRule>> rulesTable;
+	private static final Map<String, String> ruleNamesConversionTable;
+	private static final Map<String, String> reverseRuleNamesConversionTable;
+	private static final String[] ruleTypeNames;
 
-	private static HashMap<String, Class<? extends FileFilterRule>> rulesTable;
-	private static HashMap<String, String> ruleNamesConversionTable;
-	private static HashMap<String, String> reverseRuleNamesConversionTable;
-	private static String[] ruleTypeNames;
-	private static boolean initDone = false;
-
-	private String ruleType;
-	private int op;
-	private OperandValue value;
-
-	private RuleComposite ruleComposite;
-
-	private final FileFilterPage root;
-
-	private final FileFilterManager fileFilterManager;
-
-	public FilterRuleListItem(FileFilterPage root, Composite composite, FileFilterManager fileFilterManager, String ruleType, int op,
-			OperandValue value) {
-		this.fileFilterManager = fileFilterManager;
-		this.ruleType = ruleType;
-		this.op = op;
-		this.root = root;
-		this.value = value;
-		if (!initDone) {
-			initConversionTables();
-		}
-		init(composite);
-	}
-
-	private static void initConversionTables() {
+	static {
 		ruleTypeNames = new String[7];
 		ruleTypeNames[0] = Messages.getString("FilterRuleListItem.FileNameFilter");
 		ruleTypeNames[1] = Messages.getString("FilterRuleListItem.FilePathFilter");
@@ -120,7 +96,26 @@ public class FilterRuleListItem {
 				FileModificationDateFileFilterRule.typeName);
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileAgeFilter"), FileAgeFileFilterRule.typeName); //$NON-NLS-1$
 		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.NestedFilter"), SubfilterFileFilerRule.typeName); //$NON-NLS-1$
-		initDone = true;
+	}
+
+	private String ruleType;
+	private int op;
+	private OperandValue value;
+
+	private RuleComposite ruleComposite;
+
+	private final FileFilterPage root;
+
+	private final FileFilterManager fileFilterManager;
+
+	public FilterRuleListItem(FileFilterPage root, Composite composite, FileFilterManager fileFilterManager, String ruleType, int op,
+			OperandValue value) {
+		this.fileFilterManager = fileFilterManager;
+		this.ruleType = ruleType;
+		this.op = op;
+		this.root = root;
+		this.value = value;
+		init(composite);
 	}
 
 	private static Class<? extends FileFilterRule> getRuleClass(String typeName) {

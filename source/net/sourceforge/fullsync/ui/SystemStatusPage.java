@@ -155,35 +155,18 @@ public class SystemStatusPage extends WizardDialog {
 				timer.cancel();
 				return;
 			}
-			final Composite comp = content;
-			display.syncExec(new Runnable() {
-				private final String[] units = { "B", "KiB", "MiB", "GiB", "TiB" };
-				private final long kilo = 1024;
+			display.syncExec(() -> {
+				Runtime rt = Runtime.getRuntime();
+				long ltotalMemory = rt.totalMemory();
+				long lmaxMemory = rt.maxMemory();
+				long lfreeMemory = rt.freeMemory();
 
-				private void setFormattedText(final Label l, final long origValue) {
-					long unit = 0, value = origValue;
-					while (value > kilo) {
-						value /= kilo;
-						unit++;
-					}
-					l.setText(String.valueOf(value) + " " + units[(int) unit]);
-				}
-
-				@Override
-				public void run() {
-					Runtime rt = Runtime.getRuntime();
-
-					long ltotalMemory = rt.totalMemory();
-					long lmaxMemory = rt.maxMemory();
-					long lfreeMemory = rt.freeMemory();
-
-					setFormattedText(totalMemory, ltotalMemory);
-					setFormattedText(maxMemory, lmaxMemory);
-					setFormattedText(freeMemory, lfreeMemory);
-					progressBarMemory.setMaximum((int) (ltotalMemory / kilo));
-					progressBarMemory.setSelection((int) ((ltotalMemory - lfreeMemory) / kilo));
-					comp.layout();
-				}
+				totalMemory.setText(UISettings.formatSize(ltotalMemory));
+				maxMemory.setText(UISettings.formatSize(lmaxMemory));
+				freeMemory.setText(UISettings.formatSize(lfreeMemory));
+				progressBarMemory.setMaximum((int) (ltotalMemory / 1024));
+				progressBarMemory.setSelection((int) ((ltotalMemory - lfreeMemory) / 1024));
+				content.layout();
 			});
 		}
 	}

@@ -24,13 +24,13 @@ import java.io.IOException;
 import net.sourceforge.fullsync.fs.File;
 
 public interface BufferedFile extends File {
-	public long getFsLastModified();
+	long getFsLastModified();
 
-	public long getFsSize();
+	long getFsSize();
 
-	public void addChild(File node);
+	void addChild(File node);
 
-	public void removeChild(String name);
+	void removeChild(String name);
 
-	public void refreshReference() throws IOException;
+	void refreshReference() throws IOException;
 }

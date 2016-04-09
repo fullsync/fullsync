@@ -26,6 +26,6 @@ import net.sourceforge.fullsync.TaskFinishedEvent;
 
 public interface RemoteTaskFinishedListenerInterface extends Remote {
 
-	public void taskFinished(TaskFinishedEvent event) throws RemoteException;
+	void taskFinished(TaskFinishedEvent event) throws RemoteException;
 
 }

@@ -25,5 +25,5 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 
 public interface FileSystem {
-	public Site createConnection(ConnectionDescription description) throws FileSystemException, IOException;
+	Site createConnection(ConnectionDescription description) throws FileSystemException, IOException;
 }

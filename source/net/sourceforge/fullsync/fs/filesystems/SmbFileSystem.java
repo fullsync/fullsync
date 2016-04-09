@@ -22,20 +22,17 @@ package net.sourceforge.fullsync.fs.filesystems;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.FileSystem;
-import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
 import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.VFS;
-import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
-import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
 
 public class SmbFileSystem implements FileSystem {
 	static {
-		//FIXME: no longer needed after update past [VFS-552][sandbox] include vfs-providers.xml in JAR for dynamic registration of mime and smb providers.
+		//FIXME: no longer needed after update past vfs issue 552:
+		//[VFS-552][sandbox] include vfs-providers.xml in JAR for dynamic registration of mime and smb providers.
 		try {
 			FileSystemManager fsm = VFS.getManager();
 			if (!fsm.hasProvider("smb") && (fsm instanceof DefaultFileSystemManager)) {
@@ -52,15 +49,4 @@ public class SmbFileSystem implements FileSystem {
 	public final Site createConnection(final ConnectionDescription description) throws FileSystemException {
 		return new CommonsVfsConnection(description, new SmbAuthProvider());
 	}
-}
-
-class SmbAuthProvider implements FileSystemAuthProvider {
-	@Override
-	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options)
-			throws org.apache.commons.vfs2.FileSystemException {
-		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME),
-				description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
-		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
-	}
-
 }
