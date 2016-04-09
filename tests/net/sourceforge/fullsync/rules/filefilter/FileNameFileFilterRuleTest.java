@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.rules.filefilter;
 
 import static org.junit.Assert.assertTrue;
+
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
