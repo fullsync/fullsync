@@ -93,11 +93,7 @@ public class FilesystemTest {
 		if (null != m_fakeServer) {
 			m_fakeServer.stop();
 		}
-		try {
-			//FIXME: disconnect source and destination!
-		}
-		catch (Exception e) {
-		}
+		//FIXME: disconnect source and destination!
 		tmpFolder.delete();
 	}
 

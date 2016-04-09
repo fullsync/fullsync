@@ -47,28 +47,22 @@ public abstract class Schedule implements Serializable {
 	}
 
 	public static final Schedule unserialize(final Element element) {
-		if (element == null) {
-			return null;
-		}
-		String scheduleType = element.getAttribute("type");
-		Class<? extends Schedule> scheduleClass = scheduleRegister.get(scheduleType);
+		Schedule sched = null;
+		if (null != element) {
+			String scheduleType = element.getAttribute("type");
+			Class<? extends Schedule> scheduleClass = scheduleRegister.get(scheduleType);
 
-		if (scheduleClass == null) {
-			return null;
-		}
-		else {
-			Schedule sched = null;
-
-			try {
-				Constructor<? extends Schedule> constructor = scheduleClass.getDeclaredConstructor(Element.class);
-				sched = constructor.newInstance(element);
+			if (null != scheduleClass) {
+				try {
+					Constructor<? extends Schedule> constructor = scheduleClass.getDeclaredConstructor(Element.class);
+					sched = constructor.newInstance(element);
+				}
+				catch (Exception e) {
+					ExceptionHandler.reportException(e);
+				}
 			}
-			catch (Exception e) {
-				ExceptionHandler.reportException(e);
-			}
-
-			return sched;
 		}
+		return sched;
 	}
 
 	public static final Element serialize(Schedule sch, Document doc) {

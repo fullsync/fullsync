@@ -136,8 +136,8 @@ public class Main { // NO_UCD
 			try {
 				line = parser.parse(options, args);
 			}
-			catch (ParseException pe) {
-				System.err.println(pe.getMessage());
+			catch (ParseException ex) {
+				System.err.println(ex.getMessage());
 				printHelp();
 				return;
 			}
@@ -303,8 +303,8 @@ public class Main { // NO_UCD
 			}
 
 		}
-		catch (Exception exp) {
-			ExceptionHandler.reportException(exp);
+		catch (Exception ex) {
+			ExceptionHandler.reportException(ex);
 		}
 	}
 }

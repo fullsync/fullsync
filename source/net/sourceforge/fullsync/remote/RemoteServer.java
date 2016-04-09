@@ -88,6 +88,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 					remotelistener.profileChanged(profile);
 				}
 				catch (RemoteException e) {
+					e.printStackTrace();
 				}
 			}
 
@@ -97,6 +98,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 					remotelistener.profileListChanged();
 				}
 				catch (RemoteException e) {
+					e.printStackTrace();
 				}
 			}
 		};
@@ -117,6 +119,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 				remotelistener.schedulerStatusChanged(status);
 			}
 			catch (RemoteException e) {
+				e.printStackTrace();
 			}
 		};
 		profileManager.addSchedulerChangeListener(listener);

@@ -20,7 +20,6 @@
 package net.sourceforge.fullsync;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 
 import net.sourceforge.fullsync.buffer.BlockBuffer;
 import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
@@ -50,21 +49,16 @@ public class Synchronizer {
 	}
 
 	public synchronized TaskTree executeProfile(Profile profile, boolean interactive) {
-		if (remoteManager != null) {
-			try {
+		try {
+			if (remoteManager != null) {
 				return remoteManager.executeProfile(profile.getName());
 			}
-			catch (Exception e) {
-				ExceptionHandler.reportException(e);
-			}
-		}
-		else {
-			try {
+			else {
 				return taskGenerator.execute(profile, interactive);
 			}
-			catch (Exception e) {
-				ExceptionHandler.reportException(e);
-			}
+		}
+		catch (Exception e) {
+			ExceptionHandler.reportException(e);
 		}
 		return null;
 	}
@@ -88,24 +82,12 @@ public class Synchronizer {
 	 * @return Returns the ErrorLevel
 	 */
 	public int performActions(TaskTree taskTree, TaskFinishedListener listener) {
-		if (remoteManager != null) {
-			logger.info("Remote Synchronization started");
-			try {
+		try {
+			if (remoteManager != null) {
+				logger.info("Remote Synchronization started");
 				remoteManager.performActions(taskTree, listener);
-				logger.info("synchronization successful"); // TODO ...with x errors and y warnings
-				logger.info("------------------------------------------------------------");
-				return 0;
 			}
-			catch (RemoteException e) {
-				ExceptionHandler.reportException(e);
-				logger.error("An Exception occured while performing actions", e);
-				logger.info("synchronization failed");
-				logger.info("------------------------------------------------------------");
-				return 1;
-			}
-		}
-		else {
-			try {
+			else {
 				logger.info("Synchronization started");
 				logger.info("  source:      " + taskTree.getSource().getConnectionDescription().getDisplayPath());
 				logger.info("  destination: " + taskTree.getDestination().getConnectionDescription().getDisplayPath());
@@ -126,17 +108,18 @@ public class Synchronizer {
 				taskTree.getDestination().flush();
 				taskTree.getSource().close();
 				taskTree.getDestination().close();
-				logger.info("synchronization successful"); // TODO ...with x errors and y warnings
-				logger.info("------------------------------------------------------------");
-				return 0;
-			}
-			catch (IOException ioe) {
-				logger.error("An Exception occured while performing actions", ioe);
-				logger.info("synchronization failed");
-				logger.info("------------------------------------------------------------");
-				return 1;
 			}
 		}
+		catch (IOException e) {
+			ExceptionHandler.reportException(e);
+			logger.error("An Exception occured while performing actions", e);
+			logger.info("synchronization failed");
+			logger.info("------------------------------------------------------------");
+			return 1;
+		}
+		logger.info("synchronization successful"); // TODO ...with x errors and y warnings
+		logger.info("------------------------------------------------------------");
+		return 0;
 	}
 
 	public void setRemoteConnection(RemoteManager remoteManager) {

@@ -151,7 +151,7 @@ public class SchedulerImpl implements Scheduler, Runnable {
 				}
 				task.run();
 			}
-			catch (InterruptedException ie) {
+			catch (InterruptedException ex) {
 			}
 
 		}

@@ -654,6 +654,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			}
 		}
 		catch (URISyntaxException e) {
+			e.printStackTrace();
 		}
 		return dst;
 	}

@@ -24,6 +24,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import net.sourceforge.fullsync.cli.Main;
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.junit.After;
@@ -47,14 +49,7 @@ public abstract class GUITestBase {
 		System.setProperty("net.sourceforge.fullsync.skipHelp", "true");
 		System.setProperty("net.sourceforge.fullsync.skipWelcomeScreen", "true");
 
-		applicationThread = new Thread(() -> {
-			try {
-				net.sourceforge.fullsync.cli.Main.main(new String[] { "-v" });
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		applicationThread = new Thread(() -> Main.main(new String[] { "-v" }));
 		applicationThread.setName("FullSync GUI");
 		applicationThread.start();
 		assertTrue("GUI startup failed, Display not found", null != waitForDisplayToAppear(GUI_STARTUP_TIMEOUT));

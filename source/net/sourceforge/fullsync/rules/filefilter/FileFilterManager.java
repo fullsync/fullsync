@@ -68,6 +68,7 @@ public class FileFilterManager {
 			matchType = Integer.parseInt(fileFilterElement.getAttribute("matchtype"));
 		}
 		catch (NumberFormatException e) {
+			e.printStackTrace();
 		}
 		fileFilter.setMatchType(matchType);
 
@@ -76,6 +77,7 @@ public class FileFilterManager {
 			filterType = Integer.parseInt(fileFilterElement.getAttribute("filtertype"));
 		}
 		catch (NumberFormatException e) {
+			e.printStackTrace();
 		}
 		fileFilter.setFilterType(filterType);
 

@@ -364,18 +364,13 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	public void save() {
-		if (remoteManager != null) {
-			try {
+		try {
+			if (remoteManager != null) {
 				remoteManager.removeProfileListChangeListener(remoteListener);
 				remoteManager.save(profiles.toArray(new Profile[0]));
 				remoteManager.addProfileListChangeListener(remoteListener);
 			}
-			catch (RemoteException e) {
-				ExceptionHandler.reportException(e);
-			}
-		}
-		else {
-			try {
+			else {
 				DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				Document doc = docBuilder.newDocument();
 
@@ -409,9 +404,9 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 					throw ex;
 				}
 			}
-			catch (Exception ex) {
-				ExceptionHandler.reportException(ex);
-			}
+		}
+		catch (Exception ex) {
+			ExceptionHandler.reportException(ex);
 		}
 	}
 

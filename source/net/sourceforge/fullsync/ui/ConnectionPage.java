@@ -124,7 +124,8 @@ class ConnectionPage extends WizardDialog {
 			port = Integer.parseInt(textFieldPort.getText());
 		}
 		catch (NumberFormatException e) {
-			//FIXME: reject dialog and tell the user about
+			ExceptionHandler.reportException(e);
+			return false;
 		}
 
 		String password = textPassword.getText();
@@ -147,8 +148,9 @@ class ConnectionPage extends WizardDialog {
 		catch (Exception ex) {
 			GuiController.getInstance().getProfileManager().setRemoteConnected(false);
 			ExceptionHandler.reportException(Messages.getString("ConnectionComposite.Unable_To_Connect"), ex); //$NON-NLS-1$
+			return false;
 		}
-		return true; //FIXME: return false if failed
+		return true;
 	}
 
 	@Override

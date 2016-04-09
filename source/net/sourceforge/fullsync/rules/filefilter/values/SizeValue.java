@@ -59,6 +59,7 @@ public class SizeValue implements OperandValue {
 			this.value = Double.parseDouble(bytes);
 		}
 		catch (NumberFormatException e) {
+			e.printStackTrace();
 		}
 	}
 

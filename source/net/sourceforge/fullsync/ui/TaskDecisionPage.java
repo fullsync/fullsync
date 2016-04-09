@@ -139,6 +139,11 @@ public class TaskDecisionPage extends WizardDialog {
 		if (!processing) {
 			try {
 				taskTree.getSource().close();
+			}
+			catch (IOException ioe) {
+				ExceptionHandler.reportException(ioe);
+			}
+			try {
 				taskTree.getDestination().close();
 			}
 			catch (IOException ioe) {

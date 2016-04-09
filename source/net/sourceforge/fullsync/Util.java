@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -79,14 +78,12 @@ public abstract class Util {
 	public static File getInstalllocation() {
 		URL codeSource = Util.class.getProtectionDomain().getCodeSource().getLocation();
 		try {
-			URI path = codeSource.toURI();
-			path = path.resolve("../");
-			return new File(path);
+			return new File(codeSource.toURI().resolve("../"));
 		}
 		catch (URISyntaxException e) {
 			e.printStackTrace();
-			return new File(".");
 		}
+		return new File(".");
 	}
 
 	public static String[] loadDirectoryFromClasspath(Class<?> clazz, String path)
