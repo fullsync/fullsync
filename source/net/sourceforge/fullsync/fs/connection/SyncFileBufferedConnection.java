@@ -213,7 +213,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			sax.parse(new ByteArrayInputStream(out.toByteArray()), new SyncFileDefaultHandler(this));
 		}
 		catch (SAXParseException spe) {
-			StringBuffer sb = new StringBuffer(spe.toString());
+			StringBuilder sb = new StringBuilder(spe.toString());
 			sb.append("\n Line number: " + spe.getLineNumber());
 			sb.append("\n Column number: " + spe.getColumnNumber());
 			sb.append("\n Public ID: " + spe.getPublicId());

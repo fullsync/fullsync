@@ -95,7 +95,7 @@ public class CrontabPart implements Serializable {
 		}
 
 		private String generatePattern() {
-			StringBuffer p = new StringBuffer();
+			StringBuilder p = new StringBuilder();
 			for (int i = low; i <= high; i++) {
 				if (this.bArray[i + offset]) {
 					p.append(String.valueOf(i)).append(',');

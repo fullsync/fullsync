@@ -81,14 +81,12 @@ public class FileTypeFileFilterRule extends FileFilterRule {
 
 	@Override
 	public String toString() {
-		StringBuffer buff = new StringBuffer(30);
-
+		StringBuilder buff = new StringBuilder(30);
 		buff.append("file type ");
 		buff.append(allOperators[op]);
 		buff.append(" '");
 		buff.append(type.toString());
 		buff.append('\'');
-
 		return buff.toString();
 	}
 }

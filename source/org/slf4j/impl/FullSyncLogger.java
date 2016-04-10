@@ -195,7 +195,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 	 * @param t
 	 */
 	private void log(final String level, final String message, final Throwable t) {
-		final StringBuffer buf = new StringBuffer();
+		final StringBuilder buf = new StringBuilder();
 
 		final long millis = System.currentTimeMillis();
 		buf.append(millis - startTime);

@@ -94,8 +94,7 @@ public class FileAgeFileFilterRule extends FileFilterRule {
 
 	@Override
 	public String toString() {
-		StringBuffer buff = new StringBuffer(30);
-
+		StringBuilder buff = new StringBuilder(30);
 		buff.append("file age ");
 		buff.append(allOperators[op]);
 		buff.append(" '");

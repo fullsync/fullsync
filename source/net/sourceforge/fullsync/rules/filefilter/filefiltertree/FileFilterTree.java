@@ -86,11 +86,7 @@ public class FileFilterTree implements Serializable {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
-
-		buffer.append(root.toString());
-
-		return buffer.toString();
+		return root.toString();
 	}
 
 }

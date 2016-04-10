@@ -31,7 +31,7 @@ public class Crypt {
 
 		int pos = str.length() % m_key.length();
 
-		StringBuffer ret = new StringBuffer();
+		StringBuilder ret = new StringBuilder();
 		NumberFormat format = NumberFormat.getIntegerInstance();
 		format.setMinimumIntegerDigits(3);
 		format.setMaximumFractionDigits(0);
@@ -48,7 +48,7 @@ public class Crypt {
 
 		int pos = (str.length() / 3) % m_key.length();
 
-		StringBuffer ret = new StringBuffer();
+		StringBuilder ret = new StringBuilder();
 		for (int i = 0; i < (str.length() / 3); i++) {
 			int digit;
 			int number = 0;

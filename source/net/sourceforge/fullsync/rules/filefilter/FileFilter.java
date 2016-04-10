@@ -132,7 +132,7 @@ public class FileFilter implements Serializable {
 		if (rules.length == 0) {
 			return "Empty filter";
 		}
-		StringBuffer buff = new StringBuffer(25 + (30 * rules.length));
+		StringBuilder buff = new StringBuilder(25 + (30 * rules.length));
 
 		switch (filterType) {
 			case INCLUDE:

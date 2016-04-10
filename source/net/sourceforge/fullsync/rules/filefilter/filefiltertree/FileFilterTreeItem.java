@@ -61,7 +61,7 @@ class FileFilterTreeItem implements Serializable {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append("[ ");
 		for (Entry<String, FileFilterTreeItem> entry : childrenMap.entrySet()) {
 			buffer.append(entry.getKey());

@@ -80,7 +80,7 @@ public class CrontabSchedule extends Schedule {
 			daysOfWeek.bArray[1] = true;
 		}
 
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 		buff.append(minutes.pattern).append(' ');
 		buff.append(hours.pattern).append(' ');
 		buff.append(daysOfMonth.pattern).append(' ');

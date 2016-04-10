@@ -91,8 +91,7 @@ public class FileModificationDateFileFilterRule extends FileFilterRule {
 
 	@Override
 	public String toString() {
-		StringBuffer buff = new StringBuffer(30);
-
+		StringBuilder buff = new StringBuilder(30);
 		buff.append("file modification date ");
 		buff.append(allOperators[op]);
 		buff.append(" '");
