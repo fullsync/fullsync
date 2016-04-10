@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.Profile;
@@ -133,9 +134,9 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 
 		public void updateComponent() {
 			ConnectionDescription desc = profile.getSource();
-			lSource.setText((null != desc) ? desc.getDisplayPath() : "null"); //TODO: null is not really user friendly
+			lSource.setText((null != desc) ? desc.getDisplayPath() : "");
 			desc = profile.getDestination();
-			lDestination.setText((null != desc) ? desc.getDisplayPath() : "null"); //TODO: null is not really user friendly
+			lDestination.setText((null != desc) ? desc.getDisplayPath() : "");
 			lLastUpdate.setText(profile.getLastUpdateText());
 			lNextUpdate.setText(profile.getNextUpdateText());
 			layout();
@@ -179,7 +180,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 
 	private ScrolledComposite scrollPane;
 	private NiceListView profileList;
-	private HashMap<Profile, NiceListViewItem> profilesToItems;
+	private Map<Profile, NiceListViewItem> profilesToItems;
 
 	private ProfileManager profileManager;
 	private ProfileListControlHandler handler;

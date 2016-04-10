@@ -19,7 +19,7 @@
  */
 package net.sourceforge.fullsync.impl;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -91,7 +91,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		}
 
 		if (fileFilterTree != null) {
-			HashMap<String, FileFilter> itemsMap = fileFilterTree.getItemsMap();
+			Map<String, FileFilter> itemsMap = fileFilterTree.getItemsMap();
 			Set<Entry<String, FileFilter>> entrySet = itemsMap.entrySet();
 			for (Entry<String, FileFilter> entry : entrySet) {
 				String path = entry.getKey();

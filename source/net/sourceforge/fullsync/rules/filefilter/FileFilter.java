@@ -121,7 +121,7 @@ public class FileFilter implements Serializable {
 					catch (FilterRuleNotAppliableException e) {
 					}
 				}
-				return (applyedRules == 0);
+				return 0 == applyedRules;
 			default:
 				return true;
 		}

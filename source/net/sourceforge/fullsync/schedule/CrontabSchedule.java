@@ -190,7 +190,7 @@ public class CrontabSchedule extends Schedule {
 						gotoNext(months.bArray, cal, Calendar.MONTH);
 						break;
 					case Calendar.DAY_OF_WEEK:
-						cal.add(Calendar.DAY_OF_MONTH, (now - orig));
+						cal.add(Calendar.DAY_OF_MONTH, now - orig);
 						// TODO we ignore a formal gotoNext(month)
 						// as dayOfWeek is only available if all
 						// months are allowed

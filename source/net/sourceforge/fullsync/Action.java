@@ -77,7 +77,7 @@ public class Action implements Serializable {
 	}
 
 	public boolean equalsExceptExplanation(Action action) {
-		return ((getType() == action.getType()) && (getLocation() == action.getLocation())
-				&& (getBufferUpdate() == action.getBufferUpdate()) && (isBeforeRecursion() == action.isBeforeRecursion()));
+		return (getType() == action.getType()) && (getLocation() == action.getLocation()) && (getBufferUpdate() == action.getBufferUpdate())
+				&& (isBeforeRecursion() == action.isBeforeRecursion());
 	}
 }

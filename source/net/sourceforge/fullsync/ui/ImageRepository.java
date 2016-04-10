@@ -21,6 +21,7 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.fullsync.Util;
 
@@ -68,7 +69,7 @@ public class ImageRepository {
 	 */
 
 	private Display display;
-	private HashMap<String, Image> cache;
+	private Map<String, Image> cache;
 
 	public ImageRepository(Display display) {
 		this.display = display;

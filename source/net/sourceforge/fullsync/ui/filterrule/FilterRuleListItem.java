@@ -59,43 +59,42 @@ public class FilterRuleListItem {
 	private static final String[] ruleTypeNames;
 
 	static {
-		ruleTypeNames = new String[7];
-		ruleTypeNames[0] = Messages.getString("FilterRuleListItem.FileNameFilter");
-		ruleTypeNames[1] = Messages.getString("FilterRuleListItem.FilePathFilter");
-		ruleTypeNames[2] = Messages.getString("FilterRuleListItem.FileTypeFilter");
-		ruleTypeNames[3] = Messages.getString("FilterRuleListItem.FilSizeFilter");
-		ruleTypeNames[4] = Messages.getString("FilterRuleListItem.FileModificationDateFilter");
-		ruleTypeNames[5] = Messages.getString("FilterRuleListItem.FileAgeFilter");
-		ruleTypeNames[6] = Messages.getString("FilterRuleListItem.NestedFilter");
+		final String name = Messages.getString("FilterRuleListItem.FileNameFilter");
+		final String path = Messages.getString("FilterRuleListItem.FilePathFilter");
+		final String type = Messages.getString("FilterRuleListItem.FileTypeFilter");
+		final String size = Messages.getString("FilterRuleListItem.FilSizeFilter");
+		final String modificationDate = Messages.getString("FilterRuleListItem.FileModificationDateFilter");
+		final String age = Messages.getString("FilterRuleListItem.FileAgeFilter");
+		final String nested = Messages.getString("FilterRuleListItem.NestedFilter");
 
-		rulesTable = new HashMap<String, Class<? extends FileFilterRule>>(15, 0.75f);
-		rulesTable.put(Messages.getString("FilterRuleListItem.FileNameFilter"), FileNameFileFilterRule.class); //$NON-NLS-1$
-		rulesTable.put(Messages.getString("FilterRuleListItem.FilePathFilter"), FilePathFileFilterRule.class); //$NON-NLS-1$
-		rulesTable.put(Messages.getString("FilterRuleListItem.FileTypeFilter"), FileTypeFileFilterRule.class); //$NON-NLS-1$
-		rulesTable.put(Messages.getString("FilterRuleListItem.FilSizeFilter"), FileSizeFileFilterRule.class); //$NON-NLS-1$
-		rulesTable.put(Messages.getString("FilterRuleListItem.FileModificationDateFilter"), FileModificationDateFileFilterRule.class); //$NON-NLS-1$
-		rulesTable.put(Messages.getString("FilterRuleListItem.FileAgeFilter"), FileAgeFileFilterRule.class); //$NON-NLS-1$
-		rulesTable.put(Messages.getString("FilterRuleListItem.NestedFilter"), SubfilterFileFilerRule.class); //$NON-NLS-1$
+		ruleTypeNames = new String[] { name, path, type, size, modificationDate, age, nested };
 
-		ruleNamesConversionTable = new HashMap<String, String>(15, 0.75f);
-		ruleNamesConversionTable.put(FileNameFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileNameFilter")); //$NON-NLS-1$
-		ruleNamesConversionTable.put(FilePathFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FilePathFilter")); //$NON-NLS-1$
-		ruleNamesConversionTable.put(FileTypeFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileTypeFilter")); //$NON-NLS-1$
-		ruleNamesConversionTable.put(FileSizeFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FilSizeFilter")); //$NON-NLS-1$
-		ruleNamesConversionTable.put(FileModificationDateFileFilterRule.typeName,
-				Messages.getString("FilterRuleListItem.FileModificationDateFilter")); //$NON-NLS-1$
-		ruleNamesConversionTable.put(FileAgeFileFilterRule.typeName, Messages.getString("FilterRuleListItem.FileAgeFilter")); //$NON-NLS-1$
-		ruleNamesConversionTable.put(SubfilterFileFilerRule.typeName, Messages.getString("FilterRuleListItem.NestedFilter")); //$NON-NLS-1$
+		rulesTable = new HashMap<String, Class<? extends FileFilterRule>>();
+		rulesTable.put(name, FileNameFileFilterRule.class);
+		rulesTable.put(path, FilePathFileFilterRule.class);
+		rulesTable.put(type, FileTypeFileFilterRule.class);
+		rulesTable.put(size, FileSizeFileFilterRule.class);
+		rulesTable.put(modificationDate, FileModificationDateFileFilterRule.class);
+		rulesTable.put(age, FileAgeFileFilterRule.class);
+		rulesTable.put(nested, SubfilterFileFilerRule.class);
 
-		reverseRuleNamesConversionTable = new HashMap<String, String>(15, 0.75f);
-		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileNameFilter"), FileNameFileFilterRule.typeName); //$NON-NLS-1$
-		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FilePathFilter"), FilePathFileFilterRule.typeName); //$NON-NLS-1$
-		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileTypeFilter"), FileTypeFileFilterRule.typeName); //$NON-NLS-1$
-		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FilSizeFilter"), FileSizeFileFilterRule.typeName); //$NON-NLS-1$
-		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileModificationDateFilter"), //$NON-NLS-1$
-				FileModificationDateFileFilterRule.typeName);
-		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.FileAgeFilter"), FileAgeFileFilterRule.typeName); //$NON-NLS-1$
-		reverseRuleNamesConversionTable.put(Messages.getString("FilterRuleListItem.NestedFilter"), SubfilterFileFilerRule.typeName); //$NON-NLS-1$
+		ruleNamesConversionTable = new HashMap<String, String>();
+		ruleNamesConversionTable.put(FileNameFileFilterRule.TYPE_NAME, name);
+		ruleNamesConversionTable.put(FilePathFileFilterRule.TYPE_NAME, path);
+		ruleNamesConversionTable.put(FileTypeFileFilterRule.TYPE_NAME, type);
+		ruleNamesConversionTable.put(FileSizeFileFilterRule.TYPE_NAME, size);
+		ruleNamesConversionTable.put(FileModificationDateFileFilterRule.TYPE_NAME, modificationDate);
+		ruleNamesConversionTable.put(FileAgeFileFilterRule.TYPE_NAME, age);
+		ruleNamesConversionTable.put(SubfilterFileFilerRule.TYPE_NAME, nested);
+
+		reverseRuleNamesConversionTable = new HashMap<String, String>();
+		reverseRuleNamesConversionTable.put(name, FileNameFileFilterRule.TYPE_NAME);
+		reverseRuleNamesConversionTable.put(path, FilePathFileFilterRule.TYPE_NAME);
+		reverseRuleNamesConversionTable.put(type, FileTypeFileFilterRule.TYPE_NAME);
+		reverseRuleNamesConversionTable.put(size, FileSizeFileFilterRule.TYPE_NAME);
+		reverseRuleNamesConversionTable.put(modificationDate, FileModificationDateFileFilterRule.TYPE_NAME);
+		reverseRuleNamesConversionTable.put(age, FileAgeFileFilterRule.TYPE_NAME);
+		reverseRuleNamesConversionTable.put(nested, SubfilterFileFilerRule.TYPE_NAME);
 	}
 
 	private String ruleType;

@@ -20,7 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 interface AsyncUIUpdate {
-	void execute() throws Throwable;
+	void execute() throws Exception;
 
 	void updateUI(boolean succeeded);
 }

@@ -45,7 +45,7 @@ public class ChangeLogBox extends StyledText implements AsyncUIUpdate {
 	}
 
 	@Override
-	public void execute() throws Throwable {
+	public void execute() throws Exception {
 		ChangeLogLoader loader = new ChangeLogLoader();
 		changelog = ChangeLogLoader.filterAfter(loader.load(new File(Util.getInstalllocation(), "versions"), ".+\\.html"), //$NON-NLS-1$//$NON-NLS-2$
 				lastFullSyncVersion);

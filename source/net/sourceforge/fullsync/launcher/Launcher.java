@@ -31,61 +31,51 @@ import java.security.CodeSource;
 import java.util.ArrayList;
 
 public class Launcher {
-	/**
-	 *  setup the platform specific *sigh* classpath for SWT and load the application.
-	 * @param args command line arguments
-	 */
-	public static void main(final String[] args) {
+	private static final int IOBUFFERSIZE = 0x1000;
+
+	public static void main(final String[] args) throws Exception {
 		// TODO: redirect stdout && stderr here!
-		try {
-			String arch = "x86";
-			String osName = System.getProperty("os.name").toLowerCase();
-			String os = "unknown";
-			if (-1 != System.getProperty("os.arch").indexOf("64")) {
-				arch = "x86_64";
-			}
-			if (-1 != osName.indexOf("linux")) {
-				os = "gtk-linux";
-			}
-			else if (-1 != osName.indexOf("windows")) {
-				os = "win32-win32";
-			}
-			else if (-1 != osName.indexOf("mac")) {
-				os = "cocoa-macosx";
-			}
-			CodeSource cs = Launcher.class.getProtectionDomain().getCodeSource();
-			String installlocation = cs.getLocation().toURI().toString().replaceAll("launcher\\.jar$", "");
-			System.out.println("launching FullSync... OS=" + os + "; ARCH=" + arch + "; INSTALLLOCATION=" + installlocation);
-
-			ArrayList<URL> jars = new ArrayList<URL>();
-			jars.add(new URL(installlocation + "lib/fullsync.jar"));
-			// add correct SWT implementation to the class-loader
-			jars.add(new URL(installlocation + "lib/swt-" + os + "-" + arch + ".jar"));
-
-			String dependencies = getResourceAsString("net/sourceforge/fullsync/launcher/dependencies.txt").trim();
-			for (String s : dependencies.split("\r?\n")) {
-				jars.add(new URL(installlocation + "lib/" + s.trim()));
-			}
-
-			// instantiate an URL class-loader with the constructed class-path and load the real main class
-			URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Launcher.class.getClassLoader());
-			Class<?> cls = cl.loadClass("net.sourceforge.fullsync.cli.Main");
-			Method main = cls.getDeclaredMethod("main", new Class<?>[] { String[].class });
-
-			Thread.currentThread().setContextClassLoader(cl);
-			// call the main method using reflection so that there is no static reference to it
-			main.invoke(null, new Object[] { args });
+		String arch = "x86";
+		String osName = System.getProperty("os.name").toLowerCase();
+		String os = "unknown";
+		if (-1 != System.getProperty("os.arch").indexOf("64")) {
+			arch = "x86_64";
 		}
-		catch (Exception e) {
-			// TODO: tell the user
-			e.printStackTrace();
+		if (-1 != osName.indexOf("linux")) {
+			os = "gtk-linux";
 		}
+		else if (-1 != osName.indexOf("windows")) {
+			os = "win32-win32";
+		}
+		else if (-1 != osName.indexOf("mac")) {
+			os = "cocoa-macosx";
+		}
+		CodeSource cs = Launcher.class.getProtectionDomain().getCodeSource();
+		String installlocation = cs.getLocation().toURI().toString().replaceAll("launcher\\.jar$", "");
+		System.out.println("launching FullSync... OS=" + os + "; ARCH=" + arch + "; INSTALLLOCATION=" + installlocation);
+
+		ArrayList<URL> jars = new ArrayList<URL>();
+		jars.add(new URL(installlocation + "lib/fullsync.jar"));
+		// add correct SWT implementation to the class-loader
+		jars.add(new URL(installlocation + "lib/swt-" + os + "-" + arch + ".jar"));
+
+		String dependencies = getResourceAsString("net/sourceforge/fullsync/launcher/dependencies.txt").trim();
+		for (String s : dependencies.split("\r?\n")) {
+			jars.add(new URL(installlocation + "lib/" + s.trim()));
+		}
+
+		// instantiate an URL class-loader with the constructed class-path and load the real main class
+		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Launcher.class.getClassLoader());
+		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.cli.Main");
+		Method main = cls.getDeclaredMethod("main", new Class<?>[] { String[].class });
+
+		Thread.currentThread().setContextClassLoader(cl);
+		// call the main method using reflection so that there is no static reference to it
+		main.invoke(null, new Object[] { args });
 		System.exit(1);
 	}
 
 	// keep in sync with net.sourceforge.fullsync.Util.getResourceAsString(String)
-	private static final int IOBUFFERSIZE = 0x1000;
-
 	public static String getResourceAsString(final String name) {
 		StringBuilder out = new StringBuilder();
 		try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name)) {

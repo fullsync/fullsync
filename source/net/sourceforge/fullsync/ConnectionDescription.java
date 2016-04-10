@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,15 +33,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class ConnectionDescription implements Serializable {
-	private static final long serialVersionUID = 2L;
-
 	public static final String PARAMETER_USERNAME = "username";
 	public static final String PARAMETER_PASSWORD = "password";
 	public static final String PARAMETER_INTERACTIVE = "interactive";
 
+	private static final long serialVersionUID = 2L;
+
 	private URI uri;
-	private HashMap<String, String> parameters = new HashMap<String, String>();
-	private HashMap<String, String> secretParameters = new HashMap<String, String>();
+	private Map<String, String> parameters = new HashMap<String, String>();
+	private Map<String, String> secretParameters = new HashMap<String, String>();
 
 	public Element serialize(String name, Document doc) {
 		Element elem = doc.createElement(name);

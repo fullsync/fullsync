@@ -185,7 +185,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	 * @return true if a remote connection is active.
 	 */
 	public final boolean isConnected() {
-		return (remoteManager != null);
+		return null != remoteManager;
 	}
 
 	/**

@@ -328,7 +328,7 @@ public class PreferencesPage extends WizardDialog {
 		preferences.setCloseMinimizesToSystemTray(cbCloseMinimizesToSystemTray.getSelection());
 		preferences.setMinimizeMinimizesToSystemTray(cbMinimizeMinimizesToSystemTray.getSelection());
 		// preferences.setSystemTrayEnabled(cbEnableSystemTray.getSelection());
-		boolean profileListStyleChanged = (!preferences.getProfileListStyle().equals(comboProfileList.getText()));
+		boolean profileListStyleChanged = !preferences.getProfileListStyle().equals(comboProfileList.getText());
 		preferences.setProfileListStyle(comboProfileList.getText());
 		preferences.setLanguageCode(getLanguageCode(comboLanguage.getText()));
 		preferences.setAutostartScheduler(cbAutostartScheduler.getSelection());

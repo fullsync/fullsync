@@ -63,8 +63,8 @@ public class SchedulerImpl implements Scheduler, Runnable {
 	}
 
 	protected void fireSchedulerChangedEvent() {
-		for (int i = 0; i < schedulerListeners.size(); i++) {
-			(schedulerListeners.get(i)).schedulerStatusChanged(enabled);
+		for (SchedulerChangeListener listener : schedulerListeners) {
+			listener.schedulerStatusChanged(enabled);
 		}
 	}
 

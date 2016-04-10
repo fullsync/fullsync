@@ -52,10 +52,10 @@ import org.eclipse.swt.widgets.TabItem;
 class AboutDialog extends Dialog implements AsyncUIUpdate {
 	private static final String FULLSYNC_LICENSES_DIRECTORY = "net/sourceforge/fullsync/licenses/";
 	private static final long ANIMATION_DELAY = 750;
-	private int stIndex = 0;
+	private int stIndex;
 	private Timer stTimer;
 	private Combo componentCombo;
-	StyledText licenseText;
+	private StyledText licenseText;
 	private List<String> licenseNames;
 	private List<String> licenseTexts;
 
@@ -82,6 +82,7 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 
 			final TabFolder tabs = new TabFolder(dialogShell, SWT.FILL);
 			GridData tabLData = new GridData(GridData.FILL_BOTH);
+			tabs.setLayoutData(tabLData);
 			tabs.setLayout(new FillLayout());
 
 			final TabItem tabGeneral = new TabItem(tabs, SWT.NONE);
@@ -113,7 +114,6 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 			tabChangelog.setText(Messages.getString("AboutDialog.Tab_Changelog")); //$NON-NLS-1$
 			tabChangelog.setControl(initChangelogTab(tabs));
 
-			tabs.setLayoutData(tabLData);
 			// ok button
 			Button buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
 			buttonOk.setText(Messages.getString("AboutDialog.Ok")); //$NON-NLS-1$
@@ -202,14 +202,14 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 				Display display = Display.getDefault();
 				display.syncExec(() -> {
 					if (!labelThanks.isDisposed()) {
-						int firstLine = (stIndex) % specialThanks.length;
+						int firstLine = stIndex % specialThanks.length;
 						int secondLine = (stIndex + 1) % specialThanks.length;
 						int thirdLine = (stIndex + 2) % specialThanks.length;
 
 						labelThanks.setText(specialThanks[firstLine] + '\n' + specialThanks[secondLine] + '\n' + specialThanks[thirdLine]);
 						labelThanks.pack(true);
 						tab.layout(new Control[] { labelThanks });
-						stIndex++;
+						++stIndex;
 						stIndex %= specialThanks.length;
 					}
 				});
@@ -290,7 +290,7 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 	}
 
 	@Override
-	public void execute() throws Throwable {
+	public void execute() throws Exception {
 		int numLicenses = 0;
 		List<LicenseEntry> licenses = new ArrayList<LicenseEntry>();
 		for (String name : Util.loadDirectoryFromClasspath(AboutDialog.class, FULLSYNC_LICENSES_DIRECTORY)) {
@@ -313,7 +313,8 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 
 	@Override
 	public void updateUI(boolean succeeded) {
-		int idx = 0, fsIdx = 0;
+		int idx = 0;
+		int fsIdx = 0;
 		for (String licenseName : licenseNames) {
 			componentCombo.add(licenseName);
 			if ("FullSync".equals(licenseName)) { //$NON-NLS-1$

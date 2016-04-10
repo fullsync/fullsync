@@ -21,6 +21,7 @@ package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -31,7 +32,7 @@ class FileFilterTreeItem implements Serializable {
 
 	private FileFilter filter;
 
-	private HashMap<String, FileFilterTreeItem> childrenMap;
+	private Map<String, FileFilterTreeItem> childrenMap;
 
 	FileFilterTreeItem() {
 		this.filter = null;

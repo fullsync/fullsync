@@ -36,13 +36,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 class ProtocolSpecificComposite {
+	protected Text textPath;
+	protected String m_scheme;
+	protected Composite m_parent;
 
 	private Label labelPath;
-	protected Text textPath = null;
 	private Button buttonBrowse;
 	private Button buttonBuffered;
-	protected String m_scheme = null;
-	protected Composite m_parent = null;
 
 	public void createGUI(final Composite parent) {
 		m_parent = parent;
@@ -74,12 +74,12 @@ class ProtocolSpecificComposite {
 	}
 
 	public void setConnectionDescription(final ConnectionDescription connection) {
-		if ((null != connection) && (null != connection.getUri())) {
-			textPath.setText(connection.getUri().getPath());
+		String path = "";
+		URI uri = (null != connection) ? connection.getUri() : null;
+		if (null != uri) {
+			path = uri.getPath();
 		}
-		else {
-			textPath.setText("");
-		}
+		textPath.setText(path);
 	}
 
 	public void reset(final String scheme) {

@@ -25,15 +25,14 @@ import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 public class FileAgeFileFilterRule extends FileFilterRule {
-
-	private static final long serialVersionUID = 2L;
-
-	public static String typeName = "File age";
+	public static final String TYPE_NAME = "File age";
 
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
 	public static final int OP_IS_GREATER_THAN = 2;
 	public static final int OP_IS_LESS_THAN = 3;
+
+	private static final long serialVersionUID = 2L;
 
 	private static final String[] allOperators = new String[] { "is", "isn't", "is greater than", "is less than" };
 
@@ -42,7 +41,7 @@ public class FileAgeFileFilterRule extends FileFilterRule {
 
 	@Override
 	public String getRuleType() {
-		return typeName;
+		return TYPE_NAME;
 	}
 
 	public static String[] getAllOperators() {

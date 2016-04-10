@@ -274,8 +274,7 @@ public class GuiController implements Runnable {
 	}
 
 	private void createWelcomeScreen() {
-		if ((null != System.getProperty("net.sourceforge.fullsync.skipWelcomeScreen", null))
-				|| (true == preferences.getSkipWelcomeScreen())) {
+		if ((null != System.getProperty("net.sourceforge.fullsync.skipWelcomeScreen", null)) || preferences.getSkipWelcomeScreen()) {
 			return;
 		}
 		if (!preferences.getLastVersion().equals(Util.getFullSyncVersion())) {

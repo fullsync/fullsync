@@ -24,13 +24,12 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 public class FileTypeFileFilterRule extends FileFilterRule {
-
-	private static final long serialVersionUID = 2L;
-
-	public static String typeName = "File type";
+	public static final String TYPE_NAME = "File type";
 
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
+
+	private static final long serialVersionUID = 2L;
 
 	private static final String[] allOperators = new String[] { "is", "isn't" };
 
@@ -39,7 +38,7 @@ public class FileTypeFileFilterRule extends FileFilterRule {
 
 	@Override
 	public String getRuleType() {
-		return typeName;
+		return TYPE_NAME;
 	}
 
 	public static String[] getAllOperators() {
@@ -70,7 +69,7 @@ public class FileTypeFileFilterRule extends FileFilterRule {
 	public boolean match(File file) {
 		switch (op) {
 			case OP_IS:
-				return (((type.isFile()) && file.isFile()) || ((type.isDirectory()) && file.isDirectory()));
+				return ((type.isFile()) && file.isFile()) || ((type.isDirectory()) && file.isDirectory());
 
 			case OP_ISNT:
 				return !(((type.isFile()) && file.isFile()) || ((type.isDirectory()) && file.isDirectory()));

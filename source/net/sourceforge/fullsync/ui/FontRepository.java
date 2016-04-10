@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
@@ -54,7 +55,7 @@ public class FontRepository {
 	}
 
 	private Device dev;
-	private HashMap<FontRepository.Key, Font> cache;
+	private Map<FontRepository.Key, Font> cache;
 
 	public FontRepository(Device _device) {
 		dev = _device;

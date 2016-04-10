@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.fullsync.fs.File;
 
@@ -36,7 +36,7 @@ class AbstractFile implements File {
 	protected File parent;
 	protected boolean exists;
 	protected boolean directory;
-	protected HashMap<String, File> children;
+	protected Map<String, File> children;
 	protected long size;
 	protected long lastModified;
 
@@ -202,7 +202,7 @@ class AbstractFile implements File {
 	public void refresh() throws IOException {
 		if (isDirectory()) {
 			// FIXME be aware of deleting entries that may be referenced by overlaying buffer
-			HashMap<String, File> newChildren = getConnection().getChildren(this);
+			Map<String, File> newChildren = getConnection().getChildren(this);
 			if (children != null) {
 				for (File n : children.values()) {
 					if (!newChildren.containsKey(n.getName())) {

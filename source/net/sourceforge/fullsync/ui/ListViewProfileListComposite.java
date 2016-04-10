@@ -78,13 +78,9 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 			tableProfiles.clearAll();
 			tableProfiles.setItemCount(0);
 			for (Profile p : profileManager.getProfiles()) {
+				String[] cells = new String[] { p.getName(), p.getLastUpdateText(), p.getNextUpdateText(), p.getSource().toString(),
+						p.getDestination().toString(), };
 				TableItem item = new TableItem(tableProfiles, SWT.NULL);
-				String[] cells = new String[5];
-				cells[0] = p.getName();
-				cells[1] = p.getLastUpdateText();
-				cells[2] = p.getNextUpdateText();
-				cells[3] = p.getSource().toString();
-				cells[4] = p.getDestination().toString();
 				item.setText(cells);
 				item.setData(p);
 			}

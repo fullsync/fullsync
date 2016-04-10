@@ -25,6 +25,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
@@ -36,7 +37,7 @@ import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 public class RemoteManager {
 
 	private RemoteInterface remoteInterface;
-	private HashMap<Object, UnicastRemoteObject> listenersMap = new HashMap<Object, UnicastRemoteObject>();
+	private Map<Object, UnicastRemoteObject> listenersMap = new HashMap<Object, UnicastRemoteObject>();
 	private boolean useRemoteListener = false;
 
 	public RemoteManager(String host, int port, String password) throws MalformedURLException, RemoteException, NotBoundException {

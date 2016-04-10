@@ -35,10 +35,10 @@ import org.junit.rules.TemporaryFolder;
 public abstract class GUITestBase {
 	private static final long GUI_STARTUP_TIMEOUT = 7000;
 
-	private Thread applicationThread;
-
 	protected TemporaryFolder tempConfigDir;
-	protected SWTBot bot = null;
+	protected SWTBot bot;
+
+	private Thread applicationThread;
 
 	@Before
 	public void setUpBefore() throws Exception {

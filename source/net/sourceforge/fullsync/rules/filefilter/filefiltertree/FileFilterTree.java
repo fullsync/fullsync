@@ -21,6 +21,7 @@ package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -29,7 +30,7 @@ public class FileFilterTree implements Serializable {
 	private static final long serialVersionUID = 2L;
 
 	private FileFilterTreeItem root;
-	private HashMap<String, FileFilter> itemsMap;
+	private Map<String, FileFilter> itemsMap;
 
 	// TODO is this the correct path separator?
 	private String separator = "/";
@@ -79,7 +80,7 @@ public class FileFilterTree implements Serializable {
 		return parentFilter;
 	}
 
-	public HashMap<String, FileFilter> getItemsMap() {
+	public Map<String, FileFilter> getItemsMap() {
 		return itemsMap;
 	}
 

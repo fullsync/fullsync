@@ -111,27 +111,6 @@ public class BlockBuffer implements ExecutionBuffer {
 		flushes++;
 	}
 
-	// Length must be the correct length (there must be enough free bytes and so on)
-	/*
-	 * long Load( Stream inStream, FileInfo dst, int length, bool lastSegment )
-	 * {
-	 * long offset = inStream.Position;
-	 * int start = numberBytes;
-	 * int read = inStream.Read( buffer, start, length );
-	 *
-	 * Segment s;
-	 * if( offset == 0 )
-	 * s += s.First;
-	 * if( inStream.E
-	 * entries[numberEntries] = new BufferEntry( dst, start, read, offset, lastSegment );
-	 *
-	 * numberBytes += read;
-	 * numberEntries++;
-	 * freeBytes -= read;
-	 *
-	 * return read;
-	 * }
-	 */
 	// may not read as much as length says
 	protected Entry storeBytes(InputStream inStream, long length) throws IOException {
 		if (length > freeBytes) {

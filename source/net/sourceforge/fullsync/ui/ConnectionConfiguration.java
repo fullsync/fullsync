@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.ui;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -35,9 +36,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 public class ConnectionConfiguration {
-	private Composite m_parent; // the tabs content
 	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" };
-	private static HashMap<String, Class<? extends ProtocolSpecificComposite>> composites;
+	private static Map<String, Class<? extends ProtocolSpecificComposite>> composites;
+	private Composite m_parent; // the tabs content
 	private Label labelProtocol;
 	private Combo comboProtocol;
 	private Composite compositeProtocolSpecific;
@@ -79,7 +80,8 @@ public class ConnectionConfiguration {
 		protocolData.horizontalAlignment = SWT.FILL;
 		comboProtocol.setLayoutData(protocolData);
 		comboProtocol.removeAll();
-		int selectedIndex = 0, i = 0;
+		int selectedIndex = 0;
+		int i = 0;
 		for (String scheme : schemes) {
 			comboProtocol.add(scheme);
 			if (scheme.equals(selectedScheme)) {
@@ -126,7 +128,6 @@ public class ConnectionConfiguration {
 		}
 		catch (InstantiationException | IllegalAccessException e) {
 			ExceptionHandler.reportException(e);
-			e.printStackTrace();
 		}
 	}
 

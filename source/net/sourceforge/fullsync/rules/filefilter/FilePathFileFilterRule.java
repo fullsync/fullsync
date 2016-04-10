@@ -28,10 +28,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class FilePathFileFilterRule extends FileFilterRule {
-
-	private static final long serialVersionUID = 2L;
-
-	public static String typeName = "File path";
+	public static final String TYPE_NAME = "File path";
 
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
@@ -44,6 +41,8 @@ public class FilePathFileFilterRule extends FileFilterRule {
 	public static final int OP_MATCHES_REGEXP = 8;
 	public static final int OP_DOESNT_MATCHES_REGEXP = 9;
 
+	private static final long serialVersionUID = 2L;
+
 	private static final String[] allOperators = new String[] { "is", "isn't", "contains", "doesn't contains", "begins with",
 			"doesn't begins with", "ends with", "doesn't ends with", "matches regexp", "doesn't matches regexp" };
 
@@ -54,7 +53,7 @@ public class FilePathFileFilterRule extends FileFilterRule {
 
 	@Override
 	public String getRuleType() {
-		return typeName;
+		return TYPE_NAME;
 	}
 
 	public static String[] getAllOperators() {
@@ -103,10 +102,10 @@ public class FilePathFileFilterRule extends FileFilterRule {
 				return !name.equals(pattern.getValue());
 
 			case OP_CONTAINS:
-				return (name.indexOf(pattern.getValue()) >= 0);
+				return name.indexOf(pattern.getValue()) >= 0;
 
 			case OP_DOESNT_CONTAINS:
-				return (name.indexOf(pattern.getValue()) < 0);
+				return name.indexOf(pattern.getValue()) < 0;
 
 			case OP_BEGINS_WITH:
 				return name.startsWith(pattern.getValue());

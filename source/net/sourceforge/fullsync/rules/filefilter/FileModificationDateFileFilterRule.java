@@ -24,15 +24,14 @@ import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 public class FileModificationDateFileFilterRule extends FileFilterRule {
-
-	private static final long serialVersionUID = 2L;
-
-	public static String typeName = "File modification date";
+	public static final String TYPE_NAME = "File modification date";
 
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
 	public static final int OP_IS_BEFORE = 2;
 	public static final int OP_IS_AFTER = 3;
+
+	private static final long serialVersionUID = 2L;
 
 	private static final String[] allOperators = new String[] { "is", "isn't", "is before", "is after" };
 
@@ -41,7 +40,7 @@ public class FileModificationDateFileFilterRule extends FileFilterRule {
 
 	@Override
 	public String getRuleType() {
-		return typeName;
+		return TYPE_NAME;
 	}
 
 	public static String[] getAllOperators() {

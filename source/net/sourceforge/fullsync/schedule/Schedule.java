@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.schedule;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 
@@ -32,13 +33,7 @@ public abstract class Schedule implements Serializable {
 	private static final long serialVersionUID = 2L;
 	private static final String ELEMENT_NAME = "Schedule";
 
-	public abstract long getNextOccurrence(long now);
-
-	public abstract void setLastOccurrence(long now);
-
-	public abstract Element serialize(Element element);
-
-	private static final HashMap<String, Class<? extends Schedule>> scheduleRegister;
+	private static final Map<String, Class<? extends Schedule>> scheduleRegister;
 
 	static {
 		scheduleRegister = new HashMap<String, Class<? extends Schedule>>(2);
@@ -70,4 +65,9 @@ public abstract class Schedule implements Serializable {
 		return sch.serialize(element);
 	}
 
+	public abstract Element serialize(Element element);
+
+	public abstract long getNextOccurrence(long now);
+
+	public abstract void setLastOccurrence(long now);
 }

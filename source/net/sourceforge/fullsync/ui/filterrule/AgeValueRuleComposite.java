@@ -45,11 +45,11 @@ class AgeValueRuleComposite extends RuleComposite {
 		final Combo comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
 
 		if (value != null) {
-			textValue.setText(String.valueOf((value).getValue()));
+			textValue.setText(String.valueOf(value.getValue()));
 		}
 
 		textValue.addModifyListener(e -> {
-			(value).fromString(textValue.getText() + " " + comboUnits.getText());
+			value.fromString(textValue.getText() + " " + comboUnits.getText());
 			valueChanged(new ValueChangedEvent(value));
 		});
 

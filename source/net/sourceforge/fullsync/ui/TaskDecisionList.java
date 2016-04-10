@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionType;
@@ -58,8 +59,8 @@ public class TaskDecisionList extends Composite {
 	private int tableLogLinesFillIndex;
 	private int tableLogLinesFillCount;
 
-	private HashMap<ActionType, Image> actionImages;
-	private HashMap<Integer, Image> taskImages;
+	private final Map<ActionType, Image> actionImages;
+	private final Map<Integer, Image> taskImages;
 	private Image locationSource;
 	private Image locationDestination;
 	private Image locationBoth;
@@ -68,15 +69,16 @@ public class TaskDecisionList extends Composite {
 	private Image nodeUndefined;
 
 	private TaskTree taskTree;
-	private final HashMap<Task, TableItem> taskItemMap;
+	private final Map<Task, TableItem> taskItemMap;
 
 	private boolean onlyChanges;
 	private boolean changeAllowed;
 
 	public TaskDecisionList(Composite parent, int style) {
 		super(parent, style);
-
-		this.taskItemMap = new HashMap<Task, TableItem>();
+		taskItemMap = new HashMap<Task, TableItem>();
+		actionImages = new HashMap<ActionType, Image>();
+		taskImages = new HashMap<Integer, Image>();
 		try {
 			this.setSize(550, 500);
 
@@ -158,12 +160,9 @@ public class TaskDecisionList extends Composite {
 		locationDestination = gui.getImage("Location_Destination.png"); //$NON-NLS-1$
 		locationBoth = gui.getImage("Location_Both.png"); //$NON-NLS-1$
 
-		actionImages = new HashMap<ActionType, Image>();
 		for (ActionType action : ActionType.values()) {
 			actionImages.put(action, gui.getImage("Action_" + action.name() + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-
-		taskImages = new HashMap<Integer, Image>();
 	}
 
 	@Override
@@ -267,8 +266,8 @@ public class TaskDecisionList extends Composite {
 		}
 
 		// using 2+ bits for action
-		hash |= (a.getLocation().ordinal() << 6);
-		hash |= (a.getType().ordinal() << 8);
+		hash |= a.getLocation().ordinal() << 6;
+		hash |= a.getType().ordinal() << 8;
 
 		return Integer.valueOf(hash);
 	}
@@ -318,13 +317,12 @@ public class TaskDecisionList extends Composite {
 			TableItem item;
 			if (tableLogLinesFillIndex < tableLogLinesFillCount) {
 				item = tableLogLines.getItem(tableLogLinesFillIndex);
-				tableLogLinesFillIndex++;
 			}
 			else {
 				item = new TableItem(tableLogLines, SWT.NULL);
-				tableLogLinesFillIndex++;
-				tableLogLinesFillCount++;
+				++tableLogLinesFillCount;
 			}
+			++tableLogLinesFillIndex;
 			item.setImage(2, image);
 			item.setText(new String[] { t.getSource().getPath(), formatSize(t), "", //$NON-NLS-1$
 					t.getCurrentAction().getExplanation() });

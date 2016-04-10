@@ -31,7 +31,6 @@ import net.sourceforge.fullsync.ui.Messages;
  * daysOfWeek.bArray[1] = true;
  */
 public class CrontabPart implements Serializable {
-	private static final long serialVersionUID = 2L;
 	// REVISIT we can't localize those names as we don't have an guicontroller at this point of time
 	// atm the name isn't used anywhere, but if it is used, we need to think of some nice trick
 	public static final CrontabPart MINUTES = new CrontabPart("minutes", 0, 59, 0); //$NON-NLS-1$
@@ -40,6 +39,8 @@ public class CrontabPart implements Serializable {
 	public static final CrontabPart MONTHS = new CrontabPart("months", 1, 12, -1); //$NON-NLS-1$
 	public static final CrontabPart DAYSOFWEEK = new CrontabPart("daysOfWeek", 0, 7, +1); //$NON-NLS-1$
 	public static final CrontabPart[] ALL_PARTS = new CrontabPart[] { MINUTES, HOURS, DAYSOFMONTH, MONTHS, DAYSOFWEEK };
+
+	private static final long serialVersionUID = 2L;
 
 	public class Instance implements Serializable {
 		private static final long serialVersionUID = 2L;

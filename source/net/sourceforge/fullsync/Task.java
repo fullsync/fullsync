@@ -121,7 +121,7 @@ public class Task implements Serializable {
 	public boolean equals(Object o) {
 		if (o instanceof Task) {
 			Task t = (Task) o;
-			if ((source.getName().equals(t.source.getName()))) {
+			if (source.getName().equals(t.source.getName())) {
 				return true;
 			}
 		}

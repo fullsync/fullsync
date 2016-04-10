@@ -27,10 +27,9 @@ import net.sourceforge.fullsync.rules.filefilter.values.FilterValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 public class SubfilterFileFilerRule extends FileFilterRule {
+	public static final String TYPE_NAME = "Nested Filter";
 
 	private static final long serialVersionUID = 2L;
-
-	public static String typeName = "Nested Filter";
 
 	private FileFilter fileFilter;
 
@@ -40,7 +39,7 @@ public class SubfilterFileFilerRule extends FileFilterRule {
 
 	@Override
 	public String getRuleType() {
-		return typeName;
+		return TYPE_NAME;
 	}
 
 	@Override

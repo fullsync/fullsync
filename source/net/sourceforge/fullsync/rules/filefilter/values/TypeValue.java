@@ -65,11 +65,11 @@ public class TypeValue implements OperandValue {
 	}
 
 	public boolean isFile() {
-		return (type == Type.FILE);
+		return type == Type.FILE;
 	}
 
 	public boolean isDirectory() {
-		return (type == Type.DIRECTORY);
+		return type == Type.DIRECTORY;
 	}
 
 }

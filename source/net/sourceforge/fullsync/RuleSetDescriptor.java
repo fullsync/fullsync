@@ -21,6 +21,7 @@ package net.sourceforge.fullsync;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 
@@ -33,9 +34,8 @@ public abstract class RuleSetDescriptor implements Serializable {
 
 	private static final String ELEMENT_NAME = "RuleSetDescriptor";
 
-	private static HashMap<String, Class<? extends RuleSetDescriptor>> descriptorRegister;
+	private static Map<String, Class<? extends RuleSetDescriptor>> descriptorRegister;
 
-	// TODO [Michele] change this!
 	static {
 		descriptorRegister = new HashMap<String, Class<? extends RuleSetDescriptor>>(2);
 		descriptorRegister.put(SimplyfiedRuleSetDescriptor.RULESET_TYPE, SimplyfiedRuleSetDescriptor.class);

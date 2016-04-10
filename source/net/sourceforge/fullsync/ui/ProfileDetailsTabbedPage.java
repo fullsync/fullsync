@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -63,12 +64,12 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 public class ProfileDetailsTabbedPage extends WizardDialog {
+	private static final String EXPANDED_KEY = "Expanded";
+	private static final String FILTER_KEY = "Filter";
+
 	private TabFolder tabs;
 	private Text textProfileName;
 	private Text textProfileDescription;
-
-	private static final String EXPANDED_KEY = "Expanded";
-	private static final String FILTER_KEY = "Filter";
 	private ProfileManager profileManager;
 	private Label labelFilesFilter;
 	private Button buttonFileFilter;
@@ -89,7 +90,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 	private Tree directoryTree;
 	private final ArrayList<TreeItem> treeItemsWithFilter = new ArrayList<TreeItem>();
-	private HashMap<String, FileFilter> itemsMap = new HashMap<String, FileFilter>();
+	private Map<String, FileFilter> itemsMap = new HashMap<String, FileFilter>();
 	private Site sourceSite;
 	private final FileSystemManager fsm = new FileSystemManager();
 
@@ -590,7 +591,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	public boolean apply() {
 		closeSourceSite();
 
-		ConnectionDescription src, dst;
+		ConnectionDescription src;
+		ConnectionDescription dst;
 		try {
 			src = getConnectionDescription(srcConnectionConfiguration);
 			dst = getConnectionDescription(dstConnectionConfiguration);

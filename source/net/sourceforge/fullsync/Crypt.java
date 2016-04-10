@@ -36,7 +36,7 @@ public class Crypt {
 		format.setMinimumIntegerDigits(3);
 		format.setMaximumFractionDigits(0);
 		for (int i = 0; i < str.length(); i++) {
-			ret.append(format.format((str.charAt(i) ^ m_key.charAt((i + pos) % m_key.length()))));
+			ret.append(format.format(str.charAt(i) ^ m_key.charAt((i + pos) % m_key.length())));
 		}
 		return ret.toString();
 	}

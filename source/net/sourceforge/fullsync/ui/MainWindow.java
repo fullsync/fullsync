@@ -68,8 +68,6 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 
 	private String statusDelayString;
 
-	public WelcomeScreen welcomeScreen;
-
 	MainWindow(Composite parent, int style, GuiController initGuiController) {
 		super(parent, style);
 		this.guiController = initGuiController;

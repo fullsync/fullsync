@@ -33,14 +33,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 class ConnectionPage extends WizardDialog {
-	ConnectionPage(Shell parent) {
-		super(parent);
-	}
-
 	private Text textFieldHostname;
 	private Text textFieldPort;
 	private Text textPassword;
 	private Button cbDisableRemoteListener;
+
+	ConnectionPage(Shell parent) {
+		super(parent);
+	}
 
 	@Override
 	public String getTitle() {

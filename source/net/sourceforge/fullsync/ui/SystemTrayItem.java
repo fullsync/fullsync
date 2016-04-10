@@ -102,10 +102,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					imageActive++;
-					if (imageActive >= imageList.length) {
-						imageActive = 0;
-					}
+					imageActive = (imageActive + 1) % imageList.length;
 					trayItem.getDisplay().asyncExec(() -> trayItem.setImage(imageList[imageActive]));
 				}
 			}, 0, 500);

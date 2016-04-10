@@ -21,15 +21,16 @@ package net.sourceforge.fullsync.ui;
 
 import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 
 public class Messages {
 	private static final String BUNDLE_NAME = "net.sourceforge.fullsync.ui.messages";//$NON-NLS-1$
-	private ResourceBundle RESOURCE_BUNDLE;
-
 	private static Messages instance;
+
+	private ResourceBundle RESOURCE_BUNDLE;
 
 	private Messages() {
 		String code = GuiController.getInstance().getPreferences().getLanguageCode();
@@ -38,7 +39,7 @@ public class Messages {
 			Locale.setDefault(langLocale);
 			RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME, langLocale);
 		}
-		catch (Throwable e) {
+		catch (MissingResourceException e) {
 			ExceptionHandler.reportException("Unable to find locale for language " + code, e);
 			RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 		}

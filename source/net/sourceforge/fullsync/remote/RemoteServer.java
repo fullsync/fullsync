@@ -23,6 +23,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
@@ -49,7 +50,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	private Synchronizer synchronizer;
 	private String password;
 
-	private HashMap<Remote, Object> listenersMap = new HashMap<Remote, Object>();
+	private Map<Remote, Object> listenersMap = new HashMap<Remote, Object>();
 
 	private Logger logger = LoggerFactory.getLogger("FullSync");
 
