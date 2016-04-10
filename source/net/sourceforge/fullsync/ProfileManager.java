@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -389,7 +390,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 				tf.setOutputProperty(OutputKeys.INDENT, "yes");
 				tf.setOutputProperty(OutputKeys.STANDALONE, "no");
 				DOMSource source = new DOMSource(doc);
-				try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(configFile + ".tmp"), "UTF-8")) {
+				try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(configFile + ".tmp"), StandardCharsets.UTF_8)) {
 					tf.transform(source, new StreamResult(osw));
 					osw.flush();
 					osw.close();

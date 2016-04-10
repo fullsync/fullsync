@@ -27,6 +27,7 @@ import java.io.Reader;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.security.CodeSource;
 import java.util.ArrayList;
 
@@ -81,7 +82,7 @@ public class Launcher {
 		try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name)) {
 			if (null != is) {
 				final char[] buffer = new char[IOBUFFERSIZE];
-				Reader in = new InputStreamReader(is, "UTF-8");
+				Reader in = new InputStreamReader(is, StandardCharsets.UTF_8);
 				int read;
 				do {
 					read = in.read(buffer, 0, buffer.length);

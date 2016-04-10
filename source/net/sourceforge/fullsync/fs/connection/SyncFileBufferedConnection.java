@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
@@ -273,7 +274,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			tf.setOutputProperty(OutputKeys.STANDALONE, "no");
 			DOMSource source = new DOMSource(doc);
 
-			try (OutputStreamWriter osw = new OutputStreamWriter(new GZIPOutputStream(node.getOutputStream()), "UTF-8")) {
+			try (OutputStreamWriter osw = new OutputStreamWriter(new GZIPOutputStream(node.getOutputStream()), StandardCharsets.UTF_8)) {
 				tf.transform(source, new StreamResult(osw));
 				osw.flush();
 			}

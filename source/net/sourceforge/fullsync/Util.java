@@ -27,6 +27,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +49,7 @@ public abstract class Util {
 		try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name)) {
 			if (null != is) {
 				final char[] buffer = new char[IOBUFFERSIZE];
-				Reader in = new InputStreamReader(is, "UTF-8");
+				Reader in = new InputStreamReader(is, StandardCharsets.UTF_8);
 				int read;
 				do {
 					read = in.read(buffer, 0, buffer.length);
