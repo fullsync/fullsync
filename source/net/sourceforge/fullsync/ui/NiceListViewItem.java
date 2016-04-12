@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.Profile;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -33,6 +31,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+
+import net.sourceforge.fullsync.Profile;
 
 public class NiceListViewItem extends Canvas implements Listener {
 	private NiceListView parent;

@@ -19,9 +19,6 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
-import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
-import net.sourceforge.fullsync.rules.filefilter.values.AgeValue.Unit;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -29,6 +26,9 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+
+import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
+import net.sourceforge.fullsync.rules.filefilter.values.AgeValue.Unit;
 
 class AgeValueRuleComposite extends RuleComposite {
 

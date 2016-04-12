@@ -26,9 +26,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
-
 import org.junit.Test;
+
+import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 public class DateValueTest {
 

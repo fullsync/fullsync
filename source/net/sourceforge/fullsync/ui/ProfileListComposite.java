@@ -19,10 +19,10 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import org.eclipse.swt.widgets.Composite;
+
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
-
-import org.eclipse.swt.widgets.Composite;
 
 public abstract class ProfileListComposite extends Composite {
 	public ProfileListComposite(Composite parent, int style) {

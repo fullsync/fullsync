@@ -19,13 +19,13 @@
  */
 package net.sourceforge.fullsync.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileComparer;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class StateDecider implements net.sourceforge.fullsync.StateDecider {
 	private static final Logger logger = LoggerFactory.getLogger(StateDecider.class.getSimpleName());

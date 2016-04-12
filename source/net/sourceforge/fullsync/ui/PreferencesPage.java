@@ -22,10 +22,6 @@ package net.sourceforge.fullsync.ui;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.Preferences;
-import net.sourceforge.fullsync.remote.RemoteController;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -38,6 +34,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Preferences;
+import net.sourceforge.fullsync.remote.RemoteController;
 
 public class PreferencesPage extends WizardDialog {
 

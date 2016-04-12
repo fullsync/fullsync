@@ -19,12 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.DataParseException;
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.schedule.CrontabPart;
-import net.sourceforge.fullsync.schedule.CrontabSchedule;
-import net.sourceforge.fullsync.schedule.Schedule;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -35,6 +29,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import net.sourceforge.fullsync.DataParseException;
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.schedule.CrontabPart;
+import net.sourceforge.fullsync.schedule.CrontabSchedule;
+import net.sourceforge.fullsync.schedule.Schedule;
 
 class CrontabScheduleOptions extends ScheduleOptions {
 	class PartContainer {

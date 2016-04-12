@@ -23,10 +23,10 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.fullsync.Util;
-
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+
+import net.sourceforge.fullsync.Util;
 
 public class ImageRepository {
 	/*
@@ -73,7 +73,7 @@ public class ImageRepository {
 
 	public ImageRepository(Display display) {
 		this.display = display;
-		cache = new HashMap<String, Image>();
+		cache = new HashMap<>();
 	}
 
 	public Image getImage(String imageName) {

@@ -22,12 +22,6 @@ package net.sourceforge.fullsync.ui;
 import java.io.IOException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.Preferences;
-import net.sourceforge.fullsync.ProfileManager;
-import net.sourceforge.fullsync.Synchronizer;
-import net.sourceforge.fullsync.Util;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
@@ -38,6 +32,12 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Preferences;
+import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.Synchronizer;
+import net.sourceforge.fullsync.Util;
 
 public class GuiController implements Runnable {
 	private static GuiController singleton;

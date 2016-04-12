@@ -24,9 +24,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.ExceptionHandler;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -34,6 +31,9 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+
+import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.ExceptionHandler;
 
 public class ConnectionConfiguration {
 	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" };
@@ -48,7 +48,7 @@ public class ConnectionConfiguration {
 	private boolean bufferedActive = false;
 
 	static {
-		composites = new HashMap<String, Class<? extends ProtocolSpecificComposite>>();
+		composites = new HashMap<>();
 		composites.put("file", FileSpecificComposite.class);
 		composites.put("ftp", FTPSpecificComposite.class);
 		composites.put("sftp", SFTPSpecificComposite.class);

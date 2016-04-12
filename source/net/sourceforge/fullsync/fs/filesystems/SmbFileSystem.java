@@ -19,15 +19,15 @@
  */
 package net.sourceforge.fullsync.fs.filesystems;
 
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
+
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
-
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.VFS;
-import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
 
 public class SmbFileSystem implements FileSystem {
 	static {

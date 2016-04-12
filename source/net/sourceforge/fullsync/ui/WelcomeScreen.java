@@ -20,8 +20,6 @@
 
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.Util;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -31,6 +29,8 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+
+import net.sourceforge.fullsync.Util;
 
 public class WelcomeScreen extends Dialog {
 

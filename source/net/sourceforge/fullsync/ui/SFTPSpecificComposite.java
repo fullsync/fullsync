@@ -22,8 +22,6 @@ package net.sourceforge.fullsync.ui;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -32,6 +30,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
+
+import net.sourceforge.fullsync.ConnectionDescription;
 
 class SFTPSpecificComposite extends ProtocolSpecificComposite {
 	private static final int DEFAULT_SFTP_PORT = 22;

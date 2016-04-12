@@ -37,7 +37,7 @@ import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 public class RemoteManager {
 
 	private RemoteInterface remoteInterface;
-	private Map<Object, UnicastRemoteObject> listenersMap = new HashMap<Object, UnicastRemoteObject>();
+	private Map<Object, UnicastRemoteObject> listenersMap = new HashMap<>();
 	private boolean useRemoteListener = false;
 
 	public RemoteManager(String host, int port, String password) throws MalformedURLException, RemoteException, NotBoundException {

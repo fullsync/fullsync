@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -34,6 +32,8 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+
+import net.sourceforge.fullsync.ExceptionHandler;
 
 public class OptionsDialog extends Dialog implements SelectionListener {
 	private Label labelImage;

@@ -29,11 +29,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
-import net.sourceforge.fullsync.schedule.Schedule;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
+import net.sourceforge.fullsync.schedule.Schedule;
 
 public class Profile implements Serializable, Comparable<Profile> {
 	private static final long serialVersionUID = 3L;
@@ -94,7 +94,7 @@ public class Profile implements Serializable, Comparable<Profile> {
 		this.destination = destination;
 		this.ruleSet = ruleSet;
 		this.lastUpdate = new Date();
-		this.listeners = new ArrayList<ProfileChangeListener>();
+		this.listeners = new ArrayList<>();
 		this.enabled = true;
 	}
 
@@ -269,7 +269,7 @@ public class Profile implements Serializable, Comparable<Profile> {
 		lastErrorLevel = in.readInt();
 		lastErrorString = (String) in.readObject();
 
-		this.listeners = new ArrayList<ProfileChangeListener>();
+		this.listeners = new ArrayList<>();
 	}
 
 	public Element serialize(final Document doc) {

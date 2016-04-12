@@ -24,10 +24,10 @@ import static org.junit.Assert.assertTrue;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.junit.Test;
+
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
-
-import org.junit.Test;
 
 public class FileModificationDateFileFilterRuleTest {
 

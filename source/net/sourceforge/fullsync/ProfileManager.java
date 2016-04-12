@@ -40,6 +40,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import net.sourceforge.fullsync.remote.RemoteManager;
 import net.sourceforge.fullsync.schedule.Schedule;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
@@ -47,12 +53,6 @@ import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
 import net.sourceforge.fullsync.schedule.Scheduler;
 import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 import net.sourceforge.fullsync.schedule.SchedulerImpl;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 // TODO remove schedulerChangeListener
 /**
@@ -109,10 +109,10 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	private ProfileListChangeListener remoteListener;
 
 	protected ProfileManager() {
-		this.profiles = new ArrayList<Profile>();
-		this.changeListeners = new ArrayList<ProfileListChangeListener>();
-		this.scheduleListeners = new ArrayList<ProfileSchedulerListener>();
-		this.schedulerChangeListeners = new ArrayList<SchedulerChangeListener>();
+		this.profiles = new ArrayList<>();
+		this.changeListeners = new ArrayList<>();
+		this.scheduleListeners = new ArrayList<>();
+		this.schedulerChangeListeners = new ArrayList<>();
 		this.scheduler = new SchedulerImpl(this);
 		this.scheduler.addSchedulerChangeListener(this);
 	}
@@ -145,7 +145,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	private void updateRemoteProfiles() {
-		this.profiles = new ArrayList<Profile>();
+		this.profiles = new ArrayList<>();
 
 		Profile[] remoteprofiles = remoteManager.getProfiles();
 		for (Profile remoteprofile : remoteprofiles) {
@@ -168,7 +168,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 			}
 			remoteManager = null;
 
-			this.profiles = new ArrayList<Profile>();
+			this.profiles = new ArrayList<>();
 
 			try {
 				loadProfiles(configFile);

@@ -22,9 +22,9 @@ package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import net.sourceforge.fullsync.rules.filefilter.FileFilter;
-
 import org.junit.Test;
+
+import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
 public class FileFilterTreeTest {
 

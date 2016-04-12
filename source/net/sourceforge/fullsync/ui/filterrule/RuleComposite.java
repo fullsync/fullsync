@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 
 abstract class RuleComposite extends Composite {
 
-	private ArrayList<ValueChangedListener> listeners = new ArrayList<ValueChangedListener>();
+	private ArrayList<ValueChangedListener> listeners = new ArrayList<>();
 
 	protected RuleComposite(Composite parent, int style) {
 		super(parent, style);

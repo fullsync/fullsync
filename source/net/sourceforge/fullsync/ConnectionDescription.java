@@ -40,8 +40,8 @@ public class ConnectionDescription implements Serializable {
 	private static final long serialVersionUID = 2L;
 
 	private URI uri;
-	private Map<String, String> parameters = new HashMap<String, String>();
-	private Map<String, String> secretParameters = new HashMap<String, String>();
+	private Map<String, String> parameters = new HashMap<>();
+	private Map<String, String> secretParameters = new HashMap<>();
 
 	public Element serialize(String name, Document doc) {
 		Element elem = doc.createElement(name);

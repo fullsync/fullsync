@@ -22,11 +22,6 @@ package net.sourceforge.fullsync.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.Profile;
-import net.sourceforge.fullsync.ProfileListChangeListener;
-import net.sourceforge.fullsync.ProfileManager;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Color;
@@ -40,6 +35,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+
+import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ProfileListChangeListener;
+import net.sourceforge.fullsync.ProfileManager;
 
 public class NiceListViewProfileListComposite extends ProfileListComposite implements ProfileListChangeListener {
 	class ContentComposite extends Composite {
@@ -271,7 +271,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 
 	private void populateProfileList() {
 		if (getProfileManager() != null) {
-			profilesToItems = new HashMap<Profile, NiceListViewItem>();
+			profilesToItems = new HashMap<>();
 			setItemsMenu(null);
 			profileList.clear();
 			for (Profile p : getProfileManager().getProfiles()) {

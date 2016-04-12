@@ -22,8 +22,6 @@ package net.sourceforge.fullsync.ui;
 import java.io.File;
 import java.io.IOException;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -34,6 +32,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import net.sourceforge.fullsync.ExceptionHandler;
 
 public class ImportProfilesPage extends WizardDialog {
 	private Composite composite;

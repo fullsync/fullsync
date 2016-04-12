@@ -25,12 +25,12 @@ import static org.junit.Assert.assertTrue;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.junit.After;
+import org.junit.Test;
+
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
-
-import org.junit.After;
-import org.junit.Test;
 
 public class FileAgeFileFilterRuleTest {
 

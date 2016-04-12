@@ -99,7 +99,7 @@ public abstract class Util {
 		if (src.isFile() && src.exists()) {
 			try (JarFile jar = new JarFile(src)) {
 				Enumeration<JarEntry> jarEntries = jar.entries();
-				Set<String> result = new HashSet<String>(); //avoid duplicates in case it is a subdirectory
+				Set<String> result = new HashSet<>(); //avoid duplicates in case it is a subdirectory
 				String prefix = path;
 				if ('/' == prefix.charAt(0)) {
 					prefix = prefix.substring(1);

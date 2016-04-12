@@ -21,14 +21,14 @@ package net.sourceforge.fullsync.ui.filterrule;
 
 import java.text.DateFormat;
 
-import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+
+import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 class DateValueRuleComposite extends RuleComposite {
 

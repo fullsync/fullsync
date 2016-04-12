@@ -24,10 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
-
 import org.apache.commons.vfs2.Capability;
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
@@ -36,8 +32,11 @@ import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.FileType;
 import org.apache.commons.vfs2.VFS;
 
+import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
+
 public class CommonsVfsConnection implements FileSystemConnection {
-	private static final long serialVersionUID = 2L;
 	private final boolean canSetLastModifiedFile;
 	private final boolean canSetLastModifiedFolder;
 	private ConnectionDescription desc;
@@ -82,7 +81,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	@Override
 	public final HashMap<String, File> getChildren(final File dir) throws IOException {
 		try {
-			HashMap<String, File> children = new HashMap<String, File>();
+			HashMap<String, File> children = new HashMap<>();
 
 			FileObject obj = base.resolveFile(dir.getPath());
 			if (obj.exists() && (obj.getType() == FileType.FOLDER)) {

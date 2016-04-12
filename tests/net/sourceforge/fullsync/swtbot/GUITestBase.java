@@ -24,13 +24,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import net.sourceforge.fullsync.cli.Main;
-
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.rules.TemporaryFolder;
+
+import net.sourceforge.fullsync.cli.Main;
 
 public abstract class GUITestBase {
 	private static final long GUI_STARTUP_TIMEOUT = 7000;

@@ -52,7 +52,7 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		this.fsm = new FileSystemManager();
 		active = true;
 		cancelled = false;
-		taskGenerationListeners = new ArrayList<TaskGenerationListener>();
+		taskGenerationListeners = new ArrayList<>();
 	}
 
 	@Override

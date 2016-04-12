@@ -21,10 +21,10 @@ package net.sourceforge.fullsync.rules.filefilter;
 
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
+
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
-
-import org.junit.Test;
 
 public class FileSizeFileFilterRuleTest {
 	private File root = new TestNode("root", null, true, true, 0, 0);

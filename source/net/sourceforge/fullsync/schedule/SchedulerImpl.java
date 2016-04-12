@@ -39,7 +39,7 @@ public class SchedulerImpl implements Scheduler, Runnable {
 
 	public SchedulerImpl(ScheduleTaskSource source) {
 		scheduleSource = source;
-		schedulerListeners = new ArrayList<SchedulerChangeListener>();
+		schedulerListeners = new ArrayList<>();
 	}
 
 	@Override

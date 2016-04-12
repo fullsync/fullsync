@@ -55,7 +55,7 @@ public class Launcher {
 		String installlocation = cs.getLocation().toURI().toString().replaceAll("launcher\\.jar$", "");
 		System.out.println("launching FullSync... OS=" + os + "; ARCH=" + arch + "; INSTALLLOCATION=" + installlocation);
 
-		ArrayList<URL> jars = new ArrayList<URL>();
+		ArrayList<URL> jars = new ArrayList<>();
 		jars.add(new URL(installlocation + "lib/fullsync.jar"));
 		// add correct SWT implementation to the class-loader
 		jars.add(new URL(installlocation + "lib/swt-" + os + "-" + arch + ".jar"));

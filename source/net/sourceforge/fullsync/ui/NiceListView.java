@@ -21,8 +21,6 @@ package net.sourceforge.fullsync.ui;
 
 import java.util.Arrays;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Color;
@@ -31,6 +29,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+
+import net.sourceforge.fullsync.ExceptionHandler;
 
 public class NiceListView extends Composite implements Listener {
 	private Color colorDefault;

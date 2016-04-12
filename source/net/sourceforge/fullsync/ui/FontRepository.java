@@ -59,7 +59,7 @@ public class FontRepository {
 
 	public FontRepository(Device _device) {
 		dev = _device;
-		cache = new HashMap<FontRepository.Key, Font>(5);
+		cache = new HashMap<>(5);
 	}
 
 	public Font getFont(String name, int height, int style) {

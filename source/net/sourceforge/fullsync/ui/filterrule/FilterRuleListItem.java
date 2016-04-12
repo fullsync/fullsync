@@ -22,6 +22,14 @@ package net.sourceforge.fullsync.ui.filterrule;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.rules.filefilter.FileAgeFileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -44,14 +52,6 @@ import net.sourceforge.fullsync.ui.FileFilterPage;
 import net.sourceforge.fullsync.ui.GuiController;
 import net.sourceforge.fullsync.ui.Messages;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
-
 public class FilterRuleListItem {
 	private static final Map<String, Class<? extends FileFilterRule>> rulesTable;
 	private static final Map<String, String> ruleNamesConversionTable;
@@ -69,7 +69,7 @@ public class FilterRuleListItem {
 
 		ruleTypeNames = new String[] { name, path, type, size, modificationDate, age, nested };
 
-		rulesTable = new HashMap<String, Class<? extends FileFilterRule>>();
+		rulesTable = new HashMap<>();
 		rulesTable.put(name, FileNameFileFilterRule.class);
 		rulesTable.put(path, FilePathFileFilterRule.class);
 		rulesTable.put(type, FileTypeFileFilterRule.class);
@@ -78,7 +78,7 @@ public class FilterRuleListItem {
 		rulesTable.put(age, FileAgeFileFilterRule.class);
 		rulesTable.put(nested, SubfilterFileFilerRule.class);
 
-		ruleNamesConversionTable = new HashMap<String, String>();
+		ruleNamesConversionTable = new HashMap<>();
 		ruleNamesConversionTable.put(FileNameFileFilterRule.TYPE_NAME, name);
 		ruleNamesConversionTable.put(FilePathFileFilterRule.TYPE_NAME, path);
 		ruleNamesConversionTable.put(FileTypeFileFilterRule.TYPE_NAME, type);
@@ -87,7 +87,7 @@ public class FilterRuleListItem {
 		ruleNamesConversionTable.put(FileAgeFileFilterRule.TYPE_NAME, age);
 		ruleNamesConversionTable.put(SubfilterFileFilerRule.TYPE_NAME, nested);
 
-		reverseRuleNamesConversionTable = new HashMap<String, String>();
+		reverseRuleNamesConversionTable = new HashMap<>();
 		reverseRuleNamesConversionTable.put(name, FileNameFileFilterRule.TYPE_NAME);
 		reverseRuleNamesConversionTable.put(path, FilePathFileFilterRule.TYPE_NAME);
 		reverseRuleNamesConversionTable.put(type, FileTypeFileFilterRule.TYPE_NAME);

@@ -21,13 +21,6 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.IoStatistics;
-import net.sourceforge.fullsync.Synchronizer;
-import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskFinishedEvent;
-import net.sourceforge.fullsync.TaskTree;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -40,6 +33,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
+
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.IoStatistics;
+import net.sourceforge.fullsync.Synchronizer;
+import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskFinishedEvent;
+import net.sourceforge.fullsync.TaskTree;
 
 public class TaskDecisionPage extends WizardDialog {
 	private GuiController guiController;
@@ -177,7 +177,7 @@ public class TaskDecisionPage extends WizardDialog {
 
 				display.syncExec(() -> setOkButtonEnabled(false));
 
-				final GUIUpdateQueue<TaskFinishedEvent> updateQueue = new GUIUpdateQueue<TaskFinishedEvent>(display, (display1, items) -> {
+				final GUIUpdateQueue<TaskFinishedEvent> updateQueue = new GUIUpdateQueue<>(display, (display1, items) -> {
 					TableItem item = null;
 					System.err.println("GUIUpdateQueue<TaskFinishedEvent>::doUpdate: " + items.size());
 					for (TaskFinishedEvent event : items) {

@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sourceforge.fullsync.ActionDecider;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.IgnoreDecider;
@@ -30,9 +33,6 @@ import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.fs.File;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
@@ -108,7 +108,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 		RuleSet rules = updateRules(src, dst, oldrules);
 
 		Collection<File> srcFiles = src.getChildren();
-		Collection<File> dstFiles = new ArrayList<File>(dst.getChildren());
+		Collection<File> dstFiles = new ArrayList<>(dst.getChildren());
 
 		for (File sfile : srcFiles) {
 			File dfile = dst.getChild(sfile.getName());

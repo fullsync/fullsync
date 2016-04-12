@@ -22,11 +22,6 @@ package net.sourceforge.fullsync.ui;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.FileSystemManager;
-import net.sourceforge.fullsync.fs.Site;
-
 import org.apache.commons.vfs2.FileObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -34,6 +29,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+
+import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FileSystemManager;
+import net.sourceforge.fullsync.fs.Site;
 
 class ProtocolSpecificComposite {
 	protected Text textPath;

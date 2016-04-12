@@ -19,9 +19,9 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
-
 import org.junit.Test;
+
+import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 public class FileSizeValueTest {
 

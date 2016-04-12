@@ -29,16 +29,6 @@ import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.util.Date;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.Profile;
-import net.sourceforge.fullsync.ProfileManager;
-import net.sourceforge.fullsync.Synchronizer;
-import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.Util;
-import net.sourceforge.fullsync.impl.ConfigurationPreferences;
-import net.sourceforge.fullsync.remote.RemoteController;
-import net.sourceforge.fullsync.ui.GuiController;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -48,6 +38,16 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.Synchronizer;
+import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.Util;
+import net.sourceforge.fullsync.impl.ConfigurationPreferences;
+import net.sourceforge.fullsync.remote.RemoteController;
+import net.sourceforge.fullsync.ui.GuiController;
 
 public class Main { // NO_UCD
 	private static Options options;

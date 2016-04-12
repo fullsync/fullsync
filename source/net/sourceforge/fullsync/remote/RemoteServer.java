@@ -25,6 +25,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
@@ -34,9 +37,6 @@ import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class is the server for remote connections.
@@ -50,7 +50,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	private Synchronizer synchronizer;
 	private String password;
 
-	private Map<Remote, Object> listenersMap = new HashMap<Remote, Object>();
+	private Map<Remote, Object> listenersMap = new HashMap<>();
 
 	private Logger logger = LoggerFactory.getLogger("FullSync");
 

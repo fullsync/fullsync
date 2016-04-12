@@ -19,10 +19,10 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import org.eclipse.swt.widgets.Composite;
+
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.schedule.Schedule;
-
-import org.eclipse.swt.widgets.Composite;
 
 public abstract class ScheduleOptions extends Composite {
 	public ScheduleOptions(Composite parent, int style) {

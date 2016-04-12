@@ -44,12 +44,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.Site;
-import net.sourceforge.fullsync.fs.buffering.BufferedFile;
-
 import org.apache.commons.vfs2.FileObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -58,9 +52,13 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class SyncFileBufferedConnection implements BufferedConnection {
-	private static final long serialVersionUID = 2L;
+import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.Site;
+import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
+public class SyncFileBufferedConnection implements BufferedConnection {
 	class SyncFileDefaultHandler extends DefaultHandler {
 		BufferedConnection bc;
 		AbstractBufferedFile current;

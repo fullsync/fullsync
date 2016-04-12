@@ -19,13 +19,13 @@
  */
 package net.sourceforge.fullsync.fs.filesystems;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
-
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
+
+import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 
 class SmbAuthProvider implements FileSystemAuthProvider {
 	@Override

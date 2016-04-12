@@ -19,14 +19,14 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
-import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Listener;
+
+import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 class TypeValueRuleComposite extends RuleComposite {
 	private Combo comboTypes;

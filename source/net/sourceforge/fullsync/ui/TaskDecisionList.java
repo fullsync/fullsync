@@ -22,15 +22,6 @@ package net.sourceforge.fullsync.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.fullsync.Action;
-import net.sourceforge.fullsync.ActionType;
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.Location;
-import net.sourceforge.fullsync.Profile;
-import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.fs.File;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -49,6 +40,15 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+
+import net.sourceforge.fullsync.Action;
+import net.sourceforge.fullsync.ActionType;
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Location;
+import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.fs.File;
 
 public class TaskDecisionList extends Composite {
 	private TableColumn tableColumnExplanation;
@@ -76,9 +76,9 @@ public class TaskDecisionList extends Composite {
 
 	public TaskDecisionList(Composite parent, int style) {
 		super(parent, style);
-		taskItemMap = new HashMap<Task, TableItem>();
-		actionImages = new HashMap<ActionType, Image>();
-		taskImages = new HashMap<Integer, Image>();
+		taskItemMap = new HashMap<>();
+		actionImages = new HashMap<>();
+		taskImages = new HashMap<>();
 		try {
 			this.setSize(550, 500);
 

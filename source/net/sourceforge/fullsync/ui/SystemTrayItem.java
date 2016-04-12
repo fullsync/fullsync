@@ -22,17 +22,17 @@ package net.sourceforge.fullsync.ui;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskGenerationListener;
-import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.fs.File;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
+
+import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskGenerationListener;
+import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.fs.File;
 
 public class SystemTrayItem implements TaskGenerationListener {
 	private TrayItem trayItem;

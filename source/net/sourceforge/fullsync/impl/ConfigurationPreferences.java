@@ -27,12 +27,12 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Properties;
 
+import org.eclipse.swt.graphics.Rectangle;
+
 import net.sourceforge.fullsync.Crypt;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
-
-import org.eclipse.swt.graphics.Rectangle;
 
 public class ConfigurationPreferences implements Preferences {
 	private static final String PREFERENCE_DEFAULT_PROFILE_LIST_STYLE = "NiceListView";

@@ -19,17 +19,17 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.rules.filefilter.FileFilter;
-import net.sourceforge.fullsync.rules.filefilter.values.FilterValue;
-import net.sourceforge.fullsync.ui.FileFilterPage;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.rules.filefilter.FileFilter;
+import net.sourceforge.fullsync.rules.filefilter.values.FilterValue;
+import net.sourceforge.fullsync.ui.FileFilterPage;
 
 class SubfilterRuleComposite extends RuleComposite {
 	private Text textValue;

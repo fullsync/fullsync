@@ -21,12 +21,6 @@ package net.sourceforge.fullsync.ui;
 
 import java.util.ArrayList;
 
-import net.sourceforge.fullsync.rules.filefilter.FileFilter;
-import net.sourceforge.fullsync.rules.filefilter.FileFilterManager;
-import net.sourceforge.fullsync.rules.filefilter.FileFilterRule;
-import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
-import net.sourceforge.fullsync.ui.filterrule.FilterRuleListItem;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
@@ -37,6 +31,12 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+
+import net.sourceforge.fullsync.rules.filefilter.FileFilter;
+import net.sourceforge.fullsync.rules.filefilter.FileFilterManager;
+import net.sourceforge.fullsync.rules.filefilter.FileFilterRule;
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
+import net.sourceforge.fullsync.ui.filterrule.FilterRuleListItem;
 
 public class FileFilterPage extends WizardDialog {
 
@@ -51,7 +51,7 @@ public class FileFilterPage extends WizardDialog {
 	private FileFilterManager fileFilterManager = new FileFilterManager();
 	private FileFilter fileFilter;
 
-	private ArrayList<FilterRuleListItem> ruleItems = new ArrayList<FilterRuleListItem>();
+	private ArrayList<FilterRuleListItem> ruleItems = new ArrayList<>();
 
 	public FileFilterPage(Shell parent, FileFilter filter) {
 		super(parent);

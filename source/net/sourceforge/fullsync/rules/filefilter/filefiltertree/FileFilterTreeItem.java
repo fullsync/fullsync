@@ -36,7 +36,7 @@ class FileFilterTreeItem implements Serializable {
 
 	FileFilterTreeItem() {
 		this.filter = null;
-		this.childrenMap = new HashMap<String, FileFilterTreeItem>();
+		this.childrenMap = new HashMap<>();
 	}
 
 	public void setFilter(final FileFilter filter) {

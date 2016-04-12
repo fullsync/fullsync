@@ -19,9 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.schedule.Schedule;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.graphics.Rectangle;
@@ -36,6 +33,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.schedule.Schedule;
 
 public class ScheduleSelectionDialog extends Dialog {
 	class NullScheduleOptions extends ScheduleOptions {

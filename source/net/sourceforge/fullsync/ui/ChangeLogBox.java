@@ -25,13 +25,13 @@ import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import net.sourceforge.fullsync.Util;
-import net.sourceforge.fullsync.changelog.ChangeLogEntry;
-import net.sourceforge.fullsync.changelog.ChangeLogLoader;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
+
+import net.sourceforge.fullsync.Util;
+import net.sourceforge.fullsync.changelog.ChangeLogEntry;
+import net.sourceforge.fullsync.changelog.ChangeLogLoader;
 
 public class ChangeLogBox extends StyledText implements AsyncUIUpdate {
 	private String lastFullSyncVersion;

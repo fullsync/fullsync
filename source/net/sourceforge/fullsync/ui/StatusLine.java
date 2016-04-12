@@ -19,14 +19,14 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+
+import net.sourceforge.fullsync.ExceptionHandler;
 
 public class StatusLine extends Composite {
 	private Label labelIcon;

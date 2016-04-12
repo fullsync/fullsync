@@ -23,6 +23,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -31,10 +35,6 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FileNameFileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	public static final String RULESET_TYPE = "simple";

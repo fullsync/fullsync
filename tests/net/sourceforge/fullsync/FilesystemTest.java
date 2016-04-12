@@ -34,8 +34,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -52,6 +50,8 @@ import org.mockftpserver.fake.filesystem.FileSystem;
 import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 
 import com.mindtree.techworks.infix.pluginscommon.test.ssh.SSHServerResource;
+
+import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 
 @RunWith(Parameterized.class)
 public class FilesystemTest {
@@ -281,7 +281,7 @@ public class FilesystemTest {
 	@Test
 	public void testPublishUpdate() throws Exception {
 		prepareProfile("Publish/Update");
-		Map<String, Action> expectation = new HashMap<String, Action>();
+		Map<String, Action> expectation = new HashMap<>();
 		long lm;
 
 		lm = prepareForTest();

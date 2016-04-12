@@ -42,7 +42,7 @@ public class FullSyncLoggerFactory implements ILoggerFactory {
 	Map<String, Logger> loggerMap;
 
 	public FullSyncLoggerFactory() {
-		loggerMap = new HashMap<String, Logger>();
+		loggerMap = new HashMap<>();
 	}
 
 	/**

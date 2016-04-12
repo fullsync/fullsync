@@ -23,8 +23,6 @@ import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -45,6 +43,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+
+import net.sourceforge.fullsync.ExceptionHandler;
 
 class FileObjectChooser extends Dialog {
 

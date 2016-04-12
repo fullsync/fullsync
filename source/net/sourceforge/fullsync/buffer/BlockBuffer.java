@@ -57,7 +57,7 @@ public class BlockBuffer implements ExecutionBuffer {
 
 		flushes = 0;
 
-		finishedListeners = new ArrayList<EntryFinishedListener>();
+		finishedListeners = new ArrayList<>();
 	}
 
 	@Override

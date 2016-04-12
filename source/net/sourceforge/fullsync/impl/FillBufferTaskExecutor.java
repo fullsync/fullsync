@@ -42,7 +42,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 	private ExecutionBuffer buffer;
 
 	public FillBufferTaskExecutor(ExecutionBuffer buffer) {
-		this.listeners = new ArrayList<TaskFinishedListener>();
+		this.listeners = new ArrayList<>();
 		this.statisticsOnly = false;
 		this.buffer = buffer;
 		buffer.addEntryFinishedListener((entry, ioe) -> {

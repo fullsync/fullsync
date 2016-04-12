@@ -37,7 +37,7 @@ public class GUIUpdateQueue<Item> {
 
 	public GUIUpdateQueue(Display display, GUIUpdateTask<Item> guiUpdateTask) {
 		m_display = display;
-		m_queue = new ConcurrentLinkedQueue<Item>();
+		m_queue = new ConcurrentLinkedQueue<>();
 		m_updateScheduled = new AtomicBoolean(false);
 		m_updateTask = guiUpdateTask;
 	}
@@ -47,7 +47,7 @@ public class GUIUpdateQueue<Item> {
 		if (!m_updateScheduled.get()) {
 			m_updateScheduled.set(true);
 			m_display.asyncExec(() -> {
-				LinkedList<Item> items = new LinkedList<Item>();
+				LinkedList<Item> items = new LinkedList<>();
 				getItems(items);
 				if (!items.isEmpty()) {
 					m_updateTask.doUpdate(m_display, items);

@@ -22,9 +22,9 @@ package net.sourceforge.fullsync.schedule;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 
-import net.sourceforge.fullsync.DataParseException;
-
 import org.w3c.dom.Element;
+
+import net.sourceforge.fullsync.DataParseException;
 
 public class CrontabSchedule extends Schedule {
 	public static final String SCHEDULE_TYPE = "crontab";

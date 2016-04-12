@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.Util;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Image;
@@ -48,6 +45,9 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Util;
 
 class AboutDialog extends Dialog implements AsyncUIUpdate {
 	private static final String FULLSYNC_LICENSES_DIRECTORY = "net/sourceforge/fullsync/licenses/";
@@ -292,7 +292,7 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 	@Override
 	public void execute() throws Exception {
 		int numLicenses = 0;
-		List<LicenseEntry> licenses = new ArrayList<LicenseEntry>();
+		List<LicenseEntry> licenses = new ArrayList<>();
 		for (String name : Util.loadDirectoryFromClasspath(AboutDialog.class, FULLSYNC_LICENSES_DIRECTORY)) {
 			if (name.endsWith(".txt")) { //$NON-NLS-1$
 				++numLicenses;
@@ -303,8 +303,8 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 			}
 		}
 		Collections.sort(licenses, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-		licenseNames = new ArrayList<String>(numLicenses);
-		licenseTexts = new ArrayList<String>(numLicenses);
+		licenseNames = new ArrayList<>(numLicenses);
+		licenseTexts = new ArrayList<>(numLicenses);
 		for (LicenseEntry lic : licenses) {
 			licenseNames.add(lic.name);
 			licenseTexts.add(lic.license);

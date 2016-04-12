@@ -24,9 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-
 import org.eclipse.swt.widgets.DirectoryDialog;
+
+import net.sourceforge.fullsync.ConnectionDescription;
 
 class FileSpecificComposite extends ProtocolSpecificComposite {
 

@@ -19,9 +19,9 @@
  */
 package net.sourceforge.fullsync.fs;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-
 import org.apache.commons.vfs2.FileSystemOptions;
+
+import net.sourceforge.fullsync.ConnectionDescription;
 
 public interface FileSystemAuthProvider {
 	/**

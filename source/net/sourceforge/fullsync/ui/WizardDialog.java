@@ -21,8 +21,6 @@ package net.sourceforge.fullsync.ui;
 
 import java.util.ArrayList;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -35,6 +33,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+
+import net.sourceforge.fullsync.ExceptionHandler;
 
 public abstract class WizardDialog {
 
@@ -51,7 +51,7 @@ public abstract class WizardDialog {
 	private final Shell parent;
 	private final int style;
 
-	private final ArrayList<WizardDialogListener> dialogListeners = new ArrayList<WizardDialogListener>();
+	private final ArrayList<WizardDialogListener> dialogListeners = new ArrayList<>();
 
 	public WizardDialog(Shell parent) {
 		this.parent = parent;

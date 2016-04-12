@@ -49,7 +49,7 @@ public class ChangeLogLoader {
 	public List<ChangeLogEntry> load(File srcDir, String pattern)
 			throws ParserConfigurationException, SAXException, IOException, ParseException {
 		Pattern p = Pattern.compile(pattern);
-		List<ChangeLogEntry> changelogEntries = new LinkedList<ChangeLogEntry>();
+		List<ChangeLogEntry> changelogEntries = new LinkedList<>();
 		String[] children = srcDir.list();
 		if (null != children) {
 			for (String file : children) {
@@ -64,7 +64,7 @@ public class ChangeLogLoader {
 	}
 
 	public static List<ChangeLogEntry> filterAfter(List<ChangeLogEntry> changelogEntries, String version) {
-		List<ChangeLogEntry> newerVersions = new LinkedList<ChangeLogEntry>();
+		List<ChangeLogEntry> newerVersions = new LinkedList<>();
 		VersionComparator vc = new VersionComparator();
 		for (ChangeLogEntry entry : changelogEntries) {
 			if (1 != vc.compare(entry.getVersion(), version)) {

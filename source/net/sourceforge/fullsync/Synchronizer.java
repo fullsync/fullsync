@@ -21,13 +21,13 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sourceforge.fullsync.buffer.BlockBuffer;
 import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 import net.sourceforge.fullsync.impl.TaskGeneratorImpl;
 import net.sourceforge.fullsync.remote.RemoteManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class should provide wrappers for most common synchronization tasks

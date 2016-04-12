@@ -29,10 +29,10 @@ import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.xml.sax.SAXException;
+
 import net.sourceforge.fullsync.changelog.ChangeLogEntry;
 import net.sourceforge.fullsync.changelog.ChangeLogLoader;
-
-import org.xml.sax.SAXException;
 
 public class ChangeLogGenerator {
 

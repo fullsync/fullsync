@@ -38,7 +38,7 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	AbstractBufferedFile(BufferedConnection bc, String name, File parent, boolean directory, boolean exists) {
 		super(bc, name, parent, directory, exists);
 		this.unbuffered = null;
-		children = new HashMap<String, File>();
+		children = new HashMap<>();
 		fsSize = -1;
 		fsLastModified = -1;
 	}

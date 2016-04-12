@@ -22,12 +22,6 @@ package net.sourceforge.fullsync.fs.filesystems;
 import java.io.File;
 import java.util.Arrays;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
-import net.sourceforge.fullsync.impl.SFTPLogger;
-import net.sourceforge.fullsync.ui.GuiController;
-import net.sourceforge.fullsync.ui.OptionsDialog;
-
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
@@ -40,6 +34,12 @@ import org.slf4j.LoggerFactory;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UIKeyboardInteractive;
 import com.jcraft.jsch.UserInfo;
+
+import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
+import net.sourceforge.fullsync.impl.SFTPLogger;
+import net.sourceforge.fullsync.ui.GuiController;
+import net.sourceforge.fullsync.ui.OptionsDialog;
 
 class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive, UserInfo {
 	private static final String sshDirName;

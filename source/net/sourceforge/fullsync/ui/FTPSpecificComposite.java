@@ -21,13 +21,13 @@ package net.sourceforge.fullsync.ui;
 
 import java.net.URISyntaxException;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+
+import net.sourceforge.fullsync.ConnectionDescription;
 
 public class FTPSpecificComposite extends UserPasswordSpecificComposite {
 	private static final String FTP_ANONYMOUS_USERNAME = "Anonymous"; //$NON-NLS-1$

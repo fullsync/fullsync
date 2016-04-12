@@ -54,7 +54,7 @@ public class ExactCopyActionDecider implements ActionDecider {
 	@Override
 	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd)
 			throws DataParseException, IOException {
-		ArrayList<Action> actions = new ArrayList<Action>(3);
+		ArrayList<Action> actions = new ArrayList<>(3);
 		State state = sd.getState(src, dst);
 		switch (state) {
 			case OrphanSource:

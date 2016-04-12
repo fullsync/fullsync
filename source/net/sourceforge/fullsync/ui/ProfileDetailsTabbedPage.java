@@ -28,20 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.FileSystemManager;
-import net.sourceforge.fullsync.Profile;
-import net.sourceforge.fullsync.ProfileManager;
-import net.sourceforge.fullsync.RuleSetDescriptor;
-import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.Site;
-import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
-import net.sourceforge.fullsync.rules.filefilter.FileFilter;
-import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
-import net.sourceforge.fullsync.schedule.Schedule;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -62,6 +48,20 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+
+import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FileSystemException;
+import net.sourceforge.fullsync.FileSystemManager;
+import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.RuleSetDescriptor;
+import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.Site;
+import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
+import net.sourceforge.fullsync.rules.filefilter.FileFilter;
+import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
+import net.sourceforge.fullsync.schedule.Schedule;
 
 public class ProfileDetailsTabbedPage extends WizardDialog {
 	private static final String EXPANDED_KEY = "Expanded";
@@ -89,8 +89,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private Button buttonRemoveFilter;
 
 	private Tree directoryTree;
-	private final ArrayList<TreeItem> treeItemsWithFilter = new ArrayList<TreeItem>();
-	private Map<String, FileFilter> itemsMap = new HashMap<String, FileFilter>();
+	private final ArrayList<TreeItem> treeItemsWithFilter = new ArrayList<>();
+	private Map<String, FileFilter> itemsMap = new HashMap<>();
 	private Site sourceSite;
 	private final FileSystemManager fsm = new FileSystemManager();
 
@@ -568,7 +568,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	}
 
 	private List<File> getOrderedChildren(File rootFile) throws IOException {
-		ArrayList<File> children = new ArrayList<File>(rootFile.getChildren());
+		ArrayList<File> children = new ArrayList<>(rootFile.getChildren());
 		Collections.sort(children, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 		return children;
 	}

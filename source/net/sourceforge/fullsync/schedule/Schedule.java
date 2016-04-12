@@ -24,10 +24,10 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import net.sourceforge.fullsync.ExceptionHandler;
 
 public abstract class Schedule implements Serializable {
 	private static final long serialVersionUID = 2L;
@@ -36,7 +36,7 @@ public abstract class Schedule implements Serializable {
 	private static final Map<String, Class<? extends Schedule>> scheduleRegister;
 
 	static {
-		scheduleRegister = new HashMap<String, Class<? extends Schedule>>(2);
+		scheduleRegister = new HashMap<>(2);
 		scheduleRegister.put(IntervalSchedule.SCHEDULE_TYPE, IntervalSchedule.class);
 		scheduleRegister.put(CrontabSchedule.SCHEDULE_TYPE, CrontabSchedule.class);
 	}

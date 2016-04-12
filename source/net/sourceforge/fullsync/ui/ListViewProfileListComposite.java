@@ -19,10 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.Profile;
-import net.sourceforge.fullsync.ProfileListChangeListener;
-import net.sourceforge.fullsync.ProfileManager;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -30,6 +26,10 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+
+import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ProfileListChangeListener;
+import net.sourceforge.fullsync.ProfileManager;
 
 public class ListViewProfileListComposite extends ProfileListComposite implements ProfileListChangeListener {
 	private Table tableProfiles;
