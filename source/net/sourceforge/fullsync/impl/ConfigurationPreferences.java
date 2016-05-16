@@ -27,22 +27,15 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Properties;
 
-import org.eclipse.swt.graphics.Rectangle;
-
 import net.sourceforge.fullsync.Crypt;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
+import net.sourceforge.fullsync.WindowState;
 
 public class ConfigurationPreferences implements Preferences {
 	private static final String PREFERENCE_DEFAULT_PROFILE_LIST_STYLE = "NiceListView";
 	private static final String PREFERENCE_DEFAULT_LANGUAGE_CODE = "en";
-	private static final String PREFERENCE_WINDOW_STATE_HEIGHT = "Interface.WindowState.height";
-	private static final String PREFERENCE_WINDOW_STATE_WIDTH = "Interface.WindowState.width";
-	private static final String PREFERENCE_WINDOW_STATE_Y = "Interface.WindowState.y";
-	private static final String PREFERENCE_WINDOW_STATE_X = "Interface.WindowState.x";
-	private static final String PREFERENCE_WINDOW_STATE_MINIMIZED = "Interface.WindowState.minimized";
-	private static final String PREFERENCE_WINDOW_STATE_MAXIMIZED = "Interface.WindowState.maximized";
 	private static final String PREFERENCE_SKIP_WELCOME_SCREEN = "Interface.SkipWelcomeScreen";
 	private static final String PREFERENCE_HELP_SHOWN = "Interface.HelpShown";
 	private static final String PREFERENCE_LANGUAGE_CODE = "Interface.LanguageCode";
@@ -56,6 +49,13 @@ public class ConfigurationPreferences implements Preferences {
 	private static final String PREFERENCE_CLOSE_MINIMIZES_TO_SYSTEM_TRAY = "Interface.CloseMinimizesToSystemTray";
 	private static final String PREFERENCE_CONFIRM_EXIT = "Interface.ConfirmExit";
 	private static final String PREFERENCE_FULLSYNC_VERSION = "FullSync.Version";
+	private static final String PREFERENCE_WINDOW_STATE_PREFIX = "Interface.WindowState";
+	private static final String PROPERTY_HEIGHT = "height";
+	private static final String PROPERTY_WIDTH = "width";
+	private static final String PROPERTY_Y = "y";
+	private static final String PROPERTY_X = "x";
+	private static final String PROPERTY_MINIMIZED = "minimized";
+	private static final String PROPERTY_MAXIMIZED = "maximized";
 	private final String configFileName;
 	private final Properties props;
 	private final String lastFullSyncVersion;
@@ -243,40 +243,36 @@ public class ConfigurationPreferences implements Preferences {
 		return lastFullSyncVersion;
 	}
 
-	@Override
-	public void setWindowMaximized(boolean maximized) {
-		setProperty(PREFERENCE_WINDOW_STATE_MAXIMIZED, maximized);
+	private String buildName(String prefix, String instance, String suffix) {
+		StringBuilder sb = new StringBuilder(prefix);
+		if ((null != instance) && !instance.isEmpty()) {
+			sb.append('.');
+			sb.append(instance);
+		}
+		sb.append('.');
+		sb.append(suffix);
+		return sb.toString();
 	}
 
 	@Override
-	public boolean getWindowMaximized() {
-		return getProperty(PREFERENCE_WINDOW_STATE_MAXIMIZED, false);
+	public WindowState getWindowState(String name) {
+		WindowState ws = new WindowState();
+		ws.maximized = getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MAXIMIZED), false);
+		ws.minimized = getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MINIMIZED), false);
+		ws.x = getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_X), 0);
+		ws.y = getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_Y), 0);
+		ws.width = getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_WIDTH), 0);
+		ws.height = getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_HEIGHT), 0);
+		return ws;
 	}
 
 	@Override
-	public void setWindowMinimized(boolean minimized) {
-		setProperty(PREFERENCE_WINDOW_STATE_MINIMIZED, minimized);
-	}
-
-	@Override
-	public boolean getWindowMinimized() {
-		return getProperty(PREFERENCE_WINDOW_STATE_MINIMIZED, false);
-	}
-
-	@Override
-	public void setWindowBounds(Rectangle b) {
-		setProperty(PREFERENCE_WINDOW_STATE_X, b.x);
-		setProperty(PREFERENCE_WINDOW_STATE_Y, b.y);
-		setProperty(PREFERENCE_WINDOW_STATE_WIDTH, b.width);
-		setProperty(PREFERENCE_WINDOW_STATE_HEIGHT, b.height);
-	}
-
-	@Override
-	public Rectangle getWindowBounds() {
-		int x = getProperty(PREFERENCE_WINDOW_STATE_X, 0);
-		int y = getProperty(PREFERENCE_WINDOW_STATE_Y, 0);
-		int width = getProperty(PREFERENCE_WINDOW_STATE_WIDTH, 0);
-		int height = getProperty(PREFERENCE_WINDOW_STATE_HEIGHT, 0);
-		return new Rectangle(x, y, width, height);
+	public void setWindowState(String name, WindowState state) {
+		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MAXIMIZED), state.maximized);
+		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MINIMIZED), state.minimized);
+		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_X), state.x);
+		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_Y), state.y);
+		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_WIDTH), state.width);
+		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_HEIGHT), state.height);
 	}
 }

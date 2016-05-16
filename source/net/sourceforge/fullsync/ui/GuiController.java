@@ -38,6 +38,7 @@ import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Util;
+import net.sourceforge.fullsync.WindowState;
 
 public class GuiController implements Runnable {
 	private static GuiController singleton;
@@ -84,17 +85,15 @@ public class GuiController implements Runnable {
 
 	private void restoreWindowState(final Rectangle shellBounds) {
 		mainShell.setVisible(true);
-		Rectangle wb = preferences.getWindowBounds();
-		boolean maximized = preferences.getWindowMaximized();
-		boolean minimized = preferences.getWindowMinimized();
+		WindowState ws = preferences.getWindowState(null);
 		Rectangle r = display.getBounds();
-		if ((wb.width > 0) && (wb.height > 0) && r.contains(wb.x, wb.y) && r.contains(wb.x + wb.width, wb.y + wb.height)) {
-			mainShell.setBounds(wb);
+		if ((ws.width > 0) && (ws.height > 0) && r.contains(ws.x, ws.y) && r.contains(ws.x + ws.width, ws.y + ws.height)) {
+			mainShell.setBounds(ws.x, ws.y, ws.width, ws.height);
 		}
-		if (minimized) {
+		if (ws.minimized) {
 			mainShell.setMinimized(true);
 		}
-		if (maximized) {
+		if (ws.maximized) {
 			mainShell.setMaximized(true);
 		}
 	}
@@ -185,13 +184,17 @@ public class GuiController implements Runnable {
 	}
 
 	private void storeWindowState() {
-		boolean maximized = mainShell.getMaximized();
-		boolean minimized = mainShell.getMinimized();
-		if (!maximized) {
-			preferences.setWindowBounds(mainShell.getBounds());
+		WindowState ws = new WindowState();
+		ws.maximized = mainShell.getMaximized();
+		ws.minimized = mainShell.getMinimized();
+		if (!ws.maximized) {
+			Rectangle r = mainShell.getBounds();
+			ws.x = r.x;
+			ws.y = r.y;
+			ws.width = r.width;
+			ws.height = r.height;
 		}
-		preferences.setWindowMaximized(maximized);
-		preferences.setWindowMinimized(minimized);
+		preferences.setWindowState(null, ws);
 		preferences.save();
 	}
 

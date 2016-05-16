@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync;
 
-import org.eclipse.swt.graphics.Rectangle;
-
 public interface Preferences {
 	void save();
 
@@ -74,15 +72,7 @@ public interface Preferences {
 
 	String getLastVersion();
 
-	void setWindowMaximized(boolean maximized);
+	WindowState getWindowState(String name);
 
-	boolean getWindowMaximized();
-
-	void setWindowMinimized(boolean minimized);
-
-	boolean getWindowMinimized();
-
-	void setWindowBounds(Rectangle b);
-
-	Rectangle getWindowBounds();
+	void setWindowState(String name, WindowState state);
 }
