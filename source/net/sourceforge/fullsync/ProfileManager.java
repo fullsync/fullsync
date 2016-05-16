@@ -400,9 +400,11 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 					}
 					Util.fileRenameToPortableLegacy(configFile + ".tmp", configFile);
 				}
-				catch (Exception ex) {
-					new File(configFile + ".tmp").delete();
-					throw ex;
+				finally {
+					File newCfgFile = new File(configFile + ".tmp");
+					if (newCfgFile.exists()) {
+						newCfgFile.delete();
+					}
 				}
 			}
 		}
