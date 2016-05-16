@@ -257,7 +257,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		}
 		else {
 			String desc = profile.getDescription();
-			if ((desc != null) && !"".equals(desc)) {
+			if ((desc != null) && !desc.isEmpty()) {
 				item.setStatusText(desc);
 			}
 			else if (profile.isEnabled() && (profile.getSchedule() != null)) {
