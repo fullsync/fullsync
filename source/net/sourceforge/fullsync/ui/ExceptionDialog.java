@@ -29,13 +29,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-class ExceptionDialog extends Dialog {
+class ExceptionDialog {
 	private Shell dialogShell;
 	private Composite compositeBase;
 	private Button buttonDetails;
@@ -43,12 +42,14 @@ class ExceptionDialog extends Dialog {
 	private boolean expanded;
 
 	ExceptionDialog(Shell parent, String message, Throwable throwable) {
-		super(parent, SWT.NULL);
 		try {
 			Display display = parent.getDisplay();
+			Shell p = display.getActiveShell();
+			p = null == p ? parent : p;
 
-			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
+			dialogShell = new Shell(p, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
 			dialogShell.setText(Messages.getString("ExceptionDialog.Exception")); //$NON-NLS-1$
+			dialogShell.addListener(SWT.Close, e -> display.asyncExec(() -> dialogShell.dispose()));
 
 			GridLayout dialogShellLayout = new GridLayout();
 			dialogShellLayout.marginHeight = 0;
@@ -98,7 +99,7 @@ class ExceptionDialog extends Dialog {
 			Button buttonOk = new Button(compositeBase, SWT.PUSH | SWT.CENTER);
 			buttonOk.setText(Messages.getString("ExceptionDialog.Ok")); //$NON-NLS-1$
 			GridData buttonOkLData = new GridData();
-			buttonOk.addListener(SWT.Selection, e -> dialogShell.dispose());
+			buttonOk.addListener(SWT.Selection, e -> dialogShell.close());
 			buttonOkLData.horizontalAlignment = SWT.END;
 			buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
 			buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
