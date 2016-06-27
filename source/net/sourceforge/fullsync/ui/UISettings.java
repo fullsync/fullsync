@@ -23,7 +23,6 @@ package net.sourceforge.fullsync.ui;
  * this Class holds default information about UI elements.
  */
 public abstract class UISettings {
-
 	/**
 	 * preferred button width.
 	 */
@@ -34,19 +33,18 @@ public abstract class UISettings {
 	 */
 	public static final int BUTTON_HEIGHT = 25;
 
+	private static final int K = 1024;
+
+	private static String[] UNITS = {"B", "KiB", "MiB", "GiB", "TiB"};
+
 	public static String formatSize(long size) {
-		if (size == -1) {
-			return "";
+		int i = 1;
+		for (; i < UNITS.length; ++i) {
+			if (size < Math.pow(K, i)) {
+				break;
+			}
 		}
-		if (size > (1024 * 1024 * 1024)) {
-			return ((long) (Math.ceil(size / (1024f * 1024f * 1024f)))) + " GiB";
-		}
-		if (size > (1024 * 1024)) {
-			return ((long) (Math.ceil(size / (1024f * 1024f)))) + " MiB";
-		}
-		if (size > 1024) {
-			return ((long) (Math.ceil(size / 1024f))) + " KiB";
-		}
-		return size + " B";
+		--i;
+		return -1 == size ? "" : (long)Math.ceil(size / (double)Math.pow(K, i)) + " " + UNITS[i];
 	}
 }
