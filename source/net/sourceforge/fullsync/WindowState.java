@@ -29,4 +29,36 @@ public class WindowState {
 
 	public WindowState() {
 	}
+
+	private boolean isPointOutside(int _x, int _y) {
+		if ((_x <= x) || (_y <= y)) {
+			return true;
+		}
+		if ((_x >= (x + width)) || (_y >= (y + height))) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isInsideOf(int _x, int _y, int _width, int _height) {
+		return isPointOutside(_x, _y) && isPointOutside(_x + _width, _y + _height);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		sb.append('{');
+		if (!maximized) {
+			sb.append(String.format("%d, %d, %d, %d", x, y, width, height));
+		}
+		else {
+			sb.append("maximized");
+		}
+		if (minimized) {
+			sb.append(", minimized");
+		}
+		sb.append('}');
+		return sb.toString();
+	}
 }

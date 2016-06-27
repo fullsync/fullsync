@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
@@ -49,7 +48,7 @@ import org.eclipse.swt.widgets.TabItem;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Util;
 
-class AboutDialog extends Dialog implements AsyncUIUpdate {
+class AboutDialog implements AsyncUIUpdate {
 	private static final String FULLSYNC_LICENSES_DIRECTORY = "net/sourceforge/fullsync/licenses/";
 	private static final long ANIMATION_DELAY = 750;
 	private int stIndex;
@@ -59,8 +58,7 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 	private List<String> licenseNames;
 	private List<String> licenseTexts;
 
-	AboutDialog(final Shell parent, int style) {
-		super(parent, style);
+	AboutDialog(final Shell parent) {
 		try {
 			final Shell dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
 
@@ -129,6 +127,7 @@ class AboutDialog extends Dialog implements AsyncUIUpdate {
 			dialogShell.layout(true);
 
 			dialogShell.open();
+			ShellStateHandler.apply(dialogShell, AboutDialog.class);
 			buttonOk.setFocus();
 			Display display = dialogShell.getDisplay();
 			while (!dialogShell.isDisposed()) {

@@ -369,7 +369,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		MenuItem menuItemAbout = new MenuItem(menuHelp, SWT.PUSH);
 		menuItemAbout.setAccelerator(SWT.CTRL + 'A');
 		menuItemAbout.setText(Messages.getString("MainWindow.About_Menu")); //$NON-NLS-1$
-		menuItemAbout.addListener(SWT.Selection, e -> new AboutDialog(shell, SWT.NULL));
+		menuItemAbout.addListener(SWT.Selection, e -> new AboutDialog(shell));
 	}
 
 	private Menu createPopupMenu() {
