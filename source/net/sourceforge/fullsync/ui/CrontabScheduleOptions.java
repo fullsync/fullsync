@@ -66,7 +66,7 @@ class CrontabScheduleOptions extends ScheduleOptions {
 			buttonChoose.setText("..."); //$NON-NLS-1$
 			buttonChoose.setEnabled(false);
 			buttonChoose.addListener(SWT.Selection, e -> {
-				final Shell shell = new Shell(getShell(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.TOOL);
+				final Shell shell = new Shell(getShell(), SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.TOOL);
 				shell.setLayout(new GridLayout(2, false));
 				shell.setText(Messages.getString("CrontabScheduleOptions.Select") + part.name); //$NON-NLS-1$
 

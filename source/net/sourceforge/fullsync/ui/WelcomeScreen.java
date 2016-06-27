@@ -36,7 +36,7 @@ public class WelcomeScreen extends Dialog {
 
 	public WelcomeScreen(Shell parent) {
 		super(parent);
-		final Shell dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		final Shell dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
 		String title = Messages.getString("WelcomeScreen.WelcomeMessage", Util.getFullSyncVersion()); //$NON-NLS-1$
 
 		GridLayout dialogShellLayout = new GridLayout();

@@ -33,7 +33,7 @@ class SWTCalendarDialog {
 	private Calendar calendar;
 
 	SWTCalendarDialog(Shell parent, Date date) {
-		shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL | SWT.SHEET);
 		shell.setText("Choose Date...");
 		shell.setLayout(new GridLayout());
 		final DateTime dateTime = new DateTime(shell, SWT.CALENDAR | SWT.BORDER);

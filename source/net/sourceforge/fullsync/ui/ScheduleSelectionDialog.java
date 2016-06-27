@@ -76,7 +76,7 @@ public class ScheduleSelectionDialog extends Dialog {
 
 	public void open() {
 		try {
-			dialogShell = new Shell(getParent(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.RESIZE);
+			dialogShell = new Shell(getParent(), SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.RESIZE);
 			dialogShell.setText(Messages.getString("ScheduleSelectionDialog.EditScheduling")); //$NON-NLS-1$
 			dialogShell.setImage(GuiController.getInstance().getImage("Scheduler_Icon.png")); //$NON-NLS-1$
 			GridLayout thisLayout = new GridLayout();
