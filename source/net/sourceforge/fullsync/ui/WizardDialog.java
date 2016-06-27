@@ -47,21 +47,23 @@ public abstract class WizardDialog {
 	private Composite compositeContent;
 	private Button okButton;
 	private Button cancelButton;
+	private boolean closing;
 
 	private final Shell parent;
 	private final int style;
 
 	private final ArrayList<WizardDialogListener> dialogListeners = new ArrayList<>();
 
-	public WizardDialog(Shell parent) {
-		this.parent = parent;
-		this.style = SWT.DIALOG_TRIM | SWT.RESIZE | SWT.APPLICATION_MODAL;
+	public WizardDialog(Shell _parent) {
+		parent = _parent;
+		style = SWT.DIALOG_TRIM | SWT.RESIZE | SWT.PRIMARY_MODAL;
 	}
 
 	public boolean checkAndApply() {
 		boolean applied = apply();
 		if (applied) {
-			dialogShell.dispose();
+			closing = true;
+			getDisplay().asyncExec(() -> dialogShell.close());
 		}
 		return applied;
 	}
@@ -69,7 +71,8 @@ public abstract class WizardDialog {
 	public boolean checkAndCancel() {
 		boolean closed = cancel();
 		if (closed) {
-			dialogShell.dispose();
+			closing = true;
+			getDisplay().asyncExec(() -> dialogShell.close());
 		}
 		return closed;
 	}
@@ -77,8 +80,17 @@ public abstract class WizardDialog {
 	public void show() {
 		try {
 			dialogShell = new Shell(parent, style);
-			dialogShell.addListener(SWT.Close, e -> e.doit = !checkAndCancel());
-			Display display = dialogShell.getDisplay();
+			final Display display = dialogShell.getDisplay();
+			dialogShell.addListener(SWT.Close, (e) -> {
+				if (!closing) {
+					e.doit = !checkAndCancel();
+				}
+				else {
+					if (!dialogShell.isDisposed()) {
+						display.asyncExec(() -> dialogShell.dispose());
+					}
+				}
+			});
 
 			Color white = display.getSystemColor(SWT.COLOR_WHITE);
 
@@ -214,6 +226,7 @@ public abstract class WizardDialog {
 
 			dialogShell.setSize(size);
 			dialogShell.open();
+			ShellStateHandler.apply(dialogShell, getClass());
 			dialogOpened();
 
 			while (!dialogShell.isDisposed()) {
