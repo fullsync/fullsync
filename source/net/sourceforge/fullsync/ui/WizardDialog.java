@@ -39,8 +39,6 @@ import net.sourceforge.fullsync.ExceptionHandler;
 public abstract class WizardDialog {
 
 	private Shell dialogShell;
-	private Composite compositeTop;
-	private Composite compositeBottom;
 	private Label labelImage;
 	private Label labelDescription;
 	private Label labelCaption;
@@ -86,9 +84,7 @@ public abstract class WizardDialog {
 					e.doit = !checkAndCancel();
 				}
 				else {
-					if (!dialogShell.isDisposed()) {
-						display.asyncExec(() -> dialogShell.dispose());
-					}
+					display.asyncExec(() -> dialogShell.dispose());
 				}
 			});
 
@@ -102,7 +98,7 @@ public abstract class WizardDialog {
 			dialogShell.setLayout(dialogShellLayout);
 
 			// top area
-			compositeTop = new Composite(dialogShell, SWT.NONE);
+			Composite compositeTop = new Composite(dialogShell, SWT.NONE);
 			compositeTop.setBackground(white);
 			GridData compositeTopLData = new GridData();
 			compositeTopLData.grabExcessHorizontalSpace = true;
@@ -110,50 +106,7 @@ public abstract class WizardDialog {
 			compositeTopLData.horizontalIndent = 0;
 			compositeTopLData.verticalIndent = 0;
 			compositeTop.setLayoutData(compositeTopLData);
-			GridLayout compositeTopLayout = new GridLayout(2, false);
-			compositeTopLayout.horizontalSpacing = 0;
-			compositeTopLayout.marginRight = 0;
-			compositeTopLayout.marginBottom = 0;
-			compositeTopLayout.marginTop = 0;
-			compositeTopLayout.marginLeft = 0;
-			compositeTopLayout.marginHeight = 0;
-			compositeTopLayout.marginWidth = 0;
-			compositeTop.setLayout(compositeTopLayout);
-
-			Composite topTextComposite = new Composite(compositeTop, SWT.NONE);
-			topTextComposite.setBackground(white);
-			GridLayout topTextCompositeLayout = new GridLayout(1, false);
-			topTextCompositeLayout.marginHeight = 10;
-			topTextCompositeLayout.marginWidth = 10;
-			topTextComposite.setLayout(topTextCompositeLayout);
-			GridData topTextCompositeData = new GridData();
-			topTextCompositeData.grabExcessHorizontalSpace = true;
-			topTextCompositeData.horizontalAlignment = SWT.FILL;
-			topTextComposite.setLayoutData(topTextCompositeData);
-
-			// top image
-			labelImage = new Label(compositeTop, SWT.NONE);
-			labelImage.setBackground(white);
-			labelImage.setSize(64, 64);
-			GridData labelImageLData = new GridData();
-			labelImageLData.horizontalIndent = 0;
-			labelImageLData.verticalIndent = 0;
-			labelImage.setLayoutData(labelImageLData);
-
-			// wizard caption
-			labelCaption = new Label(topTextComposite, SWT.NONE);
-			labelCaption.setBackground(white);
-			labelCaption.setFont(GuiController.getInstance().getFont("Tohama", 9, SWT.BOLD)); //$NON-NLS-1$
-			GridData labelCaptionLData = new GridData();
-			labelCaptionLData.grabExcessHorizontalSpace = true;
-			labelCaption.setLayoutData(labelCaptionLData);
-
-			// wizard description
-			labelDescription = new Label(topTextComposite, SWT.NULL);
-			labelDescription.setBackground(white);
-			GridData labelDescriptionLData = new GridData();
-			labelDescriptionLData.grabExcessHorizontalSpace = true;
-			labelDescription.setLayoutData(labelDescriptionLData);
+			createHeader(compositeTop);
 
 			// line below the header
 			Label labelSeparatorTop = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -178,7 +131,7 @@ public abstract class WizardDialog {
 			labelSeparatorBottom.setLayoutData(labelSeparatorBottomData);
 
 			// button bar at the bottom
-			compositeBottom = new Composite(dialogShell, SWT.NONE);
+			Composite compositeBottom = new Composite(dialogShell, SWT.NONE);
 			GridData compositeBottomData = new GridData();
 			compositeBottomData.grabExcessHorizontalSpace = true;
 			compositeBottomData.horizontalAlignment = SWT.FILL;
@@ -238,6 +191,55 @@ public abstract class WizardDialog {
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
 		}
+	}
+
+	protected void createHeader(Composite parent) {
+		GridLayout compositeTopLayout = new GridLayout(2, false);
+		compositeTopLayout.horizontalSpacing = 0;
+		compositeTopLayout.marginRight = 0;
+		compositeTopLayout.marginBottom = 0;
+		compositeTopLayout.marginTop = 0;
+		compositeTopLayout.marginLeft = 0;
+		compositeTopLayout.marginHeight = 0;
+		compositeTopLayout.marginWidth = 0;
+		parent.setLayout(compositeTopLayout);
+
+		Color white = parent.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+
+		Composite topTextComposite = new Composite(parent, SWT.NONE);
+		topTextComposite.setBackground(white);
+		GridLayout topTextCompositeLayout = new GridLayout(1, false);
+		topTextCompositeLayout.marginHeight = 10;
+		topTextCompositeLayout.marginWidth = 10;
+		topTextComposite.setLayout(topTextCompositeLayout);
+		GridData topTextCompositeData = new GridData();
+		topTextCompositeData.grabExcessHorizontalSpace = true;
+		topTextCompositeData.horizontalAlignment = SWT.FILL;
+		topTextComposite.setLayoutData(topTextCompositeData);
+
+		// top image
+		labelImage = new Label(parent, SWT.NONE);
+		labelImage.setBackground(white);
+		labelImage.setSize(64, 64);
+		GridData labelImageLData = new GridData();
+		labelImageLData.horizontalIndent = 0;
+		labelImageLData.verticalIndent = 0;
+		labelImage.setLayoutData(labelImageLData);
+
+		// wizard caption
+		labelCaption = new Label(topTextComposite, SWT.NONE);
+		labelCaption.setBackground(white);
+		labelCaption.setFont(GuiController.getInstance().getFont("Tohama", 9, SWT.BOLD)); //$NON-NLS-1$
+		GridData labelCaptionLData = new GridData();
+		labelCaptionLData.grabExcessHorizontalSpace = true;
+		labelCaption.setLayoutData(labelCaptionLData);
+
+		// wizard description
+		labelDescription = new Label(topTextComposite, SWT.NULL);
+		labelDescription.setBackground(white);
+		GridData labelDescriptionLData = new GridData();
+		labelDescriptionLData.grabExcessHorizontalSpace = true;
+		labelDescription.setLayoutData(labelDescriptionLData);
 	}
 
 	protected void dialogOpened() {
