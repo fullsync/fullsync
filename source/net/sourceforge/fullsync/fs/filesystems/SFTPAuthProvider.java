@@ -28,6 +28,7 @@ import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 import net.sourceforge.fullsync.impl.SFTPLogger;
 import net.sourceforge.fullsync.ui.GuiController;
-import net.sourceforge.fullsync.ui.OptionsDialog;
+import net.sourceforge.fullsync.ui.Messages;
 
 class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive, UserInfo {
 	private static final String sshDirName;
@@ -122,13 +123,10 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		final boolean[] arr = new boolean[] { false };
 		if (null != desc.getParameter(ConnectionDescription.PARAMETER_INTERACTIVE)) {
 			GuiController.getInstance().getDisplay().syncExec(() -> {
-				OptionsDialog od = new OptionsDialog(GuiController.getInstance().getMainShell(), SWT.ICON_QUESTION);
-				od.setText("Question - FullSync"); //FIXME: translate
-				od.setMessage(message); //FIXE: translate message
-				od.setOptions(new String[] { "Yes", "No" }); //FIXME: translate
-				if ("Yes".equals(od.open())) { //FIXME: translate
-					arr[0] = true;
-				}
+				MessageBox mb = new MessageBox(GuiController.getInstance().getMainShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+				mb.setText(Messages.getString("SFTP.YesNoQuestion")); //$NON-NLS-1$
+				mb.setMessage(message);
+				arr[0] = SWT.YES == mb.open();
 			});
 		}
 		else {
