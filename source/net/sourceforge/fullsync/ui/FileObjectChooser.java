@@ -33,7 +33,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -46,9 +45,9 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 
-class FileObjectChooser extends Dialog {
-
+class FileObjectChooser {
 	private Shell dialogShell;
+	private Label labelBaseUrl;
 	private Text textUrlExtension;
 	private Text textFilename;
 	private ToolItem toolItemNewFolder;
@@ -71,164 +70,159 @@ class FileObjectChooser extends Dialog {
 	private FileObject activeFileObject;
 	private FileObject selectedFileObject;
 
-	FileObjectChooser(Shell parent, int style) {
-		super(parent, style);
+	FileObjectChooser(Shell parent) {
+		dialogShell = new Shell(parent, SWT.BORDER | SWT.TITLE | SWT.RESIZE | SWT.PRIMARY_MODAL);
+		dialogShell.setText("Choose Folder...");
+
+		dialogShell.setLayout(new GridLayout());
+		dialogShell.layout();
+		dialogShell.pack();
+		dialogShell.setSize(550, 400);
+
+		// top area
+		compositeTop = new Composite(dialogShell, SWT.NONE);
+		GridLayout composite1Layout = new GridLayout(4, false);
+		GridData compositeTopLData = new GridData();
+		compositeTopLData.horizontalAlignment = SWT.FILL;
+		compositeTop.setLayoutData(compositeTopLData);
+		compositeTop.setLayout(composite1Layout);
+
+		Label labelUrl = new Label(compositeTop, SWT.NONE);
+		labelUrl.setText("Url:");
+
+		labelBaseUrl = new Label(compositeTop, SWT.NONE);
+
+		textUrlExtension = new Text(compositeTop, SWT.BORDER);
+		GridData textUrlExtensionLData = new GridData();
+		textUrlExtensionLData.grabExcessHorizontalSpace = true;
+		textUrlExtensionLData.horizontalAlignment = SWT.FILL;
+		textUrlExtension.setLayoutData(textUrlExtensionLData);
+
+		// toolbar: folder up, create new folder
+		toolBarActions = new ToolBar(compositeTop, SWT.NONE);
+		// folder up
+		toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
+		toolItemParent.setImage(GuiController.getInstance().getImage("FS_LevelUp.gif"));
+		toolItemParent.addListener(SWT.Selection, e -> toolItemParentWidgetSelected());
+		// new folder
+		toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
+		toolItemNewFolder.setImage(GuiController.getInstance().getImage("FS_Folder_New.gif"));
+		toolItemNewFolder.setDisabledImage(GuiController.getInstance().getImage("FS_Folder_New_disabled.gif"));
+		toolItemNewFolder.addListener(SWT.Selection, e -> toolItemNewFolderWidgetSelected());
+		toolItemNewFolder.setEnabled(false);
+
+		// table showing files and folders
+		GridData tableItemsLData = new GridData();
+		tableItemsLData.grabExcessHorizontalSpace = true;
+		tableItemsLData.grabExcessVerticalSpace = true;
+		tableItemsLData.horizontalAlignment = SWT.FILL;
+		tableItemsLData.verticalAlignment = SWT.FILL;
+		tableItems = new Table(dialogShell, SWT.SINGLE | SWT.BORDER);
+		tableItems.setHeaderVisible(true);
+		tableItems.setLayoutData(tableItemsLData);
+		tableItems.addListener(SWT.MouseDown, e -> {
+			TableItem[] items = tableItems.getSelection();
+			if (items.length > 0) {
+				try {
+					TableItem item = items[0];
+					FileObject file = (FileObject) item.getData();
+					// FIXME if we are looking for files, just take files, otherwise just take dirs
+					setSelectedFileObject(file);
+				}
+				catch (FileSystemException fse) {
+					fse.printStackTrace();
+				}
+			}
+		});
+		tableItems.addListener(SWT.MouseDoubleClick, e -> {
+			TableItem[] items = tableItems.getSelection();
+			if (items.length > 0) {
+				try {
+					TableItem item = items[0];
+					FileObject file = (FileObject) item.getData();
+					if (file.getType().hasChildren()) {
+						setActiveFileObject(file);
+					}
+				}
+				catch (FileSystemException fse) {
+					fse.printStackTrace();
+				}
+			}
+		});
+
+		tableColumnName = new TableColumn(tableItems, SWT.NONE);
+		tableColumnName.setText("File name");
+		tableColumnName.setWidth(200);
+
+		tableColumnSize = new TableColumn(tableItems, SWT.NONE);
+		tableColumnSize.setText("Size");
+		tableColumnSize.setWidth(60);
+
+		tableColumnType = new TableColumn(tableItems, SWT.NONE);
+		tableColumnType.setText("Type");
+		tableColumnType.setWidth(100);
+
+		tableColumnDateModified = new TableColumn(tableItems, SWT.NONE);
+		tableColumnDateModified.setText("Date Modified");
+		tableColumnDateModified.setWidth(145);
+
+		// bottom area
+		compositeBottom = new Composite(dialogShell, SWT.NONE);
+		GridLayout compositeBottomLayout = new GridLayout();
+		compositeBottomLayout.numColumns = 3;
+		GridData compositeBottomLData = new GridData();
+		compositeBottomLData.horizontalAlignment = SWT.FILL;
+		compositeBottom.setLayoutData(compositeBottomLData);
+		compositeBottom.setLayout(compositeBottomLayout);
+
+		Label labelFilename = new Label(compositeBottom, SWT.NONE);
+		labelFilename.setText("File name:");
+
+		GridData textFilenameLData = new GridData();
+		textFilenameLData.horizontalAlignment = SWT.FILL;
+		textFilenameLData.grabExcessHorizontalSpace = true;
+		textFilename = new Text(compositeBottom, SWT.BORDER);
+		textFilename.setLayoutData(textFilenameLData);
+
+		buttonOk = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
+		GridData buttonOkLData = new GridData();
+		buttonOkLData.horizontalAlignment = GridData.CENTER;
+		buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
+		buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
+		buttonOk.setLayoutData(buttonOkLData);
+		buttonOk.setText("Open");
+		buttonOk.addListener(SWT.Selection, e -> {
+			result = true;
+			dialogShell.getDisplay().asyncExec(() -> dialogShell.dispose());
+		});
+		// file filter
+		Label labelFileFilter = new Label(compositeBottom, SWT.NONE);
+		labelFileFilter.setText("Files of type:");
+
+		comboFileFilter = new Combo(compositeBottom, SWT.NONE);
+		GridData comboFileFilterLData = new GridData();
+		comboFileFilterLData.horizontalAlignment = SWT.FILL;
+		comboFileFilter.setLayoutData(comboFileFilterLData);
+		comboFileFilter.setText("all files");
+		comboFileFilter.setEnabled(false);
+
+		buttonCancel = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
+		GridData buttonCancelLData = new GridData();
+		buttonCancelLData.widthHint = UISettings.BUTTON_WIDTH;
+		buttonCancelLData.heightHint = UISettings.BUTTON_HEIGHT;
+		buttonCancel.setLayoutData(buttonCancelLData);
+		buttonCancel.setText("Cancel");
+		buttonCancel.addListener(SWT.Selection, e -> {
+			result = false;
+			dialogShell.getDisplay().asyncExec(() -> dialogShell.dispose());
+		});
 	}
 
 	public boolean open() {
 		try {
 			result = false;
-			Shell parent = getParent();
-			dialogShell = new Shell(parent, SWT.BORDER | SWT.TITLE | SWT.RESIZE | SWT.APPLICATION_MODAL);
-			dialogShell.setText("Choose File...");
-
-			dialogShell.setLayout(new GridLayout());
-			dialogShell.layout();
-			dialogShell.pack();
-			dialogShell.setSize(550, 400);
-
-			// top area
-			compositeTop = new Composite(dialogShell, SWT.NONE);
-			GridLayout composite1Layout = new GridLayout(4, false);
-			GridData compositeTopLData = new GridData();
-			compositeTopLData.horizontalAlignment = SWT.FILL;
-			compositeTop.setLayoutData(compositeTopLData);
-			compositeTop.setLayout(composite1Layout);
-
-			Label labelUrl = new Label(compositeTop, SWT.NONE);
-			labelUrl.setText("Url:");
-
-			Label labelBaseUrl = new Label(compositeTop, SWT.NONE);
-			labelBaseUrl.setText(rootFileObject.getName().toString());
-
-			textUrlExtension = new Text(compositeTop, SWT.BORDER);
-			GridData textUrlExtensionLData = new GridData();
-			textUrlExtensionLData.grabExcessHorizontalSpace = true;
-			textUrlExtensionLData.horizontalAlignment = SWT.FILL;
-			textUrlExtension.setLayoutData(textUrlExtensionLData);
-
-			// toolbar: folder up, create new folder
-			toolBarActions = new ToolBar(compositeTop, SWT.NONE);
-			// folder up
-			toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
-			toolItemParent.setImage(GuiController.getInstance().getImage("FS_LevelUp.gif"));
-			toolItemParent.addListener(SWT.Selection, e -> toolItemParentWidgetSelected());
-			// new folder
-			toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
-			toolItemNewFolder.setImage(GuiController.getInstance().getImage("FS_Folder_New.gif"));
-			toolItemNewFolder.setDisabledImage(GuiController.getInstance().getImage("FS_Folder_New_disabled.gif"));
-			toolItemNewFolder.addListener(SWT.Selection, e -> toolItemNewFolderWidgetSelected());
-			toolItemNewFolder.setEnabled(false);
-
-			// table showing files and folders
-			GridData tableItemsLData = new GridData();
-			tableItemsLData.grabExcessHorizontalSpace = true;
-			tableItemsLData.grabExcessVerticalSpace = true;
-			tableItemsLData.horizontalAlignment = SWT.FILL;
-			tableItemsLData.verticalAlignment = SWT.FILL;
-			tableItems = new Table(dialogShell, SWT.SINGLE | SWT.BORDER);
-			tableItems.setHeaderVisible(true);
-			tableItems.setLayoutData(tableItemsLData);
-			tableItems.addListener(SWT.MouseDown, e -> {
-				TableItem[] items = tableItems.getSelection();
-				if (items.length > 0) {
-					try {
-						TableItem item = items[0];
-						FileObject file = (FileObject) item.getData();
-						// FIXME if we are looking for files, just take files, otherwise just take dirs
-						setSelectedFileObject(file);
-					}
-					catch (FileSystemException fse) {
-						fse.printStackTrace();
-					}
-				}
-			});
-			tableItems.addListener(SWT.MouseDoubleClick, e -> {
-				TableItem[] items = tableItems.getSelection();
-				if (items.length > 0) {
-					try {
-						TableItem item = items[0];
-						FileObject file = (FileObject) item.getData();
-						if (file.getType().hasChildren()) {
-							setActiveFileObject(file);
-						}
-					}
-					catch (FileSystemException fse) {
-						fse.printStackTrace();
-					}
-				}
-			});
-
-			tableColumnName = new TableColumn(tableItems, SWT.NONE);
-			tableColumnName.setText("File name");
-			tableColumnName.setWidth(200);
-
-			tableColumnSize = new TableColumn(tableItems, SWT.NONE);
-			tableColumnSize.setText("Size");
-			tableColumnSize.setWidth(60);
-
-			tableColumnType = new TableColumn(tableItems, SWT.NONE);
-			tableColumnType.setText("Type");
-			tableColumnType.setWidth(100);
-
-			tableColumnDateModified = new TableColumn(tableItems, SWT.NONE);
-			tableColumnDateModified.setText("Date Modified");
-			tableColumnDateModified.setWidth(145);
-
-			// bottom area
-			compositeBottom = new Composite(dialogShell, SWT.NONE);
-			GridLayout compositeBottomLayout = new GridLayout();
-			compositeBottomLayout.numColumns = 3;
-			GridData compositeBottomLData = new GridData();
-			compositeBottomLData.horizontalAlignment = SWT.FILL;
-			compositeBottom.setLayoutData(compositeBottomLData);
-			compositeBottom.setLayout(compositeBottomLayout);
-
-			Label labelFilename = new Label(compositeBottom, SWT.NONE);
-			labelFilename.setText("File name:");
-
-			GridData textFilenameLData = new GridData();
-			textFilenameLData.horizontalAlignment = SWT.FILL;
-			textFilenameLData.grabExcessHorizontalSpace = true;
-			textFilename = new Text(compositeBottom, SWT.BORDER);
-			textFilename.setLayoutData(textFilenameLData);
-
-			buttonOk = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
-			GridData buttonOkLData = new GridData();
-			buttonOkLData.horizontalAlignment = GridData.CENTER;
-			buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
-			buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
-			buttonOk.setLayoutData(buttonOkLData);
-			buttonOk.setText("Open");
-			buttonOk.addListener(SWT.Selection, e -> {
-				result = true;
-				dialogShell.dispose();
-			});
-			// file filter
-			Label labelFileFilter = new Label(compositeBottom, SWT.NONE);
-			labelFileFilter.setText("Files of type:");
-
-			comboFileFilter = new Combo(compositeBottom, SWT.NONE);
-			GridData comboFileFilterLData = new GridData();
-			comboFileFilterLData.horizontalAlignment = SWT.FILL;
-			comboFileFilter.setLayoutData(comboFileFilterLData);
-			comboFileFilter.setText("all files");
-			comboFileFilter.setEnabled(false);
-
-			buttonCancel = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
-			GridData buttonCancelLData = new GridData();
-			buttonCancelLData.widthHint = UISettings.BUTTON_WIDTH;
-			buttonCancelLData.heightHint = UISettings.BUTTON_HEIGHT;
-			buttonCancel.setLayoutData(buttonCancelLData);
-			buttonCancel.setText("Cancel");
-			buttonCancel.addListener(SWT.Selection, e -> {
-				result = false;
-				dialogShell.dispose();
-			});
-
-			updateActiveFileObject();
-			updateSelectedFileObject();
 			dialogShell.open();
+			ShellStateHandler.apply(dialogShell, FileObjectChooser.class);
 			Display display = dialogShell.getDisplay();
 			while (!dialogShell.isDisposed()) {
 				if (!display.readAndDispatch()) {
@@ -319,25 +313,23 @@ class FileObjectChooser extends Dialog {
 		}
 	}
 
-	public void setBaseFileObject(final FileObject baseFileObject) {
-		this.baseFileObject = baseFileObject;
+	public void setBaseFileObject(final FileObject _base) {
+		baseFileObject = _base;
 		if (activeFileObject == null) {
 			activeFileObject = baseFileObject;
 		}
 		try {
 			rootFileObject = baseFileObject.resolveFile("/");
+			labelBaseUrl.setText(rootFileObject.getName().toString());
+			setActiveFileObject(activeFileObject);
 		}
 		catch (FileSystemException e) {
 			ExceptionHandler.reportException(e);
 		}
 	}
 
-	public FileObject getBaseFileObject() {
-		return baseFileObject;
-	}
-
-	public void setActiveFileObject(final FileObject active) throws FileSystemException {
-		this.activeFileObject = active;
+	private void setActiveFileObject(final FileObject _active) throws FileSystemException {
+		activeFileObject = _active;
 		if (dialogShell != null) {
 			updateActiveFileObject();
 		}
@@ -352,10 +344,6 @@ class FileObjectChooser extends Dialog {
 		if (dialogShell != null) {
 			updateSelectedFileObject();
 		}
-	}
-
-	public FileObject getSelectedFileObject() {
-		return selectedFileObject;
 	}
 
 	private void toolItemParentWidgetSelected() {

@@ -102,9 +102,8 @@ class ProtocolSpecificComposite {
 			desc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
 			try (Site conn = fsm.createConnection(desc)) {
 				FileObject base = conn.getBase();
-				FileObjectChooser foc = new FileObjectChooser(m_parent.getShell(), SWT.NULL);
+				FileObjectChooser foc = new FileObjectChooser(m_parent.getShell());
 				foc.setBaseFileObject(base);
-				foc.setSelectedFileObject(base);
 				if (foc.open()) {
 					setPath(new URI(foc.getActiveFileObject().getName().getURI()).getPath());
 				}
