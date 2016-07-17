@@ -49,13 +49,14 @@ public class FileFilterPage extends WizardDialog {
 	private Button buttonAppliesToDir;
 
 	private FileFilterManager fileFilterManager = new FileFilterManager();
-	private FileFilter fileFilter;
+	private FileFilter oldFileFilter;
+	private FileFilter newFileFilter;
 
 	private ArrayList<FilterRuleListItem> ruleItems = new ArrayList<>();
 
 	public FileFilterPage(Shell parent, FileFilter filter) {
 		super(parent);
-		fileFilter = filter;
+		oldFileFilter = filter;
 	}
 
 	@Override
@@ -119,11 +120,11 @@ public class FileFilterPage extends WizardDialog {
 			scrolledComposite1.setLayoutData(scrolledComposite1LData);
 			scrolledComposite1.setAlwaysShowScrollBars(false);
 
-			if (fileFilter != null) {
-				comboMatchType.select(fileFilter.getMatchType());
-				comboFilterType.select(fileFilter.getFilterType());
-				buttonAppliesToDir.setSelection(fileFilter.appliesToDirectories());
-				FileFilterRule[] rules = fileFilter.getFileFiltersRules();
+			if (oldFileFilter != null) {
+				comboMatchType.select(oldFileFilter.getMatchType());
+				comboFilterType.select(oldFileFilter.getFilterType());
+				buttonAppliesToDir.setSelection(oldFileFilter.appliesToDirectories());
+				FileFilterRule[] rules = oldFileFilter.getFileFiltersRules();
 				if (rules.length > 0) {
 					for (FileFilterRule rule : rules) {
 						addRuleRow(rule.getRuleType(), rule.getOperator(), rule.getValue());
@@ -149,11 +150,11 @@ public class FileFilterPage extends WizardDialog {
 
 	@Override
 	public boolean apply() {
-		fileFilter = new FileFilter();
+		newFileFilter = new FileFilter();
 
-		fileFilter.setMatchType(comboMatchType.getSelectionIndex());
-		fileFilter.setFilterType(comboFilterType.getSelectionIndex());
-		fileFilter.setAppliesToDirectories(buttonAppliesToDir.getSelection());
+		newFileFilter.setMatchType(comboMatchType.getSelectionIndex());
+		newFileFilter.setFilterType(comboFilterType.getSelectionIndex());
+		newFileFilter.setAppliesToDirectories(buttonAppliesToDir.getSelection());
 
 		FileFilterRule[] rules = new FileFilterRule[ruleItems.size()];
 		for (int i = 0; i < rules.length; i++) {
@@ -161,13 +162,12 @@ public class FileFilterPage extends WizardDialog {
 			rules[i] = fileFilterManager.createFileFilterRule(ruleItem.getRuleType(), ruleItem.getOperator(), ruleItem.getValue());
 		}
 
-		fileFilter.setFileFilterRules(rules);
+		newFileFilter.setFileFilterRules(rules);
 		return true; //FIXME: return false if failed
 	}
 
 	@Override
 	public boolean cancel() {
-		fileFilter = null;
 		return true;
 	}
 
@@ -206,7 +206,6 @@ public class FileFilterPage extends WizardDialog {
 	}
 
 	public FileFilter getFileFilter() {
-		return fileFilter;
+		return newFileFilter;
 	}
-
 }
