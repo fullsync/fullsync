@@ -1,1 +1,1 @@
-http://fullsync.sourceforge.net/
+https://fullsync.sourceforge.io/

@@ -26,7 +26,7 @@ Release:        0
 Summary:        Easy file synchronization for everyone
 License:        GPL-2.0+
 Group:          Productivity/Archiving/Backup
-URL:            http://fullsync.sourceforge.net/
+URL:            https://fullsync.sourceforge.io/
 Source0:        %{name}-%{version}-src.tar.gz
 AutoReqProv:    no
 
