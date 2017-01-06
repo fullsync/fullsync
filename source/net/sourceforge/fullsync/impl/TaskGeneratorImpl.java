@@ -68,15 +68,6 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 		// handle case where src is dir but dst is file
 	}
 
-	/**
-	 *
-	 * @param src
-	 * @param dst
-	 * @param rules
-	 * @return true if node is affected, false if ignored
-	 * @throws DataParseException
-	 * @throws FileSystemException
-	 */
 	@Override
 	public void synchronizeNodes(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException {
 		if (!takeIgnoreDecider.isNodeIgnored(src)) {

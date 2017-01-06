@@ -24,6 +24,7 @@
 package org.slf4j.impl;
 
 import org.slf4j.ILoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.slf4j.spi.LoggerFactoryBinder;
 
 /**
