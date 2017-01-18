@@ -1,19 +1,10 @@
 # root directory
-/classes
-/build
-/build-tests
-/dist
-/.externalToolBuilders
-/.settings
-/dependencies
 
 # everywhere
 .directory
 *~
 *.kdev4
 
-*/bin/
-*/*-SDK/
 
 # /resources/images/
 /resources/images/*.ico
