@@ -14,6 +14,8 @@
 *.rtf	   diff=astextplain
 *.RTF	   diff=astextplain
 
-# files that need LF as EOL character
+# files that need specific EOL settings
 *.spec     eol=lf
 *.sh       eol=lf
+*.bat      eol=crlf
+*.cmd      eol=crlf

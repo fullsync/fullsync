@@ -1,10 +1,15 @@
 # root directory
+.gradle/
 
 # everywhere
+.settings/
+.project
+.classpath
 .directory
 *~
 *.kdev4
 
+**/build/
 
 # /resources/images/
 /resources/images/*.ico
