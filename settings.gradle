@@ -1,2 +1,3 @@
 rootProject.name = 'FullSync'
+include 'logger'
 include 'mvn-infix-junit-sshd'

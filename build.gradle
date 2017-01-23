@@ -17,6 +17,7 @@ subprojects {
 
 	ext {
 		swtVersion = "3.105.2"
+		slf4jVersion = "1.7.21"
 	}
 
 	repositories {
