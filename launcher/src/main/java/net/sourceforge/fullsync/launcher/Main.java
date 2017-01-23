@@ -31,7 +31,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.CodeSource;
 import java.util.ArrayList;
 
-public class Launcher {
+import net.sourceforge.fullsync.FullSync;
+import net.sourceforge.fullsync.Launcher;
+
+public class Main implements Launcher {
 	private static final int IOBUFFERSIZE = 0x1000;
 
 	public static void main(final String[] args) throws Exception {
@@ -51,7 +54,7 @@ public class Launcher {
 		else if (-1 != osName.indexOf("mac")) {
 			os = "cocoa-macosx";
 		}
-		CodeSource cs = Launcher.class.getProtectionDomain().getCodeSource();
+		CodeSource cs = Main.class.getProtectionDomain().getCodeSource();
 		String installlocation = cs.getLocation().toURI().toString().replaceAll("launcher\\.jar$", "");
 		System.out.println("launching FullSync... OS=" + os + "; ARCH=" + arch + "; INSTALLLOCATION=" + installlocation);
 
@@ -66,7 +69,7 @@ public class Launcher {
 		}
 
 		// instantiate an URL class-loader with the constructed class-path and load the real main class
-		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Launcher.class.getClassLoader());
+		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Main.class.getClassLoader());
 		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.cli.Main");
 		Method main = cls.getDeclaredMethod("main", new Class<?>[] { String[].class });
 
@@ -96,5 +99,10 @@ public class Launcher {
 			ex.printStackTrace();
 		}
 		return out.toString();
+	}
+
+	@Override
+	public void launchGui(FullSync fullsync, boolean minimized) {
+		// FIXME: implement SWT startup using reflection
 	}
 }

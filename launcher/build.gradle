@@ -1,0 +1,9 @@
+dependencies {
+	compile project(':fullsync')
+}
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'net.sourceforge.fullsync.launcher.Launcher'
+	}
+}
