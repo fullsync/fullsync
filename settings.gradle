@@ -1,5 +1,6 @@
 rootProject.name = 'FullSync'
 include 'assets'
+include 'fullsync-utils'
 include 'launcher'
 include 'logger'
 include 'mvn-infix-junit-sshd'
