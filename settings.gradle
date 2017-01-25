@@ -1,5 +1,6 @@
 rootProject.name = 'FullSync'
 include 'assets'
+include 'build-utils'
 include 'fullsync-utils'
 include 'launcher'
 include 'logger'
