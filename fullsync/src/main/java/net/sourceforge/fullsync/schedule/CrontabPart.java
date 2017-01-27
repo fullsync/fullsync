@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.util.StringTokenizer;
 
 import net.sourceforge.fullsync.DataParseException;
-import net.sourceforge.fullsync.ui.Messages;
 
 /**
  * TODO the eights day of week should be wrapped to the first! (in cron: 0 == 7)
@@ -121,7 +120,7 @@ public class CrontabPart implements Serializable {
 				if (index > 0) {
 					each = Integer.parseInt(token.substring(index + 1));
 					if (each == 0) {
-						throw new DataParseException(Messages.getString("CrontabPart.NeverUseExpressions")); //$NON-NLS-1$
+						throw new DataParseException("CrontabPart.NeverUseExpressions"); // FIXME: Messages.getString("CrontabPart.NeverUseExpressions")); //$NON-NLS-1$
 					}
 
 					token = token.substring(0, index);
@@ -159,7 +158,7 @@ public class CrontabPart implements Serializable {
 				return false;
 			}
 			catch (Exception e) {
-				throw new DataParseException(Messages.getString("CrontabPart.SomethingWasWrong") + token, e); //$NON-NLS-1$
+				throw new DataParseException("CrontabPart.SomethingWasWrong" /*Messages.getString("CrontabPart.SomethingWasWrong")*/ + token, e); //$NON-NLS-1$ // FIXME: translation
 			}
 		}
 	}

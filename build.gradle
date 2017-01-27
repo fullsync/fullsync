@@ -18,6 +18,11 @@ subprojects {
 	ext {
 		swtVersion = "3.105.2"
 		slf4jVersion = "1.7.21"
+		commonsCliVersion = "1.2"
+		commonsNetVersion = "3.3"
+		commonsVfsVersion = "2.0"
+		sambaJcifsVersion = "1.3.3"
+		jcraftJschVersion = "0.1.50"
 	}
 
 	repositories {
