@@ -1,0 +1,26 @@
+
+def getLocalSWTVersion() {
+	def arch = System.properties['os.arch'].contains('64') ? 'x86_64' : 'x86'
+	def osName = System.properties['os.name'].toLowerCase()
+	def os = ''
+	if (osName.contains('windows')) {
+		os = 'win32.win32'
+	}
+	else if (osName.contains('linux')) {
+		os = 'gtk.linux'
+	}
+	else if (osName.contains('mac')) {
+		os = 'cocoa.macosx'
+	}
+	return "org.eclipse.platform:org.eclipse.swt.${os}.${arch}:${ext.swtVersion}"
+}
+
+
+
+dependencies {
+	compile project(':fullsync')
+	compile project(':assets')
+	compile (getLocalSWTVersion()) {
+		exclude module: 'org.eclipse.swt'
+	}
+}
