@@ -9,6 +9,7 @@
 .directory
 *~
 *.kdev4
+.*.swp
 
 # /resources/images/
 /resources/images/*.ico
