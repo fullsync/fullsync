@@ -28,10 +28,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.FullSync;
 
 public class FTPSpecificComposite extends UserPasswordSpecificComposite {
 	private static final String FTP_ANONYMOUS_USERNAME = "Anonymous"; //$NON-NLS-1$
 	Combo comboAuthentication;
+
+	FTPSpecificComposite(FullSync _fullsync) {
+		super(_fullsync);
+	}
 
 	@Override
 	public int getDefaultPort() {

@@ -68,9 +68,9 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 
 	private String statusDelayString;
 
-	MainWindow(Composite parent, int style, GuiController initGuiController) {
+	MainWindow(Composite parent, int style, GuiController _guiController) {
 		super(parent, style);
-		this.guiController = initGuiController;
+		guiController = _guiController;
 		Shell shell = getShell();
 		initGUI(shell);
 
@@ -94,7 +94,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		ProfileManager pm = guiController.getProfileManager();
 		pm.addSchedulerListener(profile -> {
 			Synchronizer sync = guiController.getSynchronizer();
-			TaskTree tree = sync.executeProfile(profile, false);
+			TaskTree tree = sync.executeProfile(guiController.getFullSync(), profile, false);
 			if (tree == null) {
 				profile.setLastError(1, Messages.getString("MainWindow.Error_Comparing_Filesystems")); //$NON-NLS-1$
 			}
@@ -277,7 +277,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		preferencesItem.setAccelerator(SWT.CTRL | (SWT.SHIFT + 'P'));
 		preferencesItem.addListener(SWT.Selection, e -> {
 			// show the Preferences Dialog.
-			PreferencesPage dialog = new PreferencesPage(shell, guiController.getPreferences());
+			PreferencesPage dialog = new PreferencesPage(shell, guiController.getFullSync());
 			dialog.show();
 		});
 
@@ -322,13 +322,10 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 			mb.setMessage(Messages.getString("MainWindow.Do_You_Want_To_Disconnect") + " \n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			if (mb.open() == SWT.YES) {
-				GuiController gc = GuiController.getInstance();
-				gc.getProfileManager().disconnectRemote();
-				gc.getSynchronizer().disconnectRemote();
-
+				guiController.getFullSync().disconnectRemote();
 				connectItem.setEnabled(true);
 				disconnectItem.setEnabled(false);
-				gc.getMainShell().setImage(gc.getImage("fullsync48.png")); //$NON-NLS-1$
+				guiController.getMainShell().setImage(guiController.getImage("fullsync48.png")); //$NON-NLS-1$
 			}
 		});
 
@@ -460,7 +457,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 	@Override
 	public void createNewProfile() {
 		try {
-			WizardDialog dialog = new ProfileDetailsTabbedPage(getShell(), guiController.getProfileManager(), null);
+			WizardDialog dialog = new ProfileDetailsTabbedPage(getShell(), guiController.getFullSync(), null);
 			dialog.show();
 		}
 		catch (Exception e) {
@@ -505,7 +502,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 				}, 10, 100);
 				statusDelayString = Messages.getString("MainWindow.Starting_Profile") + p.getName() + "..."; //$NON-NLS-1$ //$NON-NLS-2$
 				statusLine.setMessage(statusDelayString);
-				t = guiController.getSynchronizer().executeProfile(p, interactive);
+				t = guiController.getSynchronizer().executeProfile(guiController.getFullSync(), p, interactive);
 				if (t == null) {
 					p.setLastError(1, Messages.getString("MainWindow.Error_Comparing_Filesystems")); //$NON-NLS-1$
 					statusLine.setMessage(Messages.getString("MainWindow.Error_Processing_Profile", p.getName())); //$NON-NLS-1$
@@ -534,7 +531,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 	@Override
 	public void editProfile(final Profile p) {
 		try {
-			WizardDialog dialog = new ProfileDetailsTabbedPage(getShell(), guiController.getProfileManager(), p);
+			WizardDialog dialog = new ProfileDetailsTabbedPage(getShell(), guiController.getFullSync(), p);
 			dialog.show();
 		}
 		catch (Exception e) {

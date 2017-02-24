@@ -29,11 +29,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileListChangeListener;
-import net.sourceforge.fullsync.ProfileManager;
-import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
@@ -41,22 +40,20 @@ import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 /**
  * This class is the server for remote connections.
  * It handles remote connections to the running instance of FullSync, allowing
- * Profile Management, Scheduling and Execution with user Iteraction.
+ * Profile Management, Scheduling and Execution with user Interaction.
  */
 public class RemoteServer extends UnicastRemoteObject implements RemoteInterface {
 
 	private static final long serialVersionUID = 2L;
-	private ProfileManager profileManager;
-	private Synchronizer synchronizer;
+	private FullSync fullsync;
 	private String password;
 
 	private Map<Remote, Object> listenersMap = new HashMap<>();
 
 	private Logger logger = LoggerFactory.getLogger("FullSync");
 
-	public RemoteServer(ProfileManager profileManager, Synchronizer synchronizer) throws RemoteException {
-		this.profileManager = profileManager;
-		this.synchronizer = synchronizer;
+	public RemoteServer(FullSync _fullsync) throws RemoteException {
+		fullsync = _fullsync;
 	}
 
 	public void setPassword(String password) {
@@ -77,7 +74,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 
 	@Override
 	public Profile[] getProfiles() throws RemoteException {
-		return profileManager.getProfiles().toArray(new Profile[] {});
+		return fullsync.getProfileManager().getProfiles().toArray(new Profile[] {});
 	}
 
 	@Override
@@ -103,14 +100,14 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 				}
 			}
 		};
-		profileManager.addProfilesChangeListener(listener);
+		fullsync.getProfileManager().addProfilesChangeListener(listener);
 		listenersMap.put(remotelistener, listener);
 	}
 
 	@Override
 	public void removeProfileListChangeListener(RemoteProfileListChangeListenerInterface remoteListener) throws RemoteException {
 		ProfileListChangeListener listener = (ProfileListChangeListener) listenersMap.remove(remoteListener);
-		profileManager.removeProfilesChangeListener(listener);
+		fullsync.getProfileManager().removeProfilesChangeListener(listener);
 	}
 
 	@Override
@@ -123,41 +120,41 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 				e.printStackTrace();
 			}
 		};
-		profileManager.addSchedulerChangeListener(listener);
+		fullsync.getProfileManager().addSchedulerChangeListener(listener);
 		listenersMap.put(remotelistener, listener);
 	}
 
 	@Override
 	public void removeSchedulerChangeListener(RemoteSchedulerChangeListenerInterface remoteListener) throws RemoteException {
 		SchedulerChangeListener listener = (SchedulerChangeListener) listenersMap.remove(remoteListener);
-		profileManager.removeSchedulerChangeListener(listener);
+		fullsync.getProfileManager().removeSchedulerChangeListener(listener);
 	}
 
 	@Override
 	public void startTimer() throws RemoteException {
-		profileManager.startScheduler();
+		fullsync.getProfileManager().startScheduler();
 	}
 
 	@Override
 	public void stopTimer() throws RemoteException {
-		profileManager.stopScheduler();
+		fullsync.getProfileManager().stopScheduler();
 	}
 
 	@Override
 	public boolean isSchedulerEnabled() throws RemoteException {
-		return profileManager.isSchedulerEnabled();
+		return fullsync.getProfileManager().isSchedulerEnabled();
 	}
 
 	@Override
 	public TaskTree executeProfile(String name) throws RemoteException {
-		Profile p = profileManager.getProfile(name);
-		TaskTree tree = synchronizer.executeProfile(p, false);
+		Profile p = fullsync.getProfileManager().getProfile(name);
+		TaskTree tree = fullsync.getSynchronizer().executeProfile(fullsync, p, false);
 		return tree;
 	}
 
 	@Override
 	public IoStatistics getIoStatistics(TaskTree taskTree) throws RemoteException {
-		return synchronizer.getIoStatistics(taskTree);
+		return fullsync.getSynchronizer().getIoStatistics(taskTree);
 	}
 
 	@Override
@@ -173,7 +170,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 				}
 			};
 		}
-		int result = synchronizer.performActions(tree, listener);
+		int result = fullsync.getSynchronizer().performActions(tree, listener);
 		if (result != 0) {
 			throw new RemoteException("Exception while performing actions");
 		}
@@ -182,7 +179,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	@Override
 	public void save(Profile[] profiles) throws RemoteException {
 		// Check for deleted profiles
-		for (Profile p : profileManager.getProfiles()) {
+		for (Profile p : fullsync.getProfileManager().getProfiles()) {
 			boolean found = false;
 			for (Profile profile : profiles) {
 				if (profile.getName().equals(p.getName())) {
@@ -191,15 +188,15 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 				}
 			}
 			if (!found) {
-				profileManager.removeProfile(p);
+				fullsync.getProfileManager().removeProfile(p);
 			}
 		}
 
 		// Check for added and modified profiles
 		for (Profile profile : profiles) {
-			Profile p = profileManager.getProfile(profile.getName());
+			Profile p = fullsync.getProfileManager().getProfile(profile.getName());
 			if (p == null) {
-				profileManager.addProfile(profile);
+				fullsync.getProfileManager().addProfile(profile);
 			}
 			else {
 				p.setName(profile.getName());
@@ -211,13 +208,13 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 				p.setSchedule(profile.getSchedule());
 				p.setEnabled(profile.isEnabled());
 
-				profileManager.profileChanged(p);
+				fullsync.getProfileManager().profileChanged(p);
 			}
 		}
 	}
 
 	@Override
 	public boolean isConnectedToRemoteInstance() {
-		return profileManager.isConnectedToRemoteInstance();
+		return fullsync.getProfileManager().isConnectedToRemoteInstance();
 	}
 }

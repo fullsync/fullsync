@@ -25,6 +25,7 @@ import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
@@ -46,7 +47,7 @@ public class SmbFileSystem implements FileSystem {
 	}
 
 	@Override
-	public final Site createConnection(final ConnectionDescription description) throws FileSystemException {
+	public final Site createConnection(final FullSync fullsync, final ConnectionDescription description) throws FileSystemException {
 		return new CommonsVfsConnection(description, new SmbAuthProvider());
 	}
 }

@@ -27,8 +27,6 @@ import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.MessageBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,10 +35,9 @@ import com.jcraft.jsch.UIKeyboardInteractive;
 import com.jcraft.jsch.UserInfo;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 import net.sourceforge.fullsync.impl.SFTPLogger;
-import net.sourceforge.fullsync.ui.GuiController;
-import net.sourceforge.fullsync.ui.Messages;
 
 class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive, UserInfo {
 	private static final String sshDirName;
@@ -67,9 +64,11 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		}
 	}
 
+	private final FullSync fullsync;
 	private final ConnectionDescription desc;
 
-	SFTPAuthProvider(final ConnectionDescription _desc) {
+	SFTPAuthProvider(final FullSync _fullsync, final ConnectionDescription _desc) {
+		fullsync = _fullsync;
 		desc = _desc;
 	}
 
@@ -120,19 +119,13 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	@Override
 	public final boolean promptYesNo(final String message) {
-		final boolean[] arr = new boolean[] { false };
 		if (null != desc.getParameter(ConnectionDescription.PARAMETER_INTERACTIVE)) {
-			GuiController.getInstance().getDisplay().syncExec(() -> {
-				MessageBox mb = new MessageBox(GuiController.getInstance().getMainShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-				mb.setText(Messages.getString("SFTP.YesNoQuestion")); //$NON-NLS-1$
-				mb.setMessage(message);
-				arr[0] = SWT.YES == mb.open();
-			});
+			return fullsync.getQuestionHandler().promptYesNo(message);
 		}
 		else {
 			logger.warn("SFTP UserInfo::promptYesNo: " + message + "; automatic decision: No");
 		}
-		return arr[0];
+		return false;
 	}
 
 	@Override

@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 
@@ -109,11 +110,11 @@ public class PreferencesPage extends WizardDialog {
 	private Combo comboProfileList;
 	// private Button cbEnableSystemTray;
 
-	private Preferences preferences;
+	private final FullSync fullsync;
 
-	public PreferencesPage(Shell parent, Preferences preferences) {
+	public PreferencesPage(Shell parent, FullSync _fullsync) {
 		super(parent);
-		this.preferences = preferences;
+		fullsync = _fullsync;
 	}
 
 	@Override
@@ -288,6 +289,7 @@ public class PreferencesPage extends WizardDialog {
 	 * update all controls with the settings from the preferences object.
 	 */
 	public void updateComponent() {
+		Preferences preferences = fullsync.getPreferences();
 		textPassword.setEchoChar('*');
 
 		cbConfirmExit.setSelection(preferences.confirmExit());
@@ -324,6 +326,7 @@ public class PreferencesPage extends WizardDialog {
 
 	@Override
 	public boolean apply() {
+		Preferences preferences = fullsync.getPreferences();
 		preferences.setConfirmExit(cbConfirmExit.getSelection());
 		preferences.setCloseMinimizesToSystemTray(cbCloseMinimizesToSystemTray.getSelection());
 		preferences.setMinimizeMinimizesToSystemTray(cbMinimizeMinimizesToSystemTray.getSelection());
@@ -371,8 +374,7 @@ public class PreferencesPage extends WizardDialog {
 			else {
 				if (port > 0) {
 					try {
-						RemoteController.getInstance().startServer(port, password, GuiController.getInstance().getProfileManager(),
-								GuiController.getInstance().getSynchronizer());
+						RemoteController.getInstance().startServer(port, password, fullsync);
 					}
 					catch (RemoteException e) {
 						ExceptionHandler.reportException(e);

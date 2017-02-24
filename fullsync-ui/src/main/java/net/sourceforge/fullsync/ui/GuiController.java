@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
@@ -43,9 +44,8 @@ import net.sourceforge.fullsync.WindowState;
 public class GuiController implements Runnable {
 	private static GuiController singleton;
 
+	private final FullSync fullsync;
 	private final Preferences preferences;
-	private final ProfileManager profileManager;
-	private final Synchronizer synchronizer;
 
 	private ExceptionHandler oldExceptionHandler;
 
@@ -57,10 +57,9 @@ public class GuiController implements Runnable {
 	private SystemTrayItem systemTrayItem;
 	private final ScheduledThreadPoolExecutor executorService;
 
-	private GuiController(Preferences preferences, ProfileManager profileManager, Synchronizer synchronizer) {
-		this.preferences = preferences;
-		this.profileManager = profileManager;
-		this.synchronizer = synchronizer;
+	private GuiController(FullSync _fullsync) {
+		fullsync = _fullsync;
+		preferences = fullsync.getPreferences();
 		executorService = new ScheduledThreadPoolExecutor(1);
 	}
 
@@ -111,16 +110,20 @@ public class GuiController implements Runnable {
 		return mainWindow;
 	}
 
+	public FullSync getFullSync() {
+		return fullsync;
+	}
+
 	public Preferences getPreferences() {
 		return preferences;
 	}
 
 	public ProfileManager getProfileManager() {
-		return profileManager;
+		return fullsync.getProfileManager();
 	}
 
 	public Synchronizer getSynchronizer() {
-		return synchronizer;
+		return fullsync.getSynchronizer();
 	}
 
 	public Display getDisplay() {
@@ -164,7 +167,7 @@ public class GuiController implements Runnable {
 
 		// Close the application, but give him a chance to
 		// confirm his action first
-		if ((profileManager.getNextScheduleTask() != null) && preferences.confirmExit()) {
+		if ((fullsync.getProfileManager().getNextScheduleTask() != null) && preferences.confirmExit()) {
 			MessageBox mb = new MessageBox(mainShell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
 			mb.setMessage(Messages.getString("GuiController.Do_You_Want_To_Quit") + "\n" //$NON-NLS-1$ //$NON-NLS-2$
@@ -176,8 +179,7 @@ public class GuiController implements Runnable {
 			}
 		}
 
-		profileManager.disconnectRemote();
-		synchronizer.disconnectRemote();
+		fullsync.disconnectRemote();
 		storeWindowState();
 
 		disposeGui();
@@ -239,8 +241,8 @@ public class GuiController implements Runnable {
 		return singleton;
 	}
 
-	public static GuiController initialize(Preferences preferences, ProfileManager profileManager, Synchronizer synchronizer) {
-		singleton = new GuiController(preferences, profileManager, synchronizer);
+	public static GuiController initialize(FullSync fullsync) {
+		singleton = new GuiController(fullsync);
 		return singleton;
 	}
 

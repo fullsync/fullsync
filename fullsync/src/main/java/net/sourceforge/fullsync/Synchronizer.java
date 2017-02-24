@@ -48,13 +48,13 @@ public class Synchronizer {
 		return taskGenerator;
 	}
 
-	public synchronized TaskTree executeProfile(Profile profile, boolean interactive) {
+	public synchronized TaskTree executeProfile(FullSync fullsync, Profile profile, boolean interactive) {
 		try {
 			if (remoteManager != null) {
 				return remoteManager.executeProfile(profile.getName());
 			}
 			else {
-				return taskGenerator.execute(profile, interactive);
+				return taskGenerator.execute(fullsync, profile, interactive);
 			}
 		}
 		catch (Exception e) {

@@ -44,10 +44,6 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	private StateDecider stateDecider;
 	private BufferStateDecider bufferStateDecider;
 
-	public TaskGeneratorImpl() {
-		super();
-	}
-
 	protected RuleSet updateRules(File src, File dst, RuleSet rules) throws DataParseException, IOException {
 		rules = rules.createChild(src, dst);
 

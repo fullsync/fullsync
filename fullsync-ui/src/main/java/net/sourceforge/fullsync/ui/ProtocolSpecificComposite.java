@@ -33,9 +33,12 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemManager;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.fs.Site;
 
 class ProtocolSpecificComposite {
+	private final FullSync fullsync;
+
 	protected Text textPath;
 	protected String m_scheme;
 	protected Composite m_parent;
@@ -43,6 +46,10 @@ class ProtocolSpecificComposite {
 	private Label labelPath;
 	private Button buttonBrowse;
 	private Button buttonBuffered;
+
+	public ProtocolSpecificComposite(FullSync _fullsync) {
+		fullsync = _fullsync;
+	}
 
 	public void createGUI(final Composite parent) {
 		m_parent = parent;
@@ -100,7 +107,7 @@ class ProtocolSpecificComposite {
 			ConnectionDescription desc = getConnectionDescription();
 			FileSystemManager fsm = new FileSystemManager();
 			desc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
-			try (Site conn = fsm.createConnection(desc)) {
+			try (Site conn = fsm.createConnection(fullsync, desc)) {
 				FileObject base = conn.getBase();
 				FileObjectChooser foc = new FileObjectChooser(m_parent.getShell());
 				foc.setBaseFileObject(base);

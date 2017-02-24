@@ -53,8 +53,8 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Profile;
-import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
@@ -67,10 +67,10 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private static final String EXPANDED_KEY = "Expanded";
 	private static final String FILTER_KEY = "Filter";
 
+	private final FullSync fullsync;
 	private TabFolder tabs;
 	private Text textProfileName;
 	private Text textProfileDescription;
-	private ProfileManager profileManager;
 	private Label labelFilesFilter;
 	private Button buttonFileFilter;
 	private Button buttonResetError;
@@ -92,7 +92,6 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private final ArrayList<TreeItem> treeItemsWithFilter = new ArrayList<>();
 	private Map<String, FileFilter> itemsMap = new HashMap<>();
 	private Site sourceSite;
-	private final FileSystemManager fsm = new FileSystemManager();
 
 	private Profile profile;
 
@@ -100,10 +99,10 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private Composite m_parent;
 	private String lastSourceLoaded;
 
-	public ProfileDetailsTabbedPage(Shell parent, ProfileManager profileManager, Profile profile) {
+	public ProfileDetailsTabbedPage(Shell parent, FullSync _fullsync, Profile _profile) {
 		super(parent);
-		this.profileManager = profileManager;
-		this.profile = profile;
+		fullsync = _fullsync;
+		profile = _profile;
 	}
 
 	@Override
@@ -327,7 +326,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		c.setLayoutData(cData);
 
 		ConnectionDescription src = null != profile ? profile.getSource() : null;
-		srcConnectionConfiguration = new ConnectionConfiguration(c, src);
+		srcConnectionConfiguration = new ConnectionConfiguration(c, fullsync, src);
 		srcConnectionConfiguration.setBufferedEnabled(false);
 		return c;
 	}
@@ -350,7 +349,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		c.setLayoutData(cData);
 
 		ConnectionDescription dst = null != profile ? profile.getDestination() : null;
-		dstConnectionConfiguration = new ConnectionConfiguration(c, dst);
+		dstConnectionConfiguration = new ConnectionConfiguration(c, fullsync, dst);
 		return c;
 	}
 
@@ -603,7 +602,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		}
 
 		if ((profile == null) || !textProfileName.getText().equals(profile.getName())) {
-			Profile pr = profileManager.getProfile(textProfileName.getText());
+			Profile pr = fullsync.getProfileManager().getProfile(textProfileName.getText());
 			if (pr != null) {
 				MessageBox mb = new MessageBox(m_parent.getShell(), SWT.ICON_ERROR);
 				mb.setText(Messages.getString("ProfileDetails.Duplicate_Entry")); //$NON-NLS-1$
@@ -625,7 +624,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			if (buttonResetError.getSelection()) {
 				profile.setLastError(0, null);
 			}
-			profileManager.addProfile(profile);
+			fullsync.getProfileManager().addProfile(profile);
 		}
 		else {
 			profile.beginUpdate();
@@ -643,7 +642,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			}
 			profile.endUpdate();
 		}
-		profileManager.save();
+		fullsync.getProfileManager().save();
 		return true; //FIXME: return false if failed
 	}
 
@@ -677,7 +676,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 							closeSourceSite();
 							src.setParameter("bufferStrategy", ""); // the subdirs tab should bypass the buffer imo
 							src.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
-							sourceSite = fsm.createConnection(src);
+							sourceSite = new FileSystemManager().createConnection(fullsync, src);
 							drawDirectoryTree();
 							lastSourceLoaded = src.getUri().toString();
 						}

@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -34,11 +36,13 @@ import org.eclipse.swt.widgets.Label;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FullSync;
 
 public class ConnectionConfiguration {
 	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" };
 	private static Map<String, Class<? extends ProtocolSpecificComposite>> composites;
 	private Composite m_parent; // the tabs content
+	private final FullSync fullsync;
 	private Label labelProtocol;
 	private Combo comboProtocol;
 	private Composite compositeProtocolSpecific;
@@ -55,8 +59,9 @@ public class ConnectionConfiguration {
 		composites.put("smb", SMBSpecificComposite.class);
 	}
 
-	public ConnectionConfiguration(Composite parent, ConnectionDescription desc) {
+	public ConnectionConfiguration(Composite parent, FullSync _fullsync, ConnectionDescription desc) {
 		m_parent = parent;
+		fullsync = _fullsync;
 		if (null != desc) {
 			URI uri = desc.getUri();
 			if (null != uri) {
@@ -120,13 +125,14 @@ public class ConnectionConfiguration {
 	private void createProtocolSpecificComposite() {
 		Class<? extends ProtocolSpecificComposite> com = composites.get(selectedScheme);
 		try {
-			compositeSpecific = com.newInstance();
+			Constructor<? extends ProtocolSpecificComposite> con = com.getConstructor(FullSync.class);
+			compositeSpecific = con.newInstance(fullsync);
 			compositeSpecific.createGUI(compositeProtocolSpecific);
 			compositeSpecific.reset(selectedScheme);
 			compositeSpecific.setBufferedEnabled(bufferedEnabled);
 			compositeSpecific.setBuffered(bufferedActive);
 		}
-		catch (InstantiationException | IllegalAccessException e) {
+		catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
 			ExceptionHandler.reportException(e);
 		}
 	}

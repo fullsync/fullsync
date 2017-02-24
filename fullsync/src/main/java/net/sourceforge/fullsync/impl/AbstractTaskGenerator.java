@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.impl;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
@@ -31,6 +32,7 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.RuleSet;
@@ -43,17 +45,9 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
 
 public abstract class AbstractTaskGenerator implements TaskGenerator {
-	protected FileSystemManager fsm;
-	protected ArrayList<TaskGenerationListener> taskGenerationListeners;
-	protected boolean active; // resume/suspend
-	protected boolean cancelled; // cancel
-
-	public AbstractTaskGenerator() {
-		this.fsm = new FileSystemManager();
-		active = true;
-		cancelled = false;
-		taskGenerationListeners = new ArrayList<>();
-	}
+	protected final List<TaskGenerationListener> taskGenerationListeners = new ArrayList<>();
+	protected boolean active = true; // resume/suspend
+	protected boolean cancelled = false; // cancel
 
 	@Override
 	public void addTaskGenerationListener(TaskGenerationListener listener) {
@@ -87,7 +81,7 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 	}
 
 	@Override
-	public TaskTree execute(Profile profile, boolean interactive)
+	public TaskTree execute(FullSync fullsync, Profile profile, boolean interactive)
 			throws FileSystemException, URISyntaxException, DataParseException, IOException {
 
 		RuleSet rules = profile.getRuleSet().createRuleSet();
@@ -122,13 +116,14 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 			srcDesc.clearParameter(ConnectionDescription.PARAMETER_INTERACTIVE);
 			dstDesc.clearParameter(ConnectionDescription.PARAMETER_INTERACTIVE);
 		}
-		try (Site d1 = fsm.createConnection(srcDesc); Site d2 = fsm.createConnection(dstDesc)) {
-			return execute(d1, d2, actionDecider, rules);
+		final FileSystemManager fsm = new FileSystemManager();
+		try (Site d1 = fsm.createConnection(fullsync, srcDesc); Site d2 = fsm.createConnection(fullsync, dstDesc)) {
+			return execute(fullsync, d1, d2, actionDecider, rules);
 		}
 	}
 
 	@Override
-	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules)
+	public TaskTree execute(FullSync fullsync, Site source, Site destination, ActionDecider actionDecider, RuleSet rules)
 			throws DataParseException, FileSystemException, IOException {
 		if (!source.isAvailable()) {
 			throw new FileSystemException("source is unavailable");

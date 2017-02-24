@@ -27,8 +27,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.ProfileManager;
-import net.sourceforge.fullsync.Synchronizer;
+import net.sourceforge.fullsync.FullSync;
 
 public class RemoteController {
 
@@ -48,14 +47,14 @@ public class RemoteController {
 		return instance;
 	}
 
-	public void startServer(int port, String password, ProfileManager profileManager, Synchronizer sync) throws RemoteException {
+	public void startServer(int port, String password, FullSync fullsync) throws RemoteException {
 		try {
 			this.port = port;
 			serverURL = "rmi://localhost:" + port + "/FullSync";
 			this.password = password;
 
 			if (remoteServer == null) {
-				remoteServer = new RemoteServer(profileManager, sync);
+				remoteServer = new RemoteServer(fullsync);
 				remoteServer.setPassword(password);
 			}
 

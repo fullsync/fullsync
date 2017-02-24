@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.FullSync;
 
 class SFTPSpecificComposite extends ProtocolSpecificComposite {
 	private static final int DEFAULT_SFTP_PORT = 22;
@@ -47,6 +48,10 @@ class SFTPSpecificComposite extends ProtocolSpecificComposite {
 	private Button buttonKeybased;
 	private Label labelKeyPassphrase;
 	private Text textKeyPassphrase;
+
+	public SFTPSpecificComposite(FullSync _fullsync) {
+		super(_fullsync);
+	}
 
 	@Override
 	public void createGUI(final Composite parent) {

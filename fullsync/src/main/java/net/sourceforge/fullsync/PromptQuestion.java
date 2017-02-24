@@ -17,17 +17,8 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
+package net.sourceforge.fullsync;
 
-import net.sourceforge.fullsync.FullSync;
-
-public class SMBSpecificComposite extends UserPasswordSpecificComposite {
-	SMBSpecificComposite(FullSync _fullsync) {
-		super(_fullsync);
-	}
-
-	@Override
-	public int getDefaultPort() {
-		return -1;
-	}
+public interface PromptQuestion {
+	boolean promptYesNo(String question);
 }
