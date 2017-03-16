@@ -20,14 +20,9 @@
 
 package net.sourceforge.fullsync.launcher;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
 import java.security.CodeSource;
 import java.util.ArrayList;
 
@@ -35,10 +30,14 @@ import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Launcher;
 
 public class Main implements Launcher {
-	private static final int IOBUFFERSIZE = 0x1000;
-
 	public static void main(final String[] args) throws Exception {
 		// TODO: redirect stdout && stderr here!
+		net.sourceforge.fullsync.cli.Main.startup(args, new Main());
+	}
+
+	@Override
+	public void launchGui(FullSync fullsync) throws Exception {
+		// FIXME: implement SWT startup using reflection
 		String arch = "x86";
 		String osName = System.getProperty("os.name").toLowerCase();
 		String os = "unknown";
@@ -59,50 +58,16 @@ public class Main implements Launcher {
 		System.out.println("launching FullSync... OS=" + os + "; ARCH=" + arch + "; INSTALLLOCATION=" + installlocation);
 
 		ArrayList<URL> jars = new ArrayList<>();
-		jars.add(new URL(installlocation + "lib/fullsync.jar"));
+		jars.add(new URL(installlocation + "lib/assets.jar"));
+		jars.add(new URL(installlocation + "lib/fullsync-ui.jar"));
 		// add correct SWT implementation to the class-loader
 		jars.add(new URL(installlocation + "lib/swt-" + os + "-" + arch + ".jar"));
 
-		String dependencies = getResourceAsString("net/sourceforge/fullsync/launcher/dependencies.txt").trim();
-		for (String s : dependencies.split("\r?\n")) {
-			jars.add(new URL(installlocation + "lib/" + s.trim()));
-		}
-
-		// instantiate an URL class-loader with the constructed class-path and load the real main class
+		// instantiate an URL class-loader with the constructed class-path and load the UI
 		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Main.class.getClassLoader());
-		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.cli.Main");
-		Method main = cls.getDeclaredMethod("main", new Class<?>[] { String[].class });
-
+		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.ui.GuiController");
+		Method launchUI = cls.getDeclaredMethod("launchUI", new Class<?>[] { FullSync.class });
 		Thread.currentThread().setContextClassLoader(cl);
-		// call the main method using reflection so that there is no static reference to it
-		main.invoke(null, new Object[] { args });
-		System.exit(1);
-	}
-
-	// keep in sync with net.sourceforge.fullsync.Util.getResourceAsString(String)
-	public static String getResourceAsString(final String name) {
-		StringBuilder out = new StringBuilder();
-		try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name)) {
-			if (null != is) {
-				final char[] buffer = new char[IOBUFFERSIZE];
-				Reader in = new InputStreamReader(is, StandardCharsets.UTF_8);
-				int read;
-				do {
-					read = in.read(buffer, 0, buffer.length);
-					if (read > 0) {
-						out.append(buffer, 0, read);
-					}
-				} while (read >= 0);
-			}
-		}
-		catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		return out.toString();
-	}
-
-	@Override
-	public void launchGui(FullSync fullsync, boolean minimized) {
-		// FIXME: implement SWT startup using reflection
+		launchUI.invoke(null, new Object[] { fullsync });
 	}
 }

@@ -17,8 +17,20 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync;
+package net.sourceforge.fullsync.ui;
 
-public interface Launcher {
-	void launchGui(FullSync fullsync) throws Exception;
+import net.sourceforge.fullsync.FullSync;
+import net.sourceforge.fullsync.Launcher;
+import net.sourceforge.fullsync.cli.Main;
+
+public class DebugMain implements Launcher {
+
+	public static void main(String[] args) throws Exception {
+		Main.startup(args, new DebugMain());
+	}
+
+	@Override
+	public void launchGui(FullSync fullsync) throws Exception {
+		GuiController.launchUI(fullsync);
+	}
 }

@@ -19,7 +19,9 @@
  */
 package net.sourceforge.fullsync.remote;
 
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -33,11 +35,9 @@ public class RemoteController {
 
 	private static RemoteController instance;
 	private RemoteServer remoteServer;
-	private String serverURL;
-	private int port;
-	private String password;
+	private URL serverURL;
+	private String serverPassword;
 	private boolean isActive = false;
-
 	private Registry registry;
 
 	public static RemoteController getInstance() {
@@ -47,37 +47,34 @@ public class RemoteController {
 		return instance;
 	}
 
-	public void startServer(int port, String password, FullSync fullsync) throws RemoteException {
+	public void startServer(InetSocketAddress listenAddress, String password, FullSync fullsync) throws RemoteException {
 		try {
-			this.port = port;
-			serverURL = "rmi://localhost:" + port + "/FullSync";
-			this.password = password;
+			serverURL = new URL("rmi", listenAddress.getHostString(), listenAddress.getPort(), "/FullSync");
+			serverPassword = password;
 
-			if (remoteServer == null) {
+			if (null == remoteServer) {
 				remoteServer = new RemoteServer(fullsync);
 				remoteServer.setPassword(password);
 			}
 
-			if (registry == null) {
-				registry = LocateRegistry.createRegistry(port);
+			if (null == registry) {
+				registry = LocateRegistry.createRegistry(listenAddress.getPort());
 			}
 
-			Naming.rebind(serverURL, remoteServer);
+			Naming.rebind(serverURL.toString(), remoteServer);
 			isActive = true;
 		}
-		catch (MalformedURLException e) {
-			ExceptionHandler.reportException(e);
+		catch (MalformedURLException ex) {
+			ExceptionHandler.reportException(ex);
 		}
 	}
 
 	public void stopServer() throws RemoteException {
-		if (!isActive) {
-			return;
-		}
-
 		try {
-			Naming.unbind(serverURL);
-			isActive = false;
+			if (isActive) {
+				Naming.unbind(serverURL.toString());
+				isActive = false;
+			}
 		}
 		catch (MalformedURLException | NotBoundException e) {
 			ExceptionHandler.reportException(e);
@@ -88,16 +85,16 @@ public class RemoteController {
 		return isActive;
 	}
 
-	public int getPort() {
-		return port;
+	public InetSocketAddress getListenAddres() {
+		return new InetSocketAddress(serverURL.getHost(), serverURL.getPort());
 	}
 
 	public String getPassword() {
-		return password;
+		return serverPassword;
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		serverPassword = password;
 		remoteServer.setPassword(password);
 	}
 }

@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.InetSocketAddress;
 import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
@@ -40,14 +41,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FullSync;
+import net.sourceforge.fullsync.Launcher;
+import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.RuntimeConfiguration;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.remote.RemoteController;
-import net.sourceforge.fullsync.ui.GuiController;
 
 public class Main { // NO_UCD
 	private static Options options;
@@ -126,180 +130,148 @@ public class Main { // NO_UCD
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void startup(String[] args, Launcher launcher) throws Exception {
 		initOptions();
 		String configDir = getConfigDir();
+		CommandLineParser parser = new PosixParser();
+		CommandLine line = null;
+
 		try {
-			CommandLineParser parser = new PosixParser();
-			CommandLine line = null;
-
-			try {
-				line = parser.parse(options, args);
-			}
-			catch (ParseException ex) {
-				System.err.println(ex.getMessage());
-				printHelp();
-				return;
-			}
-
-			if (line.hasOption('V')) {
-				System.out.println(String.format("FullSync version %s", Util.getFullSyncVersion()));
-				System.exit(0);
-			}
-
-			// Apply modifying options
-			if (!line.hasOption("v")) {
-				System.setErr(new PrintStream(new FileOutputStream(getLogFileName())));
-			}
-
-			if (line.hasOption("h")) {
-				printHelp();
-				return;
-			}
-
-			// Initialize basic facilities
-
-			// upgrade code...
-			do {
-				File newPreferences = new File(configDir + "preferences.properties");
-				File oldPreferences = new File("preferences.properties");
-				if (!newPreferences.exists() && oldPreferences.exists()) {
-					backupFile(oldPreferences, newPreferences, "preferences_old.properties");
-				}
-			} while (false); // variable scope
-			final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
-
-			String profilesFile = "profiles.xml";
-			if (line.hasOption("P")) {
-				profilesFile = line.getOptionValue("P");
-			}
-			else {
-				profilesFile = configDir + "profiles.xml";
-				// upgrade code...
-				File newProfiles = new File(profilesFile);
-				File oldProfiles = new File("profiles.xml");
-				if (!newProfiles.exists()) {
-					if (!oldProfiles.exists()) {
-						// on windows FullSync 0.9.1 installs itself into %ProgramFiles%\FullSync while 0.10.0 installs itself into %ProgramFiles%\FullSync\FullSync by default
-						oldProfiles = new File(".." + File.separator + "profiles.xml");
-					}
-					if (oldProfiles.exists()) {
-						backupFile(oldProfiles, newProfiles, "profiles_old.xml");
-					}
-				}
-			}
-			ProfileManager profileManager = new ProfileManager(profilesFile);
-
-			final Synchronizer sync = new Synchronizer();
-
-			// Apply executing options
-			if (line.hasOption("r")) {
-				Profile p = profileManager.getProfile(line.getOptionValue("r"));
-				TaskTree tree = sync.executeProfile(p, false);
-				sync.performActions(tree);
-				p.setLastUpdate(new Date());
-				profileManager.save();
-				return;
-			}
-
-			boolean activateRemote = false;
-			int port = 10000;
-			String password = "admin";
-			RemoteException listenerStarupException = null;
-
-			if (line.hasOption("p")) {
-				activateRemote = true;
-				try {
-					String portStr = line.getOptionValue("p");
-					port = Integer.parseInt(portStr);
-				}
-				catch (NumberFormatException e) {
-					e.printStackTrace();
-				}
-
-				if (line.hasOption("a")) {
-					password = line.getOptionValue("a");
-				}
-			}
-			else {
-				activateRemote = preferences.listeningForRemoteConnections();
-				port = preferences.getRemoteConnectionsPort();
-				password = preferences.getRemoteConnectionsPassword();
-			}
-			if (activateRemote) {
-				try {
-					Logger logger = LoggerFactory.getLogger("FullSync");
-
-					RemoteController.getInstance().startServer(port, password, profileManager, sync);
-					logger.info("Remote Interface available on port: " + port);
-				}
-				catch (RemoteException e) {
-					ExceptionHandler.reportException(e);
-					listenerStarupException = e;
-				}
-			}
-
-			if (line.hasOption("d")) {
-				profileManager.addSchedulerListener(profile -> {
-					TaskTree tree = sync.executeProfile(profile, false);
-					if (tree == null) {
-						profile.setLastError(1, "An error occured while comparing filesystems.");
-					}
-					else {
-						int errorLevel = sync.performActions(tree);
-						if (errorLevel > 0) {
-							profile.setLastError(errorLevel, "An error occured while copying files.");
-						}
-						else {
-							profile.setLastUpdate(new Date());
-						}
-					}
-				});
-				profileManager.startScheduler();
-			}
-			else {
-				try {
-					GuiController guiController = GuiController.initialize(preferences, profileManager, sync);
-					guiController.startGui(line.hasOption('m'));
-
-					if (!line.hasOption('P') && !preferences.getHelpShown()
-							&& (null == System.getProperty("net.sourceforge.fullsync.skipHelp"))) {
-						preferences.setHelpShown(true);
-						preferences.save();
-						File f = new File("docs/manual/manual.html");
-						if (f.exists()) {
-							GuiController.launchProgram(f.getAbsolutePath());
-						}
-					}
-
-					if (listenerStarupException != null) {
-						ExceptionHandler.reportException("Unable to start incoming connections listener.", listenerStarupException);
-					}
-
-					if (preferences.getAutostartScheduler()) {
-						profileManager.startScheduler();
-					}
-
-					guiController.run();
-					guiController.disposeGui();
-				}
-				catch (Exception ex) {
-					ExceptionHandler.reportException(ex);
-				}
-				finally {
-					profileManager.save();
-				}
-
-				// FIXME [Michele] For some reasons there is some thread still alive if you run the remote interface
-				RemoteController.getInstance().stopServer();
-				if (null == System.getProperty("net.sourceforge.fullsync.skipExit")) {
-					System.exit(-1);
-				}
-			}
-
+			line = parser.parse(options, args);
 		}
-		catch (Exception ex) {
-			ExceptionHandler.reportException(ex);
+		catch (ParseException ex) {
+			System.err.println(ex.getMessage());
+			printHelp();
+			System.exit(1);
+		}
+
+		if (line.hasOption('V')) {
+			System.out.println(String.format("FullSync version %s", Util.getFullSyncVersion()));
+			System.exit(0);
+		}
+
+		// Apply modifying options
+		if (!line.hasOption("v")) {
+			System.setErr(new PrintStream(new FileOutputStream(getLogFileName())));
+		}
+
+		if (line.hasOption("h")) {
+			printHelp();
+			System.exit(0);
+		}
+
+		// upgrade code...
+		do {
+			File newPreferences = new File(configDir + "preferences.properties");
+			File oldPreferences = new File("preferences.properties");
+			if (!newPreferences.exists() && oldPreferences.exists()) {
+				backupFile(oldPreferences, newPreferences, "preferences_old.properties");
+			}
+		} while (false); // variable scope
+
+		String profilesFile = "profiles.xml";
+		if (line.hasOption("P")) {
+			profilesFile = line.getOptionValue("P");
+		}
+		else {
+			profilesFile = configDir + "profiles.xml";
+			// upgrade code...
+			File newProfiles = new File(profilesFile);
+			File oldProfiles = new File("profiles.xml");
+			if (!newProfiles.exists()) {
+				if (!oldProfiles.exists()) {
+					// on windows FullSync 0.9.1 installs itself into %ProgramFiles%\FullSync while 0.10.0 installs itself into %ProgramFiles%\FullSync\FullSync by default
+					oldProfiles = new File(".." + File.separator + "profiles.xml");
+				}
+				if (oldProfiles.exists()) {
+					backupFile(oldProfiles, newProfiles, "profiles_old.xml");
+				}
+			}
+		}
+		final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
+		final ProfileManager profileManager = new ProfileManager(profilesFile);
+		final Synchronizer sync = new Synchronizer();
+		final RuntimeConfiguration rtConfig = new CliRuntimeConfiguration(line);
+		final FullSync fullsync = new FullSync(preferences, profileManager, sync, rtConfig);
+
+		if (rtConfig.isDaemon().orElse(false).booleanValue()) {
+			finishStartup(fullsync);
+			//TODO: keep process running here
+		}
+		else {
+			launcher.launchGui(fullsync);
+		}
+	}
+
+	public static void finishStartup(FullSync fullsync) {
+		RuntimeConfiguration rt = fullsync.getRuntimeConfiguration();
+		if (rt.getProfileToRun().isPresent()) {
+			handleRunProfile(fullsync);
+		}
+		if (rt.isDaemon().orElse(false).booleanValue()) {
+			handleIsDaemon(fullsync);
+		}
+		if (rt.getListenSocketAddress().isPresent() || fullsync.getPreferences().listeningForRemoteConnections()) {
+			handleListening(fullsync);
+		}
+		if (fullsync.getPreferences().getAutostartScheduler()) {
+			fullsync.getProfileManager().startScheduler();
+		}
+	}
+
+	private static void handleRunProfile(FullSync fullsync) {
+		ProfileManager profileManager = fullsync.getProfileManager();
+		String profileName = fullsync.getRuntimeConfiguration().getProfileToRun().get();
+		Profile p = profileManager.getProfile(profileName);
+		int errorlevel = 1;
+		if (null != p) {
+			Synchronizer sync = fullsync.getSynchronizer();
+			TaskTree tree = sync.executeProfile(fullsync, p, false);
+			errorlevel = sync.performActions(tree);
+			p.setLastUpdate(new Date());
+			profileManager.save();
+		}
+		else {
+			//FIXME: this should be on STDERR really... but that is "abused" as the log output.
+			System.out.println(String.format("Error: The profile with the name {0} couldn't be found.", profileName));
+		}
+		System.exit(errorlevel);
+	}
+
+	private static void handleIsDaemon(FullSync fullsync) {
+		ProfileManager profileManager = fullsync.getProfileManager();
+		profileManager.addSchedulerListener(profile -> {
+			Synchronizer sync = fullsync.getSynchronizer();
+			TaskTree tree = sync.executeProfile(fullsync, profile, false);
+			if (tree == null) {
+				profile.setLastError(1, "An error occured while comparing filesystems.");
+			}
+			else {
+				int errorLevel = sync.performActions(tree);
+				if (errorLevel > 0) {
+					profile.setLastError(errorLevel, "An error occured while copying files.");
+				}
+				else {
+					profile.setLastUpdate(new Date());
+				}
+			}
+		});
+		profileManager.startScheduler();
+	}
+
+	private static void handleListening(FullSync fullsync) {
+		RuntimeConfiguration rt = fullsync.getRuntimeConfiguration();
+		Preferences preferences = fullsync.getPreferences();
+		int port = preferences.getRemoteConnectionsPort();
+		Logger logger = LoggerFactory.getLogger("FullSync");
+		InetSocketAddress listenAddress = rt.getListenSocketAddress().orElse(new InetSocketAddress(port));
+		String password = rt.getRemotePassword().orElse(preferences.getRemoteConnectionsPassword());
+		try {
+			RemoteController.getInstance().startServer(listenAddress, password, fullsync);
+			logger.info("Remote Interface available on: " + listenAddress);
+		}
+		catch (RemoteException e) {
+			ExceptionHandler.reportException(e);
 		}
 	}
 }

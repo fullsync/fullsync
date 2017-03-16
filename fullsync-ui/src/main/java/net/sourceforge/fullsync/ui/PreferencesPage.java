@@ -19,6 +19,7 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.net.InetSocketAddress;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 
@@ -359,7 +360,7 @@ public class PreferencesPage extends WizardDialog {
 			preferences.setRemoteConnectionsPassword(password);
 
 			if (RemoteController.getInstance().isActive()) {
-				int oldPort = RemoteController.getInstance().getPort();
+				int oldPort = RemoteController.getInstance().getListenAddres().getPort();
 
 				RemoteController.getInstance().setPassword(password);
 
@@ -374,7 +375,7 @@ public class PreferencesPage extends WizardDialog {
 			else {
 				if (port > 0) {
 					try {
-						RemoteController.getInstance().startServer(port, password, fullsync);
+						RemoteController.getInstance().startServer(new InetSocketAddress(port), password, fullsync);
 					}
 					catch (RemoteException e) {
 						ExceptionHandler.reportException(e);

@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import org.eclipse.swt.SWT;
@@ -40,6 +41,7 @@ import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.WindowState;
+import net.sourceforge.fullsync.cli.Main;
 
 public class GuiController implements Runnable {
 	private static GuiController singleton;
@@ -63,7 +65,7 @@ public class GuiController implements Runnable {
 		executorService = new ScheduledThreadPoolExecutor(1);
 	}
 
-	private void createMainShell(boolean minimized) {
+	private void createMainShell() {
 		try {
 			mainShell = new Shell(display);
 			mainWindow = new MainWindow(mainShell, SWT.NULL, this);
@@ -73,7 +75,8 @@ public class GuiController implements Runnable {
 			mainShell.setText("FullSync"); //$NON-NLS-1$
 			mainShell.setImage(getImage("fullsync48.png")); //$NON-NLS-1$
 			restoreWindowState(shellBounds);
-			if (minimized) {
+			Optional<Boolean> minimized = fullsync.getRuntimeConfiguration().isStartMinimized();
+			if (minimized.orElse(false).booleanValue()) {
 				mainShell.setVisible(false);
 			}
 		}
@@ -134,12 +137,12 @@ public class GuiController implements Runnable {
 		return imageRepository.getImage(imageName);
 	}
 
-	public void startGui(boolean minimized) {
+	private void startGui() {
 		Display.setAppName("FullSync");
 		display = Display.getDefault();
 		imageRepository = new ImageRepository(display);
 		fontRepository = new FontRepository(display);
-		createMainShell(minimized);
+		createMainShell();
 		systemTrayItem = new SystemTrayItem(this);
 		oldExceptionHandler = ExceptionHandler.registerExceptionHandler(new ExceptionHandler() {
 			@Override
@@ -150,6 +153,15 @@ public class GuiController implements Runnable {
 			}
 		});
 		createWelcomeScreen();
+	}
+
+	public static void launchUI(FullSync fullsync) {
+		GuiController guiController = GuiController.initialize(fullsync);
+		guiController.startGui();
+		guiController.executorService.submit(() -> Main.finishStartup(fullsync));
+		guiController.run();
+		guiController.disposeGui();
+		guiController.executorService.shutdown();
 	}
 
 	@Override
