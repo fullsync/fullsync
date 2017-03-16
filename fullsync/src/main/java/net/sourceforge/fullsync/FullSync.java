@@ -28,11 +28,13 @@ public class FullSync {
 	private final ConfigurationPreferences preferences;
 	private final ProfileManager profileManager;
 	private final Synchronizer synchronizer;
+	private final RuntimeConfiguration runtimeConfiguration;
 
-	public FullSync(ConfigurationPreferences _preferences, ProfileManager _profileManager, Synchronizer _synchronizer) {
+	public FullSync(ConfigurationPreferences _preferences, ProfileManager _profileManager, Synchronizer _synchronizer, RuntimeConfiguration _runtimeConfiguration) {
 		preferences = _preferences;
 		profileManager = _profileManager;
 		synchronizer = _synchronizer;
+		runtimeConfiguration = _runtimeConfiguration;
 	}
 
 	public PromptQuestion getQuestionHandler() {
@@ -57,6 +59,10 @@ public class FullSync {
 
 	public Synchronizer getSynchronizer() {
 		return synchronizer;
+	}
+
+	public RuntimeConfiguration getRuntimeConfiguration() {
+		return runtimeConfiguration;
 	}
 
 	public void disconnectRemote() {
