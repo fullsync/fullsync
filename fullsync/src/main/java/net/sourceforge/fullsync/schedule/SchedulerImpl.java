@@ -33,10 +33,6 @@ public class SchedulerImpl implements Scheduler, Runnable {
 
 	private ArrayList<SchedulerChangeListener> schedulerListeners;
 
-	public SchedulerImpl() {
-		this(null);
-	}
-
 	public SchedulerImpl(ScheduleTaskSource source) {
 		scheduleSource = source;
 		schedulerListeners = new ArrayList<>();
@@ -80,17 +76,15 @@ public class SchedulerImpl implements Scheduler, Runnable {
 
 	@Override
 	public void start() {
-		if (enabled) {
-			return;
+		if (!enabled) {
+			enabled = true;
+			if ((null == worker) || !worker.isAlive()) {
+				worker = new Thread(this, "Scheduler");
+				worker.setDaemon(true);
+				worker.start();
+			}
+			fireSchedulerChangedEvent();
 		}
-
-		enabled = true;
-		if ((worker == null) || !worker.isAlive()) {
-			worker = new Thread(this, "Scheduler");
-			worker.setDaemon(true);
-			worker.start();
-		}
-		fireSchedulerChangedEvent();
 	}
 
 	@Override
