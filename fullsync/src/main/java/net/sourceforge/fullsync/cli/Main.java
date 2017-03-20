@@ -24,10 +24,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
+import java.security.CodeSource;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.cli.CommandLine;
@@ -53,7 +58,7 @@ import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 
-public class Main { // NO_UCD
+public class Main implements Launcher { // NO_UCD
 	private static Options options;
 
 	private static void initOptions() {
@@ -128,6 +133,11 @@ public class Main { // NO_UCD
 			out.close();
 			old.renameTo(new File(backupName));
 		}
+	}
+
+	public static void main(final String[] args) throws Exception {
+		// TODO: redirect stdout && stderr here!
+		startup(args, new Main());
 	}
 
 	public static void startup(String[] args, Launcher launcher) throws Exception {
@@ -273,5 +283,41 @@ public class Main { // NO_UCD
 		catch (RemoteException e) {
 			ExceptionHandler.reportException(e);
 		}
+	}
+
+	@Override
+	public void launchGui(FullSync fullsync) throws Exception {
+		// FIXME: implement SWT startup using reflection
+		String arch = "x86";
+		String osName = System.getProperty("os.name").toLowerCase();
+		String os = "unknown";
+		if (-1 != System.getProperty("os.arch").indexOf("64")) {
+			arch = "x86_64";
+		}
+		if (-1 != osName.indexOf("linux")) {
+			os = "gtk-linux";
+		}
+		else if (-1 != osName.indexOf("windows")) {
+			os = "win32-win32";
+		}
+		else if (-1 != osName.indexOf("mac")) {
+			os = "cocoa-macosx";
+		}
+		CodeSource cs = Main.class.getProtectionDomain().getCodeSource();
+		String installlocation = cs.getLocation().toURI().toString().replaceAll("launcher\\.jar$", "");
+		System.out.println("launching FullSync... OS=" + os + "; ARCH=" + arch + "; INSTALLLOCATION=" + installlocation);
+
+		ArrayList<URL> jars = new ArrayList<>();
+		jars.add(new URL(installlocation + "lib/assets.jar"));
+		jars.add(new URL(installlocation + "lib/fullsync-ui.jar"));
+		// add correct SWT implementation to the class-loader
+		jars.add(new URL(installlocation + "lib/swt-" + os + "-" + arch + ".jar"));
+
+		// instantiate an URL class-loader with the constructed class-path and load the UI
+		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Main.class.getClassLoader());
+		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.ui.GuiController");
+		Method launchUI = cls.getDeclaredMethod("launchUI", new Class<?>[] { FullSync.class });
+		Thread.currentThread().setContextClassLoader(cl);
+		launchUI.invoke(null, new Object[] { fullsync });
 	}
 }
