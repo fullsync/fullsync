@@ -1,4 +1,6 @@
 
+apply plugin: 'java'
+
 def getLocalSWTVersion() {
 	def arch = System.properties['os.arch'].contains('64') ? 'x86_64' : 'x86'
 	def osName = System.properties['os.name'].toLowerCase()
@@ -14,8 +16,6 @@ def getLocalSWTVersion() {
 	}
 	return "org.eclipse.platform:org.eclipse.swt.${os}.${arch}:${ext.swtVersion}"
 }
-
-
 
 dependencies {
 	compile project(':fullsync')

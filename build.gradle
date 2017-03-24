@@ -2,16 +2,18 @@ plugins {
 	id 'com.github.ben-manes.versions' version '0.13.0'
 }
 
-subprojects {
-	apply plugin: 'java'
+version = '0.11.0'
 
+subprojects {
 	version = '0.11.0'
 
-	jar {
-		manifest {
-			attributes 'License': 'GPLv2+'
-			attributes 'FullSync-Version': version
-			attributes 'Copyright': 'Copyright (c) 2016 the FullSync Team'
+	plugins.withType(JavaPlugin).whenPluginAdded {
+		jar {
+			manifest {
+				attributes 'License': 'GPLv2+'
+				attributes 'FullSync-Version': version
+				attributes 'Copyright': 'Copyright (c) 2016 the FullSync Team'
+			}
 		}
 	}
 

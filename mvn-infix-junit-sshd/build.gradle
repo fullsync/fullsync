@@ -1,3 +1,6 @@
+
+apply plugin: 'java'
+
 dependencies {
 	compile 'junit:junit:4.12'
 	compile 'sshtools:j2ssh-common:0.2.9'
