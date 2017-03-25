@@ -303,15 +303,14 @@ public class Main implements Launcher { // NO_UCD
 		else if (-1 != osName.indexOf("mac")) {
 			os = "cocoa-macosx";
 		}
-		CodeSource cs = Main.class.getProtectionDomain().getCodeSource();
-		String installlocation = cs.getLocation().toURI().toString().replaceAll("launcher\\.jar$", "");
-		System.out.println("launching FullSync... OS=" + os + "; ARCH=" + arch + "; INSTALLLOCATION=" + installlocation);
+		CodeSource cs = getClass().getProtectionDomain().getCodeSource();
+		String libDirectory = cs.getLocation().toURI().toString().replaceAll("fullsync\\.jar$", "");
 
 		ArrayList<URL> jars = new ArrayList<>();
-		jars.add(new URL(installlocation + "lib/assets.jar"));
-		jars.add(new URL(installlocation + "lib/fullsync-ui.jar"));
+		jars.add(new URL(libDirectory + "assets.jar"));
+		jars.add(new URL(libDirectory + "fullsync-ui.jar"));
 		// add correct SWT implementation to the class-loader
-		jars.add(new URL(installlocation + "lib/swt-" + os + "-" + arch + ".jar"));
+		jars.add(new URL(libDirectory + "swt-" + os + "-" + arch + ".jar"));
 
 		// instantiate an URL class-loader with the constructed class-path and load the UI
 		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Main.class.getClassLoader());
