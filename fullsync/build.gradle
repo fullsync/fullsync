@@ -6,7 +6,10 @@ dependencies {
 	compile project(':fullsync-utils')
 	compile "commons-cli:commons-cli:${project.ext.commonsCliVersion}"
 	compile "commons-net:commons-net:${project.ext.commonsNetVersion}"
-	compile "org.apache.commons:commons-vfs2:${project.ext.commonsVfsVersion}"
+	compile("org.apache.commons:commons-vfs2:${project.ext.commonsVfsVersion}") {
+		exclude group: "commons-logging"
+		exclude group: "org.apache.maven.scm"
+	}
 	compile "org.samba.jcifs:jcifs:${project.ext.sambaJcifsVersion}"
 	compile "com.jcraft:jsch:${project.ext.jcraftJschVersion}"
 	compile "org.slf4j:jcl-over-slf4j:${project.ext.slf4jVersion}"
