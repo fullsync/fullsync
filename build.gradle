@@ -23,7 +23,7 @@ subprojects {
 		commonsCliVersion = "1.2"
 		commonsNetVersion = "3.3"
 		commonsVfsVersion = "2.0"
-		sambaJcifsVersion = "1.3.3"
+		sambaJcifsVersion = "1.3.17"
 		jcraftJschVersion = "0.1.54"
 	}
 
