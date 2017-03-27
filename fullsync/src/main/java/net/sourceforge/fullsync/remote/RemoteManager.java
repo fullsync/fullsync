@@ -58,7 +58,7 @@ public class RemoteManager {
 	}
 
 	public void addProfileListChangeListener(ProfileListChangeListener listener) throws RemoteException {
-		if (listener != null) {
+		if (null != listener) {
 			RemoteProfileListChangeListener remoteListener = new RemoteProfileListChangeListener(listener);
 			remoteInterface.addProfileListChangeListener(remoteListener);
 			listenersMap.put(listener, remoteListener);
@@ -66,7 +66,7 @@ public class RemoteManager {
 	}
 
 	public void removeProfileListChangeListener(ProfileListChangeListener listener) throws RemoteException {
-		if (listener != null) {
+		if (null != listener) {
 			RemoteProfileListChangeListener remoteListener = (RemoteProfileListChangeListener) listenersMap.remove(listener);
 			remoteInterface.removeProfileListChangeListener(remoteListener);
 		}

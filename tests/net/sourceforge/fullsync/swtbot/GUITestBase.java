@@ -82,7 +82,7 @@ public abstract class GUITestBase {
 		while (System.currentTimeMillis() < endTime) {
 			for (Thread thread : threads) {
 				display = Display.findDisplay(thread);
-				if (display != null) {
+				if (null != display) {
 					return display;
 				}
 			}

@@ -63,7 +63,7 @@ class AbstractFile implements File {
 	@Override
 	public String getPath() {
 		String parentPath = null;
-		if (parent != null) {
+		if (null != parent) {
 			parentPath = parent.getPath();
 		}
 		return null != parentPath ? parentPath + "/" + name : name;
@@ -133,7 +133,7 @@ class AbstractFile implements File {
 
 	@Override
 	public File getChild(final String name) throws IOException {
-		if (children == null) {
+		if (null == children) {
 			refresh();
 		}
 		return children.get(name);
@@ -141,7 +141,7 @@ class AbstractFile implements File {
 
 	@Override
 	public Collection<File> getChildren() throws IOException {
-		if (children == null) {
+		if (null == children) {
 			refresh();
 		}
 		return children.values();
@@ -149,18 +149,11 @@ class AbstractFile implements File {
 
 	@Override
 	public boolean makeDirectory() throws IOException {
-		if (isDirectory()) {
-			if (getConnection().makeDirectory(this)) {
-				exists = true;
-				return true;
-			}
-			else {
-				return false;
-			}
+		if (isDirectory() && getConnection().makeDirectory(this)) {
+			exists = true;
+			return true;
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 
 	@Override
@@ -168,23 +161,19 @@ class AbstractFile implements File {
 		if (isFile()) {
 			return getConnection().readFile(this);
 		}
-		else {
-			return null;
-		}
+		return null;
 	}
 
 	@Override
 	public OutputStream getOutputStream() throws IOException {
+		OutputStream out = null;
 		if (isFile()) {
-			OutputStream out = getConnection().writeFile(this);
-			if (out != null) {
+			out = getConnection().writeFile(this);
+			if (null != out) {
 				this.exists = true;
 			}
-			return out;
 		}
-		else {
-			return null;
-		}
+		return out;
 	}
 
 	@Override
@@ -193,9 +182,7 @@ class AbstractFile implements File {
 			this.exists = false;
 			return true;
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 
 	@Override
@@ -203,7 +190,7 @@ class AbstractFile implements File {
 		if (isDirectory()) {
 			// FIXME be aware of deleting entries that may be referenced by overlaying buffer
 			Map<String, File> newChildren = getConnection().getChildren(this);
-			if (children != null) {
+			if (null != children) {
 				for (File n : children.values()) {
 					if (!newChildren.containsKey(n.getName())) {
 						if (n.exists()) {

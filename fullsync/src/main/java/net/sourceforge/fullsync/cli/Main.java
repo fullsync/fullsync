@@ -253,7 +253,7 @@ public class Main implements Launcher { // NO_UCD
 		profileManager.addSchedulerListener(profile -> {
 			Synchronizer sync = fullsync.getSynchronizer();
 			TaskTree tree = sync.executeProfile(fullsync, profile, false);
-			if (tree == null) {
+			if (null == tree) {
 				profile.setLastError(1, "An error occured while comparing filesystems.");
 			}
 			else {

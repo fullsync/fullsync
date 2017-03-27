@@ -108,7 +108,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	@Override
 	public String getTitle() {
 		String title = Messages.getString("ProfileDetailsPage.Profile"); //$NON-NLS-1$
-		if (this.profile != null) {
+		if (null != profile) {
 			title = title + " " + profile.getName(); //$NON-NLS-1$
 		}
 		return title;
@@ -175,7 +175,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			});
 			comboType.select(0);
 
-			if (this.profile == null) {
+			if (null == this.profile) {
 				return;
 			}
 
@@ -192,7 +192,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				dstConnectionConfiguration.setBuffered("syncfiles".equals(profile.getDestination().getParameter("bufferStrategy"))); //$NON-NLS-1$
 			}
 
-			if ((profile.getSynchronizationType() != null) && (profile.getSynchronizationType().length() > 0)) {
+			if ((null != profile.getSynchronizationType()) && (profile.getSynchronizationType().length() > 0)) {
 				comboType.setText(profile.getSynchronizationType());
 			}
 
@@ -200,23 +200,16 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			buttonEnabled.setSelection(profile.isEnabled());
 
 			RuleSetDescriptor ruleSetDescriptor = profile.getRuleSet();
-			filter = null;
 
 			SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor) ruleSetDescriptor;
 			syncSubsButton.setSelection(simpleDesc.isSyncSubDirs());
-			FileFilter fileFilter = simpleDesc.getFileFilter();
-			filter = fileFilter;
-			if (fileFilter != null) {
-				textFilterDescription.setText(fileFilter.toString());
-			}
-			else {
-				textFilterDescription.setText("");
-			}
+			filter = simpleDesc.getFileFilter();
+			textFilterDescription.setText(null != filter ? filter.toString() : "");
 			boolean useFilter = simpleDesc.isUseFilter();
 			buttonUseFileFilter.setSelection(useFilter);
 			enableFilterControls(useFilter);
 			FileFilterTree fileFilterTree = simpleDesc.getFileFilterTree();
-			if (fileFilterTree != null) {
+			if (null != fileFilterTree) {
 				itemsMap = fileFilterTree.getItemsMap();
 			}
 		}
@@ -394,7 +387,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				FileFilterPage dialog = new FileFilterPage(m_parent.getShell(), filter);
 				dialog.show();
 				FileFilter newfilter = dialog.getFileFilter();
-				if (newfilter != null) {
+				if (null != newfilter) {
 					filter = newfilter;
 					textFilterDescription.setText(filter.toString());
 				}
@@ -443,7 +436,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				TreeItem item = (TreeItem) evt.item;
 				TreeItem[] childrens = item.getItems();
 				for (TreeItem children : childrens) {
-					if (children.getData(EXPANDED_KEY) == null) {
+					if (null == children.getData(EXPANDED_KEY)) {
 						File file = (File) children.getData();
 						try {
 							addChildren(file, children);
@@ -486,7 +479,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				FileFilterPage dialog = new FileFilterPage(m_parent.getShell(), currentItemFilter);
 				dialog.show();
 				FileFilter newfilter = dialog.getFileFilter();
-				if (newfilter != null) {
+				if (null != newfilter) {
 					selectedItem.setData(FILTER_KEY, newfilter);
 					treeItemsWithFilter.add(selectedItem);
 					File file = (File) selectedItem.getData();
@@ -601,9 +594,9 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			return false;
 		}
 
-		if ((profile == null) || !textProfileName.getText().equals(profile.getName())) {
+		if ((null == profile) || !textProfileName.getText().equals(profile.getName())) {
 			Profile pr = fullsync.getProfileManager().getProfile(textProfileName.getText());
-			if (pr != null) {
+			if (null != pr) {
 				MessageBox mb = new MessageBox(m_parent.getShell(), SWT.ICON_ERROR);
 				mb.setText(Messages.getString("ProfileDetails.Duplicate_Entry")); //$NON-NLS-1$
 				mb.setMessage(Messages.getString("ProfileDetails.Profile_already_exists")); //$NON-NLS-1$
@@ -615,7 +608,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), filter, buttonUseFileFilter.getSelection(),
 				getFileFilterTree());
 
-		if (profile == null) {
+		if (null == profile) {
 			profile = new Profile(textProfileName.getText(), src, dst, ruleSetDescriptor);
 			profile.setSynchronizationType(comboType.getText());
 			profile.setDescription(textProfileDescription.getText());
@@ -663,7 +656,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private void treeTabsWidgetSelected(SelectionEvent evt) {
 		if (evt.item == tabSubDirs) {
 			final ConnectionDescription src = getConnectionDescription(srcConnectionConfiguration);
-			if ((sourceSite == null) || (src == null) || !src.getUri().toString().equals(lastSourceLoaded)) {
+			if ((null == sourceSite) || (null == src) || !src.getUri().toString().equals(lastSourceLoaded)) {
 				directoryTree.removeAll();
 				TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
 				loadingIem.setText("Loading source dir...");
@@ -709,7 +702,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	}
 
 	private void closeSourceSite() {
-		if (sourceSite != null) {
+		if (null != sourceSite) {
 			try {
 				sourceSite.close();
 				sourceSite = null;

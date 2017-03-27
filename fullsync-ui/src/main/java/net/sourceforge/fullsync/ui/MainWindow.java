@@ -95,7 +95,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		pm.addSchedulerListener(profile -> {
 			Synchronizer sync = guiController.getSynchronizer();
 			TaskTree tree = sync.executeProfile(guiController.getFullSync(), profile, false);
-			if (tree == null) {
+			if (null == tree) {
 				profile.setLastError(1, Messages.getString("MainWindow.Error_Comparing_Filesystems")); //$NON-NLS-1$
 			}
 			else {
@@ -467,21 +467,19 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 
 	@Override
 	public void runProfile(final Profile p, final boolean interactive) {
-		if (p == null) {
-			return;
-		}
-
-		if (!interactive) {
-			MessageBox mb = new MessageBox(getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-			mb.setText(Messages.getString("MainWindow.Confirmation")); //$NON-NLS-1$
-			mb.setMessage("You're about to start the profile in non-interactive mode.\n Are you sure?");
-			if (mb.open() != SWT.YES) {
-				return;
+		if (null == p) {
+			if (!interactive) {
+				MessageBox mb = new MessageBox(getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+				mb.setText(Messages.getString("MainWindow.Confirmation")); //$NON-NLS-1$
+				mb.setMessage("You're about to start the profile in non-interactive mode.\n Are you sure?");
+				if (mb.open() != SWT.YES) {
+					return;
+				}
 			}
-		}
 
-		Thread worker = new Thread(() -> doRunProfile(p, interactive));
-		worker.start();
+			Thread worker = new Thread(() -> doRunProfile(p, interactive));
+			worker.start();
+		}
 	}
 
 	private synchronized void doRunProfile(Profile p, boolean interactive) {
@@ -503,7 +501,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 				statusDelayString = Messages.getString("MainWindow.Starting_Profile") + p.getName() + "..."; //$NON-NLS-1$ //$NON-NLS-2$
 				statusLine.setMessage(statusDelayString);
 				t = guiController.getSynchronizer().executeProfile(guiController.getFullSync(), p, interactive);
-				if (t == null) {
+				if (null == t) {
 					p.setLastError(1, Messages.getString("MainWindow.Error_Comparing_Filesystems")); //$NON-NLS-1$
 					statusLine.setMessage(Messages.getString("MainWindow.Error_Processing_Profile", p.getName())); //$NON-NLS-1$
 				}
@@ -518,7 +516,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 				statusDelayTimer.cancel();
 				guiController.showBusyCursor(false);
 			}
-			if (t != null) {
+			if (null != t) {
 				TaskDecisionList.show(guiController, p, t, interactive);
 			}
 
@@ -541,7 +539,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 
 	@Override
 	public void deleteProfile(final Profile p) {
-		if (p != null) {
+		if (null != p) {
 			ProfileManager profileManager = guiController.getProfileManager();
 
 			MessageBox mb = new MessageBox(getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);

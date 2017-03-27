@@ -75,7 +75,7 @@ public class ImageRepository {
 
 	public Image getImage(String imageName) {
 		Image img = cache.get(imageName);
-		if (img == null) {
+		if (null == img) {
 			img = new Image(display, getClass().getClassLoader().getResourceAsStream("net/sourceforge/fullsync/images/" + imageName));
 			cache.put(imageName, img);
 		}

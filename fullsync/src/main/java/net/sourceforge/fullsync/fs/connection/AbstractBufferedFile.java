@@ -55,7 +55,7 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 
 	@Override
 	public File getUnbuffered() throws IOException {
-		if (unbuffered == null) {
+		if (null == unbuffered) {
 			refreshReference();
 		}
 		return unbuffered;
@@ -136,7 +136,7 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	@Override
 	public void refreshReference() throws IOException {
 		unbuffered = getParent().getUnbuffered().getChild(getName());
-		if (unbuffered == null) {
+		if (null == unbuffered) {
 			unbuffered = getParent().getUnbuffered().createChild(getName(), directory);
 		}
 	}

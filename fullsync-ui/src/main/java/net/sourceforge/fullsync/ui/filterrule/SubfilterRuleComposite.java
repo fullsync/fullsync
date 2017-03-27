@@ -47,7 +47,7 @@ class SubfilterRuleComposite extends RuleComposite {
 		GridData textValueData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		textValueData.horizontalSpan = 3;
 		textValue.setLayoutData(textValueData);
-		if (filterValue != null) {
+		if (null != filterValue) {
 			textValue.setText(filterValue.toString());
 		}
 		textValue.setEditable(false);
@@ -60,7 +60,7 @@ class SubfilterRuleComposite extends RuleComposite {
 				FileFilterPage dialog = new FileFilterPage(getShell(), filterValue.getValue());
 				dialog.show();
 				FileFilter newfilter = dialog.getFileFilter();
-				if (newfilter != null) {
+				if (null != newfilter) {
 					filterValue.setValue(newfilter);
 					textValue.setText(filterValue.toString());
 					textValue.setToolTipText(filterValue.toString());

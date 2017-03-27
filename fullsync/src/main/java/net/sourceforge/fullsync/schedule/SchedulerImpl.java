@@ -109,7 +109,7 @@ public class SchedulerImpl implements Scheduler, Runnable {
 
 	@Override
 	public void refresh() {
-		if (worker != null) {
+		if (null != worker) {
 			worker.interrupt();
 		}
 	}
@@ -123,7 +123,7 @@ public class SchedulerImpl implements Scheduler, Runnable {
 				logger.debug("searching for next task after " + now);
 			}
 			ScheduleTask task = scheduleSource.getNextScheduleTask();
-			if (task == null) {
+			if (null == task) {
 				logger.info("could not find a scheduled task, aborting");
 				break;
 			}

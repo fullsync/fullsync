@@ -120,7 +120,7 @@ public class FileFilterPage extends WizardDialog {
 			scrolledComposite1.setLayoutData(scrolledComposite1LData);
 			scrolledComposite1.setAlwaysShowScrollBars(false);
 
-			if (oldFileFilter != null) {
+			if (null != oldFileFilter) {
 				comboMatchType.select(oldFileFilter.getMatchType());
 				comboFilterType.select(oldFileFilter.getFilterType());
 				buttonAppliesToDir.setSelection(oldFileFilter.appliesToDirectories());

@@ -66,7 +66,7 @@ class FileSpecificComposite extends ProtocolSpecificComposite {
 			d.setFilterPath(desc.getUri().getPath());
 		}
 		String dir = d.open();
-		if (dir != null) {
+		if (null != dir) {
 			File f = new File(dir);
 			try {
 				setPath(f.getCanonicalPath());

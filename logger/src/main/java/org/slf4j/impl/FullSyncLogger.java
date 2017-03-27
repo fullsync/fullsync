@@ -215,7 +215,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 		buf.append(LINE_SEPARATOR);
 
 		System.err.print(buf.toString());
-		if (t != null) {
+		if (null != t) {
 			t.printStackTrace(System.err);
 		}
 	}

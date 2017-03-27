@@ -52,7 +52,7 @@ public class FileFilterManager {
 	public Element serializeRule(FileFilterRule fileFilterRule, Document document, String elementName) {
 		Element ruleElement = document.createElement(elementName);
 
-		String ruleType = (fileFilterRule != null) ? fileFilterRule.getRuleType() : null;
+		String ruleType = (null != fileFilterRule) ? fileFilterRule.getRuleType() : null;
 
 		ruleElement.setAttribute("ruletype", ruleType);
 		serializeRuleAttributes(fileFilterRule, ruleElement);

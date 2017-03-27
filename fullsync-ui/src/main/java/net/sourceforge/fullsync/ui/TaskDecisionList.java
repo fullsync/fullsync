@@ -184,7 +184,7 @@ public class TaskDecisionList extends Composite {
 
 	protected void drawSide(GC g, Task t, Action a, Location location) {
 		File n;
-		if (t == null) {
+		if (null == t) {
 			n = null;
 		}
 		else if (location == Location.Source) {
@@ -196,7 +196,7 @@ public class TaskDecisionList extends Composite {
 
 		int x = location == Location.Source ? 2 : (2 * 16) + 2;
 
-		if (n == null) {
+		if (null == n) {
 			g.drawImage(nodeUndefined, x, 0);
 		}
 		else if (n.exists()) {
@@ -211,7 +211,7 @@ public class TaskDecisionList extends Composite {
 
 		if ((a.getLocation() == location) || (a.getLocation() == Location.Both)) {
 			Image actionImage = actionImages.get(a.getType());
-			if (actionImage != null) {
+			if (null != actionImage) {
 				g.drawImage(actionImage, x, 0);
 			}
 			if (location == Location.Source) {
@@ -245,7 +245,7 @@ public class TaskDecisionList extends Composite {
 		int hash = 0;
 
 		// using 5 bits for files
-		if (t == null) {
+		if (null == t) {
 			hash |= 1;
 		}
 		else {
@@ -289,7 +289,7 @@ public class TaskDecisionList extends Composite {
 		Image image;
 		Integer key = calcTaskImageHash(t, a);
 		image = taskImages.get(key);
-		if (image == null) {
+		if (null == image) {
 			image = buildTaskImage(t, a);
 			taskImages.put(key, image);
 		}
@@ -420,39 +420,35 @@ public class TaskDecisionList extends Composite {
 				Action action = possibleActions[iPosAction];
 				boolean found = false;
 
-				if (action == null) {
-					continue;
-				}
-
-				// check whether action is also supported by this task
-				for (Action a : actions) {
-					if ((a.getType() == action.getType()) && (a.getLocation() == action.getLocation())
-							&& a.getExplanation().equals(action.getExplanation())) {
-						// the action exists
-						found = true;
-						break;
+				if (null != action) {
+					// check whether action is also supported by this task
+					for (Action a : actions) {
+						if ((a.getType() == action.getType()) && (a.getLocation() == action.getLocation())
+								&& a.getExplanation().equals(action.getExplanation())) {
+							// the action exists
+							found = true;
+							break;
+						}
 					}
-				}
 
-				if (!found) {
-					// invalidate action that is not supported by all selected tasks
-					possibleActions[iPosAction] = null;
+					if (!found) {
+						// invalidate action that is not supported by all selected tasks
+						possibleActions[iPosAction] = null;
+					}
 				}
 			}
 		}
 
 		Task referenceTask = taskList.length == 1 ? taskList[0] : null;
 		for (Action action : possibleActions) {
-			if (action == null) {
-				continue;
+			if (null != action) {
+				Image image = getTaskImage(referenceTask, action);
+				mi = new MenuItem(m, SWT.NULL);
+				mi.setImage(image);
+				mi.setText(action.getType().toString() + " - " + action.getExplanation()); //$NON-NLS-1$
+				mi.setData(action);
+				mi.addListener(SWT.Selection, selListener);
 			}
-
-			Image image = getTaskImage(referenceTask, action);
-			mi = new MenuItem(m, SWT.NULL);
-			mi.setImage(image);
-			mi.setText(action.getType().toString() + " - " + action.getExplanation()); //$NON-NLS-1$
-			mi.setData(action);
-			mi.addListener(SWT.Selection, selListener);
 		}
 
 		m.setLocation(tableLogLines.toDisplay(x, y));

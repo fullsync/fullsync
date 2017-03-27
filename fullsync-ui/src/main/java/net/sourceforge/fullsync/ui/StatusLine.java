@@ -64,7 +64,7 @@ public class StatusLine extends Composite {
 	public void setMessage(final String message) {
 		getDisplay().asyncExec(() -> {
 			labelIcon.setImage(null);
-			labelMessage.setText(message == null ? "" : message); //$NON-NLS-1$
+			labelMessage.setText(null == message ? "" : message); //$NON-NLS-1$
 		});
 	}
 

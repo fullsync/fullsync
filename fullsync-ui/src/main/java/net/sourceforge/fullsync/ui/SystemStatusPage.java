@@ -151,7 +151,7 @@ public class SystemStatusPage extends WizardDialog {
 	public void updateView() {
 		if (!content.isDisposed()) {
 			Display display = getDisplay();
-			if ((display == null) || display.isDisposed()) {
+			if ((null == display) || display.isDisposed()) {
 				timer.cancel();
 				return;
 			}

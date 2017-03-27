@@ -74,7 +74,7 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 	}
 
 	public void populateProfileList() {
-		if (profileManager != null) {
+		if (null != profileManager) {
 			tableProfiles.clearAll();
 			tableProfiles.setItemCount(0);
 			for (Profile p : profileManager.getProfiles()) {
@@ -110,11 +110,11 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 
 	@Override
 	public void setProfileManager(ProfileManager profileManager) {
-		if (this.profileManager != null) {
+		if (null != this.profileManager) {
 			profileManager.removeProfilesChangeListener(this);
 		}
 		this.profileManager = profileManager;
-		if (this.profileManager != null) {
+		if (null != this.profileManager) {
 			profileManager.addProfilesChangeListener(this);
 		}
 		populateProfileList();

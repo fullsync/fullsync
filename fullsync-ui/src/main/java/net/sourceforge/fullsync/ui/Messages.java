@@ -47,7 +47,7 @@ public class Messages {
 
 	public static String getString(final String key) {
 		String value = '!' + key + '!';
-		if (instance == null) {
+		if (null == instance) {
 			instance = new Messages();
 		}
 

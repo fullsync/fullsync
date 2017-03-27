@@ -231,7 +231,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	}
 
 	private void updateItem(NiceListViewItem item, Profile profile) {
-		if (profile.isEnabled() && (profile.getSchedule() != null)) {
+		if (profile.isEnabled() && (null != profile.getSchedule())) {
 			// scheduled
 			if (profile.getLastErrorLevel() > 0) {
 				item.setImage(imageProfileErrorScheduled);
@@ -257,10 +257,10 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		}
 		else {
 			String desc = profile.getDescription();
-			if ((desc != null) && !desc.isEmpty()) {
+			if ((null != desc) && !desc.isEmpty()) {
 				item.setStatusText(desc);
 			}
-			else if (profile.isEnabled() && (profile.getSchedule() != null)) {
+			else if (profile.isEnabled() && (null != profile.getSchedule())) {
 				item.setStatusText(profile.getNextUpdateText());
 			}
 			else {
@@ -270,7 +270,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	}
 
 	private void populateProfileList() {
-		if (getProfileManager() != null) {
+		if (null != getProfileManager()) {
 			profilesToItems = new HashMap<>();
 			setItemsMenu(null);
 			profileList.clear();
@@ -290,7 +290,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 				}
 				catch (Exception e) {
 					e.printStackTrace();
-					if (item != null) {
+					if (null != item) {
 						item.dispose();
 					}
 				}
@@ -302,22 +302,20 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	@Override
 	public Profile getSelectedProfile() {
 		ContentComposite content = (ContentComposite) profileList.getSelectedContent();
-		if (content != null) {
+		if (null != content) {
 			return content.getProfile();
 		}
-		else {
-			return null;
-		}
+		return null;
 	}
 
 	@Override
 	public void setProfileManager(ProfileManager profileManager) {
-		if (this.profileManager != null) {
+		if (null != this.profileManager) {
 			profileManager.removeProfilesChangeListener(this);
 
 		}
 		this.profileManager = profileManager;
-		if (this.profileManager != null) {
+		if (null != this.profileManager) {
 			profileManager.addProfilesChangeListener(this);
 		}
 		populateProfileList();
@@ -359,12 +357,11 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	@Override
 	public void profileChanged(final Profile p) {
 		getDisplay().syncExec(() -> {
-			Object composite = profilesToItems.get(p);
-			if (composite == null) {
+			NiceListViewItem item = profilesToItems.get(p);
+			if (null == item) {
 				populateProfileList();
 			}
 			else {
-				NiceListViewItem item = (NiceListViewItem) composite;
 				ContentComposite content = (ContentComposite) item.getContent();
 				updateItem(item, content.getProfile());
 				content.updateComponent();

@@ -57,7 +57,7 @@ public class FileSystemManager {
 
 		FileSystem fs = getFilesystem(scheme);
 
-		if (fs == null) {
+		if (null == fs) {
 			// TODO maybe we should test and correct this in profile dialog !?
 			// no fs found, test for native path
 			File f = new File(url.toString()); // ignore query as local won't need query
@@ -89,7 +89,7 @@ public class FileSystemManager {
 			p = new SyncFilesBufferingProvider();
 		}
 
-		if (p == null) {
+		if (null == p) {
 			throw new FileSystemException("BufferStrategy '" + bufferStrategy + "' not found");
 		}
 

@@ -274,7 +274,7 @@ class FileObjectChooser {
 			if (data.getType().hasContent()) {
 				FileContent content = data.getContent();
 				String contentType = content.getContentInfo().getContentType();
-				if (contentType != null) {
+				if (null != contentType) {
 					type += " (" + contentType + ")";
 				}
 				item.setText(1, String.valueOf(content.getSize()));
@@ -305,7 +305,7 @@ class FileObjectChooser {
 	}
 
 	private void updateSelectedFileObject() throws FileSystemException {
-		if (selectedFileObject != null) {
+		if (null != selectedFileObject) {
 			textFilename.setText(selectedFileObject.getName().getBaseName());
 		}
 		else {
@@ -315,7 +315,7 @@ class FileObjectChooser {
 
 	public void setBaseFileObject(final FileObject _base) {
 		baseFileObject = _base;
-		if (activeFileObject == null) {
+		if (null == activeFileObject) {
 			activeFileObject = baseFileObject;
 		}
 		try {
@@ -330,7 +330,7 @@ class FileObjectChooser {
 
 	private void setActiveFileObject(final FileObject _active) throws FileSystemException {
 		activeFileObject = _active;
-		if (dialogShell != null) {
+		if (null != dialogShell) {
 			updateActiveFileObject();
 		}
 	}
@@ -341,7 +341,7 @@ class FileObjectChooser {
 
 	public void setSelectedFileObject(final FileObject selected) throws FileSystemException {
 		this.selectedFileObject = selected;
-		if (dialogShell != null) {
+		if (null != dialogShell) {
 			updateSelectedFileObject();
 		}
 	}
@@ -349,7 +349,7 @@ class FileObjectChooser {
 	private void toolItemParentWidgetSelected() {
 		try {
 			FileObject parent = activeFileObject.getParent();
-			if (parent != null) {
+			if (null != parent) {
 				setActiveFileObject(parent);
 			}
 		}

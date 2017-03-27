@@ -46,7 +46,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 	static {
 		JSch.setLogger(new SFTPLogger());
 		String sshDirPath = System.getProperty("vfs.sftp.sshdir");
-		if (sshDirPath == null) {
+		if (null == sshDirPath) {
 			sshDirPath = System.getProperty("user.home") + File.separator + ".ssh";
 		}
 		File sshDir = new File(sshDirPath);

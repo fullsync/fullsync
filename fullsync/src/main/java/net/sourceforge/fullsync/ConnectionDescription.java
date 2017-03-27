@@ -46,29 +46,33 @@ public class ConnectionDescription implements Serializable {
 	public Element serialize(String name, Document doc) {
 		Element elem = doc.createElement(name);
 		elem.setAttribute("uri", uri.toString());
-		for (String key : parameters.keySet()) {
-			if (PARAMETER_USERNAME.equals(key)) {
-				elem.setAttribute(PARAMETER_USERNAME, parameters.get(key));
-			}
-			else if ("bufferStrategy".equals(key)) {
-				elem.setAttribute("buffer", parameters.get(key));
-			}
-			else {
+		for (Map.Entry<String, String> entry : parameters.entrySet()) {
+			switch(entry.getKey()) {
+			case PARAMETER_USERNAME:
+				elem.setAttribute(PARAMETER_USERNAME, entry.getValue());
+				break;
+			case "bufferStrategy":
+				elem.setAttribute("buffer", entry.getValue());
+				break;
+			default:
 				Element p = doc.createElement("Param");
-				p.setAttribute("name", key);
-				p.setAttribute("value", parameters.get(key));
+				p.setAttribute("name", entry.getKey());
+				p.setAttribute("value", entry.getValue());
 				elem.appendChild(p);
+				break;
 			}
 		}
-		for (String key : secretParameters.keySet()) {
-			if (PARAMETER_PASSWORD.equals(key)) {
-				elem.setAttribute(PARAMETER_PASSWORD, secretParameters.get(key));
-			}
-			else {
+		for (Map.Entry<String, String> entry : secretParameters.entrySet()) {
+			switch(entry.getKey()) {
+			case PARAMETER_PASSWORD:
+				elem.setAttribute(PARAMETER_PASSWORD, entry.getValue());
+				break;
+			default:
 				Element p = doc.createElement("SecretParam");
-				p.setAttribute("name", key);
-				p.setAttribute("value", secretParameters.get(key));
+				p.setAttribute("name", entry.getKey());
+				p.setAttribute("value", entry.getValue());
 				elem.appendChild(p);
+				break;
 			}
 		}
 		return elem;

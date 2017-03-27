@@ -25,7 +25,7 @@ public class Crypt {
 	private static String m_key = "FULLSYNC1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	public static String encrypt(String str) {
-		if (str == null) {
+		if (null == str) {
 			return null;
 		}
 
@@ -42,7 +42,7 @@ public class Crypt {
 	}
 
 	public static String decrypt(String str) {
-		if (str == null) {
+		if (null == str) {
 			return null;
 		}
 

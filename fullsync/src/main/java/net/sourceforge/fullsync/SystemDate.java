@@ -31,7 +31,7 @@ public class SystemDate {
 	}
 
 	public static SystemDate getInstance() {
-		if (instance == null) {
+		if (null == instance) {
 			instance = new SystemDate();
 		}
 		return instance;

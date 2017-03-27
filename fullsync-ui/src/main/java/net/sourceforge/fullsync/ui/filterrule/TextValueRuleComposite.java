@@ -47,7 +47,7 @@ class TextValueRuleComposite extends RuleComposite {
 			value.setValue(textValue.getText());
 			valueChanged(new ValueChangedEvent(value));
 		});
-		if (value != null) {
+		if (null != value) {
 			textValue.setText(value.toString());
 		}
 	}

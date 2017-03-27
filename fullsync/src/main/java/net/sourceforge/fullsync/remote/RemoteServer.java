@@ -160,7 +160,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	@Override
 	public void performActions(TaskTree tree, final RemoteTaskFinishedListenerInterface remoteListener) throws RemoteException {
 		TaskFinishedListener listener = null;
-		if (remoteListener != null) {
+		if (null != remoteListener) {
 			listener = event -> {
 				try {
 					remoteListener.taskFinished(event);
@@ -195,7 +195,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 		// Check for added and modified profiles
 		for (Profile profile : profiles) {
 			Profile p = fullsync.getProfileManager().getProfile(profile.getName());
-			if (p == null) {
+			if (null == p) {
 				fullsync.getProfileManager().addProfile(profile);
 			}
 			else {

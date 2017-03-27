@@ -93,7 +93,7 @@ public class ImportProfilesPage extends WizardDialog {
 			fd.setFilterIndex(0);
 			fd.setFilterPath(textPath.getText());
 			String file = fd.open();
-			if (file != null) {
+			if (null != file) {
 				File f = new File(file);
 				try {
 					textPath.setText(f.getCanonicalPath());

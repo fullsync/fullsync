@@ -62,7 +62,7 @@ public class BlockBuffer implements ExecutionBuffer {
 
 	@Override
 	public void load() {
-		if (buffer == null) {
+		if (null == buffer) {
 			buffer = new byte[maxSize];
 			entries = new Entry[maxEntries];
 		}
@@ -82,13 +82,13 @@ public class BlockBuffer implements ExecutionBuffer {
 			IOException ioe = null;
 			try {
 				OutputStream out = desc.getOutputStream();
-				if (out != null) {
+				if (null != out) {
 					out.write(buffer, e.start, e.length);
 				}
 				if ((e.internalSegment & Segment.LAST) > 0) {
 					desc.finishWrite();
 					String opDesc = desc.getOperationDescription();
-					if (opDesc != null) {
+					if (null != opDesc) {
 						logger.info(opDesc);
 					}
 				}

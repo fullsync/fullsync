@@ -274,7 +274,7 @@ public abstract class WizardDialog {
 	}
 
 	public void addWizardDialogListener(WizardDialogListener listener) {
-		if ((listener != null) && (!dialogListeners.contains(listener))) {
+		if ((null != listener) && (!dialogListeners.contains(listener))) {
 			dialogListeners.add(listener);
 		}
 	}

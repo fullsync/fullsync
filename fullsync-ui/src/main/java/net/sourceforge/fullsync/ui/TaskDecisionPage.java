@@ -96,7 +96,7 @@ public class TaskDecisionPage extends WizardDialog {
 		comboFilter.addModifyListener(e -> {
 			if (!processing) {
 				list.setOnlyChanges(comboFilter.getSelectionIndex() == 1);
-				if (taskTree != null) {
+				if (null != taskTree) {
 					list.rebuildActionList();
 				}
 			}
@@ -120,7 +120,7 @@ public class TaskDecisionPage extends WizardDialog {
 		list.setLayoutData(listLayoutData);
 
 		list.setOnlyChanges(true);
-		if (taskTree != null) {
+		if (null != taskTree) {
 			list.rebuildActionList();
 		}
 	}
@@ -190,7 +190,7 @@ public class TaskDecisionPage extends WizardDialog {
 						item = list.getTableItemForTask(task);
 						// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item
 						// the item is colored with the "successful" color.
-						if (item != null) {
+						if (null != item) {
 							if (event.isSuccessful()) {
 								item.setBackground(colorFinishedSuccessful);
 							}

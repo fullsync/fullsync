@@ -44,7 +44,7 @@ class DateValueRuleComposite extends RuleComposite {
 		textValue = new Text(this, SWT.BORDER);
 		textValue.setEditable(false);
 		textValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		if (value != null) {
+		if (null != value) {
 			textValue.setText(dateFormat.format(value.getDate()));
 		}
 

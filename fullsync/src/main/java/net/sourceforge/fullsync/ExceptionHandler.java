@@ -34,13 +34,13 @@ public abstract class ExceptionHandler {
 	}
 
 	public static void reportException(Throwable exception) {
-		if (singleton != null) {
+		if (null != singleton) {
 			singleton.doReportException("An exception occured:\n" + exception.getMessage(), exception);
 		}
 	}
 
 	public static void reportException(String message, Throwable exception) {
-		if (singleton != null) {
+		if (null != singleton) {
 			singleton.doReportException(message, exception);
 		}
 	}

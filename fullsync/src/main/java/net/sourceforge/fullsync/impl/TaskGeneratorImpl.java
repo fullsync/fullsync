@@ -99,7 +99,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 
 		for (File sfile : srcFiles) {
 			File dfile = dst.getChild(sfile.getName());
-			if (dfile == null) {
+			if (null == dfile) {
 				dfile = dst.createChild(sfile.getName(), sfile.isDirectory());
 			}
 			else {
@@ -111,7 +111,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 
 		for (File dfile : dstFiles) {
 			File sfile = src.getChild(dfile.getName());
-			if (sfile == null) {
+			if (null == sfile) {
 				sfile = src.createChild(dfile.getName(), dfile.isDirectory());
 			}
 

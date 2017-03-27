@@ -54,7 +54,7 @@ public class FullSyncLoggerFactory implements ILoggerFactory {
 		// protect against concurrent access of the loggerMap
 		synchronized (this) {
 			slogger = loggerMap.get(name);
-			if (slogger == null) {
+			if (null == slogger) {
 				slogger = new FullSyncLogger(name);
 				loggerMap.put(name, slogger);
 			}

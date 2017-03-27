@@ -41,7 +41,7 @@ public class RemoteController {
 	private Registry registry;
 
 	public static RemoteController getInstance() {
-		if (instance == null) {
+		if (null == instance) {
 			instance = new RemoteController();
 		}
 		return instance;

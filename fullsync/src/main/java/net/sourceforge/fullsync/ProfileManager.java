@@ -157,8 +157,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	public void disconnectRemote() {
-
-		if (remoteManager != null) {
+		if (null != remoteManager) {
 			try {
 				remoteManager.removeProfileListChangeListener(remoteListener);
 				remoteManager.removeSchedulerChangeListener(this);
@@ -261,7 +260,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	public void startScheduler() {
-		if (remoteManager != null) {
+		if (null != remoteManager) {
 			remoteManager.startTimer();
 		}
 		else {
@@ -270,7 +269,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	public void stopScheduler() {
-		if (remoteManager != null) {
+		if (null != remoteManager) {
 			remoteManager.stopTimer();
 		}
 		else {
@@ -279,7 +278,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	public boolean isSchedulerEnabled() {
-		if (remoteManager != null) {
+		if (null != remoteManager) {
 			return remoteManager.isSchedulerEnabled();
 		}
 		return scheduler.isEnabled();
@@ -293,7 +292,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 
 		for (Profile p : profiles) {
 			Schedule s = p.getSchedule();
-			if (p.isEnabled() && (s != null)) {
+			if (p.isEnabled() && (null != s)) {
 				long o = s.getNextOccurrence(now);
 				if (nextTime > o) {
 					nextTime = o;
@@ -302,7 +301,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 			}
 		}
 
-		if (nextProfile != null) {
+		if (null != nextProfile) {
 			return new ProfileManagerSchedulerTask(nextProfile, nextTime);
 		}
 		return null;
@@ -366,7 +365,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 
 	public void save() {
 		try {
-			if (remoteManager != null) {
+			if (null != remoteManager) {
 				remoteManager.removeProfileListChangeListener(remoteListener);
 				remoteManager.save(profiles.toArray(new Profile[0]));
 				remoteManager.addProfileListChangeListener(remoteListener);

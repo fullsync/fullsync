@@ -139,7 +139,7 @@ public class NiceListView extends Composite implements Listener {
 	}
 
 	public Composite getSelectedContent() {
-		if (selected == null) {
+		if (null == selected) {
 			return null;
 		}
 		return selected.getContent();
@@ -163,7 +163,7 @@ public class NiceListView extends Composite implements Listener {
 
 	@Override
 	public boolean setFocus() {
-		if (selected != null) {
+		if (null != selected) {
 			selected.forceFocus();
 			return true;
 		}

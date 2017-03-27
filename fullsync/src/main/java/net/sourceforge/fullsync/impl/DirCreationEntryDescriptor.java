@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
@@ -33,10 +34,7 @@ public class DirCreationEntryDescriptor implements EntryDescriptor {
 
 	public DirCreationEntryDescriptor(Task reference, File dst) {
 		this.reference = reference;
-		this.dst = dst;
-		if (dst == null) {
-			throw new RuntimeException("can't give me null !!");
-		}
+		this.dst = Objects.requireNonNull(dst);
 	}
 
 	@Override

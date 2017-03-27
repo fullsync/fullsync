@@ -156,7 +156,7 @@ public class FilterRuleListItem {
 			comboRuleTypes.add(ruleTypeName);
 		}
 
-		if ((ruleType == null) || ruleType.isEmpty()) {
+		if ((null == ruleType) || ruleType.isEmpty()) {
 			comboRuleTypes.select(0);
 			ruleType = getRuleTypeName(comboRuleTypes.getText());
 		}

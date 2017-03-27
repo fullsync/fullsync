@@ -179,7 +179,7 @@ public class GuiController implements Runnable {
 
 		// Close the application, but give him a chance to
 		// confirm his action first
-		if ((fullsync.getProfileManager().getNextScheduleTask() != null) && preferences.confirmExit()) {
+		if ((null != fullsync.getProfileManager().getNextScheduleTask()) && preferences.confirmExit()) {
 			MessageBox mb = new MessageBox(mainShell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
 			mb.setMessage(Messages.getString("GuiController.Do_You_Want_To_Quit") + "\n" //$NON-NLS-1$ //$NON-NLS-2$
@@ -214,19 +214,19 @@ public class GuiController implements Runnable {
 
 	public void disposeGui() {
 		ExceptionHandler.registerExceptionHandler(oldExceptionHandler);
-		if ((mainShell != null) && !mainShell.isDisposed()) {
+		if ((null != mainShell) && !mainShell.isDisposed()) {
 			mainShell.dispose();
 		}
-		if (imageRepository != null) {
+		if (null != imageRepository) {
 			imageRepository.dispose();
 		}
-		if (fontRepository != null) {
+		if (null != fontRepository) {
 			fontRepository.dispose();
 		}
-		if ((systemTrayItem != null) && !systemTrayItem.isDisposed()) {
+		if ((null != systemTrayItem) && !systemTrayItem.isDisposed()) {
 			systemTrayItem.dispose();
 		}
-		if ((display != null) && !display.isDisposed()) {
+		if ((null != display) && !display.isDisposed()) {
 			display.dispose();
 		}
 	}

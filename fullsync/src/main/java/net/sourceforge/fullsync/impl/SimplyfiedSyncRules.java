@@ -139,14 +139,14 @@ public class SimplyfiedSyncRules implements RuleSet {
 	public boolean isNodeIgnored(final File node) {
 		if (useFilter) {
 			FileFilter filterToUse = fileFilter;
-			if (fileFilterTree != null) {
+			if (null != fileFilterTree) {
 				FileFilter subFilter = fileFilterTree.getFilter(node.getPath());
-				if (subFilter != null) {
+				if (null != subFilter) {
 					filterToUse = subFilter;
 				}
 			}
 			boolean take = true;
-			if (filterToUse != null) {
+			if (null != filterToUse) {
 				take = filterToUse.match(node);
 			}
 			return !take;

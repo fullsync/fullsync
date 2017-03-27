@@ -50,7 +50,7 @@ public class NestedException extends Exception {
 
 	@Override
 	public void printStackTrace(PrintWriter out) {
-		if (ex != null) {
+		if (null != ex) {
 			out.println(this.toString());
 			out.println("nested exception: ");
 			ex.printStackTrace(out);

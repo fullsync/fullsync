@@ -50,26 +50,22 @@ public abstract class RuleSetDescriptor implements Serializable {
 	protected abstract void unserializeDescriptor(Element element);
 
 	public static final RuleSetDescriptor unserialize(Element element) {
-		if (element == null) {
-			return null;
-		}
-		String ruleSetType = element.getAttribute("type");
-		Class<? extends RuleSetDescriptor> ruleSetDesctiptorClass = descriptorRegister.get(ruleSetType);
+		RuleSetDescriptor desc = null;
+		if (null != element) {
+			String ruleSetType = element.getAttribute("type");
+			Class<? extends RuleSetDescriptor> ruleSetDesctiptorClass = descriptorRegister.get(ruleSetType);
 
-		if (ruleSetDesctiptorClass == null) {
-			return null;
-		}
-		else {
-			RuleSetDescriptor desc = null;
-			try {
-				desc = ruleSetDesctiptorClass.newInstance();
-				desc.unserializeDescriptor(element);
+			if (null != ruleSetDesctiptorClass) {
+				try {
+					desc = ruleSetDesctiptorClass.newInstance();
+					desc.unserializeDescriptor(element);
+				}
+				catch (InstantiationException | IllegalAccessException e) {
+					ExceptionHandler.reportException(e);
+				}
 			}
-			catch (InstantiationException | IllegalAccessException e) {
-				ExceptionHandler.reportException(e);
-			}
-			return desc;
 		}
+		return desc;
 	}
 
 	public static final Element serialize(RuleSetDescriptor desc, Document doc) {

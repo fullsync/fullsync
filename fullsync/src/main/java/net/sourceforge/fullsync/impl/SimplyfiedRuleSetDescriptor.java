@@ -85,12 +85,12 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 
 		FileFilterManager filterManager = new FileFilterManager();
 
-		if (fileFilter != null) {
+		if (null != fileFilter) {
 			Element fileFilterElement = filterManager.serializeFileFilter(getFileFilter(), document, "FileFilter", "FileFilterRule");
 			simpleRuleSetElement.appendChild(fileFilterElement);
 		}
 
-		if (fileFilterTree != null) {
+		if (null != fileFilterTree) {
 			Map<String, FileFilter> itemsMap = fileFilterTree.getItemsMap();
 			Set<Entry<String, FileFilter>> entrySet = itemsMap.entrySet();
 			for (Entry<String, FileFilter> entry : entrySet) {
@@ -129,7 +129,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 			ignorePattern = simpleRuleSetConfigElement.getAttribute("ignorePattern");
 			takePattern = simpleRuleSetConfigElement.getAttribute("takePattern");
 			String useFilterStr = simpleRuleSetConfigElement.getAttribute("useFilter");
-			if ((useFilterStr != null) && (!useFilterStr.equals(""))) {
+			if ((null != useFilterStr) && (!useFilterStr.equals(""))) {
 				useFilter = Boolean.valueOf(useFilterStr).booleanValue();
 			}
 			NodeList fileFilterNodeList = simpleRuleSetConfigElement.getElementsByTagName("FileFilter");
@@ -278,7 +278,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		SimplyfiedSyncRules ruleSet = new SimplyfiedSyncRules();
 		ruleSet.setUsingRecursion(syncSubDirs);
 
-		if ((patternsType != null) && (!patternsType.equals(""))) {
+		if ((null != patternsType) && (!patternsType.equals(""))) {
 			ruleSet.setPatternsType(patternsType);
 		}
 		else {

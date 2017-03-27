@@ -101,7 +101,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 				 * for( Iterator i = fsChildren.iterator(); i.hasNext(); )
 				 * {
 				 * File f = (File)i.next();
-				 * if( current.getChild( f.getName() ) == null )
+				 * if(null == current.getChild( f.getName() ))
 				 * current.addChild( new AbstractBufferedFile( bc, f, current, f.isDirectory(), false ) );
 				 * }
 				 * /*
@@ -130,7 +130,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	@Override
 	public File createChild(File dir, String name, boolean directory) throws IOException {
 		File n = dir.getUnbuffered().getChild(name);
-		if (n == null) {
+		if (null == n) {
 			n = dir.getUnbuffered().createChild(name, directory);
 		}
 		BufferedFile bf = new AbstractBufferedFile(this, n, dir, directory, false);
@@ -179,7 +179,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		Collection<File> fsChildren = buffered.getUnbuffered().getChildren();
 		for (File uf : fsChildren) {
 			BufferedFile bf = (BufferedFile) buffered.getChild(uf.getName());
-			if (bf == null) {
+			if (null == bf) {
 				bf = new AbstractBufferedFile(this, uf, root, uf.isDirectory(), false);
 				buffered.addChild(bf);
 			}
@@ -194,7 +194,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		File f = fsRoot.getChild(".syncfiles");
 
 		root = new AbstractBufferedFile(this, fsRoot, null, true, true);
-		if ((f == null) || !f.exists() || f.isDirectory()) {
+		if ((null == f) || !f.exists() || f.isDirectory()) {
 			if (isMonitoringFileSystem()) {
 				updateFromFileSystem(root);
 			}
@@ -252,7 +252,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	public void saveToBuffer() throws IOException {
 		File fsRoot = fs.getRoot();
 		File node = fsRoot.getChild(".syncfiles");
-		if ((node == null) || !node.exists()) {
+		if ((null == node) || !node.exists()) {
 			node = root.createChild(".syncfiles", false);
 		}
 

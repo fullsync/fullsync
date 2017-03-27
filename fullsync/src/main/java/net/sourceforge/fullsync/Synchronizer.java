@@ -50,7 +50,7 @@ public class Synchronizer {
 
 	public synchronized TaskTree executeProfile(FullSync fullsync, Profile profile, boolean interactive) {
 		try {
-			if (remoteManager != null) {
+			if (null != remoteManager) {
 				return remoteManager.executeProfile(profile.getName());
 			}
 			else {
@@ -83,7 +83,7 @@ public class Synchronizer {
 	 */
 	public int performActions(TaskTree taskTree, TaskFinishedListener listener) {
 		try {
-			if (remoteManager != null) {
+			if (null != remoteManager) {
 				logger.info("Remote Synchronization started");
 				remoteManager.performActions(taskTree, listener);
 			}
@@ -95,7 +95,7 @@ public class Synchronizer {
 				BlockBuffer buffer = new BlockBuffer(logger);
 				TaskExecutor queue = new FillBufferTaskExecutor(buffer);
 
-				if (listener != null) {
+				if (null != listener) {
 					queue.addTaskFinishedListener(listener);
 				}
 

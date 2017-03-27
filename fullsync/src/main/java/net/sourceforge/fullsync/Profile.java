@@ -154,7 +154,7 @@ public class Profile implements Serializable, Comparable<Profile> {
 
 	public String getLastUpdateText() {
 		// TODO this doesnt belong here (l18n)
-		if (lastUpdate == null) {
+		if (null == lastUpdate) {
 			return "never";
 		}
 		else {
@@ -165,7 +165,7 @@ public class Profile implements Serializable, Comparable<Profile> {
 	//FIXME: this needs updates!
 	public String getNextUpdateText() {
 		// TODO this doesnt belong here (l18n)
-		if (schedule == null) {
+		if (null == schedule) {
 			return "not scheduled";
 		}
 		else if (!enabled) {

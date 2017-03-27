@@ -90,14 +90,14 @@ public class Task implements Serializable {
 	}
 
 	public void addChild(Task child) {
-		if (children == null) {
+		if (null == children) {
 			children = new ArrayList<>(5);
 		}
 		this.children.add(child);
 	}
 
 	public ArrayList<Task> getChildren() {
-		if (children == null) {
+		if (null == children) {
 			return new ArrayList<>();
 		}
 		return children;

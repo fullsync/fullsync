@@ -44,7 +44,7 @@ class SizeValueRuleComposite extends RuleComposite {
 
 		final Combo comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.FILL);
 
-		if (value != null) {
+		if (null != value) {
 			textValue.setText(String.valueOf(value.getValue()));
 		}
 

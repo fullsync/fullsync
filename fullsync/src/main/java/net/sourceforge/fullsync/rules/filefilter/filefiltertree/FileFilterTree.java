@@ -46,7 +46,7 @@ public class FileFilterTree implements Serializable {
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
 			FileFilterTreeItem children = item.getChildren(token);
-			if (children == null) {
+			if (null == children) {
 				children = new FileFilterTreeItem();
 			}
 			item.addChildren(token, children);
@@ -66,12 +66,12 @@ public class FileFilterTree implements Serializable {
 			parentFilter = filter;
 
 			FileFilterTreeItem children = item.getChildren(token);
-			if (children == null) {
+			if (null == children) {
 				return parentFilter;
 			}
 
 			FileFilter childFilter = children.getFilter();
-			if (childFilter != null) {
+			if (null != childFilter) {
 				filter = childFilter;
 			}
 			item = children;

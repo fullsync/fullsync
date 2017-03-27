@@ -52,7 +52,7 @@ public class FileCopyEntryDescriptor implements EntryDescriptor {
 
 	@Override
 	public InputStream getInputStream() throws IOException {
-		if (inputStream == null) {
+		if (null == inputStream) {
 			inputStream = src.getInputStream();
 		}
 		return inputStream;
@@ -60,7 +60,7 @@ public class FileCopyEntryDescriptor implements EntryDescriptor {
 
 	@Override
 	public OutputStream getOutputStream() throws IOException {
-		if (outputStream == null) {
+		if (null == outputStream) {
 			outputStream = dst.getOutputStream();
 		}
 		return outputStream;
@@ -68,7 +68,7 @@ public class FileCopyEntryDescriptor implements EntryDescriptor {
 
 	@Override
 	public void finishWrite() throws IOException {
-		if (outputStream != null) {
+		if (null != outputStream) {
 			outputStream.close();
 		}
 		dst.setLastModified(src.getLastModified());
@@ -78,7 +78,7 @@ public class FileCopyEntryDescriptor implements EntryDescriptor {
 
 	@Override
 	public void finishStore() throws IOException {
-		if (inputStream != null) {
+		if (null != inputStream) {
 			inputStream.close();
 		}
 	}
