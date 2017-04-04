@@ -24,8 +24,12 @@ import java.util.Optional;
 
 public interface RuntimeConfiguration {
 	Optional<String> getProfileToRun();
+
 	Optional<String> getRemotePassword();
+
 	Optional<InetSocketAddress> getListenSocketAddress();
+
 	Optional<Boolean> isDaemon();
+
 	Optional<Boolean> isStartMinimized();
 }

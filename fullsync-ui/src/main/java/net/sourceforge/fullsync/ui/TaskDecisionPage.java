@@ -70,8 +70,11 @@ public class TaskDecisionPage extends WizardDialog {
 
 	@Override
 	public String getDescription() {
-		return Messages.getString("TaskDecisionPage.Source") + ": " + taskTree.getSource().getConnectionDescription().getDisplayPath() + "\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				+ Messages.getString("TaskDecisionPage.Destination") + ": " + taskTree.getDestination().getConnectionDescription().getDisplayPath(); //$NON-NLS-1$ //$NON-NLS-2$
+		String source = Messages.getString("TaskDecisionPage.Source"); //$NON-NLS-1$
+		String destination = Messages.getString("TaskDecisionPage.Destination"); //$NON-NLS-1$
+		String sourcePath = taskTree.getSource().getConnectionDescription().getDisplayPath();
+		String destinationPath = taskTree.getDestination().getConnectionDescription().getDisplayPath();
+		return String.format("%s: %s\n%s: %s", source, sourcePath, destination, destinationPath); //$NON-NLS-1$
 	}
 
 	@Override
@@ -179,13 +182,8 @@ public class TaskDecisionPage extends WizardDialog {
 
 				final GUIUpdateQueue<TaskFinishedEvent> updateQueue = new GUIUpdateQueue<>(display, (display1, items) -> {
 					TableItem item = null;
-					System.err.println("GUIUpdateQueue<TaskFinishedEvent>::doUpdate: " + items.size());
+					tasksFinished += items.size();
 					for (TaskFinishedEvent event : items) {
-						tasksFinished++;
-						// TODO: move this into one translatable string with arguments
-						labelProgress
-							.setText(tasksFinished
-									+ " " + Messages.getString("TaskDecisionPage.of") + " " + tasksTotal + " " + Messages.getString("TaskDecisionPage.tasksFinished")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 						Task task = event.getTask();
 						item = list.getTableItemForTask(task);
 						// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item
@@ -199,6 +197,10 @@ public class TaskDecisionPage extends WizardDialog {
 							}
 						}
 					}
+					String of = Messages.getString("TaskDecisionPage.of"); //$NON-NLS-1$
+					String finished = Messages.getString("TaskDecisionPage.tasksFinished"); //$NON-NLS-1$
+					// TODO: move this into one translatable string with arguments
+					labelProgress.setText(String.format("%d %s %d %s", tasksFinished, of, tasksTotal, finished)); //$NON-NLS-1$
 					if (null != item) {
 						list.showItem(item);
 					}

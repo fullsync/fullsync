@@ -40,8 +40,7 @@ public class FileFilterManager {
 		filterElement.setAttribute("filtertype", String.valueOf(fileFilter.getFilterType()));
 		filterElement.setAttribute("appliestodir", String.valueOf(fileFilter.appliesToDirectories()));
 
-		FileFilterRule[] rules = fileFilter.getFileFiltersRules();
-		for (FileFilterRule rule : rules) {
+		for (FileFilterRule rule : fileFilter.getFileFiltersRules()) {
 			Element ruleElement = serializeRule(rule, document, ruleElementName);
 			filterElement.appendChild(ruleElement);
 		}
@@ -137,8 +136,8 @@ public class FileFilterManager {
 		if (fileFilterRule instanceof SubfilterFileFilerRule) {
 			SubfilterFileFilerRule rule = (SubfilterFileFilerRule) fileFilterRule;
 			FileFilter subfilter = ((FilterValue) rule.getValue()).getValue();
-			Element subfilterElement = serializeFileFilter(subfilter, ruleElement.getOwnerDocument(), "NestedFileFilter",
-					"NestedFileFilterRule");
+			Document doc = ruleElement.getOwnerDocument();
+			Element subfilterElement = serializeFileFilter(subfilter, doc, "NestedFileFilter", "NestedFileFilterRule");
 			ruleElement.appendChild(subfilterElement);
 		}
 	}

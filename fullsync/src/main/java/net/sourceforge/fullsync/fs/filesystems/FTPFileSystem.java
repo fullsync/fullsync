@@ -31,7 +31,8 @@ import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 public class FTPFileSystem implements FileSystem {
 
 	@Override
-	public final Site createConnection(final FullSync fullsync, final ConnectionDescription description) throws FileSystemException, IOException {
+	public final Site createConnection(final FullSync fullsync, final ConnectionDescription description)
+			throws FileSystemException, IOException {
 		return new CommonsVfsConnection(description, new FTPAuthenticationProvider());
 	}
 

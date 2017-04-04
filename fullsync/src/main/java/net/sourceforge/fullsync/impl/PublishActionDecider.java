@@ -42,12 +42,16 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class PublishActionDecider implements ActionDecider {
 	private static final Action addDestination = new Action(ActionType.Add, Destination, BufferUpdate.Destination, "Add");
-	private static final Action ignoreDestinationExists = new Action(ActionType.UnexpectedChangeError, Destination, BufferUpdate.None, "will not add, destination already exists");
+	private static final Action ignoreDestinationExists = new Action(ActionType.UnexpectedChangeError, Destination, BufferUpdate.None,
+			"will not add, destination already exists");
 	private static final Action overwriteSource = new Action(ActionType.Update, Source, BufferUpdate.Destination, "overwrite source");
-	private static final Action overwriteDestination = new Action(ActionType.Update, Destination, BufferUpdate.Destination, "overwrite destination");
+	private static final Action overwriteDestination = new Action(ActionType.Update, Destination, BufferUpdate.Destination,
+			"overwrite destination");
 	private static final Action updateDestination = new Action(ActionType.Update, Destination, BufferUpdate.Destination, "Source changed");
-	private static final Action unexpectedDestinationChanged = new Action(ActionType.UnexpectedChangeError, Destination, BufferUpdate.None, "Destination changed");
-	private static final Action unexpectedBothChanged = new Action(ActionType.UnexpectedChangeError, Destination, BufferUpdate.None, "Source changed, but changed remotely too");
+	private static final Action unexpectedDestinationChanged = new Action(ActionType.UnexpectedChangeError, Destination, BufferUpdate.None,
+			"Destination changed");
+	private static final Action unexpectedBothChanged = new Action(ActionType.UnexpectedChangeError, Destination, BufferUpdate.None,
+			"Source changed, but changed remotely too");
 	private static final Action inSync = new Action(ActionType.Nothing, None, BufferUpdate.None, "In Sync");
 	private static final Action ignore = new Action(ActionType.Nothing, None, BufferUpdate.None, "Ignore");
 

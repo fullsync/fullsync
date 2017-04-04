@@ -158,7 +158,7 @@ public class CrontabPart implements Serializable {
 				return false;
 			}
 			catch (Exception e) {
-				throw new DataParseException("CrontabPart.SomethingWasWrong" /*Messages.getString("CrontabPart.SomethingWasWrong")*/ + token, e); //$NON-NLS-1$ // FIXME: translation
+				throw new DataParseException("CrontabPart.SomethingWasWrong" + token, e); //$NON-NLS-1$ // FIXME: translation Messages.getString("CrontabPart.SomethingWasWrong") + token
 			}
 		}
 	}

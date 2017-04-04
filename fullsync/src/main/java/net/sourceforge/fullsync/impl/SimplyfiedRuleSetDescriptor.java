@@ -21,7 +21,6 @@ package net.sourceforge.fullsync.impl;
 
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -49,7 +48,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	private FileFilterTree fileFilterTree;
 
 	public SimplyfiedRuleSetDescriptor() {
-
 	}
 
 	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, FileFilter fileFilter, boolean useFilter, FileFilterTree fileFilterTree) {
@@ -92,8 +90,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 
 		if (null != fileFilterTree) {
 			Map<String, FileFilter> itemsMap = fileFilterTree.getItemsMap();
-			Set<Entry<String, FileFilter>> entrySet = itemsMap.entrySet();
-			for (Entry<String, FileFilter> entry : entrySet) {
+			for (Entry<String, FileFilter> entry : itemsMap.entrySet()) {
 				String path = entry.getKey();
 				FileFilter filter = entry.getValue();
 				Element subdirFilterElement = document.createElement("SubdirectoryFileFilter");
@@ -129,7 +126,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 			ignorePattern = simpleRuleSetConfigElement.getAttribute("ignorePattern");
 			takePattern = simpleRuleSetConfigElement.getAttribute("takePattern");
 			String useFilterStr = simpleRuleSetConfigElement.getAttribute("useFilter");
-			if ((null != useFilterStr) && (!useFilterStr.equals(""))) {
+			if ((null != useFilterStr) && (!useFilterStr.isEmpty())) {
 				useFilter = Boolean.valueOf(useFilterStr).booleanValue();
 			}
 			NodeList fileFilterNodeList = simpleRuleSetConfigElement.getElementsByTagName("FileFilter");
@@ -148,41 +145,40 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 					if (fileFilterNodeList.getLength() > 0) {
 						Element subDirFileFilterElement = (Element) fileFilterNodeList.item(0);
 						FileFilter subDirFileFilter = filterManager.unserializeFileFilter(subDirFileFilterElement, "FileFilterRule");
-
 						fileFilterTree.addFileFilter(path, subDirFileFilter);
 					}
 				}
 			}
 			else {
 				fileFilter = null;
-				if (patternsType.equals("RegExp")) {
-					if (!ignorePattern.equals("") && (takePattern.equals(""))) {
+				if ("RegExp".equals(patternsType)) { //$NON-NLS-1$
+					if (!ignorePattern.isEmpty() && (takePattern.isEmpty())) {
 						fileFilter = new FileFilter();
 						fileFilter.setMatchType(FileFilter.MATCH_ALL);
 						fileFilter.setFilterType(FileFilter.EXCLUDE);
-						FileFilterRule[] rules = new FileFilterRule[] {
-								new FileNameFileFilterRule(new TextValue(ignorePattern), FileNameFileFilterRule.OP_MATCHES_REGEXP) };
-						fileFilter.setFileFilterRules(rules);
+						int op = FileNameFileFilterRule.OP_MATCHES_REGEXP;
+						FileNameFileFilterRule ignoreRule = new FileNameFileFilterRule(new TextValue(ignorePattern), op);
+						fileFilter.setFileFilterRules(new FileFilterRule[] { ignoreRule });
 						useFilter = true;
 					}
-					if (ignorePattern.equals("") && (!takePattern.equals(""))) {
+					if (ignorePattern.isEmpty() && (!takePattern.isEmpty())) {
 						fileFilter = new FileFilter();
 						fileFilter.setMatchType(FileFilter.MATCH_ALL);
 						fileFilter.setFilterType(FileFilter.INCLUDE);
-						FileFilterRule[] rules = new FileFilterRule[] {
-								new FileNameFileFilterRule(new TextValue(takePattern), FileNameFileFilterRule.OP_MATCHES_REGEXP) };
-						fileFilter.setFileFilterRules(rules);
+						int op = FileNameFileFilterRule.OP_MATCHES_REGEXP;
+						FileNameFileFilterRule takeRule = new FileNameFileFilterRule(new TextValue(takePattern), op);
+						fileFilter.setFileFilterRules(new FileFilterRule[] { takeRule });
 						useFilter = true;
 					}
-					if (!ignorePattern.equals("") && (!takePattern.equals(""))) {
+					if (!ignorePattern.isEmpty() && (!takePattern.isEmpty())) {
 						fileFilter = new FileFilter();
 						fileFilter.setMatchType(FileFilter.MATCH_ALL);
 						fileFilter.setFilterType(FileFilter.EXCLUDE);
-						FileFilterRule[] rules = new FileFilterRule[] {
-							new FileNameFileFilterRule(new TextValue(ignorePattern), FileNameFileFilterRule.OP_MATCHES_REGEXP),
-							new FileNameFileFilterRule(new TextValue(takePattern), FileNameFileFilterRule.OP_DOESNT_MATCHES_REGEXP),
-						};
-						fileFilter.setFileFilterRules(rules);
+						int ignoreOp = FileNameFileFilterRule.OP_MATCHES_REGEXP;
+						FileFilterRule ignoreRule = new FileNameFileFilterRule(new TextValue(ignorePattern), ignoreOp);
+						int takeOp = FileNameFileFilterRule.OP_DOESNT_MATCHES_REGEXP;
+						FileFilterRule takeRule = new FileNameFileFilterRule(new TextValue(takePattern), takeOp);
+						fileFilter.setFileFilterRules(new FileFilterRule[] { ignoreRule, takeRule });
 						useFilter = true;
 					}
 				}
@@ -243,11 +239,11 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	}
 
 	/**
-	 * @param ignorePattern
+	 * @param pattern
 	 *            The ignorePattern to set.
 	 */
-	public void setIgnorePattern(String ignorePattern) {
-		this.ignorePattern = ignorePattern;
+	public void setIgnorePattern(String pattern) {
+		ignorePattern = pattern;
 	}
 
 	public FileFilter getFileFilter() {
@@ -255,7 +251,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	}
 
 	public void setFileFilter(FileFilter filter) {
-		this.fileFilter = filter;
+		fileFilter = filter;
 	}
 
 	public boolean isUseFilter() {
@@ -266,8 +262,8 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		return fileFilterTree;
 	}
 
-	public void setFileFilterTree(FileFilterTree fileFilterTree) {
-		this.fileFilterTree = fileFilterTree;
+	public void setFileFilterTree(FileFilterTree filterTree) {
+		fileFilterTree = filterTree;
 	}
 
 	/**
@@ -278,7 +274,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		SimplyfiedSyncRules ruleSet = new SimplyfiedSyncRules();
 		ruleSet.setUsingRecursion(syncSubDirs);
 
-		if ((null != patternsType) && (!patternsType.equals(""))) {
+		if ((null != patternsType) && (!patternsType.isEmpty())) {
 			ruleSet.setPatternsType(patternsType);
 		}
 		else {

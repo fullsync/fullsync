@@ -51,8 +51,8 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		}
 		File sshDir = new File(sshDirPath);
 		if (!sshDir.exists() && !sshDir.mkdirs()) {
-			logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... (tried: "
-					+ sshDir.getAbsolutePath().toString() + ")");
+			String path = sshDir.getAbsolutePath();
+			logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... tried: " + path);
 			sshDir = null;
 			sshDirName = null;
 		}

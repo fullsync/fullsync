@@ -27,12 +27,12 @@ import java.util.HashMap;
 import org.apache.commons.vfs2.Capability;
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.FileType;
 import org.apache.commons.vfs2.VFS;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 
@@ -43,7 +43,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	private FileObject base; //FIXME FileObject is not serializable?!
 	private File root;
 
-	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystemAuthProvider fsAuthProvider) throws net.sourceforge.fullsync.FileSystemException {
+	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystemAuthProvider fsAuthProvider) throws FileSystemException {
 		try {
 			this.desc = desc;
 			FileSystemOptions options = new FileSystemOptions();
@@ -55,8 +55,8 @@ public class CommonsVfsConnection implements FileSystemConnection {
 			canSetLastModifiedFile = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FILE);
 			canSetLastModifiedFolder = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FOLDER);
 		}
-		catch (FileSystemException e) {
-			throw new net.sourceforge.fullsync.FileSystemException(e);
+		catch (org.apache.commons.vfs2.FileSystemException e) {
+			throw new FileSystemException(e);
 		}
 	}
 
@@ -66,7 +66,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	}
 
-	private File buildNode(final File parent, final FileObject file) throws FileSystemException {
+	private File buildNode(final File parent, final FileObject file) throws org.apache.commons.vfs2.FileSystemException {
 		String name = file.getName().getBaseName();
 
 		File n = new AbstractFile(this, name, parent, file.getType() == FileType.FOLDER, true);
@@ -92,7 +92,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 			}
 			return children;
 		}
-		catch (FileSystemException fse) {
+		catch (org.apache.commons.vfs2.FileSystemException fse) {
 			throw new IOException(fse.getMessage(), fse);
 		}
 	}

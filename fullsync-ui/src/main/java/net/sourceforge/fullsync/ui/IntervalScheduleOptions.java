@@ -33,11 +33,14 @@ import net.sourceforge.fullsync.schedule.Schedule;
 
 public class IntervalScheduleOptions extends ScheduleOptions {
 	// TODO sadly we can't support "days","months" as the interval is starting with program startup
-	private static SchedulingIntervalItem[] schedulingIntervals = new SchedulingIntervalItem[] {
-		new SchedulingIntervalItem("seconds", Messages.getString("IntervalScheduleOptions.seconds"), 1000),
-		new SchedulingIntervalItem("minutes", Messages.getString("IntervalScheduleOptions.minutes"), 60*1000),
-		new SchedulingIntervalItem("hours", Messages.getString("IntervalScheduleOptions.hours"), 60*60*1000),
-	};
+	private static final SchedulingIntervalItem[] schedulingIntervals;
+
+	static {
+		SchedulingIntervalItem seconds = new SchedulingIntervalItem("seconds", "IntervalScheduleOptions.seconds", 1000);
+		SchedulingIntervalItem minutes = new SchedulingIntervalItem("minutes", "IntervalScheduleOptions.minutes", 60 * 1000);
+		SchedulingIntervalItem hours = new SchedulingIntervalItem("hours", "IntervalScheduleOptions.hours", 60 * 60 * 1000);
+		schedulingIntervals = new SchedulingIntervalItem[] { seconds, minutes, hours };
+	}
 
 	private Text textCount;
 	private Combo cbUnit;
@@ -64,7 +67,7 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 			String[] names = new String[schedulingIntervals.length];
 			int idx = 0;
 			for (SchedulingIntervalItem item : schedulingIntervals) {
-				names[idx++] = item.name;
+				names[idx++] = Messages.getString(item.messageName);
 			}
 			cbUnit.setItems(names);
 			this.layout();
@@ -110,12 +113,12 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 
 	private static class SchedulingIntervalItem {
 		public String unit;
-		public String name;
+		public String messageName;
 		public long factor;
 
-		SchedulingIntervalItem(String unit, String name, long factor) {
+		SchedulingIntervalItem(String unit, String messageName, long factor) {
 			this.unit = unit;
-			this.name = name;
+			this.messageName = messageName;
 			this.factor = factor;
 		}
 	}

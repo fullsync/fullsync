@@ -55,10 +55,11 @@ public class Profile implements Serializable, Comparable<Profile> {
 	private transient ArrayList<ProfileChangeListener> listeners;
 
 	static Profile unserialize(Element element) {
-		Profile p = new Profile(element.getAttribute("name"),
-				ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)),
-				ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)),
-				RuleSetDescriptor.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)));
+		String profileName = element.getAttribute("name");
+		ConnectionDescription src = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0));
+		ConnectionDescription dst = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0));
+		RuleSetDescriptor ruleset = RuleSetDescriptor.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0));
+		Profile p = new Profile(profileName, src, dst, ruleset);
 		// this may happen with profiles that used advanced rule sets
 		if (null == p.getRuleSet()) {
 			p.setLastError(-1, "Error: the Filters of this Profile are broken");

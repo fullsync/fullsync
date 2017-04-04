@@ -35,7 +35,7 @@ public abstract class UISettings {
 
 	private static final int K = 1024;
 
-	private static String[] UNITS = {"B", "KiB", "MiB", "GiB", "TiB"};
+	private static String[] UNITS = { "B", "KiB", "MiB", "GiB", "TiB" };
 
 	public static String formatSize(long size) {
 		int i = 1;
@@ -45,6 +45,10 @@ public abstract class UISettings {
 			}
 		}
 		--i;
-		return -1 == size ? "" : (long)Math.ceil(size / (double)Math.pow(K, i)) + " " + UNITS[i];
+		String result = "";
+		if (-1 != size) {
+			result = String.format("%d %s", Math.ceil(size / Math.pow(K, i)), UNITS[i]);
+		}
+		return result;
 	}
 }

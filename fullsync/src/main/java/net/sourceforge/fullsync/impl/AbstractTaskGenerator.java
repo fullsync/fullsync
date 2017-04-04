@@ -133,8 +133,8 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		}
 
 		TaskTree tree = new TaskTree(source, destination);
-		Task root = new Task(null, null, State.InSync, new Action[] { new Action(ActionType.Nothing,
-				Location.None, BufferUpdate.None, "Root") });
+		Action rootAction = new Action(ActionType.Nothing, Location.None, BufferUpdate.None, "Root");
+		Task root = new Task(null, null, State.InSync, new Action[] { rootAction });
 		tree.setRoot(root);
 
 		for (TaskGenerationListener listener : taskGenerationListeners) {
@@ -152,7 +152,9 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		return tree;
 	}
 
-	public abstract void synchronizeNodes(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException;
+	public abstract void synchronizeNodes(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
+			throws DataParseException, IOException;
 
-	public abstract void synchronizeDirectories(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider) throws DataParseException, IOException;
+	public abstract void synchronizeDirectories(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
+			throws DataParseException, IOException;
 }

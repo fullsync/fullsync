@@ -20,7 +20,6 @@
 package net.sourceforge.fullsync.ui;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -127,13 +126,15 @@ public class ConnectionConfiguration {
 		try {
 			Constructor<? extends ProtocolSpecificComposite> con = com.getConstructor(FullSync.class);
 			compositeSpecific = con.newInstance(fullsync);
+		}
+		catch (ReflectiveOperationException e) {
+			ExceptionHandler.reportException(e);
+		}
+		if (null != compositeSpecific) {
 			compositeSpecific.createGUI(compositeProtocolSpecific);
 			compositeSpecific.reset(selectedScheme);
 			compositeSpecific.setBufferedEnabled(bufferedEnabled);
 			compositeSpecific.setBuffered(bufferedActive);
-		}
-		catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
-			ExceptionHandler.reportException(e);
 		}
 	}
 

@@ -194,8 +194,8 @@ class AbstractFile implements File {
 				for (File n : children.values()) {
 					if (!newChildren.containsKey(n.getName())) {
 						if (n.exists()) {
-							newChildren.put(n.getName(),
-									new AbstractFile(getConnection(), n.getName(), n.getParent(), n.isDirectory(), false));
+							AbstractFile f = new AbstractFile(getConnection(), n.getName(), n.getParent(), n.isDirectory(), false);
+							newChildren.put(n.getName(), f);
 						}
 						else {
 							newChildren.put(n.getName(), n);

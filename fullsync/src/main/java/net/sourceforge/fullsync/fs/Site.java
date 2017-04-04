@@ -31,7 +31,8 @@ public interface Site extends AutoCloseable {
 	// open ?
 	void flush() throws IOException;
 
-	@Override void close() throws IOException;
+	@Override
+	void close() throws IOException;
 
 	boolean isCaseSensitive();
 

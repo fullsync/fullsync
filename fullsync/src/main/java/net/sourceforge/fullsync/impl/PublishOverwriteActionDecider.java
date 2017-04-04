@@ -39,7 +39,8 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class PublishOverwriteActionDecider implements ActionDecider {
 	private static final Action addDestination = new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, "Add");
-	private static final Action overwriteSource = new Action(ActionType.Update, Location.Source, BufferUpdate.Destination, "overwrite source");
+	private static final Action overwriteSource = new Action(ActionType.Update, Location.Source, BufferUpdate.Destination,
+			"overwrite source");
 	private static final Action overwriteDestination = new Action(ActionType.Update, Location.Destination, BufferUpdate.Destination,
 			"overwrite destination");
 	private static final Action updateDestination = new Action(ActionType.Update, Location.Destination, BufferUpdate.Destination,

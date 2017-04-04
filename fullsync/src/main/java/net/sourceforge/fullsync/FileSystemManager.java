@@ -51,7 +51,8 @@ public class FileSystemManager {
 		return null;
 	}
 
-	public final Site createConnection(final FullSync fullsync, final ConnectionDescription desc) throws FileSystemException, IOException, URISyntaxException {
+	public final Site createConnection(final FullSync fullsync, final ConnectionDescription desc)
+			throws FileSystemException, IOException, URISyntaxException {
 		URI url = desc.getUri();
 		String scheme = url.getScheme();
 
@@ -75,7 +76,6 @@ public class FileSystemManager {
 
 		/* FIXME: [BUFFERING] uncomment to reenable buffering
 		String bufferStrategy = desc.getParameter("bufferStrategy");
-
 		if ((null != bufferStrategy) && !"".equals(bufferStrategy)) {
 			s = resolveBuffering(s, bufferStrategy);
 		}

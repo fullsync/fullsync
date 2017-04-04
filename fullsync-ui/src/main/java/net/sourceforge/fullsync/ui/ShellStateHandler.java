@@ -63,7 +63,7 @@ public class ShellStateHandler {
 	}
 
 	private void shellClosed(Event _event) {
-		Shell shell = (Shell)_event.widget;
+		Shell shell = (Shell) _event.widget;
 		WindowState ws = new WindowState();
 		ws.maximized = shell.getMaximized();
 		ws.minimized = shell.getMinimized();
