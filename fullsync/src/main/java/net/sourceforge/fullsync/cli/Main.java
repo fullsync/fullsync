@@ -37,11 +37,11 @@ import java.util.Date;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,40 +68,53 @@ public class Main implements Launcher { // NO_UCD
 		options.addOption("V", "version", false, "display the version and exit");
 		options.addOption("m", "minimized", false, "starts fullsync gui in system tray ");
 
-		OptionBuilder.withLongOpt("profiles-file");
-		OptionBuilder.withDescription("uses the specified file instead of profiles.xml");
-		OptionBuilder.hasArg();
-		OptionBuilder.withArgName("filename");
-		options.addOption(OptionBuilder.create("P"));
+		Option profilesFile = Option.builder("P")
+			.longOpt("profiles-file")
+			.desc("uses the specified file instead of profiles.xml")
+			.hasArg()
+			.argName("filename")
+			.build();
+		options.addOption(profilesFile);
 
-		OptionBuilder.withLongOpt("run");
-		OptionBuilder.withDescription("run the specified profile");
-		OptionBuilder.hasArg();
-		OptionBuilder.withArgName("profile");
-		options.addOption(OptionBuilder.create("r"));
+		Option run = Option.builder("r")
+			.longOpt("run")
+			.desc("run the specified profile and then exit FullSync")
+			.hasArg()
+			.argName("profile")
+			.build();
+		options.addOption(run);
 
-		options.addOption("d", "daemon", false, "disables the gui and runs in daemon mode with scheduler");
+		Option daemon = Option.builder("d")
+			.longOpt("daemon")
+			.desc("disables the gui and runs in daemon mode with scheduler")
+			.hasArg(false)
+			.build();
+		options.addOption(daemon);
 
 		// REVISIT somehow i don't like -p so much, but it's the standard for specifying ports.
 		// the problem is that it implies "enable remote connection" in our case what
 		// i consider more important, espec because the port is optional.
-		OptionBuilder.withLongOpt("remoteport");
-		OptionBuilder.withDescription("accept incoming connection on the specified port or 10000");
-		OptionBuilder.hasOptionalArg();
-		OptionBuilder.withArgName("port");
-		options.addOption(OptionBuilder.create("p"));
+		Option port = Option.builder("p")
+			.longOpt("remoteport")
+			.desc("accept incoming connection on the specified port or 10000")
+			.optionalArg(true)
+			.argName("port")
+			.build();
+		options.addOption(port);
 
-		OptionBuilder.withLongOpt("password");
-		OptionBuilder.withDescription("password for incoming connections");
-		OptionBuilder.hasOptionalArg();
-		OptionBuilder.withArgName("passwd");
-		options.addOption(OptionBuilder.create("a"));
+		Option password = Option.builder("a")
+			.longOpt("password")
+			.desc("password for incoming connections")
+			.optionalArg(true)
+			.argName("passwd")
+			.build();
+		options.addOption(password);
 		// + interactive mode
 	}
 
 	private static void printHelp() {
 		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("fullsync [-hvrdp]", options);
+		formatter.printHelp(85, "fullsync", "", options, "", true);
 	}
 
 	public static String getConfigDir() {
@@ -143,7 +156,7 @@ public class Main implements Launcher { // NO_UCD
 	public static void startup(String[] args, Launcher launcher) throws Exception {
 		initOptions();
 		String configDir = getConfigDir();
-		CommandLineParser parser = new PosixParser();
+		CommandLineParser parser = new DefaultParser();
 		CommandLine line = null;
 
 		try {

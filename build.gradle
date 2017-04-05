@@ -22,7 +22,7 @@ subprojects {
 	ext {
 		swtVersion = "3.105.2"
 		slf4jVersion = "1.7.25"
-		commonsCliVersion = "1.2"
+		commonsCliVersion = "1.4"
 		commonsNetVersion = "3.6"
 		commonsVfsVersion = "2.1"
 		sambaJcifsVersion = "1.3.17"
