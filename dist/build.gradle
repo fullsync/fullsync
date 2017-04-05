@@ -19,11 +19,11 @@ def getSWTVariant(osName, osArch) {
 }
 
 dependencies {
-	dist project(':assets')
 	dist project(':fullsync')
+	dist project(':fullsync-assets')
+	dist project(':fullsync-logger')
 	dist project(':fullsync-ui')
 	dist project(':fullsync-utils')
-	dist project(':logger')
 	dist getSWTVariant("linux", "x86")
 	dist getSWTVariant("linux", "x86_64")
 	dist getSWTVariant("mac", "x86_64")

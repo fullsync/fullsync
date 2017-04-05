@@ -2,7 +2,7 @@
 apply plugin: 'java'
 
 dependencies {
-	compile project(':logger')
+	compile project(':fullsync-logger')
 	compile project(':fullsync-utils')
 	compile "commons-cli:commons-cli:${project.ext.commonsCliVersion}"
 	compile "commons-net:commons-net:${project.ext.commonsNetVersion}"

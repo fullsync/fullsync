@@ -19,7 +19,7 @@ def getLocalSWTVersion() {
 
 dependencies {
 	compile project(':fullsync')
-	compile project(':assets')
+	compile project(':fullsync-assets')
 	compile (getLocalSWTVersion()) {
 		exclude module: 'org.eclipse.swt'
 	}
