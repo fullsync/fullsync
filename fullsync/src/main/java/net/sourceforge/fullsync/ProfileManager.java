@@ -218,7 +218,8 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 						doAddProfile(p, false);
 					}
 					catch (Throwable t) {
-						ExceptionHandler.reportException("Failed to load a Profile, ignoring and continuing with the rest", t);
+						String message = String.format("Failed to load Profile %d, ignoring and continuing with the rest", i + 1);
+						ExceptionHandler.reportException(message, t);
 					}
 				}
 			}

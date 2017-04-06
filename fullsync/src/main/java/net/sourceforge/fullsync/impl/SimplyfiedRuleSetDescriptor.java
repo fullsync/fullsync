@@ -47,9 +47,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	private boolean useFilter;
 	private FileFilterTree fileFilterTree;
 
-	public SimplyfiedRuleSetDescriptor() {
-	}
-
 	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, FileFilter fileFilter, boolean useFilter, FileFilterTree fileFilterTree) {
 		this.syncSubDirs = syncSubDirs;
 		this.ignorePattern = "";
@@ -104,11 +101,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		return simpleRuleSetElement;
 	}
 
-	/**
-	 * @see net.sourceforge.fullsync.RuleSetDescriptor#unserializeDescriptor(org.w3c.dom.Element)
-	 */
-	@Override
-	protected void unserializeDescriptor(Element element) {
+	public SimplyfiedRuleSetDescriptor(Element element) {
 		NodeList ruleSetConfigNodeList = element.getElementsByTagName("SimpleRuleSet");
 
 		if (ruleSetConfigNodeList.getLength() == 0) {

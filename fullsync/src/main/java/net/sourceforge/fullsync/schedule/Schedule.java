@@ -20,9 +20,9 @@
 package net.sourceforge.fullsync.schedule;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -33,27 +33,26 @@ public abstract class Schedule implements Serializable {
 	private static final long serialVersionUID = 2L;
 	private static final String ELEMENT_NAME = "Schedule";
 
-	private static final Map<String, Class<? extends Schedule>> scheduleRegister;
+	private static final Map<String, Function<Element, Schedule>> scheduleRegister;
 
 	static {
 		scheduleRegister = new HashMap<>(2);
-		scheduleRegister.put(IntervalSchedule.SCHEDULE_TYPE, IntervalSchedule.class);
-		scheduleRegister.put(CrontabSchedule.SCHEDULE_TYPE, CrontabSchedule.class);
+		scheduleRegister.put(IntervalSchedule.SCHEDULE_TYPE, IntervalSchedule::new);
+		scheduleRegister.put(CrontabSchedule.SCHEDULE_TYPE, CrontabSchedule::new);
 	}
 
 	public static final Schedule unserialize(final Element element) {
 		Schedule sched = null;
 		if (null != element) {
 			String scheduleType = element.getAttribute("type");
-			Class<? extends Schedule> scheduleClass = scheduleRegister.get(scheduleType);
+			Function<Element, Schedule> scheduleConstructor = scheduleRegister.get(scheduleType);
 
-			if (null != scheduleClass) {
+			if (null != scheduleConstructor) {
 				try {
-					Constructor<? extends Schedule> constructor = scheduleClass.getDeclaredConstructor(Element.class);
-					sched = constructor.newInstance(element);
+					sched = scheduleConstructor.apply(element);
 				}
-				catch (Exception e) {
-					ExceptionHandler.reportException(e);
+				catch (IllegalArgumentException iex) {
+					ExceptionHandler.reportException(iex);
 				}
 			}
 		}

@@ -22,6 +22,7 @@ package net.sourceforge.fullsync;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -34,11 +35,11 @@ public abstract class RuleSetDescriptor implements Serializable {
 
 	private static final String ELEMENT_NAME = "RuleSetDescriptor";
 
-	private static Map<String, Class<? extends RuleSetDescriptor>> descriptorRegister;
+	private static Map<String, Function<Element, RuleSetDescriptor>> descriptorRegister;
 
 	static {
 		descriptorRegister = new HashMap<>(2);
-		descriptorRegister.put(SimplyfiedRuleSetDescriptor.RULESET_TYPE, SimplyfiedRuleSetDescriptor.class);
+		descriptorRegister.put(SimplyfiedRuleSetDescriptor.RULESET_TYPE, SimplyfiedRuleSetDescriptor::new);
 	}
 
 	public abstract RuleSet createRuleSet();
@@ -47,22 +48,14 @@ public abstract class RuleSetDescriptor implements Serializable {
 
 	public abstract Element serializeDescriptor(Document document);
 
-	protected abstract void unserializeDescriptor(Element element);
-
 	public static final RuleSetDescriptor unserialize(Element element) {
 		RuleSetDescriptor desc = null;
 		if (null != element) {
 			String ruleSetType = element.getAttribute("type");
-			Class<? extends RuleSetDescriptor> ruleSetDesctiptorClass = descriptorRegister.get(ruleSetType);
+			Function<Element, RuleSetDescriptor> ruleSetDesctiptorConstructor = descriptorRegister.get(ruleSetType);
 
-			if (null != ruleSetDesctiptorClass) {
-				try {
-					desc = ruleSetDesctiptorClass.newInstance();
-					desc.unserializeDescriptor(element);
-				}
-				catch (InstantiationException | IllegalAccessException e) {
-					ExceptionHandler.reportException(e);
-				}
+			if (null != ruleSetDesctiptorConstructor) {
+				desc = ruleSetDesctiptorConstructor.apply(element);
 			}
 		}
 		return desc;

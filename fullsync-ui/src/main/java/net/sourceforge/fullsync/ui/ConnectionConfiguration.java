@@ -19,11 +19,11 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -34,12 +34,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FullSync;
 
 public class ConnectionConfiguration {
 	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" };
-	private static Map<String, Class<? extends ProtocolSpecificComposite>> composites;
+	private static Map<String, Function<FullSync, ProtocolSpecificComposite>> composites;
 	private Composite m_parent; // the tabs content
 	private final FullSync fullsync;
 	private Label labelProtocol;
@@ -52,10 +51,10 @@ public class ConnectionConfiguration {
 
 	static {
 		composites = new HashMap<>();
-		composites.put("file", FileSpecificComposite.class);
-		composites.put("ftp", FTPSpecificComposite.class);
-		composites.put("sftp", SFTPSpecificComposite.class);
-		composites.put("smb", SMBSpecificComposite.class);
+		composites.put("file", FileSpecificComposite::new);
+		composites.put("ftp", FTPSpecificComposite::new);
+		composites.put("sftp", SFTPSpecificComposite::new);
+		composites.put("smb", SMBSpecificComposite::new);
 	}
 
 	public ConnectionConfiguration(Composite parent, FullSync _fullsync, ConnectionDescription desc) {
@@ -122,14 +121,8 @@ public class ConnectionConfiguration {
 	}
 
 	private void createProtocolSpecificComposite() {
-		Class<? extends ProtocolSpecificComposite> com = composites.get(selectedScheme);
-		try {
-			Constructor<? extends ProtocolSpecificComposite> con = com.getConstructor(FullSync.class);
-			compositeSpecific = con.newInstance(fullsync);
-		}
-		catch (ReflectiveOperationException e) {
-			ExceptionHandler.reportException(e);
-		}
+		Function<FullSync, ProtocolSpecificComposite> compositeConstructor = composites.get(selectedScheme);
+		compositeSpecific = compositeConstructor.apply(fullsync);
 		if (null != compositeSpecific) {
 			compositeSpecific.createGUI(compositeProtocolSpecific);
 			compositeSpecific.reset(selectedScheme);
