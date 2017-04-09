@@ -44,7 +44,7 @@ public class FileNameFileFilterRule extends FileFilterRule {
 	private static final long serialVersionUID = 2L;
 
 	private static final String[] allOperators = new String[] { "is", "isn't", "contains", "doesn't contains", "begins with",
-			"doesn't begins with", "ends with", "doesn't ends with", "matches regexp", "doesn't matches regexp" };
+		"doesn't begins with", "ends with", "doesn't ends with", "matches regexp", "doesn't matches regexp" };
 
 	private TextValue pattern;
 	private int op;

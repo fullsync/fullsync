@@ -17,7 +17,6 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-
 package net.sourceforge.fullsync.ui;
 
 import java.io.File;

@@ -45,18 +45,18 @@ public class BackupActionDecider implements ActionDecider {
 
 	private static final Action addDestination = new Action(ActionType.Add, Destination, BufferUpdate.Destination, "Add");
 	private static final Action overwriteDestination = new Action(ActionType.Update, Destination, BufferUpdate.Destination,
-			"overwrite destination");
+		"overwrite destination");
 	private static final Action updateDestination = new Action(ActionType.Update, Destination, BufferUpdate.Destination, "Source changed");
 	private static final Action deleteDestinationOrphan = new Action(ActionType.Delete, Destination, BufferUpdate.Destination,
-			"Delete orphan in destination", false);
+		"Delete orphan in destination", false);
 	private static final Action ignoreDestinationOrphan = new Action(ActionType.Nothing, None, BufferUpdate.None,
-			"Ignoring orphan in destination");
+		"Ignoring orphan in destination");
 	private static final Action inSync = new Action(ActionType.Nothing, None, BufferUpdate.None, "In Sync");
 	private static final Action ignore = new Action(ActionType.Nothing, None, BufferUpdate.None, "Ignore");
 
 	@Override
 	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd)
-			throws DataParseException, IOException {
+		throws DataParseException, IOException {
 		ArrayList<Action> actions = new ArrayList<>(3);
 		State state = sd.getState(src, dst);
 		switch (state) {
@@ -77,16 +77,16 @@ public class BackupActionDecider implements ActionDecider {
 				State buff = bsd.getState(dst);
 				if (buff.equals(State.OrphanDestination)) {
 					actions.add(new Action(ActionType.Add, Destination, BufferUpdate.Destination,
-							"There was a node in buff, but its orphan, so add"));
+						"There was a node in buff, but its orphan, so add"));
 				}
 				else if (buff.equals(state)) {
 					if (state.equals(State.DirSourceFileDestination)) {
 						actions.add(new Action(ActionType.Nothing, None, BufferUpdate.Destination,
-								"dirherefilethere, but there is a dir instead of file, so its in sync"));
+							"dirherefilethere, but there is a dir instead of file, so its in sync"));
 					}
 					else {
 						actions.add(new Action(ActionType.DirHereFileThereError, Destination, BufferUpdate.None,
-								"file changed from/to dir, can't overwrite"));
+							"file changed from/to dir, can't overwrite"));
 						// TODO ^ recompare here
 					}
 				}

@@ -52,7 +52,7 @@ public class FileSystemManager {
 	}
 
 	public final Site createConnection(final FullSync fullsync, final ConnectionDescription desc)
-			throws FileSystemException, IOException, URISyntaxException {
+		throws FileSystemException, IOException, URISyntaxException {
 		URI url = desc.getUri();
 		String scheme = url.getScheme();
 

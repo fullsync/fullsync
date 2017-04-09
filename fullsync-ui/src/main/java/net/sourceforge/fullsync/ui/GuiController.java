@@ -182,8 +182,9 @@ public class GuiController implements Runnable {
 		if ((null != fullsync.getProfileManager().getNextScheduleTask()) && preferences.confirmExit()) {
 			MessageBox mb = new MessageBox(mainShell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
-			mb.setMessage(Messages.getString("GuiController.Do_You_Want_To_Quit") + "\n" //$NON-NLS-1$ //$NON-NLS-2$
-					+ Messages.getString("GuiController.Schedule_is_stopped")); //$NON-NLS-1$
+			String doYouWantToQuit = Messages.getString("GuiController.Do_You_Want_To_Quit"); //$NON-NLS-1$
+			String scheduleIsStopped = Messages.getString("GuiController.Schedule_is_stopped"); //$NON-NLS-1$
+			mb.setMessage(String.format("%s\n%s", doYouWantToQuit, scheduleIsStopped)); //$NON-NLS-1$
 
 			// check whether the user really wants to close
 			if (mb.open() != SWT.YES) {

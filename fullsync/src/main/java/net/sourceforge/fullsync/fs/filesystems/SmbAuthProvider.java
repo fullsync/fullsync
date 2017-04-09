@@ -30,8 +30,9 @@ import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 class SmbAuthProvider implements FileSystemAuthProvider {
 	@Override
 	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws FileSystemException {
-		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME),
-				description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
+		String username = description.getParameter(ConnectionDescription.PARAMETER_USERNAME);
+		String password = description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD);
+		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 	}
 

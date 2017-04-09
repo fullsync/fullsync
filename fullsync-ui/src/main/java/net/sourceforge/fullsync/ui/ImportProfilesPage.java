@@ -86,9 +86,9 @@ public class ImportProfilesPage extends WizardDialog {
 			FileDialog fd = new FileDialog(content.getShell());
 			fd.setFileName("profiles.xml"); //$NON-NLS-1$
 			fd.setFilterExtensions(new String[] {
-					"profiles.xml", //$NON-NLS-1$
-					"*.xml", //$NON-NLS-1$
-					"*" //$NON-NLS-1$
+				"profiles.xml", //$NON-NLS-1$
+				"*.xml", //$NON-NLS-1$
+				"*" //$NON-NLS-1$
 			});
 			fd.setFilterIndex(0);
 			fd.setFilterPath(textPath.getText());

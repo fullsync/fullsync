@@ -57,7 +57,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	}
 
 	protected void recurse(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
-			throws DataParseException, IOException {
+		throws DataParseException, IOException {
 		if (src.isDirectory() && dst.isDirectory()) {
 			synchronizeDirectories(src, dst, rules, parent, actionDecider);
 		}
@@ -67,7 +67,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 
 	@Override
 	public void synchronizeNodes(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
-			throws DataParseException, IOException {
+		throws DataParseException, IOException {
 		if (!takeIgnoreDecider.isNodeIgnored(src)) {
 			for (TaskGenerationListener listener : taskGenerationListeners) {
 				listener.taskGenerationStarted(src, dst);
@@ -93,7 +93,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	 */
 	@Override
 	public void synchronizeDirectories(File src, File dst, RuleSet oldrules, Task parent, ActionDecider actionDecider)
-			throws DataParseException, IOException {
+		throws DataParseException, IOException {
 		// update rules to current directory
 		RuleSet rules = updateRules(src, dst, oldrules);
 

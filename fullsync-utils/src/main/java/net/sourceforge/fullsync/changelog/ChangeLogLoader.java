@@ -47,7 +47,7 @@ public class ChangeLogLoader {
 	}
 
 	public List<ChangeLogEntry> load(File srcDir, String pattern)
-			throws ParserConfigurationException, SAXException, IOException, ParseException {
+		throws ParserConfigurationException, SAXException, IOException, ParseException {
 		Pattern p = Pattern.compile(pattern);
 		List<ChangeLogEntry> changelogEntries = new LinkedList<>();
 		String[] children = srcDir.list();

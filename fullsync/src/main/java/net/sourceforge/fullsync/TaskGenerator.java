@@ -27,10 +27,10 @@ import net.sourceforge.fullsync.fs.Site;
 public interface TaskGenerator extends Phase {
 	// main functionallity
 	TaskTree execute(FullSync fullsync, Profile profile, boolean interactive)
-			throws FileSystemException, DataParseException, URISyntaxException, IOException;
+		throws FileSystemException, DataParseException, URISyntaxException, IOException;
 
 	TaskTree execute(FullSync fullsync, Site source, Site destination, ActionDecider actionDecider, RuleSet initialRules)
-			throws FileSystemException, DataParseException, IOException;
+		throws FileSystemException, DataParseException, IOException;
 
 	// listeners
 	void addTaskGenerationListener(TaskGenerationListener listener);

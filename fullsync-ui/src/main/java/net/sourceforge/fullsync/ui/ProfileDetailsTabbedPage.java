@@ -17,7 +17,6 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
@@ -605,8 +604,9 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			}
 		}
 		RuleSetDescriptor ruleSetDescriptor = null;
-		ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), filter, buttonUseFileFilter.getSelection(),
-				getFileFilterTree());
+		boolean syncSubdirectories = syncSubsButton.getSelection();
+		boolean useFileFilter = buttonUseFileFilter.getSelection();
+		ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubdirectories, filter, useFileFilter, getFileFilterTree());
 
 		if (null == profile) {
 			profile = new Profile(textProfileName.getText(), src, dst, ruleSetDescriptor);

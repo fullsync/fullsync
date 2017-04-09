@@ -82,7 +82,7 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 
 	@Override
 	public TaskTree execute(FullSync fullsync, Profile profile, boolean interactive)
-			throws FileSystemException, URISyntaxException, DataParseException, IOException {
+		throws FileSystemException, URISyntaxException, DataParseException, IOException {
 
 		RuleSet rules = profile.getRuleSet().createRuleSet();
 
@@ -124,7 +124,7 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 
 	@Override
 	public TaskTree execute(FullSync fullsync, Site source, Site destination, ActionDecider actionDecider, RuleSet rules)
-			throws DataParseException, FileSystemException, IOException {
+		throws DataParseException, FileSystemException, IOException {
 		if (!source.isAvailable()) {
 			throw new FileSystemException("source is unavailable");
 		}
@@ -153,8 +153,8 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 	}
 
 	public abstract void synchronizeNodes(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
-			throws DataParseException, IOException;
+		throws DataParseException, IOException;
 
 	public abstract void synchronizeDirectories(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
-			throws DataParseException, IOException;
+		throws DataParseException, IOException;
 }

@@ -324,8 +324,12 @@ public class TaskDecisionList extends Composite {
 			}
 			++tableLogLinesFillIndex;
 			item.setImage(2, image);
-			item.setText(new String[] { t.getSource().getPath(), formatSize(t), "", //$NON-NLS-1$
-					t.getCurrentAction().getExplanation() });
+			String[] text = new String[4];
+			text[0] = t.getSource().getPath();
+			text[0] = formatSize(t);
+			text[0] = ""; //$NON-NLS-1$
+			text[0] = t.getCurrentAction().getExplanation();
+			item.setText(text);
 			item.setData(t);
 
 			taskItemMap.put(t, item);
@@ -373,6 +377,13 @@ public class TaskDecisionList extends Composite {
 		}
 	}
 
+	private boolean isSameAction(Action a, Action b) {
+		boolean same = a.getType() == b.getType();
+		same = same && (a.getLocation() == b.getLocation());
+		same = same && a.getExplanation().equals(b.getExplanation());
+		return same;
+	}
+
 	protected void showPopup(int x, int y) {
 		final TableItem[] tableItemList = tableLogLines.getSelection();
 		// TODO impl some kind of ActionList supporting "containsAction"
@@ -388,11 +399,9 @@ public class TaskDecisionList extends Composite {
 				Task task = (Task) item.getData();
 				Action[] actions = task.getActions();
 
-				for (int iAction = 0; iAction < actions.length; iAction++) {
-					Action a = actions[iAction];
-					if ((a.getType() == targetAction.getType()) && (a.getLocation() == targetAction.getLocation())
-							&& a.getExplanation().equals(targetAction.getExplanation())) {
-						task.setCurrentAction(iAction);
+				for (int i = 0; i < actions.length; ++i) {
+					if (isSameAction(actions[i], targetAction)) {
+						task.setCurrentAction(i);
 						break;
 					}
 				}
@@ -423,8 +432,7 @@ public class TaskDecisionList extends Composite {
 				if (null != action) {
 					// check whether action is also supported by this task
 					for (Action a : actions) {
-						if ((a.getType() == action.getType()) && (a.getLocation() == action.getLocation())
-								&& a.getExplanation().equals(action.getExplanation())) {
+						if (isSameAction(a, action)) {
 							// the action exists
 							found = true;
 							break;

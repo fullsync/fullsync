@@ -31,7 +31,7 @@ public class FullSync {
 	private final RuntimeConfiguration runtimeConfiguration;
 
 	public FullSync(ConfigurationPreferences _preferences, ProfileManager _profileManager, Synchronizer _synchronizer,
-			RuntimeConfiguration _runtimeConfiguration) {
+		RuntimeConfiguration _runtimeConfiguration) {
 		preferences = _preferences;
 		profileManager = _profileManager;
 		synchronizer = _synchronizer;

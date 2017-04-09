@@ -21,6 +21,7 @@ package net.sourceforge.fullsync.ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -162,8 +163,10 @@ public class ScheduleSelectionDialog extends Dialog {
 			dialogShell.setSize(350, 350);
 
 			Rectangle rect = getParent().getBounds();
-			dialogShell.setLocation((rect.x + (rect.width / 2)) - (dialogShell.getSize().x / 2),
-					(rect.y + (rect.height / 2)) - (dialogShell.getSize().y / 2));
+			Point dialogSize = dialogShell.getSize();
+			int x = (rect.x + (rect.width / 2)) - (dialogSize.x / 2);
+			int y = (rect.y + (rect.height / 2)) - (dialogSize.y / 2);
+			dialogShell.setLocation(x, y);
 			dialogShell.layout();
 			dialogShell.open();
 			while (!dialogShell.isDisposed()) {

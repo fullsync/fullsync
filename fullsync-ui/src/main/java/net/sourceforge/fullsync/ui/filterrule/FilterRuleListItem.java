@@ -108,7 +108,7 @@ public class FilterRuleListItem {
 	private final FileFilterManager fileFilterManager;
 
 	public FilterRuleListItem(FileFilterPage root, Composite composite, FileFilterManager fileFilterManager, String ruleType, int op,
-			OperandValue value) {
+		OperandValue value) {
 		this.fileFilterManager = fileFilterManager;
 		this.ruleType = ruleType;
 		this.op = op;

@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.schedule.CrontabPart;
+import net.sourceforge.fullsync.schedule.CrontabPart.Instance;
 import net.sourceforge.fullsync.schedule.CrontabSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
 
@@ -179,7 +180,11 @@ class CrontabScheduleOptions extends ScheduleOptions {
 
 	@Override
 	public Schedule getSchedule() throws DataParseException {
-		return new CrontabSchedule(parts[0].getInstance(), parts[1].getInstance(), parts[2].getInstance(), parts[3].getInstance(),
-				parts[4].getInstance());
+		Instance minutes = parts[0].getInstance();
+		Instance hours = parts[1].getInstance();
+		Instance daysOfMonth = parts[2].getInstance();
+		Instance months = parts[3].getInstance();
+		Instance daysOfWeek = parts[4].getInstance();
+		return new CrontabSchedule(minutes, hours, daysOfMonth, months, daysOfWeek);
 	}
 }

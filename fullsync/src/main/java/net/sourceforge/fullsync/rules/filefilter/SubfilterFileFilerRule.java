@@ -17,9 +17,6 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-/*
- * Created on 6-feb-2006
- */
 package net.sourceforge.fullsync.rules.filefilter;
 
 import net.sourceforge.fullsync.fs.File;

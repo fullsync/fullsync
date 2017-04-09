@@ -74,7 +74,7 @@ public class CrontabSchedule extends Schedule {
 	}
 
 	public CrontabSchedule(CrontabPart.Instance minutes, CrontabPart.Instance hours, CrontabPart.Instance daysOfMonth,
-			CrontabPart.Instance months, CrontabPart.Instance daysOfWeek) {
+		CrontabPart.Instance months, CrontabPart.Instance daysOfWeek) {
 		this.minutes = minutes;
 		this.hours = hours;
 		this.daysOfMonth = daysOfMonth;

@@ -89,7 +89,7 @@ public abstract class Util {
 	}
 
 	public static String[] loadDirectoryFromClasspath(Class<?> clazz, String path)
-			throws URISyntaxException, UnsupportedEncodingException, IOException {
+		throws URISyntaxException, UnsupportedEncodingException, IOException {
 		URL dirURL = clazz.getProtectionDomain().getCodeSource().getLocation();
 		File src = new File(dirURL.toURI());
 		if (src.isDirectory() && src.exists()) {

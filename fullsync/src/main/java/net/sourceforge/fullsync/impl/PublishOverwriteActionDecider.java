@@ -40,13 +40,13 @@ import net.sourceforge.fullsync.fs.File;
 public class PublishOverwriteActionDecider implements ActionDecider {
 	private static final Action addDestination = new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, "Add");
 	private static final Action overwriteSource = new Action(ActionType.Update, Location.Source, BufferUpdate.Destination,
-			"overwrite source");
+		"overwrite source");
 	private static final Action overwriteDestination = new Action(ActionType.Update, Location.Destination, BufferUpdate.Destination,
-			"overwrite destination");
+		"overwrite destination");
 	private static final Action updateDestination = new Action(ActionType.Update, Location.Destination, BufferUpdate.Destination,
-			"Source changed");
+		"Source changed");
 	private static final Action deleteDestination = new Action(ActionType.Delete, Location.Destination, BufferUpdate.Destination,
-			"Delete destination file", false);
+		"Delete destination file", false);
 	private static final Action inSync = new Action(ActionType.Nothing, Location.None, BufferUpdate.None, "In Sync");
 	private static final Action ignore = new Action(ActionType.Nothing, Location.None, BufferUpdate.None, "Ignore");
 
@@ -70,31 +70,31 @@ public class PublishOverwriteActionDecider implements ActionDecider {
 				State buff = bsd.getState(dst);
 				if (buff.equals(State.OrphanSource)) {
 					actions.add(new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination,
-							"There was a node in buff, but its orphan, so add"));
+						"There was a node in buff, but its orphan, so add"));
 				}
 				else if (buff.equals(State.DirSourceFileDestination)) {
 					actions.add(new Action(ActionType.Nothing, Location.None, BufferUpdate.None,
-							"dirherefilethere, but there is a dir instead of file, so its in sync"));
+						"dirherefilethere, but there is a dir instead of file, so its in sync"));
 				}
 				else {
 					actions.add(new Action(ActionType.DirHereFileThereError, Location.Source, BufferUpdate.None,
-							"cant update, dir here file there error occured"));
+						"cant update, dir here file there error occured"));
 				}
 				break;
 			case FileSourceDirDestination:
 				State buff1 = bsd.getState(dst);
 				if (buff1.equals(State.OrphanSource)) {
 					actions.add(new Action(ActionType.Add, Location.Source, BufferUpdate.Destination,
-							"There was a node in buff, but its orphan, so add"));
+						"There was a node in buff, but its orphan, so add"));
 				}
 				else if (buff1.equals(State.FileSourceDirDestination)) {
 					actions.add(new Action(ActionType.UnexpectedChangeError, Location.Destination, BufferUpdate.None,
-							"dirherefilethere, but there is a file instead of dir, so unexpected change"));
+						"dirherefilethere, but there is a file instead of dir, so unexpected change"));
 					// TODO ^ recompare here
 				}
 				else {
 					actions.add(new Action(ActionType.DirHereFileThereError, Location.Destination, BufferUpdate.None,
-							"cant update, dir here file there error occured"));
+						"cant update, dir here file there error occured"));
 				}
 				break;
 			case FileChangeDestination:

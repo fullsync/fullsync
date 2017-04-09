@@ -74,8 +74,9 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	@Override
 	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws FileSystemException {
-		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, description.getParameter(ConnectionDescription.PARAMETER_USERNAME),
-				description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
+		String username = description.getParameter(ConnectionDescription.PARAMETER_USERNAME);
+		String password = description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD);
+		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 		SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
 		//TODO: add cfg.setUserDirIsRoot(opts, false); and handle profile updates
@@ -135,7 +136,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	@Override
 	public final String[] promptKeyboardInteractive(final String destination, final String name, final String instruction,
-			final String[] prompt, final boolean[] echo) {
+		final String[] prompt, final boolean[] echo) {
 		logger.warn("Suppressed promptKeyboardInteractive:");
 		logger.warn("Destination: " + destination);
 		logger.warn("Name: " + name);
