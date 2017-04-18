@@ -1,7 +1,12 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+}
 
 plugins {
 	id 'com.github.ben-manes.versions' version '0.14.0'
-	id 'com.diffplug.gradle.spotless' version '3.2.0'
+	id 'com.diffplug.gradle.spotless' version '3.3.0'
 }
 
 apply plugin: 'com.diffplug.gradle.spotless'
@@ -13,6 +18,11 @@ spotless {
 }
 
 subprojects {
+	buildscript {
+		repositories {
+			jcenter()
+		}
+	}
 	version = rootProject.version
 	apply plugin: 'com.diffplug.gradle.spotless'
 
