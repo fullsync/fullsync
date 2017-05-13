@@ -53,7 +53,7 @@ public class FileSizeFileFilterRuleTest {
 	@Test
 	public void testOpIsGreaterThan() throws FilterRuleNotAppliableException {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"),
-				FileSizeFileFilterRule.OP_IS_GREATER_THAN);
+			FileSizeFileFilterRule.OP_IS_GREATER_THAN);
 		TestNode file = new TestNode("foobar.txt", root, true, false, 1000, 0);
 
 		assertTrue(!filterRule.match(file));

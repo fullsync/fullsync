@@ -56,7 +56,7 @@ public class FileTypeFileNameFilterRuleTest {
 	@Test
 	public void testIsDirectory() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY),
-				FileTypeFileFilterRule.OP_IS);
+			FileTypeFileFilterRule.OP_IS);
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
 
@@ -68,7 +68,7 @@ public class FileTypeFileNameFilterRuleTest {
 	@Test
 	public void testIsntDirectory() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY),
-				FileTypeFileFilterRule.OP_ISNT);
+			FileTypeFileFilterRule.OP_ISNT);
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
 

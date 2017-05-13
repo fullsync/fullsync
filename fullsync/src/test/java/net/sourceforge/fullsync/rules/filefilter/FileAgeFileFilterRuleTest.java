@@ -49,13 +49,13 @@ public class FileAgeFileFilterRuleTest {
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:01").getTime());
 		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_IS);
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 10:00:00").getTime())));
+			"01/01/2005 10:00:00").getTime())));
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 10:00:01").getTime())));
+			"01/01/2005 10:00:01").getTime())));
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 09:00:00").getTime())));
+			"01/01/2005 09:00:00").getTime())));
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/02/2005 10:00:00").getTime())));
+			"01/02/2005 10:00:00").getTime())));
 	}
 
 	@Test
@@ -64,13 +64,13 @@ public class FileAgeFileFilterRuleTest {
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:01").getTime());
 		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_ISNT);
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 10:00:00").getTime())));
+			"01/01/2005 10:00:00").getTime())));
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 10:00:01").getTime())));
+			"01/01/2005 10:00:01").getTime())));
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 09:00:00").getTime())));
+			"01/01/2005 09:00:00").getTime())));
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/02/2005 10:00:00").getTime())));
+			"01/02/2005 10:00:00").getTime())));
 	}
 
 	@Test
@@ -78,27 +78,27 @@ public class FileAgeFileFilterRuleTest {
 		SystemDate.getInstance().setTimeSpeed(0);
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:00").getTime());
 		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS),
-				FileAgeFileFilterRule.OP_IS_GREATER_THAN);
+			FileAgeFileFilterRule.OP_IS_GREATER_THAN);
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 10:00:00").getTime())));
+			"01/01/2005 10:00:00").getTime())));
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 10:00:01").getTime())));
+			"01/01/2005 10:00:01").getTime())));
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 10:00:02").getTime())));
+			"01/01/2005 10:00:02").getTime())));
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"30/12/2004 09:00:00").getTime())));
+			"30/12/2004 09:00:00").getTime())));
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 01:00:00").getTime())));
+			"01/01/2005 01:00:00").getTime())));
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 11:00:00").getTime())));
+			"01/01/2005 11:00:00").getTime())));
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2006 09:00:00").getTime())));
+			"01/01/2006 09:00:00").getTime())));
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2004 09:00:00").getTime())));
+			"01/01/2004 09:00:00").getTime())));
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 09:59:59").getTime())));
+			"01/01/2005 09:59:59").getTime())));
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 09:59:58").getTime())));
+			"01/01/2005 09:59:58").getTime())));
 	}
 
 	@Test
@@ -106,18 +106,18 @@ public class FileAgeFileFilterRuleTest {
 		SystemDate.getInstance().setTimeSpeed(0);
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:00").getTime());
 		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(10, AgeValue.Unit.SECONDS),
-				FileAgeFileFilterRule.OP_IS_LESS_THAN);
+			FileAgeFileFilterRule.OP_IS_LESS_THAN);
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 10:00:00").getTime())));
+			"01/01/2005 10:00:00").getTime())));
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 09:59:57").getTime())));
+			"01/01/2005 09:59:57").getTime())));
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 09:59:50").getTime())));
+			"01/01/2005 09:59:50").getTime())));
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"30/12/2004 10:00:00").getTime())));
+			"30/12/2004 10:00:00").getTime())));
 		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 09:00:00").getTime())));
+			"01/01/2005 09:00:00").getTime())));
 		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, dateFormat.parse(
-				"01/01/2005 11:00:00").getTime())));
+			"01/01/2005 11:00:00").getTime())));
 	}
 }
