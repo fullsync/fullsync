@@ -1,9 +1,8 @@
 
 apply plugin: 'java'
 
-def getLocalSWTVersion() {
-	def arch = System.properties['os.arch'].contains('64') ? 'x86_64' : 'x86'
-	def osName = System.properties['os.name'].toLowerCase()
+def getSWTVariant(osName, osArch) {
+	def arch = osArch.contains('64') ? 'x86_64' : 'x86'
 	def os = ''
 	if (osName.contains('windows')) {
 		os = 'win32.win32'
@@ -17,10 +16,31 @@ def getLocalSWTVersion() {
 	return "org.eclipse.platform:org.eclipse.swt.${os}.${arch}:${ext.swtVersion}"
 }
 
+def getLocalSWTVersion() {
+	return getSWTVariant(System.properties['os.name'].toLowerCase(), System.properties['os.arch'])
+}
+
+configurations {
+	dist.extendsFrom(runtime)
+}
+
 dependencies {
 	compile project(':fullsync')
 	compile project(':fullsync-assets')
-	compile (getLocalSWTVersion()) {
-		exclude module: 'org.eclipse.swt'
-	}
+	compile getLocalSWTVersion()
+	dist getSWTVariant("linux", "x86")
+	dist getSWTVariant("linux", "x86_64")
+	dist getSWTVariant("mac", "x86_64")
+	dist getSWTVariant("windows", "x86")
+	dist getSWTVariant("windows", "x86_64")
+	dist project(':fullsync-ui')
+}
+
+configurations {
+	all*.exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt'
+}
+
+task run(type: JavaExec) {
+	main = 'net.sourceforge.fullsync.ui.DebugMain'
+	classpath = configurations.runtime + sourceSets.main.output
 }

@@ -10,7 +10,9 @@ plugins {
 }
 
 apply plugin: 'com.diffplug.gradle.spotless'
+apply plugin: 'distribution'
 
+group = "net.sourceforge.fullsync"
 version = '0.11.0'
 
 spotless {
@@ -23,6 +25,7 @@ subprojects {
 			jcenter()
 		}
 	}
+	group = rootProject.group
 	version = rootProject.version
 	apply plugin: 'com.diffplug.gradle.spotless'
 
@@ -66,4 +69,52 @@ subprojects {
 
 task wrapper(type: Wrapper) {
 	gradleVersion = '3.5'
+}
+
+distributions {
+	main {
+		contents {
+			from 'resources/fullsync*'
+			from file('LICENSE')
+		}
+	}
+}
+
+gradle.projectsEvaluated {
+	distTar {
+		dependsOn project('fullsync-ui').jar
+	}
+
+	distZip {
+		dependsOn project('fullsync-ui').jar
+	}
+
+	distributions.main.contents {
+		from('resources') {
+			include 'fullsync*'
+		}
+	}
+
+	def ui = project(':fullsync-ui')
+	def resolvedUiDist = ui.configurations.dist.resolvedConfiguration
+	def commonContents = copySpec {}
+	resolvedUiDist.resolvedArtifacts.each { a ->
+		commonContents.with copySpec {
+			def f = a.file
+			into('lib') {
+				from(f.path) {
+					def group = a.moduleVersion.id.group
+					def classifier = a.classifier ?: ""
+					classifier = classifier ? "-${classifier}" : ""
+					rename(f.name, "${group}-${a.name}${classifier}.${a.extension}")
+				}
+			}
+		}
+	}
+	commonContents.with copySpec {
+		into('lib') {
+			from resolvedUiDist.files - resolvedUiDist.resolvedArtifacts*.file
+		}
+	}
+	distributions.main.contents.with commonContents
 }
