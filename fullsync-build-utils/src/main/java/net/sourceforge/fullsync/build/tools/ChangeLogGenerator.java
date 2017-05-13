@@ -22,10 +22,9 @@ package net.sourceforge.fullsync.build.tools;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
 import java.text.ParseException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -72,9 +71,8 @@ public class ChangeLogGenerator {
 		ChangeLogLoader c = new ChangeLogLoader();
 		List<ChangeLogEntry> changelogEntries = c.load(dir, pattern);
 		PrintWriter pw = (null == changelog) ? new PrintWriter(System.out) : new PrintWriter(changelog);
-		DateFormat releaseDateFormatter = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
 		for (ChangeLogEntry entry : changelogEntries) {
-			entry.write("FullSync %s %s", " - %s", pw, releaseDateFormatter);
+			entry.write("FullSync %s %s", " - %s", pw, DateTimeFormatter.ofPattern("MMMM d, uuuu"));
 		}
 		pw.flush();
 	}

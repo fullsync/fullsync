@@ -21,9 +21,8 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.File;
 import java.io.StringWriter;
-import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -56,7 +55,7 @@ public class ChangeLogBox extends StyledText implements AsyncUIUpdate {
 		if (!isDisposed()) {
 			if (succeeded) {
 				StringWriter sw = new StringWriter();
-				DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+				DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM d, uuuu");
 				for (ChangeLogEntry entry : changelog) {
 					entry.write("FullSync %s released on %s", " - %s", sw, dateFormat);
 				}

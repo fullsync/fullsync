@@ -21,10 +21,9 @@ package net.sourceforge.fullsync.changelog;
 
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -32,10 +31,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class ChangeLogEntry implements Comparable<ChangeLogEntry> {
-	private static DateFormat releaseDateParser = new SimpleDateFormat("yyyyMMdd");
 	private Node ul;
 	private String manual;
-	private Date date;
+	private LocalDate date;
 	private String version;
 
 	public ChangeLogEntry(Document doc) throws ParseException {
@@ -45,10 +43,10 @@ public class ChangeLogEntry implements Comparable<ChangeLogEntry> {
 		manual = attr(attrs, "data-manual");
 		String d = attr(attrs, "data-date");
 		if ("00000000".equals(d)) {
-			date = new Date();
+			date = LocalDate.now();
 		}
 		else {
-			date = releaseDateParser.parse(d);
+			date = LocalDate.parse(d, DateTimeFormatter.BASIC_ISO_DATE);
 		}
 	}
 
@@ -60,7 +58,7 @@ public class ChangeLogEntry implements Comparable<ChangeLogEntry> {
 		return null;
 	}
 
-	public void write(String headerTemplate, String entryTemplate, Writer wr, DateFormat dateFormat) {
+	public void write(String headerTemplate, String entryTemplate, Writer wr, DateTimeFormatter dateFormat) {
 		PrintWriter pw = new PrintWriter(wr);
 		pw.println(String.format(headerTemplate, version, dateFormat.format(date)));
 		NodeList lis = ul.getChildNodes();
@@ -81,5 +79,13 @@ public class ChangeLogEntry implements Comparable<ChangeLogEntry> {
 
 	public String getVersion() {
 		return version;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public String getManual() {
+		return manual;
 	}
 }

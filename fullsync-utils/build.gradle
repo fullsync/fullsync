@@ -1,2 +1,6 @@
 
 apply plugin: 'java'
+
+dependencies {
+	testCompile "junit:junit:${project.ext.junitVersion}"
+}
