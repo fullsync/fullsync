@@ -9,6 +9,10 @@ plugins {
 	id 'com.diffplug.gradle.spotless' version '3.3.0'
 }
 
+repositories {
+	jcenter()
+}
+
 apply plugin: 'com.diffplug.gradle.spotless'
 apply plugin: 'distribution'
 
@@ -28,8 +32,10 @@ subprojects {
 	group = rootProject.group
 	version = rootProject.version
 	apply plugin: 'com.diffplug.gradle.spotless'
+	apply plugin: 'jacoco'
 
-	plugins.withType(JavaPlugin).whenPluginAdded {
+	def subproject = delegate
+	plugins.withType(JavaPlugin).whenPluginAdded { p ->
 		sourceCompatibility = 1.8
 		targetCompatibility = 1.8
 		jar {
@@ -48,7 +54,7 @@ subprojects {
 				endWithNewline()
 			}
 		}
-
+		jacocoRootReport.dependsOn subproject.tasks.jacocoTestReport
 	}
 
 	ext {
@@ -117,4 +123,40 @@ gradle.projectsEvaluated {
 		}
 	}
 	distributions.main.contents.with commonContents
+
+	subprojects.findAll { subproject ->
+		subproject.pluginManager.hasPlugin('java')
+	}.each { subproject ->
+		jacocoRootReport.sourceDirectories = jacocoRootReport.sourceDirectories + subproject.jacocoTestReport.sourceDirectories
+		jacocoRootReport.classDirectories = jacocoRootReport.classDirectories + subproject.jacocoTestReport.classDirectories
+		jacocoRootReport.executionData = jacocoRootReport.executionData + subproject.jacocoTestReport.executionData
+	}
+}
+
+apply plugin: 'jacoco'
+
+jacoco {
+	reportsDir = file("${project.reporting.baseDir}/jacoco")
+}
+
+task jacocoRootReport(type: JacocoReport) {
+	sourceDirectories = files()
+	classDirectories = files()
+	executionData = files()
+	reports {
+		html.enabled = true
+		xml.enabled = true
+		csv.enabled = false
+	}
+
+	// Work-around to allow us to build list of executionData files in doFirst
+	onlyIf = {
+		true
+	}
+
+	doFirst {
+		executionData = files(executionData.findAll {
+			it.exists()
+		})
+	}
 }
