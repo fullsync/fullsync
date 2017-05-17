@@ -86,6 +86,13 @@ distributions {
 	}
 }
 
+def mapArtifactToFilename(a) {
+	def group = a.moduleVersion.id.group
+	def classifier = a.classifier ?: ""
+	classifier = classifier ? "-${classifier}" : ""
+	return "${group}-${a.name}${classifier}.${a.extension}"
+}
+
 gradle.projectsEvaluated {
 	distTar {
 		dependsOn project('fullsync-ui').jar
@@ -109,10 +116,7 @@ gradle.projectsEvaluated {
 			def f = a.file
 			into('lib') {
 				from(f.path) {
-					def group = a.moduleVersion.id.group
-					def classifier = a.classifier ?: ""
-					classifier = classifier ? "-${classifier}" : ""
-					rename(f.name, "${group}-${a.name}${classifier}.${a.extension}")
+					rename(f.name, mapArtifactToFilename(a))
 				}
 			}
 		}

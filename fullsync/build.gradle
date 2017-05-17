@@ -21,6 +21,13 @@ dependencies {
 jar {
 	manifest {
 		attributes 'Main-Class': 'net.sourceforge.fullsync.cli.Main'
-		attributes 'Class-Path': configurations.runtime.collect { it.getName() }.join(' ')
+		def resolvedRuntime = configurations.runtime.resolvedConfiguration
+		def jarFiles = resolvedRuntime.resolvedArtifacts.collect { a ->
+			rootProject.mapArtifactToFilename a
+		}
+		(resolvedRuntime.files - resolvedRuntime.resolvedArtifacts*.file).collect { f ->
+			jarFiles.add f.name
+		}
+		attributes 'Class-Path': jarFiles.join(' ')
 	}
 }
