@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -88,34 +89,47 @@ public abstract class Util {
 		return new File(".");
 	}
 
-	public static String[] loadDirectoryFromClasspath(Class<?> clazz, String path)
+	public static Set<String> loadDirectoryFromClasspath(String path)
 		throws URISyntaxException, UnsupportedEncodingException, IOException {
-		URL dirURL = clazz.getProtectionDomain().getCodeSource().getLocation();
-		File src = new File(dirURL.toURI());
-		if (src.isDirectory() && src.exists()) {
-			return new File(new File(dirURL.toURI()), path.replace('/', File.separatorChar)).list();
-		}
+		ClassLoader cl = getContextClassLoader();
+		Enumeration<URL> urls = cl.getResources(path);
+		Set<String> children = new HashSet<>();
+		while(urls.hasMoreElements()) {
+			URL url = urls.nextElement();
+			File src;
+			if ("jar".equals(url.getProtocol())) {
+				src = new File(new URI(url.toString().replaceAll("^jar:(.+)!/.*$", "$1")));
+			}
+			else {
+				src = new File(url.toURI());
 
-		if (src.isFile() && src.exists()) {
-			try (JarFile jar = new JarFile(src)) {
-				Enumeration<JarEntry> jarEntries = jar.entries();
-				Set<String> result = new HashSet<>(); //avoid duplicates in case it is a subdirectory
-				String prefix = path;
-				if ('/' == prefix.charAt(0)) {
-					prefix = prefix.substring(1);
-				}
-				while (jarEntries.hasMoreElements()) {
-					JarEntry entry = jarEntries.nextElement();
-					String name = entry.getName();
-					if (!entry.isDirectory() && name.startsWith(prefix)) { //filter according to the path
-						name = name.substring(prefix.length());
-						result.add(name);
+			}
+			if (src.isDirectory() && src.exists()) {
+				src.toPath().forEach(p -> children.add(p.toFile().getName()));
+			}
+			else if (src.isFile() && src.exists()) {
+				try (JarFile jar = new JarFile(src)) {
+					Enumeration<JarEntry> jarEntries = jar.entries();
+					String prefix = path;
+					if ('/' == prefix.charAt(0)) {
+						prefix = prefix.substring(1);
+					}
+					while (jarEntries.hasMoreElements()) {
+						JarEntry entry = jarEntries.nextElement();
+						String name = entry.getName();
+						if (!entry.isDirectory() && name.startsWith(prefix)) { //filter according to the path
+							name = name.substring(prefix.length());
+							children.add(name);
+						}
 					}
 				}
-				return result.toArray(new String[result.size()]);
 			}
 		}
-		return new String[] {};
+		return children;
+	}
+
+	private static ClassLoader getContextClassLoader() {
+		return Thread.currentThread().getContextClassLoader();
 	}
 
 	public static void fileRenameToPortableLegacy(String from, String to) throws Exception {

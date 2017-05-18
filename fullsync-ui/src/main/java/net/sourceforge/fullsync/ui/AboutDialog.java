@@ -292,7 +292,7 @@ class AboutDialog implements AsyncUIUpdate {
 	public void execute() throws Exception {
 		int numLicenses = 0;
 		List<LicenseEntry> licenses = new ArrayList<>();
-		for (String name : Util.loadDirectoryFromClasspath(AboutDialog.class, FULLSYNC_LICENSES_DIRECTORY)) {
+		for (String name : Util.loadDirectoryFromClasspath(FULLSYNC_LICENSES_DIRECTORY)) {
 			if (name.endsWith(".txt")) { //$NON-NLS-1$
 				++numLicenses;
 				LicenseEntry entry = new LicenseEntry();
