@@ -6,7 +6,7 @@ buildscript {
 
 plugins {
 	id 'com.github.ben-manes.versions' version '0.14.0'
-	id 'com.diffplug.gradle.spotless' version '3.3.0'
+	id 'com.diffplug.gradle.spotless' version '3.3.2'
 }
 
 repositories {
@@ -73,8 +73,13 @@ subprojects {
 	}
 }
 
-task wrapper(type: Wrapper) {
+wrapper {
 	gradleVersion = '3.5'
+}
+
+dependencyUpdates {
+	revision = "release"
+	outputFormatter = "plain"
 }
 
 distributions {
