@@ -164,3 +164,17 @@ task jacocoRootReport(type: JacocoReport) {
 		})
 	}
 }
+
+task run(type: JavaExec) {
+	dependsOn installDist
+	main = '-jar'
+	args = ["${buildDir}/install/${project.name}/lib/net.sourceforge.fullsync-fullsync.jar", "-v"]
+}
+
+task debug(type: JavaExec) {
+	dependsOn installDist
+	main = '-jar'
+	args = ["${buildDir}/install/${project.name}/lib/net.sourceforge.fullsync-fullsync.jar", "-v"]
+	debug = true
+	enableAssertions = true
+}
