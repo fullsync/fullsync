@@ -94,7 +94,7 @@ public abstract class Util {
 		ClassLoader cl = getContextClassLoader();
 		Enumeration<URL> urls = cl.getResources(path);
 		Set<String> children = new HashSet<>();
-		while(urls.hasMoreElements()) {
+		while (urls.hasMoreElements()) {
 			URL url = urls.nextElement();
 			File src;
 			if ("jar".equals(url.getProtocol())) {
