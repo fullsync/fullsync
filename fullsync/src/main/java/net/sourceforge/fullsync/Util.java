@@ -47,7 +47,7 @@ public abstract class Util {
 	// keep in sync with net.sourceforge.fullsync.launcher.Launcher.getResourceAsString(String)
 	public static String getResourceAsString(final String name) {
 		StringBuilder out = new StringBuilder();
-		try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name)) {
+		try (InputStream is = getContextClassLoader().getResourceAsStream(name)) {
 			if (null != is) {
 				final char[] buffer = new char[IOBUFFERSIZE];
 				Reader in = new InputStreamReader(is, StandardCharsets.UTF_8);
