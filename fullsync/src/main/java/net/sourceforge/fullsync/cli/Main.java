@@ -308,28 +308,28 @@ public class Main implements Launcher { // NO_UCD
 			arch = "x86_64";
 		}
 		if (-1 != osName.indexOf("linux")) {
-			os = "gtk-linux";
+			os = "gtk.linux";
 		}
 		else if (-1 != osName.indexOf("windows")) {
-			os = "win32-win32";
+			os = "win32.win32";
 		}
 		else if (-1 != osName.indexOf("mac")) {
-			os = "cocoa-macosx";
+			os = "cocoa.macosx";
 		}
 		CodeSource cs = getClass().getProtectionDomain().getCodeSource();
-		String libDirectory = cs.getLocation().toURI().toString().replaceAll("fullsync\\.jar$", "");
+		String libDirectory = cs.getLocation().toURI().toString().replaceAll("^(.*)/[^/]+\\.jar$", "$1/");
 
 		ArrayList<URL> jars = new ArrayList<>();
-		jars.add(new URL(libDirectory + "assets.jar"));
-		jars.add(new URL(libDirectory + "fullsync-ui.jar"));
+		jars.add(new URL(libDirectory + "net.sourceforge.fullsync-fullsync-assets.jar"));
+		jars.add(new URL(libDirectory + "net.sourceforge.fullsync-fullsync-ui.jar"));
 		// add correct SWT implementation to the class-loader
-		jars.add(new URL(libDirectory + "swt-" + os + "-" + arch + ".jar"));
+		jars.add(new URL(libDirectory + "org.eclipse.platform-org.eclipse.swt." + os + "." + arch + ".jar"));
 
 		// instantiate an URL class-loader with the constructed class-path and load the UI
 		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Main.class.getClassLoader());
+		Thread.currentThread().setContextClassLoader(cl);
 		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.ui.GuiController");
 		Method launchUI = cls.getDeclaredMethod("launchUI", new Class<?>[] { FullSync.class });
-		Thread.currentThread().setContextClassLoader(cl);
 		launchUI.invoke(null, new Object[] { fullsync });
 	}
 }

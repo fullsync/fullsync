@@ -80,7 +80,9 @@ task wrapper(type: Wrapper) {
 distributions {
 	main {
 		contents {
-			from 'resources/fullsync*'
+			from('resources') {
+				include 'fullsync*'
+			}
 			from file('LICENSE')
 		}
 	}
@@ -94,18 +96,16 @@ def mapArtifactToFilename(a) {
 }
 
 gradle.projectsEvaluated {
+	installDist {
+		dependsOn project('fullsync-ui').jar
+	}
+
 	distTar {
 		dependsOn project('fullsync-ui').jar
 	}
 
 	distZip {
 		dependsOn project('fullsync-ui').jar
-	}
-
-	distributions.main.contents {
-		from('resources') {
-			include 'fullsync*'
-		}
 	}
 
 	def ui = project(':fullsync-ui')
