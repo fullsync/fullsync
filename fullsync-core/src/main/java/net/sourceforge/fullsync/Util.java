@@ -70,14 +70,6 @@ public abstract class Util {
 		return Util.getResourceAsString("net/sourceforge/fullsync/version.txt").trim();
 	}
 
-	public static String getTwitterURL() {
-		return Util.getResourceAsString("net/sourceforge/fullsync/twitter-url.txt").trim();
-	}
-
-	public static String getWebsiteURL() {
-		return Util.getResourceAsString("net/sourceforge/fullsync/website-url.txt").trim();
-	}
-
 	public static File getInstalllocation() {
 		URL codeSource = Util.class.getProtectionDomain().getCodeSource().getLocation();
 		try {

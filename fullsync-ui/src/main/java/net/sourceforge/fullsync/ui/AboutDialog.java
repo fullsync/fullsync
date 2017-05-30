@@ -233,7 +233,7 @@ class AboutDialog implements AsyncUIUpdate {
 		Link websiteLink = new Link(compositeBottom, SWT.NONE);
 		websiteLink.setText(String.format("<a>%s</a>", Messages.getString("AboutDialog.WebSite"))); //$NON-NLS-1$ //$NON-NLS-2$
 		GridData websiteLinkLData = new GridData();
-		websiteLink.addListener(SWT.Selection, e -> GuiController.launchProgram(Util.getWebsiteURL()));
+		websiteLink.addListener(SWT.Selection, e -> GuiController.launchProgram(GuiController.getWebsiteURL()));
 		websiteLinkLData.grabExcessHorizontalSpace = false;
 		websiteLinkLData.horizontalAlignment = SWT.CENTER;
 		websiteLink.setLayoutData(websiteLinkLData);
@@ -249,7 +249,7 @@ class AboutDialog implements AsyncUIUpdate {
 		Link twitterLink = new Link(compositeTwitter, SWT.NONE);
 		twitterLink.setText("<a>@FullSyncNews</a>"); //$NON-NLS-1$
 		GridData twitterLinkLData = new GridData();
-		twitterLink.addListener(SWT.Selection, e -> GuiController.launchProgram(Util.getTwitterURL()));
+		twitterLink.addListener(SWT.Selection, e -> GuiController.launchProgram(GuiController.getTwitterURL()));
 		twitterLink.setLayoutData(twitterLinkLData);
 		tab.pack();
 		tab.layout();

@@ -311,4 +311,12 @@ public class GuiController implements Runnable {
 		GuiController gc = getInstance();
 		gc.executorService.execute(new ExecuteBackgroundJob(job, gc.display));
 	}
+
+	public static String getTwitterURL() {
+		return Util.getResourceAsString("net/sourceforge/fullsync/twitter-url.txt").trim();
+	}
+
+	public static String getWebsiteURL() {
+		return Util.getResourceAsString("net/sourceforge/fullsync/website-url.txt").trim();
+	}
 }

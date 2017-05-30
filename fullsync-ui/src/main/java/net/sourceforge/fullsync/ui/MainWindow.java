@@ -343,14 +343,14 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 				GuiController.launchProgram(helpIndex.getAbsolutePath());
 			}
 			else {
-				GuiController.launchProgram(Util.getWebsiteURL() + "docs/manual-" + Util.getFullSyncVersion() + "/manual.html"); //$NON-NLS-1$ //$NON-NLS-2$
+				GuiController.launchProgram(GuiController.getWebsiteURL() + "docs/manual-" + Util.getFullSyncVersion() + "/manual.html"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		});
 
 		MenuItem menuItemTwitter = new MenuItem(menuHelp, SWT.PUSH);
 		menuItemTwitter.setImage(guiController.getImage("twitter_bird_blue_16.png")); //$NON-NLS-1$
 		menuItemTwitter.setText(Messages.getString("MainWindow.Menu_Twitter")); //$NON-NLS-1$
-		menuItemTwitter.addListener(SWT.Selection, e -> GuiController.launchProgram(Util.getTwitterURL()));
+		menuItemTwitter.addListener(SWT.Selection, e -> GuiController.launchProgram(GuiController.getTwitterURL()));
 
 		new MenuItem(menuHelp, SWT.SEPARATOR);
 
