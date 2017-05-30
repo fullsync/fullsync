@@ -83,14 +83,39 @@ dependencyUpdates {
 }
 
 distributions {
-	main {
+	linux
+	mac
+	windows {
 		contents {
 			from('resources') {
-				include 'fullsync*'
+				include 'fullsync*.exe'
+				include 'fullsync*.ini'
 			}
-			from file('LICENSE')
 		}
 	}
+}
+
+distZip.enabled = false
+distTar.enabled = false
+linuxDistZip.enabled = false
+macDistZip.enabled = false
+windowsDistTar.enabled = false
+
+tasks.withType(Tar) {
+	compression = Compression.GZIP
+}
+
+installLinuxDist.dependsOn ':fullsync-ui:jar'
+installMacDist.dependsOn ':fullsync-ui:jar'
+installWindowsDist.dependsOn ':fullsync-ui:jar'
+linuxDistTar.dependsOn ':fullsync-ui:jar'
+macDistTar.dependsOn ':fullsync-ui:jar'
+windowsDistZip.dependsOn ':fullsync-ui:jar'
+
+assembleDist {
+	dependsOn assembleLinuxDist
+	dependsOn assembleMacDist
+	dependsOn assembleWindowsDist
 }
 
 def mapArtifactToFilename(a) {
@@ -101,18 +126,6 @@ def mapArtifactToFilename(a) {
 }
 
 gradle.projectsEvaluated {
-	installDist {
-		dependsOn project('fullsync-ui').jar
-	}
-
-	distTar {
-		dependsOn project('fullsync-ui').jar
-	}
-
-	distZip {
-		dependsOn project('fullsync-ui').jar
-	}
-
 	def ui = project(':fullsync-ui')
 	def resolvedUiDist = ui.configurations.dist.resolvedConfiguration
 	def commonContents = copySpec {}
@@ -131,7 +144,9 @@ gradle.projectsEvaluated {
 			from resolvedUiDist.files - resolvedUiDist.resolvedArtifacts*.file
 		}
 	}
-	distributions.main.contents.with commonContents
+	distributions.linux.contents.with commonContents
+	distributions.mac.contents.with commonContents
+	distributions.windows.contents.with commonContents
 
 	subprojects.findAll { subproject ->
 		subproject.pluginManager.hasPlugin('java')
@@ -171,15 +186,15 @@ task jacocoRootReport(type: JacocoReport) {
 }
 
 task run(type: JavaExec) {
-	dependsOn installDist
+	dependsOn installLinuxDist
 	main = '-jar'
-	args = ["${buildDir}/install/${project.name}/lib/net.sourceforge.fullsync-fullsync.jar", "-v"]
+	args = ["${buildDir}/install/${project.name}-linux/lib/net.sourceforge.fullsync-fullsync.jar", "-v"]
 }
 
 task debug(type: JavaExec) {
-	dependsOn installDist
+	dependsOn installLinuxDist
 	main = '-jar'
-	args = ["${buildDir}/install/${project.name}/lib/net.sourceforge.fullsync-fullsync.jar", "-v"]
+	args = ["${buildDir}/install/${project.name}-linux/lib/net.sourceforge.fullsync-fullsync.jar", "-v"]
 	debug = true
 	enableAssertions = true
 }
