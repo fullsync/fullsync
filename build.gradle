@@ -188,13 +188,13 @@ task jacocoRootReport(type: JacocoReport) {
 task run(type: JavaExec) {
 	dependsOn installLinuxDist
 	main = '-jar'
-	args = ["${buildDir}/install/${project.name}-linux/lib/net.sourceforge.fullsync-fullsync.jar", "-v"]
+	args = ["${buildDir}/install/${project.name}-linux/lib/net.sourceforge.fullsync-fullsync-core.jar", "-v"]
 }
 
 task debug(type: JavaExec) {
 	dependsOn installLinuxDist
 	main = '-jar'
-	args = ["${buildDir}/install/${project.name}-linux/lib/net.sourceforge.fullsync-fullsync.jar", "-v"]
+	args = ["${buildDir}/install/${project.name}-linux/lib/net.sourceforge.fullsync-fullsync-core.jar", "-v"]
 	debug = true
 	enableAssertions = true
 }

@@ -25,7 +25,7 @@ configurations {
 }
 
 dependencies {
-	compile project(':fullsync')
+	compile project(':fullsync-core')
 	compile project(':fullsync-assets')
 	compile getLocalSWTVersion()
 	dist getSWTVariant("linux", "x86")
