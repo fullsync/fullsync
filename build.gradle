@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.*;
+
 buildscript {
 	repositories {
 		jcenter()
@@ -83,13 +85,29 @@ dependencyUpdates {
 }
 
 distributions {
-	linux
-	mac
+	linux {
+		contents {
+			from('LICENSE') {
+				filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("lf"))
+			}
+		}
+	}
+	mac {
+		contents {
+			from('LICENSE') {
+				filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("lf"))
+			}
+		}
+	}
 	windows {
 		contents {
 			from('resources') {
 				include 'fullsync*.exe'
 				include 'fullsync*.ini'
+			}
+			from('LICENSE') {
+				filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("crlf"))
+				rename('LICENSE', 'LICENSE.txt')
 			}
 		}
 	}
