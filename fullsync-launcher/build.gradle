@@ -1,0 +1,17 @@
+apply plugin: 'java'
+
+configurations {
+	dist
+}
+
+dependencies {
+	dist project(':fullsync-launcher')
+}
+
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'net.sourceforge.fullsync.launcher.WindowsLauncher'
+	}
+}
+

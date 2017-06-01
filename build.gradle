@@ -124,11 +124,15 @@ tasks.withType(Tar) {
 }
 
 installLinuxDist.dependsOn ':fullsync-ui:jar'
-installMacDist.dependsOn ':fullsync-ui:jar'
-installWindowsDist.dependsOn ':fullsync-ui:jar'
 linuxDistTar.dependsOn ':fullsync-ui:jar'
+
+installMacDist.dependsOn ':fullsync-ui:jar'
 macDistTar.dependsOn ':fullsync-ui:jar'
+
+installWindowsDist.dependsOn ':fullsync-ui:jar'
 windowsDistZip.dependsOn ':fullsync-ui:jar'
+installWindowsDist.dependsOn ':fullsync-launcher:jar'
+windowsDistZip.dependsOn ':fullsync-launcher:jar'
 
 assembleDist {
 	dependsOn assembleLinuxDist
@@ -165,6 +169,19 @@ gradle.projectsEvaluated {
 	distributions.linux.contents.with commonContents
 	distributions.mac.contents.with commonContents
 	distributions.windows.contents.with commonContents
+
+	def launcher = project(':fullsync-launcher')
+	def resolvedLauncherDist = launcher.configurations.dist.resolvedConfiguration
+	resolvedLauncherDist.resolvedArtifacts.each { a ->
+		distributions.windows.contents.with  copySpec {
+			def f = a.file
+			into('lib') {
+				from(f.path) {
+					rename(f.name, mapArtifactToFilename(a))
+				}
+			}
+		}
+	}
 
 	subprojects.findAll { subproject ->
 		subproject.pluginManager.hasPlugin('java')
@@ -213,6 +230,14 @@ task debug(type: JavaExec) {
 	dependsOn installLinuxDist
 	main = '-jar'
 	args = ["${buildDir}/install/${project.name}-linux/lib/net.sourceforge.fullsync-fullsync-core.jar", "-v"]
+	debug = true
+	enableAssertions = true
+}
+
+task debugLauncher(type: JavaExec) {
+	dependsOn installWindowsDist
+	main = '-jar'
+	args = ["${buildDir}/install/${project.name}-windows/lib/net.sourceforge.fullsync-fullsync-launcher.jar", "-v"]
 	debug = true
 	enableAssertions = true
 }
