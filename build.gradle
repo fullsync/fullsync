@@ -84,11 +84,37 @@ dependencyUpdates {
 	outputFormatter = "plain"
 }
 
+task renderChangeLog(type: JavaExec) {
+	dependsOn ':fullsync-build-utils:jar'
+	main = 'net.sourceforge.fullsync.build.tools.ChangeLogGenerator'
+	def versionsDir = file("versions")
+	def changelogFile = file("$buildDir/ChangeLog.txt")
+	inputs.file(fileTree(versionsDir) {
+		include "*.html"
+	})
+	outputs.files changelogFile
+	def allArgs = []
+	allArgs << "--src-dir"
+	allArgs << versionsDir
+	allArgs << "--pattern"
+	allArgs << ".*\\.html"
+	allArgs << "--changelog"
+	allArgs << changelogFile
+	args allArgs
+}
+
+def eolFilter(context, eol) {
+	context.filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance(eol))
+}
+
 distributions {
 	linux {
 		contents {
 			from('LICENSE') {
-				filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("lf"))
+				eolFilter(delegate, "lf")
+			}
+			from(renderChangeLog) {
+				eolFilter(delegate, "lf")
 			}
 		}
 	}
@@ -96,6 +122,9 @@ distributions {
 		contents {
 			from('LICENSE') {
 				filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("lf"))
+			}
+			from(renderChangeLog) {
+				eolFilter(delegate, "lf")
 			}
 		}
 	}
@@ -106,8 +135,11 @@ distributions {
 				include 'fullsync*.ini'
 			}
 			from('LICENSE') {
-				filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("crlf"))
+				eolFilter(delegate, "crlf")
 				rename('LICENSE', 'LICENSE.txt')
+			}
+			from(renderChangeLog) {
+				eolFilter(delegate, "crlf")
 			}
 		}
 	}
@@ -140,6 +172,12 @@ assembleDist {
 	dependsOn assembleWindowsDist
 }
 
+installDist {
+	dependsOn installLinuxDist
+	dependsOn installMacDist
+	dependsOn installWindowsDist
+}
+
 def mapArtifactToFilename(a) {
 	def group = a.moduleVersion.id.group
 	def classifier = a.classifier ?: ""
@@ -148,6 +186,9 @@ def mapArtifactToFilename(a) {
 }
 
 gradle.projectsEvaluated {
+	def buildUltils = project(':fullsync-build-utils')
+	renderChangeLog.classpath = buildUltils.configurations.runtime + buildUltils.jar.outputs.files
+
 	def ui = project(':fullsync-ui')
 	def resolvedUiDist = ui.configurations.dist.resolvedConfiguration
 	def commonContents = copySpec {}
