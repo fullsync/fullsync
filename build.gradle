@@ -107,6 +107,18 @@ def eolFilter(context, eol) {
 	context.filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance(eol))
 }
 
+def manualCopySpec = copySpec {
+	into('docs/manual') {
+		from('docs/manual') {
+			include '*'
+		}
+		from('resources') {
+			include 'fullsync.ico'
+			rename('fullsync.ico', 'favicon.ico')
+		}
+	}
+}
+
 distributions {
 	linux {
 		contents {
@@ -116,6 +128,7 @@ distributions {
 			from(renderChangeLog) {
 				eolFilter(delegate, "lf")
 			}
+			with manualCopySpec
 		}
 	}
 	mac {
@@ -126,6 +139,7 @@ distributions {
 			from(renderChangeLog) {
 				eolFilter(delegate, "lf")
 			}
+			with manualCopySpec
 		}
 	}
 	windows {
@@ -141,6 +155,7 @@ distributions {
 			from(renderChangeLog) {
 				eolFilter(delegate, "crlf")
 			}
+			with manualCopySpec
 		}
 	}
 }
