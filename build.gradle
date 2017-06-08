@@ -140,6 +140,7 @@ distributions {
 			}
 			from('LICENSE') {
 				eolFilter(delegate, "lf")
+				rename('LICENSE', 'LICENSE.txt')
 			}
 			from(renderChangeLog) {
 				eolFilter(delegate, "lf")
@@ -160,6 +161,7 @@ distributions {
 			}
 			from('LICENSE') {
 				filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("lf"))
+				rename('LICENSE', 'LICENSE.txt')
 			}
 			from(renderChangeLog) {
 				eolFilter(delegate, "lf")
