@@ -145,6 +145,9 @@ distributions {
 			from(renderChangeLog) {
 				eolFilter(delegate, "lf")
 			}
+			from('resources/images') {
+				include 'fullsync.svg'
+			}
 			with manualCopySpec
 			with versionsCopySpec
 		}
