@@ -101,6 +101,9 @@ task renderChangeLog(type: JavaExec) {
 	allArgs << "--changelog"
 	allArgs << changelogFile
 	args allArgs
+	doFirst {
+		file(buildDir).mkdir()
+	}
 }
 
 def eolFilter(context, eol) {
