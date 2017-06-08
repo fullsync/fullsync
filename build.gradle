@@ -130,6 +130,14 @@ def versionsCopySpec = copySpec {
 distributions {
 	linux {
 		contents {
+			eachFile { file ->
+				if (file.name.endsWith(".sh")) {
+					file.mode = 0755
+				}
+				if ("fullsync.sh" == file.name) {
+					file.name = "fullsync"
+				}
+			}
 			from('LICENSE') {
 				eolFilter(delegate, "lf")
 			}
@@ -142,6 +150,14 @@ distributions {
 	}
 	mac {
 		contents {
+			eachFile { file ->
+				if (file.name.endsWith(".sh")) {
+					file.mode = 0755
+				}
+				if ("fullsync.sh" == file.name) {
+					file.name = "fullsync"
+				}
+			}
 			from('LICENSE') {
 				filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("lf"))
 			}
