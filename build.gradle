@@ -119,6 +119,14 @@ def manualCopySpec = copySpec {
 	}
 }
 
+def versionsCopySpec = copySpec {
+	into('versions') {
+		from('versions') {
+			include '*.html'
+		}
+	}
+}
+
 distributions {
 	linux {
 		contents {
@@ -129,6 +137,7 @@ distributions {
 				eolFilter(delegate, "lf")
 			}
 			with manualCopySpec
+			with versionsCopySpec
 		}
 	}
 	mac {
@@ -140,6 +149,7 @@ distributions {
 				eolFilter(delegate, "lf")
 			}
 			with manualCopySpec
+			with versionsCopySpec
 		}
 	}
 	windows {
@@ -156,6 +166,7 @@ distributions {
 				eolFilter(delegate, "crlf")
 			}
 			with manualCopySpec
+			with versionsCopySpec
 		}
 	}
 }
