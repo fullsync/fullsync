@@ -25,13 +25,14 @@ import org.slf4j.LoggerFactory;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileComparer;
 import net.sourceforge.fullsync.State;
+import net.sourceforge.fullsync.StateDecider;
 import net.sourceforge.fullsync.fs.File;
 
-public class StateDecider implements net.sourceforge.fullsync.StateDecider {
-	private static final Logger logger = LoggerFactory.getLogger(StateDecider.class.getSimpleName());
+public class StateDeciderImpl implements StateDecider {
+	private static final Logger logger = LoggerFactory.getLogger(StateDeciderImpl.class.getSimpleName());
 	protected FileComparer comparer;
 
-	public StateDecider(FileComparer comparer) {
+	public StateDeciderImpl(FileComparer comparer) {
 		this.comparer = comparer;
 	}
 

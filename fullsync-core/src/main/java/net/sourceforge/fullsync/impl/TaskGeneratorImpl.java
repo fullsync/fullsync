@@ -41,16 +41,16 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	// so maybe just put them all into a inmutable
 	// state container
 	private IgnoreDecider takeIgnoreDecider;
-	private StateDecider stateDecider;
-	private BufferStateDecider bufferStateDecider;
+	private StateDeciderImpl stateDecider;
+	private BufferStateDeciderImpl bufferStateDecider;
 
 	protected RuleSet updateRules(File src, File dst, RuleSet rules) throws DataParseException, IOException {
 		rules = rules.createChild(src, dst);
 
 		/* HACK OMG, that is utterly wrong !! */
 		this.takeIgnoreDecider = rules;
-		this.stateDecider = new StateDecider(rules);
-		this.bufferStateDecider = new BufferStateDecider(rules);
+		this.stateDecider = new StateDeciderImpl(rules);
+		this.bufferStateDecider = new BufferStateDeciderImpl(rules);
 		// this.actionDecider = new BackupActionDecider();
 
 		return rules;
@@ -123,8 +123,8 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 
 		/* HACK OMG, that is utterly wrong !! */
 		this.takeIgnoreDecider = oldrules;
-		this.stateDecider = new StateDecider(oldrules);
-		this.bufferStateDecider = new BufferStateDecider(oldrules);
+		this.stateDecider = new StateDeciderImpl(oldrules);
+		this.bufferStateDecider = new BufferStateDeciderImpl(oldrules);
 		// this.actionDecider = new PublishActionDecider();
 	}
 }
