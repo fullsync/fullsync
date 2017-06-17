@@ -145,5 +145,4 @@ public class DataParseException extends NestedException {
 	public void setLinenumber(long linenumber) {
 		this.linenumber = linenumber;
 	}
-
 }

@@ -48,5 +48,4 @@ public class FilterValue implements OperandValue {
 	public String toString() {
 		return value.toString();
 	}
-
 }

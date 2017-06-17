@@ -53,5 +53,4 @@ public class FileSystemException extends NestedException {
 	public FileSystemException(String text, Throwable ex) {
 		super(text, ex);
 	}
-
 }

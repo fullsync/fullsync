@@ -312,5 +312,4 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	public ConnectionDescription getConnectionDescription() {
 		return fs.getConnectionDescription();
 	}
-
 }

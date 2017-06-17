@@ -26,10 +26,8 @@ import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
 import net.sourceforge.fullsync.fs.connection.SyncFileBufferedConnection;
 
 public class SyncFilesBufferingProvider implements BufferingProvider {
-
 	@Override
 	public final Site createBufferedSite(final Site dir) throws IOException {
 		return new SyncFileBufferedConnection(dir);
 	}
-
 }

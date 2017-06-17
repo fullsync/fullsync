@@ -63,7 +63,6 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	@Override
 	public final File createChild(final File parent, final String name, final boolean directory) throws IOException {
 		return new AbstractFile(this, name, parent, directory, false);
-
 	}
 
 	private File buildNode(final File parent, final FileObject file) throws org.apache.commons.vfs2.FileSystemException {
@@ -175,5 +174,4 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	public ConnectionDescription getConnectionDescription() {
 		return desc;
 	}
-
 }

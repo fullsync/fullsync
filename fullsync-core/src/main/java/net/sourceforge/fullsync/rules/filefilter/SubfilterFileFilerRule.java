@@ -63,5 +63,4 @@ public class SubfilterFileFilerRule extends FileFilterRule {
 	public String toString() {
 		return "(" + fileFilter.toString() + ")";
 	}
-
 }

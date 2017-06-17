@@ -42,7 +42,6 @@ import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 
 public class PreferencesPage extends WizardDialog {
-
 	/**
 	 * supported language codes.
 	 */

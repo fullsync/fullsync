@@ -88,5 +88,4 @@ public class FileFilterTree implements Serializable {
 	public String toString() {
 		return root.toString();
 	}
-
 }

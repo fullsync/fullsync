@@ -25,7 +25,5 @@ import java.rmi.RemoteException;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 
 public interface RemoteTaskFinishedListenerInterface extends Remote {
-
 	void taskFinished(TaskFinishedEvent event) throws RemoteException;
-
 }

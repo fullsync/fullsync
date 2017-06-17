@@ -27,20 +27,13 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 
 public class SimplyfiedSyncRules implements RuleSet {
-
 	private String name;
-
 	private boolean isUsingRecursion = true;
-
 	private String patternsType;
-
 	private String ignorePattern;
-
 	private String takePattern;
-
 	private FileFilter fileFilter;
 	private FileFilterTree fileFilterTree;
-
 	private boolean useFilter;
 
 	/**

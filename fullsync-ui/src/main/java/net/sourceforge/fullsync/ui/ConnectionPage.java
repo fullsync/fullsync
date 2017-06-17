@@ -157,5 +157,4 @@ class ConnectionPage extends WizardDialog {
 	public boolean cancel() {
 		return true;
 	}
-
 }

@@ -50,5 +50,4 @@ public class TextValue implements OperandValue {
 	public String toString() {
 		return value;
 	}
-
 }

@@ -72,7 +72,6 @@ public class ScheduleSelectionDialog extends Dialog {
 
 	public ScheduleSelectionDialog(Shell parent, int style) {
 		super(parent, style);
-
 	}
 
 	public void open() {

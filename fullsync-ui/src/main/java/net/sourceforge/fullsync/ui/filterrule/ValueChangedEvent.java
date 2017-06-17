@@ -22,7 +22,6 @@ package net.sourceforge.fullsync.ui.filterrule;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 class ValueChangedEvent {
-
 	private OperandValue value;
 
 	ValueChangedEvent(OperandValue value) {

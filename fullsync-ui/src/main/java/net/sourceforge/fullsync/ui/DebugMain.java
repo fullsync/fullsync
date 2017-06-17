@@ -24,7 +24,6 @@ import net.sourceforge.fullsync.Launcher;
 import net.sourceforge.fullsync.cli.Main;
 
 public class DebugMain implements Launcher {
-
 	public static void main(String[] args) throws Exception {
 		Main.startup(args, new DebugMain());
 	}

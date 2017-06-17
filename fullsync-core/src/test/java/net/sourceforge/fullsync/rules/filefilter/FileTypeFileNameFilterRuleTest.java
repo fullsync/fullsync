@@ -28,7 +28,6 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 public class FileTypeFileNameFilterRuleTest {
-
 	private File root = new TestNode("root", null, true, true, 0, 0);
 
 	@Test

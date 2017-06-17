@@ -30,7 +30,6 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 public class FileModificationDateFileFilterRuleTest {
-
 	private File root = new TestNode("root", null, true, true, 0, 0);
 
 	@Test
@@ -47,5 +46,4 @@ public class FileModificationDateFileFilterRuleTest {
 
 		assertTrue(!filterRule.match(file));
 	}
-
 }

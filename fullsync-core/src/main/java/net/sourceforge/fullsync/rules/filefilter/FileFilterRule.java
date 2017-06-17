@@ -40,5 +40,4 @@ public abstract class FileFilterRule implements Serializable {
 	public abstract String toString();
 
 	public abstract String getRuleType();
-
 }

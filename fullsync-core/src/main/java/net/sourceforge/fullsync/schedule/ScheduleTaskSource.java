@@ -21,5 +21,4 @@ package net.sourceforge.fullsync.schedule;
 
 public interface ScheduleTaskSource {
 	ScheduleTask getNextScheduleTask();
-
 }

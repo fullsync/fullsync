@@ -27,7 +27,6 @@ import org.junit.Test;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
 public class FileFilterTreeTest {
-
 	@Test
 	public void testBasic() {
 		FileFilterTree tree = new FileFilterTree();
@@ -55,5 +54,4 @@ public class FileFilterTreeTest {
 		assertEquals(filter4, tree.getFilter("./a/c/d/g/file.txt"));
 		assertEquals(filter2, tree.getFilter("./b/e/subdir/file.txt"));
 	}
-
 }

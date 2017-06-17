@@ -151,5 +151,4 @@ public class Task implements Serializable {
 		this.currentAction = in.readInt();
 		this.children = (ArrayList<Task>) in.readObject();
 	}
-
 }

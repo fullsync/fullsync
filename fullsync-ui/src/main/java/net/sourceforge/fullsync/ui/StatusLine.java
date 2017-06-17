@@ -74,5 +74,4 @@ public class StatusLine extends Composite {
 			labelMessage.setText(message);
 		});
 	}
-
 }

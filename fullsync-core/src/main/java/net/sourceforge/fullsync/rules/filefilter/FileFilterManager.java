@@ -264,5 +264,4 @@ public class FileFilterManager {
 
 		return new String[] { "N/A" };
 	}
-
 }

@@ -39,7 +39,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.ui.filterrule.FilterRuleListItem;
 
 public class FileFilterPage extends WizardDialog {
-
 	private Combo comboFilterType;
 	private Label label1;
 	private Combo comboMatchType;

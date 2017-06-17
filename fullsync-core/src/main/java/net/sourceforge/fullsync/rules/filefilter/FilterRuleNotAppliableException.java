@@ -30,5 +30,4 @@ public class FilterRuleNotAppliableException extends Exception {
 	public FilterRuleNotAppliableException(String msg) {
 		super(msg);
 	}
-
 }

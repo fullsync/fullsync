@@ -29,7 +29,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class FileFilterTest {
-
 	private File root = new TestNode("root", null, true, true, 0, 0);
 
 	private static class AlwaysTrueFileFilterRule extends FileFilterRule {

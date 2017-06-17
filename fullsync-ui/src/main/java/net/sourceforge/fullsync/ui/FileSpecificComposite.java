@@ -29,7 +29,6 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FullSync;
 
 class FileSpecificComposite extends ProtocolSpecificComposite {
-
 	public FileSpecificComposite(FullSync _fullsync) {
 		super(_fullsync);
 	}

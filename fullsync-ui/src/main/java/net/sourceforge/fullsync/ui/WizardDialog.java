@@ -37,7 +37,6 @@ import org.eclipse.swt.widgets.Shell;
 import net.sourceforge.fullsync.ExceptionHandler;
 
 public abstract class WizardDialog {
-
 	private Shell dialogShell;
 	private Label labelImage;
 	private Label labelDescription;
@@ -314,5 +313,4 @@ public abstract class WizardDialog {
 	public abstract boolean apply();
 
 	public abstract boolean cancel();
-
 }

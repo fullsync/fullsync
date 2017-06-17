@@ -35,5 +35,4 @@ class SmbAuthProvider implements FileSystemAuthProvider {
 		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 	}
-
 }

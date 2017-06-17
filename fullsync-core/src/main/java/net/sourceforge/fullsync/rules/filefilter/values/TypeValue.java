@@ -71,5 +71,4 @@ public class TypeValue implements OperandValue {
 	public boolean isDirectory() {
 		return type == Type.DIRECTORY;
 	}
-
 }

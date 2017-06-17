@@ -39,5 +39,4 @@ public class RemoteTaskFinishedListener extends UnicastRemoteObject implements R
 	public void taskFinished(TaskFinishedEvent event) throws RemoteException {
 		localListener.taskFinished(event);
 	}
-
 }

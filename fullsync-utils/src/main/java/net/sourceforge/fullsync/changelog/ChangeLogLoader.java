@@ -35,7 +35,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 public class ChangeLogLoader {
-
 	private DocumentBuilderFactory parserFactory = DocumentBuilderFactory.newInstance();
 
 	public ChangeLogLoader() {

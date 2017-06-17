@@ -102,5 +102,4 @@ public class FileAgeFileFilterRule extends FileFilterRule {
 		buff.append("'");
 		return buff.toString();
 	}
-
 }

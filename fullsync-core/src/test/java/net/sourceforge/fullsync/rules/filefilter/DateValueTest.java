@@ -105,5 +105,4 @@ public class DateValueTest {
 		date = dateFormat.parse("10/08/1990 23:59:59");
 		assertTrue(value.isAfter(date.getTime()));
 	}
-
 }

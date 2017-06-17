@@ -57,5 +57,4 @@ class SWTCalendarDialog {
 	public Date getDate() {
 		return calendar.getTime();
 	}
-
 }

@@ -33,5 +33,4 @@ public interface FileSystemAuthProvider {
 	 * @throws FileSystemException
 	 */
 	void authSetup(ConnectionDescription description, FileSystemOptions options) throws FileSystemException;
-
 }

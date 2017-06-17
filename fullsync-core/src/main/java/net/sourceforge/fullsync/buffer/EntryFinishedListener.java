@@ -24,5 +24,4 @@ import java.util.EventListener;
 
 public interface EntryFinishedListener extends EventListener {
 	void entryFinished(EntryDescriptor entry, IOException ioe);
-
 }

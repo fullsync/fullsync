@@ -85,7 +85,6 @@ public class Profile implements Serializable, Comparable<Profile> {
 
 		p.setSchedule(Schedule.unserialize((Element) element.getElementsByTagName("Schedule").item(0)));
 		return p;
-
 	}
 
 	public Profile(String name, ConnectionDescription source, ConnectionDescription destination, RuleSetDescriptor ruleSet) {
@@ -269,7 +268,6 @@ public class Profile implements Serializable, Comparable<Profile> {
 		enabled = in.readBoolean();
 		lastErrorLevel = in.readInt();
 		lastErrorString = (String) in.readObject();
-
 		this.listeners = new ArrayList<>();
 	}
 
@@ -303,5 +301,4 @@ public class Profile implements Serializable, Comparable<Profile> {
 	public int compareTo(Profile o) {
 		return ("" + name).compareTo(o.getName());
 	}
-
 }

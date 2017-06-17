@@ -260,5 +260,4 @@ public class NiceListViewItem extends Canvas implements Listener {
 	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
-
 }

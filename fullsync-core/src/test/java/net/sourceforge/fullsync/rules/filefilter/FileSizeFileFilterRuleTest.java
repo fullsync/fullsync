@@ -78,5 +78,4 @@ public class FileSizeFileFilterRuleTest {
 		file.setSize(999);
 		assertTrue(filterRule.match(file));
 	}
-
 }

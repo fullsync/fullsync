@@ -120,5 +120,4 @@ public class DateValue implements OperandValue {
 		}
 		return false;
 	}
-
 }

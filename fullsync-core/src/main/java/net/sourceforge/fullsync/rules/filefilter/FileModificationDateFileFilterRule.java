@@ -99,5 +99,4 @@ public class FileModificationDateFileFilterRule extends FileFilterRule {
 		buff.append("'");
 		return buff.toString();
 	}
-
 }

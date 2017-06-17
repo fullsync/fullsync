@@ -73,5 +73,4 @@ class FileFilterTreeItem implements Serializable {
 
 		return buffer.toString();
 	}
-
 }
