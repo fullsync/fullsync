@@ -294,7 +294,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() throws Exception {
 		fs.close();
 	}
 

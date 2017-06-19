@@ -59,8 +59,8 @@ public class TaskDecisionList extends Composite {
 	private int tableLogLinesFillIndex;
 	private int tableLogLinesFillCount;
 
-	private final Map<ActionType, Image> actionImages;
-	private final Map<Integer, Image> taskImages;
+	private final Map<ActionType, Image> actionImages = new HashMap<>();
+	private final Map<Integer, Image> taskImages = new HashMap<>();
 	private Image locationSource;
 	private Image locationDestination;
 	private Image locationBoth;
@@ -69,16 +69,13 @@ public class TaskDecisionList extends Composite {
 	private Image nodeUndefined;
 
 	private TaskTree taskTree;
-	private final Map<Task, TableItem> taskItemMap;
+	private final Map<Task, TableItem> taskItemMap = new HashMap<>();
 
 	private boolean onlyChanges;
 	private boolean changeAllowed;
 
 	public TaskDecisionList(Composite parent, int style) {
 		super(parent, style);
-		taskItemMap = new HashMap<>();
-		actionImages = new HashMap<>();
-		taskImages = new HashMap<>();
 		try {
 			this.setSize(550, 500);
 

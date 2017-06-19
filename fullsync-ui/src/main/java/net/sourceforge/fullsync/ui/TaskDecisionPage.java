@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.io.IOException;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -143,14 +141,14 @@ public class TaskDecisionPage extends WizardDialog {
 			try {
 				taskTree.getSource().close();
 			}
-			catch (IOException ioe) {
-				ExceptionHandler.reportException(ioe);
+			catch (Exception ex) {
+				ExceptionHandler.reportException(ex);
 			}
 			try {
 				taskTree.getDestination().close();
 			}
-			catch (IOException ioe) {
-				ExceptionHandler.reportException(ioe);
+			catch (Exception ex) {
+				ExceptionHandler.reportException(ex);
 			}
 			return true;
 		}

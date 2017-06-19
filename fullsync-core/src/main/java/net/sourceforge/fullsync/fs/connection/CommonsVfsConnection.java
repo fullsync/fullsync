@@ -155,7 +155,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public final void close() throws IOException {
+	public final void close() throws Exception {
 		VFS.getManager().closeFileSystem(base.getFileSystem());
 	}
 

@@ -707,7 +707,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				sourceSite.close();
 				sourceSite = null;
 			}
-			catch (IOException e) {
+			catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

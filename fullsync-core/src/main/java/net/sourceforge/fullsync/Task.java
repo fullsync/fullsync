@@ -42,8 +42,6 @@ public class Task implements Serializable {
 		this.destination = destination;
 		this.state = state;
 		this.actions = actions;
-		this.currentAction = 0;
-		this.children = null;
 	}
 
 	public File getDestination() {

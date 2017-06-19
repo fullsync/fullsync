@@ -35,16 +35,9 @@ public class FileFilter implements Serializable {
 	private int matchType;
 	private int filterType;
 
-	private boolean appliesToDir;
+	private boolean appliesToDir = true;
 
-	private FileFilterRule[] rules;
-
-	public FileFilter() {
-		matchType = 0;
-		filterType = 0;
-		appliesToDir = true;
-		rules = new FileFilterRule[0];
-	}
+	private FileFilterRule[] rules = new FileFilterRule[0];
 
 	public void setMatchType(int _matchType) {
 		this.matchType = _matchType;

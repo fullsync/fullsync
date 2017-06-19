@@ -39,8 +39,6 @@ public class GUIUpdateQueue<Item> {
 
 	public GUIUpdateQueue(Display display, GUIUpdateTask<Item> guiUpdateTask) {
 		m_display = display;
-		m_queue = new ConcurrentLinkedQueue<>();
-		m_updateScheduled = new AtomicBoolean(false);
 		m_updateTask = guiUpdateTask;
 	}
 

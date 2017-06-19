@@ -29,16 +29,11 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 public class FileFilterTree implements Serializable {
 	private static final long serialVersionUID = 2L;
 
-	private FileFilterTreeItem root;
-	private Map<String, FileFilter> itemsMap;
+	private FileFilterTreeItem root = new FileFilterTreeItem();
+	private Map<String, FileFilter> itemsMap = new HashMap<>();
 
 	// TODO is this the correct path separator?
 	private String separator = "/";
-
-	public FileFilterTree() {
-		this.root = new FileFilterTreeItem();
-		this.itemsMap = new HashMap<>();
-	}
 
 	public void addFileFilter(String key, FileFilter filter) {
 		StringTokenizer tokenizer = new StringTokenizer(key, separator);

@@ -120,6 +120,9 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		try (Site d1 = fsm.createConnection(fullsync, srcDesc); Site d2 = fsm.createConnection(fullsync, dstDesc)) {
 			return execute(fullsync, d1, d2, actionDecider, rules);
 		}
+		catch (Exception ex) {
+			throw new FileSystemException(ex);
+		}
 	}
 
 	@Override

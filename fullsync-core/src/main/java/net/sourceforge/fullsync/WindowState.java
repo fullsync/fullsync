@@ -27,9 +27,6 @@ public class WindowState {
 	public boolean maximized;
 	public boolean minimized;
 
-	public WindowState() {
-	}
-
 	private boolean isPointOutside(int _x, int _y) {
 		if ((_x <= x) || (_y <= y)) {
 			return true;

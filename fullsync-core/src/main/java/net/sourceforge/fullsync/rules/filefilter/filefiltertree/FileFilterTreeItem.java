@@ -32,12 +32,7 @@ class FileFilterTreeItem implements Serializable {
 
 	private FileFilter filter;
 
-	private Map<String, FileFilterTreeItem> childrenMap;
-
-	FileFilterTreeItem() {
-		this.filter = null;
-		this.childrenMap = new HashMap<>();
-	}
+	private Map<String, FileFilterTreeItem> childrenMap = new HashMap<>();
 
 	public void setFilter(final FileFilter filter) {
 		this.filter = filter;

@@ -36,12 +36,6 @@ public class SimplyfiedSyncRules implements RuleSet {
 	private FileFilterTree fileFilterTree;
 	private boolean useFilter;
 
-	/**
-	 * Default Constructor.
-	 */
-	public SimplyfiedSyncRules() {
-	}
-
 	@Override
 	public String getName() {
 		return name;

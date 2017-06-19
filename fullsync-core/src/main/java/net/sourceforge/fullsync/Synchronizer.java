@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync;
 
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,7 +108,7 @@ public class Synchronizer {
 				taskTree.getDestination().close();
 			}
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			ExceptionHandler.reportException(e);
 			logger.error("An Exception occured while performing actions", e);
 			logger.info("synchronization failed");

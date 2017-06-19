@@ -60,10 +60,9 @@ import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 
 public class Main implements Launcher { // NO_UCD
-	private static Options options;
+	private static final Options options = new Options();
 
 	private static void initOptions() {
-		options = new Options();
 		options.addOption("h", "help", false, "this help");
 		options.addOption("v", "verbose", false, "verbose output to stdout");
 		options.addOption("V", "version", false, "display the version and exit");

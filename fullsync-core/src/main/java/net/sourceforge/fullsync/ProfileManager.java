@@ -75,7 +75,6 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 			Thread worker = new Thread(() -> fireProfileSchedulerEvent(profile));
 			worker.start();
 			profile.getSchedule().setLastOccurrence(System.currentTimeMillis());
-			Thread.yield();
 		}
 
 		@Override
@@ -110,10 +109,6 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	private ProfileListChangeListener remoteListener;
 
 	protected ProfileManager() {
-		this.profiles = new ArrayList<>();
-		this.changeListeners = new ArrayList<>();
-		this.scheduleListeners = new ArrayList<>();
-		this.schedulerChangeListeners = new ArrayList<>();
 		this.scheduler = new SchedulerImpl(this);
 		this.scheduler.addSchedulerChangeListener(this);
 	}

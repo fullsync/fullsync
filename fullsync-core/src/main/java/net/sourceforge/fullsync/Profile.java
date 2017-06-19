@@ -95,7 +95,6 @@ public class Profile implements Serializable, Comparable<Profile> {
 		this.destination = destination;
 		this.ruleSet = ruleSet;
 		this.lastUpdate = new Date();
-		this.listeners = new ArrayList<>();
 		this.enabled = true;
 	}
 
@@ -269,7 +268,6 @@ public class Profile implements Serializable, Comparable<Profile> {
 		enabled = in.readBoolean();
 		lastErrorLevel = in.readInt();
 		lastErrorString = (String) in.readObject();
-		this.listeners = new ArrayList<>();
 	}
 
 	public Element serialize(final Document doc) {

@@ -37,13 +37,12 @@ import net.sourceforge.fullsync.buffer.ExecutionBuffer;
 import net.sourceforge.fullsync.fs.File;
 
 public class FillBufferTaskExecutor implements TaskExecutor {
-	private List<TaskFinishedListener> listeners;
+	private List<TaskFinishedListener> listeners = new ArrayList<>();
 	private boolean statisticsOnly;
 	private IoStatisticsImpl stats;
 	private ExecutionBuffer buffer;
 
 	public FillBufferTaskExecutor(ExecutionBuffer buffer) {
-		this.listeners = new ArrayList<>();
 		this.statisticsOnly = false;
 		this.buffer = buffer;
 		buffer.addEntryFinishedListener((entry, ioe) -> {
