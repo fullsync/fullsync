@@ -309,13 +309,12 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	}
 
 	@Override
-	public void setProfileManager(ProfileManager profileManager) {
-		if (null != this.profileManager) {
+	public void setProfileManager(ProfileManager pm) {
+		if (null != profileManager) {
 			profileManager.removeProfilesChangeListener(this);
-
 		}
-		this.profileManager = profileManager;
-		if (null != this.profileManager) {
+		profileManager = pm;
+		if (null != profileManager) {
 			profileManager.addProfilesChangeListener(this);
 		}
 		populateProfileList();
