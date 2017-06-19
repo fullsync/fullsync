@@ -39,7 +39,7 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 public class ScheduleSelectionDialog extends Dialog {
-	class NullScheduleOptions extends ScheduleOptions {
+	private static class NullScheduleOptions extends ScheduleOptions {
 		NullScheduleOptions(Composite parent, int style) {
 			super(parent, style);
 		}

@@ -42,7 +42,7 @@ import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
 
 public class NiceListViewProfileListComposite extends ProfileListComposite implements ProfileListChangeListener {
-	class ContentComposite extends Composite {
+	private class ContentComposite extends Composite {
 		private Profile profile;
 
 		private Label lSource;

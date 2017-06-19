@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync.buffer;
 
-import java.util.Formatter;
-
 public class Entry {
 	public int start;
 	public int length;
@@ -38,11 +36,6 @@ public class Entry {
 
 	@Override
 	public String toString() {
-		String result;
-		try (Formatter formatter = new Formatter()) {
-			Formatter format = formatter.format("%10d-%10d: %s", start, (start + length) - 1, descriptor.toString());
-			result = format.out().toString();
-		}
-		return result;
+		return String.format("%10d-%10d: %s", start, (start + length) - 1, descriptor.toString());
 	}
 }

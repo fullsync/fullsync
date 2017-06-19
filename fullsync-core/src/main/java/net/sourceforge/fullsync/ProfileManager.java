@@ -61,18 +61,20 @@ import net.sourceforge.fullsync.schedule.SchedulerImpl;
  * a scheduler for creating events when a Profile should be executed.
  */
 public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource, SchedulerChangeListener {
-	class ProfileManagerSchedulerTask implements ScheduleTask {
+	static class ProfileManagerSchedulerTask implements ScheduleTask {
+		private ProfileManager profileManager;
 		private Profile profile;
 		private long executionTime;
 
-		ProfileManagerSchedulerTask(Profile profile, long executionTime) {
-			this.profile = profile;
-			this.executionTime = executionTime;
+		ProfileManagerSchedulerTask(ProfileManager pm, Profile p, long ts) {
+			profileManager = pm;
+			profile = p;
+			executionTime = ts;
 		}
 
 		@Override
 		public void run() {
-			Thread worker = new Thread(() -> fireProfileSchedulerEvent(profile));
+			Thread worker = new Thread(() -> profileManager.fireProfileSchedulerEvent(profile));
 			worker.start();
 			profile.getSchedule().setLastOccurrence(System.currentTimeMillis());
 		}
@@ -109,8 +111,8 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	private ProfileListChangeListener remoteListener;
 
 	protected ProfileManager() {
-		this.scheduler = new SchedulerImpl(this);
-		this.scheduler.addSchedulerChangeListener(this);
+		scheduler = new SchedulerImpl(this);
+		scheduler.addSchedulerChangeListener(this);
 	}
 
 	public ProfileManager(String configFile) throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
@@ -299,7 +301,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		}
 
 		if (null != nextProfile) {
-			return new ProfileManagerSchedulerTask(nextProfile, nextTime);
+			return new ProfileManagerSchedulerTask(this, nextProfile, nextTime);
 		}
 		return null;
 	}

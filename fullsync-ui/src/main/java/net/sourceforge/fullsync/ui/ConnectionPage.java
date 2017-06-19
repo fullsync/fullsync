@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.remote.RemoteManager;
 
 class ConnectionPage extends WizardDialog {
@@ -132,21 +133,23 @@ class ConnectionPage extends WizardDialog {
 
 		boolean useRemoteListener = !cbDisableRemoteListener.getSelection();
 
+		final GuiController gc = GuiController.getInstance();
+		final ProfileManager pm = gc.getProfileManager();
 		try {
-			GuiController.getInstance().getProfileManager().setRemoteConnected(true);
-			GuiController.getInstance().getProfileManager().stopScheduler();
+			pm.setRemoteConnected(true);
+			pm.stopScheduler();
 			RemoteManager remoteManager = new RemoteManager(hostname, port, password);
 			if (!remoteManager.isConnectedToRemoteInstance()) {
 				remoteManager.setUseRemoteListener(useRemoteListener);
-				GuiController.getInstance().getProfileManager().setRemoteConnection(remoteManager);
-				GuiController.getInstance().getSynchronizer().setRemoteConnection(remoteManager);
+				pm.setRemoteConnection(remoteManager);
+				gc.getSynchronizer().setRemoteConnection(remoteManager);
 			}
 			else {
 				throw new Exception("The FullSync instance you tried to connect to is already connected to another FullSync instance");
 			}
 		}
 		catch (Exception ex) {
-			GuiController.getInstance().getProfileManager().setRemoteConnected(false);
+			pm.setRemoteConnected(false);
 			ExceptionHandler.reportException(Messages.getString("ConnectionComposite.Unable_To_Connect"), ex); //$NON-NLS-1$
 			return false;
 		}

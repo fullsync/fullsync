@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -38,19 +40,19 @@ import net.sourceforge.fullsync.schedule.CrontabSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 class CrontabScheduleOptions extends ScheduleOptions {
-	class PartContainer {
+	private static class PartContainer {
 		private CrontabPart part;
 		private Button cbAll;
 		private Text text;
 		private Button buttonChoose;
 
-		PartContainer(CrontabPart crontabPart) {
-			this.part = crontabPart;
+		PartContainer(CrontabScheduleOptions parent, CrontabPart crontabPart) {
+			part = crontabPart;
 
-			Label label = new Label(CrontabScheduleOptions.this, SWT.NULL);
+			Label label = new Label(parent, SWT.NULL);
 			label.setText(part.name);
 
-			cbAll = new Button(CrontabScheduleOptions.this, SWT.CHECK);
+			cbAll = new Button(parent, SWT.CHECK);
 			cbAll.setText(Messages.getString("CrontabScheduleOptions.all")); //$NON-NLS-1$
 			cbAll.setSelection(true);
 			cbAll.addListener(SWT.Selection, e -> {
@@ -58,16 +60,16 @@ class CrontabScheduleOptions extends ScheduleOptions {
 				buttonChoose.setEnabled(!cbAll.getSelection());
 			});
 
-			text = new Text(CrontabScheduleOptions.this, SWT.BORDER);
+			text = new Text(parent, SWT.BORDER);
 			text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			text.setText("*"); //$NON-NLS-1$
 			text.setEnabled(false);
 
-			buttonChoose = new Button(CrontabScheduleOptions.this, SWT.NULL);
+			buttonChoose = new Button(parent, SWT.NULL);
 			buttonChoose.setText("..."); //$NON-NLS-1$
 			buttonChoose.setEnabled(false);
 			buttonChoose.addListener(SWT.Selection, e -> {
-				final Shell shell = new Shell(getShell(), SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.TOOL);
+				final Shell shell = new Shell(parent.getShell(), SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.TOOL);
 				shell.setLayout(new GridLayout(2, false));
 				shell.setText(Messages.getString("CrontabScheduleOptions.Select") + part.name); //$NON-NLS-1$
 
@@ -110,7 +112,7 @@ class CrontabScheduleOptions extends ScheduleOptions {
 				shell.setSize(UISettings.BUTTON_WIDTH * 3, 300);
 				shell.layout();
 				shell.open();
-				Display display = getDisplay();
+				Display display = parent.getDisplay();
 				while (!shell.isDisposed()) {
 					if (!display.readAndDispatch()) {
 						display.sleep();
@@ -140,16 +142,14 @@ class CrontabScheduleOptions extends ScheduleOptions {
 		}
 	}
 
-	private PartContainer[] parts;
+	private java.util.List<PartContainer> parts = new ArrayList<>();
 
 	CrontabScheduleOptions(Composite parent, int style) {
 		super(parent, style);
 		try {
-			this.setLayout(new GridLayout(4, false));
-			CrontabPart[] cronParts = CrontabPart.ALL_PARTS;
-			parts = new PartContainer[cronParts.length];
-			for (int i = 0; i < parts.length; i++) {
-				parts[i] = new PartContainer(cronParts[i]);
+			setLayout(new GridLayout(4, false));
+			for (CrontabPart cronPart : CrontabPart.ALL_PARTS) {
+				parts.add(new PartContainer(this, cronPart));
 			}
 			this.layout();
 		}
@@ -173,18 +173,18 @@ class CrontabScheduleOptions extends ScheduleOptions {
 		if (schedule instanceof CrontabSchedule) {
 			CrontabPart.Instance[] instances = ((CrontabSchedule) schedule).getParts();
 			for (int i = 0; i < instances.length; i++) {
-				parts[i].setInstance(instances[i]);
+				parts.get(i).setInstance(instances[i]);
 			}
 		}
 	}
 
 	@Override
 	public Schedule getSchedule() throws DataParseException {
-		Instance minutes = parts[0].getInstance();
-		Instance hours = parts[1].getInstance();
-		Instance daysOfMonth = parts[2].getInstance();
-		Instance months = parts[3].getInstance();
-		Instance daysOfWeek = parts[4].getInstance();
+		Instance minutes = parts.get(0).getInstance();
+		Instance hours = parts.get(1).getInstance();
+		Instance daysOfMonth = parts.get(2).getInstance();
+		Instance months = parts.get(3).getInstance();
+		Instance daysOfWeek = parts.get(4).getInstance();
 		return new CrontabSchedule(minutes, hours, daysOfMonth, months, daysOfWeek);
 	}
 }

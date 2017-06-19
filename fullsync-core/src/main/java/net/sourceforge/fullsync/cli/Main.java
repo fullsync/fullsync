@@ -139,12 +139,12 @@ public class Main implements Launcher { // NO_UCD
 
 	private static void backupFile(final File old, final File current, final String backupName) throws IOException {
 		try (FileInputStream fis = new FileInputStream(old); FileOutputStream fos = new FileOutputStream(current)) {
-			FileChannel in = fis.getChannel();
-			FileChannel out = fos.getChannel();
-			in.transferTo(0, in.size(), out);
-			in.close();
-			out.close();
-			old.renameTo(new File(backupName));
+			try (FileChannel in = fis.getChannel(); FileChannel out = fos.getChannel();) {
+				in.transferTo(0, in.size(), out);
+				in.close();
+				out.close();
+				old.renameTo(new File(backupName));
+			}
 		}
 	}
 
@@ -183,14 +183,7 @@ public class Main implements Launcher { // NO_UCD
 			System.exit(0);
 		}
 
-		// upgrade code...
-		do {
-			File newPreferences = new File(configDir + "preferences.properties");
-			File oldPreferences = new File("preferences.properties");
-			if (!newPreferences.exists() && oldPreferences.exists()) {
-				backupFile(oldPreferences, newPreferences, "preferences_old.properties");
-			}
-		} while (false); // variable scope
+		upgradeLegacyPreferencesLocation(configDir);
 
 		String profilesFile = "profiles.xml";
 		if (line.hasOption("P")) {
@@ -198,18 +191,7 @@ public class Main implements Launcher { // NO_UCD
 		}
 		else {
 			profilesFile = configDir + "profiles.xml";
-			// upgrade code...
-			File newProfiles = new File(profilesFile);
-			File oldProfiles = new File("profiles.xml");
-			if (!newProfiles.exists()) {
-				if (!oldProfiles.exists()) {
-					// on windows FullSync 0.9.1 installs itself into %ProgramFiles%\FullSync while 0.10.0 installs itself into %ProgramFiles%\FullSync\FullSync by default
-					oldProfiles = new File(".." + File.separator + "profiles.xml");
-				}
-				if (oldProfiles.exists()) {
-					backupFile(oldProfiles, newProfiles, "profiles_old.xml");
-				}
-			}
+			upgradeLegacyProfilesXmlLocation(profilesFile);
 		}
 		final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
 		final ProfileManager profileManager = new ProfileManager(profilesFile);
@@ -223,6 +205,28 @@ public class Main implements Launcher { // NO_UCD
 		}
 		else {
 			launcher.launchGui(fullsync);
+		}
+	}
+
+	private static void upgradeLegacyProfilesXmlLocation(String profilesFile) throws IOException {
+		File newProfiles = new File(profilesFile);
+		File oldProfiles = new File("profiles.xml");
+		if (!newProfiles.exists()) {
+			if (!oldProfiles.exists()) {
+				// on windows FullSync 0.9.1 installs itself into %ProgramFiles%\FullSync while 0.10.0 installs itself into %ProgramFiles%\FullSync\FullSync by default
+				oldProfiles = new File(".." + File.separator + "profiles.xml");
+			}
+			if (oldProfiles.exists()) {
+				backupFile(oldProfiles, newProfiles, "profiles_old.xml");
+			}
+		}
+	}
+
+	private static void upgradeLegacyPreferencesLocation(String configDir) throws IOException {
+		File newPreferences = new File(configDir + "preferences.properties");
+		File oldPreferences = new File("preferences.properties");
+		if (!newPreferences.exists() && oldPreferences.exists()) {
+			backupFile(oldPreferences, newPreferences, "preferences_old.properties");
 		}
 	}
 

@@ -48,19 +48,21 @@ public class ChangeLogGenerator {
 		String changelog = null;
 
 		for (int i = 0; (i + 1) < args.length; i += 2) {
-			if ("--src-dir".equals(args[i])) {
-				srcDir = args[i + 1];
-			}
-			else if ("--pattern".equals(args[i])) {
-				pattern = args[i + 1];
-			}
-			else if ("--changelog".equals(args[i])) {
-				changelog = args[i + 1];
-			}
-			else {
-				System.err.println(String.format("Error: unknown argument '%s'", args[i]));
-				usage();
-				System.exit(1);
+			switch (args[i]) {
+				case "--src-dir":
+					srcDir = args[i + 1];
+					break;
+				case "--pattern":
+					pattern = args[i + 1];
+					break;
+				case "--changelog":
+					changelog = args[i + 1];
+					break;
+				default:
+					System.err.println(String.format("Error: unknown argument '%s'", args[i]));
+					usage();
+					System.exit(1);
+					break;
 			}
 		}
 		File dir = new File(srcDir);

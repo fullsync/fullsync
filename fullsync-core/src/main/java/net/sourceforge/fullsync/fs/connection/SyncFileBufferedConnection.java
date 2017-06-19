@@ -59,12 +59,12 @@ import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
 public class SyncFileBufferedConnection implements BufferedConnection {
-	class SyncFileDefaultHandler extends DefaultHandler {
-		BufferedConnection bc;
-		AbstractBufferedFile current;
+	private static class SyncFileDefaultHandler extends DefaultHandler {
+		private BufferedConnection bufferedConnection;
+		private AbstractBufferedFile current;
 
 		SyncFileDefaultHandler(SyncFileBufferedConnection bc) {
-			this.bc = bc;
+			bufferedConnection = bc;
 			current = (AbstractBufferedFile) bc.getRoot();
 		}
 
@@ -76,12 +76,12 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 				if ("/".equals(name) || ".".equals(name)) {
 					return;
 				}
-				AbstractBufferedFile newDir = new AbstractBufferedFile(bc, name, current, true, true);
+				AbstractBufferedFile newDir = new AbstractBufferedFile(bufferedConnection, name, current, true, true);
 				current.addChild(newDir);
 				current = newDir;
 			}
 			else if ("File".equals(qName)) {
-				AbstractBufferedFile newFile = new AbstractBufferedFile(bc, name, current, false, true);
+				AbstractBufferedFile newFile = new AbstractBufferedFile(bufferedConnection, name, current, false, true);
 				newFile.setSize(Long.parseLong(attributes.getValue("BufferedLength")));
 				newFile.setLastModified(Long.parseLong(attributes.getValue("BufferedLastModified")));
 
@@ -233,11 +233,9 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		elem.setAttribute("Name", file.getName());
 		if (file.isDirectory()) {
 			for (File n : file.getChildren()) {
-				if (!n.exists()) {
-					continue;
+				if (n.exists()) {
+					elem.appendChild(serializeFile((BufferedFile) n, doc));
 				}
-
-				elem.appendChild(serializeFile((BufferedFile) n, doc));
 			}
 		}
 		else {
