@@ -25,6 +25,7 @@ import static net.sourceforge.fullsync.Location.Source;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
@@ -57,7 +58,8 @@ public class BackupActionDecider implements ActionDecider {
 	@Override
 	public Task getTask(final File src, final File dst, final StateDecider sd, final BufferStateDecider bsd)
 		throws DataParseException, IOException {
-		ArrayList<Action> actions = new ArrayList<>(3);
+
+		List<Action> actions = new ArrayList<>(3);
 		State state = sd.getState(src, dst);
 		switch (state) {
 			case OrphanSource:

@@ -22,6 +22,7 @@ package net.sourceforge.fullsync;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.sourceforge.fullsync.fs.File;
 
@@ -34,7 +35,7 @@ public class Task implements Serializable {
 	private Action[] actions;
 	private int currentAction;
 
-	private ArrayList<Task> children;
+	private List<Task> children;
 
 	public Task(File source, File destination, State state, Action[] actions) {
 		this.source = source;
@@ -96,7 +97,7 @@ public class Task implements Serializable {
 		this.children.add(child);
 	}
 
-	public ArrayList<Task> getChildren() {
+	public List<Task> getChildren() {
 		if (null == children) {
 			return new ArrayList<>();
 		}

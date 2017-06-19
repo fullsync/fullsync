@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.vfs2.Capability;
 import org.apache.commons.vfs2.FileContent;
@@ -78,9 +79,9 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public final HashMap<String, File> getChildren(final File dir) throws IOException {
+	public final Map<String, File> getChildren(final File dir) throws IOException {
 		try {
-			HashMap<String, File> children = new HashMap<>();
+			Map<String, File> children = new HashMap<>();
 
 			FileObject obj = base.resolveFile(dir.getPath());
 			if (obj.exists() && (obj.getType() == FileType.FOLDER)) {

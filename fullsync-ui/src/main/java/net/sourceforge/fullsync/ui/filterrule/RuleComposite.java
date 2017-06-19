@@ -20,12 +20,12 @@
 package net.sourceforge.fullsync.ui.filterrule;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 
 abstract class RuleComposite extends Composite {
-
-	private ArrayList<ValueChangedListener> listeners = new ArrayList<>();
+	private List<ValueChangedListener> listeners = new ArrayList<>();
 
 	protected RuleComposite(Composite parent, int style) {
 		super(parent, style);

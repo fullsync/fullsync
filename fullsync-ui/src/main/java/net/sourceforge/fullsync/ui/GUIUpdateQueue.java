@@ -20,6 +20,8 @@
 package net.sourceforge.fullsync.ui;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -27,12 +29,12 @@ import org.eclipse.swt.widgets.Display;
 
 public class GUIUpdateQueue<Item> {
 	public interface GUIUpdateTask<Item> {
-		void doUpdate(Display display, LinkedList<Item> items);
+		void doUpdate(Display display, List<Item> items);
 	}
 
 	private Display m_display;
-	private ConcurrentLinkedQueue<Item> m_queue;
-	private AtomicBoolean m_updateScheduled;
+	private final Queue<Item> m_queue = new ConcurrentLinkedQueue<>();
+	private final AtomicBoolean m_updateScheduled = new AtomicBoolean(false);
 	private GUIUpdateTask<Item> m_updateTask;
 
 	public GUIUpdateQueue(Display display, GUIUpdateTask<Item> guiUpdateTask) {
@@ -47,7 +49,7 @@ public class GUIUpdateQueue<Item> {
 		if (!m_updateScheduled.get()) {
 			m_updateScheduled.set(true);
 			m_display.asyncExec(() -> {
-				LinkedList<Item> items = new LinkedList<>();
+				List<Item> items = new LinkedList<>();
 				getItems(items);
 				if (!items.isEmpty()) {
 					m_updateTask.doUpdate(m_display, items);
@@ -56,7 +58,7 @@ public class GUIUpdateQueue<Item> {
 		}
 	}
 
-	private synchronized void getItems(LinkedList<Item> items) {
+	private synchronized void getItems(List<Item> items) {
 		Item item;
 		while (null != (item = m_queue.poll())) {
 			items.add(item);

@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.w3c.dom.Document;
@@ -52,7 +53,7 @@ public class Profile implements Serializable, Comparable<Profile> {
 	private String lastErrorString;
 
 	private transient boolean eventsAllowed;
-	private transient ArrayList<ProfileChangeListener> listeners;
+	private transient List<ProfileChangeListener> listeners = new ArrayList<>();
 
 	static Profile unserialize(Element element) {
 		String profileName = element.getAttribute("name");

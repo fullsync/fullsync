@@ -21,6 +21,7 @@ package net.sourceforge.fullsync.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.BufferUpdate;
@@ -36,7 +37,7 @@ import net.sourceforge.fullsync.buffer.ExecutionBuffer;
 import net.sourceforge.fullsync.fs.File;
 
 public class FillBufferTaskExecutor implements TaskExecutor {
-	private ArrayList<TaskFinishedListener> listeners;
+	private List<TaskFinishedListener> listeners;
 	private boolean statisticsOnly;
 	private IoStatisticsImpl stats;
 	private ExecutionBuffer buffer;

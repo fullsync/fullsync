@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -49,7 +50,7 @@ public abstract class WizardDialog {
 	private final Shell parent;
 	private final int style;
 
-	private final ArrayList<WizardDialogListener> dialogListeners = new ArrayList<>();
+	private final List<WizardDialogListener> dialogListeners = new ArrayList<>();
 
 	public WizardDialog(Shell _parent) {
 		parent = _parent;

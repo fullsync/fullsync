@@ -88,7 +88,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private Button buttonRemoveFilter;
 
 	private Tree directoryTree;
-	private final ArrayList<TreeItem> treeItemsWithFilter = new ArrayList<>();
+	private final List<TreeItem> treeItemsWithFilter = new ArrayList<>();
 	private Map<String, FileFilter> itemsMap = new HashMap<>();
 	private Site sourceSite;
 
@@ -559,7 +559,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	}
 
 	private List<File> getOrderedChildren(File rootFile) throws IOException {
-		ArrayList<File> children = new ArrayList<>(rootFile.getChildren());
+		List<File> children = new ArrayList<>(rootFile.getChildren());
 		Collections.sort(children, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 		return children;
 	}

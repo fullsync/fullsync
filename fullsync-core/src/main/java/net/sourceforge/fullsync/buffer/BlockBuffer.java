@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.slf4j.Logger;
 
@@ -41,7 +42,7 @@ public class BlockBuffer implements ExecutionBuffer {
 
 	int flushes;
 
-	ArrayList<EntryFinishedListener> finishedListeners;
+	List<EntryFinishedListener> finishedListeners;
 
 	public BlockBuffer(Logger logger) {
 		this.logger = logger;

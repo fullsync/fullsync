@@ -34,6 +34,7 @@ import java.rmi.RemoteException;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -319,7 +320,7 @@ public class Main implements Launcher { // NO_UCD
 		CodeSource cs = getClass().getProtectionDomain().getCodeSource();
 		String libDirectory = cs.getLocation().toURI().toString().replaceAll("^(.*)/[^/]+\\.jar$", "$1/");
 
-		ArrayList<URL> jars = new ArrayList<>();
+		List<URL> jars = new ArrayList<>();
 		jars.add(new URL(libDirectory + "net.sourceforge.fullsync-fullsync-assets.jar"));
 		jars.add(new URL(libDirectory + "net.sourceforge.fullsync-fullsync-ui.jar"));
 		// add correct SWT implementation to the class-loader

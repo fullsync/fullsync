@@ -21,6 +21,7 @@ package net.sourceforge.fullsync.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
@@ -52,7 +53,7 @@ public class PublishOverwriteActionDecider implements ActionDecider {
 
 	@Override
 	public Task getTask(File src, File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
-		ArrayList<Action> actions = new ArrayList<>(3);
+		List<Action> actions = new ArrayList<>(3);
 		State state = sd.getState(src, dst);
 		switch (state) {
 			case OrphanSource:

@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.schedule;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,7 @@ public class SchedulerImpl implements Scheduler, Runnable {
 	private boolean running;
 	private boolean enabled;
 
-	private ArrayList<SchedulerChangeListener> schedulerListeners;
+	private List<SchedulerChangeListener> schedulerListeners = new ArrayList<>();
 
 	public SchedulerImpl(ScheduleTaskSource source) {
 		scheduleSource = source;

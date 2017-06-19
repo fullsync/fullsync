@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -51,7 +52,7 @@ public class FileFilterPage extends WizardDialog {
 	private FileFilter oldFileFilter;
 	private FileFilter newFileFilter;
 
-	private ArrayList<FilterRuleListItem> ruleItems = new ArrayList<>();
+	private List<FilterRuleListItem> ruleItems = new ArrayList<>();
 
 	public FileFilterPage(Shell parent, FileFilter filter) {
 		super(parent);

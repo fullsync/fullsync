@@ -29,6 +29,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -89,14 +90,14 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	private String configFile;
-	private ArrayList<Profile> profiles;
-	private ArrayList<ProfileListChangeListener> changeListeners;
-	private ArrayList<ProfileSchedulerListener> scheduleListeners;
+	private List<Profile> profiles = new ArrayList<>();
+	private List<ProfileListChangeListener> changeListeners = new ArrayList<>();
+	private List<ProfileSchedulerListener> scheduleListeners = new ArrayList<>();
 	private boolean remoteConnected = false;
 
 	// FIXME this list is only needed because we need to give feedback from
 	// the local scheduler and a remote scheduler.
-	private ArrayList<SchedulerChangeListener> schedulerChangeListeners;
+	private List<SchedulerChangeListener> schedulerChangeListeners = new ArrayList<>();
 
 	// TODO the scheduler shouldn't reside within the profile manager
 	// but just use it as task source
@@ -247,7 +248,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		fireProfilesChangeEvent();
 	}
 
-	public ArrayList<Profile> getProfiles() {
+	public List<Profile> getProfiles() {
 		return profiles;
 	}
 
