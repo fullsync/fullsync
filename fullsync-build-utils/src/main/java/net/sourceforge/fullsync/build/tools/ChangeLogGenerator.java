@@ -65,6 +65,12 @@ public class ChangeLogGenerator {
 					break;
 			}
 		}
+		if ((args.length > 0) && ((args.length % 2) > 0)) {
+			System.err.println(String.format("Error: missing parameter for argument '%s'", args[args.length - 1]));
+			usage();
+			System.exit(1);
+		}
+
 		File dir = new File(srcDir);
 		if (!dir.exists()) {
 			System.err.println(String.format("Error: Directory '%s' does not exist.", dir.getAbsolutePath()));
