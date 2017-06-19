@@ -467,7 +467,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 
 	@Override
 	public void runProfile(final Profile p, final boolean interactive) {
-		if (null == p) {
+		if (null != p) {
 			if (!interactive) {
 				MessageBox mb = new MessageBox(getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 				mb.setText(Messages.getString("MainWindow.Confirmation")); //$NON-NLS-1$
