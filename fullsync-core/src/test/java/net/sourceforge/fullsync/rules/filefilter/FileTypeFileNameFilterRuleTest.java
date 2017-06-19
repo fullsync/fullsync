@@ -30,50 +30,54 @@ import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 public class FileTypeFileNameFilterRuleTest {
 	private File root = new TestNode("root", null, true, true, 0, 0);
 
+	private File createTestNode(boolean isDirectory) {
+		return new TestNode("foobar.txt", root, true, isDirectory, 1024, System.currentTimeMillis());
+	}
+
 	@Test
 	public void testIsFile() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.FILE), FileTypeFileFilterRule.OP_IS);
-		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
-		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
+		assertTrue(filterRule.match(createTestNode(false)));
+		assertFalse(filterRule.match(createTestNode(true)));
 
 		filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.FILE), FileTypeFileFilterRule.OP_IS);
-		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
-		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
+		assertTrue(filterRule.match(createTestNode(false)));
+		assertFalse(filterRule.match(createTestNode(true)));
 	}
 
 	@Test
 	public void testIsntFile() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.FILE), FileTypeFileFilterRule.OP_ISNT);
-		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
-		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(createTestNode(false)));
+		assertTrue(filterRule.match(createTestNode(true)));
 
 		filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.FILE), FileTypeFileFilterRule.OP_ISNT);
-		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
-		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(createTestNode(false)));
+		assertTrue(filterRule.match(createTestNode(true)));
 	}
 
 	@Test
 	public void testIsDirectory() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY),
 			FileTypeFileFilterRule.OP_IS);
-		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
-		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(createTestNode(false)));
+		assertTrue(filterRule.match(createTestNode(true)));
 
 		filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY), FileTypeFileFilterRule.OP_IS);
-		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
-		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
+		assertFalse(filterRule.match(createTestNode(false)));
+		assertTrue(filterRule.match(createTestNode(true)));
 	}
 
 	@Test
 	public void testIsntDirectory() {
 		FileTypeFileFilterRule filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY),
 			FileTypeFileFilterRule.OP_ISNT);
-		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
-		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
+		assertTrue(filterRule.match(createTestNode(false)));
+		assertFalse(filterRule.match(createTestNode(true)));
 
 		filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY), FileTypeFileFilterRule.OP_ISNT);
-		assertTrue(filterRule.match(new TestNode("foobar.txt", root, true, false, 1024, System.currentTimeMillis())));
-		assertFalse(filterRule.match(new TestNode("foobar.txt", root, true, true, 1024, System.currentTimeMillis())));
+		assertTrue(filterRule.match(createTestNode(false)));
+		assertFalse(filterRule.match(createTestNode(true)));
 	}
 
 }

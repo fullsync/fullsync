@@ -19,8 +19,10 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import net.sourceforge.fullsync.fs.File;
@@ -28,54 +30,56 @@ import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 public class FileSizeFileFilterRuleTest {
 	private File root = new TestNode("root", null, true, true, 0, 0);
+	private File foobarTxt;
+
+	@Before
+	public void setUp() {
+		foobarTxt = new TestNode("foobar.txt", root, true, false, 1000, 0);
+	}
 
 	@Test
 	public void testOpIs() throws FilterRuleNotAppliableException {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS);
-		TestNode file = new TestNode("foobar.txt", root, true, false, 1000, 0);
 
-		assertTrue(filterRule.match(file));
+		assertTrue(filterRule.match(foobarTxt));
 
-		file.setSize(2000);
-		assertTrue(!filterRule.match(file));
+		foobarTxt.setSize(2000);
+		assertFalse(filterRule.match(foobarTxt));
 	}
 
 	@Test
 	public void testOpIsnt() throws FilterRuleNotAppliableException {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_ISNT);
-		TestNode file = new TestNode("foobar.txt", root, true, false, 1000, 0);
-		assertTrue(!filterRule.match(file));
+		assertFalse(filterRule.match(foobarTxt));
 
-		file.setSize(2000);
-		assertTrue(filterRule.match(file));
+		foobarTxt.setSize(2000);
+		assertTrue(filterRule.match(foobarTxt));
 	}
 
 	@Test
 	public void testOpIsGreaterThan() throws FilterRuleNotAppliableException {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"),
 			FileSizeFileFilterRule.OP_IS_GREATER_THAN);
-		TestNode file = new TestNode("foobar.txt", root, true, false, 1000, 0);
 
-		assertTrue(!filterRule.match(file));
+		assertFalse(filterRule.match(foobarTxt));
 
-		file.setSize(2000);
-		assertTrue(filterRule.match(file));
+		foobarTxt.setSize(2000);
+		assertTrue(filterRule.match(foobarTxt));
 
-		file.setSize(999);
-		assertTrue(!filterRule.match(file));
+		foobarTxt.setSize(999);
+		assertFalse(filterRule.match(foobarTxt));
 	}
 
 	@Test
 	public void testOpIsLessThan() throws FilterRuleNotAppliableException {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS_LESS_THAN);
-		TestNode file = new TestNode("foobar.txt", root, true, false, 1000, 0);
 
-		assertTrue(!filterRule.match(file));
+		assertFalse(filterRule.match(foobarTxt));
 
-		file.setSize(2000);
-		assertTrue(!filterRule.match(file));
+		foobarTxt.setSize(2000);
+		assertFalse(filterRule.match(foobarTxt));
 
-		file.setSize(999);
-		assertTrue(filterRule.match(file));
+		foobarTxt.setSize(999);
+		assertTrue(filterRule.match(foobarTxt));
 	}
 }

@@ -24,13 +24,17 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.junit.Test;
 
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 public class DateValueTest {
+	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+	private long parseDate(String date) throws ParseException {
+		return dateFormat.parse(date).getTime();
+	}
 
 	@Test
 	public void testFromString() {
@@ -38,71 +42,39 @@ public class DateValueTest {
 		value.fromString("10/08/1994");
 
 		assertEquals(value.toString(), "10/08/1994");
+		assertEquals(new DateValue("10/08/1994").toString(), "10/08/1994");
 	}
 
 	@Test
 	public void testEquals() throws ParseException {
-		DateValue value = new DateValue();
-		value.fromString("10/08/1994");
+		DateValue value = new DateValue("10/08/1994");
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		Date date = dateFormat.parse("10/08/1994 10:00:00");
-		assertTrue(value.equals(date.getTime()));
-
-		date = dateFormat.parse("10/08/1994 23:59:59");
-		assertTrue(value.equals(date.getTime()));
-
-		date = dateFormat.parse("10/08/1994 00:00:00");
-		assertTrue(value.equals(date.getTime()));
-
-		date = dateFormat.parse("09/08/1994 23:59:59");
-		assertTrue(!value.equals(date.getTime()));
-
-		date = dateFormat.parse("11/08/1994 00:00:00");
-		assertTrue(!value.equals(date.getTime()));
+		assertTrue(value.equals(parseDate("10/08/1994 10:00:00")));
+		assertTrue(value.equals(parseDate("10/08/1994 23:59:59")));
+		assertTrue(value.equals(parseDate("10/08/1994 00:00:00")));
+		assertTrue(!value.equals(parseDate("09/08/1994 23:59:59")));
+		assertTrue(!value.equals(parseDate("11/08/1994 00:00:00")));
 	}
 
 	@Test
 	public void testIsBefore() throws ParseException {
-		DateValue value = new DateValue();
-		value.fromString("10/08/1994");
+		DateValue value = new DateValue("10/08/1994");
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		Date date = dateFormat.parse("11/08/1994 00:00:00");
-		assertTrue(value.isBefore(date.getTime()));
-
-		date = dateFormat.parse("11/08/1994 23:59:59");
-		assertTrue(value.isBefore(date.getTime()));
-
-		date = dateFormat.parse("10/09/1994 23:59:59");
-		assertTrue(value.isBefore(date.getTime()));
-
-		date = dateFormat.parse("10/08/1995 23:59:59");
-		assertTrue(value.isBefore(date.getTime()));
-
-		date = dateFormat.parse("09/08/2005 23:59:59");
-		assertTrue(value.isBefore(date.getTime()));
+		assertTrue(value.isBefore(parseDate("11/08/1994 00:00:00")));
+		assertTrue(value.isBefore(parseDate("11/08/1994 23:59:59")));
+		assertTrue(value.isBefore(parseDate("10/09/1994 23:59:59")));
+		assertTrue(value.isBefore(parseDate("10/08/1995 23:59:59")));
+		assertTrue(value.isBefore(parseDate("09/08/2005 23:59:59")));
 	}
 
 	@Test
 	public void testIsAfter() throws ParseException {
-		DateValue value = new DateValue();
-		value.fromString("10/08/1994");
+		DateValue value = new DateValue("10/08/1994");
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		Date date = dateFormat.parse("09/08/1994 00:00:00");
-		assertTrue(value.isAfter(date.getTime()));
-
-		date = dateFormat.parse("09/08/1994 23:59:59");
-		assertTrue(value.isAfter(date.getTime()));
-
-		date = dateFormat.parse("10/07/1994 23:59:59");
-		assertTrue(value.isAfter(date.getTime()));
-
-		date = dateFormat.parse("10/08/1993 23:59:59");
-		assertTrue(value.isAfter(date.getTime()));
-
-		date = dateFormat.parse("10/08/1990 23:59:59");
-		assertTrue(value.isAfter(date.getTime()));
+		assertTrue(value.isAfter(parseDate("09/08/1994 00:00:00")));
+		assertTrue(value.isAfter(parseDate("09/08/1994 23:59:59")));
+		assertTrue(value.isAfter(parseDate("10/07/1994 23:59:59")));
+		assertTrue(value.isAfter(parseDate("10/08/1993 23:59:59")));
+		assertTrue(value.isAfter(parseDate("10/08/1990 23:59:59")));
 	}
 }
