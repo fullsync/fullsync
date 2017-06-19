@@ -338,7 +338,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		MenuItem menuItemHelpContent = new MenuItem(menuHelp, SWT.PUSH);
 		menuItemHelpContent.setText(Messages.getString("MainWindow.Help_Menu_Item")); //$NON-NLS-1$
 		menuItemHelpContent.addListener(SWT.Selection, e -> {
-			java.io.File helpIndex = new java.io.File("docs/manual/manual.html").getAbsoluteFile(); //$NON-NLS-1$
+			java.io.File helpIndex = new java.io.File(Util.getInstalllocation(), "docs/manual/manual.html").getAbsoluteFile(); //$NON-NLS-1$
 			if (helpIndex.exists()) {
 				GuiController.launchProgram(helpIndex.getAbsolutePath());
 			}
