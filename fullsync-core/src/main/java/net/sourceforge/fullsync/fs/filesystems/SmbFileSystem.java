@@ -32,7 +32,7 @@ import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
 public class SmbFileSystem implements FileSystem {
 	static {
-		//FIXME: no longer needed after update past vfs issue 552:
+		// even tough VFS-552 is fixed this si still needed
 		//[VFS-552][sandbox] include vfs-providers.xml in JAR for dynamic registration of mime and smb providers.
 		try {
 			FileSystemManager fsm = VFS.getManager();

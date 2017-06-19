@@ -35,16 +35,12 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-/**
- * various utilities.
- */
 public abstract class Util {
 	/**
 	 * used for all I/O buffers.
 	 */
 	private static final int IOBUFFERSIZE = 0x1000;
 
-	// keep in sync with net.sourceforge.fullsync.launcher.Launcher.getResourceAsString(String)
 	public static String getResourceAsString(final String name) {
 		StringBuilder out = new StringBuilder();
 		try (InputStream is = getContextClassLoader().getResourceAsStream(name)) {

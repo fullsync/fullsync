@@ -23,9 +23,6 @@ import java.util.EventListener;
 
 import net.sourceforge.fullsync.fs.File;
 
-/**
- * @author <a href="mailto:codewright@gmx.net">Jan Kopcsek</a>
- */
 public interface TaskGenerationListener extends EventListener {
 	void taskTreeStarted(TaskTree tree);
 

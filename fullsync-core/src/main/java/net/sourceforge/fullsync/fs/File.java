@@ -58,7 +58,7 @@ public interface File extends Serializable {
 
 	File getChild(String name) throws IOException;
 
-	// TODO currently, 'create' isnt the right word
+	// TODO currently, 'create' isn't the right word
 	// they do not exist before and may not exists after sync
 	File createChild(String name, boolean directory) throws IOException;
 

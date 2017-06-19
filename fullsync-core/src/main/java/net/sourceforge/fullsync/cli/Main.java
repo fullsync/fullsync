@@ -304,7 +304,6 @@ public class Main implements Launcher { // NO_UCD
 
 	@Override
 	public void launchGui(FullSync fullsync) throws Exception {
-		// FIXME: implement SWT startup using reflection
 		String arch = "x86";
 		String osName = System.getProperty("os.name").toLowerCase();
 		String os = "unknown";
