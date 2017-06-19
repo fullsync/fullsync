@@ -161,6 +161,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			tabSubDirs.setText("Subdirectories"); // FIXME: move text to translation file
 			tabSubDirs.setControl(initSubDirsTab(tabs));
 
+			//FIXME: update to lambda when on Oxygen
 			tabs.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(final SelectionEvent e) {

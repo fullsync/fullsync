@@ -19,6 +19,7 @@
  */
 package net.sourceforge.fullsync;
 
+//TODO: implement like PromptQuestion in FullSync or better yet like event handlers
 public abstract class ExceptionHandler {
 	private static ExceptionHandler singleton = new ExceptionHandler() {
 		@Override

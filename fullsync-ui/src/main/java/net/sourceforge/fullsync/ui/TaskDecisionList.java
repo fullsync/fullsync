@@ -220,6 +220,7 @@ public class TaskDecisionList extends Composite {
 		}
 	}
 
+	//FIXME: implement using ImageDataProvider?
 	protected void drawLocation(GC g, Action a) {
 		switch (a.getLocation()) {
 			case Source:

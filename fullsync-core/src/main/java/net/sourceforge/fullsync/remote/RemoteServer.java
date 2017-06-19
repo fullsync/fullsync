@@ -43,6 +43,7 @@ import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
  * Profile Management, Scheduling and Execution with user Interaction.
  */
 public class RemoteServer extends UnicastRemoteObject implements RemoteInterface {
+	//FIXME: not serializable
 	private static final long serialVersionUID = 2L;
 	private FullSync fullsync;
 	private String password;
