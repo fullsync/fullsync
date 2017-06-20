@@ -324,9 +324,9 @@ public class TaskDecisionList extends Composite {
 			item.setImage(2, image);
 			String[] text = new String[4];
 			text[0] = t.getSource().getPath();
-			text[0] = formatSize(t);
-			text[0] = ""; //$NON-NLS-1$
-			text[0] = t.getCurrentAction().getExplanation();
+			text[1] = formatSize(t);
+			text[2] = ""; //$NON-NLS-1$
+			text[3] = t.getCurrentAction().getExplanation();
 			item.setText(text);
 			item.setData(t);
 
