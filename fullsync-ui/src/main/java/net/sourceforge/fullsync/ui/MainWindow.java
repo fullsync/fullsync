@@ -406,16 +406,14 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		for (Control c : profileListContainer.getChildren()) {
 			c.dispose();
 		}
+		final ProfileManager profileManager = guiController.getProfileManager();
 		if ("NiceListView".equals(guiController.getPreferences().getProfileListStyle())) {
-			profileList = new NiceListViewProfileListComposite(profileListContainer, SWT.NULL);
+			profileList = new NiceListViewProfileListComposite(profileListContainer, SWT.NULL, profileManager, this);
 		}
 		else {
-			profileList = new ListViewProfileListComposite(profileListContainer, SWT.NULL);
+			profileList = new ListViewProfileListComposite(profileListContainer, SWT.NULL, profileManager, this);
 		}
 		profileList.setMenu(createPopupMenu());
-		profileList.setHandler(this);
-		profileList.setProfileManager(guiController.getProfileManager());
-
 		profileListContainer.layout();
 	}
 

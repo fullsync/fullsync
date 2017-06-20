@@ -39,11 +39,8 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 	private TableColumn tableColumnSource;
 	private TableColumn tableColumnDestination;
 
-	private ProfileManager profileManager;
-	private ProfileListControlHandler handler;
-
-	public ListViewProfileListComposite(Composite parent, int style) {
-		super(parent, style);
+	public ListViewProfileListComposite(Composite parent, int style, ProfileManager profileManager, ProfileListControlHandler handler) {
+		super(parent, style, profileManager, handler);
 		tableProfiles = new Table(this, SWT.FULL_SELECTION | SWT.BORDER);
 
 		tableColumnName = new TableColumn(tableProfiles, SWT.NONE);
@@ -69,37 +66,30 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 		tableProfiles.setHeaderVisible(true);
 		tableProfiles.setLinesVisible(false);
 
-		this.setLayout(new FillLayout());
-		this.layout();
+		setLayout(new FillLayout());
+		layout();
+		populateProfileList();
 	}
 
 	public void populateProfileList() {
-		if (null != profileManager) {
-			tableProfiles.clearAll();
-			tableProfiles.setItemCount(0);
-			for (Profile p : profileManager.getProfiles()) {
-				String[] cells = new String[5];
-				cells[0] = p.getName();
-				cells[1] = p.getLastUpdateText();
-				cells[2] = p.getNextUpdateText();
-				cells[3] = p.getSource().toString();
-				cells[4] = p.getDestination().toString();
-				TableItem item = new TableItem(tableProfiles, SWT.NULL);
-				item.setText(cells);
-				item.setData(p);
-			}
-			tableColumnName.pack();
-			tableColumnLastUpdate.pack();
-			tableColumnNextUpdate.pack();
-			tableColumnSource.pack();
-			tableColumnDestination.pack();
+		tableProfiles.clearAll();
+		tableProfiles.setItemCount(0);
+		for (Profile p : getProfileManager().getProfiles()) {
+			String[] cells = new String[5];
+			cells[0] = p.getName();
+			cells[1] = p.getLastUpdateText();
+			cells[2] = p.getNextUpdateText();
+			cells[3] = p.getSource().toString();
+			cells[4] = p.getDestination().toString();
+			TableItem item = new TableItem(tableProfiles, SWT.NULL);
+			item.setText(cells);
+			item.setData(p);
 		}
-	}
-
-	@Override
-	public void dispose() {
-		profileManager.removeProfilesChangeListener(this);
-		super.dispose();
+		tableColumnName.pack();
+		tableColumnLastUpdate.pack();
+		tableColumnNextUpdate.pack();
+		tableColumnSource.pack();
+		tableColumnDestination.pack();
 	}
 
 	@Override
@@ -110,33 +100,6 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 			p = (Profile) (sel[0].getData());
 		}
 		return p;
-	}
-
-	@Override
-	public void setProfileManager(ProfileManager pm) {
-		if (null != profileManager) {
-			profileManager.removeProfilesChangeListener(this);
-		}
-		profileManager = pm;
-		if (null != profileManager) {
-			profileManager.addProfilesChangeListener(this);
-		}
-		populateProfileList();
-	}
-
-	@Override
-	public ProfileManager getProfileManager() {
-		return profileManager;
-	}
-
-	@Override
-	public ProfileListControlHandler getHandler() {
-		return handler;
-	}
-
-	@Override
-	public void setHandler(ProfileListControlHandler handler) {
-		this.handler = handler;
 	}
 
 	@Override

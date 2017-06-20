@@ -42,7 +42,8 @@ import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
 
 public class NiceListViewProfileListComposite extends ProfileListComposite implements ProfileListChangeListener {
-	private class ContentComposite extends Composite {
+	private static class ContentComposite extends Composite {
+		private NiceListViewProfileListComposite niceListViewProfileListComposite;
 		private Profile profile;
 
 		private Label lSource;
@@ -50,14 +51,15 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		private Label lLastUpdate;
 		private Label lNextUpdate;
 
-		ContentComposite(Composite parent, int style) {
+		ContentComposite(NiceListViewProfileListComposite profileListComposite, Composite parent, int style) {
 			super(parent, style);
+			niceListViewProfileListComposite = profileListComposite;
 			GridLayout layout = new GridLayout(2, false);
 			layout.marginHeight = 1;
 			layout.marginWidth = 1;
 			layout.verticalSpacing = 2;
 			layout.horizontalSpacing = 2;
-			this.setLayout(layout);
+			setLayout(layout);
 
 			Composite cSourceDestination = new Composite(this, SWT.FILL);
 			GridLayout sourceDestinationLayout = new GridLayout(2, false);
@@ -115,20 +117,22 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 			d.verticalSpan = 2;
 			toolbar.setLayoutData(d);
 
+			final ProfileListControlHandler handler = niceListViewProfileListComposite.getHandler();
+
 			ToolItem t = new ToolItem(toolbar, SWT.PUSH);
-			t.setImage(imageRun);
+			t.setImage(niceListViewProfileListComposite.imageRun);
 			t.addListener(SWT.Selection, e -> handler.runProfile(profile, true));
 
 			t = new ToolItem(toolbar, SWT.PUSH);
-			t.setImage(imageRunNonInter);
+			t.setImage(niceListViewProfileListComposite.imageRunNonInter);
 			t.addListener(SWT.Selection, e -> handler.runProfile(profile, false));
 
 			t = new ToolItem(toolbar, SWT.PUSH);
-			t.setImage(imageEdit);
+			t.setImage(niceListViewProfileListComposite.imageEdit);
 			t.addListener(SWT.Selection, e -> handler.editProfile(profile));
 
 			t = new ToolItem(toolbar, SWT.PUSH);
-			t.setImage(imageDelete);
+			t.setImage(niceListViewProfileListComposite.imageDelete);
 			t.addListener(SWT.Selection, e -> handler.deleteProfile(profile));
 		}
 
@@ -182,9 +186,6 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	private NiceListView profileList;
 	private Map<Profile, NiceListViewItem> profilesToItems;
 
-	private ProfileManager profileManager;
-	private ProfileListControlHandler handler;
-
 	private Image imageProfileDefault;
 	private Image imageProfileScheduled;
 	private Image imageProfileError;
@@ -194,8 +195,8 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	private Image imageEdit;
 	private Image imageDelete;
 
-	public NiceListViewProfileListComposite(Composite parent, int style) {
-		super(parent, style);
+	public NiceListViewProfileListComposite(Composite parent, int style, ProfileManager profileManager, ProfileListControlHandler handler) {
+		super(parent, style, profileManager, handler);
 		loadImages();
 		scrollPane = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
 		profileList = new NiceListView(scrollPane, SWT.TRANSPARENT);
@@ -206,8 +207,9 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		scrollPane.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		scrollPane.getVerticalBar().setIncrement(20);
 		profileList.pack();
-		this.setLayout(new FillLayout());
-		this.layout();
+		setLayout(new FillLayout());
+		layout();
+		populateProfileList();
 	}
 
 	private void loadImages() {
@@ -221,13 +223,6 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		imageRunNonInter = gc.getImage("Profile_Run_Non_Inter.png"); //$NON-NLS-1$
 		imageEdit = gc.getImage("Profile_Edit.png"); //$NON-NLS-1$
 		imageDelete = gc.getImage("Profile_Delete.png"); //$NON-NLS-1$
-	}
-
-	@Override
-	public void dispose() {
-		profileManager.removeProfilesChangeListener(this);
-
-		super.dispose();
 	}
 
 	private void updateItem(NiceListViewItem item, Profile profile) {
@@ -270,33 +265,32 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	}
 
 	private void populateProfileList() {
-		if (null != getProfileManager()) {
-			profilesToItems = new HashMap<>();
-			setItemsMenu(null);
-			profileList.clear();
-			for (Profile p : getProfileManager().getProfiles()) {
-				NiceListViewItem item = null;
-				try {
-					item = new NiceListViewItem(profileList, SWT.NULL);
-					ContentComposite content = new ContentComposite(item, SWT.NULL);
-					content.setProfile(p);
-					item.setContent(content);
-					item.setMenu(getMenu());
-					item.setHandler(handler);
-					item.setProfile(p);
-					updateItem(item, p);
+		profilesToItems = new HashMap<>();
+		setItemsMenu(null);
+		profileList.clear();
+		ProfileListControlHandler handler = getHandler();
+		for (Profile p : getProfileManager().getProfiles()) {
+			NiceListViewItem item = null;
+			try {
+				item = new NiceListViewItem(profileList, SWT.NULL);
+				ContentComposite content = new ContentComposite(this, item, SWT.NULL);
+				content.setProfile(p);
+				item.setContent(content);
+				item.setMenu(getMenu());
+				item.setHandler(handler);
+				item.setProfile(p);
+				updateItem(item, p);
 
-					profilesToItems.put(p, item);
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-					if (null != item) {
-						item.dispose();
-					}
+				profilesToItems.put(p, item);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				if (null != item) {
+					item.dispose();
 				}
 			}
-			profileList.pack();
 		}
+		profileList.pack();
 	}
 
 	@Override
@@ -306,33 +300,6 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 			return content.getProfile();
 		}
 		return null;
-	}
-
-	@Override
-	public void setProfileManager(ProfileManager pm) {
-		if (null != profileManager) {
-			profileManager.removeProfilesChangeListener(this);
-		}
-		profileManager = pm;
-		if (null != profileManager) {
-			profileManager.addProfilesChangeListener(this);
-		}
-		populateProfileList();
-	}
-
-	@Override
-	public ProfileManager getProfileManager() {
-		return profileManager;
-	}
-
-	@Override
-	public ProfileListControlHandler getHandler() {
-		return handler;
-	}
-
-	@Override
-	public void setHandler(ProfileListControlHandler handler) {
-		this.handler = handler;
 	}
 
 	public void setItemsMenu(Menu menu) {

@@ -19,23 +19,40 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.util.Objects;
+
 import org.eclipse.swt.widgets.Composite;
 
 import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
 
-public abstract class ProfileListComposite extends Composite {
-	public ProfileListComposite(Composite parent, int style) {
+public abstract class ProfileListComposite extends Composite implements ProfileListChangeListener {
+	private final ProfileManager profileManager;
+	private final ProfileListControlHandler profileListControlHandler;
+
+	public ProfileListComposite(Composite parent, int style, ProfileManager pm, ProfileListControlHandler handler) {
 		super(parent, style);
+		Objects.requireNonNull(pm);
+		Objects.requireNonNull(handler);
+		profileManager = pm;
+		profileManager.addProfilesChangeListener(this);
+		profileListControlHandler = handler;
+	}
+
+	public ProfileManager getProfileManager() {
+		return profileManager;
+	}
+
+	@Override
+	public void dispose() {
+		profileManager.removeProfilesChangeListener(this);
+		super.dispose();
+	}
+
+	public ProfileListControlHandler getHandler() {
+		return profileListControlHandler;
 	}
 
 	public abstract Profile getSelectedProfile();
-
-	public abstract void setProfileManager(ProfileManager manager);
-
-	public abstract ProfileManager getProfileManager();
-
-	public abstract void setHandler(ProfileListControlHandler handler);
-
-	public abstract ProfileListControlHandler getHandler();
 }
