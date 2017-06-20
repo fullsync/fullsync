@@ -276,10 +276,14 @@ public class TaskDecisionList extends Composite {
 
 		Image image = new Image(null, data);
 		GC g = new GC(image);
-		drawSide(g, t, a, Location.Source);
-		drawSide(g, t, a, Location.Destination);
-		drawLocation(g, a);
-		g.dispose();
+		try {
+			drawSide(g, t, a, Location.Source);
+			drawSide(g, t, a, Location.Destination);
+			drawLocation(g, a);
+		}
+		finally {
+			g.dispose();
+		}
 		return image;
 	}
 
