@@ -47,7 +47,8 @@ public abstract class UISettings {
 		--i;
 		String result = "";
 		if (-1 != size) {
-			result = String.format("%d %s", Math.ceil(size / Math.pow(K, i)), UNITS[i]);
+			int scaledSize = (int) Math.ceil(size / Math.pow(K, i));
+			result = String.format("%d %s", scaledSize, UNITS[i]);
 		}
 		return result;
 	}
