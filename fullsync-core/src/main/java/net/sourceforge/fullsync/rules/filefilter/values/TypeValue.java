@@ -54,7 +54,7 @@ public class TypeValue implements OperandValue {
 		for (Type t : Type.values()) {
 			if (t.name().equalsIgnoreCase(str)) {
 				this.type = t;
-				return;
+				break;
 			}
 		}
 	}
