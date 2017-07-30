@@ -84,6 +84,9 @@ public class SystemTrayItem implements TaskGenerationListener {
 	public void dispose() {
 		trayItem.dispose();
 		menu.dispose();
+		if (null != timer) {
+			timer.cancel();
+		}
 	}
 
 	@Override
