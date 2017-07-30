@@ -52,11 +52,10 @@ class AboutDialog implements AsyncUIUpdate {
 	private static final String FULLSYNC_LICENSES_DIRECTORY = "net/sourceforge/fullsync/licenses/";
 	private static final long ANIMATION_DELAY = 750;
 	private int stIndex;
-	private Timer stTimer;
+	private final List<String> licenseNames = new ArrayList<>();
+	private final List<String> licenseTexts = new ArrayList<>();
 	private Combo componentCombo;
 	private StyledText licenseText;
-	private List<String> licenseNames;
-	private List<String> licenseTexts;
 
 	AboutDialog(final Shell parent) {
 		try {
@@ -85,9 +84,9 @@ class AboutDialog implements AsyncUIUpdate {
 
 			final TabItem tabGeneral = new TabItem(tabs, SWT.NONE);
 			tabGeneral.setText(Messages.getString("AboutDialog.Tab_About")); //$NON-NLS-1$
-			stTimer = new Timer(false);
-			tabGeneral.setControl(initAboutTab(tabs));
+			final Timer stTimer = new Timer(false);
 			dialogShell.addDisposeListener(e -> stTimer.cancel());
+			tabGeneral.setControl(initAboutTab(tabs, stTimer));
 			dialogShell.getDisplay().asyncExec(() -> {
 				// fix the size of the General tab to show all child elements
 				Point generalTabSize = tabGeneral.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT);
@@ -112,7 +111,6 @@ class AboutDialog implements AsyncUIUpdate {
 			tabChangelog.setText(Messages.getString("AboutDialog.Tab_Changelog")); //$NON-NLS-1$
 			tabChangelog.setControl(initChangelogTab(tabs));
 
-			// ok button
 			Button buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
 			buttonOk.setText(Messages.getString("AboutDialog.Ok")); //$NON-NLS-1$
 			buttonOk.addListener(SWT.Selection, e -> dialogShell.close());
@@ -151,7 +149,7 @@ class AboutDialog implements AsyncUIUpdate {
 		return tab;
 	}
 
-	private Composite initAboutTab(Composite parent) {
+	private Composite initAboutTab(Composite parent, Timer stTimer) {
 		final Composite tab = new Composite(parent, SWT.FILL);
 		tab.setLayout(new GridLayout(1, true));
 
@@ -208,8 +206,7 @@ class AboutDialog implements AsyncUIUpdate {
 						labelThanks.setText(specialThanks[firstLine] + '\n' + specialThanks[secondLine] + '\n' + specialThanks[thirdLine]);
 						labelThanks.pack(true);
 						tab.layout(new Control[] { labelThanks });
-						++stIndex;
-						stIndex %= specialThanks.length;
+						stIndex = (stIndex + 1) % specialThanks.length;
 					}
 				});
 			}
@@ -290,11 +287,9 @@ class AboutDialog implements AsyncUIUpdate {
 
 	@Override
 	public void execute() throws Exception {
-		int numLicenses = 0;
 		List<LicenseEntry> licenses = new ArrayList<>();
 		for (String name : Util.loadDirectoryFromClasspath(FULLSYNC_LICENSES_DIRECTORY)) {
 			if (name.endsWith(".txt")) { //$NON-NLS-1$
-				++numLicenses;
 				LicenseEntry entry = new LicenseEntry();
 				entry.name = name.substring(0, name.length() - 4);
 				entry.license = Util.getResourceAsString(FULLSYNC_LICENSES_DIRECTORY + name);
@@ -302,8 +297,6 @@ class AboutDialog implements AsyncUIUpdate {
 			}
 		}
 		Collections.sort(licenses, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-		licenseNames = new ArrayList<>(numLicenses);
-		licenseTexts = new ArrayList<>(numLicenses);
 		for (LicenseEntry lic : licenses) {
 			licenseNames.add(lic.name);
 			licenseTexts.add(lic.license);
@@ -321,7 +314,6 @@ class AboutDialog implements AsyncUIUpdate {
 			}
 			++idx;
 		}
-		licenseNames = null;
 		componentCombo.select(fsIdx);
 		licenseText.setText(licenseTexts.get(fsIdx));
 	}
