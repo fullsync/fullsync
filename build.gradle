@@ -113,7 +113,7 @@ def eolFilter(context, eol) {
 def manualCopySpec = copySpec {
 	into('docs/manual') {
 		from('docs/manual') {
-			include '*'
+			include '**'
 		}
 		from('resources') {
 			include 'fullsync.ico'
