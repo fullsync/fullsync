@@ -260,7 +260,7 @@ public class Main implements Launcher { // NO_UCD
 		}
 		else {
 			//FIXME: this should be on STDERR really... but that is "abused" as the log output.
-			System.out.println(String.format("Error: The profile with the name {0} couldn't be found.", profileName));
+			System.out.println(String.format("Error: The profile with the name %s couldn't be found.", profileName));
 		}
 		System.exit(errorlevel);
 	}
