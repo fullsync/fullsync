@@ -93,7 +93,12 @@ public abstract class Util {
 
 			}
 			if (src.isDirectory() && src.exists()) {
-				src.toPath().forEach(p -> children.add(p.toFile().getName()));
+				String[] files = src.list();
+				if (null != files) {
+					for (String f : files) {
+						children.add(f);
+					}
+				}
 			}
 			else if (src.isFile() && src.exists()) {
 				try (JarFile jar = new JarFile(src)) {
