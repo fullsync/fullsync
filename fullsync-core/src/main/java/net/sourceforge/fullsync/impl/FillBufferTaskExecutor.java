@@ -73,9 +73,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 	}
 
 	protected void enqueueTaskChildren(Task task) {
-		for (Task t : task.getChildren()) {
-			enqueue(t);
-		}
+		task.getChildren().stream().forEachOrdered(this::enqueue);
 	}
 
 	@Override

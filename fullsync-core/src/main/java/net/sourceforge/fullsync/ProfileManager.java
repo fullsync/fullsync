@@ -375,9 +375,9 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 
 				Element e = doc.createElement("Profiles");
 				e.setAttribute("version", "1.1");
-				for (Profile p : profiles) {
-					e.appendChild(p.serialize(doc));
-				}
+				profiles.stream()
+					.map(p -> p.serialize(doc))
+					.forEachOrdered(e::appendChild);
 				doc.appendChild(e);
 
 				TransformerFactory fac = TransformerFactory.newInstance();
