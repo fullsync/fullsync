@@ -23,8 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 
 abstract class RuleComposite extends Composite {
+	protected Text textValue;
 	private List<ValueChangedListener> listeners = new ArrayList<>();
 
 	protected RuleComposite(Composite parent, int style) {
@@ -45,5 +47,10 @@ abstract class RuleComposite extends Composite {
 		for (ValueChangedListener listener : listeners) {
 			listener.onValueChanged(evt);
 		}
+	}
+
+	public void setError(String message) {
+		textValue.setToolTipText(message);
+		//TODO: mark field as invalid
 	}
 }

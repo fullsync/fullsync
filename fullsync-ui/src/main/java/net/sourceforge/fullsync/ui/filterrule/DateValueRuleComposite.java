@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 class DateValueRuleComposite extends RuleComposite {
-	private Text textValue;
 	private Button buttonCalendar;
 	private DateFormat dateFormat;
 

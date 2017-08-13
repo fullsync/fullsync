@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.rules.filefilter;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
@@ -60,7 +61,7 @@ public class FileNameFileFilterRule extends FileFilterRule {
 		return allOperators;
 	}
 
-	public FileNameFileFilterRule(TextValue pattern, int operator) {
+	public FileNameFileFilterRule(TextValue pattern, int operator) throws DataParseException {
 		this.pattern = pattern;
 		this.op = operator;
 
@@ -69,8 +70,7 @@ public class FileNameFileFilterRule extends FileFilterRule {
 				this.regexppattern = Pattern.compile(this.pattern.getValue());
 			}
 			catch (PatternSyntaxException e) {
-				this.pattern.setValue("");
-				ExceptionHandler.reportException(e);
+				throw new DataParseException(e);
 			}
 		}
 	}

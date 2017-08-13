@@ -55,4 +55,8 @@ class TypeValueRuleComposite extends RuleComposite {
 		comboTypes.addListener(SWT.Selection, comboSelectionListener);
 		comboTypes.addListener(SWT.DefaultSelection, comboSelectionListener);
 	}
+
+	@Override
+	public void setError(String message) {
+	}
 }

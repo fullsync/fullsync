@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.ui.filterrule;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sourceforge.fullsync.DataParseException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
@@ -105,11 +106,10 @@ public class FilterRuleListItem {
 
 	private final FileFilterPage root;
 
-	private final FileFilterManager fileFilterManager;
+	private final FileFilterManager fileFilterManager = new FileFilterManager();
 
-	public FilterRuleListItem(FileFilterPage root, Composite composite, FileFilterManager fileFilterManager, String ruleType, int op,
+	public FilterRuleListItem(FileFilterPage root, Composite composite, String ruleType, int op,
 		OperandValue value) {
-		this.fileFilterManager = fileFilterManager;
 		this.ruleType = ruleType;
 		this.op = op;
 		this.root = root;
@@ -129,16 +129,8 @@ public class FilterRuleListItem {
 		return ruleNamesConversionTable.get(typeName);
 	}
 
-	public String getRuleType() {
-		return ruleType;
-	}
-
-	public int getOperator() {
-		return op;
-	}
-
-	public OperandValue getValue() {
-		return value;
+	public FileFilterRule getFileFilterRule() throws DataParseException {
+		return fileFilterManager.createFileFilterRule(ruleType, op, value);
 	}
 
 	public void init(final Composite composite) {
@@ -254,5 +246,9 @@ public class FilterRuleListItem {
 		toolItemAdd.setImage(GuiController.getInstance().getImage("Rule_Add.png")); //$NON-NLS-1$
 		toolItemAdd.setToolTipText(Messages.getString("FilterRuleListItem.Add")); //$NON-NLS-1$
 		toolItemAdd.addListener(SWT.Selection, e -> root.addRuleRow());
+	}
+
+	public void setError(String message) {
+		ruleComposite.setError(message);
 	}
 }
