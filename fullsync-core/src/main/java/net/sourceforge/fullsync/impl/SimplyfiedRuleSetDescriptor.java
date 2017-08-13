@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.impl;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.sourceforge.fullsync.DataParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -101,7 +102,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		return simpleRuleSetElement;
 	}
 
-	public SimplyfiedRuleSetDescriptor(Element element) {
+	public SimplyfiedRuleSetDescriptor(Element element) throws DataParseException {
 		NodeList ruleSetConfigNodeList = element.getElementsByTagName("SimpleRuleSet");
 
 		if (ruleSetConfigNodeList.getLength() == 0) {
