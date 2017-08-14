@@ -1,3 +1,26 @@
+sudo: false
+dist: trusty
+group: edge
+
+addons:
+  apt:
+    packages:
+      - oracle-java9-installer
+
 language: java
 jdk:
+  - oraclejdk9
   - oraclejdk8
+  - openjdk8
+
+script:
+  - ./gradlew assemble
+  - ./gradlew test jacocoRootReport coveralls
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
