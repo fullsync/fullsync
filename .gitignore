@@ -1,6 +1,8 @@
 # root directory
 /.gradle/
 /build/
+/.idea/
+/out/
 
 # everywhere
 .settings/

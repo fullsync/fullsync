@@ -22,16 +22,18 @@ package net.sourceforge.fullsync.rules.filefilter;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class FileFilterTest {
-	private File root = new TestNode("root", null, true, true, 0, 0);
-	private File testNode = new TestNode("foobar.txt", root, true, false, 0, 0);
+	private File root;
+	private File testNode;
 
 	private static class AlwaysTrueFileFilterRule extends FileFilterRule {
 		private static final long serialVersionUID = 2L;
@@ -101,6 +103,12 @@ public class FileFilterTest {
 		}
 	}
 
+	@Before
+	public void setUp() {
+		root = new TestNode("root", null, true, true, 0, 0);
+		testNode = new TestNode("foobar.txt", root, true, false, 0, 0);
+	}
+
 	@Test
 	public void testEmptyFilter() {
 		FileFilter filter = new FileFilter();
@@ -128,6 +136,45 @@ public class FileFilterTest {
 
 		filter.setMatchType(FileFilter.MATCH_ANY);
 		assertFalse(filter.match(testNode));
+	}
+
+	@Test
+	public void testOneRuleFilterAppliesToDir() {
+		FileFilter filter = new FileFilter();
+		filter.setMatchType(FileFilter.MATCH_ALL);
+		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule() });
+		filter.setAppliesToDirectories(false);
+
+		assertTrue(filter.match(root));
+
+		filter.setMatchType(FileFilter.MATCH_ANY);
+		assertTrue(filter.match(root));
+	}
+
+	@Test
+	public void throwFilterRuleNotAppliableExceptionAll() {
+		FileFilter filter = new FileFilter();
+		filter.setFileFilterRules(
+			new FileFilterRule[]
+		{ new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_IS) });
+		filter.setMatchType(FileFilter.MATCH_ALL);
+
+		testNode.setLastModified(-1);
+
+		assertTrue(filter.match(testNode));
+	}
+
+	@Test
+	public void throwFilterRuleNotAppliableExceptionAny() {
+		FileFilter filter = new FileFilter();
+		filter.setFileFilterRules(
+			new FileFilterRule[]
+		{ new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_IS) });
+		filter.setMatchType(FileFilter.MATCH_ANY);
+
+		testNode.setLastModified(-1);
+
+		assertTrue(filter.match(testNode));
 	}
 
 	@Test
@@ -227,7 +274,7 @@ public class FileFilterTest {
 	}
 
 	@Test
-	public void testFilterInclude() {
+	public void testFilterInclude() throws Exception {
 		FileFilter filter = new FileFilter();
 		filter.setMatchType(FileFilter.MATCH_ANY);
 		filter.setFilterType(FileFilter.INCLUDE);
@@ -241,7 +288,7 @@ public class FileFilterTest {
 	}
 
 	@Test
-	public void testFilterExclude() {
+	public void testFilterExclude() throws Exception {
 		FileFilter filter = new FileFilter();
 		filter.setMatchType(FileFilter.MATCH_ANY);
 		filter.setFilterType(FileFilter.EXCLUDE);

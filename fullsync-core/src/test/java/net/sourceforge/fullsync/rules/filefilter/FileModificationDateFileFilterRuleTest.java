@@ -19,31 +19,89 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import static org.junit.Assert.assertTrue;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
+import static org.junit.Assert.*;
+
 public class FileModificationDateFileFilterRuleTest {
 	private File root = new TestNode("root", null, true, true, 0, 0);
+	private File testNode;
+	private long oldtime;
+	private long newtime;
+	private SimpleDateFormat dateFormat;
+
+	@Before
+	public void setUp() throws ParseException {
+		dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		oldtime = dateFormat.parse("01/06/2005 06:00:00").getTime();
+		newtime = dateFormat.parse("02/06/2005 06:00:00").getTime();
+
+		testNode = new TestNode("foobar.txt", root, true, false, 1000, oldtime);
+	}
 
 	@Test
 	public void testOpIs() throws ParseException, FilterRuleNotAppliableException {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-
 		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(
-			new DateValue(dateFormat.parse("01/06/2005 06:00:00").getTime()), FileModificationDateFileFilterRule.OP_IS);
+			new DateValue(oldtime), FileModificationDateFileFilterRule.OP_IS);
 
-		TestNode file = new TestNode("foobar.txt", root, true, false, 1000, dateFormat.parse("01/06/2005 10:00:00").getTime());
+		assertTrue(filterRule.match(testNode));
+		testNode.setLastModified(newtime);
 
-		assertTrue(filterRule.match(file));
-		file.setLastModified(dateFormat.parse("02/06/2005 10:00:00").getTime());
+		assertFalse(filterRule.match(testNode));
+	}
 
-		assertTrue(!filterRule.match(file));
+	@Test
+	public void testOpIsnt() throws ParseException, FilterRuleNotAppliableException {
+		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(
+			new DateValue(oldtime), FileModificationDateFileFilterRule.OP_ISNT);
+
+		testNode.setLastModified(newtime);
+		assertTrue(filterRule.match(testNode));
+	}
+
+	@Test
+	public void testOpIsAfter() throws ParseException, FilterRuleNotAppliableException {
+		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(
+			new DateValue(newtime), FileModificationDateFileFilterRule.OP_IS_AFTER);
+
+		testNode.setLastModified(oldtime);
+
+		assertNotEquals(oldtime, newtime);
+		assertTrue(filterRule.match(testNode));
+	}
+
+	@Test
+	public void testOpIsBefore() throws ParseException, FilterRuleNotAppliableException {
+		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(
+			new DateValue(oldtime), FileModificationDateFileFilterRule.OP_IS_BEFORE);
+
+		testNode.setLastModified(newtime);
+		assertNotEquals(oldtime, newtime);
+		assertTrue(filterRule.match(testNode));
+	}
+
+	@Test
+	public void testOpDefault() throws ParseException, FilterRuleNotAppliableException {
+		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(
+			new DateValue(newtime), -1);
+
+		assertFalse(filterRule.match(testNode));
+	}
+
+	@Test(expected = FilterRuleNotAppliableException.class)
+	public void throwFilterRuleNotAppliableExceptionAll() throws FilterRuleNotAppliableException {
+		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(
+			new DateValue(newtime), FileModificationDateFileFilterRule.OP_IS);
+
+		testNode.setLastModified(-1);
+
+		assertTrue(filterRule.match(testNode));
 	}
 }

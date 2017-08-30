@@ -21,6 +21,7 @@ package net.sourceforge.fullsync.rules.filefilter;
 
 import java.util.Arrays;
 
+import net.sourceforge.fullsync.DataParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -58,7 +59,7 @@ public class FileFilterManager {
 		return ruleElement;
 	}
 
-	public FileFilter unserializeFileFilter(Element fileFilterElement, String ruleElementName) {
+	public FileFilter unserializeFileFilter(Element fileFilterElement, String ruleElementName) throws DataParseException {
 		FileFilter fileFilter = new FileFilter();
 		int matchType = 0;
 
@@ -141,7 +142,7 @@ public class FileFilterManager {
 		}
 	}
 
-	public FileFilterRule unserializeFileFilterRule(Element fileFilterRuleElement) {
+	public FileFilterRule unserializeFileFilterRule(Element fileFilterRuleElement) throws DataParseException {
 		FileFilterRule rule = null;
 		String ruleType = fileFilterRuleElement.getAttribute("ruletype");
 
@@ -191,7 +192,7 @@ public class FileFilterManager {
 		return rule;
 	}
 
-	public FileFilterRule createFileFilterRule(String ruleType, int op, OperandValue value) {
+	public FileFilterRule createFileFilterRule(String ruleType, int op, OperandValue value) throws DataParseException {
 		FileFilterRule rule = null;
 
 		if (ruleType.equals(FileNameFileFilterRule.TYPE_NAME)) {

@@ -31,8 +31,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue.Unit;
 
 class AgeValueRuleComposite extends RuleComposite {
-	private Text textValue;
-
 	AgeValueRuleComposite(Composite parent, int style, final AgeValue value) {
 		super(parent, style);
 		this.setLayout(new GridLayout(2, true));

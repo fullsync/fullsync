@@ -98,4 +98,10 @@ public class FileAgeFileFilterRuleTest {
 		assertFalse(filterRule.match(createTestNode("01/01/2005 09:00:00")));
 		assertTrue(filterRule.match(createTestNode("01/01/2005 11:00:00")));
 	}
+
+	@Test
+	public void testOpDefault() throws FilterRuleNotAppliableException, ParseException {
+		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), -1);
+		assertFalse(filterRule.match(createTestNode("01/01/2005 10:00:00")));
+	}
 }

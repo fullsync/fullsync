@@ -32,7 +32,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.FilterValue;
 import net.sourceforge.fullsync.ui.FileFilterPage;
 
 class SubfilterRuleComposite extends RuleComposite {
-	private Text textValue;
 	private Button buttonFilter;
 
 	SubfilterRuleComposite(Composite parent, int style, final FilterValue filterValue) {

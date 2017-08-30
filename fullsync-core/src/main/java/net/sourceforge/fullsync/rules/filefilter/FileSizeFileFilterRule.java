@@ -85,8 +85,10 @@ public class FileSizeFileFilterRule extends FileFilterRule {
 
 			case OP_IS_LESS_THAN:
 				return filesize < size.getBytes();
+
+			default:
+				return false;
 		}
-		return false;
 	}
 
 	@Override

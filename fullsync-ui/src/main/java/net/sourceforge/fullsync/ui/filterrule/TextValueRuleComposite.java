@@ -28,8 +28,6 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 class TextValueRuleComposite extends RuleComposite {
-	private Text textValue;
-
 	TextValueRuleComposite(Composite parent, int style, final TextValue value) {
 		super(parent, style);
 		GridData compositeLayoutData = new GridData();

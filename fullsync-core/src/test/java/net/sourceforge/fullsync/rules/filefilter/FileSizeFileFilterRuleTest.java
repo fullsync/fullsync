@@ -82,4 +82,19 @@ public class FileSizeFileFilterRuleTest {
 		foobarTxt.setSize(999);
 		assertTrue(filterRule.match(foobarTxt));
 	}
+
+	@Test(expected = FilterRuleNotAppliableException.class)
+	public void fileSizeNegative() throws FilterRuleNotAppliableException {
+		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS);
+		foobarTxt.setSize(-1);
+
+		filterRule.match(foobarTxt);
+	}
+
+	@Test
+	public void testOpDefault() throws FilterRuleNotAppliableException {
+		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), -1);
+
+		assertFalse(filterRule.match(foobarTxt));
+	}
 }

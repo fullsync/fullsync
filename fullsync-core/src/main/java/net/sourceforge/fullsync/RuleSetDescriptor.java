@@ -20,9 +20,6 @@
 package net.sourceforge.fullsync;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,27 +32,20 @@ public abstract class RuleSetDescriptor implements Serializable {
 
 	private static final String ELEMENT_NAME = "RuleSetDescriptor";
 
-	private static Map<String, Function<Element, RuleSetDescriptor>> descriptorRegister;
-
-	static {
-		descriptorRegister = new HashMap<>(2);
-		descriptorRegister.put(SimplyfiedRuleSetDescriptor.RULESET_TYPE, SimplyfiedRuleSetDescriptor::new);
-	}
-
 	public abstract RuleSet createRuleSet();
 
 	public abstract String getType();
 
 	public abstract Element serializeDescriptor(Document document);
 
-	public static final RuleSetDescriptor unserialize(Element element) {
+	public static final RuleSetDescriptor unserialize(Element element) throws DataParseException {
 		RuleSetDescriptor desc = null;
 		if (null != element) {
 			String ruleSetType = element.getAttribute("type");
-			Function<Element, RuleSetDescriptor> ruleSetDesctiptorConstructor = descriptorRegister.get(ruleSetType);
-
-			if (null != ruleSetDesctiptorConstructor) {
-				desc = ruleSetDesctiptorConstructor.apply(element);
+			switch (ruleSetType) {
+				case SimplyfiedRuleSetDescriptor.RULESET_TYPE:
+					desc = new SimplyfiedRuleSetDescriptor(element);
+					break;
 			}
 		}
 		return desc;

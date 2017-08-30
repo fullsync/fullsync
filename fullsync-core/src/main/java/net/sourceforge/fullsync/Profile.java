@@ -55,7 +55,7 @@ public class Profile implements Serializable, Comparable<Profile> {
 	private transient boolean eventsAllowed;
 	private transient List<ProfileChangeListener> listeners = new ArrayList<>();
 
-	static Profile unserialize(Element element) {
+	static Profile unserialize(Element element) throws DataParseException {
 		String profileName = element.getAttribute("name");
 		ConnectionDescription src = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0));
 		ConnectionDescription dst = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0));
@@ -69,7 +69,7 @@ public class Profile implements Serializable, Comparable<Profile> {
 		p.setDescription(element.getAttribute("description"));
 		p.setSynchronizationType(element.getAttribute("type"));
 		if (element.hasAttribute("enabled")) {
-			p.setEnabled(Boolean.valueOf(element.getAttribute("enabled")).booleanValue());
+			p.setEnabled(Boolean.valueOf(element.getAttribute("enabled")));
 		}
 		if (element.hasAttribute("lastErrorLevel")) {
 			p.setLastError(Integer.parseInt(element.getAttribute("lastErrorLevel")), element.getAttribute("lastErrorString"));

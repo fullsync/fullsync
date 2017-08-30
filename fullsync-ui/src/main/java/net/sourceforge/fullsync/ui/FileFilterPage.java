@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sourceforge.fullsync.DataParseException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
@@ -34,7 +35,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
-import net.sourceforge.fullsync.rules.filefilter.FileFilterManager;
 import net.sourceforge.fullsync.rules.filefilter.FileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.ui.filterrule.FilterRuleListItem;
@@ -48,7 +48,6 @@ public class FileFilterPage extends WizardDialog {
 	private Composite compositeRuleList;
 	private Button buttonAppliesToDir;
 
-	private FileFilterManager fileFilterManager = new FileFilterManager();
 	private FileFilter oldFileFilter;
 	private FileFilter newFileFilter;
 
@@ -159,7 +158,13 @@ public class FileFilterPage extends WizardDialog {
 		FileFilterRule[] rules = new FileFilterRule[ruleItems.size()];
 		for (int i = 0; i < rules.length; i++) {
 			FilterRuleListItem ruleItem = ruleItems.get(i);
-			rules[i] = fileFilterManager.createFileFilterRule(ruleItem.getRuleType(), ruleItem.getOperator(), ruleItem.getValue());
+			try {
+				rules[i] = ruleItem.getFileFilterRule();
+			}
+			catch (DataParseException e) {
+				ruleItem.setError(e.getMessage());
+				return false;
+			}
 		}
 
 		newFileFilter.setFileFilterRules(rules);
@@ -176,7 +181,7 @@ public class FileFilterPage extends WizardDialog {
 	}
 
 	protected void addRuleRow(String ruleType, int op, OperandValue value) {
-		FilterRuleListItem ruleItem = new FilterRuleListItem(this, compositeRuleList, fileFilterManager, ruleType, op, value);
+		FilterRuleListItem ruleItem = new FilterRuleListItem(this, compositeRuleList, ruleType, op, value);
 		ruleItems.add(ruleItem);
 		compositeRuleList.pack();
 	}

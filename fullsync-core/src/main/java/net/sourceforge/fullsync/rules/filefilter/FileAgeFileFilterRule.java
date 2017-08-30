@@ -88,8 +88,10 @@ public class FileAgeFileFilterRule extends FileFilterRule {
 
 			case OP_IS_LESS_THAN:
 				return delta < age.getSeconds();
+
+			default:
+				return false;
 		}
-		return false;
 	}
 
 	@Override
