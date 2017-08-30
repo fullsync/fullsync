@@ -20,36 +20,33 @@
 package net.sourceforge.fullsync.impl;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.rules.filefilter.TestNode;
 
 public class PublishActionDeciderTest extends ActionDeciderTestUtil {
 	private PublishActionDecider decider;
-	private File root;
-	private File existingTestNode;
-	private File missingTestNode;
-	private File largeTestNode;
 
 	@Override
 	@Before
 	public void setUp() {
 		super.setUp();
 		decider = new PublishActionDecider();
-		root = new TestNode("root", null, true, true, 0, 0);
-		existingTestNode = new TestNode("test", root, true, false, 1, 1000);
-		missingTestNode = new TestNode("test", root, false, false, 0, 1000);
-		largeTestNode = new TestNode("test", root, true, false, 6000, 2000);
 	}
 
 	@Test
 	public void testInSync() throws Exception {
 		Task task = decider.getTask(existingTestNode, existingTestNode, stateDecider, bufferedStateDecider);
+		checkAction(task.getCurrentAction(), ActionType.Nothing, Location.None, BufferUpdate.None);
+	}
+
+	@Test
+	public void testDirectoryInSync() throws Exception {
+		Task task = decider.getTask(directoryTestNode, directoryTestNode, stateDecider, bufferedStateDecider);
 		checkAction(task.getCurrentAction(), ActionType.Nothing, Location.None, BufferUpdate.None);
 	}
 
@@ -75,5 +72,31 @@ public class PublishActionDeciderTest extends ActionDeciderTestUtil {
 	public void testDestinationUpdated() throws Exception {
 		Task task = decider.getTask(existingTestNode, largeTestNode, stateDecider, bufferedStateDecider);
 		checkAction(task.getCurrentAction(), ActionType.UnexpectedChangeError, Location.Destination, BufferUpdate.None);
+	}
+
+	@Ignore
+	@Test
+	public void testSourceBigger() throws Exception {
+		Task task = decider.getTask(existingBigTestNode, existingTestNode, stateDecider, bufferedStateDecider);
+		checkAction(task.getCurrentAction(), ActionType.NotDecidableError, Location.None, BufferUpdate.None);
+	}
+
+	@Ignore
+	@Test
+	public void testDestinationBigger() throws Exception {
+		Task task = decider.getTask(existingTestNode, existingBigTestNode, stateDecider, bufferedStateDecider);
+		checkAction(task.getCurrentAction(), ActionType.NotDecidableError, Location.None, BufferUpdate.None);
+	}
+
+	@Test
+	public void testFileToDirectory() throws Exception {
+		Task task = decider.getTask(existingTestNode, directoryTestNode, stateDecider, bufferedStateDecider);
+		checkAction(task.getCurrentAction(), ActionType.DirHereFileThereError, Location.Destination, BufferUpdate.None);
+	}
+
+	@Test
+	public void testDirectoryToFile() throws Exception {
+		Task task = decider.getTask(directoryTestNode, existingTestNode, stateDecider, bufferedStateDecider);
+		checkAction(task.getCurrentAction(), ActionType.DirHereFileThereError, Location.Source, BufferUpdate.None);
 	}
 }

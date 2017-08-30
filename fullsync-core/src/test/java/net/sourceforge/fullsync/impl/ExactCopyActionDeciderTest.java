@@ -28,14 +28,14 @@ import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
 
-public class BackupActionDeciderTest extends ActionDeciderTestUtil {
-	private BackupActionDecider decider;
+public class ExactCopyActionDeciderTest extends ActionDeciderTestUtil {
+	private ExactCopyActionDecider decider;
 
 	@Override
 	@Before
 	public void setUp() {
 		super.setUp();
-		decider = new BackupActionDecider();
+		decider = new ExactCopyActionDecider();
 	}
 
 	@Test
@@ -59,7 +59,7 @@ public class BackupActionDeciderTest extends ActionDeciderTestUtil {
 	@Test
 	public void testSourceMissing() throws Exception {
 		Task task = decider.getTask(missingTestNode, existingTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.Nothing, Location.None, BufferUpdate.None);
+		checkAction(task.getCurrentAction(), ActionType.Delete, Location.Destination, BufferUpdate.Destination);
 	}
 
 	@Test
@@ -78,14 +78,14 @@ public class BackupActionDeciderTest extends ActionDeciderTestUtil {
 	@Test
 	public void testSourceBigger() throws Exception {
 		Task task = decider.getTask(existingBigTestNode, existingTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.NotDecidableError, Location.None, BufferUpdate.None);
+		checkAction(task.getCurrentAction(), ActionType.Update, Location.Destination, BufferUpdate.Destination);
 	}
 
 	@Ignore
 	@Test
 	public void testDestinationBigger() throws Exception {
 		Task task = decider.getTask(existingTestNode, existingBigTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.NotDecidableError, Location.None, BufferUpdate.None);
+		checkAction(task.getCurrentAction(), ActionType.Update, Location.Destination, BufferUpdate.Destination);
 	}
 
 	@Test

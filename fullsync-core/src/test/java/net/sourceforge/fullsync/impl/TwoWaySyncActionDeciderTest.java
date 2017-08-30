@@ -28,14 +28,14 @@ import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
 
-public class BackupActionDeciderTest extends ActionDeciderTestUtil {
-	private BackupActionDecider decider;
+public class TwoWaySyncActionDeciderTest extends ActionDeciderTestUtil {
+	private TwoWaySyncActionDecider decider;
 
 	@Override
 	@Before
 	public void setUp() {
 		super.setUp();
-		decider = new BackupActionDecider();
+		decider = new TwoWaySyncActionDecider();
 	}
 
 	@Test
@@ -59,7 +59,7 @@ public class BackupActionDeciderTest extends ActionDeciderTestUtil {
 	@Test
 	public void testSourceMissing() throws Exception {
 		Task task = decider.getTask(missingTestNode, existingTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.Nothing, Location.None, BufferUpdate.None);
+		checkAction(task.getCurrentAction(), ActionType.Add, Location.Source, BufferUpdate.Source);
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class BackupActionDeciderTest extends ActionDeciderTestUtil {
 	@Test
 	public void testDestinationUpdated() throws Exception {
 		Task task = decider.getTask(existingTestNode, largeTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.Update, Location.Destination, BufferUpdate.Destination);
+		checkAction(task.getCurrentAction(), ActionType.Update, Location.Source, BufferUpdate.Source);
 	}
 
 	@Ignore
@@ -91,12 +91,12 @@ public class BackupActionDeciderTest extends ActionDeciderTestUtil {
 	@Test
 	public void testFileToDirectory() throws Exception {
 		Task task = decider.getTask(existingTestNode, directoryTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.DirHereFileThereError, Location.Destination, BufferUpdate.None);
+		checkAction(task.getCurrentAction(), ActionType.DirHereFileThereError, Location.Source, BufferUpdate.None);
 	}
 
 	@Test
 	public void testDirectoryToFile() throws Exception {
 		Task task = decider.getTask(directoryTestNode, existingTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.DirHereFileThereError, Location.Source, BufferUpdate.None);
+		checkAction(task.getCurrentAction(), ActionType.DirHereFileThereError, Location.Destination, BufferUpdate.None);
 	}
 }
