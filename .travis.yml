@@ -15,12 +15,13 @@ jdk:
 
 script:
   - ./gradlew assemble
-  - ./gradlew test jacocoRootReport coveralls
+  - ./gradlew test jacocoRootReport coveralls sonarqube "-Dsonar.host.url=https://sonarcloud.io" "-Dsonar.login=$SONAR_LOGIN" "-Dsonar.organization=$SONAR_ORGANIZATION"
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
+    - $HOME/.sonar/cache
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
