@@ -20,14 +20,14 @@
 
 package net.sourceforge.fullsync.swtbot;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.rules.TemporaryFolder;
 
 import net.sourceforge.fullsync.cli.Main;
@@ -40,7 +40,7 @@ public abstract class GUITestBase {
 
 	private Thread applicationThread;
 
-	@Before
+	@BeforeEach
 	public void setUpBefore() throws Exception {
 		tempConfigDir = new TemporaryFolder();
 		tempConfigDir.create();

@@ -19,19 +19,19 @@
  */
 package net.sourceforge.fullsync.schedule;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class CrontabScheduleTest {
 	private Calendar now;
 	private Calendar expectedResult;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		now = Calendar.getInstance();
 		expectedResult = Calendar.getInstance();

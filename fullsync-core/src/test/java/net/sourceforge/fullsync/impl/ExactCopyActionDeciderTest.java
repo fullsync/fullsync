@@ -19,9 +19,9 @@
  */
 package net.sourceforge.fullsync.impl;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferUpdate;
@@ -32,8 +32,8 @@ public class ExactCopyActionDeciderTest extends ActionDeciderTestUtil {
 	private ExactCopyActionDecider decider;
 
 	@Override
-	@Before
-	public void setUp() {
+	@BeforeEach
+	protected void setUp() {
 		super.setUp();
 		decider = new ExactCopyActionDecider();
 	}
@@ -74,14 +74,14 @@ public class ExactCopyActionDeciderTest extends ActionDeciderTestUtil {
 		checkAction(task.getCurrentAction(), ActionType.UPDATE, Location.DESTINATION, BufferUpdate.DESTINATION);
 	}
 
-	@Ignore
+	@Disabled
 	@Test
 	public void testSourceBigger() throws Exception {
 		Task task = decider.getTask(existingBigTestNode, existingTestNode, stateDecider, bufferedStateDecider);
 		checkAction(task.getCurrentAction(), ActionType.UPDATE, Location.DESTINATION, BufferUpdate.DESTINATION);
 	}
 
-	@Ignore
+	@Disabled
 	@Test
 	public void testDestinationBigger() throws Exception {
 		Task task = decider.getTask(existingTestNode, existingBigTestNode, stateDecider, bufferedStateDecider);

@@ -20,10 +20,10 @@
 
 package net.sourceforge.fullsync.swtbot;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.swtbot.swt.finder.SWTBot;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ProfileDialogTest extends GUITestBase {
 

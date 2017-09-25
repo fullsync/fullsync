@@ -19,11 +19,12 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
@@ -32,7 +33,7 @@ public class FileSizeFileFilterRuleTest {
 	private File root = new TestNode("root", null, true, true, 0, 0);
 	private File foobarTxt;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		foobarTxt = new TestNode("foobar.txt", root, true, false, 1000, 0);
 	}
@@ -83,12 +84,12 @@ public class FileSizeFileFilterRuleTest {
 		assertTrue(filterRule.match(foobarTxt));
 	}
 
-	@Test(expected = FilterRuleNotAppliableException.class)
-	public void fileSizeNegative() throws FilterRuleNotAppliableException {
+	@Test
+	public void fileSizeNegative() throws Exception {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS);
 		foobarTxt.setSize(-1);
 
-		filterRule.match(foobarTxt);
+		assertThrows(FilterRuleNotAppliableException.class, () -> filterRule.match(foobarTxt));
 	}
 
 	@Test

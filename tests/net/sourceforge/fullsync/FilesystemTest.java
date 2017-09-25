@@ -19,8 +19,8 @@
  */
 package net.sourceforge.fullsync;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,9 +35,9 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -79,7 +79,7 @@ public class FilesystemTest {
 	@Rule
 	public SSHServerResource m_sshServer = new SSHServerResource("SampleUser", 2222, "127.0.0.1");
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		testingDst = null;
 		testingSrc = null;

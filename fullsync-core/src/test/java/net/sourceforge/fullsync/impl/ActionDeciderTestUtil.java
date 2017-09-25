@@ -19,7 +19,7 @@
  */
 package net.sourceforge.fullsync.impl;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionType;
@@ -42,7 +42,7 @@ public class ActionDeciderTestUtil {
 	protected File largeTestNode;
 	protected File directoryTestNode;
 
-	public void setUp() {
+	protected void setUp() {
 		fileComparer = new SimplyfiedSyncRules();
 		bufferedStateDecider = new BufferStateDeciderImpl(fileComparer);
 		stateDecider = new StateDeciderImpl(fileComparer);
@@ -55,8 +55,8 @@ public class ActionDeciderTestUtil {
 	}
 
 	protected void checkAction(Action action, ActionType type, Location location, BufferUpdate bufferUpdate) {
-		Assert.assertEquals(type, action.getType());
-		Assert.assertEquals(location, action.getLocation());
-		Assert.assertEquals(bufferUpdate, action.getBufferUpdate());
+		Assertions.assertEquals(type, action.getType());
+		Assertions.assertEquals(location, action.getLocation());
+		Assertions.assertEquals(bufferUpdate, action.getBufferUpdate());
 	}
 }
