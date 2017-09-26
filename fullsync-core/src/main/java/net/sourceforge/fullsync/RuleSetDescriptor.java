@@ -27,10 +27,10 @@ import org.w3c.dom.Element;
 import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 
 public abstract class RuleSetDescriptor implements Serializable {
-
 	private static final long serialVersionUID = 2L;
 
-	private static final String ELEMENT_NAME = "RuleSetDescriptor";
+	private static final String ELEMENT_NAME = "RuleSetDescriptor"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 
 	public abstract RuleSet createRuleSet();
 
@@ -41,7 +41,7 @@ public abstract class RuleSetDescriptor implements Serializable {
 	public static final RuleSetDescriptor unserialize(Element element) throws DataParseException {
 		RuleSetDescriptor desc = null;
 		if (null != element) {
-			String ruleSetType = element.getAttribute("type");
+			String ruleSetType = element.getAttribute(ATTRIBUTE_TYPE);
 			switch (ruleSetType) {
 				case SimplyfiedRuleSetDescriptor.RULESET_TYPE:
 					desc = new SimplyfiedRuleSetDescriptor(element);
@@ -53,7 +53,7 @@ public abstract class RuleSetDescriptor implements Serializable {
 
 	public static final Element serialize(RuleSetDescriptor desc, Document doc) {
 		Element elem = doc.createElement(ELEMENT_NAME);
-		elem.setAttribute("type", desc.getType());
+		elem.setAttribute(ATTRIBUTE_TYPE, desc.getType());
 		Element ruleDescriptorElement = desc.serializeDescriptor(doc);
 		elem.appendChild(ruleDescriptorElement);
 		return elem;

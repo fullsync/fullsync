@@ -33,9 +33,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class ConnectionDescription implements Serializable {
-	public static final String PARAMETER_USERNAME = "username";
-	public static final String PARAMETER_PASSWORD = "password";
-	public static final String PARAMETER_INTERACTIVE = "interactive";
+	private static final String ELEMENT_SECRET_PARAM = "SecretParam"; //$NON-NLS-1$
+	private static final String ELEMENT_PARAM = "Param"; //$NON-NLS-1$
+	public static final String PARAMETER_BUFFER_STRATEGY = "bufferStrategy"; //$NON-NLS-1$
+	public static final String PARAMETER_USERNAME = "username"; //$NON-NLS-1$
+	public static final String PARAMETER_PASSWORD = "password"; //$NON-NLS-1$
+	public static final String PARAMETER_INTERACTIVE = "interactive"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_URI = "uri"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_BUFFER_STRATEGY = "buffer"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_USERNAME = PARAMETER_USERNAME;
+	private static final String ATTRIBUTE_PASSWORD = PARAMETER_PASSWORD;
 
 	private static final long serialVersionUID = 2L;
 
@@ -45,19 +54,19 @@ public class ConnectionDescription implements Serializable {
 
 	public Element serialize(String name, Document doc) {
 		Element elem = doc.createElement(name);
-		elem.setAttribute("uri", uri.toString());
+		elem.setAttribute(ATTRIBUTE_URI, uri.toString());
 		for (Map.Entry<String, String> entry : parameters.entrySet()) {
 			switch (entry.getKey()) {
 				case PARAMETER_USERNAME:
-					elem.setAttribute(PARAMETER_USERNAME, entry.getValue());
+					elem.setAttribute(ATTRIBUTE_USERNAME, entry.getValue());
 					break;
-				case "bufferStrategy":
-					elem.setAttribute("buffer", entry.getValue());
+				case PARAMETER_BUFFER_STRATEGY:
+					elem.setAttribute(ATTRIBUTE_BUFFER_STRATEGY, entry.getValue());
 					break;
 				default:
-					Element p = doc.createElement("Param");
-					p.setAttribute("name", entry.getKey());
-					p.setAttribute("value", entry.getValue());
+					Element p = doc.createElement(ELEMENT_PARAM);
+					p.setAttribute(ATTRIBUTE_NAME, entry.getKey());
+					p.setAttribute(ATTRIBUTE_VALUE, entry.getValue());
 					elem.appendChild(p);
 					break;
 			}
@@ -65,12 +74,12 @@ public class ConnectionDescription implements Serializable {
 		for (Map.Entry<String, String> entry : secretParameters.entrySet()) {
 			switch (entry.getKey()) {
 				case PARAMETER_PASSWORD:
-					elem.setAttribute(PARAMETER_PASSWORD, entry.getValue());
+					elem.setAttribute(ATTRIBUTE_PASSWORD, entry.getValue());
 					break;
 				default:
-					Element p = doc.createElement("SecretParam");
-					p.setAttribute("name", entry.getKey());
-					p.setAttribute("value", entry.getValue());
+					Element p = doc.createElement(ELEMENT_SECRET_PARAM);
+					p.setAttribute(ATTRIBUTE_NAME, entry.getKey());
+					p.setAttribute(ATTRIBUTE_VALUE, entry.getValue());
 					elem.appendChild(p);
 					break;
 			}
@@ -81,25 +90,26 @@ public class ConnectionDescription implements Serializable {
 	public static ConnectionDescription unserialize(Element element) {
 		ConnectionDescription desc = new ConnectionDescription(null);
 		try {
-			desc.setUri(new URI(element.getAttribute("uri")));
+			desc.setUri(new URI(element.getAttribute(ATTRIBUTE_URI)));
 		}
 		catch (URISyntaxException ex) {
 			ex.printStackTrace();
 		}
-		desc.parameters.put("bufferStrategy", element.getAttribute("buffer"));
-		desc.parameters.put(PARAMETER_USERNAME, element.getAttribute(PARAMETER_USERNAME));
-		desc.secretParameters.put(PARAMETER_PASSWORD, element.getAttribute(PARAMETER_PASSWORD));
+		desc.parameters.put(PARAMETER_BUFFER_STRATEGY, element.getAttribute(ATTRIBUTE_BUFFER_STRATEGY));
+		desc.parameters.put(PARAMETER_USERNAME, element.getAttribute(ATTRIBUTE_USERNAME));
+		desc.secretParameters.put(PARAMETER_PASSWORD, element.getAttribute(ATTRIBUTE_PASSWORD));
 
 		NodeList list = element.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
 			Node n = list.item(i);
-			if ((n.getNodeType() == Node.ELEMENT_NODE) && "Param".equals(n.getNodeName())) {
+			if (n.getNodeType() == Node.ELEMENT_NODE) {
 				Element e = (Element) n;
-				desc.parameters.put(e.getAttribute("name"), e.getAttribute("value"));
-			}
-			if ((n.getNodeType() == Node.ELEMENT_NODE) && "SecretParam".equals(n.getNodeName())) {
-				Element e = (Element) n;
-				desc.secretParameters.put(e.getAttribute("name"), e.getAttribute("value"));
+				if (ELEMENT_PARAM.equals(n.getNodeName())) {
+					desc.parameters.put(e.getAttribute(ATTRIBUTE_NAME), e.getAttribute(ATTRIBUTE_VALUE));
+				}
+				if (ELEMENT_SECRET_PARAM.equals(n.getNodeName())) {
+					desc.secretParameters.put(e.getAttribute(ATTRIBUTE_NAME), e.getAttribute(ATTRIBUTE_VALUE));
+				}
 			}
 		}
 

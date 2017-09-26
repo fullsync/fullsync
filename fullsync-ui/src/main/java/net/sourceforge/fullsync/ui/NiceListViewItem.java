@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Listener;
 import net.sourceforge.fullsync.Profile;
 
 public class NiceListViewItem extends Canvas implements Listener {
-	private NiceListView parent;
+	private NiceListView list;
 
 	private Label labelIcon;
 	private Label labelCaption;
@@ -50,7 +50,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 
 	public NiceListViewItem(NiceListView parent, int style) {
 		super(parent, style);
-		this.parent = parent;
+		this.list = parent;
 
 		GridData layoutData = new GridData();
 		layoutData.grabExcessHorizontalSpace = true;
@@ -127,7 +127,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 				updateBackground();
 				break;
 			case SWT.MouseDown:
-				parent.setSelected(NiceListViewItem.this);
+				list.setSelected(NiceListViewItem.this);
 				break;
 			case SWT.MouseUp:
 				if (event.button == 3) {
@@ -138,7 +138,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 				handler.editProfile(profile);
 				break;
 			case SWT.KeyDown:
-				parent.handleEvent(event);
+				list.handleEvent(event);
 				break;
 			default:
 				break;
@@ -165,12 +165,12 @@ public class NiceListViewItem extends Canvas implements Listener {
 
 	public void updateBackground() {
 		if (selected) {
-			setBackground(parent.getColorSelected());
+			setBackground(list.getColorSelected());
 		}
 		else {
-			setBackground(mouseOver ? parent.getColorHover() : parent.getColorDefault());
+			setBackground(mouseOver ? list.getColorHover() : list.getColorDefault());
 		}
-		setForeground(selected ? parent.getColorSelectedForegroud() : parent.getColorForeground());
+		setForeground(selected ? list.getColorSelectedForegroud() : list.getColorForeground());
 	}
 
 	public void setImage(Image image) {

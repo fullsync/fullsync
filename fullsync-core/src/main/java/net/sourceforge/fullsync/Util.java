@@ -84,41 +84,49 @@ public abstract class Util {
 		Set<String> children = new HashSet<>();
 		while (urls.hasMoreElements()) {
 			URL url = urls.nextElement();
-			File src;
+			URI uri = null;
 			if ("jar".equals(url.getProtocol())) {
-				src = new File(new URI(url.toString().replaceAll("^jar:(.+)!/.*$", "$1")));
+				uri = new URI(url.toString().replaceAll("^jar:(.+)!/.*$", "$1"));
 			}
 			else {
-				src = new File(url.toURI());
-
+				uri = url.toURI();
 			}
+			File src = new File(uri);
 			if (src.isDirectory() && src.exists()) {
-				String[] files = src.list();
-				if (null != files) {
-					for (String f : files) {
-						children.add(f);
-					}
-				}
+				enumerateDirectoryChildren(children, src);
 			}
 			else if (src.isFile() && src.exists()) {
-				try (JarFile jar = new JarFile(src)) {
-					Enumeration<JarEntry> jarEntries = jar.entries();
-					String prefix = path;
-					if ('/' == prefix.charAt(0)) {
-						prefix = prefix.substring(1);
-					}
-					while (jarEntries.hasMoreElements()) {
-						JarEntry entry = jarEntries.nextElement();
-						String name = entry.getName();
-						if (!entry.isDirectory() && name.startsWith(prefix)) { //filter according to the path
-							name = name.substring(prefix.length());
-							children.add(name);
-						}
-					}
-				}
+				enumerateJarEntriesWith(path, children, src);
 			}
 		}
 		return children;
+	}
+
+	private static void enumerateJarEntriesWith(String path, Set<String> children, File src) throws IOException {
+		try (JarFile jar = new JarFile(src)) {
+			Enumeration<JarEntry> jarEntries = jar.entries();
+			String prefix = path;
+			if ('/' == prefix.charAt(0)) {
+				prefix = prefix.substring(1);
+			}
+			while (jarEntries.hasMoreElements()) {
+				JarEntry entry = jarEntries.nextElement();
+				String name = entry.getName();
+				if (!entry.isDirectory() && name.startsWith(prefix)) { //filter according to the path
+					name = name.substring(prefix.length());
+					children.add(name);
+				}
+			}
+		}
+	}
+
+	private static void enumerateDirectoryChildren(Set<String> children, File src) {
+		String[] files = src.list();
+		if (null != files) {
+			for (String f : files) {
+				children.add(f);
+			}
+		}
 	}
 
 	private static ClassLoader getContextClassLoader() {

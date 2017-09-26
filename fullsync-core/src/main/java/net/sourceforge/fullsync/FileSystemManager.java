@@ -36,17 +36,15 @@ import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 public class FileSystemManager {
 
 	private FileSystem getFilesystem(final String scheme) {
-		if ("file".equals(scheme)) {
-			return new LocalFileSystem();
-		}
-		if ("ftp".equals(scheme)) {
-			return new FTPFileSystem();
-		}
-		if ("sftp".equals(scheme)) {
-			return new SFTPFileSystem();
-		}
-		if ("smb".equals(scheme)) {
-			return new SmbFileSystem();
+		switch (scheme) {
+			case "file":
+				return new LocalFileSystem();
+			case "ftp":
+				return new FTPFileSystem();
+			case "sftp":
+				return new SFTPFileSystem();
+			case "smb":
+				return new SmbFileSystem();
 		}
 		return null;
 	}
@@ -75,7 +73,7 @@ public class FileSystemManager {
 		Site s = fs.createConnection(fullsync, desc);
 
 		/* FIXME: [BUFFERING] uncomment to reenable buffering
-		String bufferStrategy = desc.getParameter("bufferStrategy");
+		String bufferStrategy = desc.getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
 		if ((null != bufferStrategy) && !"".equals(bufferStrategy)) {
 			s = resolveBuffering(s, bufferStrategy);
 		}

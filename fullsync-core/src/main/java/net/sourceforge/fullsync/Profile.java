@@ -39,6 +39,14 @@ import net.sourceforge.fullsync.schedule.Schedule;
 public class Profile implements Serializable, Comparable<Profile> {
 	private static final long serialVersionUID = 3L;
 
+	private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_ENABLED = "enabled"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_DESCRIPTION = "description"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_LAST_UPDATE = "lastUpdate"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_LAST_ERROR_LEVEL = "lastErrorLevel"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_LAST_ERROR_STRING = "lastErrorString"; //$NON-NLS-1$
+
 	private String name;
 	private String description;
 	private String synchronizationType;
@@ -56,7 +64,7 @@ public class Profile implements Serializable, Comparable<Profile> {
 	private transient List<ProfileChangeListener> listeners = new ArrayList<>();
 
 	static Profile unserialize(Element element) throws DataParseException {
-		String profileName = element.getAttribute("name");
+		String profileName = element.getAttribute(ATTRIBUTE_NAME);
 		ConnectionDescription src = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0));
 		ConnectionDescription dst = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0));
 		RuleSetDescriptor ruleset = RuleSetDescriptor.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0));
@@ -66,18 +74,19 @@ public class Profile implements Serializable, Comparable<Profile> {
 			p.setLastError(-1, "Error: the Filters of this Profile are broken");
 			p.setRuleSet(new SimplyfiedRuleSetDescriptor(true, null, false, null));
 		}
-		p.setDescription(element.getAttribute("description"));
-		p.setSynchronizationType(element.getAttribute("type"));
-		if (element.hasAttribute("enabled")) {
-			p.setEnabled(Boolean.valueOf(element.getAttribute("enabled")));
+		p.setDescription(element.getAttribute(ATTRIBUTE_DESCRIPTION));
+		p.setSynchronizationType(element.getAttribute(ATTRIBUTE_TYPE));
+		if (element.hasAttribute(ATTRIBUTE_ENABLED)) {
+			p.setEnabled(Boolean.valueOf(element.getAttribute(ATTRIBUTE_ENABLED)));
 		}
-		if (element.hasAttribute("lastErrorLevel")) {
-			p.setLastError(Integer.parseInt(element.getAttribute("lastErrorLevel")), element.getAttribute("lastErrorString"));
+		if (element.hasAttribute(ATTRIBUTE_LAST_ERROR_LEVEL)) {
+			int errorLevel = Integer.parseInt(element.getAttribute(ATTRIBUTE_LAST_ERROR_LEVEL));
+			p.setLastError(errorLevel, element.getAttribute(ATTRIBUTE_LAST_ERROR_STRING));
 		}
 
 		try {
 			Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-			c.setTimeInMillis(Integer.parseInt(element.getAttribute("lastUpdate")));
+			c.setTimeInMillis(Integer.parseInt(element.getAttribute(ATTRIBUTE_LAST_UPDATE)));
 			p.setLastUpdate(c.getTime());
 		}
 		catch (NumberFormatException e) {
@@ -272,14 +281,14 @@ public class Profile implements Serializable, Comparable<Profile> {
 
 	public Element serialize(final Document doc) {
 		Element elem = doc.createElement("Profile");
-		elem.setAttribute("name", name);
-		elem.setAttribute("description", description);
-		elem.setAttribute("type", synchronizationType);
-		elem.setAttribute("enabled", String.valueOf(enabled));
-		elem.setAttribute("lastErrorLevel", String.valueOf(lastErrorLevel));
-		elem.setAttribute("lastErrorString", lastErrorString);
+		elem.setAttribute(ATTRIBUTE_NAME, name);
+		elem.setAttribute(ATTRIBUTE_DESCRIPTION, description);
+		elem.setAttribute(ATTRIBUTE_TYPE, synchronizationType);
+		elem.setAttribute(ATTRIBUTE_ENABLED, String.valueOf(enabled));
+		elem.setAttribute(ATTRIBUTE_LAST_ERROR_LEVEL, String.valueOf(lastErrorLevel));
+		elem.setAttribute(ATTRIBUTE_LAST_ERROR_STRING, lastErrorString);
 		if (null != lastUpdate) {
-			elem.setAttribute("lastUpdate", Long.valueOf(lastUpdate.getTime()).toString());
+			elem.setAttribute(ATTRIBUTE_LAST_UPDATE, Long.valueOf(lastUpdate.getTime()).toString());
 		}
 
 		elem.appendChild(RuleSetDescriptor.serialize(ruleSet, doc));

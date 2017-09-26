@@ -60,6 +60,8 @@ import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 
 public class Main implements Launcher { // NO_UCD
+	private static final String PREFERENCES_PROPERTIES = "preferences.properties"; //$NON-NLS-1$
+	private static final String PROFILES_XML = "profiles.xml"; //$NON-NLS-1$
 	private static final Options options = new Options();
 
 	private static void initOptions() {
@@ -185,15 +187,15 @@ public class Main implements Launcher { // NO_UCD
 
 		upgradeLegacyPreferencesLocation(configDir);
 
-		String profilesFile = "profiles.xml";
+		String profilesFile = PROFILES_XML;
 		if (line.hasOption("P")) {
 			profilesFile = line.getOptionValue("P");
 		}
 		else {
-			profilesFile = configDir + "profiles.xml";
+			profilesFile = configDir + PROFILES_XML;
 			upgradeLegacyProfilesXmlLocation(profilesFile);
 		}
-		final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + "preferences.properties");
+		final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + PREFERENCES_PROPERTIES);
 		final ProfileManager profileManager = new ProfileManager(profilesFile);
 		final Synchronizer sync = new Synchronizer();
 		final RuntimeConfiguration rtConfig = new CliRuntimeConfiguration(line);
@@ -210,11 +212,11 @@ public class Main implements Launcher { // NO_UCD
 
 	private static void upgradeLegacyProfilesXmlLocation(String profilesFile) throws IOException {
 		File newProfiles = new File(profilesFile);
-		File oldProfiles = new File("profiles.xml");
+		File oldProfiles = new File(PROFILES_XML);
 		if (!newProfiles.exists()) {
 			if (!oldProfiles.exists()) {
 				// on windows FullSync 0.9.1 installs itself into %ProgramFiles%\FullSync while 0.10.0 installs itself into %ProgramFiles%\FullSync\FullSync by default
-				oldProfiles = new File(".." + File.separator + "profiles.xml");
+				oldProfiles = new File(".." + File.separator + PROFILES_XML);
 			}
 			if (oldProfiles.exists()) {
 				backupFile(oldProfiles, newProfiles, "profiles_old.xml");
@@ -223,8 +225,8 @@ public class Main implements Launcher { // NO_UCD
 	}
 
 	private static void upgradeLegacyPreferencesLocation(String configDir) throws IOException {
-		File newPreferences = new File(configDir + "preferences.properties");
-		File oldPreferences = new File("preferences.properties");
+		File newPreferences = new File(configDir + PREFERENCES_PROPERTIES);
+		File oldPreferences = new File(PREFERENCES_PROPERTIES);
 		if (!newPreferences.exists() && oldPreferences.exists()) {
 			backupFile(oldPreferences, newPreferences, "preferences_old.properties");
 		}

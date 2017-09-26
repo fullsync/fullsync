@@ -184,12 +184,14 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 			srcConnectionConfiguration.setConnectionDescription(profile.getSource());
 			if (null != profile.getSource()) {
-				srcConnectionConfiguration.setBuffered("syncfiles".equals(profile.getSource().getParameter("bufferStrategy"))); //$NON-NLS-1$
+				String bufferStrategy = profile.getSource().getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
+				srcConnectionConfiguration.setBuffered("syncfiles".equals(bufferStrategy)); //$NON-NLS-1$
 			}
 
 			dstConnectionConfiguration.setConnectionDescription(profile.getDestination());
 			if (null != profile.getDestination()) {
-				dstConnectionConfiguration.setBuffered("syncfiles".equals(profile.getDestination().getParameter("bufferStrategy"))); //$NON-NLS-1$
+				String bufferStrategy = profile.getDestination().getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
+				dstConnectionConfiguration.setBuffered("syncfiles".equals(bufferStrategy)); //$NON-NLS-1$
 			}
 
 			if ((null != profile.getSynchronizationType()) && (profile.getSynchronizationType().length() > 0)) {
@@ -645,7 +647,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		try {
 			dst = cfg.getConnectionDescription();
 			if (cfg.getBuffered()) {
-				dst.setParameter("bufferStrategy", "syncfiles"); //$NON-NLS-1$
+				dst.setParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY, "syncfiles"); //$NON-NLS-1$
 			}
 		}
 		catch (URISyntaxException e) {
@@ -668,7 +670,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 					try {
 						if (null != src) {
 							closeSourceSite();
-							src.setParameter("bufferStrategy", ""); // the subdirs tab should bypass the buffer imo
+							src.setParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY, ""); // the subdirs tab should bypass the buffer imo
 							src.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
 							sourceSite = new FileSystemManager().createConnection(fullsync, src);
 							drawDirectoryTree();
