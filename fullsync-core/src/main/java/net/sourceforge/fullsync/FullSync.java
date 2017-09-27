@@ -19,12 +19,13 @@
  */
 package net.sourceforge.fullsync;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 
 public class FullSync {
-	private final Stack<PromptQuestion> questionHandler = new Stack<>();
+	private final Deque<PromptQuestion> questionHandler = new ArrayDeque<>();
 	private final ConfigurationPreferences preferences;
 	private final ProfileManager profileManager;
 	private final Synchronizer synchronizer;

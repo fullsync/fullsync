@@ -23,9 +23,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.rmi.NotBoundException;
+import java.nio.file.Files;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -122,7 +121,7 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		Collections.sort(profiles);
 	}
 
-	public void setRemoteConnection(RemoteManager remoteManager) throws MalformedURLException, RemoteException, NotBoundException {
+	public void setRemoteConnection(RemoteManager remoteManager) throws RemoteException {
 		this.remoteManager = remoteManager;
 
 		remoteListener = new ProfileListChangeListener() {
@@ -215,9 +214,9 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 						p.setName(name);
 						doAddProfile(p, false);
 					}
-					catch (Throwable t) {
+					catch (Exception ex) {
 						String message = String.format("Failed to load Profile %d, ignoring and continuing with the rest", i + 1);
-						ExceptionHandler.reportException(message, t);
+						ExceptionHandler.reportException(message, ex);
 					}
 				}
 			}
@@ -388,21 +387,19 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 				tf.setOutputProperty(OutputKeys.INDENT, "yes");
 				tf.setOutputProperty(OutputKeys.STANDALONE, "no");
 				DOMSource source = new DOMSource(doc);
-				try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(configFile + ".tmp"), StandardCharsets.UTF_8)) {
+				File newCfgFile = new File(configFile + ".tmp");
+				try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(newCfgFile), StandardCharsets.UTF_8)) {
 					tf.transform(source, new StreamResult(osw));
 					osw.flush();
-					osw.close();
-					File newCfgFile = new File(configFile + ".tmp");
+				}
+				try {
 					if (0 == newCfgFile.length()) {
 						throw new Exception("Storing profiles failed (size = 0)");
 					}
-					Util.fileRenameToPortableLegacy(configFile + ".tmp", configFile);
+					Util.fileRenameToPortableLegacy(newCfgFile.getName(), configFile);
 				}
 				finally {
-					File newCfgFile = new File(configFile + ".tmp");
-					if (newCfgFile.exists()) {
-						newCfgFile.delete();
-					}
+					Files.deleteIfExists(newCfgFile.toPath());
 				}
 			}
 		}

@@ -24,6 +24,9 @@ import java.text.NumberFormat;
 public class Crypt {
 	private static String m_key = "FULLSYNC1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+	private Crypt() {
+	}
+
 	public static String encrypt(String str) {
 		if (null == str) {
 			return null;

@@ -22,6 +22,5 @@ package net.sourceforge.fullsync;
 import net.sourceforge.fullsync.fs.File;
 
 public interface FileComparer {
-	// TODO exception ?
-	State compareFiles(File src, File dst) throws DataParseException;
+	State compareFiles(File src, File dst);
 }

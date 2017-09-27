@@ -45,8 +45,9 @@ public class FileSystemManager {
 				return new SFTPFileSystem();
 			case "smb":
 				return new SmbFileSystem();
+			default:
+				return null;
 		}
-		return null;
 	}
 
 	public final Site createConnection(final FullSync fullsync, final ConnectionDescription desc)
@@ -69,15 +70,16 @@ public class FileSystemManager {
 				throw new URISyntaxException(url.toString(), "Not a valid uri or unknown scheme");
 			}
 		}
-
-		Site s = fs.createConnection(fullsync, desc);
-
-		/* FIXME: [BUFFERING] uncomment to reenable buffering
-		String bufferStrategy = desc.getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
-		if ((null != bufferStrategy) && !"".equals(bufferStrategy)) {
-			s = resolveBuffering(s, bufferStrategy);
+		Site s = null;
+		if (null != fs) {
+			s = fs.createConnection(fullsync, desc);
+			/* FIXME: [BUFFERING] uncomment to reenable buffering
+			String bufferStrategy = desc.getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
+			if ((null != bufferStrategy) && !"".equals(bufferStrategy)) {
+				s = resolveBuffering(s, bufferStrategy);
+			}
+			*/
 		}
-		*/
 		return s;
 	}
 

@@ -22,10 +22,10 @@ package net.sourceforge.fullsync;
 /**
  * Thrown when an error occured while parsing a file.
  */
-public class DataParseException extends NestedException {
+public class DataParseException extends Exception {
 	private static final long serialVersionUID = 2L;
-	String sourceName = "unknown";
-	long linenumber = -1;
+	private String sourceName = "unknown";
+	private long linenumber = -1;
 
 	/**
 	 * Constructor for ParseException.

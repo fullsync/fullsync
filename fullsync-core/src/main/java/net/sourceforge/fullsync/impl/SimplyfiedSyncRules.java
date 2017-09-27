@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.impl;
 
-import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.fs.File;
@@ -146,7 +145,7 @@ public class SimplyfiedSyncRules implements RuleSet {
 	 *      net.sourceforge.fullsync.fs.FileAttributes)
 	 */
 	@Override
-	public State compareFiles(final File src, final File dst) throws DataParseException {
+	public State compareFiles(final File src, final File dst) {
 		if (Math.floor(src.getLastModified() / 1000.0) > Math.floor(dst.getLastModified() / 1000.0)) {
 			return State.FileChangeSource;
 		}

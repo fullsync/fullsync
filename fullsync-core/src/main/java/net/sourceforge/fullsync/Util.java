@@ -24,18 +24,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public abstract class Util {
+	private static Logger logger = LoggerFactory.getLogger(Util.class);
+
+	private Util() {
+	}
+
 	/**
 	 * used for all I/O buffers.
 	 */
@@ -57,7 +65,7 @@ public abstract class Util {
 			}
 		}
 		catch (IOException ex) {
-			ex.printStackTrace();
+			logger.warn("Failed to load " + name, ex);
 		}
 		return out.toString();
 	}
@@ -71,14 +79,13 @@ public abstract class Util {
 		try {
 			return new File(codeSource.toURI().resolve("../"));
 		}
-		catch (URISyntaxException e) {
-			e.printStackTrace();
+		catch (URISyntaxException ex) {
+			logger.warn("Failed to get installlocation ", ex);
 		}
 		return new File(".");
 	}
 
-	public static Set<String> loadDirectoryFromClasspath(String path)
-		throws URISyntaxException, UnsupportedEncodingException, IOException {
+	public static Set<String> loadDirectoryFromClasspath(String path) throws URISyntaxException, IOException {
 		ClassLoader cl = getContextClassLoader();
 		Enumeration<URL> urls = cl.getResources(path);
 		Set<String> children = new HashSet<>();
@@ -138,10 +145,10 @@ public abstract class Util {
 		File dstFile = new File(to);
 		if (!srcFile.renameTo(dstFile)) {
 			File tmpFile = File.createTempFile("fullsync", "tmp", dstFile.getParentFile());
-			tmpFile.delete();
+			Files.deleteIfExists(tmpFile.toPath());
 			if (dstFile.renameTo(tmpFile)) {
 				if (srcFile.renameTo(dstFile)) {
-					tmpFile.delete();
+					Files.deleteIfExists(tmpFile.toPath());
 				}
 				else {
 					tmpFile.renameTo(dstFile);

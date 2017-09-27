@@ -108,7 +108,7 @@ public class Task implements Serializable {
 	}
 
 	public int getTaskCount() {
-		return 1 + getChildren().parallelStream().mapToInt(t -> t.getTaskCount()).sum();
+		return 1 + getChildren().parallelStream().mapToInt(Task::getTaskCount).sum();
 	}
 
 	// HACK equals and hashCode should use more fields!!! Moreover some of the fields can be null.

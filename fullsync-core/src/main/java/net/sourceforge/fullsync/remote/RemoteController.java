@@ -21,7 +21,8 @@ package net.sourceforge.fullsync.remote;
 
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -35,7 +36,7 @@ public class RemoteController {
 
 	private static RemoteController instance;
 	private RemoteServer remoteServer;
-	private URL serverURL;
+	private URI serverURI;
 	private String serverPassword;
 	private boolean isActive = false;
 	private Registry registry;
@@ -49,7 +50,7 @@ public class RemoteController {
 
 	public void startServer(InetSocketAddress listenAddress, String password, FullSync fullsync) throws RemoteException {
 		try {
-			serverURL = new URL("rmi", listenAddress.getHostString(), listenAddress.getPort(), "/FullSync");
+			serverURI = new URI("rmi", null, listenAddress.getHostString(), listenAddress.getPort(), "/FullSync", null, null);
 			serverPassword = password;
 
 			if (null == remoteServer) {
@@ -61,10 +62,10 @@ public class RemoteController {
 				registry = LocateRegistry.createRegistry(listenAddress.getPort());
 			}
 
-			Naming.rebind(serverURL.toString(), remoteServer);
+			Naming.rebind(serverURI.toString(), remoteServer);
 			isActive = true;
 		}
-		catch (MalformedURLException ex) {
+		catch (URISyntaxException | MalformedURLException ex) {
 			ExceptionHandler.reportException(ex);
 		}
 	}
@@ -72,7 +73,7 @@ public class RemoteController {
 	public void stopServer() throws RemoteException {
 		try {
 			if (isActive) {
-				Naming.unbind(serverURL.toString());
+				Naming.unbind(serverURI.toString());
 				isActive = false;
 			}
 		}
@@ -86,7 +87,7 @@ public class RemoteController {
 	}
 
 	public InetSocketAddress getListenAddres() {
-		return new InetSocketAddress(serverURL.getHost(), serverURL.getPort());
+		return new InetSocketAddress(serverURI.getHost(), serverURI.getPort());
 	}
 
 	public String getPassword() {

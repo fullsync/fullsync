@@ -27,6 +27,8 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,6 +49,8 @@ public class ConnectionDescription implements Serializable {
 	private static final String ATTRIBUTE_PASSWORD = PARAMETER_PASSWORD;
 
 	private static final long serialVersionUID = 2L;
+
+	private static Logger logger = LoggerFactory.getLogger(ConnectionDescription.class);
 
 	private URI uri;
 	private Map<String, String> parameters = new HashMap<>();
@@ -89,11 +93,12 @@ public class ConnectionDescription implements Serializable {
 
 	public static ConnectionDescription unserialize(Element element) {
 		ConnectionDescription desc = new ConnectionDescription(null);
+		String uri = element.getAttribute(ATTRIBUTE_URI);
 		try {
-			desc.setUri(new URI(element.getAttribute(ATTRIBUTE_URI)));
+			desc.setUri(new URI(uri));
 		}
 		catch (URISyntaxException ex) {
-			ex.printStackTrace();
+			logger.warn("could not parse '" + uri + "'", ex);
 		}
 		desc.parameters.put(PARAMETER_BUFFER_STRATEGY, element.getAttribute(ATTRIBUTE_BUFFER_STRATEGY));
 		desc.parameters.put(PARAMETER_USERNAME, element.getAttribute(ATTRIBUTE_USERNAME));
@@ -159,8 +164,8 @@ public class ConnectionDescription implements Serializable {
 			try {
 				return f.getCanonicalPath();
 			}
-			catch (IOException e) {
-				e.printStackTrace();
+			catch (IOException ex) {
+				logger.debug("failed to canonicalize file path", ex);
 			}
 		}
 		return uri.toString();

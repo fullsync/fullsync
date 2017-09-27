@@ -288,7 +288,7 @@ public class Profile implements Serializable, Comparable<Profile> {
 		elem.setAttribute(ATTRIBUTE_LAST_ERROR_LEVEL, String.valueOf(lastErrorLevel));
 		elem.setAttribute(ATTRIBUTE_LAST_ERROR_STRING, lastErrorString);
 		if (null != lastUpdate) {
-			elem.setAttribute(ATTRIBUTE_LAST_UPDATE, Long.valueOf(lastUpdate.getTime()).toString());
+			elem.setAttribute(ATTRIBUTE_LAST_UPDATE, String.valueOf(lastUpdate.getTime()));
 		}
 
 		elem.appendChild(RuleSetDescriptor.serialize(ruleSet, doc));
