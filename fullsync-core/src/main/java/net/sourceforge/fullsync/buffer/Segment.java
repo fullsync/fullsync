@@ -24,4 +24,7 @@ public final class Segment {
 	public static final int MIDDLE = 2;
 	public static final int LAST = 4;
 	public static final int ONLY = 7;
+
+	private Segment() {
+	}
 }

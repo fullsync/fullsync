@@ -188,22 +188,7 @@ class AbstractFile implements File {
 	@Override
 	public void refresh() throws IOException {
 		if (isDirectory()) {
-			// FIXME be aware of deleting entries that may be referenced by overlaying buffer
-			Map<String, File> newChildren = getConnection().getChildren(this);
-			if (null != children) {
-				for (File n : children.values()) {
-					if (!newChildren.containsKey(n.getName())) {
-						if (n.exists()) {
-							AbstractFile f = new AbstractFile(getConnection(), n.getName(), n.getParent(), n.isDirectory(), false);
-							newChildren.put(n.getName(), f);
-						}
-						else {
-							newChildren.put(n.getName(), n);
-						}
-					}
-				}
-			}
-			children = newChildren;
+			refreshDirectory();
 		}
 		else {
 			// TODO update file attribute data / existing / is dir and stuff
@@ -212,9 +197,23 @@ class AbstractFile implements File {
 		}
 	}
 
-	@Override
-	public void refreshBuffer() throws IOException {
-
+	private void refreshDirectory() throws IOException {
+		// FIXME be aware of deleting entries that may be referenced by overlaying buffer
+		Map<String, File> newChildren = getConnection().getChildren(this);
+		if (null != children) {
+			for (File n : children.values()) {
+				if (!newChildren.containsKey(n.getName())) {
+					if (n.exists()) {
+						AbstractFile f = new AbstractFile(getConnection(), n.getName(), n.getParent(), n.isDirectory(), false);
+						newChildren.put(n.getName(), f);
+					}
+					else {
+						newChildren.put(n.getName(), n);
+					}
+				}
+			}
+		}
+		children = newChildren;
 	}
 
 	@Override

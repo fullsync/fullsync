@@ -257,22 +257,22 @@ public class ConfigurationPreferences implements Preferences {
 	@Override
 	public WindowState getWindowState(String name) {
 		WindowState ws = new WindowState();
-		ws.maximized = getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MAXIMIZED), false);
-		ws.minimized = getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MINIMIZED), false);
-		ws.x = getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_X), 0);
-		ws.y = getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_Y), 0);
-		ws.width = getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_WIDTH), 0);
-		ws.height = getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_HEIGHT), 0);
+		ws.setMaximized(getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MAXIMIZED), false));
+		ws.setMinimized(getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MINIMIZED), false));
+		ws.setX(getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_X), 0));
+		ws.setY(getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_Y), 0));
+		ws.setWidth(getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_WIDTH), 0));
+		ws.setHeight(getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_HEIGHT), 0));
 		return ws;
 	}
 
 	@Override
 	public void setWindowState(String name, WindowState state) {
-		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MAXIMIZED), state.maximized);
-		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MINIMIZED), state.minimized);
-		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_X), state.x);
-		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_Y), state.y);
-		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_WIDTH), state.width);
-		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_HEIGHT), state.height);
+		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MAXIMIZED), state.isMaximized());
+		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MINIMIZED), state.isMinimized());
+		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_X), state.getX());
+		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_Y), state.getY());
+		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_WIDTH), state.getWidth());
+		setProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_HEIGHT), state.getHeight());
 	}
 }

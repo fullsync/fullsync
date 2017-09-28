@@ -42,7 +42,8 @@ public interface File extends Serializable {
 
 	File getUnbuffered() throws IOException;
 
-	void refreshBuffer() throws IOException;
+	default void refreshBuffer() throws IOException {
+	}
 
 	void writeFileAttributes() throws IOException;
 

@@ -79,14 +79,14 @@ public class BlockBuffer implements ExecutionBuffer {
 	public void flush() throws IOException {
 		for (int i = 0; i < numberEntries; ++i) {
 			Entry e = entries[i];
-			EntryDescriptor desc = e.descriptor;
+			EntryDescriptor desc = e.getDescriptor();
 			IOException ioe = null;
 			try {
 				OutputStream out = desc.getOutputStream();
 				if (null != out) {
-					out.write(buffer, e.start, e.length);
+					out.write(buffer, e.getStart(), e.getLength());
 				}
-				if ((e.internalSegment & Segment.LAST) > 0) {
+				if (e.isLastSegment()) {
 					desc.finishWrite();
 					String opDesc = desc.getOperationDescription();
 					if (null != opDesc) {
@@ -98,7 +98,7 @@ public class BlockBuffer implements ExecutionBuffer {
 				ioe = ex;
 				logger.error("Exception", ex);
 			}
-			if ((e.internalSegment & Segment.LAST) > 0) {
+			if (e.isLastSegment()) {
 				for (EntryFinishedListener listener : finishedListeners) {
 					listener.entryFinished(desc, ioe);
 				}
@@ -138,14 +138,14 @@ public class BlockBuffer implements ExecutionBuffer {
 		if (alreadyRead == 0) {
 			s |= Segment.FIRST;
 		}
-		if (entry.length == lengthLeft) {
+		if (entry.getLength() == lengthLeft) {
 			s |= Segment.LAST;
 		}
 
-		entry.internalSegment = s;
-		entry.descriptor = descriptor;
+		entry.setInternalSegment(s);
+		entry.setDescriptor(descriptor);
 
-		return entry.length;
+		return entry.getLength();
 	}
 
 	private void storeEntry(InputStream data, long size, EntryDescriptor descriptor) throws IOException {
@@ -170,7 +170,7 @@ public class BlockBuffer implements ExecutionBuffer {
 				flush();
 			}
 			entry = new Entry(numberBytes, 0);
-			entry.descriptor = descriptor;
+			entry.setDescriptor(descriptor);
 			entries[numberEntries] = entry;
 			numberEntries++;
 		}

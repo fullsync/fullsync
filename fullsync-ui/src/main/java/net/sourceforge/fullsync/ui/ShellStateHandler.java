@@ -51,13 +51,13 @@ public class ShellStateHandler {
 		WindowState ws = preferences.getWindowState(name);
 		_shell.setVisible(true);
 		Rectangle r = _shell.getDisplay().getBounds();
-		if ((ws.width > 0) && (ws.height > 0) && ws.isInsideOf(r.x, r.y, r.width, r.height)) {
-			_shell.setBounds(ws.x, ws.y, ws.width, ws.height);
+		if (ws.isValid() && ws.isInsideOf(r.x, r.y, r.width, r.height)) {
+			_shell.setBounds(ws.getX(), ws.getY(), ws.getWidth(), ws.getHeight());
 		}
-		if (ws.minimized) {
+		if (ws.isMinimized()) {
 			_shell.setMinimized(true);
 		}
-		if (ws.maximized) {
+		if (ws.isMaximized()) {
 			_shell.setMaximized(true);
 		}
 	}
@@ -65,14 +65,14 @@ public class ShellStateHandler {
 	private void shellClosed(Event _event) {
 		Shell shell = (Shell) _event.widget;
 		WindowState ws = new WindowState();
-		ws.maximized = shell.getMaximized();
-		ws.minimized = shell.getMinimized();
-		if (!ws.maximized) {
+		ws.setMaximized(shell.getMaximized());
+		ws.setMinimized(shell.getMinimized());
+		if (!ws.isMaximized()) {
 			Rectangle r = shell.getBounds();
-			ws.x = r.x;
-			ws.y = r.y;
-			ws.width = r.width;
-			ws.height = r.height;
+			ws.setX(r.x);
+			ws.setY(r.y);
+			ws.setWidth(r.width);
+			ws.setHeight(r.height);
 		}
 		preferences.setWindowState(name, ws);
 	}

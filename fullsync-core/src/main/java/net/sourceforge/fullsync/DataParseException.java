@@ -20,12 +20,13 @@
 package net.sourceforge.fullsync;
 
 /**
- * Thrown when an error occured while parsing a file.
+ * Thrown when an error occurred while parsing a file.
  */
 public class DataParseException extends Exception {
+	private static final String UNKNOWN_SOURCE = "unknown"; //$NON-NLS-1$
 	private static final long serialVersionUID = 2L;
-	private String sourceName = "unknown";
-	private long linenumber = -1;
+	private final String sourceName;
+	private final long lineNumber;
 
 	/**
 	 * Constructor for ParseException.
@@ -34,29 +35,33 @@ public class DataParseException extends Exception {
 	 */
 	public DataParseException(String text) {
 		super(text);
+		sourceName = UNKNOWN_SOURCE;
+		lineNumber = -1;
 	}
 
 	/**
 	 * Constructor for ParseException.
 	 *
 	 * @param text
-	 * @param linenumber
+	 * @param line
 	 */
-	public DataParseException(String text, long linenumber) {
-		this(text);
-		setLinenumber(linenumber);
+	public DataParseException(String text, long line) {
+		super(text);
+		sourceName = UNKNOWN_SOURCE;
+		lineNumber = line;
 	}
 
 	/**
 	 * Constructor for ParseException.
 	 *
 	 * @param text
-	 * @param linenumber
-	 * @param sourcename
+	 * @param line
+	 * @param source
 	 */
-	public DataParseException(String text, long linenumber, String sourcename) {
-		this(text, linenumber);
-		setSourceName(sourcename);
+	public DataParseException(String text, long line, String source) {
+		super(text);
+		sourceName = source;
+		lineNumber = line;
 	}
 
 	/**
@@ -66,17 +71,20 @@ public class DataParseException extends Exception {
 	 */
 	public DataParseException(Throwable cause) {
 		super(cause);
+		sourceName = UNKNOWN_SOURCE;
+		lineNumber = -1;
 	}
 
 	/**
 	 * Constructor for ParseException.
 	 *
 	 * @param cause
-	 * @param linenumber
+	 * @param line
 	 */
-	public DataParseException(Throwable cause, long linenumber) {
-		this(cause);
-		setLinenumber(linenumber);
+	public DataParseException(Throwable cause, long line) {
+		super(cause);
+		sourceName = UNKNOWN_SOURCE;
+		lineNumber = line;
 	}
 
 	/**
@@ -87,6 +95,8 @@ public class DataParseException extends Exception {
 	 */
 	public DataParseException(String text, Throwable cause) {
 		super(text, cause);
+		sourceName = UNKNOWN_SOURCE;
+		lineNumber = -1;
 	}
 
 	/**
@@ -94,22 +104,22 @@ public class DataParseException extends Exception {
 	 *
 	 * @param text
 	 * @param cause
-	 * @param lineno
+	 * @param line
 	 * @param source
 	 */
-	public DataParseException(String text, Throwable cause, int lineno, String source) {
-		this(text, cause);
-		setLinenumber(lineno);
-		setSourceName(source);
+	public DataParseException(String text, Throwable cause, int line, String source) {
+		super(text, cause);
+		sourceName = source;
+		lineNumber = line;
 	}
 
 	@Override
 	public String getMessage() {
-		return sourceName + "[" + linenumber + "]: " + super.getMessage();
+		return sourceName + "[" + lineNumber + "]: " + super.getMessage();
 	}
 
 	/**
-	 * Returns the filename.
+	 * Returns the file name.
 	 *
 	 * @return String
 	 */
@@ -118,31 +128,11 @@ public class DataParseException extends Exception {
 	}
 
 	/**
-	 * Returns the linenumber.
+	 * Returns the line number.
 	 *
 	 * @return long
 	 */
-	public long getLinenumber() {
-		return linenumber;
-	}
-
-	/**
-	 * Sets the sourceName.
-	 *
-	 * @param sourceName
-	 *            The sourceName to set
-	 */
-	public void setSourceName(String sourceName) {
-		this.sourceName = sourceName;
-	}
-
-	/**
-	 * Sets the linenumber.
-	 *
-	 * @param linenumber
-	 *            The linenumber to set
-	 */
-	public void setLinenumber(long linenumber) {
-		this.linenumber = linenumber;
+	public long getLineNumber() {
+		return lineNumber;
 	}
 }

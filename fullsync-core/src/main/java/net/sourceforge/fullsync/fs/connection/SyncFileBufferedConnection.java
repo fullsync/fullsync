@@ -59,6 +59,16 @@ import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
 public class SyncFileBufferedConnection implements BufferedConnection {
+	private static final String BUFFER_FILENAME = ".syncfiles";
+	private static final String ELEMENT_SYNC_FILES = "SyncFiles";
+	private static final String ELEMENT_FILE = "File";
+	private static final String ELEMENT_DIRECTORY = "Directory";
+	private static final String ATTRIBUTE_FILE_SYSTEM_LAST_MODIFIED = "FileSystemLastModified";
+	private static final String ATTRIBUTE_FILE_SYSTEM_LENGTH = "FileSystemLength";
+	private static final String ATTRIBUTE_BUFFERED_LAST_MODIFIED = "BufferedLastModified";
+	private static final String ATTRIBUTE_BUFFERED_LENGTH = "BufferedLength";
+	private static final String ATTRIBUTE_NAME = "Name";
+
 	private static class SyncFileDefaultHandler extends DefaultHandler {
 		private BufferedConnection bufferedConnection;
 		private AbstractBufferedFile current;
@@ -70,9 +80,9 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 
 		@Override
 		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-			String name = attributes.getValue("Name");
+			String name = attributes.getValue(ATTRIBUTE_NAME);
 
-			if ("Directory".equals(qName)) {
+			if (ELEMENT_DIRECTORY.equals(qName)) {
 				if ("/".equals(name) || ".".equals(name)) {
 					return;
 				}
@@ -80,13 +90,13 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 				current.addChild(newDir);
 				current = newDir;
 			}
-			else if ("File".equals(qName)) {
+			else if (ELEMENT_FILE.equals(qName)) {
 				AbstractBufferedFile newFile = new AbstractBufferedFile(bufferedConnection, name, current, false, true);
-				newFile.setSize(Long.parseLong(attributes.getValue("BufferedLength")));
-				newFile.setLastModified(Long.parseLong(attributes.getValue("BufferedLastModified")));
+				newFile.setSize(Long.parseLong(attributes.getValue(ATTRIBUTE_BUFFERED_LENGTH)));
+				newFile.setLastModified(Long.parseLong(attributes.getValue(ATTRIBUTE_BUFFERED_LAST_MODIFIED)));
 
-				newFile.setFsSize(Long.parseLong(attributes.getValue("FileSystemLength")));
-				newFile.setFsLastModified(Long.parseLong(attributes.getValue("FileSystemLastModified")));
+				newFile.setFsSize(Long.parseLong(attributes.getValue(ATTRIBUTE_FILE_SYSTEM_LENGTH)));
+				newFile.setFsLastModified(Long.parseLong(attributes.getValue(ATTRIBUTE_FILE_SYSTEM_LAST_MODIFIED)));
 				current.addChild(newFile);
 			}
 			super.startElement(uri, localName, qName, attributes);
@@ -94,7 +104,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 
 		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
-			if ("Directory".equals(qName)) {
+			if (ELEMENT_DIRECTORY.equals(qName)) {
 				/*
 				 * Source Buffer needs to load fs files after buffer info /
 				 * Collection fsChildren = current.getUnbuffered().getChildren();
@@ -133,8 +143,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		if (null == n) {
 			n = dir.getUnbuffered().createChild(name, directory);
 		}
-		BufferedFile bf = new AbstractBufferedFile(this, n, dir, directory, false);
-		return bf;
+		return new AbstractBufferedFile(this, n, dir, directory, false);
 	}
 
 	@Override
@@ -191,7 +200,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 
 	protected void loadFromBuffer() throws IOException {
 		File fsRoot = fs.getRoot();
-		File f = fsRoot.getChild(".syncfiles");
+		File f = fsRoot.getChild(BUFFER_FILENAME);
 
 		root = new AbstractBufferedFile(this, fsRoot, null, true, true);
 		if ((null == f) || !f.exists() || f.isDirectory()) {
@@ -200,14 +209,15 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			}
 			return;
 		}
+		ByteArrayOutputStream out = new ByteArrayOutputStream((int) f.getSize());
 		try (InputStream in = new GZIPInputStream(f.getInputStream())) {
-			ByteArrayOutputStream out = new ByteArrayOutputStream((int) f.getSize());
 			int i;
 			byte[] block = new byte[4096];
 			while ((i = in.read(block)) > 0) {
 				out.write(block, 0, i);
 			}
-			in.close();
+		}
+		try {
 			SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
 			sax.parse(new ByteArrayInputStream(out.toByteArray()), new SyncFileDefaultHandler(this));
 		}
@@ -229,8 +239,8 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	}
 
 	protected Element serializeFile(BufferedFile file, Document doc) throws IOException {
-		Element elem = doc.createElement(file.isDirectory() ? "Directory" : "File");
-		elem.setAttribute("Name", file.getName());
+		Element elem = doc.createElement(file.isDirectory() ? ELEMENT_DIRECTORY : ELEMENT_FILE);
+		elem.setAttribute(ATTRIBUTE_NAME, file.getName());
 		if (file.isDirectory()) {
 			for (File n : file.getChildren()) {
 				if (n.exists()) {
@@ -239,26 +249,26 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			}
 		}
 		else {
-			elem.setAttribute("BufferedLength", String.valueOf(file.getSize()));
-			elem.setAttribute("BufferedLastModified", String.valueOf(file.getLastModified()));
-			elem.setAttribute("FileSystemLength", String.valueOf(file.getFsSize()));
-			elem.setAttribute("FileSystemLastModified", String.valueOf(file.getFsLastModified()));
+			elem.setAttribute(ATTRIBUTE_BUFFERED_LENGTH, String.valueOf(file.getSize()));
+			elem.setAttribute(ATTRIBUTE_BUFFERED_LAST_MODIFIED, String.valueOf(file.getLastModified()));
+			elem.setAttribute(ATTRIBUTE_FILE_SYSTEM_LENGTH, String.valueOf(file.getFsSize()));
+			elem.setAttribute(ATTRIBUTE_FILE_SYSTEM_LAST_MODIFIED, String.valueOf(file.getFsLastModified()));
 		}
 		return elem;
 	}
 
 	public void saveToBuffer() throws IOException {
 		File fsRoot = fs.getRoot();
-		File node = fsRoot.getChild(".syncfiles");
+		File node = fsRoot.getChild(BUFFER_FILENAME);
 		if ((null == node) || !node.exists()) {
-			node = root.createChild(".syncfiles", false);
+			node = root.createChild(BUFFER_FILENAME, false);
 		}
 
 		try {
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = docBuilder.newDocument();
 
-			Element e = doc.createElement("SyncFiles");
+			Element e = doc.createElement(ELEMENT_SYNC_FILES);
 			e.appendChild(serializeFile(root, doc));
 			doc.appendChild(e);
 			TransformerFactory fac = TransformerFactory.newInstance();

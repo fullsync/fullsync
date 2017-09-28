@@ -21,7 +21,6 @@ package net.sourceforge.fullsync.changelog;
 
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -36,7 +35,7 @@ public class ChangeLogEntry implements Comparable<ChangeLogEntry> {
 	private LocalDate date;
 	private String version;
 
-	public ChangeLogEntry(Document doc) throws ParseException {
+	public ChangeLogEntry(Document doc) {
 		ul = doc.getFirstChild();
 		NamedNodeMap attrs = ul.getAttributes();
 		version = attr(attrs, "data-version");

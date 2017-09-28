@@ -141,12 +141,10 @@ public class Main implements Launcher { // NO_UCD
 
 	private static void backupFile(final File old, final File current, final String backupName) throws IOException {
 		try (FileInputStream fis = new FileInputStream(old); FileOutputStream fos = new FileOutputStream(current)) {
-			try (FileChannel in = fis.getChannel(); FileChannel out = fos.getChannel();) {
+			try (FileChannel in = fis.getChannel(); FileChannel out = fos.getChannel()) {
 				in.transferTo(0, in.size(), out);
-				in.close();
-				out.close();
-				old.renameTo(new File(backupName));
 			}
+			old.renameTo(new File(backupName));
 		}
 	}
 
@@ -187,7 +185,7 @@ public class Main implements Launcher { // NO_UCD
 
 		upgradeLegacyPreferencesLocation(configDir);
 
-		String profilesFile = PROFILES_XML;
+		String profilesFile;
 		if (line.hasOption("P")) {
 			profilesFile = line.getOptionValue("P");
 		}
@@ -235,7 +233,7 @@ public class Main implements Launcher { // NO_UCD
 	public static void finishStartup(FullSync fullsync) {
 		RuntimeConfiguration rt = fullsync.getRuntimeConfiguration();
 		if (rt.getProfileToRun().isPresent()) {
-			handleRunProfile(fullsync);
+			handleRunProfile(fullsync, rt.getProfileToRun().get());
 		}
 		if (rt.isDaemon().orElse(false).booleanValue()) {
 			handleIsDaemon(fullsync);
@@ -248,9 +246,8 @@ public class Main implements Launcher { // NO_UCD
 		}
 	}
 
-	private static void handleRunProfile(FullSync fullsync) {
+	private static void handleRunProfile(FullSync fullsync, String profileName) {
 		ProfileManager profileManager = fullsync.getProfileManager();
-		String profileName = fullsync.getRuntimeConfiguration().getProfileToRun().get();
 		Profile p = profileManager.getProfile(profileName);
 		int errorlevel = 1;
 		if (null != p) {
@@ -297,7 +294,7 @@ public class Main implements Launcher { // NO_UCD
 		String password = rt.getRemotePassword().orElse(preferences.getRemoteConnectionsPassword());
 		try {
 			RemoteController.getInstance().startServer(listenAddress, password, fullsync);
-			logger.info("Remote Interface available on: " + listenAddress);
+			logger.info("Remote Interface available on: {}:{}", listenAddress.getHostString(), listenAddress.getPort());
 		}
 		catch (RemoteException e) {
 			ExceptionHandler.reportException(e);
@@ -334,7 +331,7 @@ public class Main implements Launcher { // NO_UCD
 		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Main.class.getClassLoader());
 		Thread.currentThread().setContextClassLoader(cl);
 		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.ui.GuiController");
-		Method launchUI = cls.getDeclaredMethod("launchUI", new Class<?>[] { FullSync.class });
-		launchUI.invoke(null, new Object[] { fullsync });
+		Method launchUI = cls.getDeclaredMethod("launchUI", FullSync.class);
+		launchUI.invoke(null, fullsync);
 	}
 }

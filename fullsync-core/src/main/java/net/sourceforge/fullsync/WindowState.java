@@ -20,21 +20,15 @@
 package net.sourceforge.fullsync;
 
 public class WindowState {
-	public int x;
-	public int y;
-	public int width;
-	public int height;
-	public boolean maximized;
-	public boolean minimized;
+	private int x;
+	private int y;
+	private int width;
+	private int height;
+	private boolean maximized;
+	private boolean minimized;
 
 	private boolean isPointOutside(int _x, int _y) {
-		if ((_x <= x) || (_y <= y)) {
-			return true;
-		}
-		if ((_x >= (x + width)) || (_y >= (y + height))) {
-			return true;
-		}
-		return false;
+		return (_x <= x) || (_y <= y) || (_x >= (x + width)) || (_y >= (y + height));
 	}
 
 	public boolean isInsideOf(int _x, int _y, int _width, int _height) {
@@ -57,5 +51,57 @@ public class WindowState {
 		}
 		sb.append('}');
 		return sb.toString();
+	}
+
+	public boolean isValid() {
+		return (width > 0) && (height > 0);
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public boolean isMaximized() {
+		return maximized;
+	}
+
+	public void setMaximized(boolean maximized) {
+		this.maximized = maximized;
+	}
+
+	public boolean isMinimized() {
+		return minimized;
+	}
+
+	public void setMinimized(boolean minimized) {
+		this.minimized = minimized;
 	}
 }

@@ -40,7 +40,7 @@ import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 import net.sourceforge.fullsync.impl.SFTPLogger;
 
 class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive, UserInfo {
-	private static final String sshDirName;
+	private static final String SSH_DIR_NAME;
 	private static final Logger logger = LoggerFactory.getLogger("FullSync");
 
 	static {
@@ -52,12 +52,12 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		File sshDir = new File(sshDirPath);
 		if (!sshDir.exists() && !sshDir.mkdirs()) {
 			String path = sshDir.getAbsolutePath();
-			logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... tried: " + path);
+			logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... tried: {}", path);
 			sshDir = null;
-			sshDirName = null;
+			SSH_DIR_NAME = null;
 		}
 		else {
-			sshDirName = sshDirPath;
+			SSH_DIR_NAME = sshDirPath;
 		}
 		if (null != sshDir) {
 			System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath());
@@ -80,8 +80,8 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 		SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
 		//TODO: add cfg.setUserDirIsRoot(opts, false); and handle profile updates
-		if (null != sshDirName) {
-			cfg.setKnownHosts(options, new File(sshDirName, "known_hosts"));
+		if (null != SSH_DIR_NAME) {
+			cfg.setKnownHosts(options, new File(SSH_DIR_NAME, "known_hosts"));
 		}
 		logger.debug("SFTP using knownHosts: ", cfg.getKnownHosts(options));
 		cfg.setUserInfo(options, this);
@@ -108,13 +108,13 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	@Override
 	public final boolean promptPassword(final String message) {
-		logger.debug("SFTP UserInfo::promptPassword: " + message);
+		logger.debug("SFTP UserInfo::promptPassword: {}", message);
 		return true;
 	}
 
 	@Override
 	public final boolean promptPassphrase(final String message) {
-		logger.debug("SFTP UserInfo::promptPassphrase: " + message);
+		logger.debug("SFTP UserInfo::promptPassphrase: {}", message);
 		return true;
 	}
 
@@ -124,25 +124,25 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 			return fullsync.getQuestionHandler().promptYesNo(message);
 		}
 		else {
-			logger.warn("SFTP UserInfo::promptYesNo: " + message + "; automatic decision: No");
+			logger.warn("SFTP UserInfo::promptYesNo: {}; automatic decision: No", message);
 		}
 		return false;
 	}
 
 	@Override
 	public final void showMessage(final String message) {
-		logger.warn("SFTP UserInfo::showMessage: " + message);
+		logger.warn("SFTP UserInfo::showMessage: {}", message);
 	}
 
 	@Override
 	public final String[] promptKeyboardInteractive(final String destination, final String name, final String instruction,
 		final String[] prompt, final boolean[] echo) {
 		logger.warn("Suppressed promptKeyboardInteractive:");
-		logger.warn("Destination: " + destination);
-		logger.warn("Name: " + name);
-		logger.warn("Instruction: " + instruction);
-		logger.warn("Prompt (#" + prompt.length + "): " + Arrays.toString(prompt));
-		logger.warn("echo: (#" + echo.length + "): " + Arrays.toString(echo));
+		logger.warn("Destination: {}", destination);
+		logger.warn("Name: {}", name);
+		logger.warn("Instruction: {}", instruction);
+		logger.warn("Prompt (#{}): {}", prompt.length, Arrays.toString(prompt));
+		logger.warn("echo: (#{}): {}", echo.length, Arrays.toString(echo));
 		logger.warn("rejecting prompt automatically");
 		return null;
 	}

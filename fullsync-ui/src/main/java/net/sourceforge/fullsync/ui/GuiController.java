@@ -89,13 +89,13 @@ public class GuiController implements Runnable {
 		mainShell.setVisible(true);
 		WindowState ws = preferences.getWindowState(null);
 		Rectangle r = display.getBounds();
-		if ((ws.width > 0) && (ws.height > 0) && r.contains(ws.x, ws.y) && r.contains(ws.x + ws.width, ws.y + ws.height)) {
-			mainShell.setBounds(ws.x, ws.y, ws.width, ws.height);
+		if (ws.isValid() && ws.isInsideOf(r.x, r.y, r.width, r.height)) {
+			mainShell.setBounds(ws.getX(), ws.getY(), ws.getWidth(), ws.getHeight());
 		}
-		if (ws.minimized) {
+		if (ws.isMinimized()) {
 			mainShell.setMinimized(true);
 		}
-		if (ws.maximized) {
+		if (ws.isMaximized()) {
 			mainShell.setMaximized(true);
 		}
 	}
@@ -200,14 +200,14 @@ public class GuiController implements Runnable {
 
 	private void storeWindowState() {
 		WindowState ws = new WindowState();
-		ws.maximized = mainShell.getMaximized();
-		ws.minimized = mainShell.getMinimized();
-		if (!ws.maximized) {
+		ws.setMaximized(mainShell.getMaximized());
+		ws.setMinimized(mainShell.getMinimized());
+		if (!ws.isMaximized()) {
 			Rectangle r = mainShell.getBounds();
-			ws.x = r.x;
-			ws.y = r.y;
-			ws.width = r.width;
-			ws.height = r.height;
+			ws.setX(r.x);
+			ws.setY(r.y);
+			ws.setWidth(r.width);
+			ws.setHeight(r.height);
 		}
 		preferences.setWindowState(null, ws);
 		preferences.save();
