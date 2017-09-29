@@ -93,7 +93,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 		if (!statisticsOnly) {
 			buffer.storeEntry(new DirCreationEntryDescriptor(task, subject));
 		}
-		stats.dirsCreated++;
+		stats.setDirsCreated(stats.getDirsCreated() + 1);
 	}
 
 	protected void storeFileCopy(Task task, File source, File destination) throws IOException {
@@ -101,8 +101,8 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 			if (!statisticsOnly) {
 				buffer.storeEntry(new FileCopyEntryDescriptor(task, source, destination));
 			}
-			stats.filesCopied++;
-			stats.bytesTransferred += source.getSize();
+			stats.setFilesCopied(stats.getFilesCopied() + 1);
+			stats.setBytesTransferred(stats.getBytesTransferred() + source.getSize());
 		}
 		catch (IOException ioe) {
 			// FIXME that's not right, the task does not neccessarily be the one
@@ -115,7 +115,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 		if (!statisticsOnly) {
 			buffer.storeEntry(new DeleteNodeEntryDescriptor(task, subject));
 		}
-		stats.deletions++;
+		stats.setDeletions(stats.getDeletions() + 1);
 	}
 
 	protected void executeTask(Task task) {

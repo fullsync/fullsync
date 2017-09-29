@@ -38,7 +38,7 @@ public class StateDeciderImpl implements StateDecider {
 
 	@Override
 	public State getState(final File source, final File destination) throws DataParseException {
-		logger.debug(source + " vs. " + destination);
+		logger.debug("{} vs. {}", source, destination);
 		if (!source.exists()) {
 			if (!destination.exists()) {
 				logger.debug("both missing"); // FIXME: impossible?!

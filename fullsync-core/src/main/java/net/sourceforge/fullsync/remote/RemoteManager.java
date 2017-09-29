@@ -54,7 +54,7 @@ public class RemoteManager {
 		catch (RemoteException e) {
 			ExceptionHandler.reportException(e);
 		}
-		return null;
+		return new Profile[] {};
 	}
 
 	public void addProfileListChangeListener(ProfileListChangeListener listener) throws RemoteException {

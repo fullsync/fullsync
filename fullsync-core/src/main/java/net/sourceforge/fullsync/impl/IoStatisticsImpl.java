@@ -24,10 +24,10 @@ import net.sourceforge.fullsync.IoStatistics;
 public class IoStatisticsImpl implements IoStatistics {
 	private static final long serialVersionUID = 2L;
 
-	public int filesCopied;
-	public int dirsCreated;
-	public int deletions;
-	public long bytesTransferred;
+	private int filesCopied;
+	private int dirsCreated;
+	private int deletions;
+	private long bytesTransferred;
 
 	@Override
 	public int getFilesCopied() {
@@ -51,6 +51,22 @@ public class IoStatisticsImpl implements IoStatistics {
 
 	@Override
 	public int getCountActions() {
-		return filesCopied + dirsCreated + deletions;
+		return getFilesCopied() + getDirsCreated() + getDeletions();
+	}
+
+	public void setBytesTransferred(long bytesTransferred) {
+		this.bytesTransferred = bytesTransferred;
+	}
+
+	public void setDeletions(int deletions) {
+		this.deletions = deletions;
+	}
+
+	public void setDirsCreated(int dirsCreated) {
+		this.dirsCreated = dirsCreated;
+	}
+
+	public void setFilesCopied(int filesCopied) {
+		this.filesCopied = filesCopied;
 	}
 }

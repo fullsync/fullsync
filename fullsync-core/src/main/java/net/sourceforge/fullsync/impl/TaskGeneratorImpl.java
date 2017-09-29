@@ -74,7 +74,7 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 			}
 
 			Task task = actionDecider.getTask(src, dst, stateDecider, bufferStateDecider);
-			logger.debug(src.getName() + ": " + task);
+			logger.debug("{}: {}", src.getName(), task);
 
 			for (TaskGenerationListener listener : taskGenerationListeners) {
 				listener.taskGenerationFinished(task);

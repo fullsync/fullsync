@@ -33,6 +33,7 @@ class WindowsLauncher {
 		URL codeSource = WindowsLauncher.class.getProtectionDomain().getCodeSource().getLocation();
 		File basePath = new File(codeSource.toURI().resolve("../lib"));
 		File coreJar = new File(basePath, "net.sourceforge.fullsync-fullsync-core.jar");
+		Method mainMethod;
 		try (JarFile fullsyncCore = new JarFile(coreJar, true, JarFile.OPEN_READ)) {
 			Attributes manifestAttributes = fullsyncCore.getManifest().getMainAttributes();
 			String classpath = manifestAttributes.getValue(Attributes.Name.CLASS_PATH);
@@ -45,9 +46,8 @@ class WindowsLauncher {
 			URLClassLoader classloader = new URLClassLoader(urls.toArray(new URL[] {}), Thread.currentThread().getContextClassLoader());
 			Thread.currentThread().setContextClassLoader(classloader);
 			Class<?> mainClass = Class.forName(manifestAttributes.getValue(Attributes.Name.MAIN_CLASS), true, classloader);
-			Method mainMethod = mainClass.getDeclaredMethod("main", String[].class);
-			fullsyncCore.close();
-			mainMethod.invoke(null, new Object[] { args });
+			mainMethod = mainClass.getDeclaredMethod("main", String[].class);
 		}
+		mainMethod.invoke(null, new Object[] { args });
 	}
 }

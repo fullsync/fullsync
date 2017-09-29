@@ -187,15 +187,12 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public String getRemoteConnectionsPassword() {
-		String passwd = getProperty(PREFERENCE_REMOTE_CONNECTION_PASSWORD, "");
-		String decryptedPassword = Crypt.decrypt(passwd);
-		return decryptedPassword;
+		return Crypt.decrypt(getProperty(PREFERENCE_REMOTE_CONNECTION_PASSWORD, ""));
 	}
 
 	@Override
 	public void setRemoteConnectionsPassword(final String password) {
-		String encryptedPasswd = Crypt.encrypt(password);
-		setProperty(PREFERENCE_REMOTE_CONNECTION_PASSWORD, encryptedPasswd);
+		setProperty(PREFERENCE_REMOTE_CONNECTION_PASSWORD, Crypt.encrypt(password));
 	}
 
 	@Override

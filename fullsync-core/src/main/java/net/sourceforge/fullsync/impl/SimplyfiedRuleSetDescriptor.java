@@ -22,11 +22,11 @@ package net.sourceforge.fullsync.impl;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.sourceforge.fullsync.DataParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -37,7 +37,21 @@ import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
-	public static final String RULESET_TYPE = "simple";
+	public static final String RULESET_TYPE = "simple"; //$NON-NLS-1$
+
+	private static final String ELEMENT_SIMPLE_RULE_SET = "SimpleRuleSet"; //$NON-NLS-1$
+	private static final String ELEMENT_FILE_FILTER_RULE = "FileFilterRule"; //$NON-NLS-1$
+	private static final String ELEMENT_FILE_FILTER = "FileFilter"; //$NON-NLS-1$
+	private static final String ELEMENT_SUBDIRECTORY_FILE_FILTER = "SubdirectoryFileFilter"; //$NON-NLS-1$
+
+	private static final String ATTRIBUTE_PATH = "path"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_USE_FILTER = "useFilter"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_TAKE_PATTERN = "takePattern"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_IGNORE_PATTERN = "ignorePattern"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_PATTERNS_TYPE = "patternsType"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_SYNC_SUBS = "syncSubs"; //$NON-NLS-1$
+
+	private static final String PATTERN_TYPE_REG_EXP = "RegExp"; //$NON-NLS-1$
 
 	private static final long serialVersionUID = 2L;
 	private boolean syncSubDirs = false;
@@ -71,18 +85,18 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	 */
 	@Override
 	public Element serializeDescriptor(Document document) {
-		Element simpleRuleSetElement = document.createElement("SimpleRuleSet");
+		Element simpleRuleSetElement = document.createElement(ELEMENT_SIMPLE_RULE_SET);
 
-		simpleRuleSetElement.setAttribute("syncSubs", String.valueOf(isSyncSubDirs()));
-		simpleRuleSetElement.setAttribute("patternsType", getPatternsType());
-		simpleRuleSetElement.setAttribute("ignorePattern", getIgnorePattern());
-		simpleRuleSetElement.setAttribute("takePattern", getTakePattern());
-		simpleRuleSetElement.setAttribute("useFilter", String.valueOf(isUseFilter()));
+		simpleRuleSetElement.setAttribute(ATTRIBUTE_SYNC_SUBS, String.valueOf(isSyncSubDirs()));
+		simpleRuleSetElement.setAttribute(ATTRIBUTE_PATTERNS_TYPE, getPatternsType());
+		simpleRuleSetElement.setAttribute(ATTRIBUTE_IGNORE_PATTERN, getIgnorePattern());
+		simpleRuleSetElement.setAttribute(ATTRIBUTE_TAKE_PATTERN, getTakePattern());
+		simpleRuleSetElement.setAttribute(ATTRIBUTE_USE_FILTER, String.valueOf(isUseFilter()));
 
-		FileFilterManager filterManager = new FileFilterManager();
+		FileFilterManager fm = new FileFilterManager();
 
 		if (null != fileFilter) {
-			Element fileFilterElement = filterManager.serializeFileFilter(getFileFilter(), document, "FileFilter", "FileFilterRule");
+			Element fileFilterElement = fm.serializeFileFilter(getFileFilter(), document, ELEMENT_FILE_FILTER, ELEMENT_FILE_FILTER_RULE);
 			simpleRuleSetElement.appendChild(fileFilterElement);
 		}
 
@@ -91,9 +105,9 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 			for (Entry<String, FileFilter> entry : itemsMap.entrySet()) {
 				String path = entry.getKey();
 				FileFilter filter = entry.getValue();
-				Element subdirFilterElement = document.createElement("SubdirectoryFileFilter");
-				subdirFilterElement.setAttribute("path", path);
-				Element fileFilterElement = filterManager.serializeFileFilter(filter, document, "FileFilter", "FileFilterRule");
+				Element subdirFilterElement = document.createElement(ELEMENT_SUBDIRECTORY_FILE_FILTER);
+				subdirFilterElement.setAttribute(ATTRIBUTE_PATH, path);
+				Element fileFilterElement = fm.serializeFileFilter(filter, document, ELEMENT_FILE_FILTER, ELEMENT_FILE_FILTER_RULE);
 				subdirFilterElement.appendChild(fileFilterElement);
 				simpleRuleSetElement.appendChild(subdirFilterElement);
 			}
@@ -103,7 +117,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	}
 
 	public SimplyfiedRuleSetDescriptor(Element element) throws DataParseException {
-		NodeList ruleSetConfigNodeList = element.getElementsByTagName("SimpleRuleSet");
+		NodeList ruleSetConfigNodeList = element.getElementsByTagName(ELEMENT_SIMPLE_RULE_SET);
 
 		if (ruleSetConfigNodeList.getLength() == 0) {
 			syncSubDirs = true;
@@ -115,37 +129,35 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		}
 		else {
 			Element simpleRuleSetConfigElement = (Element) ruleSetConfigNodeList.item(0);
-			syncSubDirs = Boolean.valueOf(simpleRuleSetConfigElement.getAttribute("syncSubs")).booleanValue();
-			patternsType = simpleRuleSetConfigElement.getAttribute("patternsType");
-			ignorePattern = simpleRuleSetConfigElement.getAttribute("ignorePattern");
-			takePattern = simpleRuleSetConfigElement.getAttribute("takePattern");
-			String useFilterStr = simpleRuleSetConfigElement.getAttribute("useFilter");
-			if ((null != useFilterStr) && (!useFilterStr.isEmpty())) {
-				useFilter = Boolean.valueOf(useFilterStr).booleanValue();
-			}
-			NodeList fileFilterNodeList = simpleRuleSetConfigElement.getElementsByTagName("FileFilter");
+			syncSubDirs = Boolean.parseBoolean(simpleRuleSetConfigElement.getAttribute(ATTRIBUTE_SYNC_SUBS));
+			patternsType = simpleRuleSetConfigElement.getAttribute(ATTRIBUTE_PATTERNS_TYPE);
+			ignorePattern = simpleRuleSetConfigElement.getAttribute(ATTRIBUTE_IGNORE_PATTERN);
+			takePattern = simpleRuleSetConfigElement.getAttribute(ATTRIBUTE_TAKE_PATTERN);
+			useFilter = Boolean.parseBoolean(simpleRuleSetConfigElement.getAttribute(ATTRIBUTE_USE_FILTER));
+			NodeList fileFilterNodeList = simpleRuleSetConfigElement.getElementsByTagName(ELEMENT_FILE_FILTER);
 			if (fileFilterNodeList.getLength() > 0) {
 				FileFilterManager filterManager = new FileFilterManager();
 				Element fileFilterElement = (Element) fileFilterNodeList.item(0);
-				fileFilter = filterManager.unserializeFileFilter(fileFilterElement, "FileFilterRule");
+				fileFilter = filterManager.unserializeFileFilter(fileFilterElement, ELEMENT_FILE_FILTER_RULE);
 
-				NodeList subdirFiltersNodeList = simpleRuleSetConfigElement.getElementsByTagName("SubdirectoryFileFilter");
+				NodeList subdirFiltersNodeList = simpleRuleSetConfigElement.getElementsByTagName(ELEMENT_SUBDIRECTORY_FILE_FILTER);
 				int numOfDirs = subdirFiltersNodeList.getLength();
 				fileFilterTree = new FileFilterTree();
 				for (int i = 0; i < numOfDirs; i++) {
 					Element subDirElement = (Element) subdirFiltersNodeList.item(i);
-					String path = subDirElement.getAttribute("path");
-					fileFilterNodeList = subDirElement.getElementsByTagName("FileFilter");
+					String path = subDirElement.getAttribute(ATTRIBUTE_PATH);
+					fileFilterNodeList = subDirElement.getElementsByTagName(ELEMENT_FILE_FILTER);
 					if (fileFilterNodeList.getLength() > 0) {
 						Element subDirFileFilterElement = (Element) fileFilterNodeList.item(0);
-						FileFilter subDirFileFilter = filterManager.unserializeFileFilter(subDirFileFilterElement, "FileFilterRule");
+						FileFilter subDirFileFilter = filterManager.unserializeFileFilter(subDirFileFilterElement,
+							ELEMENT_FILE_FILTER_RULE);
 						fileFilterTree.addFileFilter(path, subDirFileFilter);
 					}
 				}
 			}
 			else {
 				fileFilter = null;
-				if ("RegExp".equals(patternsType)) { //$NON-NLS-1$
+				if (PATTERN_TYPE_REG_EXP.equals(patternsType)) {
 					if (!ignorePattern.isEmpty() && (takePattern.isEmpty())) {
 						fileFilter = new FileFilter();
 						fileFilter.setMatchType(FileFilter.MATCH_ALL);
@@ -272,7 +284,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 			ruleSet.setPatternsType(patternsType);
 		}
 		else {
-			ruleSet.setPatternsType("RegExp");
+			ruleSet.setPatternsType(PATTERN_TYPE_REG_EXP);
 		}
 		ruleSet.setIgnorePattern(ignorePattern);
 		ruleSet.setTakePattern(takePattern);
