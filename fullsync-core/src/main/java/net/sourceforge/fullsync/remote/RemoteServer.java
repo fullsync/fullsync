@@ -43,14 +43,13 @@ import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
  * Profile Management, Scheduling and Execution with user Interaction.
  */
 public class RemoteServer extends UnicastRemoteObject implements RemoteInterface {
+	private static final Logger logger = LoggerFactory.getLogger(RemoteServer.class);
+
 	//FIXME: not serializable
 	private static final long serialVersionUID = 2L;
 	private FullSync fullsync;
 	private String password;
-
 	private Map<Remote, Object> listenersMap = new HashMap<>();
-
-	private Logger logger = LoggerFactory.getLogger("FullSync");
 
 	public RemoteServer(FullSync _fullsync) throws RemoteException {
 		fullsync = _fullsync;
@@ -86,7 +85,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 					remotelistener.profileChanged(profile);
 				}
 				catch (RemoteException e) {
-					e.printStackTrace();
+					ExceptionHandler.reportException(e);
 				}
 			}
 
@@ -96,7 +95,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 					remotelistener.profileListChanged();
 				}
 				catch (RemoteException e) {
-					e.printStackTrace();
+					ExceptionHandler.reportException(e);
 				}
 			}
 		};
@@ -117,7 +116,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 				remotelistener.schedulerStatusChanged(status);
 			}
 			catch (RemoteException e) {
-				e.printStackTrace();
+				ExceptionHandler.reportException(e);
 			}
 		};
 		fullsync.getProfileManager().addSchedulerChangeListener(listener);
@@ -148,8 +147,7 @@ public class RemoteServer extends UnicastRemoteObject implements RemoteInterface
 	@Override
 	public TaskTree executeProfile(String name) throws RemoteException {
 		Profile p = fullsync.getProfileManager().getProfile(name);
-		TaskTree tree = fullsync.getSynchronizer().executeProfile(fullsync, p, false);
-		return tree;
+		return fullsync.getSynchronizer().executeProfile(fullsync, p, false);
 	}
 
 	@Override

@@ -27,40 +27,40 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.swt.widgets.Display;
 
-public class GUIUpdateQueue<Item> {
+public class GUIUpdateQueue<ITEM> {
 	public interface GUIUpdateTask<Item> {
 		void doUpdate(Display display, List<Item> items);
 	}
 
-	private Display m_display;
-	private final Queue<Item> m_queue = new ConcurrentLinkedQueue<>();
-	private final AtomicBoolean m_updateScheduled = new AtomicBoolean(false);
-	private GUIUpdateTask<Item> m_updateTask;
+	private Display display;
+	private final Queue<ITEM> queue = new ConcurrentLinkedQueue<>();
+	private final AtomicBoolean updateScheduled = new AtomicBoolean(false);
+	private GUIUpdateTask<ITEM> updateTask;
 
-	public GUIUpdateQueue(Display display, GUIUpdateTask<Item> guiUpdateTask) {
-		m_display = display;
-		m_updateTask = guiUpdateTask;
+	public GUIUpdateQueue(Display d, GUIUpdateTask<ITEM> task) {
+		display = d;
+		updateTask = task;
 	}
 
-	public synchronized void add(Item item) {
-		m_queue.add(item);
-		if (!m_updateScheduled.get()) {
-			m_updateScheduled.set(true);
-			m_display.asyncExec(() -> {
-				List<Item> items = new LinkedList<>();
+	public synchronized void add(ITEM item) {
+		queue.add(item);
+		if (!updateScheduled.get()) {
+			updateScheduled.set(true);
+			display.asyncExec(() -> {
+				List<ITEM> items = new LinkedList<>();
 				getItems(items);
 				if (!items.isEmpty()) {
-					m_updateTask.doUpdate(m_display, items);
+					updateTask.doUpdate(display, items);
 				}
 			});
 		}
 	}
 
-	private synchronized void getItems(List<Item> items) {
-		Item item;
-		while (null != (item = m_queue.poll())) {
+	private synchronized void getItems(List<ITEM> items) {
+		ITEM item;
+		while (null != (item = queue.poll())) {
 			items.add(item);
 		}
-		m_updateScheduled.set(false);
+		updateScheduled.set(false);
 	}
 }

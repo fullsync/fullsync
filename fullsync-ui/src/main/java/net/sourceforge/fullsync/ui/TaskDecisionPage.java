@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -46,6 +48,10 @@ public class TaskDecisionPage extends WizardDialog {
 	private int tasksFinished;
 	private int tasksTotal;
 
+	private final Display display;
+	private final Color colorFinishedSuccessful;
+	private final Color colorFinishedUnsuccessful;
+
 	private TaskDecisionList list;
 	private Combo comboFilter;
 	private Label labelProgress;
@@ -54,6 +60,13 @@ public class TaskDecisionPage extends WizardDialog {
 		super(parent);
 		this.guiController = guiController;
 		this.taskTree = taskTree;
+		display = getDisplay();
+		colorFinishedSuccessful = new Color(display, 150, 255, 150);
+		colorFinishedUnsuccessful = new Color(display, 255, 150, 150);
+		parent.addDisposeListener(e -> {
+			colorFinishedSuccessful.dispose();
+			colorFinishedUnsuccessful.dispose();
+		});
 	}
 
 	@Override
@@ -72,7 +85,7 @@ public class TaskDecisionPage extends WizardDialog {
 		String destination = Messages.getString("TaskDecisionPage.Destination"); //$NON-NLS-1$
 		String sourcePath = taskTree.getSource().getConnectionDescription().getDisplayPath();
 		String destinationPath = taskTree.getDestination().getConnectionDescription().getDisplayPath();
-		return String.format("%s: %s\n%s: %s", source, sourcePath, destination, destinationPath); //$NON-NLS-1$
+		return String.format("%s: %s%n%s: %s", source, sourcePath, destination, destinationPath); //$NON-NLS-1$
 	}
 
 	@Override
@@ -161,69 +174,69 @@ public class TaskDecisionPage extends WizardDialog {
 	}
 
 	void performActions() {
-		Thread worker = new Thread(() -> {
-			guiController.showBusyCursor(true);
-			final Display display = getDisplay();
-			try {
-				processing = true;
-				list.setChangeAllowed(false);
-
-				Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
-				IoStatistics stats = synchronizer.getIoStatistics(taskTree);
-				tasksTotal = stats.getCountActions();
-				tasksFinished = 0;
-
-				final Color colorFinishedSuccessful = new Color(null, 150, 255, 150);
-				final Color colorFinishedUnsuccessful = new Color(null, 255, 150, 150);
-
-				display.syncExec(() -> setOkButtonEnabled(false));
-
-				final GUIUpdateQueue<TaskFinishedEvent> updateQueue = new GUIUpdateQueue<>(display, (display1, items) -> {
-					TableItem item = null;
-					tasksFinished += items.size();
-					for (TaskFinishedEvent event : items) {
-						Task task = event.getTask();
-						item = list.getTableItemForTask(task);
-						// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item
-						// the item is colored with the "successful" color.
-						if (null != item) {
-							if (event.isSuccessful()) {
-								item.setBackground(colorFinishedSuccessful);
-							}
-							else {
-								item.setBackground(colorFinishedUnsuccessful);
-							}
-						}
-					}
-					String of = Messages.getString("TaskDecisionPage.of"); //$NON-NLS-1$
-					String finished = Messages.getString("TaskDecisionPage.tasksFinished"); //$NON-NLS-1$
-					// TODO: move this into one translatable string with arguments
-					labelProgress.setText(String.format("%d %s %d %s", tasksFinished, of, tasksTotal, finished)); //$NON-NLS-1$
-					if (null != item) {
-						list.showItem(item);
-					}
-				});
-
-				synchronizer.performActions(taskTree, e -> updateQueue.add(e));
-
-				display.asyncExec(() -> {
-					// Notification Window.
-					MessageBox mb = new MessageBox(getShell(), SWT.ICON_INFORMATION | SWT.OK);
-					mb.setText(Messages.getString("TaskDecisionPage.Finished")); //$NON-NLS-1$
-					mb.setMessage(Messages.getString("TaskDecisionPage.ProfileFinished")); //$NON-NLS-1$
-					mb.open();
-					checkAndCancel();
-				});
-			}
-			catch (Exception e) {
-				ExceptionHandler.reportException(e);
-			}
-			finally {
-				guiController.showBusyCursor(false);
-				processing = false;
-				list.setChangeAllowed(true);
-			}
-		}, "ActionPerformer"); //$NON-NLS-1$
+		Thread worker = new Thread(this::doPerformActions, "ActionPerformer"); //$NON-NLS-1$
 		worker.start();
+	}
+
+	private void doPerformActions() {
+		guiController.showBusyCursor(true);
+		try {
+			processing = true;
+			list.setChangeAllowed(false);
+
+			Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
+			IoStatistics stats = synchronizer.getIoStatistics(taskTree);
+			tasksTotal = stats.getCountActions();
+			tasksFinished = 0;
+
+			display.syncExec(() -> setOkButtonEnabled(false));
+
+			GUIUpdateQueue<TaskFinishedEvent> updateQueue = new GUIUpdateQueue<>(display, this::updateTaskStatus);
+
+			synchronizer.performActions(taskTree, updateQueue::add);
+
+			display.asyncExec(() -> {
+				// Notification Window.
+				MessageBox mb = new MessageBox(getShell(), SWT.ICON_INFORMATION | SWT.OK);
+				mb.setText(Messages.getString("TaskDecisionPage.Finished")); //$NON-NLS-1$
+				mb.setMessage(Messages.getString("TaskDecisionPage.ProfileFinished")); //$NON-NLS-1$
+				mb.open();
+				checkAndCancel();
+			});
+		}
+		catch (Exception e) {
+			ExceptionHandler.reportException(e);
+		}
+		finally {
+			guiController.showBusyCursor(false);
+			processing = false;
+			list.setChangeAllowed(true);
+		}
+	}
+
+	private void updateTaskStatus(Display d, List<TaskFinishedEvent> items) {
+		TableItem item = null;
+		tasksFinished += items.size();
+		for (TaskFinishedEvent event : items) {
+			Task task = event.getTask();
+			item = list.getTableItemForTask(task);
+			// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item
+			// the item is colored with the "successful" color.
+			if (null != item) {
+				if (event.isSuccessful()) {
+					item.setBackground(colorFinishedSuccessful);
+				}
+				else {
+					item.setBackground(colorFinishedUnsuccessful);
+				}
+			}
+		}
+		String of = Messages.getString("TaskDecisionPage.of"); //$NON-NLS-1$
+		String finished = Messages.getString("TaskDecisionPage.tasksFinished"); //$NON-NLS-1$
+		// TODO: move this into one translatable string with arguments
+		labelProgress.setText(String.format("%d %s %d %s", tasksFinished, of, tasksTotal, finished)); //$NON-NLS-1$
+		if (null != item) {
+			list.showItem(item);
+		}
 	}
 }

@@ -27,17 +27,7 @@ import org.slf4j.LoggerFactory;
  * org.apache.commons.vfs2 SFTP implementation.
  */
 public class SFTPLogger implements com.jcraft.jsch.Logger {
-	/**
-	 * reference to the FullSync logger.
-	 */
-	private Logger logger;
-
-	/**
-	 * Constructor of the SFTPLogger implementation.
-	 */
-	public SFTPLogger() {
-		logger = LoggerFactory.getLogger("SFTP");
-	}
+	private static final Logger logger = LoggerFactory.getLogger(SFTPLogger.class);
 
 	@Override
 	public final boolean isEnabled(final int level) {

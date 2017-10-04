@@ -83,41 +83,51 @@ public class FileFilter implements Serializable {
 
 		switch (matchType) {
 			case MATCH_ALL:
-				for (FileFilterRule rule : rules) {
-					if ((!appliesToDir) && (file.isDirectory())) {
-						continue;
-					}
-					try {
-						boolean res = rule.match(file);
-						if (!res) {
-							return false;
-						}
-					}
-					catch (FilterRuleNotAppliableException e) {
-					}
-				}
-				return true;
+				return doMatchAll(file);
 			case MATCH_ANY:
-				int applyedRules = 0;
-
-				for (FileFilterRule rule : rules) {
-					if ((!appliesToDir) && (file.isDirectory())) {
-						continue;
-					}
-					try {
-						boolean res = rule.match(file);
-						if (res) {
-							return true;
-						}
-						applyedRules++;
-					}
-					catch (FilterRuleNotAppliableException e) {
-					}
-				}
-				return 0 == applyedRules;
+				return doMatchAny(file);
 			default:
 				return true;
 		}
+	}
+
+	private boolean doMatchAll(final File file) {
+		for (FileFilterRule rule : rules) {
+			if ((!appliesToDir) && (file.isDirectory())) {
+				continue;
+			}
+			try {
+				boolean res = rule.match(file);
+				if (!res) {
+					return false;
+				}
+			}
+			catch (FilterRuleNotAppliableException e) {
+				// fine
+			}
+		}
+		return true;
+	}
+
+	private boolean doMatchAny(final File file) {
+		int applyedRules = 0;
+
+		for (FileFilterRule rule : rules) {
+			if ((!appliesToDir) && (file.isDirectory())) {
+				continue;
+			}
+			try {
+				boolean res = rule.match(file);
+				if (res) {
+					return true;
+				}
+				applyedRules++;
+			}
+			catch (FilterRuleNotAppliableException e) {
+				// fine
+			}
+		}
+		return 0 == applyedRules;
 	}
 
 	@Override

@@ -46,8 +46,6 @@ import net.sourceforge.fullsync.fs.Site;
 
 public abstract class AbstractTaskGenerator implements TaskGenerator {
 	protected final List<TaskGenerationListener> taskGenerationListeners = new ArrayList<>();
-	protected boolean active = true; // resume/suspend
-	protected boolean cancelled = false; // cancel
 
 	@Override
 	public void addTaskGenerationListener(TaskGenerationListener listener) {
@@ -60,46 +58,25 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 	}
 
 	@Override
-	public boolean isActive() {
-		return active && !cancelled;
-	}
-
-	@Override
-	public void suspend() {
-		active = false;
-	}
-
-	@Override
-	public void resume() {
-		active = true;
-	}
-
-	@Override
-	public void cancel() {
-		cancelled = true;
-		active = false;
-	}
-
-	@Override
 	public TaskTree execute(FullSync fullsync, Profile profile, boolean interactive)
 		throws FileSystemException, URISyntaxException, DataParseException, IOException {
 
 		RuleSet rules = profile.getRuleSet().createRuleSet();
 
 		ActionDecider actionDecider;
-		if (profile.getSynchronizationType().equals("Publish/Update")) {
+		if ("Publish/Update".equals(profile.getSynchronizationType())) {
 			actionDecider = new PublishActionDecider();
 		}
-		else if (profile.getSynchronizationType().equals("Publish/Update Overwrite")) {
+		else if ("Publish/Update Overwrite".equals(profile.getSynchronizationType())) {
 			actionDecider = new PublishOverwriteActionDecider();
 		}
-		else if (profile.getSynchronizationType().equals("Backup Copy")) {
+		else if ("Backup Copy".equals(profile.getSynchronizationType())) {
 			actionDecider = new BackupActionDecider();
 		}
-		else if (profile.getSynchronizationType().equals("Exact Copy")) {
+		else if ("Exact Copy".equals(profile.getSynchronizationType())) {
 			actionDecider = new ExactCopyActionDecider();
 		}
-		else if (profile.getSynchronizationType().equals("Two Way Sync")) {
+		else if ("Two Way Sync".equals(profile.getSynchronizationType())) {
 			actionDecider = new TwoWaySyncActionDecider();
 		}
 		else {

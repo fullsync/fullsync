@@ -50,7 +50,7 @@ public class ConnectionDescription implements Serializable {
 
 	private static final long serialVersionUID = 2L;
 
-	private static Logger logger = LoggerFactory.getLogger(ConnectionDescription.class);
+	private static final Logger logger = LoggerFactory.getLogger(ConnectionDescription.class);
 
 	private URI uri;
 	private Map<String, String> parameters = new HashMap<>();
@@ -138,11 +138,11 @@ public class ConnectionDescription implements Serializable {
 	}
 
 	public String getSecretParameter(final String name) {
-		return Crypt.decrypt(secretParameters.get(name));
+		return Obfuscator.deobfuscate(secretParameters.get(name));
 	}
 
 	public final void setSecretParameter(final String name, final String value) {
-		secretParameters.put(name, Crypt.encrypt(value));
+		secretParameters.put(name, Obfuscator.obfuscate(value));
 	}
 
 	@Override

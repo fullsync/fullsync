@@ -20,48 +20,29 @@
 package net.sourceforge.fullsync.schedule;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-
 public abstract class Schedule implements Serializable {
 	private static final long serialVersionUID = 2L;
-	private static final String ELEMENT_NAME = "Schedule";
-
-	private static final Map<String, Function<Element, Schedule>> scheduleRegister;
-
-	static {
-		scheduleRegister = new HashMap<>(2);
-		scheduleRegister.put(IntervalSchedule.SCHEDULE_TYPE, IntervalSchedule::new);
-		scheduleRegister.put(CrontabSchedule.SCHEDULE_TYPE, CrontabSchedule::new);
-	}
+	private static final String ELEMENT_NAME = "Schedule"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 
 	public static final Schedule unserialize(final Element element) {
-		Schedule sched = null;
 		if (null != element) {
-			String scheduleType = element.getAttribute("type");
-			Function<Element, Schedule> scheduleConstructor = scheduleRegister.get(scheduleType);
-
-			if (null != scheduleConstructor) {
-				try {
-					sched = scheduleConstructor.apply(element);
-				}
-				catch (IllegalArgumentException iex) {
-					ExceptionHandler.reportException(iex);
-				}
+			switch (element.getAttribute(ATTRIBUTE_TYPE)) {
+				case IntervalSchedule.SCHEDULE_TYPE:
+					return new IntervalSchedule(element);
+				case CrontabSchedule.SCHEDULE_TYPE:
+					return new CrontabSchedule(element);
 			}
 		}
-		return sched;
+		return null;
 	}
 
 	public static final Element serialize(Schedule sch, Document doc) {
-		Element element = doc.createElement(Schedule.ELEMENT_NAME);
-		return sch.serialize(element);
+		return sch.serialize(doc.createElement(ELEMENT_NAME));
 	}
 
 	public abstract Element serialize(Element element);

@@ -24,7 +24,7 @@ import java.net.URISyntaxException;
 
 import net.sourceforge.fullsync.fs.Site;
 
-public interface TaskGenerator extends Phase {
+public interface TaskGenerator {
 	TaskTree execute(FullSync fullsync, Profile profile, boolean interactive)
 		throws FileSystemException, DataParseException, URISyntaxException, IOException;
 

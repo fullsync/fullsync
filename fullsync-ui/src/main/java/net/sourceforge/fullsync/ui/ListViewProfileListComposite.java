@@ -119,6 +119,6 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 
 	@Override
 	public void profileListChanged() {
-		getDisplay().asyncExec(() -> populateProfileList());
+		getDisplay().asyncExec(this::populateProfileList);
 	}
 }

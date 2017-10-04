@@ -115,7 +115,7 @@ public class CrontabPart implements Serializable {
 
 			try {
 				// Look for step first
-				index = token.indexOf("/");
+				index = token.indexOf('/');
 
 				if (index > 0) {
 					each = Integer.parseInt(token.substring(index + 1));
@@ -126,14 +126,14 @@ public class CrontabPart implements Serializable {
 					token = token.substring(0, index);
 				}
 
-				if (token.equals("*")) {
+				if ("*".equals(token)) {
 					for (i = low; i < (bArray.length - offset); i += each) {
 						bArray[i + offset] = true;
 					}
 					return each == 1;
 				}
 
-				index = token.indexOf(",");
+				index = token.indexOf(',');
 				if (index > 0) {
 					StringTokenizer tokenizer = new StringTokenizer(token, ",");
 					while (tokenizer.hasMoreElements()) {
@@ -142,7 +142,7 @@ public class CrontabPart implements Serializable {
 					return false;
 				}
 
-				index = token.indexOf("-");
+				index = token.indexOf('-');
 				if (index > 0) {
 					int start = Integer.parseInt(token.substring(0, index));
 					int end = Integer.parseInt(token.substring(index + 1));

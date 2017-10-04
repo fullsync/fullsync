@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SchedulerImpl implements Scheduler, Runnable {
-	private Logger logger = LoggerFactory.getLogger(Scheduler.class);
+	private static final Logger logger = LoggerFactory.getLogger(SchedulerImpl.class);
 	private ScheduleTaskSource scheduleSource;
 	private Thread worker;
 	private boolean running;

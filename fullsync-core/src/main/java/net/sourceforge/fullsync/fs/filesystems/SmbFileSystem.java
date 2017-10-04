@@ -22,6 +22,8 @@ package net.sourceforge.fullsync.fs.filesystems;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
@@ -31,6 +33,7 @@ import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
 public class SmbFileSystem implements FileSystem {
+	private static final Logger logger = LoggerFactory.getLogger(SmbFileSystem.class);
 	static {
 		// even tough VFS-552 is fixed this si still needed
 		//[VFS-552][sandbox] include vfs-providers.xml in JAR for dynamic registration of mime and smb providers.
@@ -41,8 +44,8 @@ public class SmbFileSystem implements FileSystem {
 				dfsm.addProvider("smb", new org.apache.commons.vfs2.provider.smb.SmbFileProvider());
 			}
 		}
-		catch (org.apache.commons.vfs2.FileSystemException e) {
-			e.printStackTrace();
+		catch (org.apache.commons.vfs2.FileSystemException ex) {
+			logger.warn("Failed to add SMB file system provider", ex);
 		}
 	}
 

@@ -185,13 +185,13 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			srcConnectionConfiguration.setConnectionDescription(profile.getSource());
 			if (null != profile.getSource()) {
 				String bufferStrategy = profile.getSource().getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
-				srcConnectionConfiguration.setBuffered("syncfiles".equals(bufferStrategy)); //$NON-NLS-1$
+				srcConnectionConfiguration.setBuffered(FileSystemManager.BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy));
 			}
 
 			dstConnectionConfiguration.setConnectionDescription(profile.getDestination());
 			if (null != profile.getDestination()) {
 				String bufferStrategy = profile.getDestination().getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
-				dstConnectionConfiguration.setBuffered("syncfiles".equals(bufferStrategy)); //$NON-NLS-1$
+				dstConnectionConfiguration.setBuffered(FileSystemManager.BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy));
 			}
 
 			if ((null != profile.getSynchronizationType()) && (profile.getSynchronizationType().length() > 0)) {
@@ -647,7 +647,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		try {
 			dst = cfg.getConnectionDescription();
 			if (cfg.getBuffered()) {
-				dst.setParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY, "syncfiles"); //$NON-NLS-1$
+				dst.setParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY, FileSystemManager.BUFFER_STRATEGY_SYNCFILES);
 			}
 		}
 		catch (URISyntaxException e) {

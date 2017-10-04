@@ -27,8 +27,8 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Properties;
 
-import net.sourceforge.fullsync.Crypt;
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Obfuscator;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.WindowState;
@@ -44,7 +44,6 @@ public class ConfigurationPreferences implements Preferences {
 	private static final String PREFERENCE_REMOTE_CONNECTION_PORT = "RemoteConnection.port";
 	private static final String PREFERENCE_REMOTE_CONNECTION_ACTIVE = "RemoteConnection.active";
 	private static final String PREFERENCE_PROFILE_LIST_STYLE = "Interface.ProfileList.Style";
-	private static final String PREFERENCE_SYSTEM_TRAY_ENABLED = "Interface.SystemTray.Enabled";
 	private static final String PREFERENCE_MINIMIZE_MINIMIZES_TO_SYSTEM_TRAY = "Interface.MinimizeMinimizesToSystemTray";
 	private static final String PREFERENCE_CLOSE_MINIMIZES_TO_SYSTEM_TRAY = "Interface.CloseMinimizesToSystemTray";
 	private static final String PREFERENCE_CONFIRM_EXIT = "Interface.ConfirmExit";
@@ -146,16 +145,6 @@ public class ConfigurationPreferences implements Preferences {
 	}
 
 	@Override
-	public boolean systemTrayEnabled() {
-		return getProperty(PREFERENCE_SYSTEM_TRAY_ENABLED, true);
-	}
-
-	@Override
-	public void setSystemTrayEnabled(final boolean bool) {
-		setProperty(PREFERENCE_SYSTEM_TRAY_ENABLED, bool);
-	}
-
-	@Override
 	public String getProfileListStyle() {
 		return getProperty(PREFERENCE_PROFILE_LIST_STYLE, PREFERENCE_DEFAULT_PROFILE_LIST_STYLE);
 	}
@@ -187,12 +176,12 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public String getRemoteConnectionsPassword() {
-		return Crypt.decrypt(getProperty(PREFERENCE_REMOTE_CONNECTION_PASSWORD, ""));
+		return Obfuscator.deobfuscate(getProperty(PREFERENCE_REMOTE_CONNECTION_PASSWORD, ""));
 	}
 
 	@Override
 	public void setRemoteConnectionsPassword(final String password) {
-		setProperty(PREFERENCE_REMOTE_CONNECTION_PASSWORD, Crypt.encrypt(password));
+		setProperty(PREFERENCE_REMOTE_CONNECTION_PASSWORD, Obfuscator.obfuscate(password));
 	}
 
 	@Override

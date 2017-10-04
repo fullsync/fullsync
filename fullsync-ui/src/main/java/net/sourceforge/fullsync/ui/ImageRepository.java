@@ -19,6 +19,7 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,20 +67,18 @@ public class ImageRepository {
 	 */
 
 	private Display display;
-	private Map<String, Image> cache;
+	private Map<String, Image> cache = new HashMap<>();
 
 	public ImageRepository(Display display) {
 		this.display = display;
-		cache = new HashMap<>();
 	}
 
 	public Image getImage(String imageName) {
-		Image img = cache.get(imageName);
-		if (null == img) {
-			img = new Image(display, getClass().getClassLoader().getResourceAsStream("net/sourceforge/fullsync/images/" + imageName));
-			cache.put(imageName, img);
-		}
-		return img;
+		return cache.computeIfAbsent(imageName, n -> new Image(display, getImageStream(n)));
+	}
+
+	private InputStream getImageStream(String name) {
+		return getClass().getClassLoader().getResourceAsStream("net/sourceforge/fullsync/images/" + name);
 	}
 
 	public void dispose() {

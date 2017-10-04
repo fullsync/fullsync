@@ -137,13 +137,15 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 	@Override
 	public final String[] promptKeyboardInteractive(final String destination, final String name, final String instruction,
 		final String[] prompt, final boolean[] echo) {
-		logger.warn("Suppressed promptKeyboardInteractive:");
-		logger.warn("Destination: {}", destination);
-		logger.warn("Name: {}", name);
-		logger.warn("Instruction: {}", instruction);
-		logger.warn("Prompt (#{}): {}", prompt.length, Arrays.toString(prompt));
-		logger.warn("echo: (#{}): {}", echo.length, Arrays.toString(echo));
-		logger.warn("rejecting prompt automatically");
+		if (logger.isWarnEnabled()) {
+			logger.warn("Suppressed promptKeyboardInteractive:");
+			logger.warn("Destination: {}", destination);
+			logger.warn("Name: {}", name);
+			logger.warn("Instruction: {}", instruction);
+			logger.warn("Prompt (#{}): {}", prompt.length, Arrays.toString(prompt));
+			logger.warn("echo: (#{}): {}", echo.length, Arrays.toString(echo));
+			logger.warn("rejecting prompt automatically");
+		}
 		return null;
 	}
 }

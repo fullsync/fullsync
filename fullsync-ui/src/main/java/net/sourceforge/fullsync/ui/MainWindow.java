@@ -21,17 +21,15 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
@@ -53,7 +51,7 @@ import net.sourceforge.fullsync.fs.File;
 class MainWindow extends Composite implements ProfileListControlHandler, TaskGenerationListener {
 	private ToolItem toolItemNew;
 	private Menu menuBarMainWindow;
-	private StatusLine statusLine;
+	private Label statusLine;
 	private ToolItem toolItemRun;
 	private ToolItem toolItemRunNonIter;
 	private ToolItem toolItemDelete;
@@ -65,8 +63,8 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 	private Composite profileListContainer;
 	private ProfileListComposite profileList;
 	private GuiController guiController;
-
-	private String statusDelayString;
+	private GUIUpdateQueue<File> lastFileChecked;
+	private GUIUpdateQueue<String> statusLineText;
 
 	MainWindow(Composite parent, int style, GuiController _guiController) {
 		super(parent, style);
@@ -111,13 +109,21 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 				}
 			}
 		});
-		// TODO [Michele] Implement this listener also on the remote interface
-		pm.addSchedulerChangeListener(enabled -> {
-			getDisplay().syncExec(() -> {
-				toolItemScheduleStart.setEnabled(!enabled);
-				toolItemScheduleStop.setEnabled(enabled);
-			});
+		pm.addSchedulerChangeListener(enabled -> getDisplay().syncExec(() -> {
+			toolItemScheduleStart.setEnabled(!enabled);
+			toolItemScheduleStop.setEnabled(enabled);
+		}));
+
+		statusLineText = new GUIUpdateQueue<>(getDisplay(), (d, texts) -> {
+			String statusMessage = texts.get(texts.size() - 1);
+			statusLine.setText(statusMessage);
 		});
+
+		lastFileChecked = new GUIUpdateQueue<>(getDisplay(), (d, files) -> {
+			File lastCheckedFile = files.get(files.size() - 1);
+			statusLineText.add(Messages.getString("MainWindow.Checking_File", lastCheckedFile.getPath())); //$NON-NLS-1$
+		});
+
 		guiController.getSynchronizer().getTaskGenerator().addTaskGenerationListener(this);
 
 		boolean enabled = pm.isSchedulerEnabled();
@@ -204,7 +210,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 			profileListContainer.setLayout(new FillLayout());
 
 			// status line
-			statusLine = new StatusLine(this, SWT.NULL);
+			statusLine = new Label(this, SWT.NONE);
 			statusLine.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 			createMenu(shell);
@@ -417,10 +423,6 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		profileListContainer.layout();
 	}
 
-	public StatusLine getStatusLine() {
-		return statusLine;
-	}
-
 	public GuiController getGuiController() {
 		return guiController;
 	}
@@ -435,21 +437,22 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 
 	@Override
 	public void taskTreeStarted(TaskTree tree) {
+		// not significant
 	}
 
 	@Override
 	public void taskGenerationStarted(final File source, final File destination) {
-		statusDelayString = Messages.getString("MainWindow.Checking_File", source.getPath()); //$NON-NLS-1$
+		lastFileChecked.add(source);
 	}
 
 	@Override
 	public void taskGenerationFinished(Task task) {
-
+		// not significant
 	}
 
 	@Override
 	public void taskTreeFinished(TaskTree tree) {
-		statusLine.setMessage(Messages.getString("MainWindow.Sync_Finished")); //$NON-NLS-1$
+		statusLineText.add(Messages.getString("MainWindow.Sync_Finished")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -474,50 +477,35 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 					return;
 				}
 			}
-
 			Thread worker = new Thread(() -> doRunProfile(p, interactive));
 			worker.start();
 		}
 	}
 
 	private synchronized void doRunProfile(Profile p, boolean interactive) {
-		TaskTree t = null;
-		Timer statusDelayTimer = null;
 		try {
 			guiController.showBusyCursor(true);
-			// REVISIT wow, a timer here is pretty much overhead / specific for
-			// this generell problem
-			// FIXME: do we really need this Timer?
-			statusDelayTimer = new Timer(true);
+			TaskTree t = null;
 			try {
-				statusDelayTimer.schedule(new TimerTask() {
-					@Override
-					public void run() {
-						statusLine.setMessage(statusDelayString);
-					}
-				}, 10, 100);
-				statusDelayString = Messages.getString("MainWindow.Starting_Profile") + p.getName() + "..."; //$NON-NLS-1$ //$NON-NLS-2$
-				statusLine.setMessage(statusDelayString);
+				statusLineText.add(Messages.getString("MainWindow.Starting_Profile") + p.getName() + "..."); //$NON-NLS-1$ //$NON-NLS-2$
 				t = guiController.getSynchronizer().executeProfile(guiController.getFullSync(), p, interactive);
 				if (null == t) {
 					p.setLastError(1, Messages.getString("MainWindow.Error_Comparing_Filesystems")); //$NON-NLS-1$
-					statusLine.setMessage(Messages.getString("MainWindow.Error_Processing_Profile", p.getName())); //$NON-NLS-1$
+					statusLineText.add(Messages.getString("MainWindow.Error_Processing_Profile", p.getName())); //$NON-NLS-1$
 				}
 				else {
-					statusLine.setMessage(Messages.getString("MainWindow.Finished_Profile", p.getName())); //$NON-NLS-1$
+					statusLineText.add(Messages.getString("MainWindow.Finished_Profile", p.getName())); //$NON-NLS-1$
 				}
 			}
-			catch (Error e) {
+			catch (Exception e) {
 				ExceptionHandler.reportException(e);
 			}
 			finally {
-				statusDelayTimer.cancel();
 				guiController.showBusyCursor(false);
 			}
 			if (null != t) {
-				TaskDecisionList.show(guiController, p, t, interactive);
+				TaskDecisionList.show(guiController, t, interactive);
 			}
-
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
@@ -548,16 +536,5 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 				profileManager.save();
 			}
 		}
-	}
-
-	protected void toolItemScheduleWidgedSelected(SelectionEvent evt) {
-		ProfileManager profileManager = guiController.getProfileManager();
-		if (profileManager.isSchedulerEnabled()) {
-			profileManager.stopScheduler();
-		}
-		else {
-			profileManager.startScheduler();
-		}
-		// updateTimerEnabled();
 	}
 }

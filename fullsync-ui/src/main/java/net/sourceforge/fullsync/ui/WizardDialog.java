@@ -61,7 +61,7 @@ public abstract class WizardDialog {
 		boolean applied = apply();
 		if (applied) {
 			closing = true;
-			getDisplay().asyncExec(() -> dialogShell.close());
+			getDisplay().asyncExec(dialogShell::close);
 		}
 		return applied;
 	}
@@ -70,7 +70,7 @@ public abstract class WizardDialog {
 		boolean closed = cancel();
 		if (closed) {
 			closing = true;
-			getDisplay().asyncExec(() -> dialogShell.close());
+			getDisplay().asyncExec(dialogShell::close);
 		}
 		return closed;
 	}
@@ -79,12 +79,12 @@ public abstract class WizardDialog {
 		try {
 			dialogShell = new Shell(parent, style);
 			final Display display = dialogShell.getDisplay();
-			dialogShell.addListener(SWT.Close, (e) -> {
+			dialogShell.addListener(SWT.Close, e -> {
 				if (!closing) {
 					e.doit = !checkAndCancel();
 				}
 				else {
-					display.asyncExec(() -> dialogShell.dispose());
+					display.asyncExec(dialogShell::dispose);
 				}
 			});
 

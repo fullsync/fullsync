@@ -34,7 +34,7 @@ public class ShellStateHandler {
 	public ShellStateHandler(Shell _shell, String _name, Preferences _preferences) {
 		preferences = _preferences;
 		name = _name;
-		_shell.addListener(SWT.Close, e -> shellClosed(e));
+		_shell.addListener(SWT.Close, this::shellClosed);
 		_shell.setVisible(false);
 		_shell.getDisplay().asyncExec(() -> applyPreferences(_shell));
 	}

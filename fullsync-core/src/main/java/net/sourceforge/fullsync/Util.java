@@ -39,7 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class Util {
-	private static Logger logger = LoggerFactory.getLogger(Util.class);
+	private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
 	private Util() {
 	}

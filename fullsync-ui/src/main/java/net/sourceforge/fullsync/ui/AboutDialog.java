@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -253,7 +252,7 @@ class AboutDialog implements AsyncUIUpdate {
 		return tab;
 	}
 
-	private Composite initLicensesTab(Composite parent) throws IOException {
+	private Composite initLicensesTab(Composite parent) {
 		Composite tab = new Composite(parent, SWT.FILL);
 		tab.setLayout(new GridLayout(2, false));
 
@@ -271,10 +270,8 @@ class AboutDialog implements AsyncUIUpdate {
 		licenseText.setLayoutData(licenseTextLData);
 
 		componentCombo.addModifyListener(e -> {
-			if (null != licenseTexts) {
-				int index = componentCombo.getSelectionIndex();
-				licenseText.setText(licenseTexts.get(index));
-			}
+			int index = componentCombo.getSelectionIndex();
+			licenseText.setText(licenseTexts.get(index));
 		});
 		GuiController.backgroundExec(this);
 		return tab;

@@ -29,20 +29,17 @@ import java.util.List;
 import org.slf4j.Logger;
 
 public class BlockBuffer implements ExecutionBuffer {
-	Logger logger;
+	private final Logger logger;
 
-	int maxSize;
-	int maxEntries;
-
-	int freeBytes;
-	int numberBytes;
-	int numberEntries;
-	byte[] buffer;
-	Entry[] entries;
-
-	int flushes;
-
-	List<EntryFinishedListener> finishedListeners;
+	private int maxSize;
+	private int maxEntries;
+	private int freeBytes;
+	private int numberBytes;
+	private int numberEntries;
+	private byte[] buffer;
+	private Entry[] entries;
+	private int flushes;
+	private List<EntryFinishedListener> finishedListeners;
 
 	public BlockBuffer(Logger logger) {
 		this.logger = logger;

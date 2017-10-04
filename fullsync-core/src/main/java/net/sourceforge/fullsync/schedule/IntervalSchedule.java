@@ -22,24 +22,28 @@ package net.sourceforge.fullsync.schedule;
 import org.w3c.dom.Element;
 
 public class IntervalSchedule extends Schedule {
-	public static final String SCHEDULE_TYPE = "interval";
+	public static final String SCHEDULE_TYPE = "interval"; //$NON-NLS-1$
 
+	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_DISPLAY_UNIT = "displayUnit"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_INTERVAL = "interval"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_FIRSTINTERVAL = "firstinterval"; //$NON-NLS-1$
 	private static final long serialVersionUID = 2L;
 
-	long firstInterval;
-	long interval;
-	long next;
-	String displayUnit;
+	private long firstInterval;
+	private long interval;
+	private long next;
+	private String displayUnit;
 
 	public IntervalSchedule(Element element) {
-		if (element.hasAttribute("firstinterval")) {
-			this.firstInterval = Long.parseLong(element.getAttribute("firstinterval"));
+		if (element.hasAttribute(ATTRIBUTE_FIRSTINTERVAL)) {
+			this.firstInterval = Long.parseLong(element.getAttribute(ATTRIBUTE_FIRSTINTERVAL));
 		}
-		if (element.hasAttribute("interval")) {
-			this.interval = Long.parseLong(element.getAttribute("interval"));
+		if (element.hasAttribute(ATTRIBUTE_INTERVAL)) {
+			this.interval = Long.parseLong(element.getAttribute(ATTRIBUTE_INTERVAL));
 		}
-		if (element.hasAttribute("displayUnit")) {
-			this.displayUnit = element.getAttribute("displayUnit");
+		if (element.hasAttribute(ATTRIBUTE_DISPLAY_UNIT)) {
+			this.displayUnit = element.getAttribute(ATTRIBUTE_DISPLAY_UNIT);
 		}
 		this.next = System.currentTimeMillis() + firstInterval;
 	}
@@ -54,10 +58,10 @@ public class IntervalSchedule extends Schedule {
 
 	@Override
 	public final Element serialize(final Element element) {
-		element.setAttribute("type", SCHEDULE_TYPE);
-		element.setAttribute("firstinterval", "" + this.firstInterval);
-		element.setAttribute("interval", "" + this.interval);
-		element.setAttribute("displayUnit", this.displayUnit);
+		element.setAttribute(ATTRIBUTE_TYPE, SCHEDULE_TYPE);
+		element.setAttribute(ATTRIBUTE_FIRSTINTERVAL, Long.toString(firstInterval));
+		element.setAttribute(ATTRIBUTE_INTERVAL, Long.toString(interval));
+		element.setAttribute(ATTRIBUTE_DISPLAY_UNIT, displayUnit);
 		return element;
 	}
 

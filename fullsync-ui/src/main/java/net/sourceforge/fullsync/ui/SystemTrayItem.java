@@ -91,10 +91,12 @@ public class SystemTrayItem implements TaskGenerationListener {
 
 	@Override
 	public void taskGenerationStarted(File source, File destination) {
+		// not relevant
 	}
 
 	@Override
 	public void taskGenerationFinished(Task task) {
+		// not relevant
 	}
 
 	@Override

@@ -32,10 +32,10 @@ import net.sourceforge.fullsync.remote.RemoteManager;
  * like synchronizing a profile or perfoming a task tree.
  */
 public class Synchronizer {
+	private static final Logger logger = LoggerFactory.getLogger(Synchronizer.class);
+
 	private TaskGenerator taskGenerator;
 	private RemoteManager remoteManager;
-
-	private Logger logger = LoggerFactory.getLogger("FullSync");
 
 	public Synchronizer() {
 		taskGenerator = new TaskGeneratorImpl();
@@ -130,8 +130,8 @@ public class Synchronizer {
 
 	public IoStatistics getIoStatistics(TaskTree taskTree) {
 		// HACK omg, that's not the way io stats are intended to be generated / used
-		Logger logger = LoggerFactory.getLogger("FullSync");
-		BlockBuffer buffer = new BlockBuffer(logger);
+		Logger tmpLogger = LoggerFactory.getLogger(Synchronizer.class);
+		BlockBuffer buffer = new BlockBuffer(tmpLogger);
 		TaskExecutor queue = new FillBufferTaskExecutor(buffer);
 		return queue.createStatistics(taskTree);
 	}

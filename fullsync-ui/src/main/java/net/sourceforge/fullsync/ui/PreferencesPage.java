@@ -108,7 +108,6 @@ public class PreferencesPage extends WizardDialog {
 	private Label labelPort;
 	private Button cbListenForIncomming;
 	private Combo comboProfileList;
-	// private Button cbEnableSystemTray;
 
 	private final FullSync fullsync;
 
@@ -194,14 +193,6 @@ public class PreferencesPage extends WizardDialog {
 		cbAutostartSchedulerLData.horizontalAlignment = SWT.FILL;
 		cbAutostartSchedulerLData.horizontalSpan = 2;
 		cbAutostartScheduler.setLayoutData(cbAutostartSchedulerLData);
-
-		// system tray enabled
-//		cbEnableSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
-//		cbEnableSystemTray.setText("Enable System Tray Icon");
-//		GridData cbEnableSystemTrayLData = new GridData();
-//		cbEnableSystemTrayLData.horizontalAlignment = SWT.FILL;
-//		cbEnableSystemTrayLData.horizontalSpan = 2;
-//		cbEnableSystemTray.setLayoutData(cbEnableSystemTrayLData);
 
 		// profile list style
 		Label labelProfileListStyle = new Label(groupInterface, SWT.NONE);
@@ -295,7 +286,6 @@ public class PreferencesPage extends WizardDialog {
 		cbConfirmExit.setSelection(preferences.confirmExit());
 		cbCloseMinimizesToSystemTray.setSelection(preferences.closeMinimizesToSystemTray());
 		cbMinimizeMinimizesToSystemTray.setSelection(preferences.minimizeMinimizesToSystemTray());
-		// cbEnableSystemTray.setSelection(preferences.systemTrayEnabled());
 		comboProfileList.setText(preferences.getProfileListStyle());
 		comboLanguage.setText(getLanguageName(preferences.getLanguageCode()));
 		cbListenForIncomming.setSelection(preferences.listeningForRemoteConnections());
@@ -330,7 +320,6 @@ public class PreferencesPage extends WizardDialog {
 		preferences.setConfirmExit(cbConfirmExit.getSelection());
 		preferences.setCloseMinimizesToSystemTray(cbCloseMinimizesToSystemTray.getSelection());
 		preferences.setMinimizeMinimizesToSystemTray(cbMinimizeMinimizesToSystemTray.getSelection());
-		// preferences.setSystemTrayEnabled(cbEnableSystemTray.getSelection());
 		boolean profileListStyleChanged = !preferences.getProfileListStyle().equals(comboProfileList.getText());
 		preferences.setProfileListStyle(comboProfileList.getText());
 		preferences.setLanguageCode(getLanguageCode(comboLanguage.getText()));

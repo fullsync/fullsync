@@ -41,8 +41,8 @@ public class DateValueTest {
 		DateValue value = new DateValue();
 		value.fromString("10/08/1994");
 
-		assertEquals(value.toString(), "10/08/1994");
-		assertEquals(new DateValue("10/08/1994").toString(), "10/08/1994");
+		assertEquals("10/08/1994", value.toString());
+		assertEquals("10/08/1994", new DateValue("10/08/1994").toString());
 	}
 
 	@Test

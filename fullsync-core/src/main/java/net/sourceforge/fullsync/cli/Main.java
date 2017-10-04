@@ -35,6 +35,7 @@ import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -60,6 +61,7 @@ import net.sourceforge.fullsync.impl.ConfigurationPreferences;
 import net.sourceforge.fullsync.remote.RemoteController;
 
 public class Main implements Launcher { // NO_UCD
+	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 	private static final String PREFERENCES_PROPERTIES = "preferences.properties"; //$NON-NLS-1$
 	private static final String PROFILES_XML = "profiles.xml"; //$NON-NLS-1$
 	private static final Options options = new Options();
@@ -232,8 +234,9 @@ public class Main implements Launcher { // NO_UCD
 
 	public static void finishStartup(FullSync fullsync) {
 		RuntimeConfiguration rt = fullsync.getRuntimeConfiguration();
-		if (rt.getProfileToRun().isPresent()) {
-			handleRunProfile(fullsync, rt.getProfileToRun().get());
+		Optional<String> profile = rt.getProfileToRun();
+		if (profile.isPresent()) {
+			handleRunProfile(fullsync, profile.get());
 		}
 		if (rt.isDaemon().orElse(false).booleanValue()) {
 			handleIsDaemon(fullsync);
@@ -289,7 +292,6 @@ public class Main implements Launcher { // NO_UCD
 		RuntimeConfiguration rt = fullsync.getRuntimeConfiguration();
 		Preferences preferences = fullsync.getPreferences();
 		int port = preferences.getRemoteConnectionsPort();
-		Logger logger = LoggerFactory.getLogger("FullSync");
 		InetSocketAddress listenAddress = rt.getListenSocketAddress().orElse(new InetSocketAddress(port));
 		String password = rt.getRemotePassword().orElse(preferences.getRemoteConnectionsPassword());
 		try {

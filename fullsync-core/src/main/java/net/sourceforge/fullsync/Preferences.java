@@ -34,10 +34,6 @@ public interface Preferences {
 
 	void setMinimizeMinimizesToSystemTray(boolean bool);
 
-	boolean systemTrayEnabled();
-
-	void setSystemTrayEnabled(boolean bool);
-
 	String getProfileListStyle();
 
 	void setProfileListStyle(String profileListStyle);

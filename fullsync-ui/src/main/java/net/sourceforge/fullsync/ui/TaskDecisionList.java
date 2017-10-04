@@ -19,8 +19,12 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -34,7 +38,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
@@ -45,7 +49,6 @@ import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Location;
-import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.fs.File;
@@ -59,7 +62,7 @@ public class TaskDecisionList extends Composite {
 	private int tableLogLinesFillIndex;
 	private int tableLogLinesFillCount;
 
-	private final Map<ActionType, Image> actionImages = new HashMap<>();
+	private final Map<ActionType, Image> actionImages = new EnumMap<>(ActionType.class);
 	private final Map<Integer, Image> taskImages = new HashMap<>();
 	private Image locationSource;
 	private Image locationDestination;
@@ -128,13 +131,13 @@ public class TaskDecisionList extends Composite {
 		changeAllowed = true;
 	}
 
-	public static void show(final GuiController guiController, final Profile profile, final TaskTree task, final boolean interactive) {
+	public static void show(final GuiController guiController, final TaskTree task, final boolean interactive) {
 		final Display display = Display.getDefault();
 		display.asyncExec(() -> {
 			try {
 				final TaskDecisionPage dialog = new TaskDecisionPage(guiController.getMainShell(), guiController, task);
 				if (!interactive) {
-					dialog.addWizardDialogListener(() -> dialog.performActions());
+					dialog.addWizardDialogListener(dialog::performActions);
 				}
 				dialog.show();
 			}
@@ -288,22 +291,7 @@ public class TaskDecisionList extends Composite {
 	}
 
 	protected Image getTaskImage(Task t, Action a) {
-		Image image;
-		Integer key = calcTaskImageHash(t, a);
-		image = taskImages.get(key);
-		if (null == image) {
-			image = buildTaskImage(t, a);
-			taskImages.put(key, image);
-		}
-		return image;
-	}
-
-	protected Image getTaskImage(Action a) {
-		return getTaskImage(null, a);
-	}
-
-	protected Image getTaskImage(Task t) {
-		return getTaskImage(t, t.getCurrentAction());
+		return taskImages.computeIfAbsent(calcTaskImageHash(t, a), key -> buildTaskImage(t, a));
 	}
 
 	protected void addTaskChildren(Task task) {
@@ -314,7 +302,7 @@ public class TaskDecisionList extends Composite {
 
 	protected void addTask(Task t) {
 		if (!onlyChanges || (t.getCurrentAction().getType() != ActionType.Nothing)) {
-			Image image = getTaskImage(t);
+			Image image = getTaskImage(t, t.getCurrentAction());
 
 			TableItem item;
 			if (tableLogLinesFillIndex < tableLogLinesFillCount) {
@@ -359,7 +347,7 @@ public class TaskDecisionList extends Composite {
 
 	protected void updateTask(TableItem item) {
 		Task t = (Task) item.getData();
-		Image image = getTaskImage(t);
+		Image image = getTaskImage(t, t.getCurrentAction());
 		item.setImage(2, image);
 		item.setText(3, t.getCurrentAction().getExplanation());
 	}
@@ -386,6 +374,24 @@ public class TaskDecisionList extends Composite {
 		return same;
 	}
 
+	private void actionSelected(Event e) {
+		TableItem[] tableItemList = tableLogLines.getSelection();
+		Action targetAction = (Action) e.widget.getData();
+		for (TableItem item : tableItemList) {
+			Task task = (Task) item.getData();
+			Action[] actions = task.getActions();
+
+			for (int i = 0; i < actions.length; ++i) {
+				if (isSameAction(actions[i], targetAction)) {
+					task.setCurrentAction(i);
+					break;
+				}
+			}
+
+			updateTask(item);
+		}
+	}
+
 	protected void showPopup(int x, int y) {
 		final TableItem[] tableItemList = tableLogLines.getSelection();
 		// TODO impl some kind of ActionList supporting "containsAction"
@@ -394,38 +400,14 @@ public class TaskDecisionList extends Composite {
 			return;
 		}
 
-		Listener selListener = e -> {
-			Action targetAction = (Action) e.widget.getData();
-
-			for (TableItem item : tableItemList) {
-				Task task = (Task) item.getData();
-				Action[] actions = task.getActions();
-
-				for (int i = 0; i < actions.length; ++i) {
-					if (isSameAction(actions[i], targetAction)) {
-						task.setCurrentAction(i);
-						break;
-					}
-				}
-
-				updateTask(item);
-			}
-		};
-
-		Task[] taskList = new Task[tableItemList.length];
-		for (int i = 0; i < tableItemList.length; i++) {
-			taskList[i] = (Task) tableItemList[i].getData();
-		}
-
-		Menu m = new Menu(this);
-		MenuItem mi;
+		List<Task> taskList = Arrays.stream(tableItemList).map(i -> (Task) i.getData()).collect(Collectors.toList());
 
 		// load initial actions of first task
-		Action[] possibleActions = taskList[0].getActions().clone();
+		Action[] possibleActions = taskList.get(0).getActions().clone();
 
-		for (int iTask = 1; iTask < taskList.length; iTask++) {
+		for (int iTask = 1; iTask < taskList.size(); iTask++) {
 			// invalidate all possible actions we dont find in this actionlist
-			Action[] actions = taskList[iTask].getActions();
+			Action[] actions = taskList.get(iTask).getActions();
 
 			for (int iPosAction = 0; iPosAction < possibleActions.length; iPosAction++) {
 				Action action = possibleActions[iPosAction];
@@ -449,15 +431,17 @@ public class TaskDecisionList extends Composite {
 			}
 		}
 
-		Task referenceTask = taskList.length == 1 ? taskList[0] : null;
+		Task referenceTask = taskList.size() == 1 ? taskList.get(0) : null;
+
+		Menu m = new Menu(this);
 		for (Action action : possibleActions) {
 			if (null != action) {
 				Image image = getTaskImage(referenceTask, action);
-				mi = new MenuItem(m, SWT.NULL);
+				MenuItem mi = new MenuItem(m, SWT.NULL);
 				mi.setImage(image);
 				mi.setText(action.getType().toString() + " - " + action.getExplanation()); //$NON-NLS-1$
 				mi.setData(action);
-				mi.addListener(SWT.Selection, selListener);
+				mi.addListener(SWT.Selection, this::actionSelected);
 			}
 		}
 

@@ -23,6 +23,9 @@ package net.sourceforge.fullsync.ui;
  * this Class holds default information about UI elements.
  */
 public abstract class UISettings {
+	private UISettings() {
+	}
+
 	/**
 	 * preferred button width.
 	 */

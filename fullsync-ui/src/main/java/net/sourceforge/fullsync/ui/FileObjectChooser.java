@@ -65,7 +65,6 @@ class FileObjectChooser {
 	private Table tableItems;
 
 	private boolean result;
-	private FileObject baseFileObject;
 	private FileObject rootFileObject;
 	private FileObject activeFileObject;
 	private FileObject selectedFileObject;
@@ -304,7 +303,7 @@ class FileObjectChooser {
 		textUrlExtension.setText(rootFileObject.getName().getRelativeName(activeFileObject.getName()));
 	}
 
-	private void updateSelectedFileObject() throws FileSystemException {
+	private void updateSelectedFileObject() {
 		if (null != selectedFileObject) {
 			textFilename.setText(selectedFileObject.getName().getBaseName());
 		}
@@ -313,13 +312,12 @@ class FileObjectChooser {
 		}
 	}
 
-	public void setBaseFileObject(final FileObject _base) {
-		baseFileObject = _base;
+	public void setBaseFileObject(final FileObject base) {
 		if (null == activeFileObject) {
-			activeFileObject = baseFileObject;
+			activeFileObject = base;
 		}
 		try {
-			rootFileObject = baseFileObject.resolveFile("/");
+			rootFileObject = base.resolveFile("/");
 			labelBaseUrl.setText(rootFileObject.getName().toString());
 			setActiveFileObject(activeFileObject);
 		}

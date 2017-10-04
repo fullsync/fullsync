@@ -23,16 +23,16 @@ import java.util.Arrays;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 
-public class NiceListView extends Composite implements Listener {
+public class NiceListView extends Composite implements KeyListener {
 	private Color colorDefault;
 	private Color colorHover;
 	private Color colorSelected;
@@ -49,7 +49,7 @@ public class NiceListView extends Composite implements Listener {
 		colorForeground = getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
 		colorSelectedForegroud = getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT);
 
-		addListener(SWT.KeyDown, this);
+		addKeyListener(this);
 		initGUI();
 	}
 
@@ -74,53 +74,47 @@ public class NiceListView extends Composite implements Listener {
 	}
 
 	@Override
-	public void handleEvent(final Event event) {
-		switch (event.type) {
-			case SWT.KeyDown:
-				Control[] children = getChildren();
-				int index = Arrays.asList(children).indexOf(selected);
-				switch (event.keyCode) {
-					case SWT.ARROW_UP:
-						if (index > 0) {
-							index -= 1;
-						}
-						break;
-					case SWT.ARROW_DOWN:
-						if ((index + 1) < children.length) {
-							index += 1;
-						}
-						break;
-					case SWT.HOME:
-						if (children.length > 0) {
-							index = 0;
-						}
-						break;
-					case SWT.END:
-						if (children.length > 0) {
-							index = children.length - 1;
-						}
-						break;
-					case SWT.PAGE_UP:
-						index = Math.max(0, index - 5);
-						break;
-					case SWT.PAGE_DOWN:
-						index = Math.min(children.length - 1, index + 5);
-						break;
-					default:
-						index = -1;
-						break;
+	public void keyPressed(KeyEvent event) {
+		Control[] children = getChildren();
+		int index = Arrays.asList(children).indexOf(selected);
+		switch (event.keyCode) {
+			case SWT.ARROW_UP:
+				if (index > 0) {
+					index -= 1;
 				}
-				if (index > -1) {
-					setSelected((NiceListViewItem) children[index]);
-					Composite parent = this.getParent();
-					if (parent instanceof ScrolledComposite) {
-						ScrolledComposite sc = (ScrolledComposite) parent;
-						sc.showControl(children[index]);
-					}
+				break;
+			case SWT.ARROW_DOWN:
+				if ((index + 1) < children.length) {
+					index += 1;
 				}
+				break;
+			case SWT.HOME:
+				if (children.length > 0) {
+					index = 0;
+				}
+				break;
+			case SWT.END:
+				if (children.length > 0) {
+					index = children.length - 1;
+				}
+				break;
+			case SWT.PAGE_UP:
+				index = Math.max(0, index - 5);
+				break;
+			case SWT.PAGE_DOWN:
+				index = Math.min(children.length - 1, index + 5);
 				break;
 			default:
+				index = -1;
 				break;
+		}
+		if (index > -1) {
+			setSelected((NiceListViewItem) children[index]);
+			Composite parent = this.getParent();
+			if (parent instanceof ScrolledComposite) {
+				ScrolledComposite sc = (ScrolledComposite) parent;
+				sc.showControl(children[index]);
+			}
 		}
 	}
 
@@ -180,5 +174,10 @@ public class NiceListView extends Composite implements Listener {
 		for (Control element : children) {
 			element.dispose();
 		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// empty
 	}
 }

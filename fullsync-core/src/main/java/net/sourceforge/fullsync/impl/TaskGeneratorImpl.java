@@ -51,7 +51,6 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 		this.takeIgnoreDecider = rules;
 		this.stateDecider = new StateDeciderImpl(rules);
 		this.bufferStateDecider = new BufferStateDeciderImpl(rules);
-		// this.actionDecider = new BackupActionDecider();
 
 		return rules;
 	}
@@ -125,6 +124,5 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 		this.takeIgnoreDecider = oldrules;
 		this.stateDecider = new StateDeciderImpl(oldrules);
 		this.bufferStateDecider = new BufferStateDeciderImpl(oldrules);
-		// this.actionDecider = new PublishActionDecider();
 	}
 }

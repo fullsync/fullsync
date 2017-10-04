@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 //TODO: implement like PromptQuestion in FullSync or better yet like event handlers
 public abstract class ExceptionHandler {
-	private static Logger logger = LoggerFactory.getLogger(ExceptionHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(ExceptionHandler.class);
 
 	private static ExceptionHandler singleton = new ExceptionHandler() {
 		@Override

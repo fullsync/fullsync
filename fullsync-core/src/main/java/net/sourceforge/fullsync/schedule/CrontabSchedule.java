@@ -27,7 +27,9 @@ import org.w3c.dom.Element;
 import net.sourceforge.fullsync.DataParseException;
 
 public class CrontabSchedule extends Schedule {
-	public static final String SCHEDULE_TYPE = "crontab";
+	public static final String SCHEDULE_TYPE = "crontab"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_PATTERN = "pattern"; //$NON-NLS-1$
 
 	private static final long serialVersionUID = 2L;
 
@@ -43,8 +45,8 @@ public class CrontabSchedule extends Schedule {
 
 	public CrontabSchedule(final Element element) {
 		String pattern = "* * * * *";
-		if (element.hasAttribute("pattern")) {
-			pattern = element.getAttribute("pattern");
+		if (element.hasAttribute(ATTRIBUTE_PATTERN)) {
+			pattern = element.getAttribute(ATTRIBUTE_PATTERN);
 		}
 		try {
 			read(pattern);
@@ -56,8 +58,8 @@ public class CrontabSchedule extends Schedule {
 
 	@Override
 	public Element serialize(final Element element) {
-		element.setAttribute("type", SCHEDULE_TYPE);
-		element.setAttribute("pattern", getPattern());
+		element.setAttribute(ATTRIBUTE_TYPE, SCHEDULE_TYPE);
+		element.setAttribute(ATTRIBUTE_PATTERN, getPattern());
 		return element;
 	}
 

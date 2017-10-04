@@ -226,28 +226,18 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	}
 
 	private void updateItem(NiceListViewItem item, Profile profile) {
-		if (profile.isEnabled() && (null != profile.getSchedule())) {
-			// scheduled
-			if (profile.getLastErrorLevel() > 0) {
-				item.setImage(imageProfileErrorScheduled);
-			}
-			else {
-				item.setImage(imageProfileScheduled);
-			}
+		boolean isError = profile.getLastErrorLevel() > 0;
+		boolean isScheduled = profile.isEnabled() && (null != profile.getSchedule());
+		if (isScheduled) {
+			item.setImage(isError ? imageProfileErrorScheduled : imageProfileScheduled);
 		}
 		else {
-			// not scheduled
-			if (profile.getLastErrorLevel() > 0) {
-				item.setImage(imageProfileError);
-			}
-			else {
-				item.setImage(imageProfileDefault);
-			}
+			item.setImage(isError ? imageProfileError : imageProfileDefault);
 		}
 
 		item.setText(profile.getName());
 
-		if (profile.getLastErrorLevel() > 0) {
+		if (isError) {
 			item.setStatusText(profile.getLastErrorString());
 		}
 		else {
@@ -255,7 +245,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 			if ((null != desc) && !desc.isEmpty()) {
 				item.setStatusText(desc);
 			}
-			else if (profile.isEnabled() && (null != profile.getSchedule())) {
+			else if (isScheduled) {
 				item.setStatusText(profile.getNextUpdateText());
 			}
 			else {
@@ -317,7 +307,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	@Override
 	public void profileListChanged() {
 		// use something like a de-bounced setTimeout
-		getDisplay().syncExec(() -> populateProfileList());
+		getDisplay().syncExec(this::populateProfileList);
 	}
 
 	@Override

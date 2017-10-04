@@ -34,6 +34,7 @@ import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 
 public class FileSystemManager {
+	public static final String BUFFER_STRATEGY_SYNCFILES = "syncfiles"; //$NON-NLS-1$
 
 	private FileSystem getFilesystem(final String scheme) {
 		switch (scheme) {
@@ -85,7 +86,7 @@ public class FileSystemManager {
 
 	public Site resolveBuffering(final Site dir, final String bufferStrategy) throws FileSystemException, IOException {
 		BufferingProvider p = null;
-		if ("syncfiles".equals(bufferStrategy)) {
+		if (BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy)) {
 			p = new SyncFilesBufferingProvider();
 		}
 

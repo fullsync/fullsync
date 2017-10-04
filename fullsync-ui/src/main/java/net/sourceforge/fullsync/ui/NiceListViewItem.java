@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -138,7 +139,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 				handler.editProfile(profile);
 				break;
 			case SWT.KeyDown:
-				list.handleEvent(event);
+				list.keyPressed(new KeyEvent(event));
 				break;
 			default:
 				break;

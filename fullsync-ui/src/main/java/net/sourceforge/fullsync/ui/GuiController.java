@@ -74,7 +74,7 @@ public class GuiController implements Runnable {
 			mainShell.setSize(shellBounds.width, shellBounds.height);
 			mainShell.setText("FullSync"); //$NON-NLS-1$
 			mainShell.setImage(getImage("fullsync48.png")); //$NON-NLS-1$
-			restoreWindowState(shellBounds);
+			restoreWindowState();
 			Optional<Boolean> minimized = fullsync.getRuntimeConfiguration().isStartMinimized();
 			if (minimized.orElse(false).booleanValue()) {
 				mainShell.setVisible(false);
@@ -85,7 +85,7 @@ public class GuiController implements Runnable {
 		}
 	}
 
-	private void restoreWindowState(final Rectangle shellBounds) {
+	private void restoreWindowState() {
 		mainShell.setVisible(true);
 		WindowState ws = preferences.getWindowState(null);
 		Rectangle r = display.getBounds();
@@ -184,7 +184,7 @@ public class GuiController implements Runnable {
 			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
 			String doYouWantToQuit = Messages.getString("GuiController.Do_You_Want_To_Quit"); //$NON-NLS-1$
 			String scheduleIsStopped = Messages.getString("GuiController.Schedule_is_stopped"); //$NON-NLS-1$
-			mb.setMessage(String.format("%s\n%s", doYouWantToQuit, scheduleIsStopped)); //$NON-NLS-1$
+			mb.setMessage(String.format("%s%n%s", doYouWantToQuit, scheduleIsStopped)); //$NON-NLS-1$
 
 			// check whether the user really wants to close
 			if (mb.open() != SWT.YES) {

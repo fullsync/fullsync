@@ -21,35 +21,35 @@ package net.sourceforge.fullsync;
 
 import java.text.NumberFormat;
 
-public class Crypt {
-	private static String m_key = "FULLSYNC1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+public class Obfuscator {
+	private static String OBFUSCATION_KEY = "FULLSYNC1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //$NON-NLS-1$
 
-	private Crypt() {
+	private Obfuscator() {
 	}
 
-	public static String encrypt(String str) {
+	public static String obfuscate(String str) {
 		if (null == str) {
 			return null;
 		}
 
-		int pos = str.length() % m_key.length();
+		int pos = str.length() % OBFUSCATION_KEY.length();
 
 		StringBuilder ret = new StringBuilder();
 		NumberFormat format = NumberFormat.getIntegerInstance();
 		format.setMinimumIntegerDigits(3);
 		format.setMaximumFractionDigits(0);
 		for (int i = 0; i < str.length(); i++) {
-			ret.append(format.format(str.charAt(i) ^ m_key.charAt((i + pos) % m_key.length())));
+			ret.append(format.format(str.charAt(i) ^ OBFUSCATION_KEY.charAt((i + pos) % OBFUSCATION_KEY.length())));
 		}
 		return ret.toString();
 	}
 
-	public static String decrypt(String str) {
+	public static String deobfuscate(String str) {
 		if (null == str) {
 			return null;
 		}
 
-		int pos = (str.length() / 3) % m_key.length();
+		int pos = (str.length() / 3) % OBFUSCATION_KEY.length();
 
 		StringBuilder ret = new StringBuilder();
 		for (int i = 0; i < (str.length() / 3); i++) {
@@ -70,7 +70,7 @@ public class Crypt {
 				return "";
 			}
 			number += digit - '0';
-			ret.append((char) (number ^ m_key.charAt((i + pos) % m_key.length())));
+			ret.append((char) (number ^ OBFUSCATION_KEY.charAt((i + pos) % OBFUSCATION_KEY.length())));
 		}
 		return ret.toString();
 	}
