@@ -38,7 +38,6 @@ public class BlockBuffer implements ExecutionBuffer {
 	private int numberEntries;
 	private byte[] buffer;
 	private Entry[] entries;
-	private int flushes;
 	private List<EntryFinishedListener> finishedListeners;
 
 	public BlockBuffer(Logger logger) {
@@ -52,8 +51,6 @@ public class BlockBuffer implements ExecutionBuffer {
 
 		buffer = null;
 		entries = null;
-
-		flushes = 0;
 
 		finishedListeners = new ArrayList<>();
 	}
@@ -105,8 +102,6 @@ public class BlockBuffer implements ExecutionBuffer {
 		numberBytes = 0;
 		numberEntries = 0;
 		freeBytes = maxSize;
-
-		flushes++;
 	}
 
 	// may not read as much as length says

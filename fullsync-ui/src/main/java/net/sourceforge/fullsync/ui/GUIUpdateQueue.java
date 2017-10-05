@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Display;
 
 public class GUIUpdateQueue<ITEM> {
 	public interface GUIUpdateTask<Item> {
-		void doUpdate(Display display, List<Item> items);
+		void doUpdate(List<Item> items);
 	}
 
 	private Display display;
@@ -50,7 +50,7 @@ public class GUIUpdateQueue<ITEM> {
 				List<ITEM> items = new LinkedList<>();
 				getItems(items);
 				if (!items.isEmpty()) {
-					updateTask.doUpdate(display, items);
+					updateTask.doUpdate(items);
 				}
 			});
 		}

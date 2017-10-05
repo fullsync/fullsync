@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
+import java.util.zip.ZipFile;
 
 class WindowsLauncher {
 	public static void main(String[] args) throws Exception {
@@ -34,7 +35,7 @@ class WindowsLauncher {
 		File basePath = new File(codeSource.toURI().resolve("../lib"));
 		File coreJar = new File(basePath, "net.sourceforge.fullsync-fullsync-core.jar");
 		Method mainMethod;
-		try (JarFile fullsyncCore = new JarFile(coreJar, true, JarFile.OPEN_READ)) {
+		try (JarFile fullsyncCore = new JarFile(coreJar, true, ZipFile.OPEN_READ)) {
 			Attributes manifestAttributes = fullsyncCore.getManifest().getMainAttributes();
 			String classpath = manifestAttributes.getValue(Attributes.Name.CLASS_PATH);
 			String[] entries = classpath.split(" ");

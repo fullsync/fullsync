@@ -74,7 +74,7 @@ public class ChangeLogLoader {
 		return newerVersions;
 	}
 
-	private ChangeLogEntry loadChangeLogFile(File f) throws ParserConfigurationException, SAXException, IOException, ParseException {
+	private ChangeLogEntry loadChangeLogFile(File f) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilder parser = parserFactory.newDocumentBuilder();
 		return new ChangeLogEntry(parser.parse(f));
 	}

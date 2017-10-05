@@ -22,7 +22,6 @@ package net.sourceforge.fullsync.ui.filterrule;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.fullsync.DataParseException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
@@ -31,6 +30,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.rules.filefilter.FileAgeFileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;

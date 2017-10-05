@@ -114,12 +114,12 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 			toolItemScheduleStop.setEnabled(enabled);
 		}));
 
-		statusLineText = new GUIUpdateQueue<>(getDisplay(), (d, texts) -> {
+		statusLineText = new GUIUpdateQueue<>(getDisplay(), texts -> {
 			String statusMessage = texts.get(texts.size() - 1);
 			statusLine.setText(statusMessage);
 		});
 
-		lastFileChecked = new GUIUpdateQueue<>(getDisplay(), (d, files) -> {
+		lastFileChecked = new GUIUpdateQueue<>(getDisplay(), files -> {
 			File lastCheckedFile = files.get(files.size() - 1);
 			statusLineText.add(Messages.getString("MainWindow.Checking_File", lastCheckedFile.getPath())); //$NON-NLS-1$
 		});

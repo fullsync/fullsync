@@ -60,7 +60,7 @@ public class Messages {
 				return value;
 			}
 			else {
-				logger.warn("Missing translation for key " + key, new Exception("key exists but is empty"));
+				throw new MissingResourceException("Can't find resource for key " + key, Messages.class.getName(), key);
 			}
 		}
 		catch (Exception e) {

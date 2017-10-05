@@ -22,7 +22,6 @@ package net.sourceforge.fullsync.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.fullsync.DataParseException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
@@ -34,6 +33,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.FileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;

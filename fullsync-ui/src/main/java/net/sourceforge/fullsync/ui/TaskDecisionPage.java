@@ -214,7 +214,7 @@ public class TaskDecisionPage extends WizardDialog {
 		}
 	}
 
-	private void updateTaskStatus(Display d, List<TaskFinishedEvent> items) {
+	private void updateTaskStatus(List<TaskFinishedEvent> items) {
 		TableItem item = null;
 		tasksFinished += items.size();
 		for (TaskFinishedEvent event : items) {
