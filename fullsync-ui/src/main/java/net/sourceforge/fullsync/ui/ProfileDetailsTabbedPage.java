@@ -19,6 +19,9 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import static org.eclipse.swt.events.SelectionListener.widgetDefaultSelectedAdapter;
+import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -29,7 +32,6 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Image;
@@ -161,18 +163,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			tabSubDirs.setText("Subdirectories"); // FIXME: move text to translation file
 			tabSubDirs.setControl(initSubDirsTab(tabs));
 
-			//FIXME: update to lambda when on Oxygen
-			tabs.addSelectionListener(new SelectionListener() {
-				@Override
-				public void widgetSelected(final SelectionEvent e) {
-					treeTabsWidgetSelected(e);
-				}
-
-				@Override
-				public void widgetDefaultSelected(final SelectionEvent e) {
-					treeTabsWidgetSelected(e);
-				}
-			});
+			tabs.addSelectionListener(widgetDefaultSelectedAdapter(this::treeTabsWidgetSelected));
+			tabs.addSelectionListener(widgetSelectedAdapter(this::treeTabsWidgetSelected));
 			comboType.select(0);
 
 			if (null == this.profile) {

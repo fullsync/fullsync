@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,45 +26,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 public class ImageRepository {
-	/*
-	 * TODO for now we'll create/dispose mixed pictures in place, but
-	 * it might be interesting to build some global caching mechanism
-	 * for all mixes which is still pretty fast (say int -> image)
-	 * public static class Overlay
-	 * {
-	 * public final static int PositionBeginning = 0;
-	 * public final static int PositionCenter = 1;
-	 * public final static int PositionEnd = 2;
-	 *
-	 * private Image image;
-	 * private int positionX;
-	 * private int positionY;
-	 *
-	 * public Overlay( Image image )
-	 * {
-	 * this( image, PositionBeginning, PositionBeginning );
-	 * }
-	 * public Overlay( Image image, int positionX, int positionY )
-	 * {
-	 * this.image = image;
-	 * this.positionX = PositionBeginning;
-	 * this.positionY = PositionBeginning;
-	 * }
-	 * public Image getImage()
-	 * {
-	 * return image;
-	 * }
-	 * public int getPositionX()
-	 * {
-	 * return positionX;
-	 * }
-	 * public int getPositionY()
-	 * {
-	 * return positionY;
-	 * }
-	 * }
-	 */
-
 	private Display display;
 	private Map<String, Image> cache = new HashMap<>();
 
@@ -74,11 +34,7 @@ public class ImageRepository {
 	}
 
 	public Image getImage(String imageName) {
-		return cache.computeIfAbsent(imageName, n -> new Image(display, getImageStream(n)));
-	}
-
-	private InputStream getImageStream(String name) {
-		return getClass().getClassLoader().getResourceAsStream("net/sourceforge/fullsync/images/" + name);
+		return cache.computeIfAbsent(imageName, n -> new Image(display, new FullSyncImageDataProvider(n)));
 	}
 
 	public void dispose() {

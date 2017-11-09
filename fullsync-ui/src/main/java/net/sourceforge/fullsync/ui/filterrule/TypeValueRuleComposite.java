@@ -19,12 +19,17 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
+import static org.eclipse.swt.events.SelectionListener.widgetDefaultSelectedAdapter;
+import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
+
+import java.util.function.Consumer;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Listener;
 
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
@@ -48,12 +53,12 @@ class TypeValueRuleComposite extends RuleComposite {
 			comboTypes.add(type.name());
 		}
 		comboTypes.select(value.getType().ordinal());
-		Listener comboSelectionListener = e -> {
+		Consumer<SelectionEvent> comboSelectionListener = e -> {
 			value.setType(TypeValue.Type.values()[comboTypes.getSelectionIndex()]);
 			valueChanged(new ValueChangedEvent(value));
 		};
-		comboTypes.addListener(SWT.Selection, comboSelectionListener);
-		comboTypes.addListener(SWT.DefaultSelection, comboSelectionListener);
+		comboTypes.addSelectionListener(widgetSelectedAdapter(comboSelectionListener));
+		comboTypes.addSelectionListener(widgetDefaultSelectedAdapter(comboSelectionListener));
 	}
 
 	@Override

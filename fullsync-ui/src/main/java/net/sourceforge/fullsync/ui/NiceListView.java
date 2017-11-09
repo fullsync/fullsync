@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Control;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 
-public class NiceListView extends Composite implements KeyListener {
+public class NiceListView extends Composite {
 	private Color colorDefault;
 	private Color colorHover;
 	private Color colorSelected;
@@ -49,7 +49,7 @@ public class NiceListView extends Composite implements KeyListener {
 		colorForeground = getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
 		colorSelectedForegroud = getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT);
 
-		addKeyListener(this);
+		addKeyListener(KeyListener.keyPressedAdapter(this::keyPressed));
 		initGUI();
 	}
 
@@ -73,8 +73,7 @@ public class NiceListView extends Composite implements KeyListener {
 		return colorSelectedForegroud;
 	}
 
-	@Override
-	public void keyPressed(KeyEvent event) {
+	protected void keyPressed(KeyEvent event) {
 		Control[] children = getChildren();
 		int index = Arrays.asList(children).indexOf(selected);
 		switch (event.keyCode) {
@@ -174,10 +173,5 @@ public class NiceListView extends Composite implements KeyListener {
 		for (Control element : children) {
 			element.dispose();
 		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// empty
 	}
 }
