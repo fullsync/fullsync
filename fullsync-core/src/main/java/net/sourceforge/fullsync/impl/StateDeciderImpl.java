@@ -42,31 +42,31 @@ public class StateDeciderImpl implements StateDecider {
 		if (!source.exists()) {
 			if (!destination.exists()) {
 				logger.debug("both missing"); // FIXME: impossible?!
-				return State.InSync;
+				return State.IN_SYNC;
 			}
 			else {
 				logger.debug("source missing");
-				return State.OrphanDestination;
+				return State.ORPHAN_DESTINATION;
 			}
 		}
 		else if (!destination.exists()) {
 			logger.debug("destination missing");
-			return State.OrphanSource;
+			return State.ORPHAN_SOURCE;
 		}
 
 		if (source.isDirectory()) {
 			if (destination.isDirectory()) {
 				logger.debug("both are dirs");
-				return State.InSync;
+				return State.IN_SYNC;
 			}
 			else {
 				logger.debug("source directory, destination file");
-				return State.DirSourceFileDestination;
+				return State.DIR_SOURCE_FILE_DESTINATION;
 			}
 		}
 		else if (destination.isDirectory()) {
 			logger.debug("source file, destination directory");
-			return State.FileSourceDirDestination;
+			return State.FILE_SOURCE_DIR_DESTINATION;
 		}
 
 		return comparer.compareFiles(source, destination);

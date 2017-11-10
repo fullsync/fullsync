@@ -42,57 +42,57 @@ import net.sourceforge.fullsync.fs.File;
 public class TwoWaySyncActionDecider implements ActionDecider {
 	// TODO param keep orphans/exact copy
 
-	private static final Action addToDestination = new Action(ActionType.Add, Location.Destination, BufferUpdate.Destination, "Add");
-	private static final Action addToSource = new Action(ActionType.Add, Location.Source, BufferUpdate.Source, "Add");
-	private static final Action updateDestination = new Action(ActionType.Update, Location.Destination, BufferUpdate.Destination,
+	private static final Action addToDestination = new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION, "Add");
+	private static final Action addToSource = new Action(ActionType.ADD, Location.SOURCE, BufferUpdate.SOURCE, "Add");
+	private static final Action updateDestination = new Action(ActionType.UPDATE, Location.DESTINATION, BufferUpdate.DESTINATION,
 		"source changed, update destination");
-	private static final Action updateSource = new Action(ActionType.Update, Location.Source, BufferUpdate.Source,
+	private static final Action updateSource = new Action(ActionType.UPDATE, Location.SOURCE, BufferUpdate.SOURCE,
 		"destination changed, update source");
-	private static final Action overwriteDestination = new Action(ActionType.Update, Location.Destination, BufferUpdate.Destination,
+	private static final Action overwriteDestination = new Action(ActionType.UPDATE, Location.DESTINATION, BufferUpdate.DESTINATION,
 		"overwrite destination changes");
-	private static final Action overwriteSource = new Action(ActionType.Update, Location.Source, BufferUpdate.Source,
+	private static final Action overwriteSource = new Action(ActionType.UPDATE, Location.SOURCE, BufferUpdate.SOURCE,
 		"overwrite source changes");
-	private static final Action deleteDestinationOrphan = new Action(ActionType.Delete, Location.Destination, BufferUpdate.Destination,
+	private static final Action deleteDestinationOrphan = new Action(ActionType.DELETE, Location.DESTINATION, BufferUpdate.DESTINATION,
 		"Delete orphan in destination", false);
-	private static final Action deleteSourceOrphan = new Action(ActionType.Delete, Location.Source, BufferUpdate.Source,
+	private static final Action deleteSourceOrphan = new Action(ActionType.DELETE, Location.SOURCE, BufferUpdate.SOURCE,
 		"Delete orphan in source", false);
-	private static final Action inSync = new Action(ActionType.Nothing, Location.None, BufferUpdate.None, "In Sync");
-	private static final Action ignore = new Action(ActionType.Nothing, Location.None, BufferUpdate.None, "Ignore");
+	private static final Action inSync = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "In Sync");
+	private static final Action ignore = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "Ignore");
 
 	@Override
 	public Task getTask(final File src, final File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
 		List<Action> actions = new ArrayList<>(3);
 		State state = sd.getState(src, dst);
 		switch (state) {
-			case OrphanSource:
+			case ORPHAN_SOURCE:
 				actions.add(addToDestination);
 				actions.add(deleteSourceOrphan);
 				break;
-			case OrphanDestination:
+			case ORPHAN_DESTINATION:
 				actions.add(addToSource);
 				actions.add(deleteDestinationOrphan);
 				break;
-			case DirSourceFileDestination:
-				actions.add(new Action(ActionType.DirHereFileThereError, Location.Destination, BufferUpdate.None,
+			case DIR_SOURCE_FILE_DESTINATION:
+				actions.add(new Action(ActionType.DIR_HERE_FILE_THERE_ERROR, Location.DESTINATION, BufferUpdate.NONE,
 					"file changed from/to dir, can't overwrite"));
 				break;
-			case FileSourceDirDestination:
-				actions.add(new Action(ActionType.DirHereFileThereError, Location.Source, BufferUpdate.None,
+			case FILE_SOURCE_DIR_DESTINATION:
+				actions.add(new Action(ActionType.DIR_HERE_FILE_THERE_ERROR, Location.SOURCE, BufferUpdate.NONE,
 					"file changed from/to dir, can't overwrite"));
 				break;
-			case FileChangeSource:
+			case FILE_CHANGE_SOURCE:
 				actions.add(updateDestination);
 				actions.add(overwriteSource);
 				break;
-			case FileChangeDestination:
+			case FILE_CHANGE_DESTINATION:
 				actions.add(updateSource);
 				actions.add(overwriteDestination);
 				break;
 
-			case FileChangeUnknown:
+			case FILE_CHANGE_UNKNOWN:
 				// TODO a change but we can't tell which file is 'better' (just size changed)
 				break;
-			case InSync:
+			case IN_SYNC:
 				actions.add(inSync);
 				actions.add(overwriteDestination);
 				actions.add(overwriteSource);

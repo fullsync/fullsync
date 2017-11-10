@@ -36,7 +36,7 @@ public class BufferStateDeciderImpl extends StateDeciderImpl implements BufferSt
 	@Override
 	public State getState(File buffered) throws DataParseException, IOException {
 		if (!buffered.isBuffered()) {
-			return State.InSync;
+			return State.IN_SYNC;
 		}
 
 		File source = buffered.getUnbuffered();
@@ -44,26 +44,26 @@ public class BufferStateDeciderImpl extends StateDeciderImpl implements BufferSt
 
 		if (!source.exists()) {
 			if (!destination.exists()) {
-				return State.InSync;
+				return State.IN_SYNC;
 			}
 			else {
-				return State.OrphanDestination;
+				return State.ORPHAN_DESTINATION;
 			}
 		}
 		else if (!destination.exists()) {
-			return State.OrphanSource;
+			return State.ORPHAN_SOURCE;
 		}
 
 		if (source.isDirectory()) {
 			if (destination.isDirectory()) {
-				return State.InSync;
+				return State.IN_SYNC;
 			}
 			else {
-				return State.DirSourceFileDestination;
+				return State.DIR_SOURCE_FILE_DESTINATION;
 			}
 		}
 		else if (destination.isDirectory()) {
-			return State.FileSourceDirDestination;
+			return State.FILE_SOURCE_DIR_DESTINATION;
 		}
 
 		return comparer.compareFiles(source, destination);

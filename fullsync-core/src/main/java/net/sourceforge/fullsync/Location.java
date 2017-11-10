@@ -20,9 +20,9 @@
 package net.sourceforge.fullsync;
 
 public enum Location {
-	None,
-	Source,
-	Destination,
-	Buffer,
-	Both
+	NONE,
+	SOURCE,
+	DESTINATION,
+	BUFFER,
+	BOTH
 }

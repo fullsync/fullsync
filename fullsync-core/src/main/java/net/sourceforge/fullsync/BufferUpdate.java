@@ -20,8 +20,8 @@
 package net.sourceforge.fullsync;
 
 public enum BufferUpdate {
-	None,
-	Source,
-	Destination,
-	Both
+	NONE,
+	SOURCE,
+	DESTINATION,
+	BOTH
 }

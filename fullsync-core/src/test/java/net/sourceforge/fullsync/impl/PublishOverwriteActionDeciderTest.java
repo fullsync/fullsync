@@ -41,62 +41,62 @@ public class PublishOverwriteActionDeciderTest extends ActionDeciderTestUtil {
 	@Test
 	public void testInSync() throws Exception {
 		Task task = decider.getTask(existingTestNode, existingTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.Nothing, Location.None, BufferUpdate.None);
+		checkAction(task.getCurrentAction(), ActionType.NOTHING, Location.NONE, BufferUpdate.NONE);
 	}
 
 	@Test
 	public void testDirectoryInSync() throws Exception {
 		Task task = decider.getTask(directoryTestNode, directoryTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.Nothing, Location.None, BufferUpdate.None);
+		checkAction(task.getCurrentAction(), ActionType.NOTHING, Location.NONE, BufferUpdate.NONE);
 	}
 
 	@Test
 	public void testDestinationMissing() throws Exception {
 		Task task = decider.getTask(existingTestNode, missingTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.Add, Location.Destination, BufferUpdate.Destination);
+		checkAction(task.getCurrentAction(), ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION);
 	}
 
 	@Test
 	public void testSourceMissing() throws Exception {
 		Task task = decider.getTask(missingTestNode, existingTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.Delete, Location.Destination, BufferUpdate.Destination);
+		checkAction(task.getCurrentAction(), ActionType.DELETE, Location.DESTINATION, BufferUpdate.DESTINATION);
 	}
 
 	@Test
 	public void testSourceModifiedUpdated() throws Exception {
 		Task task = decider.getTask(largeTestNode, existingTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.Update, Location.Destination, BufferUpdate.Destination);
+		checkAction(task.getCurrentAction(), ActionType.UPDATE, Location.DESTINATION, BufferUpdate.DESTINATION);
 	}
 
 	@Test
 	public void testDestinationUpdated() throws Exception {
 		Task task = decider.getTask(existingTestNode, largeTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.Update, Location.Destination, BufferUpdate.Destination);
+		checkAction(task.getCurrentAction(), ActionType.UPDATE, Location.DESTINATION, BufferUpdate.DESTINATION);
 	}
 
 	@Ignore
 	@Test
 	public void testSourceBigger() throws Exception {
 		Task task = decider.getTask(existingBigTestNode, existingTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.NotDecidableError, Location.None, BufferUpdate.None);
+		checkAction(task.getCurrentAction(), ActionType.NOT_DECIDABLE_ERROR, Location.NONE, BufferUpdate.NONE);
 	}
 
 	@Ignore
 	@Test
 	public void testDestinationBigger() throws Exception {
 		Task task = decider.getTask(existingTestNode, existingBigTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.NotDecidableError, Location.None, BufferUpdate.None);
+		checkAction(task.getCurrentAction(), ActionType.NOT_DECIDABLE_ERROR, Location.NONE, BufferUpdate.NONE);
 	}
 
 	@Test
 	public void testFileToDirectory() throws Exception {
 		Task task = decider.getTask(existingTestNode, directoryTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.DirHereFileThereError, Location.Destination, BufferUpdate.None);
+		checkAction(task.getCurrentAction(), ActionType.DIR_HERE_FILE_THERE_ERROR, Location.DESTINATION, BufferUpdate.NONE);
 	}
 
 	@Test
 	public void testDirectoryToFile() throws Exception {
 		Task task = decider.getTask(directoryTestNode, existingTestNode, stateDecider, bufferedStateDecider);
-		checkAction(task.getCurrentAction(), ActionType.DirHereFileThereError, Location.Source, BufferUpdate.None);
+		checkAction(task.getCurrentAction(), ActionType.DIR_HERE_FILE_THERE_ERROR, Location.SOURCE, BufferUpdate.NONE);
 	}
 }

@@ -113,8 +113,8 @@ public abstract class AbstractTaskGenerator implements TaskGenerator {
 		}
 
 		TaskTree tree = new TaskTree(source, destination);
-		Action rootAction = new Action(ActionType.Nothing, Location.None, BufferUpdate.None, "Root");
-		Task root = new Task(null, null, State.InSync, new Action[] { rootAction });
+		Action rootAction = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "Root");
+		Task root = new Task(null, null, State.IN_SYNC, new Action[] { rootAction });
 		tree.setRoot(root);
 
 		for (TaskGenerationListener listener : taskGenerationListeners) {

@@ -20,24 +20,24 @@
 package net.sourceforge.fullsync;
 
 public enum ActionType {
-	Nothing,
-	Add,
-	Update,
-	Delete,
-	NotDecidableError,
-	UnexpectedChangeError,
-	DirHereFileThereError;
+	NOTHING,
+	ADD,
+	UPDATE,
+	DELETE,
+	NOT_DECIDABLE_ERROR,
+	UNEXPECTED_CHANGE_ERROR,
+	DIR_HERE_FILE_THERE_ERROR;
 
 	public boolean isError() {
 		switch (this) {
-			case Nothing:
-			case Add:
-			case Update:
-			case Delete:
+			case NOTHING:
+			case ADD:
+			case UPDATE:
+			case DELETE:
 				return false;
-			case NotDecidableError:
-			case UnexpectedChangeError:
-			case DirHereFileThereError:
+			case NOT_DECIDABLE_ERROR:
+			case UNEXPECTED_CHANGE_ERROR:
+			case DIR_HERE_FILE_THERE_ERROR:
 				return true;
 		}
 		throw new RuntimeException("Implementation bug in ActionType::isError, ordinal: " + ordinal());

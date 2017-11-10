@@ -20,12 +20,12 @@
 package net.sourceforge.fullsync;
 
 public enum State {
-	InSync,
-	OrphanSource,
-	OrphanDestination,
-	DirSourceFileDestination,
-	FileSourceDirDestination,
-	FileChangeSource,
-	FileChangeDestination,
-	FileChangeUnknown
+	IN_SYNC,
+	ORPHAN_SOURCE,
+	ORPHAN_DESTINATION,
+	DIR_SOURCE_FILE_DESTINATION,
+	FILE_SOURCE_DIR_DESTINATION,
+	FILE_CHANGE_SOURCE,
+	FILE_CHANGE_DESTINATION,
+	FILE_CHANGE_UNKNOWN
 }

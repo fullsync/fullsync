@@ -161,7 +161,29 @@ public class TaskDecisionList extends Composite {
 		locationBoth = gui.getImage("Location_Both.png"); //$NON-NLS-1$
 
 		for (ActionType action : ActionType.values()) {
-			actionImages.put(action, gui.getImage("Action_" + action.name() + ".png")); //$NON-NLS-1$ //$NON-NLS-2$
+			actionImages.put(action, gui.getImage(getActionTypeImage(action)));
+		}
+	}
+
+	private String getActionTypeImage(ActionType actionType) {
+		switch (actionType) {
+			case NOTHING:
+				return "Action_Nothing.png"; //$NON-NLS-1$
+			case ADD:
+				return "Action_Add.png"; //$NON-NLS-1$
+			case UPDATE:
+				return "Action_Update.png"; //$NON-NLS-1$
+			case DELETE:
+				return "Action_Delete.png"; //$NON-NLS-1$
+			case NOT_DECIDABLE_ERROR:
+				return "Action_NotDecidableError.png"; //$NON-NLS-1$
+			case UNEXPECTED_CHANGE_ERROR:
+				return "Action_UnexpectedChangeError.png"; //$NON-NLS-1$
+			case DIR_HERE_FILE_THERE_ERROR:
+				return "Action_DirHereFileThereError.png"; //$NON-NLS-1$
+			default:
+				assert false;
+				return "";
 		}
 	}
 
@@ -187,14 +209,14 @@ public class TaskDecisionList extends Composite {
 		if (null == t) {
 			n = null;
 		}
-		else if (location == Location.Source) {
+		else if (location == Location.SOURCE) {
 			n = t.getSource();
 		}
 		else {
 			n = t.getDestination();
 		}
 
-		int x = location == Location.Source ? 2 : (2 * 16) + 2;
+		int x = location == Location.SOURCE ? 2 : (2 * 16) + 2;
 
 		if (null == n) {
 			g.drawImage(nodeUndefined, x, 0);
@@ -209,12 +231,12 @@ public class TaskDecisionList extends Composite {
 		}
 		// TODO draw some not-existing image ?
 
-		if ((a.getLocation() == location) || (a.getLocation() == Location.Both)) {
+		if ((a.getLocation() == location) || (a.getLocation() == Location.BOTH)) {
 			Image actionImage = actionImages.get(a.getType());
 			if (null != actionImage) {
 				g.drawImage(actionImage, x, 0);
 			}
-			if (location == Location.Source) {
+			if (location == Location.SOURCE) {
 				g.drawImage(locationSource, x + 16, 0);
 			}
 			else {
@@ -226,18 +248,18 @@ public class TaskDecisionList extends Composite {
 	//FIXME: implement using ImageDataProvider?
 	protected void drawLocation(GC g, Action a) {
 		switch (a.getLocation()) {
-			case Source:
+			case SOURCE:
 				g.drawImage(locationSource, 16 + 2, 0);
 				break;
-			case Destination:
+			case DESTINATION:
 				g.drawImage(locationDestination, 16 + 2, 0);
 				break;
-			case Both:
+			case BOTH:
 				g.drawImage(locationBoth, 16 + 2, 0);
 				break;
-			case Buffer:
+			case BUFFER:
 				break;
-			case None:
+			case NONE:
 				break;
 		}
 	}
@@ -280,8 +302,8 @@ public class TaskDecisionList extends Composite {
 		Image image = new Image(null, data);
 		GC g = new GC(image);
 		try {
-			drawSide(g, t, a, Location.Source);
-			drawSide(g, t, a, Location.Destination);
+			drawSide(g, t, a, Location.SOURCE);
+			drawSide(g, t, a, Location.DESTINATION);
 			drawLocation(g, a);
 		}
 		finally {
@@ -301,7 +323,7 @@ public class TaskDecisionList extends Composite {
 	}
 
 	protected void addTask(Task t) {
-		if (!onlyChanges || (t.getCurrentAction().getType() != ActionType.Nothing)) {
+		if (!onlyChanges || (t.getCurrentAction().getType() != ActionType.NOTHING)) {
 			Image image = getTaskImage(t, t.getCurrentAction());
 
 			TableItem item;
@@ -330,12 +352,12 @@ public class TaskDecisionList extends Composite {
 	private String formatSize(final Task t) {
 		long size = -1;
 		final Action action = t.getCurrentAction();
-		if ((action.getType() == ActionType.Add) || (action.getType() == ActionType.Update)) {
+		if ((action.getType() == ActionType.ADD) || (action.getType() == ActionType.UPDATE)) {
 			switch (action.getLocation()) {
-				case Source:
+				case SOURCE:
 					size = t.getDestination().getSize();
 					break;
-				case Destination:
+				case DESTINATION:
 					size = t.getSource().getSize();
 					break;
 				default:

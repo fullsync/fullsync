@@ -147,15 +147,15 @@ public class SimplyfiedSyncRules implements RuleSet {
 	@Override
 	public State compareFiles(final File src, final File dst) {
 		if (Math.floor(src.getLastModified() / 1000.0) > Math.floor(dst.getLastModified() / 1000.0)) {
-			return State.FileChangeSource;
+			return State.FILE_CHANGE_SOURCE;
 		}
 		else if (Math.floor(src.getLastModified() / 1000.0) < Math.floor(dst.getLastModified() / 1000.0)) {
-			return State.FileChangeDestination;
+			return State.FILE_CHANGE_DESTINATION;
 		}
 		if (src.getSize() != dst.getSize()) {
-			return State.FileChangeUnknown;
+			return State.FILE_CHANGE_UNKNOWN;
 		}
-		return State.InSync;
+		return State.IN_SYNC;
 	}
 
 	/**

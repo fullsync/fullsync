@@ -127,9 +127,9 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 			File destination = task.getDestination();
 
 			switch (action.getType()) {
-				case Add:
-				case Update:
-					if (action.getLocation() == Location.Destination) {
+				case ADD:
+				case UPDATE:
+					if (action.getLocation() == Location.DESTINATION) {
 						if (source.isDirectory()) {
 							storeDirCreation(task, destination);
 						}
@@ -137,7 +137,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 							storeFileCopy(task, source, destination);
 						}
 					}
-					else if (action.getLocation() == Location.Source) {
+					else if (action.getLocation() == Location.SOURCE) {
 						if (destination.isDirectory()) {
 							storeDirCreation(task, source);
 						}
@@ -146,11 +146,11 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 						}
 					}
 					break;
-				case Delete:
-					if (action.getLocation() == Location.Destination) {
+				case DELETE:
+					if (action.getLocation() == Location.DESTINATION) {
 						storeDeleteNode(task, destination);
 					}
-					else if (action.getLocation() == Location.Source) {
+					else if (action.getLocation() == Location.SOURCE) {
 						storeDeleteNode(task, source);
 					}
 
@@ -158,7 +158,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 				default:
 					break;
 			}
-			if ((action.getBufferUpdate() != BufferUpdate.None) && !statisticsOnly) {
+			if ((action.getBufferUpdate() != BufferUpdate.NONE) && !statisticsOnly) {
 				buffer.storeEntry(new BufferUpdateEntryDescriptor(source, destination, action.getBufferUpdate()));
 			}
 		}
