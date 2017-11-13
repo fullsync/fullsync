@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync.rules.filefilter.values;
 
-import java.io.Serializable;
-
-public interface OperandValue extends Serializable {
+public interface OperandValue {
 	void fromString(String value);
 }

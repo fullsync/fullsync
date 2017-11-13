@@ -66,9 +66,4 @@ public class FullSync {
 	public RuntimeConfiguration getRuntimeConfiguration() {
 		return runtimeConfiguration;
 	}
-
-	public void disconnectRemote() {
-		profileManager.disconnectRemote();
-		synchronizer.disconnectRemote();
-	}
 }

@@ -19,13 +19,9 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import java.io.Serializable;
-
 import net.sourceforge.fullsync.fs.File;
 
-public class FileFilter implements Serializable {
-
-	private static final long serialVersionUID = 2L;
+public class FileFilter {
 	public static final int MATCH_ALL = 0;
 	public static final int MATCH_ANY = 1;
 

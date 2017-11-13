@@ -19,10 +19,6 @@
  */
 package net.sourceforge.fullsync;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,9 +32,7 @@ import org.w3c.dom.Element;
 import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 import net.sourceforge.fullsync.schedule.Schedule;
 
-public class Profile implements Serializable, Comparable<Profile> {
-	private static final long serialVersionUID = 3L;
-
+public class Profile implements Comparable<Profile> {
 	private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_ENABLED = "enabled"; //$NON-NLS-1$
@@ -249,34 +243,6 @@ public class Profile implements Serializable, Comparable<Profile> {
 	public void endUpdate() {
 		this.eventsAllowed = true;
 		notifyProfileChangeListeners();
-	}
-
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		out.writeObject(name);
-		out.writeObject(description);
-		out.writeObject(synchronizationType);
-		out.writeObject(source);
-		out.writeObject(destination);
-		out.writeObject(ruleSet);
-		out.writeObject(lastUpdate);
-		out.writeObject(schedule);
-		out.writeBoolean(enabled);
-		out.writeInt(lastErrorLevel);
-		out.writeObject(lastErrorString);
-	}
-
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		name = (String) in.readObject();
-		description = (String) in.readObject();
-		synchronizationType = (String) in.readObject();
-		source = (ConnectionDescription) in.readObject();
-		destination = (ConnectionDescription) in.readObject();
-		ruleSet = (RuleSetDescriptor) in.readObject();
-		lastUpdate = (Date) in.readObject();
-		schedule = (Schedule) in.readObject();
-		enabled = in.readBoolean();
-		lastErrorLevel = in.readInt();
-		lastErrorString = (String) in.readObject();
 	}
 
 	public Element serialize(final Document doc) {

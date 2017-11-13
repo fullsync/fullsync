@@ -19,12 +19,7 @@
  */
 package net.sourceforge.fullsync;
 
-import java.io.Serializable;
-
-public class TaskFinishedEvent implements Serializable {
-
-	private static final long serialVersionUID = 2L;
-
+public class TaskFinishedEvent {
 	private Task task;
 	private boolean successful;
 	private String errorMsg;

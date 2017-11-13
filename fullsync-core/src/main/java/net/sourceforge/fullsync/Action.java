@@ -19,11 +19,7 @@
  */
 package net.sourceforge.fullsync;
 
-import java.io.Serializable;
-
-public class Action implements Serializable {
-	private static final long serialVersionUID = 2L;
-
+public class Action {
 	private ActionType type;
 	private Location location;
 	private BufferUpdate bufferUpdate;

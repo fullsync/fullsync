@@ -41,7 +41,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	private final boolean canSetLastModifiedFile;
 	private final boolean canSetLastModifiedFolder;
 	private ConnectionDescription desc;
-	private FileObject base; //FIXME FileObject is not serializable?!
+	private FileObject base;
 	private File root;
 
 	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystemAuthProvider fsAuthProvider) throws FileSystemException {

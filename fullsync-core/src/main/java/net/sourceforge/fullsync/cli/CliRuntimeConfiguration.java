@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.cli;
 
-import java.net.InetSocketAddress;
 import java.util.Optional;
 
 import org.apache.commons.cli.CommandLine;
@@ -28,15 +27,11 @@ import net.sourceforge.fullsync.RuntimeConfiguration;
 
 public class CliRuntimeConfiguration implements RuntimeConfiguration {
 	private final Optional<String> profileToRun;
-	private final Optional<String> remotePassword;
-	private final Optional<InetSocketAddress> listenSocketAddress;
 	private final Optional<Boolean> daemon;
 	private final Optional<Boolean> startMinimized;
 
 	public CliRuntimeConfiguration(CommandLine args) {
 		profileToRun = parseProfileToRun(args);
-		remotePassword = parseRemotePassword(args);
-		listenSocketAddress = parseListenSocketAddress(args);
 		daemon = Optional.of(args.hasOption("d"));
 		startMinimized = Optional.of(args.hasOption('m'));
 	}
@@ -48,37 +43,9 @@ public class CliRuntimeConfiguration implements RuntimeConfiguration {
 		return Optional.empty();
 	}
 
-	private Optional<String> parseRemotePassword(CommandLine args) {
-		if (args.hasOption("a")) {
-			return Optional.of(args.getOptionValue("a", "admin"));
-		}
-		else if (args.hasOption("p")) {
-			return Optional.of("admin");
-		}
-		return Optional.empty();
-	}
-
-	private Optional<InetSocketAddress> parseListenSocketAddress(CommandLine args) {
-		if (args.hasOption("p")) {
-			String portStr = args.getOptionValue("p", "10000");
-			return Optional.of(new InetSocketAddress(Integer.parseInt(portStr)));
-		}
-		return Optional.empty();
-	}
-
 	@Override
 	public Optional<String> getProfileToRun() {
 		return profileToRun;
-	}
-
-	@Override
-	public Optional<String> getRemotePassword() {
-		return remotePassword;
-	}
-
-	@Override
-	public Optional<InetSocketAddress> getListenSocketAddress() {
-		return listenSocketAddress;
 	}
 
 	@Override

@@ -19,9 +19,7 @@
  */
 package net.sourceforge.fullsync;
 
-import java.io.Serializable;
-
-public interface IoStatistics extends Serializable {
+public interface IoStatistics {
 	int getFilesCopied();
 
 	int getDirsCreated();

@@ -295,46 +295,6 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 			dialog.show();
 		});
 
-		MenuItem menuItemRemoteConnection = new MenuItem(menuBarMainWindow, SWT.CASCADE);
-		menuItemRemoteConnection.setText(Messages.getString("MainWindow.Remote_Connection_Menu")); //$NON-NLS-1$
-
-		Menu menuRemoteConnection = new Menu(menuItemRemoteConnection);
-		menuItemRemoteConnection.setMenu(menuRemoteConnection);
-
-		final MenuItem connectItem = new MenuItem(menuRemoteConnection, SWT.PUSH);
-		connectItem.setText(Messages.getString("MainWindow.Connect_Menu")); //$NON-NLS-1$
-		connectItem.setAccelerator(SWT.CTRL | (SWT.SHIFT + 'C'));
-		connectItem.setEnabled(true);
-
-		final MenuItem disconnectItem = new MenuItem(menuRemoteConnection, SWT.PUSH);
-		disconnectItem.setText(Messages.getString("MainWindow.Disconnect_Menu")); //$NON-NLS-1$
-		disconnectItem.setAccelerator(SWT.CTRL | (SWT.SHIFT + 'D'));
-		disconnectItem.setEnabled(false);
-
-		connectItem.addListener(SWT.Selection, e -> {
-			WizardDialog dialog = new ConnectionPage(shell);
-			dialog.show();
-			GuiController gc = GuiController.getInstance();
-			if (gc.getProfileManager().isConnected()) {
-				connectItem.setEnabled(false);
-				disconnectItem.setEnabled(true);
-				gc.getMainShell().setImage(gc.getImage("Remote_Connect.png")); //$NON-NLS-1$
-			}
-		});
-
-		disconnectItem.addListener(SWT.Selection, e -> {
-			MessageBox mb = new MessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
-			mb.setText(Messages.getString("MainWindow.Confirmation")); //$NON-NLS-1$
-			mb.setMessage(Messages.getString("MainWindow.Do_You_Want_To_Disconnect") + " \n"); //$NON-NLS-1$ //$NON-NLS-2$
-
-			if (mb.open() == SWT.YES) {
-				guiController.getFullSync().disconnectRemote();
-				connectItem.setEnabled(true);
-				disconnectItem.setEnabled(false);
-				guiController.getMainShell().setImage(guiController.getImage("fullsync48.png")); //$NON-NLS-1$
-			}
-		});
-
 		MenuItem menuItemHelp = new MenuItem(menuBarMainWindow, SWT.CASCADE);
 		menuItemHelp.setText(Messages.getString("MainWindow.Help_Menu")); //$NON-NLS-1$
 

@@ -19,14 +19,10 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import java.io.Serializable;
-
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
-public abstract class FileFilterRule implements Serializable {
-
-	private static final long serialVersionUID = 2L;
+public abstract class FileFilterRule {
 
 	public abstract int getOperator();
 

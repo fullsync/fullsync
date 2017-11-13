@@ -19,16 +19,13 @@
  */
 package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
-public class FileFilterTree implements Serializable {
-	private static final long serialVersionUID = 2L;
-
+public class FileFilterTree {
 	private FileFilterTreeItem root = new FileFilterTreeItem();
 	private Map<String, FileFilter> itemsMap = new HashMap<>();
 

@@ -192,9 +192,7 @@ public class GuiController implements Runnable {
 			}
 		}
 
-		fullsync.disconnectRemote();
 		storeWindowState();
-
 		disposeGui();
 	}
 

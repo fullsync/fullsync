@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.net.InetSocketAddress;
-import java.rmi.RemoteException;
 import java.util.Arrays;
 
 import org.eclipse.swt.SWT;
@@ -32,14 +30,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
-import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Preferences;
-import net.sourceforge.fullsync.remote.RemoteController;
 
 public class PreferencesPage extends WizardDialog {
 	/**
@@ -101,12 +95,6 @@ public class PreferencesPage extends WizardDialog {
 	private Button cbMinimizeMinimizesToSystemTray;
 	private Combo comboLanguage;
 	private Button cbAutostartScheduler;
-	private Text textPassword;
-	private Label labelPassword;
-	private Group groupRemoteConnection;
-	private Text textListeningPort;
-	private Label labelPort;
-	private Button cbListenForIncomming;
 	private Combo comboProfileList;
 
 	private final FullSync fullsync;
@@ -228,50 +216,6 @@ public class PreferencesPage extends WizardDialog {
 		labelNeedsRestartLData.horizontalAlignment = SWT.FILL;
 		labelNeedsRestart.setLayoutData(labelNeedsRestartLData);
 
-		groupRemoteConnection = new Group(content, SWT.NONE);
-		GridLayout groupRemoteConnectionLayout = new GridLayout();
-		GridData groupRemoteConnectionLData = new GridData();
-		groupRemoteConnectionLData.horizontalAlignment = SWT.FILL;
-		groupRemoteConnectionLData.grabExcessVerticalSpace = true;
-		groupRemoteConnectionLData.verticalAlignment = SWT.FILL;
-		groupRemoteConnection.setLayoutData(groupRemoteConnectionLData);
-		groupRemoteConnectionLayout.numColumns = 2;
-		groupRemoteConnection.setLayout(groupRemoteConnectionLayout);
-		groupRemoteConnection.setText(Messages.getString("PreferencesComposite.RemoteConnection")); //$NON-NLS-1$
-
-		// enable remote connections
-		cbListenForIncomming = new Button(groupRemoteConnection, SWT.CHECK | SWT.LEFT);
-		cbListenForIncomming.setText(Messages.getString("PreferencesComposite.EnableRemoteConnections")); //$NON-NLS-1$
-		GridData cbListenForIncommingLData = new GridData();
-		cbListenForIncomming.addListener(SWT.Selection, e -> updateRemoteConnectionGroup());
-		cbListenForIncommingLData.horizontalSpan = 2;
-		cbListenForIncomming.setLayoutData(cbListenForIncommingLData);
-
-		// remote listen port
-		labelPort = new Label(groupRemoteConnection, SWT.NONE);
-		labelPort.setText(Messages.getString("PreferencesComposite.IncomingPort") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-		labelPort.setEnabled(false);
-
-		textListeningPort = new Text(groupRemoteConnection, SWT.BORDER);
-		textListeningPort.setText("10000"); //$NON-NLS-1$
-		GridData textListeningPortLData = new GridData();
-		textListeningPortLData.horizontalAlignment = SWT.FILL;
-		textListeningPortLData.grabExcessHorizontalSpace = true;
-		textListeningPort.setLayoutData(textListeningPortLData);
-		textListeningPort.setEnabled(false);
-
-		// remote password
-		labelPassword = new Label(groupRemoteConnection, SWT.NONE);
-		labelPassword.setText(Messages.getString("PreferencesComposite.IncomingPassword") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-		labelPassword.setEnabled(false);
-
-		textPassword = new Text(groupRemoteConnection, SWT.BORDER);
-		GridData textPasswordLData = new GridData();
-		textPassword.setEnabled(false);
-		textPasswordLData.horizontalAlignment = SWT.FILL;
-		textPasswordLData.grabExcessHorizontalSpace = true;
-		textPassword.setLayoutData(textPasswordLData);
-
 		updateComponent();
 		content.layout();
 	}
@@ -281,37 +225,12 @@ public class PreferencesPage extends WizardDialog {
 	 */
 	public void updateComponent() {
 		Preferences preferences = fullsync.getPreferences();
-		textPassword.setEchoChar('*');
-
 		cbConfirmExit.setSelection(preferences.confirmExit());
 		cbCloseMinimizesToSystemTray.setSelection(preferences.closeMinimizesToSystemTray());
 		cbMinimizeMinimizesToSystemTray.setSelection(preferences.minimizeMinimizesToSystemTray());
 		comboProfileList.setText(preferences.getProfileListStyle());
 		comboLanguage.setText(getLanguageName(preferences.getLanguageCode()));
-		cbListenForIncomming.setSelection(preferences.listeningForRemoteConnections());
-		textListeningPort.setText(String.valueOf(preferences.getRemoteConnectionsPort()));
-		textPassword.setText(preferences.getRemoteConnectionsPassword());
 		cbAutostartScheduler.setSelection(preferences.getAutostartScheduler());
-		updateRemoteConnectionGroup();
-	}
-
-	/**
-	 * enable / disable the controls for remote connections according to the checkbox.
-	 */
-	private void updateRemoteConnectionGroup() {
-		if (cbListenForIncomming.getSelection()) {
-			labelPort.setEnabled(true);
-			textListeningPort.setEnabled(true);
-			labelPassword.setEnabled(true);
-			textPassword.setEnabled(true);
-		}
-		else {
-			labelPort.setEnabled(false);
-			textListeningPort.setEnabled(false);
-			labelPassword.setEnabled(false);
-			textPassword.setEnabled(false);
-		}
-
 	}
 
 	@Override
@@ -327,65 +246,6 @@ public class PreferencesPage extends WizardDialog {
 
 		if (profileListStyleChanged) {
 			GuiController.getInstance().getMainWindow().createProfileList();
-		}
-
-		boolean listenForIncoming = cbListenForIncomming.getSelection();
-		preferences.setListeningForRemoteConnections(listenForIncoming);
-		int port = -1;
-		String password = null;
-
-		if (listenForIncoming) {
-			try {
-				port = Integer.parseInt(textListeningPort.getText());
-			}
-			catch (NumberFormatException e) {
-				ExceptionHandler.reportException(e);
-			}
-
-			preferences.setRemoteConnectionsPort(port);
-
-			password = textPassword.getText();
-			preferences.setRemoteConnectionsPassword(password);
-
-			if (RemoteController.getInstance().isActive()) {
-				int oldPort = RemoteController.getInstance().getListenAddres().getPort();
-
-				RemoteController.getInstance().setPassword(password);
-
-				if (oldPort != port) {
-					MessageBox mb = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
-					mb.setText(Messages.getString("PreferencesComposite.Warning")); //$NON-NLS-1$
-					mb.setMessage(Messages.getString("PreferencesComposite.RequiresRestart")); //$NON-NLS-1$
-					mb.open();
-				}
-
-			}
-			else {
-				if (port > 0) {
-					try {
-						RemoteController.getInstance().startServer(new InetSocketAddress(port), password, fullsync);
-					}
-					catch (RemoteException e) {
-						ExceptionHandler.reportException(e);
-						MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
-						mb.setText(Messages.getString("PreferencesComposite.ConnectionError")); //$NON-NLS-1$
-						mb.setMessage(Messages.getString("PreferencesComposite.UnableToStart") + ".\n(" + e.getMessage() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						mb.open();
-					}
-				}
-			}
-		}
-		else {
-			try {
-				RemoteController.getInstance().stopServer();
-			}
-			catch (RemoteException e) {
-				ExceptionHandler.reportException(e);
-				MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
-				mb.setText(Messages.getString("PreferencesComposite.ConnectionError")); //$NON-NLS-1$
-				mb.setMessage(Messages.getString("PreferencesComposite.UnableToStop") + ".\n(" + e.getMessage() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				mb.open();
-			}
 		}
 
 		preferences.save();
