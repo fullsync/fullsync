@@ -38,18 +38,6 @@ public interface Preferences {
 
 	void setProfileListStyle(String profileListStyle);
 
-	boolean listeningForRemoteConnections();
-
-	void setListeningForRemoteConnections(boolean bool);
-
-	int getRemoteConnectionsPort();
-
-	void setRemoteConnectionsPort(int port);
-
-	String getRemoteConnectionsPassword();
-
-	void setRemoteConnectionsPassword(String password);
-
 	boolean getAutostartScheduler();
 
 	void setAutostartScheduler(boolean bool);

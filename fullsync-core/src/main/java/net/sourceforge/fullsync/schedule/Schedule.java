@@ -19,13 +19,10 @@
  */
 package net.sourceforge.fullsync.schedule;
 
-import java.io.Serializable;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public abstract class Schedule implements Serializable {
-	private static final long serialVersionUID = 2L;
+public abstract class Schedule {
 	private static final String ELEMENT_NAME = "Schedule"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 

@@ -22,10 +22,9 @@ package net.sourceforge.fullsync.fs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.Collection;
 
-public interface File extends Serializable {
+public interface File {
 	String getName();
 
 	String getPath();

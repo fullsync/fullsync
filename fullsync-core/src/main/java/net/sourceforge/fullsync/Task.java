@@ -19,16 +19,12 @@
  */
 package net.sourceforge.fullsync;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.fullsync.fs.File;
 
-public class Task implements Serializable {
-	private static final long serialVersionUID = 2L;
-
+public class Task {
 	private File source;
 	private File destination;
 	private State state;
@@ -126,24 +122,5 @@ public class Task implements Serializable {
 	@Override
 	public int hashCode() {
 		return source.getPath().hashCode();
-	}
-
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.writeObject(source);
-		out.writeObject(destination);
-		out.writeObject(state);
-		out.writeObject(actions);
-		out.writeInt(currentAction);
-		out.writeObject(children);
-	}
-
-	@SuppressWarnings("unchecked")
-	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-		this.source = (File) in.readObject();
-		this.destination = (File) in.readObject();
-		this.state = (State) in.readObject();
-		this.actions = (Action[]) in.readObject();
-		this.currentAction = in.readInt();
-		this.children = (ArrayList<Task>) in.readObject();
 	}
 }

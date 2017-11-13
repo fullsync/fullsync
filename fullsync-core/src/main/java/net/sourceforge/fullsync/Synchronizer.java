@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import net.sourceforge.fullsync.buffer.BlockBuffer;
 import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 import net.sourceforge.fullsync.impl.TaskGeneratorImpl;
-import net.sourceforge.fullsync.remote.RemoteManager;
 
 /**
  * This class should provide wrappers for most common synchronization tasks
@@ -35,7 +34,6 @@ public class Synchronizer {
 	private static final Logger logger = LoggerFactory.getLogger(Synchronizer.class);
 
 	private TaskGenerator taskGenerator;
-	private RemoteManager remoteManager;
 
 	public Synchronizer() {
 		taskGenerator = new TaskGeneratorImpl();
@@ -48,12 +46,7 @@ public class Synchronizer {
 
 	public synchronized TaskTree executeProfile(FullSync fullsync, Profile profile, boolean interactive) {
 		try {
-			if (null != remoteManager) {
-				return remoteManager.executeProfile(profile.getName());
-			}
-			else {
-				return taskGenerator.execute(fullsync, profile, interactive);
-			}
+			return taskGenerator.execute(fullsync, profile, interactive);
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
@@ -81,32 +74,26 @@ public class Synchronizer {
 	 */
 	public int performActions(TaskTree taskTree, TaskFinishedListener listener) {
 		try {
-			if (null != remoteManager) {
-				logger.info("Remote Synchronization started");
-				remoteManager.performActions(taskTree, listener);
+			logger.info("Synchronization started");
+			logger.info("  source:      " + taskTree.getSource().getConnectionDescription().getDisplayPath());
+			logger.info("  destination: " + taskTree.getDestination().getConnectionDescription().getDisplayPath());
+
+			BlockBuffer buffer = new BlockBuffer(logger);
+			TaskExecutor queue = new FillBufferTaskExecutor(buffer);
+
+			if (null != listener) {
+				queue.addTaskFinishedListener(listener);
 			}
-			else {
-				logger.info("Synchronization started");
-				logger.info("  source:      " + taskTree.getSource().getConnectionDescription().getDisplayPath());
-				logger.info("  destination: " + taskTree.getDestination().getConnectionDescription().getDisplayPath());
 
-				BlockBuffer buffer = new BlockBuffer(logger);
-				TaskExecutor queue = new FillBufferTaskExecutor(buffer);
+			buffer.load();
+			queue.enqueue(taskTree);
+			queue.flush();
+			buffer.unload();
 
-				if (null != listener) {
-					queue.addTaskFinishedListener(listener);
-				}
-
-				buffer.load();
-				queue.enqueue(taskTree);
-				queue.flush();
-				buffer.unload();
-
-				taskTree.getSource().flush();
-				taskTree.getDestination().flush();
-				taskTree.getSource().close();
-				taskTree.getDestination().close();
-			}
+			taskTree.getSource().flush();
+			taskTree.getDestination().flush();
+			taskTree.getSource().close();
+			taskTree.getDestination().close();
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
@@ -118,14 +105,6 @@ public class Synchronizer {
 		logger.info("synchronization successful"); // TODO ...with x errors and y warnings
 		logger.info("------------------------------------------------------------");
 		return 0;
-	}
-
-	public void setRemoteConnection(RemoteManager remoteManager) {
-		this.remoteManager = remoteManager;
-	}
-
-	public void disconnectRemote() {
-		remoteManager = null;
 	}
 
 	public IoStatistics getIoStatistics(TaskTree taskTree) {

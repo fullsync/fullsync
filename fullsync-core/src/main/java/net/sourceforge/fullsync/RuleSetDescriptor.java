@@ -19,16 +19,12 @@
  */
 package net.sourceforge.fullsync;
 
-import java.io.Serializable;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 
-public abstract class RuleSetDescriptor implements Serializable {
-	private static final long serialVersionUID = 2L;
-
+public abstract class RuleSetDescriptor {
 	private static final String ELEMENT_NAME = "RuleSetDescriptor"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 

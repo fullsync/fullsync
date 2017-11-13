@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +45,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import net.sourceforge.fullsync.remote.RemoteManager;
 import net.sourceforge.fullsync.schedule.Schedule;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
 import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
@@ -59,7 +57,7 @@ import net.sourceforge.fullsync.schedule.SchedulerImpl;
  * A ProfileManager handles persistence of Profiles and provides
  * a scheduler for creating events when a Profile should be executed.
  */
-public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource, SchedulerChangeListener {
+public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource {
 	static class ProfileManagerSchedulerTask implements ScheduleTask {
 		private ProfileManager profileManager;
 		private Profile profile;
@@ -90,107 +88,16 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	private String configFile;
+	private final Scheduler scheduler;
 	private List<Profile> profiles = new ArrayList<>();
 	private List<ProfileListChangeListener> changeListeners = new ArrayList<>();
 	private List<ProfileSchedulerListener> scheduleListeners = new ArrayList<>();
-	private boolean remoteConnected = false;
-
-	// FIXME this list is only needed because we need to give feedback from
-	// the local scheduler and a remote scheduler.
-	private List<SchedulerChangeListener> schedulerChangeListeners = new ArrayList<>();
-
-	// TODO the scheduler shouldn't reside within the profile manager
-	// but just use it as task source
-	private Scheduler scheduler;
-
-	// FIXME omg, a profilemanager having a remoteprofilemanager?
-	// please make a dao of me, with save/load and that's it
-	// don't forget calling profilesChangeEvent if dao is changed
-	private RemoteManager remoteManager;
-	private ProfileListChangeListener remoteListener;
-
-	protected ProfileManager() {
-		scheduler = new SchedulerImpl(this);
-		scheduler.addSchedulerChangeListener(this);
-	}
 
 	public ProfileManager(String configFile) throws SAXException, IOException, ParserConfigurationException, FactoryConfigurationError {
-		this();
+		scheduler = new SchedulerImpl(this);
 		this.configFile = configFile;
 		loadProfiles(configFile);
 		Collections.sort(profiles);
-	}
-
-	public void setRemoteConnection(RemoteManager remoteManager) throws RemoteException {
-		this.remoteManager = remoteManager;
-
-		remoteListener = new ProfileListChangeListener() {
-			@Override
-			public void profileListChanged() {
-				updateRemoteProfiles();
-			}
-
-			@Override
-			public void profileChanged(Profile p) {
-				updateRemoteProfiles();
-			}
-		};
-		remoteManager.addProfileListChangeListener(remoteListener);
-		remoteManager.addSchedulerChangeListener(this);
-		updateRemoteProfiles();
-		fireSchedulerChangedEvent();
-	}
-
-	private void updateRemoteProfiles() {
-		this.profiles = new ArrayList<>();
-
-		Profile[] remoteprofiles = remoteManager.getProfiles();
-		for (Profile remoteprofile : remoteprofiles) {
-			this.profiles.add(remoteprofile);
-			remoteprofile.addProfileChangeListener(this);
-		}
-
-		fireProfilesChangeEvent();
-	}
-
-	public void disconnectRemote() {
-		if (null != remoteManager) {
-			try {
-				remoteManager.removeProfileListChangeListener(remoteListener);
-				remoteManager.removeSchedulerChangeListener(this);
-			}
-			catch (RemoteException e) {
-				ExceptionHandler.reportException(e);
-			}
-			remoteManager = null;
-
-			this.profiles = new ArrayList<>();
-
-			try {
-				loadProfiles(configFile);
-			}
-			catch (Exception e) {
-				ExceptionHandler.reportException(e);
-			}
-			remoteConnected = false;
-			fireProfilesChangeEvent();
-		}
-	}
-
-	/**
-	 * Check for the existence of a successful remote connection.
-	 * @return true if a remote connection is active.
-	 */
-	public final boolean isConnected() {
-		return null != remoteManager;
-	}
-
-	/**
-	 * This method in necessary to avoid self RMI connections.
-	 * @return true if this instance is connected to another instance, or an attempt to connect is running
-	 */
-	public final boolean isConnectedToRemoteInstance() {
-		return remoteConnected;
 	}
 
 	public boolean loadProfiles(String profilesFileName)
@@ -258,27 +165,14 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 	}
 
 	public void startScheduler() {
-		if (null != remoteManager) {
-			remoteManager.startTimer();
-		}
-		else {
-			scheduler.start();
-		}
+		scheduler.start();
 	}
 
 	public void stopScheduler() {
-		if (null != remoteManager) {
-			remoteManager.stopTimer();
-		}
-		else {
-			scheduler.stop();
-		}
+		scheduler.stop();
 	}
 
 	public boolean isSchedulerEnabled() {
-		if (null != remoteManager) {
-			return remoteManager.isSchedulerEnabled();
-		}
 		return scheduler.isEnabled();
 	}
 
@@ -341,74 +235,51 @@ public class ProfileManager implements ProfileChangeListener, ScheduleTaskSource
 		}
 	}
 
-	@Override
-	public void schedulerStatusChanged(boolean status) {
-		fireSchedulerChangedEvent();
-	}
-
 	public void addSchedulerChangeListener(SchedulerChangeListener listener) {
-		schedulerChangeListeners.add(listener);
+		scheduler.addSchedulerChangeListener(listener);
 	}
 
 	public void removeSchedulerChangeListener(SchedulerChangeListener listener) {
-		schedulerChangeListeners.remove(listener);
-	}
-
-	protected void fireSchedulerChangedEvent() {
-		boolean enabled = isSchedulerEnabled();
-		for (SchedulerChangeListener listener : schedulerChangeListeners) {
-			listener.schedulerStatusChanged(enabled);
-		}
+		scheduler.removeSchedulerChangeListener(listener);
 	}
 
 	public void save() {
 		try {
-			if (null != remoteManager) {
-				remoteManager.removeProfileListChangeListener(remoteListener);
-				remoteManager.save(profiles.toArray(new Profile[0]));
-				remoteManager.addProfileListChangeListener(remoteListener);
+			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document doc = docBuilder.newDocument();
+
+			Element e = doc.createElement("Profiles");
+			e.setAttribute("version", "1.1");
+			profiles.stream()
+				.map(p -> p.serialize(doc))
+				.forEachOrdered(e::appendChild);
+			doc.appendChild(e);
+
+			TransformerFactory fac = TransformerFactory.newInstance();
+			fac.setAttribute("indent-number", 2);
+			Transformer tf = fac.newTransformer();
+			tf.setOutputProperty(OutputKeys.METHOD, "xml");
+			tf.setOutputProperty(OutputKeys.VERSION, "1.0");
+			tf.setOutputProperty(OutputKeys.INDENT, "yes");
+			tf.setOutputProperty(OutputKeys.STANDALONE, "no");
+			DOMSource source = new DOMSource(doc);
+			File newCfgFile = new File(configFile + ".tmp");
+			try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(newCfgFile), StandardCharsets.UTF_8)) {
+				tf.transform(source, new StreamResult(osw));
+				osw.flush();
 			}
-			else {
-				DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				Document doc = docBuilder.newDocument();
-
-				Element e = doc.createElement("Profiles");
-				e.setAttribute("version", "1.1");
-				profiles.stream()
-					.map(p -> p.serialize(doc))
-					.forEachOrdered(e::appendChild);
-				doc.appendChild(e);
-
-				TransformerFactory fac = TransformerFactory.newInstance();
-				fac.setAttribute("indent-number", 2);
-				Transformer tf = fac.newTransformer();
-				tf.setOutputProperty(OutputKeys.METHOD, "xml");
-				tf.setOutputProperty(OutputKeys.VERSION, "1.0");
-				tf.setOutputProperty(OutputKeys.INDENT, "yes");
-				tf.setOutputProperty(OutputKeys.STANDALONE, "no");
-				DOMSource source = new DOMSource(doc);
-				File newCfgFile = new File(configFile + ".tmp");
-				try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(newCfgFile), StandardCharsets.UTF_8)) {
-					tf.transform(source, new StreamResult(osw));
-					osw.flush();
+			try {
+				if (0 == newCfgFile.length()) {
+					throw new Exception("Storing profiles failed (size = 0)");
 				}
-				try {
-					if (0 == newCfgFile.length()) {
-						throw new Exception("Storing profiles failed (size = 0)");
-					}
-					Util.fileRenameToPortableLegacy(newCfgFile.getName(), configFile);
-				}
-				finally {
-					Files.deleteIfExists(newCfgFile.toPath());
-				}
+				Util.fileRenameToPortableLegacy(newCfgFile.getName(), configFile);
+			}
+			finally {
+				Files.deleteIfExists(newCfgFile.toPath());
 			}
 		}
 		catch (Exception ex) {
 			ExceptionHandler.reportException(ex);
 		}
-	}
-
-	public void setRemoteConnected(boolean connected) {
-		remoteConnected = connected;
 	}
 }

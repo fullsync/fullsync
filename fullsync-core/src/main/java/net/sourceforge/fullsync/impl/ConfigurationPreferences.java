@@ -28,7 +28,6 @@ import java.io.Writer;
 import java.util.Properties;
 
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.Obfuscator;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.WindowState;
@@ -40,9 +39,6 @@ public class ConfigurationPreferences implements Preferences {
 	private static final String PREFERENCE_HELP_SHOWN = "Interface.HelpShown";
 	private static final String PREFERENCE_LANGUAGE_CODE = "Interface.LanguageCode";
 	private static final String PREFERENCE_AUTOSTART_SCHEDULER = "Interface.AutostartScheduler";
-	private static final String PREFERENCE_REMOTE_CONNECTION_PASSWORD = "RemoteConnection.password";
-	private static final String PREFERENCE_REMOTE_CONNECTION_PORT = "RemoteConnection.port";
-	private static final String PREFERENCE_REMOTE_CONNECTION_ACTIVE = "RemoteConnection.active";
 	private static final String PREFERENCE_PROFILE_LIST_STYLE = "Interface.ProfileList.Style";
 	private static final String PREFERENCE_MINIMIZE_MINIMIZES_TO_SYSTEM_TRAY = "Interface.MinimizeMinimizesToSystemTray";
 	private static final String PREFERENCE_CLOSE_MINIMIZES_TO_SYSTEM_TRAY = "Interface.CloseMinimizesToSystemTray";
@@ -152,36 +148,6 @@ public class ConfigurationPreferences implements Preferences {
 	@Override
 	public void setProfileListStyle(final String profileListStyle) {
 		setProperty(PREFERENCE_PROFILE_LIST_STYLE, profileListStyle);
-	}
-
-	@Override
-	public boolean listeningForRemoteConnections() {
-		return getProperty(PREFERENCE_REMOTE_CONNECTION_ACTIVE, false);
-	}
-
-	@Override
-	public void setListeningForRemoteConnections(final boolean bool) {
-		setProperty(PREFERENCE_REMOTE_CONNECTION_ACTIVE, bool);
-	}
-
-	@Override
-	public int getRemoteConnectionsPort() {
-		return getProperty(PREFERENCE_REMOTE_CONNECTION_PORT, 10000);
-	}
-
-	@Override
-	public void setRemoteConnectionsPort(final int port) {
-		setProperty(PREFERENCE_REMOTE_CONNECTION_PORT, port);
-	}
-
-	@Override
-	public String getRemoteConnectionsPassword() {
-		return Obfuscator.deobfuscate(getProperty(PREFERENCE_REMOTE_CONNECTION_PASSWORD, ""));
-	}
-
-	@Override
-	public void setRemoteConnectionsPassword(final String password) {
-		setProperty(PREFERENCE_REMOTE_CONNECTION_PASSWORD, Obfuscator.obfuscate(password));
 	}
 
 	@Override

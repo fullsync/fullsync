@@ -19,13 +19,9 @@
  */
 package net.sourceforge.fullsync;
 
-import java.io.Serializable;
-
 import net.sourceforge.fullsync.fs.Site;
 
-public class TaskTree implements Serializable {
-	private static final long serialVersionUID = 2L;
-
+public class TaskTree {
 	private Site source;
 	private Site destination;
 	private Task root;

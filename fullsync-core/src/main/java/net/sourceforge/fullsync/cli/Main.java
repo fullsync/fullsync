@@ -25,12 +25,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
-import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
-import java.rmi.RemoteException;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,13 +42,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Launcher;
-import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuntimeConfiguration;
@@ -58,10 +52,8 @@ import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.impl.ConfigurationPreferences;
-import net.sourceforge.fullsync.remote.RemoteController;
 
 public class Main implements Launcher { // NO_UCD
-	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 	private static final String PREFERENCES_PROPERTIES = "preferences.properties"; //$NON-NLS-1$
 	private static final String PROFILES_XML = "profiles.xml"; //$NON-NLS-1$
 	private static final Options options = new Options();
@@ -241,9 +233,6 @@ public class Main implements Launcher { // NO_UCD
 		if (rt.isDaemon().orElse(false).booleanValue()) {
 			handleIsDaemon(fullsync);
 		}
-		if (rt.getListenSocketAddress().isPresent() || fullsync.getPreferences().listeningForRemoteConnections()) {
-			handleListening(fullsync);
-		}
 		if (fullsync.getPreferences().getAutostartScheduler()) {
 			fullsync.getProfileManager().startScheduler();
 		}
@@ -286,21 +275,6 @@ public class Main implements Launcher { // NO_UCD
 			}
 		});
 		profileManager.startScheduler();
-	}
-
-	private static void handleListening(FullSync fullsync) {
-		RuntimeConfiguration rt = fullsync.getRuntimeConfiguration();
-		Preferences preferences = fullsync.getPreferences();
-		int port = preferences.getRemoteConnectionsPort();
-		InetSocketAddress listenAddress = rt.getListenSocketAddress().orElse(new InetSocketAddress(port));
-		String password = rt.getRemotePassword().orElse(preferences.getRemoteConnectionsPassword());
-		try {
-			RemoteController.getInstance().startServer(listenAddress, password, fullsync);
-			logger.info("Remote Interface available on: {}:{}", listenAddress.getHostString(), listenAddress.getPort());
-		}
-		catch (RemoteException e) {
-			ExceptionHandler.reportException(e);
-		}
 	}
 
 	@Override

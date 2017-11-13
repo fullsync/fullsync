@@ -21,7 +21,6 @@ package net.sourceforge.fullsync;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -34,7 +33,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ConnectionDescription implements Serializable {
+public class ConnectionDescription {
 	private static final String ELEMENT_SECRET_PARAM = "SecretParam"; //$NON-NLS-1$
 	private static final String ELEMENT_PARAM = "Param"; //$NON-NLS-1$
 	public static final String PARAMETER_BUFFER_STRATEGY = "bufferStrategy"; //$NON-NLS-1$
@@ -47,8 +46,6 @@ public class ConnectionDescription implements Serializable {
 	private static final String ATTRIBUTE_BUFFER_STRATEGY = "buffer"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_USERNAME = PARAMETER_USERNAME;
 	private static final String ATTRIBUTE_PASSWORD = PARAMETER_PASSWORD;
-
-	private static final long serialVersionUID = 2L;
 
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionDescription.class);
 
