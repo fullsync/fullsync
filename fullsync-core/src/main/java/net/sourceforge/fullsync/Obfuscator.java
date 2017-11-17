@@ -22,7 +22,7 @@ package net.sourceforge.fullsync;
 import java.text.NumberFormat;
 
 public class Obfuscator {
-	private static String OBFUSCATION_KEY = "FULLSYNC1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //$NON-NLS-1$
+	private static final String OBFUSCATION_KEY = "FULLSYNC1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //$NON-NLS-1$
 
 	private Obfuscator() {
 	}

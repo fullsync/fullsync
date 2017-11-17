@@ -31,17 +31,14 @@ public class CrontabSchedule extends Schedule {
 	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_PATTERN = "pattern"; //$NON-NLS-1$
 
-	private static final long serialVersionUID = 2L;
-
 	private String origPattern;
-
 	private CrontabPart.Instance minutes;
 	private CrontabPart.Instance hours;
 	private CrontabPart.Instance daysOfMonth;
 	private CrontabPart.Instance months;
 	private CrontabPart.Instance daysOfWeek;
 
-	private transient long lastExecution;
+	private long lastExecution;
 
 	public CrontabSchedule(final Element element) {
 		String pattern = "* * * * *";

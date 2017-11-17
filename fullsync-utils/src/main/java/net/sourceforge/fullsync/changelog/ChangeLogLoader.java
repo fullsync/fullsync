@@ -21,7 +21,6 @@ package net.sourceforge.fullsync.changelog;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,7 +45,7 @@ public class ChangeLogLoader {
 	}
 
 	public List<ChangeLogEntry> load(File srcDir, String pattern)
-		throws ParserConfigurationException, SAXException, IOException, ParseException {
+		throws ParserConfigurationException, SAXException, IOException {
 		Pattern p = Pattern.compile(pattern);
 		List<ChangeLogEntry> changelogEntries = new LinkedList<>();
 		String[] children = srcDir.list();

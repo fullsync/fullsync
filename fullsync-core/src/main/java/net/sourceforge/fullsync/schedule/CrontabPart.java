@@ -49,12 +49,6 @@ public class CrontabPart {
 			this.all = parseToken(pattern);
 		}
 
-		public Instance(boolean[] bArray) {
-			this.bArray = new boolean[high + 1 + offset];
-			this.pattern = generatePattern();
-			this.all = false;
-		}
-
 		public Instance(int[] intArray, int intOffset) {
 			bArray = new boolean[high + 1 + offset];
 			setIntArray(intArray, intOffset);

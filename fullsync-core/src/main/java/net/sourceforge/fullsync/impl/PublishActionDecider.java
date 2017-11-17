@@ -49,7 +49,8 @@ public class PublishActionDecider implements ActionDecider {
 	private static final Action overwriteDestination = new Action(ActionType.UPDATE, DESTINATION, BufferUpdate.DESTINATION,
 		"overwrite destination");
 	private static final Action updateDestination = new Action(ActionType.UPDATE, DESTINATION, BufferUpdate.DESTINATION, "Source changed");
-	private static final Action unexpectedDestinationChanged = new Action(ActionType.UNEXPECTED_CHANGE_ERROR, DESTINATION, BufferUpdate.NONE,
+	private static final Action unexpectedDestinationChanged = new Action(ActionType.UNEXPECTED_CHANGE_ERROR, DESTINATION,
+		BufferUpdate.NONE,
 		"Destination changed");
 	private static final Action unexpectedBothChanged = new Action(ActionType.UNEXPECTED_CHANGE_ERROR, DESTINATION, BufferUpdate.NONE,
 		"Source changed, but changed remotely too");

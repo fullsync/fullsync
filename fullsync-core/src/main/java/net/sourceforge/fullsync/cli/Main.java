@@ -89,25 +89,6 @@ public class Main implements Launcher { // NO_UCD
 			.hasArg(false)
 			.build();
 		options.addOption(daemon);
-
-		// REVISIT somehow i don't like -p so much, but it's the standard for specifying ports.
-		// the problem is that it implies "enable remote connection" in our case what
-		// i consider more important, espec because the port is optional.
-		Option port = Option.builder("p")
-			.longOpt("remoteport")
-			.desc("accept incoming connection on the specified port or 10000")
-			.optionalArg(true)
-			.argName("port")
-			.build();
-		options.addOption(port);
-
-		Option password = Option.builder("a")
-			.longOpt("password")
-			.desc("password for incoming connections")
-			.optionalArg(true)
-			.argName("passwd")
-			.build();
-		options.addOption(password);
 		// + interactive mode
 	}
 
