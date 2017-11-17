@@ -57,7 +57,7 @@ public class Profile implements Comparable<Profile> {
 	private transient boolean eventsAllowed;
 	private transient List<ProfileChangeListener> listeners = new ArrayList<>();
 
-	static Profile unserialize(Element element) throws DataParseException {
+	public static Profile unserialize(Element element) throws DataParseException {
 		String profileName = element.getAttribute(ATTRIBUTE_NAME);
 		ConnectionDescription src = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0));
 		ConnectionDescription dst = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0));

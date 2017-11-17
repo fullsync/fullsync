@@ -19,12 +19,13 @@
  */
 package net.sourceforge.fullsync;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sourceforge.fullsync.buffer.BlockBuffer;
 import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
-import net.sourceforge.fullsync.impl.TaskGeneratorImpl;
 
 /**
  * This class should provide wrappers for most common synchronization tasks
@@ -35,13 +36,9 @@ public class Synchronizer {
 
 	private TaskGenerator taskGenerator;
 
-	public Synchronizer() {
-		taskGenerator = new TaskGeneratorImpl();
-	}
-
-	// TODO we should hide the taskgenerator we use
-	public TaskGenerator getTaskGenerator() {
-		return taskGenerator;
+	@Inject
+	public Synchronizer(TaskGenerator taskGenerator) {
+		this.taskGenerator = taskGenerator;
 	}
 
 	public synchronized TaskTree executeProfile(FullSync fullsync, Profile profile, boolean interactive) {
@@ -113,5 +110,9 @@ public class Synchronizer {
 		BlockBuffer buffer = new BlockBuffer(tmpLogger);
 		TaskExecutor queue = new FillBufferTaskExecutor(buffer);
 		return queue.createStatistics(taskTree);
+	}
+
+	public TaskGenerator getTaskGenerator() {
+		return taskGenerator;
 	}
 }

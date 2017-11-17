@@ -22,16 +22,17 @@ package net.sourceforge.fullsync;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import net.sourceforge.fullsync.impl.ConfigurationPreferences;
+import javax.inject.Inject;
 
 public class FullSync {
 	private final Deque<PromptQuestion> questionHandler = new ArrayDeque<>();
-	private final ConfigurationPreferences preferences;
+	private final Preferences preferences;
 	private final ProfileManager profileManager;
 	private final Synchronizer synchronizer;
 	private final RuntimeConfiguration runtimeConfiguration;
 
-	public FullSync(ConfigurationPreferences _preferences, ProfileManager _profileManager, Synchronizer _synchronizer,
+	@Inject
+	public FullSync(Preferences _preferences, ProfileManager _profileManager, Synchronizer _synchronizer,
 		RuntimeConfiguration _runtimeConfiguration) {
 		preferences = _preferences;
 		profileManager = _profileManager;
@@ -51,7 +52,7 @@ public class FullSync {
 		questionHandler.pop();
 	}
 
-	public ConfigurationPreferences getPreferences() {
+	public Preferences getPreferences() {
 		return preferences;
 	}
 

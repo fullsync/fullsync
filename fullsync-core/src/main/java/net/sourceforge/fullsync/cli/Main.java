@@ -43,6 +43,9 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Launcher;
 import net.sourceforge.fullsync.Profile;
@@ -51,7 +54,7 @@ import net.sourceforge.fullsync.RuntimeConfiguration;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
-import net.sourceforge.fullsync.impl.ConfigurationPreferences;
+import net.sourceforge.fullsync.impl.FullSyncModule;
 
 public class Main implements Launcher { // NO_UCD
 	private static final String PREFERENCES_PROPERTIES = "preferences.properties"; //$NON-NLS-1$
@@ -187,11 +190,10 @@ public class Main implements Launcher { // NO_UCD
 			profilesFile = configDir + PROFILES_XML;
 			upgradeLegacyProfilesXmlLocation(profilesFile);
 		}
-		final ConfigurationPreferences preferences = new ConfigurationPreferences(configDir + PREFERENCES_PROPERTIES);
-		final ProfileManager profileManager = new ProfileManager(profilesFile);
-		final Synchronizer sync = new Synchronizer();
-		final RuntimeConfiguration rtConfig = new CliRuntimeConfiguration(line);
-		final FullSync fullsync = new FullSync(preferences, profileManager, sync, rtConfig);
+		final String prefrencesFile = configDir + PREFERENCES_PROPERTIES;
+		final Injector injector = Guice.createInjector(new FullSyncModule(line, prefrencesFile, profilesFile));
+		final RuntimeConfiguration rtConfig = injector.getInstance(RuntimeConfiguration.class);
+		final FullSync fullsync = injector.getInstance(FullSync.class);
 
 		if (rtConfig.isDaemon().orElse(false).booleanValue()) {
 			finishStartup(fullsync);
@@ -227,6 +229,7 @@ public class Main implements Launcher { // NO_UCD
 	public static void finishStartup(FullSync fullsync) {
 		RuntimeConfiguration rt = fullsync.getRuntimeConfiguration();
 		Optional<String> profile = rt.getProfileToRun();
+		fullsync.getProfileManager().loadProfiles();
 		if (profile.isPresent()) {
 			handleRunProfile(fullsync, profile.get());
 		}

@@ -27,11 +27,14 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Properties;
 
+import javax.inject.Singleton;
+
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.WindowState;
 
+@Singleton
 public class ConfigurationPreferences implements Preferences {
 	private static final String PREFERENCE_DEFAULT_PROFILE_LIST_STYLE = "NiceListView";
 	private static final String PREFERENCE_DEFAULT_LANGUAGE_CODE = "en";

@@ -21,10 +21,13 @@ package net.sourceforge.fullsync.cli;
 
 import java.util.Optional;
 
+import javax.inject.Singleton;
+
 import org.apache.commons.cli.CommandLine;
 
 import net.sourceforge.fullsync.RuntimeConfiguration;
 
+@Singleton
 public class CliRuntimeConfiguration implements RuntimeConfiguration {
 	private final Optional<String> profileToRun;
 	private final Optional<Boolean> daemon;

@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.inject.Singleton;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +36,7 @@ import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.fs.File;
 
+@Singleton
 public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
 	// TODO this should be execution local so the class
