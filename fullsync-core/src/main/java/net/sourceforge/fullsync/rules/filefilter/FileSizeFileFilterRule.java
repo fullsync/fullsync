@@ -31,8 +31,6 @@ public class FileSizeFileFilterRule extends FileFilterRule {
 	public static final int OP_IS_GREATER_THAN = 2;
 	public static final int OP_IS_LESS_THAN = 3;
 
-	private static final long serialVersionUID = 2L;
-
 	private static final String[] allOperators = new String[] { "is", "isn't", "is greater than", "is less than" };
 
 	private SizeValue size;

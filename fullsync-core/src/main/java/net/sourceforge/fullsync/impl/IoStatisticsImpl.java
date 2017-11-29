@@ -22,8 +22,6 @@ package net.sourceforge.fullsync.impl;
 import net.sourceforge.fullsync.IoStatistics;
 
 public class IoStatisticsImpl implements IoStatistics {
-	private static final long serialVersionUID = 2L;
-
 	private int filesCopied;
 	private int dirsCreated;
 	private int deletions;

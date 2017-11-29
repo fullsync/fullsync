@@ -20,9 +20,6 @@
 package net.sourceforge.fullsync.rules.filefilter;
 
 public class FilterRuleNotAppliableException extends Exception {
-
-	private static final long serialVersionUID = 2L;
-
 	public FilterRuleNotAppliableException() {
 		super();
 	}

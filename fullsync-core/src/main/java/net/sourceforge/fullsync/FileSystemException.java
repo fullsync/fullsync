@@ -23,9 +23,6 @@ package net.sourceforge.fullsync;
  * Thrown when an error occured while accessing a file system.
  */
 public class FileSystemException extends Exception {
-
-	private static final long serialVersionUID = 2L;
-
 	/**
 	 * Constructor for FileSystemException.
 	 *

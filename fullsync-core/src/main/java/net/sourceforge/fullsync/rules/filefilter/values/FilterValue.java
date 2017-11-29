@@ -22,9 +22,6 @@ package net.sourceforge.fullsync.rules.filefilter.values;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
 public class FilterValue implements OperandValue {
-
-	private static final long serialVersionUID = 2L;
-
 	private FileFilter value;
 
 	public FilterValue(FileFilter value) {

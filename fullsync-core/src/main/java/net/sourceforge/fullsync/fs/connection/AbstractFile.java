@@ -29,8 +29,6 @@ import java.util.Map;
 import net.sourceforge.fullsync.fs.File;
 
 class AbstractFile implements File {
-	private static final long serialVersionUID = 3L;
-
 	protected FileSystemConnection fs;
 	protected String name;
 	protected File parent;

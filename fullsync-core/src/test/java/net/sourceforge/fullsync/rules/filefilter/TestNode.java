@@ -27,7 +27,6 @@ import java.util.Collection;
 import net.sourceforge.fullsync.fs.File;
 
 public class TestNode implements File {
-	private static final long serialVersionUID = 2L;
 	private File parent;
 	private String name;
 	private boolean directory;

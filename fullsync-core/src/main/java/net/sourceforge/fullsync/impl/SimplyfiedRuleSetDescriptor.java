@@ -53,7 +53,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 
 	private static final String PATTERN_TYPE_REG_EXP = "RegExp"; //$NON-NLS-1$
 
-	private static final long serialVersionUID = 2L;
 	private boolean syncSubDirs = false;
 	private String ignorePattern;
 	private String takePattern;

@@ -25,8 +25,6 @@ public class TypeValue implements OperandValue {
 		DIRECTORY
 	}
 
-	private static final long serialVersionUID = 2L;
-
 	private Type type;
 
 	public TypeValue() {

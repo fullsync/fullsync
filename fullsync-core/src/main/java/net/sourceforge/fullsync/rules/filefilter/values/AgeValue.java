@@ -27,7 +27,6 @@ public class AgeValue implements OperandValue {
 		DAYS
 	}
 
-	private static final long serialVersionUID = 2L;
 	private static final long SECONDS_PER_DAY = 60 * 60 * 24;
 
 	private double value;

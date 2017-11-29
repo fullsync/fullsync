@@ -31,8 +31,6 @@ public class FileModificationDateFileFilterRule extends FileFilterRule {
 	public static final int OP_IS_BEFORE = 2;
 	public static final int OP_IS_AFTER = 3;
 
-	private static final long serialVersionUID = 2L;
-
 	private static final String[] allOperators = new String[] { "is", "isn't", "is before", "is after" };
 
 	private DateValue date;

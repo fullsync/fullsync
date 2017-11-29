@@ -36,8 +36,6 @@ public class FileFilterTest {
 	private File testNode;
 
 	private static class AlwaysTrueFileFilterRule extends FileFilterRule {
-		private static final long serialVersionUID = 2L;
-
 		@Override
 		public boolean match(File file) {
 			return true;
@@ -70,8 +68,6 @@ public class FileFilterTest {
 	}
 
 	private static class AlwaysFalseFileFilterRule extends FileFilterRule {
-		private static final long serialVersionUID = 2L;
-
 		@Override
 		public boolean match(File file) {
 			return false;

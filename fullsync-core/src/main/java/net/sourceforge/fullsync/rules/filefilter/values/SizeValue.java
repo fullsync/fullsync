@@ -27,8 +27,6 @@ public class SizeValue implements OperandValue {
 		GBYTES
 	}
 
-	private static final long serialVersionUID = 2L;
-
 	private double value;
 	private Unit unit;
 

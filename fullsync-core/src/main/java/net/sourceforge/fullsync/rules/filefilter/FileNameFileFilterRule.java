@@ -41,8 +41,6 @@ public class FileNameFileFilterRule extends FileFilterRule {
 	public static final int OP_MATCHES_REGEXP = 8;
 	public static final int OP_DOESNT_MATCHES_REGEXP = 9;
 
-	private static final long serialVersionUID = 2L;
-
 	private static final String[] allOperators = new String[] { "is", "isn't", "contains", "doesn't contains", "begins with",
 		"doesn't begins with", "ends with", "doesn't ends with", "matches regexp", "doesn't matches regexp" };
 

@@ -28,8 +28,6 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
 class AbstractBufferedFile extends AbstractFile implements BufferedFile {
-	private static final long serialVersionUID = 2L;
-
 	protected File unbuffered;
 
 	private long fsSize;

@@ -28,7 +28,6 @@ public class IntervalSchedule extends Schedule {
 	private static final String ATTRIBUTE_DISPLAY_UNIT = "displayUnit"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_INTERVAL = "interval"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_FIRSTINTERVAL = "firstinterval"; //$NON-NLS-1$
-	private static final long serialVersionUID = 2L;
 
 	private long firstInterval;
 	private long interval;

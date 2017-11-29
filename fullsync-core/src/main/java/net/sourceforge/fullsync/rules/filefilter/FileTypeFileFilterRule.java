@@ -29,8 +29,6 @@ public class FileTypeFileFilterRule extends FileFilterRule {
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
 
-	private static final long serialVersionUID = 2L;
-
 	private static final String[] allOperators = new String[] { "is", "isn't" };
 
 	private TypeValue type;

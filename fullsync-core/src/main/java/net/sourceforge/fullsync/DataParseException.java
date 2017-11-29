@@ -24,7 +24,6 @@ package net.sourceforge.fullsync;
  */
 public class DataParseException extends Exception {
 	private static final String UNKNOWN_SOURCE = "unknown"; //$NON-NLS-1$
-	private static final long serialVersionUID = 2L;
 	private final String sourceName;
 	private final long lineNumber;
 
