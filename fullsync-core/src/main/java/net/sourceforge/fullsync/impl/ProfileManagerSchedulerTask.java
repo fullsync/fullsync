@@ -17,35 +17,36 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync;
+package net.sourceforge.fullsync.impl;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.schedule.ScheduleTask;
 
-import javax.inject.Inject;
+class ProfileManagerSchedulerTask implements ScheduleTask {
+	private XmlBackedProfileManager profileManager;
+	private Profile profile;
+	private long executionTime;
 
-public class FullSync {
-	private final Deque<PromptQuestion> questionHandler = new ArrayDeque<>();
-	private final Synchronizer synchronizer;
-
-	@Inject
-	public FullSync(Synchronizer _synchronizer) {
-		synchronizer = _synchronizer;
+	ProfileManagerSchedulerTask(XmlBackedProfileManager pm, Profile p, long ts) {
+		profileManager = pm;
+		profile = p;
+		executionTime = ts;
 	}
 
-	public PromptQuestion getQuestionHandler() {
-		return questionHandler.peek();
+	@Override
+	public void run() {
+		Thread worker = new Thread(() -> profileManager.fireProfileSchedulerEvent(profile));
+		worker.start();
+		profile.getSchedule().setLastOccurrence(System.currentTimeMillis());
 	}
 
-	public void pushQuestionHandler(PromptQuestion handler) {
-		questionHandler.push(handler);
+	@Override
+	public long getExecutionTime() {
+		return executionTime;
 	}
 
-	public void popQuestionHandler() {
-		questionHandler.pop();
-	}
-
-	public Synchronizer getSynchronizer() {
-		return synchronizer;
+	@Override
+	public String toString() {
+		return "Scheduled execution of " + profile.getName();
 	}
 }

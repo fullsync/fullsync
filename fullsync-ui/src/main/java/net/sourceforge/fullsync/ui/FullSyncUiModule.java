@@ -17,35 +17,16 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync;
+package net.sourceforge.fullsync.ui;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import org.eclipse.swt.widgets.Display;
 
-import javax.inject.Inject;
+import com.google.inject.AbstractModule;
 
-public class FullSync {
-	private final Deque<PromptQuestion> questionHandler = new ArrayDeque<>();
-	private final Synchronizer synchronizer;
-
-	@Inject
-	public FullSync(Synchronizer _synchronizer) {
-		synchronizer = _synchronizer;
-	}
-
-	public PromptQuestion getQuestionHandler() {
-		return questionHandler.peek();
-	}
-
-	public void pushQuestionHandler(PromptQuestion handler) {
-		questionHandler.push(handler);
-	}
-
-	public void popQuestionHandler() {
-		questionHandler.pop();
-	}
-
-	public Synchronizer getSynchronizer() {
-		return synchronizer;
+public class FullSyncUiModule extends AbstractModule {
+	@Override
+	protected void configure() {
+		Display.setAppName("FullSync");
+		bind(Display.class).toInstance(Display.getDefault());
 	}
 }

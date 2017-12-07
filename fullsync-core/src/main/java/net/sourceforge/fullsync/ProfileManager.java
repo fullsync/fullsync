@@ -22,15 +22,18 @@ package net.sourceforge.fullsync;
 import java.util.List;
 
 import net.sourceforge.fullsync.schedule.ScheduleTask;
-import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
 
 public interface ProfileManager {
+
+	void setProfilesFileName(String profilesFileName);
 
 	boolean loadProfiles();
 
 	boolean loadProfiles(String profilesFileName);
 
 	void addProfile(Profile profile);
+
+	void updateProfile(Profile oldProfile, Profile newProfile);
 
 	void removeProfile(Profile profile);
 
@@ -44,19 +47,9 @@ public interface ProfileManager {
 
 	void save();
 
-	void startScheduler();
-
-	void stopScheduler();
-
-	boolean isSchedulerEnabled();
-
 	void addSchedulerListener(ProfileSchedulerListener listener);
 
 	void removeSchedulerListener(ProfileSchedulerListener listener);
-
-	void addSchedulerChangeListener(SchedulerChangeListener listener);
-
-	void removeSchedulerChangeListener(SchedulerChangeListener listener);
 
 	ScheduleTask getNextScheduleTask();
 }

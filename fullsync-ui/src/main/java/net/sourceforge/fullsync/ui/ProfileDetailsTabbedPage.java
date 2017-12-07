@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TreeAdapter;
@@ -43,7 +45,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -56,6 +57,7 @@ import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
@@ -69,6 +71,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private static final String FILTER_KEY = "Filter";
 
 	private final FullSync fullsync;
+	private final ProfileManager profileManager;
+
 	private TabFolder tabs;
 	private Text textProfileName;
 	private Text textProfileDescription;
@@ -100,10 +104,15 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private Composite m_parent;
 	private String lastSourceLoaded;
 
-	public ProfileDetailsTabbedPage(Shell parent, FullSync _fullsync, Profile _profile) {
-		super(parent);
-		fullsync = _fullsync;
-		profile = _profile;
+	@Inject
+	public ProfileDetailsTabbedPage(MainWindow parent, FullSync fullsync, ProfileManager profileManager) {
+		super(parent.getShell());
+		this.fullsync = fullsync;
+		this.profileManager = profileManager;
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
 	}
 
 	@Override
@@ -587,9 +596,10 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			ExceptionHandler.reportException(e);
 			return false;
 		}
+		boolean isNewProfile = null == profile;
 
-		if ((null == profile) || !textProfileName.getText().equals(profile.getName())) {
-			Profile pr = fullsync.getProfileManager().getProfile(textProfileName.getText());
+		if (isNewProfile || !textProfileName.getText().equals(profile.getName())) {
+			Profile pr = profileManager.getProfile(textProfileName.getText());
 			if (null != pr) {
 				MessageBox mb = new MessageBox(m_parent.getShell(), SWT.ICON_ERROR);
 				mb.setText(Messages.getString("ProfileDetails.Duplicate_Entry")); //$NON-NLS-1$
@@ -603,34 +613,22 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		boolean useFileFilter = buttonUseFileFilter.getSelection();
 		ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubdirectories, filter, useFileFilter, getFileFilterTree());
 
-		if (null == profile) {
-			profile = new Profile(textProfileName.getText(), src, dst, ruleSetDescriptor);
-			profile.setSynchronizationType(comboType.getText());
-			profile.setDescription(textProfileDescription.getText());
-			profile.setSchedule((Schedule) buttonScheduling.getData());
-			profile.setEnabled(buttonEnabled.getSelection());
-			if (buttonResetError.getSelection()) {
-				profile.setLastError(0, null);
-			}
-			fullsync.getProfileManager().addProfile(profile);
+		Profile oldProfile = profile;
+		profile = new Profile(textProfileName.getText(), src, dst, ruleSetDescriptor);
+		profile.setSynchronizationType(comboType.getText());
+		profile.setDescription(textProfileDescription.getText());
+		profile.setSchedule((Schedule) buttonScheduling.getData());
+		profile.setEnabled(buttonEnabled.getSelection());
+		if (buttonResetError.getSelection()) {
+			profile.setLastError(0, null);
+		}
+		if (isNewProfile) {
+			profileManager.addProfile(profile);
 		}
 		else {
-			profile.beginUpdate();
-			profile.setName(textProfileName.getText());
-			profile.setDescription(textProfileDescription.getText());
-			profile.setSynchronizationType(comboType.getText());
-			profile.setSource(src);
-			profile.setDestination(dst);
-			profile.setSchedule((Schedule) buttonScheduling.getData());
-			profile.setEnabled(buttonEnabled.getSelection());
-
-			profile.setRuleSet(ruleSetDescriptor);
-			if (buttonResetError.getSelection()) {
-				profile.setLastError(0, null);
-			}
-			profile.endUpdate();
+			profileManager.updateProfile(oldProfile, profile);
 		}
-		fullsync.getProfileManager().save();
+		profileManager.save();
 		return true; //FIXME: return false if failed
 	}
 

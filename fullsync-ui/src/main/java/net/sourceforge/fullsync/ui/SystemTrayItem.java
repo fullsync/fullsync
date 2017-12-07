@@ -22,6 +22,9 @@ package net.sourceforge.fullsync.ui;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Menu;
@@ -31,9 +34,11 @@ import org.eclipse.swt.widgets.TrayItem;
 
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerationListener;
+import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.fs.File;
 
+@Singleton
 public class SystemTrayItem implements TaskGenerationListener {
 	private TrayItem trayItem;
 	private Menu menu;
@@ -42,7 +47,8 @@ public class SystemTrayItem implements TaskGenerationListener {
 	private Timer timer;
 	private boolean isBusy;
 
-	public SystemTrayItem(final GuiController guiController) {
+	@Inject
+	public SystemTrayItem(GuiController guiController, MainWindow mainWindow, TaskGenerator taskGenerator) {
 		Tray tray = guiController.getDisplay().getSystemTray();
 		this.trayItem = new TrayItem(tray, SWT.NULL);
 
@@ -54,23 +60,23 @@ public class SystemTrayItem implements TaskGenerationListener {
 		// initialize trayItem
 		trayItem.setImage(imageList[0]);
 		trayItem.setToolTipText("FullSync"); //$NON-NLS-1$
-		trayItem.addListener(SWT.Selection, e -> guiController.setMainShellVisible(true));
-		trayItem.addListener(SWT.DefaultSelection, e -> guiController.setMainShellVisible(true));
+		trayItem.addListener(SWT.Selection, e -> mainWindow.setVisible(true));
+		trayItem.addListener(SWT.DefaultSelection, e -> mainWindow.setVisible(true));
 		trayItem.addListener(SWT.MenuDetect, e -> menu.setVisible(true));
 
 		// initialize popup menu
-		menu = new Menu(guiController.getMainShell(), SWT.POP_UP);
+		menu = new Menu(mainWindow.getShell(), SWT.POP_UP);
 		MenuItem item;
 		item = new MenuItem(menu, SWT.NULL);
 		item.setImage(guiController.getImage("fullsync16.png"));
 		item.setText(Messages.getString("SystemTrayItem.OpenFullSync")); //$NON-NLS-1$
-		item.addListener(SWT.Selection, e -> guiController.setMainShellVisible(true));
+		item.addListener(SWT.Selection, e -> mainWindow.setVisible(true));
 
 		item = new MenuItem(menu, SWT.NULL);
 		item.setText(Messages.getString("SystemTrayItem.Exit")); //$NON-NLS-1$
 		item.addListener(SWT.Selection, e -> guiController.closeGui());
 
-		guiController.getSynchronizer().getTaskGenerator().addTaskGenerationListener(this);
+		taskGenerator.addTaskGenerationListener(this);
 	}
 
 	public void setVisible(boolean visible) {

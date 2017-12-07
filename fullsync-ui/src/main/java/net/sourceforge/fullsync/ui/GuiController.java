@@ -20,19 +20,22 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+
+import com.google.inject.Injector;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FullSync;
@@ -40,73 +43,30 @@ import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Util;
-import net.sourceforge.fullsync.WindowState;
 import net.sourceforge.fullsync.cli.Main;
 
+@Singleton
 public class GuiController implements Runnable {
 	private static GuiController singleton;
-
 	private final FullSync fullsync;
 	private final Preferences preferences;
-
+	private final ProfileManager profileManager;
+	private final Injector injector;
 	private ExceptionHandler oldExceptionHandler;
-
 	private Display display;
 	private ImageRepository imageRepository;
 	private FontRepository fontRepository;
-	private Shell mainShell;
 	private MainWindow mainWindow;
 	private SystemTrayItem systemTrayItem;
 	private final ScheduledThreadPoolExecutor executorService;
 
-	private GuiController(FullSync _fullsync) {
-		fullsync = _fullsync;
-		preferences = fullsync.getPreferences();
+	@Inject
+	private GuiController(FullSync fullsync, Preferences preferences, ProfileManager profileManager, Injector injector) {
+		this.fullsync = fullsync;
+		this.preferences = preferences;
+		this.profileManager = profileManager;
+		this.injector = injector.createChildInjector(new FullSyncUiModule());
 		executorService = new ScheduledThreadPoolExecutor(1);
-	}
-
-	private void createMainShell() {
-		try {
-			mainShell = new Shell(display);
-			mainWindow = new MainWindow(mainShell, SWT.NULL, this);
-			mainShell.setLayout(new FillLayout());
-			Rectangle shellBounds = mainShell.computeTrim(0, 0, mainWindow.getSize().x, mainWindow.getSize().y);
-			mainShell.setSize(shellBounds.width, shellBounds.height);
-			mainShell.setText("FullSync"); //$NON-NLS-1$
-			mainShell.setImage(getImage("fullsync48.png")); //$NON-NLS-1$
-			restoreWindowState();
-			Optional<Boolean> minimized = fullsync.getRuntimeConfiguration().isStartMinimized();
-			if (minimized.orElse(false).booleanValue()) {
-				mainShell.setVisible(false);
-			}
-		}
-		catch (Exception e) {
-			ExceptionHandler.reportException(e);
-		}
-	}
-
-	private void restoreWindowState() {
-		mainShell.setVisible(true);
-		WindowState ws = preferences.getWindowState(null);
-		Rectangle r = display.getBounds();
-		if (ws.isValid() && ws.isInsideOf(r.x, r.y, r.width, r.height)) {
-			mainShell.setBounds(ws.getX(), ws.getY(), ws.getWidth(), ws.getHeight());
-		}
-		if (ws.isMinimized()) {
-			mainShell.setMinimized(true);
-		}
-		if (ws.isMaximized()) {
-			mainShell.setMaximized(true);
-		}
-	}
-
-	public void setMainShellVisible(boolean visible) {
-		mainShell.setVisible(visible);
-		mainShell.setMinimized(!visible);
-	}
-
-	public Shell getMainShell() {
-		return mainShell;
 	}
 
 	public MainWindow getMainWindow() {
@@ -122,7 +82,7 @@ public class GuiController implements Runnable {
 	}
 
 	public ProfileManager getProfileManager() {
-		return fullsync.getProfileManager();
+		return profileManager;
 	}
 
 	public Synchronizer getSynchronizer() {
@@ -138,27 +98,27 @@ public class GuiController implements Runnable {
 	}
 
 	private void startGui() {
-		Display.setAppName("FullSync");
-		display = Display.getDefault();
+		display = injector.getInstance(Display.class);
 		imageRepository = new ImageRepository(display);
 		fontRepository = new FontRepository(display);
-		createMainShell();
-		systemTrayItem = new SystemTrayItem(this);
+		mainWindow = injector.getInstance(MainWindow.class);
+		systemTrayItem = injector.getInstance(SystemTrayItem.class);
 		oldExceptionHandler = ExceptionHandler.registerExceptionHandler(new ExceptionHandler() {
 			@Override
 			protected void doReportException(final String message, final Throwable exception) {
 				exception.printStackTrace();
 
-				display.syncExec(() -> new ExceptionDialog(mainShell, message, exception));
+				display.syncExec(() -> new ExceptionDialog(mainWindow.getShell(), message, exception));
 			}
 		});
 		createWelcomeScreen();
 	}
 
-	public static void launchUI(FullSync fullsync) {
-		GuiController guiController = GuiController.initialize(fullsync);
+	public static void launchUI(Injector i) {
+		GuiController guiController = i.getInstance(GuiController.class);
+		singleton = guiController;
 		guiController.startGui();
-		guiController.executorService.submit(() -> Main.finishStartup(fullsync));
+		guiController.executorService.submit(() -> Main.finishStartup(i));
 		guiController.run();
 		guiController.disposeGui();
 		guiController.executorService.shutdown();
@@ -166,9 +126,14 @@ public class GuiController implements Runnable {
 
 	@Override
 	public void run() {
-		while (!mainShell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
+		while (!display.isDisposed()) {
+			try {
+				if (!display.readAndDispatch()) {
+					display.sleep();
+				}
+			}
+			catch (SWTException ex) {
+				ex.printStackTrace();
 			}
 		}
 	}
@@ -179,8 +144,8 @@ public class GuiController implements Runnable {
 
 		// Close the application, but give him a chance to
 		// confirm his action first
-		if ((null != fullsync.getProfileManager().getNextScheduleTask()) && preferences.confirmExit()) {
-			MessageBox mb = new MessageBox(mainShell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
+		if ((null != profileManager.getNextScheduleTask()) && preferences.confirmExit()) {
+			MessageBox mb = new MessageBox(mainWindow.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
 			String doYouWantToQuit = Messages.getString("GuiController.Do_You_Want_To_Quit"); //$NON-NLS-1$
 			String scheduleIsStopped = Messages.getString("GuiController.Schedule_is_stopped"); //$NON-NLS-1$
@@ -191,30 +156,14 @@ public class GuiController implements Runnable {
 				return;
 			}
 		}
-
-		storeWindowState();
+		mainWindow.storeWindowState();
 		disposeGui();
 	}
 
-	private void storeWindowState() {
-		WindowState ws = new WindowState();
-		ws.setMaximized(mainShell.getMaximized());
-		ws.setMinimized(mainShell.getMinimized());
-		if (!ws.isMaximized()) {
-			Rectangle r = mainShell.getBounds();
-			ws.setX(r.x);
-			ws.setY(r.y);
-			ws.setWidth(r.width);
-			ws.setHeight(r.height);
-		}
-		preferences.setWindowState(null, ws);
-		preferences.save();
-	}
-
-	public void disposeGui() {
+	private void disposeGui() {
 		ExceptionHandler.registerExceptionHandler(oldExceptionHandler);
-		if ((null != mainShell) && !mainShell.isDisposed()) {
-			mainShell.dispose();
+		if (null != mainWindow) {
+			mainWindow.dispose();
 		}
 		if (null != imageRepository) {
 			imageRepository.dispose();
@@ -249,11 +198,6 @@ public class GuiController implements Runnable {
 	}
 
 	public static GuiController getInstance() {
-		return singleton;
-	}
-
-	public static GuiController initialize(FullSync fullsync) {
-		singleton = new GuiController(fullsync);
 		return singleton;
 	}
 
@@ -297,7 +241,7 @@ public class GuiController implements Runnable {
 			// update the stored version number
 			preferences.save();
 			try {
-				new WelcomeScreen(getMainShell());
+				injector.getInstance(WelcomeScreen.class);
 			}
 			catch (Exception e) {
 				ExceptionHandler.reportException(e);

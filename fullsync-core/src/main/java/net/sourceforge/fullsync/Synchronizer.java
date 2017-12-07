@@ -34,14 +34,16 @@ import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 public class Synchronizer {
 	private static final Logger logger = LoggerFactory.getLogger(Synchronizer.class);
 
-	private TaskGenerator taskGenerator;
+	private final TaskGenerator taskGenerator;
+	private final FullSync fullsync;
 
 	@Inject
-	public Synchronizer(TaskGenerator taskGenerator) {
+	public Synchronizer(TaskGenerator taskGenerator, FullSync fullsync) {
 		this.taskGenerator = taskGenerator;
+		this.fullsync = fullsync;
 	}
 
-	public synchronized TaskTree executeProfile(FullSync fullsync, Profile profile, boolean interactive) {
+	public synchronized TaskTree executeProfile(Profile profile, boolean interactive) {
 		try {
 			return taskGenerator.execute(fullsync, profile, interactive);
 		}
@@ -104,7 +106,7 @@ public class Synchronizer {
 		return 0;
 	}
 
-	public IoStatistics getIoStatistics(TaskTree taskTree) {
+	public IoStatistics getIoStatistics(TaskTree taskTree) { //FIXME: move to TaskTree
 		// HACK omg, that's not the way io stats are intended to be generated / used
 		Logger tmpLogger = LoggerFactory.getLogger(Synchronizer.class);
 		BlockBuffer buffer = new BlockBuffer(tmpLogger);

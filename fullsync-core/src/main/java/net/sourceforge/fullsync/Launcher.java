@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync;
 
+import com.google.inject.Injector;
+
 public interface Launcher {
-	void launchGui(FullSync fullsync) throws Exception;
+	void launchGui(Injector injector) throws Exception;
 }

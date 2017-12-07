@@ -236,15 +236,6 @@ public class Profile implements Comparable<Profile> {
 		}
 	}
 
-	public void beginUpdate() {
-		this.eventsAllowed = false;
-	}
-
-	public void endUpdate() {
-		this.eventsAllowed = true;
-		notifyProfileChangeListeners();
-	}
-
 	public Element serialize(final Document doc) {
 		Element elem = doc.createElement("Profile");
 		elem.setAttribute(ATTRIBUTE_NAME, name);

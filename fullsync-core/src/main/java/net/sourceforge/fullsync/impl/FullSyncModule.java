@@ -28,16 +28,17 @@ import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuntimeConfiguration;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.cli.CliRuntimeConfiguration;
+import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
+import net.sourceforge.fullsync.schedule.Scheduler;
+import net.sourceforge.fullsync.schedule.SchedulerImpl;
 
 public class FullSyncModule extends AbstractModule {
 	private final CommandLine line;
 	private final String prefrencesFile;
-	private final String profilesFile;
 
-	public FullSyncModule(CommandLine line, String prefrencesFile, String profilesFile) {
+	public FullSyncModule(CommandLine line, String prefrencesFile) {
 		this.line = line;
 		this.prefrencesFile = prefrencesFile;
-		this.profilesFile = profilesFile;
 	}
 
 	@Override
@@ -45,6 +46,8 @@ public class FullSyncModule extends AbstractModule {
 		bind(TaskGenerator.class).to(TaskGeneratorImpl.class);
 		bind(Preferences.class).toInstance(new ConfigurationPreferences(prefrencesFile));
 		bind(RuntimeConfiguration.class).toInstance(new CliRuntimeConfiguration(line));
-		bind(ProfileManager.class).toInstance(new XmlBackedProfileManager(profilesFile));
+		bind(ProfileManager.class).to(XmlBackedProfileManager.class);
+		bind(Scheduler.class).to(SchedulerImpl.class);
+		bind(ScheduleTaskSource.class).to(XmlBackedProfileManager.class);
 	}
 }

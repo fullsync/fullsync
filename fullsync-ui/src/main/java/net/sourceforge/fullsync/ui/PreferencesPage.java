@@ -21,6 +21,8 @@ package net.sourceforge.fullsync.ui;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -30,9 +32,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 
-import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Preferences;
 
 public class PreferencesPage extends WizardDialog {
@@ -97,11 +97,12 @@ public class PreferencesPage extends WizardDialog {
 	private Button cbAutostartScheduler;
 	private Combo comboProfileList;
 
-	private final FullSync fullsync;
+	private final Preferences preferences;
 
-	public PreferencesPage(Shell parent, FullSync _fullsync) {
-		super(parent);
-		fullsync = _fullsync;
+	@Inject
+	public PreferencesPage(MainWindow parent, Preferences preferences) {
+		super(parent.getShell());
+		this.preferences = preferences;
 	}
 
 	@Override
@@ -224,7 +225,6 @@ public class PreferencesPage extends WizardDialog {
 	 * update all controls with the settings from the preferences object.
 	 */
 	public void updateComponent() {
-		Preferences preferences = fullsync.getPreferences();
 		cbConfirmExit.setSelection(preferences.confirmExit());
 		cbCloseMinimizesToSystemTray.setSelection(preferences.closeMinimizesToSystemTray());
 		cbMinimizeMinimizesToSystemTray.setSelection(preferences.minimizeMinimizesToSystemTray());
@@ -235,7 +235,6 @@ public class PreferencesPage extends WizardDialog {
 
 	@Override
 	public boolean apply() {
-		Preferences preferences = fullsync.getPreferences();
 		preferences.setConfirmExit(cbConfirmExit.getSelection());
 		preferences.setCloseMinimizesToSystemTray(cbCloseMinimizesToSystemTray.getSelection());
 		preferences.setMinimizeMinimizesToSystemTray(cbMinimizeMinimizesToSystemTray.getSelection());

@@ -48,6 +48,7 @@ import com.google.inject.Injector;
 
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Launcher;
+import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuntimeConfiguration;
@@ -55,6 +56,7 @@ import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.impl.FullSyncModule;
+import net.sourceforge.fullsync.schedule.Scheduler;
 
 public class Main implements Launcher { // NO_UCD
 	private static final String PREFERENCES_PROPERTIES = "preferences.properties"; //$NON-NLS-1$
@@ -172,16 +174,16 @@ public class Main implements Launcher { // NO_UCD
 			upgradeLegacyProfilesXmlLocation(profilesFile);
 		}
 		final String prefrencesFile = configDir + PREFERENCES_PROPERTIES;
-		final Injector injector = Guice.createInjector(new FullSyncModule(line, prefrencesFile, profilesFile));
+		final Injector injector = Guice.createInjector(new FullSyncModule(line, prefrencesFile));
 		final RuntimeConfiguration rtConfig = injector.getInstance(RuntimeConfiguration.class);
-		final FullSync fullsync = injector.getInstance(FullSync.class);
+		injector.getInstance(ProfileManager.class).setProfilesFileName(profilesFile);
 
 		if (rtConfig.isDaemon().orElse(false).booleanValue()) {
-			finishStartup(fullsync);
+			finishStartup(injector);
 			//TODO: keep process running here
 		}
 		else {
-			launcher.launchGui(fullsync);
+			launcher.launchGui(injector);
 		}
 	}
 
@@ -207,28 +209,31 @@ public class Main implements Launcher { // NO_UCD
 		}
 	}
 
-	public static void finishStartup(FullSync fullsync) {
-		RuntimeConfiguration rt = fullsync.getRuntimeConfiguration();
+	public static void finishStartup(Injector injector) {
+		FullSync fullsync = injector.getInstance(FullSync.class);
+		RuntimeConfiguration rt = injector.getInstance(RuntimeConfiguration.class);
+		Preferences preferences = injector.getInstance(Preferences.class);
+		Scheduler scheduler = injector.getInstance(Scheduler.class);
+		ProfileManager profileManager = injector.getInstance(ProfileManager.class);
 		Optional<String> profile = rt.getProfileToRun();
-		fullsync.getProfileManager().loadProfiles();
+		profileManager.loadProfiles();
 		if (profile.isPresent()) {
-			handleRunProfile(fullsync, profile.get());
+			handleRunProfile(fullsync, profileManager, profile.get());
 		}
 		if (rt.isDaemon().orElse(false).booleanValue()) {
-			handleIsDaemon(fullsync);
+			handleIsDaemon(fullsync, profileManager, scheduler);
 		}
-		if (fullsync.getPreferences().getAutostartScheduler()) {
-			fullsync.getProfileManager().startScheduler();
+		if (preferences.getAutostartScheduler()) {
+			scheduler.start();
 		}
 	}
 
-	private static void handleRunProfile(FullSync fullsync, String profileName) {
-		ProfileManager profileManager = fullsync.getProfileManager();
+	private static void handleRunProfile(FullSync fullsync, ProfileManager profileManager, String profileName) {
 		Profile p = profileManager.getProfile(profileName);
 		int errorlevel = 1;
 		if (null != p) {
 			Synchronizer sync = fullsync.getSynchronizer();
-			TaskTree tree = sync.executeProfile(fullsync, p, false);
+			TaskTree tree = sync.executeProfile(p, false);
 			errorlevel = sync.performActions(tree);
 			p.setLastUpdate(new Date());
 			profileManager.save();
@@ -240,11 +245,10 @@ public class Main implements Launcher { // NO_UCD
 		System.exit(errorlevel);
 	}
 
-	private static void handleIsDaemon(FullSync fullsync) {
-		ProfileManager profileManager = fullsync.getProfileManager();
+	private static void handleIsDaemon(FullSync fullsync, ProfileManager profileManager, Scheduler scheduler) {
 		profileManager.addSchedulerListener(profile -> {
 			Synchronizer sync = fullsync.getSynchronizer();
-			TaskTree tree = sync.executeProfile(fullsync, profile, false);
+			TaskTree tree = sync.executeProfile(profile, false);
 			if (null == tree) {
 				profile.setLastError(1, "An error occured while comparing filesystems.");
 			}
@@ -258,11 +262,11 @@ public class Main implements Launcher { // NO_UCD
 				}
 			}
 		});
-		profileManager.startScheduler();
+		scheduler.start();
 	}
 
 	@Override
-	public void launchGui(FullSync fullsync) throws Exception {
+	public void launchGui(Injector injector) throws Exception {
 		String arch = "x86";
 		String osName = System.getProperty("os.name").toLowerCase();
 		String os = "unknown";
@@ -291,7 +295,7 @@ public class Main implements Launcher { // NO_UCD
 		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Main.class.getClassLoader());
 		Thread.currentThread().setContextClassLoader(cl);
 		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.ui.GuiController");
-		Method launchUI = cls.getDeclaredMethod("launchUI", FullSync.class);
-		launchUI.invoke(null, fullsync);
+		Method launchUI = cls.getDeclaredMethod("launchUI", Injector.class);
+		launchUI.invoke(null, injector);
 	}
 }

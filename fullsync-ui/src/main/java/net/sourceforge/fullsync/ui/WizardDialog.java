@@ -48,13 +48,10 @@ public abstract class WizardDialog {
 	private boolean closing;
 
 	private final Shell parent;
-	private final int style;
-
 	private final List<WizardDialogListener> dialogListeners = new ArrayList<>();
 
 	public WizardDialog(Shell _parent) {
 		parent = _parent;
-		style = SWT.DIALOG_TRIM | SWT.RESIZE | SWT.PRIMARY_MODAL;
 	}
 
 	public boolean checkAndApply() {
@@ -77,7 +74,7 @@ public abstract class WizardDialog {
 
 	public void show() {
 		try {
-			dialogShell = new Shell(parent, style);
+			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.PRIMARY_MODAL);
 			final Display display = dialogShell.getDisplay();
 			dialogShell.addListener(SWT.Close, e -> {
 				if (!closing) {

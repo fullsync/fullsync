@@ -21,8 +21,14 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -37,18 +43,32 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import com.google.inject.Injector;
+
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.RuntimeConfiguration;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerationListener;
+import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
+import net.sourceforge.fullsync.WindowState;
 import net.sourceforge.fullsync.cli.Main;
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.schedule.Scheduler;
 
-class MainWindow extends Composite implements ProfileListControlHandler, TaskGenerationListener {
+@Singleton
+class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
+	private final GuiController guiController;
+	private final ProfileManager profileManager;
+	private final Scheduler scheduler;
+	private final Preferences preferences;
+	private final Injector injector;
+	private final Shell shell;
 	private ToolItem toolItemNew;
 	private Menu menuBarMainWindow;
 	private Label statusLine;
@@ -62,20 +82,26 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 
 	private Composite profileListContainer;
 	private ProfileListComposite profileList;
-	private GuiController guiController;
 	private GUIUpdateQueue<File> lastFileChecked;
 	private GUIUpdateQueue<String> statusLineText;
 
-	MainWindow(Composite parent, int style, GuiController _guiController) {
-		super(parent, style);
-		guiController = _guiController;
-		Shell shell = getShell();
-		initGUI(shell);
+	@Inject
+	MainWindow(GuiController guiController, ProfileManager profileManager, TaskGenerator taskGenerator, Scheduler scheduler,
+		Display display, RuntimeConfiguration runtimeConfiguration, Preferences preferences, Injector injector) {
+		this.guiController = guiController;
+		this.profileManager = profileManager;
+		this.scheduler = scheduler;
+		this.preferences = preferences;
+		this.injector = injector;
+		shell = new Shell(display);
+		shell.setLayout(new FillLayout());
+		shell.setText("FullSync"); //$NON-NLS-1$
+		shell.setImage(guiController.getImage("fullsync48.png")); //$NON-NLS-1$
 
 		shell.addListener(SWT.Close, e -> {
 			e.doit = false;
-			if (guiController.getPreferences().closeMinimizesToSystemTray()) {
-				minimizeToTray(shell);
+			if (preferences.closeMinimizesToSystemTray()) {
+				minimizeToTray();
 			}
 			else {
 				guiController.closeGui();
@@ -83,74 +109,116 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		});
 
 		shell.addListener(SWT.Iconify, e -> {
-			if (guiController.getPreferences().minimizeMinimizesToSystemTray()) {
+			if (preferences.minimizeMinimizesToSystemTray()) {
 				e.doit = false;
-				minimizeToTray(shell);
+				minimizeToTray();
 			}
 		});
+		Composite mainComposite = new Composite(shell, SWT.NULL);
+		initGUI(mainComposite);
 
-		ProfileManager pm = guiController.getProfileManager();
-		pm.addSchedulerListener(profile -> {
-			Synchronizer sync = guiController.getSynchronizer();
-			TaskTree tree = sync.executeProfile(guiController.getFullSync(), profile, false);
+		profileManager.addSchedulerListener(profile -> {
+			Synchronizer synchronizer = injector.getInstance(Synchronizer.class);
+			TaskTree tree = synchronizer.executeProfile(profile, false);
 			if (null == tree) {
 				profile.setLastError(1, Messages.getString("MainWindow.Error_Comparing_Filesystems")); //$NON-NLS-1$
 			}
 			else {
-				int errorLevel = sync.performActions(tree);
+				int errorLevel = synchronizer.performActions(tree);
 				if (errorLevel > 0) {
 					profile.setLastError(errorLevel, Messages.getString("MainWindow.Error_Copying_Files")); //$NON-NLS-1$
 				}
 				else {
-					profile.beginUpdate();
 					profile.setLastError(0, null);
 					profile.setLastUpdate(new Date());
-					profile.endUpdate();
 				}
 			}
 		});
-		pm.addSchedulerChangeListener(enabled -> getDisplay().syncExec(() -> {
+		scheduler.addSchedulerChangeListener(enabled -> display.syncExec(() -> {
 			toolItemScheduleStart.setEnabled(!enabled);
 			toolItemScheduleStop.setEnabled(enabled);
 		}));
 
-		statusLineText = new GUIUpdateQueue<>(getDisplay(), texts -> {
+		statusLineText = new GUIUpdateQueue<>(display, texts -> {
 			String statusMessage = texts.get(texts.size() - 1);
 			statusLine.setText(statusMessage);
 		});
 
-		lastFileChecked = new GUIUpdateQueue<>(getDisplay(), files -> {
+		lastFileChecked = new GUIUpdateQueue<>(display, files -> {
 			File lastCheckedFile = files.get(files.size() - 1);
 			statusLineText.add(Messages.getString("MainWindow.Checking_File", lastCheckedFile.getPath())); //$NON-NLS-1$
 		});
 
-		guiController.getSynchronizer().getTaskGenerator().addTaskGenerationListener(this);
+		taskGenerator.addTaskGenerationListener(this);
 
-		boolean enabled = pm.isSchedulerEnabled();
+		boolean enabled = scheduler.isEnabled();
 		toolItemScheduleStart.setEnabled(!enabled);
 		toolItemScheduleStop.setEnabled(enabled);
+		Point size = mainComposite.getSize();
+		Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
+		shell.setSize(shellBounds.width, shellBounds.height);
+		restoreWindowState();
+		Optional<Boolean> minimized = runtimeConfiguration.isStartMinimized();
+		if (minimized.orElse(false).booleanValue()) {
+			shell.setVisible(false);
+		}
+	}
+
+	private void restoreWindowState() {
+		shell.setVisible(true);
+		WindowState ws = preferences.getWindowState(null);
+		Rectangle r = shell.getDisplay().getBounds();
+		if (ws.isValid() && ws.isInsideOf(r.x, r.y, r.width, r.height)) {
+			shell.setBounds(ws.getX(), ws.getY(), ws.getWidth(), ws.getHeight());
+		}
+		if (ws.isMinimized()) {
+			shell.setMinimized(true);
+		}
+		if (ws.isMaximized()) {
+			shell.setMaximized(true);
+		}
+	}
+
+	public void storeWindowState() {
+		WindowState ws = new WindowState();
+		ws.setMaximized(shell.getMaximized());
+		ws.setMinimized(shell.getMinimized());
+		if (!ws.isMaximized()) {
+			Rectangle r = shell.getBounds();
+			ws.setX(r.x);
+			ws.setY(r.y);
+			ws.setWidth(r.width);
+			ws.setHeight(r.height);
+		}
+		preferences.setWindowState(null, ws);
+		preferences.save();
+	}
+
+	public void setVisible(boolean visible) {
+		shell.setVisible(visible);
+		shell.setMinimized(!visible);
 	}
 
 	/**
 	 * Initializes the GUI.
 	 * @throws IOException
 	 */
-	private void initGUI(Shell shell) {
+	private void initGUI(Composite mainComposite) {
 		try {
-			this.setSize(600, 300);
+			mainComposite.setSize(600, 300);
 
 			GridLayout thisLayout = new GridLayout();
 			thisLayout.horizontalSpacing = 0;
 			thisLayout.marginHeight = 0;
 			thisLayout.marginWidth = 0;
 			thisLayout.verticalSpacing = 0;
-			this.setLayout(thisLayout);
+			mainComposite.setLayout(thisLayout);
 
 			menuBarMainWindow = new Menu(shell, SWT.BAR);
 			shell.setMenuBar(menuBarMainWindow);
 
 			// toolbar
-			Composite cToolBar = new Composite(this, SWT.FILL);
+			Composite cToolBar = new Composite(mainComposite, SWT.FILL);
 			GridLayout toolBarLayout = new GridLayout(2, false);
 			toolBarLayout.marginHeight = 0;
 			toolBarLayout.marginWidth = 0;
@@ -197,32 +265,32 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 			toolItemScheduleStart = new ToolItem(toolBarScheduling, SWT.NULL);
 			toolItemScheduleStart.setToolTipText(Messages.getString("MainWindow.Start_Scheduler")); //$NON-NLS-1$
 			toolItemScheduleStart.setImage(guiController.getImage("Scheduler_Start.png")); //$NON-NLS-1$
-			toolItemScheduleStart.addListener(SWT.Selection, e -> guiController.getProfileManager().startScheduler());
+			toolItemScheduleStart.addListener(SWT.Selection, e -> scheduler.start());
 
 			toolItemScheduleStop = new ToolItem(toolBarScheduling, SWT.PUSH);
 			toolItemScheduleStop.setToolTipText(Messages.getString("MainWindow.Stop_Scheduler")); //$NON-NLS-1$
 			toolItemScheduleStop.setImage(guiController.getImage("Scheduler_Stop.png")); //$NON-NLS-1$
-			toolItemScheduleStop.addListener(SWT.Selection, e -> guiController.getProfileManager().stopScheduler());
+			toolItemScheduleStop.addListener(SWT.Selection, e -> scheduler.stop());
 
 			// profile list
-			profileListContainer = new Composite(this, SWT.NULL);
+			profileListContainer = new Composite(mainComposite, SWT.NULL);
 			profileListContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			profileListContainer.setLayout(new FillLayout());
 
 			// status line
-			statusLine = new Label(this, SWT.NONE);
+			statusLine = new Label(mainComposite, SWT.NONE);
 			statusLine.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
-			createMenu(shell);
+			createMenu();
 			createProfileList();
-			this.layout();
+			mainComposite.layout();
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
 		}
 	}
 
-	private void createMenu(final Shell shell) {
+	private void createMenu() {
 		// Menu Bar
 		MenuItem menuItemFile = new MenuItem(menuBarMainWindow, SWT.CASCADE);
 		menuItemFile.setText(Messages.getString("MainWindow.File_Menu")); //$NON-NLS-1$
@@ -281,19 +349,11 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		MenuItem preferencesItem = new MenuItem(menuEdit, SWT.PUSH);
 		preferencesItem.setText(Messages.getString("MainWindow.Preferences_Menu")); //$NON-NLS-1$
 		preferencesItem.setAccelerator(SWT.CTRL | (SWT.SHIFT + 'P'));
-		preferencesItem.addListener(SWT.Selection, e -> {
-			// show the Preferences Dialog.
-			PreferencesPage dialog = new PreferencesPage(shell, guiController.getFullSync());
-			dialog.show();
-		});
+		preferencesItem.addListener(SWT.Selection, e -> injector.getInstance(PreferencesPage.class).show());
 
 		MenuItem importItem = new MenuItem(menuEdit, SWT.PUSH);
 		importItem.setText(Messages.getString("MainWindow.Import_Menu")); //$NON-NLS-1$
-		importItem.addListener(SWT.Selection, e -> {
-			// show the Import Dialog.
-			WizardDialog dialog = new ImportProfilesPage(shell);
-			dialog.show();
-		});
+		importItem.addListener(SWT.Selection, e -> injector.getInstance(ImportProfilesPage.class).show());
 
 		MenuItem menuItemHelp = new MenuItem(menuBarMainWindow, SWT.CASCADE);
 		menuItemHelp.setText(Messages.getString("MainWindow.Help_Menu")); //$NON-NLS-1$
@@ -322,22 +382,19 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 
 		MenuItem menuItemSystem = new MenuItem(menuHelp, SWT.PUSH);
 		menuItemSystem.setText(Messages.getString("MainWindow.Menu_SystemInfo"));
-		menuItemSystem.addListener(SWT.Selection, e -> {
-			WizardDialog dialog = new SystemStatusPage(shell);
-			dialog.show();
-		});
+		menuItemSystem.addListener(SWT.Selection, e -> injector.getInstance(SystemStatusPage.class).show());
 
 		new MenuItem(menuHelp, SWT.SEPARATOR);
 
 		MenuItem menuItemAbout = new MenuItem(menuHelp, SWT.PUSH);
 		menuItemAbout.setAccelerator(SWT.CTRL + 'A');
 		menuItemAbout.setText(Messages.getString("MainWindow.About_Menu")); //$NON-NLS-1$
-		menuItemAbout.addListener(SWT.Selection, e -> new AboutDialog(shell));
+		menuItemAbout.addListener(SWT.Selection, e -> injector.getInstance(AboutDialog.class).show());
 	}
 
 	private Menu createPopupMenu() {
 		// PopUp Menu for the Profile list.
-		Menu profilePopupMenu = new Menu(getShell(), SWT.POP_UP);
+		Menu profilePopupMenu = new Menu(shell, SWT.POP_UP);
 
 		MenuItem runItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		runItem.setText(Messages.getString("MainWindow.Run_Profile")); //$NON-NLS-1$
@@ -372,8 +429,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 		for (Control c : profileListContainer.getChildren()) {
 			c.dispose();
 		}
-		final ProfileManager profileManager = guiController.getProfileManager();
-		if ("NiceListView".equals(guiController.getPreferences().getProfileListStyle())) {
+		if ("NiceListView".equals(preferences.getProfileListStyle())) {
 			profileList = new NiceListViewProfileListComposite(profileListContainer, SWT.NULL, profileManager, this);
 		}
 		else {
@@ -385,14 +441,6 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 
 	public GuiController getGuiController() {
 		return guiController;
-	}
-
-	private void minimizeToTray(final Shell shell) {
-		// FIXME: on OSX use this:
-		// mainWindow.setMinimized(true);
-		shell.setMinimized(true);
-		shell.setVisible(false);
-		// TODO make sure Tray is visible here
 	}
 
 	@Override
@@ -418,8 +466,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 	@Override
 	public void createNewProfile() {
 		try {
-			WizardDialog dialog = new ProfileDetailsTabbedPage(getShell(), guiController.getFullSync(), null);
-			dialog.show();
+			injector.getInstance(ProfileDetailsTabbedPage.class).show();
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
@@ -430,7 +477,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 	public void runProfile(final Profile p, final boolean interactive) {
 		if (null != p) {
 			if (!interactive) {
-				MessageBox mb = new MessageBox(getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+				MessageBox mb = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 				mb.setText(Messages.getString("MainWindow.Confirmation")); //$NON-NLS-1$
 				mb.setMessage("You're about to start the profile in non-interactive mode.\n Are you sure?");
 				if (mb.open() != SWT.YES) {
@@ -447,8 +494,9 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 			guiController.showBusyCursor(true);
 			TaskTree t = null;
 			try {
+				Synchronizer synchronizer = injector.getInstance(Synchronizer.class);
 				statusLineText.add(Messages.getString("MainWindow.Starting_Profile") + p.getName() + "..."); //$NON-NLS-1$ //$NON-NLS-2$
-				t = guiController.getSynchronizer().executeProfile(guiController.getFullSync(), p, interactive);
+				t = synchronizer.executeProfile(p, interactive);
 				if (null == t) {
 					p.setLastError(1, Messages.getString("MainWindow.Error_Comparing_Filesystems")); //$NON-NLS-1$
 					statusLineText.add(Messages.getString("MainWindow.Error_Processing_Profile", p.getName())); //$NON-NLS-1$
@@ -475,7 +523,8 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 	@Override
 	public void editProfile(final Profile p) {
 		try {
-			WizardDialog dialog = new ProfileDetailsTabbedPage(getShell(), guiController.getFullSync(), p);
+			ProfileDetailsTabbedPage dialog = injector.getInstance(ProfileDetailsTabbedPage.class);
+			dialog.setProfile(p);
 			dialog.show();
 		}
 		catch (Exception e) {
@@ -486,9 +535,7 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 	@Override
 	public void deleteProfile(final Profile p) {
 		if (null != p) {
-			ProfileManager profileManager = guiController.getProfileManager();
-
-			MessageBox mb = new MessageBox(getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+			MessageBox mb = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("MainWindow.Confirmation")); //$NON-NLS-1$
 			mb.setMessage(Messages.getString("MainWindow.Do_You_Want_To_Delete_Profile") + " " + p.getName() + " ?"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			if (mb.open() == SWT.YES) {
@@ -496,5 +543,21 @@ class MainWindow extends Composite implements ProfileListControlHandler, TaskGen
 				profileManager.save();
 			}
 		}
+	}
+
+	private void minimizeToTray() {
+		// FIXME: on OSX use this:
+		// mainWindow.setMinimized(true);
+		shell.setMinimized(true);
+		shell.setVisible(false);
+		// TODO make sure Tray is visible here
+	}
+
+	public Shell getShell() {
+		return shell;
+	}
+
+	public void dispose() {
+		shell.dispose();
 	}
 }

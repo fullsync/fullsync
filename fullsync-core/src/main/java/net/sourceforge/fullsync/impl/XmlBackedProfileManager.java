@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -45,6 +46,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.google.inject.Injector;
+
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
@@ -57,59 +60,28 @@ import net.sourceforge.fullsync.schedule.Schedule;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
 import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
 import net.sourceforge.fullsync.schedule.Scheduler;
-import net.sourceforge.fullsync.schedule.SchedulerChangeListener;
-import net.sourceforge.fullsync.schedule.SchedulerImpl;
 
-// TODO remove schedulerChangeListener
 /**
  * A ProfileManager handles persistence of Profiles and provides
  * a scheduler for creating events when a Profile should be executed.
  */
 @Singleton
-public class XmlBackedProfileManager implements ProfileChangeListener, ScheduleTaskSource, ProfileManager {
-	static class ProfileManagerSchedulerTask implements ScheduleTask {
-		private XmlBackedProfileManager profileManager;
-		private Profile profile;
-		private long executionTime;
-
-		ProfileManagerSchedulerTask(XmlBackedProfileManager pm, Profile p, long ts) {
-			profileManager = pm;
-			profile = p;
-			executionTime = ts;
-		}
-
-		@Override
-		public void run() {
-			Thread worker = new Thread(() -> profileManager.fireProfileSchedulerEvent(profile));
-			worker.start();
-			profile.getSchedule().setLastOccurrence(System.currentTimeMillis());
-		}
-
-		@Override
-		public long getExecutionTime() {
-			return executionTime;
-		}
-
-		@Override
-		public String toString() {
-			return "Scheduled execution of " + profile.getName();
-		}
-	}
-
-	private String configFile;
-	private final Scheduler scheduler;
+public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManager, ProfileChangeListener {
+	@Inject
+	private Injector injector;
+	private String profilesFileName;
 	private List<Profile> profiles = new ArrayList<>();
 	private List<ProfileListChangeListener> changeListeners = new ArrayList<>();
 	private List<ProfileSchedulerListener> scheduleListeners = new ArrayList<>();
 
-	public XmlBackedProfileManager(String configFile) {
-		scheduler = new SchedulerImpl(this);
-		this.configFile = configFile;
+	@Override
+	public void setProfilesFileName(String profilesFileName) {
+		this.profilesFileName = profilesFileName;
 	}
 
 	@Override
 	public boolean loadProfiles() {
-		return loadProfiles(configFile);
+		return loadProfiles(profilesFileName);
 	}
 
 	@Override
@@ -174,6 +146,13 @@ public class XmlBackedProfileManager implements ProfileChangeListener, ScheduleT
 	}
 
 	@Override
+	public void updateProfile(Profile oldProfile, Profile newProfile) {
+		oldProfile.removeProfileChangeListener(this);
+		profiles.remove(oldProfile);
+		doAddProfile(newProfile, true);
+	}
+
+	@Override
 	public void removeProfile(Profile profile) {
 		profile.removeProfileChangeListener(this);
 		profiles.remove(profile);
@@ -193,21 +172,6 @@ public class XmlBackedProfileManager implements ProfileChangeListener, ScheduleT
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public void startScheduler() {
-		scheduler.start();
-	}
-
-	@Override
-	public void stopScheduler() {
-		scheduler.stop();
-	}
-
-	@Override
-	public boolean isSchedulerEnabled() {
-		return scheduler.isEnabled();
 	}
 
 	@Override
@@ -251,7 +215,7 @@ public class XmlBackedProfileManager implements ProfileChangeListener, ScheduleT
 
 	@Override
 	public void profileChanged(Profile profile) {
-		scheduler.refresh();
+		injector.getInstance(Scheduler.class).refresh();
 		for (ProfileListChangeListener changeListener : changeListeners) {
 			changeListener.profileChanged(profile);
 		}
@@ -274,16 +238,6 @@ public class XmlBackedProfileManager implements ProfileChangeListener, ScheduleT
 	}
 
 	@Override
-	public void addSchedulerChangeListener(SchedulerChangeListener listener) {
-		scheduler.addSchedulerChangeListener(listener);
-	}
-
-	@Override
-	public void removeSchedulerChangeListener(SchedulerChangeListener listener) {
-		scheduler.removeSchedulerChangeListener(listener);
-	}
-
-	@Override
 	public void save() {
 		try {
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -291,9 +245,7 @@ public class XmlBackedProfileManager implements ProfileChangeListener, ScheduleT
 
 			Element e = doc.createElement("Profiles");
 			e.setAttribute("version", "1.1");
-			profiles.stream()
-				.map(p -> p.serialize(doc))
-				.forEachOrdered(e::appendChild);
+			profiles.stream().map(p -> p.serialize(doc)).forEachOrdered(e::appendChild);
 			doc.appendChild(e);
 
 			TransformerFactory fac = TransformerFactory.newInstance();
@@ -304,7 +256,7 @@ public class XmlBackedProfileManager implements ProfileChangeListener, ScheduleT
 			tf.setOutputProperty(OutputKeys.INDENT, "yes");
 			tf.setOutputProperty(OutputKeys.STANDALONE, "no");
 			DOMSource source = new DOMSource(doc);
-			File newCfgFile = new File(configFile + ".tmp");
+			File newCfgFile = new File(profilesFileName + ".tmp");
 			try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(newCfgFile), StandardCharsets.UTF_8)) {
 				tf.transform(source, new StreamResult(osw));
 				osw.flush();
@@ -313,7 +265,7 @@ public class XmlBackedProfileManager implements ProfileChangeListener, ScheduleT
 				if (0 == newCfgFile.length()) {
 					throw new Exception("Storing profiles failed (size = 0)");
 				}
-				Util.fileRenameToPortableLegacy(newCfgFile.getName(), configFile);
+				Util.fileRenameToPortableLegacy(newCfgFile.getName(), profilesFileName);
 			}
 			finally {
 				Files.deleteIfExists(newCfgFile.toPath());

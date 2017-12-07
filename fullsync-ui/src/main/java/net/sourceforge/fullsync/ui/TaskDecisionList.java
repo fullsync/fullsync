@@ -135,7 +135,7 @@ public class TaskDecisionList extends Composite {
 		final Display display = Display.getDefault();
 		display.asyncExec(() -> {
 			try {
-				final TaskDecisionPage dialog = new TaskDecisionPage(guiController.getMainShell(), guiController, task);
+				final TaskDecisionPage dialog = new TaskDecisionPage(guiController.getMainWindow().getShell(), guiController, task);
 				if (!interactive) {
 					dialog.addWizardDialogListener(dialog::performActions);
 				}

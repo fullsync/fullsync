@@ -22,6 +22,8 @@ package net.sourceforge.fullsync.ui;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -32,7 +34,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
-import org.eclipse.swt.widgets.Shell;
 
 public class SystemStatusPage extends WizardDialog {
 	private Label totalMemory;
@@ -42,8 +43,9 @@ public class SystemStatusPage extends WizardDialog {
 	private Timer timer;
 	private Composite content;
 
-	public SystemStatusPage(Shell parent) {
-		super(parent);
+	@Inject
+	public SystemStatusPage(MainWindow mainWindow) {
+		super(mainWindow.getShell());
 	}
 
 	@Override

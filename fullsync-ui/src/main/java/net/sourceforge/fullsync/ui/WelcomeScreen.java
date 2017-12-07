@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import javax.inject.Inject;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -29,13 +31,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
 
 public class WelcomeScreen extends Dialog {
-
-	public WelcomeScreen(Shell parent) {
-		super(parent);
-		final Shell dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
+	@Inject
+	public WelcomeScreen(MainWindow mainWindow, Preferences preferences) {
+		super(mainWindow.getShell());
+		final Shell dialogShell = new Shell(mainWindow.getShell(), SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
 		String title = Messages.getString("WelcomeScreen.WelcomeMessage", Util.getFullSyncVersion()); //$NON-NLS-1$
 
 		GridLayout dialogShellLayout = new GridLayout();
@@ -63,7 +66,7 @@ public class WelcomeScreen extends Dialog {
 		lrel.grabExcessHorizontalSpace = true;
 		labelReleases.setLayoutData(lrel);
 
-		ChangeLogBox changelogText = new ChangeLogBox(dialogShell, SWT.NONE, GuiController.getInstance().getPreferences().getLastVersion());
+		ChangeLogBox changelogText = new ChangeLogBox(dialogShell, SWT.NONE, preferences.getLastVersion());
 		GridData changelogTextLData = new GridData(GridData.FILL_BOTH);
 		changelogTextLData.heightHint = 300;
 		changelogText.setLayoutData(changelogTextLData);

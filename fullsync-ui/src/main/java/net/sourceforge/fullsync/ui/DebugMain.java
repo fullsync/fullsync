@@ -19,7 +19,8 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.FullSync;
+import com.google.inject.Injector;
+
 import net.sourceforge.fullsync.Launcher;
 import net.sourceforge.fullsync.cli.Main;
 
@@ -29,7 +30,7 @@ public class DebugMain implements Launcher {
 	}
 
 	@Override
-	public void launchGui(FullSync fullsync) throws Exception {
-		GuiController.launchUI(fullsync);
+	public void launchGui(Injector injector) throws Exception {
+		GuiController.launchUI(injector);
 	}
 }

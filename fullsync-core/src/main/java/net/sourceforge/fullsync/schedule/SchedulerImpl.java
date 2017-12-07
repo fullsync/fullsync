@@ -22,9 +22,13 @@ package net.sourceforge.fullsync.schedule;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Singleton
 public class SchedulerImpl implements Scheduler, Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerImpl.class);
 	private ScheduleTaskSource scheduleSource;
@@ -34,6 +38,7 @@ public class SchedulerImpl implements Scheduler, Runnable {
 
 	private List<SchedulerChangeListener> schedulerListeners = new ArrayList<>();
 
+	@Inject
 	public SchedulerImpl(ScheduleTaskSource source) {
 		scheduleSource = source;
 	}
@@ -119,29 +124,21 @@ public class SchedulerImpl implements Scheduler, Runnable {
 		running = true;
 		while (enabled) {
 			long now = System.currentTimeMillis();
-			if (logger.isDebugEnabled()) {
-				logger.debug("searching for next task after " + now);
-			}
+			logger.debug("searching for next task after {}", now);
 			ScheduleTask task = scheduleSource.getNextScheduleTask();
 			if (null == task) {
 				logger.info("could not find a scheduled task, aborting");
 				break;
 			}
-			if (logger.isDebugEnabled()) {
-				logger.debug("found: " + task.toString() + " at " + task.getExecutionTime());
-			}
+			logger.debug("found: {} at {}", task, task.getExecutionTime());
 
 			long nextTime = task.getExecutionTime();
 			try {
-				if (logger.isDebugEnabled()) {
-					logger.debug("waiting for " + (nextTime - now) + " mseconds");
-				}
+				logger.debug("waiting for {} microseconds", nextTime - now);
 				if (nextTime >= now) {
 					Thread.sleep(nextTime - now);
 				}
-				if (logger.isDebugEnabled()) {
-					logger.debug("Running task " + task);
-				}
+				logger.debug("Running task {}", task);
 				task.run();
 			}
 			catch (InterruptedException ex) {
