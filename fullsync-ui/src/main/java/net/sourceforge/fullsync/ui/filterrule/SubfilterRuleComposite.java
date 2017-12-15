@@ -36,8 +36,8 @@ import net.sourceforge.fullsync.ui.FileFilterPage;
 class SubfilterRuleComposite extends RuleComposite {
 	private Button buttonFilter;
 
-	SubfilterRuleComposite(Injector injector, Composite parent, int style, final FilterValue filterValue) {
-		super(parent, style);
+	SubfilterRuleComposite(Injector injector, Composite parent, final FilterValue filterValue) {
+		super(parent);
 		this.setLayout(new GridLayout(4, true));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		layoutData.horizontalSpan = 2;

@@ -66,7 +66,7 @@ public class WelcomeScreen extends Dialog {
 		lrel.grabExcessHorizontalSpace = true;
 		labelReleases.setLayoutData(lrel);
 
-		ChangeLogBox changelogText = new ChangeLogBox(dialogShell, SWT.NONE, preferences.getLastVersion());
+		ChangeLogBox changelogText = new ChangeLogBox(dialogShell, preferences.getLastVersion());
 		GridData changelogTextLData = new GridData(GridData.FILL_BOTH);
 		changelogTextLData.heightHint = 300;
 		changelogText.setLayoutData(changelogTextLData);

@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.ui.filterrule;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -29,8 +30,8 @@ abstract class RuleComposite extends Composite {
 	protected Text textValue;
 	private List<ValueChangedListener> listeners = new ArrayList<>();
 
-	protected RuleComposite(Composite parent, int style) {
-		super(parent, style);
+	protected RuleComposite(Composite parent) {
+		super(parent, SWT.None);
 	}
 
 	public void addValueChangedListener(ValueChangedListener listener) {

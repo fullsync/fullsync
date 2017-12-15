@@ -144,8 +144,8 @@ class CrontabScheduleOptions extends ScheduleOptions {
 
 	private java.util.List<PartContainer> parts = new ArrayList<>();
 
-	CrontabScheduleOptions(Composite parent, int style) {
-		super(parent, style);
+	CrontabScheduleOptions(Composite parent) {
+		super(parent);
 		try {
 			setLayout(new GridLayout(4, false));
 			for (CrontabPart cronPart : CrontabPart.ALL_PARTS) {

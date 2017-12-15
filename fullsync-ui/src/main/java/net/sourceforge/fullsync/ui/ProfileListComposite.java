@@ -21,6 +21,7 @@ package net.sourceforge.fullsync.ui;
 
 import java.util.Objects;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import net.sourceforge.fullsync.Profile;
@@ -31,8 +32,8 @@ public abstract class ProfileListComposite extends Composite implements ProfileL
 	private final ProfileManager profileManager;
 	private final ProfileListControlHandler profileListControlHandler;
 
-	public ProfileListComposite(Composite parent, int style, ProfileManager pm, ProfileListControlHandler handler) {
-		super(parent, style);
+	public ProfileListComposite(Composite parent, ProfileManager pm, ProfileListControlHandler handler) {
+		super(parent, SWT.NULL);
 		Objects.requireNonNull(pm);
 		Objects.requireNonNull(handler);
 		profileManager = pm;

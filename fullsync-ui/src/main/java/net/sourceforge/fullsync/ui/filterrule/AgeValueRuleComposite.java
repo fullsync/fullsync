@@ -31,8 +31,8 @@ import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue.Unit;
 
 class AgeValueRuleComposite extends RuleComposite {
-	AgeValueRuleComposite(Composite parent, int style, final AgeValue value) {
-		super(parent, style);
+	AgeValueRuleComposite(Composite parent, final AgeValue value) {
+		super(parent);
 		this.setLayout(new GridLayout(2, true));
 		this.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 

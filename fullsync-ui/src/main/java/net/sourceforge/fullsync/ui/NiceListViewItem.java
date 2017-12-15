@@ -49,8 +49,8 @@ public class NiceListViewItem extends Canvas implements Listener {
 	private boolean mouseOver;
 	private boolean selected;
 
-	public NiceListViewItem(NiceListView parent, int style) {
-		super(parent, style);
+	public NiceListViewItem(NiceListView parent) {
+		super(parent, SWT.NULL);
 		this.list = parent;
 
 		GridData layoutData = new GridData();

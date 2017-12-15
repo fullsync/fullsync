@@ -149,7 +149,7 @@ class AboutDialog implements AsyncUIUpdate {
 	private Control initChangelogTab(Composite parent) {
 		final Composite tab = new Composite(parent, SWT.FILL);
 		tab.setLayout(new GridLayout(1, true));
-		ChangeLogBox changeLogBox = new ChangeLogBox(tab, SWT.NONE, "");
+		ChangeLogBox changeLogBox = new ChangeLogBox(tab, "");
 		GridData changelogBoxLData = new GridData(GridData.FILL_BOTH);
 		changelogBoxLData.heightHint = 300;
 		changeLogBox.setLayoutData(changelogBoxLData);

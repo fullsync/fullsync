@@ -30,8 +30,8 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 class SizeValueRuleComposite extends RuleComposite {
-	SizeValueRuleComposite(Composite parent, int style, final SizeValue value) {
-		super(parent, style);
+	SizeValueRuleComposite(Composite parent, final SizeValue value) {
+		super(parent);
 		this.setLayout(new GridLayout(2, true));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false);
 		this.setLayoutData(layoutData);

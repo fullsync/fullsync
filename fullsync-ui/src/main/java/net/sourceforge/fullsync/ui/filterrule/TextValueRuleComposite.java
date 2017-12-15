@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 class TextValueRuleComposite extends RuleComposite {
-	TextValueRuleComposite(Composite parent, int style, final TextValue value) {
-		super(parent, style);
+	TextValueRuleComposite(Composite parent, final TextValue value) {
+		super(parent);
 		GridData compositeLayoutData = new GridData();
 		compositeLayoutData.horizontalAlignment = SWT.FILL;
 		compositeLayoutData.grabExcessHorizontalSpace = true;

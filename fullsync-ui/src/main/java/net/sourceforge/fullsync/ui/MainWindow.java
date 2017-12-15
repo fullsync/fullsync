@@ -430,10 +430,10 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 			c.dispose();
 		}
 		if ("NiceListView".equals(preferences.getProfileListStyle())) {
-			profileList = new NiceListViewProfileListComposite(profileListContainer, SWT.NULL, profileManager, this);
+			profileList = new NiceListViewProfileListComposite(profileListContainer, profileManager, this);
 		}
 		else {
-			profileList = new ListViewProfileListComposite(profileListContainer, SWT.NULL, profileManager, this);
+			profileList = new ListViewProfileListComposite(profileListContainer, profileManager, this);
 		}
 		profileList.setMenu(createPopupMenu());
 		profileListContainer.layout();

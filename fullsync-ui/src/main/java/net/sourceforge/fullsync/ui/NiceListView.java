@@ -41,8 +41,8 @@ public class NiceListView extends Composite {
 
 	private NiceListViewItem selected;
 
-	public NiceListView(Composite parent, int style) {
-		super(parent, style);
+	public NiceListView(Composite parent) {
+		super(parent, SWT.TRANSPARENT);
 		colorDefault = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 		colorHover = getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
 		colorSelected = getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION);

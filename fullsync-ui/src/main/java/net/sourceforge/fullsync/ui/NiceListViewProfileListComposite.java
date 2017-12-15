@@ -51,8 +51,8 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		private Label lLastUpdate;
 		private Label lNextUpdate;
 
-		ContentComposite(NiceListViewProfileListComposite profileListComposite, Composite parent, int style) {
-			super(parent, style);
+		ContentComposite(NiceListViewProfileListComposite profileListComposite, Composite parent) {
+			super(parent, SWT.NULL);
 			niceListViewProfileListComposite = profileListComposite;
 			GridLayout layout = new GridLayout(2, false);
 			layout.marginHeight = 1;
@@ -195,11 +195,11 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	private Image imageEdit;
 	private Image imageDelete;
 
-	public NiceListViewProfileListComposite(Composite parent, int style, ProfileManager profileManager, ProfileListControlHandler handler) {
-		super(parent, style, profileManager, handler);
+	public NiceListViewProfileListComposite(Composite parent, ProfileManager profileManager, ProfileListControlHandler handler) {
+		super(parent, profileManager, handler);
 		loadImages();
 		scrollPane = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
-		profileList = new NiceListView(scrollPane, SWT.TRANSPARENT);
+		profileList = new NiceListView(scrollPane);
 		scrollPane.setExpandHorizontal(true);
 		scrollPane.setExpandVertical(false);
 		scrollPane.setAlwaysShowScrollBars(true);
@@ -262,8 +262,8 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		for (Profile p : getProfileManager().getProfiles()) {
 			NiceListViewItem item = null;
 			try {
-				item = new NiceListViewItem(profileList, SWT.NULL);
-				ContentComposite content = new ContentComposite(this, item, SWT.NULL);
+				item = new NiceListViewItem(profileList);
+				ContentComposite content = new ContentComposite(this, item);
 				content.setProfile(p);
 				item.setContent(content);
 				item.setMenu(getMenu());

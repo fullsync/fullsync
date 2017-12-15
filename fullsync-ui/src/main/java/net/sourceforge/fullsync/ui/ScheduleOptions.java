@@ -19,14 +19,15 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 public abstract class ScheduleOptions extends Composite {
-	public ScheduleOptions(Composite parent, int style) {
-		super(parent, style);
+	public ScheduleOptions(Composite parent) {
+		super(parent, SWT.NULL);
 	}
 
 	public abstract String getSchedulingName();

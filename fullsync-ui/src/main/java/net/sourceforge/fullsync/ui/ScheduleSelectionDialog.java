@@ -40,8 +40,8 @@ import net.sourceforge.fullsync.schedule.Schedule;
 
 public class ScheduleSelectionDialog extends Dialog {
 	private static class NullScheduleOptions extends ScheduleOptions {
-		NullScheduleOptions(Composite parent, int style) {
-			super(parent, style);
+		NullScheduleOptions(Composite parent) {
+			super(parent);
 		}
 
 		@Override
@@ -153,10 +153,10 @@ public class ScheduleSelectionDialog extends Dialog {
 			buttonCancel.setLayoutData(buttonCancelLData);
 			buttonCancel.addListener(SWT.Selection, e -> dialogShell.dispose());
 
-			addScheduleOptions(new NullScheduleOptions(groupOptions, SWT.NULL));
+			addScheduleOptions(new NullScheduleOptions(groupOptions));
 			cbType.select(0);
-			addScheduleOptions(new IntervalScheduleOptions(groupOptions, SWT.NULL));
-			addScheduleOptions(new CrontabScheduleOptions(groupOptions, SWT.NULL));
+			addScheduleOptions(new IntervalScheduleOptions(groupOptions));
+			addScheduleOptions(new CrontabScheduleOptions(groupOptions));
 
 			Display display = dialogShell.getDisplay();
 			dialogShell.setSize(350, 350);

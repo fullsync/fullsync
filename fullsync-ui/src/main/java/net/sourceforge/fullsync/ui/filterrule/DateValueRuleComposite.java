@@ -34,8 +34,8 @@ class DateValueRuleComposite extends RuleComposite {
 	private Button buttonCalendar;
 	private DateFormat dateFormat;
 
-	DateValueRuleComposite(Composite parent, int style, final DateValue value) {
-		super(parent, style);
+	DateValueRuleComposite(Composite parent, final DateValue value) {
+		super(parent);
 		this.setLayout(new GridLayout(2, true));
 		dateFormat = DateFormat.getDateInstance();
 

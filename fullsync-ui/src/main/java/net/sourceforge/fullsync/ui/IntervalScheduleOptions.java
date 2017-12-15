@@ -45,8 +45,8 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 	private Text textCount;
 	private Combo cbUnit;
 
-	public IntervalScheduleOptions(Composite parent, int style) {
-		super(parent, style);
+	public IntervalScheduleOptions(Composite parent) {
+		super(parent);
 		try {
 			GridLayout thisLayout = new GridLayout(3, false);
 			this.setLayout(thisLayout);

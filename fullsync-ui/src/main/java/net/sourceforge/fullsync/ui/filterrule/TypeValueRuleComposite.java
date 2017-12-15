@@ -36,8 +36,8 @@ import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 class TypeValueRuleComposite extends RuleComposite {
 	private Combo comboTypes;
 
-	TypeValueRuleComposite(Composite parent, int style, final TypeValue value) {
-		super(parent, style);
+	TypeValueRuleComposite(Composite parent, final TypeValue value) {
+		super(parent);
 		GridData compositeLayoutData = new GridData();
 		compositeLayoutData.horizontalAlignment = SWT.FILL;
 		compositeLayoutData.grabExcessHorizontalSpace = true;

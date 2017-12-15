@@ -188,41 +188,41 @@ public class FilterRuleListItem {
 				value = new TextValue();
 			}
 
-			ruleComposite = new TextValueRuleComposite(composite, SWT.NULL, (TextValue) value);
+			ruleComposite = new TextValueRuleComposite(composite, (TextValue) value);
 		}
 		else if (ruleClass.equals(FileTypeFileFilterRule.class)) {
 			if (!(value instanceof TypeValue)) {
 				value = new TypeValue();
 			}
 
-			ruleComposite = new TypeValueRuleComposite(composite, SWT.NULL, (TypeValue) value);
+			ruleComposite = new TypeValueRuleComposite(composite, (TypeValue) value);
 		}
 		else if (ruleClass.equals(FileSizeFileFilterRule.class)) {
 			if (!(value instanceof SizeValue)) {
 				value = new SizeValue();
 			}
 
-			ruleComposite = new SizeValueRuleComposite(composite, SWT.NULL, (SizeValue) value);
+			ruleComposite = new SizeValueRuleComposite(composite, (SizeValue) value);
 		}
 		else if (ruleClass.equals(FileAgeFileFilterRule.class)) {
 			if (!(value instanceof AgeValue)) {
 				value = new AgeValue();
 			}
 
-			ruleComposite = new AgeValueRuleComposite(composite, SWT.NULL, (AgeValue) value);
+			ruleComposite = new AgeValueRuleComposite(composite, (AgeValue) value);
 		}
 		else if (ruleClass.equals(FileModificationDateFileFilterRule.class)) {
 			if (!(value instanceof DateValue)) {
 				value = new DateValue(SystemDate.getInstance().currentTimeMillis());
 			}
 
-			ruleComposite = new DateValueRuleComposite(composite, SWT.NULL, (DateValue) value);
+			ruleComposite = new DateValueRuleComposite(composite, (DateValue) value);
 		}
 		else if (ruleClass.equals(SubfilterFileFilerRule.class)) {
 			if (!(value instanceof FilterValue)) {
 				value = new FilterValue(new FileFilter());
 			}
-			ruleComposite = new SubfilterRuleComposite(root.getInjector(), composite, SWT.NULL, (FilterValue) value);
+			ruleComposite = new SubfilterRuleComposite(root.getInjector(), composite, (FilterValue) value);
 		}
 		else {
 			Composite valueComposite = new Composite(composite, SWT.NULL);

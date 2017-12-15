@@ -36,8 +36,8 @@ public class ChangeLogBox extends StyledText implements AsyncUIUpdate {
 	private String lastFullSyncVersion;
 	private List<ChangeLogEntry> changelog;
 
-	public ChangeLogBox(Composite parent, int style, String _lastFullSyncVersion) {
-		super(parent, style | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+	public ChangeLogBox(Composite parent, String _lastFullSyncVersion) {
+		super(parent, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 		setAlwaysShowScrollBars(false);
 		lastFullSyncVersion = _lastFullSyncVersion;
 		GuiController.backgroundExec(this);

@@ -39,8 +39,8 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 	private TableColumn tableColumnSource;
 	private TableColumn tableColumnDestination;
 
-	public ListViewProfileListComposite(Composite parent, int style, ProfileManager profileManager, ProfileListControlHandler handler) {
-		super(parent, style, profileManager, handler);
+	public ListViewProfileListComposite(Composite parent, ProfileManager profileManager, ProfileListControlHandler handler) {
+		super(parent, profileManager, handler);
 		tableProfiles = new Table(this, SWT.FULL_SELECTION | SWT.BORDER);
 
 		tableColumnName = new TableColumn(tableProfiles, SWT.NONE);

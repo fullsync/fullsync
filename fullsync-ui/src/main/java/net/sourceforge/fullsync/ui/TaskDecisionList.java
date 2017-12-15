@@ -79,8 +79,8 @@ public class TaskDecisionList extends Composite {
 	private boolean onlyChanges;
 	private boolean changeAllowed;
 
-	public TaskDecisionList(Composite parent, int style) {
-		super(parent, style);
+	public TaskDecisionList(Composite parent) {
+		super(parent, SWT.NULL);
 		try {
 			this.setSize(550, 500);
 
