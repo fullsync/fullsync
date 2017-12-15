@@ -25,10 +25,9 @@ import java.net.URISyntaxException;
 import net.sourceforge.fullsync.fs.Site;
 
 public interface TaskGenerator {
-	TaskTree execute(FullSync fullsync, Profile profile, boolean interactive)
-		throws FileSystemException, DataParseException, URISyntaxException, IOException;
+	TaskTree execute(Profile profile, boolean interactive) throws FileSystemException, DataParseException, URISyntaxException, IOException;
 
-	TaskTree execute(FullSync fullsync, Site source, Site destination, ActionDecider actionDecider, RuleSet initialRules)
+	TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet initialRules)
 		throws FileSystemException, DataParseException, IOException;
 
 	void addTaskGenerationListener(TaskGenerationListener listener);

@@ -22,13 +22,18 @@ package net.sourceforge.fullsync.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
+@Singleton
 public class ImageRepository {
 	private Display display;
 	private Map<String, Image> cache = new HashMap<>();
 
+	@Inject
 	public ImageRepository(Display display) {
 		this.display = display;
 	}

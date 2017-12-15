@@ -22,9 +22,14 @@ package net.sourceforge.fullsync.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.widgets.Display;
 
+@Singleton
 public class FontRepository {
 	private static class Key {
 		private String name;
@@ -54,21 +59,17 @@ public class FontRepository {
 		}
 	}
 
-	private Device dev;
-	private Map<FontRepository.Key, Font> cache;
+	private final Device dev;
+	private final Map<FontRepository.Key, Font> cache = new HashMap<>(5);
 
-	public FontRepository(Device _device) {
-		dev = _device;
-		cache = new HashMap<>(5);
+	@Inject
+	public FontRepository(Display display) {
+		dev = display;
 	}
 
 	public Font getFont(String name, int height, int style) {
 		Key key = new Key(name, height, style);
-		Font font = cache.get(key);
-		if (null == font) {
-			font = new Font(dev, name, height, style);
-		}
-		return font;
+		return cache.computeIfAbsent(key, k -> new Font(dev, k.name, k.height, k.style));
 	}
 
 	public void dispose() {

@@ -22,16 +22,8 @@ package net.sourceforge.fullsync;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import javax.inject.Inject;
-
 public class FullSync {
 	private final Deque<PromptQuestion> questionHandler = new ArrayDeque<>();
-	private final Synchronizer synchronizer;
-
-	@Inject
-	public FullSync(Synchronizer _synchronizer) {
-		synchronizer = _synchronizer;
-	}
 
 	public PromptQuestion getQuestionHandler() {
 		return questionHandler.peek();
@@ -43,9 +35,5 @@ public class FullSync {
 
 	public void popQuestionHandler() {
 		questionHandler.pop();
-	}
-
-	public Synchronizer getSynchronizer() {
-		return synchronizer;
 	}
 }

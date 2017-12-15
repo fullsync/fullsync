@@ -51,6 +51,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import com.google.inject.Injector;
+
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemException;
@@ -72,6 +74,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 	private final FullSync fullsync;
 	private final ProfileManager profileManager;
+	private final Injector injector;
 
 	private TabFolder tabs;
 	private Text textProfileName;
@@ -105,10 +108,11 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private String lastSourceLoaded;
 
 	@Inject
-	public ProfileDetailsTabbedPage(MainWindow parent, FullSync fullsync, ProfileManager profileManager) {
+	public ProfileDetailsTabbedPage(MainWindow parent, FullSync fullsync, ProfileManager profileManager, Injector injector) {
 		super(parent.getShell());
 		this.fullsync = fullsync;
 		this.profileManager = profileManager;
+		this.injector = injector;
 	}
 
 	public void setProfile(Profile profile) {
@@ -387,7 +391,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		buttonFileFilter.setLayoutData(buttonFileFilterData);
 		buttonFileFilter.addListener(SWT.Selection, e -> {
 			try {
-				FileFilterPage dialog = new FileFilterPage(m_parent.getShell(), filter);
+				FileFilterPage dialog = injector.getInstance(FileFilterPage.class);
+				dialog.setFileFilter(filter);
 				dialog.show();
 				FileFilter newfilter = dialog.getFileFilter();
 				if (null != newfilter) {
@@ -479,7 +484,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			if (selectedItems.length > 0) {
 				TreeItem selectedItem = selectedItems[0];
 				FileFilter currentItemFilter = (FileFilter) selectedItem.getData(FILTER_KEY);
-				FileFilterPage dialog = new FileFilterPage(m_parent.getShell(), currentItemFilter);
+				FileFilterPage dialog = injector.getInstance(FileFilterPage.class);
+				dialog.setFileFilter(currentItemFilter);
 				dialog.show();
 				FileFilter newfilter = dialog.getFileFilter();
 				if (null != newfilter) {

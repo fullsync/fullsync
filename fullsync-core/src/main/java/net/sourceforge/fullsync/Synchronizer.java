@@ -35,17 +35,15 @@ public class Synchronizer {
 	private static final Logger logger = LoggerFactory.getLogger(Synchronizer.class);
 
 	private final TaskGenerator taskGenerator;
-	private final FullSync fullsync;
 
 	@Inject
-	public Synchronizer(TaskGenerator taskGenerator, FullSync fullsync) {
+	public Synchronizer(TaskGenerator taskGenerator) {
 		this.taskGenerator = taskGenerator;
-		this.fullsync = fullsync;
 	}
 
 	public synchronized TaskTree executeProfile(Profile profile, boolean interactive) {
 		try {
-			return taskGenerator.execute(fullsync, profile, interactive);
+			return taskGenerator.execute(profile, interactive);
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
@@ -112,9 +110,5 @@ public class Synchronizer {
 		BlockBuffer buffer = new BlockBuffer(tmpLogger);
 		TaskExecutor queue = new FillBufferTaskExecutor(buffer);
 		return queue.createStatistics(taskTree);
-	}
-
-	public TaskGenerator getTaskGenerator() {
-		return taskGenerator;
 	}
 }

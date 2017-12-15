@@ -46,7 +46,6 @@ import org.apache.commons.cli.ParseException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Launcher;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Profile;
@@ -210,31 +209,30 @@ public class Main implements Launcher { // NO_UCD
 	}
 
 	public static void finishStartup(Injector injector) {
-		FullSync fullsync = injector.getInstance(FullSync.class);
 		RuntimeConfiguration rt = injector.getInstance(RuntimeConfiguration.class);
 		Preferences preferences = injector.getInstance(Preferences.class);
 		Scheduler scheduler = injector.getInstance(Scheduler.class);
 		ProfileManager profileManager = injector.getInstance(ProfileManager.class);
+		Synchronizer synchronizer = injector.getInstance(Synchronizer.class);
 		Optional<String> profile = rt.getProfileToRun();
 		profileManager.loadProfiles();
 		if (profile.isPresent()) {
-			handleRunProfile(fullsync, profileManager, profile.get());
+			handleRunProfile(synchronizer, profileManager, profile.get());
 		}
 		if (rt.isDaemon().orElse(false).booleanValue()) {
-			handleIsDaemon(fullsync, profileManager, scheduler);
+			handleIsDaemon(synchronizer, profileManager, scheduler);
 		}
 		if (preferences.getAutostartScheduler()) {
 			scheduler.start();
 		}
 	}
 
-	private static void handleRunProfile(FullSync fullsync, ProfileManager profileManager, String profileName) {
+	private static void handleRunProfile(Synchronizer synchronizer, ProfileManager profileManager, String profileName) {
 		Profile p = profileManager.getProfile(profileName);
 		int errorlevel = 1;
 		if (null != p) {
-			Synchronizer sync = fullsync.getSynchronizer();
-			TaskTree tree = sync.executeProfile(p, false);
-			errorlevel = sync.performActions(tree);
+			TaskTree tree = synchronizer.executeProfile(p, false);
+			errorlevel = synchronizer.performActions(tree);
 			p.setLastUpdate(new Date());
 			profileManager.save();
 		}
@@ -245,15 +243,14 @@ public class Main implements Launcher { // NO_UCD
 		System.exit(errorlevel);
 	}
 
-	private static void handleIsDaemon(FullSync fullsync, ProfileManager profileManager, Scheduler scheduler) {
+	private static void handleIsDaemon(Synchronizer synchronizer, ProfileManager profileManager, Scheduler scheduler) {
 		profileManager.addSchedulerListener(profile -> {
-			Synchronizer sync = fullsync.getSynchronizer();
-			TaskTree tree = sync.executeProfile(profile, false);
+			TaskTree tree = synchronizer.executeProfile(profile, false);
 			if (null == tree) {
 				profile.setLastError(1, "An error occured while comparing filesystems.");
 			}
 			else {
-				int errorLevel = sync.performActions(tree);
+				int errorLevel = synchronizer.performActions(tree);
 				if (errorLevel > 0) {
 					profile.setLastError(errorLevel, "An error occured while copying files.");
 				}

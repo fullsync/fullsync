@@ -38,17 +38,14 @@ import org.eclipse.swt.widgets.Shell;
 import com.google.inject.Injector;
 
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
-import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.cli.Main;
 
 @Singleton
 public class GuiController implements Runnable {
 	private static GuiController singleton;
-	private final FullSync fullsync;
 	private final Preferences preferences;
 	private final ProfileManager profileManager;
 	private final Injector injector;
@@ -61,36 +58,15 @@ public class GuiController implements Runnable {
 	private final ScheduledThreadPoolExecutor executorService;
 
 	@Inject
-	private GuiController(FullSync fullsync, Preferences preferences, ProfileManager profileManager, Injector injector) {
-		this.fullsync = fullsync;
+	private GuiController(Preferences preferences, ProfileManager profileManager, Injector injector) {
 		this.preferences = preferences;
 		this.profileManager = profileManager;
 		this.injector = injector.createChildInjector(new FullSyncUiModule());
 		executorService = new ScheduledThreadPoolExecutor(1);
 	}
 
-	public MainWindow getMainWindow() {
-		return mainWindow;
-	}
-
-	public FullSync getFullSync() {
-		return fullsync;
-	}
-
 	public Preferences getPreferences() {
 		return preferences;
-	}
-
-	public ProfileManager getProfileManager() {
-		return profileManager;
-	}
-
-	public Synchronizer getSynchronizer() {
-		return fullsync.getSynchronizer();
-	}
-
-	public Display getDisplay() {
-		return display;
 	}
 
 	public Image getImage(String imageName) {
@@ -99,8 +75,8 @@ public class GuiController implements Runnable {
 
 	private void startGui() {
 		display = injector.getInstance(Display.class);
-		imageRepository = new ImageRepository(display);
-		fontRepository = new FontRepository(display);
+		imageRepository = injector.getInstance(ImageRepository.class);
+		fontRepository = injector.getInstance(FontRepository.class);
 		mainWindow = injector.getInstance(MainWindow.class);
 		systemTrayItem = injector.getInstance(SystemTrayItem.class);
 		oldExceptionHandler = ExceptionHandler.registerExceptionHandler(new ExceptionHandler() {

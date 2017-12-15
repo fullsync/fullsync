@@ -222,7 +222,7 @@ public class FilterRuleListItem {
 			if (!(value instanceof FilterValue)) {
 				value = new FilterValue(new FileFilter());
 			}
-			ruleComposite = new SubfilterRuleComposite(composite, SWT.NULL, (FilterValue) value);
+			ruleComposite = new SubfilterRuleComposite(root.getInjector(), composite, SWT.NULL, (FilterValue) value);
 		}
 		else {
 			Composite valueComposite = new Composite(composite, SWT.NULL);

@@ -439,10 +439,6 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		profileListContainer.layout();
 	}
 
-	public GuiController getGuiController() {
-		return guiController;
-	}
-
 	@Override
 	public void taskTreeStarted(TaskTree tree) {
 		// not significant
@@ -512,7 +508,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 				guiController.showBusyCursor(false);
 			}
 			if (null != t) {
-				TaskDecisionList.show(guiController, t, interactive);
+				TaskDecisionList.show(injector, t, interactive);
 			}
 		}
 		catch (Exception e) {

@@ -20,25 +20,42 @@
 package net.sourceforge.fullsync.impl;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
+import net.sourceforge.fullsync.ActionType;
+import net.sourceforge.fullsync.BufferUpdate;
+import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.DataParseException;
+import net.sourceforge.fullsync.FileSystemException;
+import net.sourceforge.fullsync.FileSystemManager;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.IgnoreDecider;
+import net.sourceforge.fullsync.Location;
+import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.RuleSet;
+import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerationListener;
+import net.sourceforge.fullsync.TaskGenerator;
+import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.Site;
 
 @Singleton
-public class TaskGeneratorImpl extends AbstractTaskGenerator {
+public class TaskGeneratorImpl implements TaskGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
+	private final List<TaskGenerationListener> taskGenerationListeners = new ArrayList<>();
 	// TODO this should be execution local so the class
 	// itself is multithreadable
 	// so maybe just put them all into a inmutable
@@ -46,6 +63,12 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	private IgnoreDecider takeIgnoreDecider;
 	private StateDeciderImpl stateDecider;
 	private BufferStateDeciderImpl bufferStateDecider;
+	private final FullSync fullsync;
+
+	@Inject
+	public TaskGeneratorImpl(FullSync fullsync) {
+		this.fullsync = fullsync;
+	}
 
 	protected RuleSet updateRules(File src, File dst, RuleSet rules) throws DataParseException, IOException {
 		rules = rules.createChild(src, dst);
@@ -67,7 +90,6 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 		// handle case where src is dir but dst is file
 	}
 
-	@Override
 	public void synchronizeNodes(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
 		throws DataParseException, IOException {
 		if (!takeIgnoreDecider.isNodeIgnored(src)) {
@@ -93,7 +115,6 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 	 * we could updateRules in synchronizeNodes and apply synchronizeDirectories
 	 * to the given src and dst if they are directories
 	 */
-	@Override
 	public void synchronizeDirectories(File src, File dst, RuleSet oldrules, Task parent, ActionDecider actionDecider)
 		throws DataParseException, IOException {
 		// update rules to current directory
@@ -127,5 +148,90 @@ public class TaskGeneratorImpl extends AbstractTaskGenerator {
 		this.takeIgnoreDecider = oldrules;
 		this.stateDecider = new StateDeciderImpl(oldrules);
 		this.bufferStateDecider = new BufferStateDeciderImpl(oldrules);
+	}
+
+	@Override
+	public void addTaskGenerationListener(TaskGenerationListener listener) {
+		taskGenerationListeners.add(listener);
+	}
+
+	@Override
+	public void removeTaskGenerationListener(TaskGenerationListener listener) {
+		taskGenerationListeners.remove(listener);
+	}
+
+	@Override
+	public TaskTree execute(Profile profile, boolean interactive)
+		throws FileSystemException, URISyntaxException, DataParseException, IOException {
+
+		RuleSet rules = profile.getRuleSet().createRuleSet();
+
+		ActionDecider actionDecider;
+		if ("Publish/Update".equals(profile.getSynchronizationType())) {
+			actionDecider = new PublishActionDecider();
+		}
+		else if ("Publish/Update Overwrite".equals(profile.getSynchronizationType())) {
+			actionDecider = new PublishOverwriteActionDecider();
+		}
+		else if ("Backup Copy".equals(profile.getSynchronizationType())) {
+			actionDecider = new BackupActionDecider();
+		}
+		else if ("Exact Copy".equals(profile.getSynchronizationType())) {
+			actionDecider = new ExactCopyActionDecider();
+		}
+		else if ("Two Way Sync".equals(profile.getSynchronizationType())) {
+			actionDecider = new TwoWaySyncActionDecider();
+		}
+		else {
+			throw new IllegalArgumentException("Profile has unknown synchronization type.");
+		}
+
+		ConnectionDescription srcDesc = profile.getSource();
+		ConnectionDescription dstDesc = profile.getDestination();
+		if (interactive) {
+			srcDesc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
+			dstDesc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
+		}
+		else {
+			srcDesc.clearParameter(ConnectionDescription.PARAMETER_INTERACTIVE);
+			dstDesc.clearParameter(ConnectionDescription.PARAMETER_INTERACTIVE);
+		}
+		final FileSystemManager fsm = new FileSystemManager();
+		try (Site d1 = fsm.createConnection(fullsync, srcDesc); Site d2 = fsm.createConnection(fullsync, dstDesc)) {
+			return execute(d1, d2, actionDecider, rules);
+		}
+		catch (Exception ex) {
+			throw new FileSystemException(ex);
+		}
+	}
+
+	@Override
+	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules)
+		throws DataParseException, FileSystemException, IOException {
+		if (!source.isAvailable()) {
+			throw new FileSystemException("source is unavailable");
+		}
+		if (!destination.isAvailable()) {
+			throw new FileSystemException("destination is unavailable");
+		}
+
+		TaskTree tree = new TaskTree(source, destination);
+		Action rootAction = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "Root");
+		Task root = new Task(null, null, State.IN_SYNC, new Action[] { rootAction });
+		tree.setRoot(root);
+
+		for (TaskGenerationListener listener : taskGenerationListeners) {
+			listener.taskTreeStarted(tree);
+		}
+
+		// TODO use syncnodes here [?]
+		// TODO get traversal type and start correct traversal action
+		synchronizeDirectories(source.getRoot(), destination.getRoot(), rules, root, actionDecider);
+
+		for (TaskGenerationListener listener : taskGenerationListeners) {
+			listener.taskTreeFinished(tree);
+		}
+
+		return tree;
 	}
 }

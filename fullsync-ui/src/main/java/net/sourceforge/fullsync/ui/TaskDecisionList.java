@@ -45,6 +45,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import com.google.inject.Injector;
+
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -131,11 +133,12 @@ public class TaskDecisionList extends Composite {
 		changeAllowed = true;
 	}
 
-	public static void show(final GuiController guiController, final TaskTree task, final boolean interactive) {
+	public static void show(Injector injector, final TaskTree task, final boolean interactive) {
 		final Display display = Display.getDefault();
 		display.asyncExec(() -> {
 			try {
-				final TaskDecisionPage dialog = new TaskDecisionPage(guiController.getMainWindow().getShell(), guiController, task);
+				TaskDecisionPage dialog = injector.getInstance(TaskDecisionPage.class);
+				dialog.setTaskTree(task);
 				if (!interactive) {
 					dialog.addWizardDialogListener(dialog::performActions);
 				}

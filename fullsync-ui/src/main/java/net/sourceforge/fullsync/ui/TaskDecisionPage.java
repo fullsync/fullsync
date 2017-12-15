@@ -21,6 +21,8 @@ package net.sourceforge.fullsync.ui;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -31,7 +33,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -48,6 +49,7 @@ public class TaskDecisionPage extends WizardDialog {
 	private int tasksFinished;
 	private int tasksTotal;
 
+	private final Synchronizer synchronizer;
 	private final Display display;
 	private final Color colorFinishedSuccessful;
 	private final Color colorFinishedUnsuccessful;
@@ -56,17 +58,22 @@ public class TaskDecisionPage extends WizardDialog {
 	private Combo comboFilter;
 	private Label labelProgress;
 
-	public TaskDecisionPage(Shell parent, GuiController guiController, TaskTree taskTree) {
-		super(parent);
+	@Inject
+	public TaskDecisionPage(MainWindow mainWindow, Display display, Synchronizer synchronizer, GuiController guiController) {
+		super(mainWindow.getShell());
+		this.display = display;
+		this.synchronizer = synchronizer;
 		this.guiController = guiController;
-		this.taskTree = taskTree;
-		display = getDisplay();
 		colorFinishedSuccessful = new Color(display, 150, 255, 150);
 		colorFinishedUnsuccessful = new Color(display, 255, 150, 150);
-		parent.addDisposeListener(e -> {
+		mainWindow.getShell().addDisposeListener(e -> {
 			colorFinishedSuccessful.dispose();
 			colorFinishedUnsuccessful.dispose();
 		});
+	}
+
+	public void setTaskTree(TaskTree taskTree) {
+		this.taskTree = taskTree;
 	}
 
 	@Override
@@ -123,7 +130,6 @@ public class TaskDecisionPage extends WizardDialog {
 		labelProgressLData.horizontalIndent = 5;
 		labelProgressLData.grabExcessHorizontalSpace = true;
 		labelProgress.setLayoutData(labelProgressLData);
-		Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
 		IoStatistics stats = synchronizer.getIoStatistics(taskTree);
 		labelProgress.setText("Totals: " + stats.getCountActions() + " tasks, " + UISettings.formatSize(stats.getBytesTransferred()));
 
@@ -184,11 +190,9 @@ public class TaskDecisionPage extends WizardDialog {
 			processing = true;
 			list.setChangeAllowed(false);
 
-			Synchronizer synchronizer = GuiController.getInstance().getSynchronizer();
 			IoStatistics stats = synchronizer.getIoStatistics(taskTree);
 			tasksTotal = stats.getCountActions();
 			tasksFinished = 0;
-
 			display.syncExec(() -> setOkButtonEnabled(false));
 
 			GUIUpdateQueue<TaskFinishedEvent> updateQueue = new GUIUpdateQueue<>(display, this::updateTaskStatus);

@@ -27,6 +27,7 @@ import javax.inject.Singleton;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Tray;
@@ -48,13 +49,13 @@ public class SystemTrayItem implements TaskGenerationListener {
 	private boolean isBusy;
 
 	@Inject
-	public SystemTrayItem(GuiController guiController, MainWindow mainWindow, TaskGenerator taskGenerator) {
-		Tray tray = guiController.getDisplay().getSystemTray();
+	public SystemTrayItem(Display display, GuiController guiController, ImageRepository imageRepository, MainWindow mainWindow, TaskGenerator taskGenerator) {
+		Tray tray = display.getSystemTray();
 		this.trayItem = new TrayItem(tray, SWT.NULL);
 
 		imageList = new Image[2];
-		imageList[0] = guiController.getImage("fullsync48.png"); //$NON-NLS-1$
-		imageList[1] = guiController.getImage("fullsync48_r.png"); //$NON-NLS-1$
+		imageList[0] = imageRepository.getImage("fullsync48.png"); //$NON-NLS-1$
+		imageList[1] = imageRepository.getImage("fullsync48_r.png"); //$NON-NLS-1$
 		imageActive = 0;
 
 		// initialize trayItem
@@ -68,7 +69,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 		menu = new Menu(mainWindow.getShell(), SWT.POP_UP);
 		MenuItem item;
 		item = new MenuItem(menu, SWT.NULL);
-		item.setImage(guiController.getImage("fullsync16.png"));
+		item.setImage(imageRepository.getImage("fullsync16.png"));
 		item.setText(Messages.getString("SystemTrayItem.OpenFullSync")); //$NON-NLS-1$
 		item.addListener(SWT.Selection, e -> mainWindow.setVisible(true));
 

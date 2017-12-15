@@ -35,15 +35,18 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.ProfileManager;
 
 public class ImportProfilesPage extends WizardDialog {
+	private final ProfileManager profileManager;
 	private Composite composite;
 	private Text textPath;
 	private Button buttonBrowse;
 
 	@Inject
-	public ImportProfilesPage(MainWindow mainWindow) {
+	public ImportProfilesPage(MainWindow mainWindow, ProfileManager profileManager) {
 		super(mainWindow.getShell());
+		this.profileManager = profileManager;
 	}
 
 	@Override
@@ -111,7 +114,7 @@ public class ImportProfilesPage extends WizardDialog {
 	@Override
 	public boolean apply() {
 		try {
-			if (GuiController.getInstance().getProfileManager().loadProfiles(textPath.getText())) {
+			if (profileManager.loadProfiles(textPath.getText())) {
 				return true;
 			}
 			else {

@@ -98,11 +98,13 @@ public class PreferencesPage extends WizardDialog {
 	private Combo comboProfileList;
 
 	private final Preferences preferences;
+	private final MainWindow mainWindow;
 
 	@Inject
-	public PreferencesPage(MainWindow parent, Preferences preferences) {
+	public PreferencesPage(MainWindow parent, Preferences preferences, MainWindow mainWindow) {
 		super(parent.getShell());
 		this.preferences = preferences;
+		this.mainWindow = mainWindow;
 	}
 
 	@Override
@@ -244,7 +246,7 @@ public class PreferencesPage extends WizardDialog {
 		preferences.setAutostartScheduler(cbAutostartScheduler.getSelection());
 
 		if (profileListStyleChanged) {
-			GuiController.getInstance().getMainWindow().createProfileList();
+			mainWindow.createProfileList();
 		}
 
 		preferences.save();

@@ -22,6 +22,8 @@ package net.sourceforge.fullsync.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -38,6 +40,10 @@ import org.eclipse.swt.widgets.Shell;
 import net.sourceforge.fullsync.ExceptionHandler;
 
 public abstract class WizardDialog {
+	@Inject
+	protected FontRepository fontRepository;
+	@Inject
+	protected ImageRepository imageRepository;
 	private Shell dialogShell;
 	private Label labelImage;
 	private Label labelDescription;
@@ -47,11 +53,15 @@ public abstract class WizardDialog {
 	private Button cancelButton;
 	private boolean closing;
 
-	private final Shell parent;
 	private final List<WizardDialogListener> dialogListeners = new ArrayList<>();
+	private Shell parent;
 
-	public WizardDialog(Shell _parent) {
-		parent = _parent;
+	public WizardDialog(Shell parent) {
+		this.parent = parent;
+	}
+
+	public void setParent(Shell parent) {
+		this.parent = parent;
 	}
 
 	public boolean checkAndApply() {
@@ -226,7 +236,7 @@ public abstract class WizardDialog {
 		// wizard caption
 		labelCaption = new Label(topTextComposite, SWT.NONE);
 		labelCaption.setBackground(white);
-		labelCaption.setFont(GuiController.getInstance().getFont("Tohama", 9, SWT.BOLD)); //$NON-NLS-1$
+		labelCaption.setFont(fontRepository.getFont("Tohama", 9, SWT.BOLD)); //$NON-NLS-1$
 		GridData labelCaptionLData = new GridData();
 		labelCaptionLData.grabExcessHorizontalSpace = true;
 		labelCaption.setLayoutData(labelCaptionLData);
