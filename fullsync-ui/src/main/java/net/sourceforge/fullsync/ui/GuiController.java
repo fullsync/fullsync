@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.eclipse.swt.SWT;
@@ -44,24 +45,33 @@ import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.cli.Main;
 
 @Singleton
-public class GuiController implements Runnable {
+public class GuiController {
 	private static GuiController singleton;
+	private final Display display;
+	private final Shell shell;
+	private final ImageRepository imageRepository;
+	private final FontRepository fontRepository;
+	private final Provider<MainWindow> mainWindowProvider;
+	private final Provider<SystemTrayItem> systemTrayItemProvider;
+	private final Provider<WelcomeScreen> welcomeScreenProvider;
 	private final Preferences preferences;
 	private final ProfileManager profileManager;
-	private final Injector injector;
-	private ExceptionHandler oldExceptionHandler;
-	private Display display;
-	private ImageRepository imageRepository;
-	private FontRepository fontRepository;
-	private MainWindow mainWindow;
-	private SystemTrayItem systemTrayItem;
 	private final ScheduledThreadPoolExecutor executorService;
+	private ExceptionHandler oldExceptionHandler;
 
 	@Inject
-	private GuiController(Preferences preferences, ProfileManager profileManager, Injector injector) {
+	private GuiController(Display display, Shell shell, ImageRepository imageRepository, FontRepository fontRepository,
+		Provider<MainWindow> mainWindowProvider, Provider<SystemTrayItem> systemTrayItemProvider,
+		Provider<WelcomeScreen> welcomeScreenProvider, Preferences preferences, ProfileManager profileManager) {
+		this.display = display;
+		this.shell = shell;
+		this.imageRepository = imageRepository;
+		this.fontRepository = fontRepository;
+		this.mainWindowProvider = mainWindowProvider;
+		this.systemTrayItemProvider = systemTrayItemProvider;
+		this.welcomeScreenProvider = welcomeScreenProvider;
 		this.preferences = preferences;
 		this.profileManager = profileManager;
-		this.injector = injector.createChildInjector(new FullSyncUiModule());
 		executorService = new ScheduledThreadPoolExecutor(1);
 	}
 
@@ -74,34 +84,29 @@ public class GuiController implements Runnable {
 	}
 
 	private void startGui() {
-		display = injector.getInstance(Display.class);
-		imageRepository = injector.getInstance(ImageRepository.class);
-		fontRepository = injector.getInstance(FontRepository.class);
-		mainWindow = injector.getInstance(MainWindow.class);
-		systemTrayItem = injector.getInstance(SystemTrayItem.class);
+		mainWindowProvider.get();
+		systemTrayItemProvider.get().show();
 		oldExceptionHandler = ExceptionHandler.registerExceptionHandler(new ExceptionHandler() {
 			@Override
 			protected void doReportException(final String message, final Throwable exception) {
 				exception.printStackTrace();
 
-				display.syncExec(() -> new ExceptionDialog(mainWindow.getShell(), message, exception));
+				display.syncExec(() -> new ExceptionDialog(shell, message, exception));
 			}
 		});
 		createWelcomeScreen();
 	}
 
-	public static void launchUI(Injector i) {
-		GuiController guiController = i.getInstance(GuiController.class);
+	public static void launchUI(Injector injector) {
+		Injector uiInjector = injector.createChildInjector(new FullSyncUiModule());
+		GuiController guiController = uiInjector.getInstance(GuiController.class);
 		singleton = guiController;
-		guiController.startGui();
-		guiController.executorService.submit(() -> Main.finishStartup(i));
-		guiController.run();
-		guiController.disposeGui();
-		guiController.executorService.shutdown();
+		guiController.run(uiInjector);
 	}
 
-	@Override
-	public void run() {
+	public void run(Injector uiInjector) {
+		startGui();
+		executorService.submit(() -> Main.finishStartup(uiInjector));
 		while (!display.isDisposed()) {
 			try {
 				if (!display.readAndDispatch()) {
@@ -112,6 +117,8 @@ public class GuiController implements Runnable {
 				ex.printStackTrace();
 			}
 		}
+		disposeGui();
+		executorService.shutdown();
 	}
 
 	public void closeGui() {
@@ -121,7 +128,7 @@ public class GuiController implements Runnable {
 		// Close the application, but give him a chance to
 		// confirm his action first
 		if ((null != profileManager.getNextScheduleTask()) && preferences.confirmExit()) {
-			MessageBox mb = new MessageBox(mainWindow.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+			MessageBox mb = new MessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
 			String doYouWantToQuit = Messages.getString("GuiController.Do_You_Want_To_Quit"); //$NON-NLS-1$
 			String scheduleIsStopped = Messages.getString("GuiController.Schedule_is_stopped"); //$NON-NLS-1$
@@ -132,22 +139,21 @@ public class GuiController implements Runnable {
 				return;
 			}
 		}
-		mainWindow.storeWindowState();
+		mainWindowProvider.get().storeWindowState();
 		disposeGui();
 	}
 
 	private void disposeGui() {
 		ExceptionHandler.registerExceptionHandler(oldExceptionHandler);
-		if (null != mainWindow) {
-			mainWindow.dispose();
-		}
+		mainWindowProvider.get().dispose();
 		if (null != imageRepository) {
 			imageRepository.dispose();
 		}
 		if (null != fontRepository) {
 			fontRepository.dispose();
 		}
-		if ((null != systemTrayItem) && !systemTrayItem.isDisposed()) {
+		SystemTrayItem systemTrayItem = systemTrayItemProvider.get();
+		if (!systemTrayItem.isDisposed()) {
 			systemTrayItem.dispose();
 		}
 		if ((null != display) && !display.isDisposed()) {
@@ -217,7 +223,7 @@ public class GuiController implements Runnable {
 			// update the stored version number
 			preferences.save();
 			try {
-				injector.getInstance(WelcomeScreen.class);
+				welcomeScreenProvider.get().show();
 			}
 			catch (Exception e) {
 				ExceptionHandler.reportException(e);

@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -44,8 +45,8 @@ public class ImportProfilesPage extends WizardDialog {
 	private Button buttonBrowse;
 
 	@Inject
-	public ImportProfilesPage(MainWindow mainWindow, ProfileManager profileManager) {
-		super(mainWindow.getShell());
+	public ImportProfilesPage(Shell shell, ProfileManager profileManager) {
+		super(shell);
 		this.profileManager = profileManager;
 	}
 

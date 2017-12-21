@@ -70,8 +70,8 @@ public class ScheduleSelectionDialog extends Dialog {
 
 	private Schedule schedule;
 
-	public ScheduleSelectionDialog(Shell parent, int style) {
-		super(parent, style);
+	public ScheduleSelectionDialog(Shell parent) {
+		super(parent, SWT.NULL);
 	}
 
 	public void open() {

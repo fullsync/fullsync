@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import com.google.inject.AbstractModule;
 
@@ -27,6 +28,8 @@ public class FullSyncUiModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		Display.setAppName("FullSync");
-		bind(Display.class).toInstance(Display.getDefault());
+		Display display = Display.getDefault();
+		bind(Display.class).toInstance(display);
+		bind(Shell.class).toInstance(new Shell(display));
 	}
 }

@@ -23,14 +23,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Tray;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TrayItem;
 
 import net.sourceforge.fullsync.Task;
@@ -41,17 +41,31 @@ import net.sourceforge.fullsync.fs.File;
 
 @Singleton
 public class SystemTrayItem implements TaskGenerationListener {
+	private final Shell shell;
+	private final Provider<GuiController> guiControllerProvider;
+	private final Provider<ImageRepository> imageRepositoryProvider;
+	private final Provider<MainWindow> mainWindowProvider;
+	private final Provider<TaskGenerator> taskGeneratorProvider;
 	private TrayItem trayItem;
-	private Menu menu;
 	private Image[] imageList;
+	private Menu menu;
 	private int imageActive;
 	private Timer timer;
 	private boolean isBusy;
 
 	@Inject
-	public SystemTrayItem(Display display, GuiController guiController, ImageRepository imageRepository, MainWindow mainWindow, TaskGenerator taskGenerator) {
-		Tray tray = display.getSystemTray();
-		this.trayItem = new TrayItem(tray, SWT.NULL);
+	public SystemTrayItem(Shell shell, Provider<GuiController> guiControllerProvider, Provider<ImageRepository> imageRepositoryProvider,
+		Provider<MainWindow> mainWindowProvider, Provider<TaskGenerator> taskGeneratorProvider) {
+		this.shell = shell;
+		this.guiControllerProvider = guiControllerProvider;
+		this.imageRepositoryProvider = imageRepositoryProvider;
+		this.mainWindowProvider = mainWindowProvider;
+		this.taskGeneratorProvider = taskGeneratorProvider;
+	}
+
+	public void show() {
+		ImageRepository imageRepository = imageRepositoryProvider.get();
+		trayItem = new TrayItem(shell.getDisplay().getSystemTray(), SWT.NULL);
 
 		imageList = new Image[2];
 		imageList[0] = imageRepository.getImage("fullsync48.png"); //$NON-NLS-1$
@@ -61,23 +75,23 @@ public class SystemTrayItem implements TaskGenerationListener {
 		// initialize trayItem
 		trayItem.setImage(imageList[0]);
 		trayItem.setToolTipText("FullSync"); //$NON-NLS-1$
-		trayItem.addListener(SWT.Selection, e -> mainWindow.setVisible(true));
-		trayItem.addListener(SWT.DefaultSelection, e -> mainWindow.setVisible(true));
+		trayItem.addListener(SWT.Selection, e -> mainWindowProvider.get().setVisible(true));
+		trayItem.addListener(SWT.DefaultSelection, e -> mainWindowProvider.get().setVisible(true));
 		trayItem.addListener(SWT.MenuDetect, e -> menu.setVisible(true));
 
 		// initialize popup menu
-		menu = new Menu(mainWindow.getShell(), SWT.POP_UP);
+		menu = new Menu(shell, SWT.POP_UP);
 		MenuItem item;
 		item = new MenuItem(menu, SWT.NULL);
 		item.setImage(imageRepository.getImage("fullsync16.png"));
 		item.setText(Messages.getString("SystemTrayItem.OpenFullSync")); //$NON-NLS-1$
-		item.addListener(SWT.Selection, e -> mainWindow.setVisible(true));
+		item.addListener(SWT.Selection, e -> mainWindowProvider.get().setVisible(true));
 
 		item = new MenuItem(menu, SWT.NULL);
 		item.setText(Messages.getString("SystemTrayItem.Exit")); //$NON-NLS-1$
-		item.addListener(SWT.Selection, e -> guiController.closeGui());
+		item.addListener(SWT.Selection, e -> guiControllerProvider.get().closeGui());
 
-		taskGenerator.addTaskGenerationListener(this);
+		taskGeneratorProvider.get().addTaskGenerationListener(this);
 	}
 
 	public void setVisible(boolean visible) {
@@ -89,6 +103,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 	}
 
 	public void dispose() {
+		taskGeneratorProvider.get().removeTaskGenerationListener(this);
 		trayItem.dispose();
 		menu.dispose();
 		if (null != timer) {

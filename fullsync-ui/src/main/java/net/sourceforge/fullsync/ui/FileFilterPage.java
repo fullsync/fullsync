@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -33,8 +34,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
-import com.google.inject.Injector;
+import org.eclipse.swt.widgets.Shell;
 
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -43,7 +43,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.ui.filterrule.FilterRuleListItem;
 
 public class FileFilterPage extends WizardDialog {
-	private final Injector injector;
+	private final Provider<FileFilterPage> fileFilterPageProvider;
 
 	private Combo comboFilterType;
 	private Label label1;
@@ -59,17 +59,17 @@ public class FileFilterPage extends WizardDialog {
 	private List<FilterRuleListItem> ruleItems = new ArrayList<>();
 
 	@Inject
-	public FileFilterPage(MainWindow mainWindow, Injector injector) {
-		super(mainWindow.getShell());
-		this.injector = injector;
+	public FileFilterPage(Shell mainShell, Provider<FileFilterPage> fileFilterPageProvider) {
+		super(mainShell);
+		this.fileFilterPageProvider = fileFilterPageProvider;
 	}
 
 	public void setFileFilter(FileFilter fileFilter) {
 		this.oldFileFilter = fileFilter;
 	}
 
-	public Injector getInjector() {
-		return injector;
+	public Provider<FileFilterPage> getFileFilterPageProvider() {
+		return fileFilterPageProvider;
 	}
 
 	@Override

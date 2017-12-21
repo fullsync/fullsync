@@ -37,15 +37,12 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-
-import com.google.inject.Injector;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionType;
@@ -131,23 +128,6 @@ public class TaskDecisionList extends Composite {
 		initializeImages();
 		onlyChanges = true;
 		changeAllowed = true;
-	}
-
-	public static void show(Injector injector, final TaskTree task, final boolean interactive) {
-		final Display display = Display.getDefault();
-		display.asyncExec(() -> {
-			try {
-				TaskDecisionPage dialog = injector.getInstance(TaskDecisionPage.class);
-				dialog.setTaskTree(task);
-				if (!interactive) {
-					dialog.addWizardDialogListener(dialog::performActions);
-				}
-				dialog.show();
-			}
-			catch (Exception ex) {
-				ExceptionHandler.reportException(ex);
-			}
-		});
 	}
 
 	public void setTaskTree(TaskTree task) {

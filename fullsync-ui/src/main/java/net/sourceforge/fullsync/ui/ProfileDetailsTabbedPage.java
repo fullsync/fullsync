@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -45,13 +46,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-
-import com.google.inject.Injector;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -74,7 +74,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 	private final FullSync fullsync;
 	private final ProfileManager profileManager;
-	private final Injector injector;
+	private final Provider<FileFilterPage> fileFilterPageProvider;
 
 	private TabFolder tabs;
 	private Text textProfileName;
@@ -108,11 +108,12 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private String lastSourceLoaded;
 
 	@Inject
-	public ProfileDetailsTabbedPage(MainWindow parent, FullSync fullsync, ProfileManager profileManager, Injector injector) {
-		super(parent.getShell());
+	public ProfileDetailsTabbedPage(Shell shell, FullSync fullsync, ProfileManager profileManager,
+		Provider<FileFilterPage> fileFilterPageProvider) {
+		super(shell);
 		this.fullsync = fullsync;
 		this.profileManager = profileManager;
-		this.injector = injector;
+		this.fileFilterPageProvider = fileFilterPageProvider;
 	}
 
 	public void setProfile(Profile profile) {
@@ -296,7 +297,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		buttonScheduling = new Button(c, SWT.PUSH | SWT.CENTER);
 		buttonScheduling.setText(Messages.getString("ProfileDetails.Edit_Scheduling")); //$NON-NLS-1$
 		buttonScheduling.addListener(SWT.Selection, e -> {
-			ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(m_parent.getShell(), SWT.NULL);
+			ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(m_parent.getShell());
 			dialog.setSchedule((Schedule) buttonScheduling.getData());
 			dialog.open();
 			buttonScheduling.setData(dialog.getSchedule());
@@ -391,7 +392,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		buttonFileFilter.setLayoutData(buttonFileFilterData);
 		buttonFileFilter.addListener(SWT.Selection, e -> {
 			try {
-				FileFilterPage dialog = injector.getInstance(FileFilterPage.class);
+				FileFilterPage dialog = fileFilterPageProvider.get();
 				dialog.setFileFilter(filter);
 				dialog.show();
 				FileFilter newfilter = dialog.getFileFilter();
@@ -484,7 +485,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			if (selectedItems.length > 0) {
 				TreeItem selectedItem = selectedItems[0];
 				FileFilter currentItemFilter = (FileFilter) selectedItem.getData(FILTER_KEY);
-				FileFilterPage dialog = injector.getInstance(FileFilterPage.class);
+				FileFilterPage dialog = fileFilterPageProvider.get();
 				dialog.setFileFilter(currentItemFilter);
 				dialog.show();
 				FileFilter newfilter = dialog.getFileFilter();

@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -45,8 +46,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import com.google.inject.Injector;
 
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -67,12 +66,16 @@ import net.sourceforge.fullsync.schedule.Scheduler;
  */
 @Singleton
 public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManager, ProfileChangeListener {
-	@Inject
-	private Injector injector;
+	private final Provider<Scheduler> schedulerProvider;
 	private String profilesFileName;
 	private List<Profile> profiles = new ArrayList<>();
 	private List<ProfileListChangeListener> changeListeners = new ArrayList<>();
 	private List<ProfileSchedulerListener> scheduleListeners = new ArrayList<>();
+
+	@Inject
+	public XmlBackedProfileManager(Provider<Scheduler> schedulerProvider) {
+		this.schedulerProvider = schedulerProvider;
+	}
 
 	@Override
 	public void setProfilesFileName(String profilesFileName) {
@@ -215,7 +218,7 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 
 	@Override
 	public void profileChanged(Profile profile) {
-		injector.getInstance(Scheduler.class).refresh();
+		schedulerProvider.get().refresh();
 		for (ProfileListChangeListener changeListener : changeListeners) {
 			changeListener.profileChanged(profile);
 		}

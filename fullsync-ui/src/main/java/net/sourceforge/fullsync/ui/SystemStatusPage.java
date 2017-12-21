@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Shell;
 
 public class SystemStatusPage extends WizardDialog {
 	private Label totalMemory;
@@ -44,8 +45,8 @@ public class SystemStatusPage extends WizardDialog {
 	private Composite content;
 
 	@Inject
-	public SystemStatusPage(MainWindow mainWindow) {
-		super(mainWindow.getShell());
+	public SystemStatusPage(Shell shell) {
+		super(shell);
 	}
 
 	@Override

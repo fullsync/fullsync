@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
 import net.sourceforge.fullsync.Preferences;
 
@@ -101,8 +102,8 @@ public class PreferencesPage extends WizardDialog {
 	private final MainWindow mainWindow;
 
 	@Inject
-	public PreferencesPage(MainWindow parent, Preferences preferences, MainWindow mainWindow) {
-		super(parent.getShell());
+	public PreferencesPage(Shell shell, MainWindow mainWindow, Preferences preferences) {
+		super(shell);
 		this.preferences = preferences;
 		this.mainWindow = mainWindow;
 	}

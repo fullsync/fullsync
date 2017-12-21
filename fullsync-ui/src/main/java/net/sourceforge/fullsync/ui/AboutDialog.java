@@ -52,21 +52,21 @@ import net.sourceforge.fullsync.Util;
 class AboutDialog implements AsyncUIUpdate {
 	private static final String FULLSYNC_LICENSES_DIRECTORY = "net/sourceforge/fullsync/licenses/";
 	private static final long ANIMATION_DELAY = 750;
-	private final MainWindow mainWindow;
-	private int stIndex;
+	private final Shell shell;
 	private final List<String> licenseNames = new ArrayList<>();
 	private final List<String> licenseTexts = new ArrayList<>();
+	private int stIndex;
 	private Combo componentCombo;
 	private StyledText licenseText;
 
 	@Inject
-	AboutDialog(MainWindow mainWindow) {
-		this.mainWindow = mainWindow;
+	AboutDialog(Shell shell) {
+		this.shell = shell;
 	}
 
 	void show() {
 		try {
-			final Shell dialogShell = new Shell(mainWindow.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
+			final Shell dialogShell = new Shell(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
 
 			GridLayout dialogShellLayout = new GridLayout(1, true);
 			dialogShellLayout.marginTop = 0;
@@ -104,7 +104,7 @@ class AboutDialog implements AsyncUIUpdate {
 				width = dlgSize.x + width;
 				height = dlgSize.y + height;
 				dialogShell.setSize(width, height);
-				Rectangle parentBounds = mainWindow.getShell().getBounds();
+				Rectangle parentBounds = shell.getBounds();
 				int dlgX = (parentBounds.x + (parentBounds.width / 2)) - (width / 2);
 				int dlgY = (parentBounds.y + (parentBounds.height / 2)) - (height / 2);
 				dialogShell.setLocation(dlgX, dlgY);

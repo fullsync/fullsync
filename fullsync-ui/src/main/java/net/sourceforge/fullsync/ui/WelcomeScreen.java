@@ -35,10 +35,16 @@ import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
 
 public class WelcomeScreen extends Dialog {
+	private final Preferences preferences;
+
 	@Inject
-	public WelcomeScreen(MainWindow mainWindow, Preferences preferences) {
-		super(mainWindow.getShell());
-		final Shell dialogShell = new Shell(mainWindow.getShell(), SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
+	public WelcomeScreen(Shell shell, Preferences preferences) {
+		super(shell);
+		this.preferences = preferences;
+	}
+
+	public void show() {
+		final Shell dialogShell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
 		String title = Messages.getString("WelcomeScreen.WelcomeMessage", Util.getFullSyncVersion()); //$NON-NLS-1$
 
 		GridLayout dialogShellLayout = new GridLayout();

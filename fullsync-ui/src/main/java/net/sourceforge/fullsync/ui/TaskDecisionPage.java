@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -59,14 +60,14 @@ public class TaskDecisionPage extends WizardDialog {
 	private Label labelProgress;
 
 	@Inject
-	public TaskDecisionPage(MainWindow mainWindow, Display display, Synchronizer synchronizer, GuiController guiController) {
-		super(mainWindow.getShell());
+	public TaskDecisionPage(Shell shell, Display display, Synchronizer synchronizer, GuiController guiController) {
+		super(shell);
 		this.display = display;
 		this.synchronizer = synchronizer;
 		this.guiController = guiController;
 		colorFinishedSuccessful = new Color(display, 150, 255, 150);
 		colorFinishedUnsuccessful = new Color(display, 255, 150, 150);
-		mainWindow.getShell().addDisposeListener(e -> {
+		shell.addDisposeListener(e -> {
 			colorFinishedSuccessful.dispose();
 			colorFinishedUnsuccessful.dispose();
 		});

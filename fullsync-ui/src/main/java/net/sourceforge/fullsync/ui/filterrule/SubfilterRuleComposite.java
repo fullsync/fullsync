@@ -19,14 +19,14 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
+import javax.inject.Provider;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-
-import com.google.inject.Injector;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -36,7 +36,7 @@ import net.sourceforge.fullsync.ui.FileFilterPage;
 class SubfilterRuleComposite extends RuleComposite {
 	private Button buttonFilter;
 
-	SubfilterRuleComposite(Injector injector, Composite parent, final FilterValue filterValue) {
+	SubfilterRuleComposite(Provider<FileFilterPage> fileFilterPageProvider, Composite parent, final FilterValue filterValue) {
 		super(parent);
 		this.setLayout(new GridLayout(4, true));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -58,7 +58,7 @@ class SubfilterRuleComposite extends RuleComposite {
 		buttonFilter.setText("Set Filter...");
 		buttonFilter.addListener(SWT.Selection, evt -> {
 			try {
-				FileFilterPage dialog = injector.getInstance(FileFilterPage.class);
+				FileFilterPage dialog = fileFilterPageProvider.get();
 				dialog.setParent(getShell());
 				dialog.setFileFilter(filterValue.getValue());
 				dialog.show();
