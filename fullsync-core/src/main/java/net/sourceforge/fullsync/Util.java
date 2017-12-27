@@ -147,6 +147,7 @@ public abstract class Util {
 			File tmpFile = File.createTempFile("fullsync", "tmp", dstFile.getParentFile());
 			Files.deleteIfExists(tmpFile.toPath());
 			if (dstFile.renameTo(tmpFile)) {
+				// FIXME: Files.copy(srcFile.toPath(), dstFile.toPath(), StandardCopyOption.ATOMIC_MOVE); ?
 				if (srcFile.renameTo(dstFile)) {
 					Files.deleteIfExists(tmpFile.toPath());
 				}

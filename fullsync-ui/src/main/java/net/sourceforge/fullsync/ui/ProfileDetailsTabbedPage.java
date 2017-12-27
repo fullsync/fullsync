@@ -300,7 +300,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(m_parent.getShell());
 			dialog.setSchedule((Schedule) buttonScheduling.getData());
 			dialog.open();
-			buttonScheduling.setData(dialog.getSchedule());
+			buttonScheduling.setData(dialog.getSchedule()); //FIXME: if cancelled??
 		});
 		new Label(c, SWT.NONE); // area below the automated execution label should be empty
 		buttonResetError = new Button(c, SWT.CHECK | SWT.RIGHT); // TODO: make this a button?
