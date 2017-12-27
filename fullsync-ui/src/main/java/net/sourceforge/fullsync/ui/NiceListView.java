@@ -29,6 +29,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 
@@ -43,11 +44,12 @@ public class NiceListView extends Composite {
 
 	public NiceListView(Composite parent) {
 		super(parent, SWT.TRANSPARENT);
-		colorDefault = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
-		colorHover = getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
-		colorSelected = getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION);
-		colorForeground = getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
-		colorSelectedForegroud = getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT);
+		Display display = getDisplay();
+		colorDefault = display.getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+		colorHover = display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
+		colorSelected = display.getSystemColor(SWT.COLOR_LIST_SELECTION);
+		colorForeground = display.getSystemColor(SWT.COLOR_LIST_FOREGROUND);
+		colorSelectedForegroud = display.getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT);
 
 		addKeyListener(KeyListener.keyPressedAdapter(this::keyPressed));
 		initGUI();

@@ -27,9 +27,9 @@ class ExecuteBackgroundJob implements Runnable {
 	private boolean executed;
 	private boolean succeeded;
 
-	ExecuteBackgroundJob(AsyncUIUpdate _job, Display _display) {
-		job = _job;
-		display = _display;
+	ExecuteBackgroundJob(AsyncUIUpdate job, Display display) {
+		this.job = job;
+		this.display = display;
 	}
 
 	@Override

@@ -150,9 +150,9 @@ public class FileFilterTest {
 	@Test
 	public void throwFilterRuleNotAppliableExceptionAll() {
 		FileFilter filter = new FileFilter();
-		filter.setFileFilterRules(
-			new FileFilterRule[]
-		{ new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_IS) });
+		filter
+			.setFileFilterRules(new FileFilterRule[]
+			{ new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_IS) });
 		filter.setMatchType(FileFilter.MATCH_ALL);
 
 		testNode.setLastModified(-1);
@@ -163,9 +163,9 @@ public class FileFilterTest {
 	@Test
 	public void throwFilterRuleNotAppliableExceptionAny() {
 		FileFilter filter = new FileFilter();
-		filter.setFileFilterRules(
-			new FileFilterRule[]
-		{ new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_IS) });
+		filter
+			.setFileFilterRules(new FileFilterRule[]
+			{ new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_IS) });
 		filter.setMatchType(FileFilter.MATCH_ANY);
 
 		testNode.setLastModified(-1);

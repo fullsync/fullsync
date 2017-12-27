@@ -59,17 +59,17 @@ public class FontRepository {
 		}
 	}
 
-	private final Device dev;
+	private final Device device;
 	private final Map<FontRepository.Key, Font> cache = new HashMap<>(5);
 
 	@Inject
 	public FontRepository(Display display) {
-		dev = display;
+		this.device = display;
 	}
 
 	public Font getFont(String name, int height, int style) {
 		Key key = new Key(name, height, style);
-		return cache.computeIfAbsent(key, k -> new Font(dev, k.name, k.height, k.style));
+		return cache.computeIfAbsent(key, k -> new Font(device, k.name, k.height, k.style));
 	}
 
 	public void dispose() {
