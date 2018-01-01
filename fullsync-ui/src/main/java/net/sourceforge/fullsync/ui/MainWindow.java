@@ -63,6 +63,7 @@ import net.sourceforge.fullsync.schedule.Scheduler;
 @Singleton
 class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	private final GuiController guiController;
+	private final ImageRepository imageRepository;
 	private final ProfileManager profileManager;
 	private final Scheduler scheduler;
 	private final Preferences preferences;
@@ -91,13 +92,14 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	private GUIUpdateQueue<String> statusLineText;
 
 	@Inject
-	MainWindow(GuiController guiController, Shell shell, ProfileManager profileManager, TaskGenerator taskGenerator,
-		Scheduler scheduler, Display display, RuntimeConfiguration runtimeConfiguration, Preferences preferences,
-		Provider<PreferencesPage> preferencesPageProvider, Provider<Synchronizer> synchronizerProvider,
+	MainWindow(GuiController guiController, ImageRepository imageRepository, Shell shell, ProfileManager profileManager,
+		TaskGenerator taskGenerator, Scheduler scheduler, Display display, RuntimeConfiguration runtimeConfiguration,
+		Preferences preferences, Provider<PreferencesPage> preferencesPageProvider, Provider<Synchronizer> synchronizerProvider,
 		Provider<ImportProfilesPage> importProfilesPageProvider, Provider<SystemStatusPage> systemStatusPageProvider,
 		Provider<AboutDialog> aboutDialogProvider, Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider,
 		Provider<TaskDecisionPage> taskDecisionPageProvider) {
 		this.guiController = guiController;
+		this.imageRepository = imageRepository;
 		this.profileManager = profileManager;
 		this.scheduler = scheduler;
 		this.preferences = preferences;
@@ -110,7 +112,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		this.taskDecisionPageProvider = taskDecisionPageProvider;
 		shell.setLayout(new FillLayout());
 		shell.setText("FullSync"); //$NON-NLS-1$
-		shell.setImage(guiController.getImage("fullsync48.png")); //$NON-NLS-1$
+		shell.setImage(imageRepository.getImage("fullsync48.png")); //$NON-NLS-1$
 
 		shell.addListener(SWT.Close, e -> {
 			e.doit = false;
@@ -249,27 +251,27 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 			ToolBar toolBarProfile = new ToolBar(cToolBar, SWT.FLAT);
 
 			toolItemNew = new ToolItem(toolBarProfile, SWT.PUSH);
-			toolItemNew.setImage(guiController.getImage("Button_New.png")); //$NON-NLS-1$
+			toolItemNew.setImage(imageRepository.getImage("Button_New.png")); //$NON-NLS-1$
 			toolItemNew.setToolTipText(Messages.getString("MainWindow.New_Profile")); //$NON-NLS-1$
 			toolItemNew.addListener(SWT.Selection, e -> createNewProfile());
 
 			toolItemEdit = new ToolItem(toolBarProfile, SWT.PUSH);
-			toolItemEdit.setImage(guiController.getImage("Button_Edit.png")); //$NON-NLS-1$
+			toolItemEdit.setImage(imageRepository.getImage("Button_Edit.png")); //$NON-NLS-1$
 			toolItemEdit.setToolTipText(Messages.getString("MainWindow.Edit_Profile")); //$NON-NLS-1$
 			toolItemEdit.addListener(SWT.Selection, e -> editProfile(profileList.getSelectedProfile()));
 
 			toolItemDelete = new ToolItem(toolBarProfile, SWT.PUSH);
-			toolItemDelete.setImage(guiController.getImage("Button_Delete.png")); //$NON-NLS-1$
+			toolItemDelete.setImage(imageRepository.getImage("Button_Delete.png")); //$NON-NLS-1$
 			toolItemDelete.setToolTipText(Messages.getString("MainWindow.Delete_Profile")); //$NON-NLS-1$
 			toolItemDelete.addListener(SWT.Selection, e -> deleteProfile(profileList.getSelectedProfile()));
 
 			toolItemRun = new ToolItem(toolBarProfile, SWT.PUSH);
-			toolItemRun.setImage(guiController.getImage("Button_Run.png")); //$NON-NLS-1$
+			toolItemRun.setImage(imageRepository.getImage("Button_Run.png")); //$NON-NLS-1$
 			toolItemRun.setToolTipText(Messages.getString("MainWindow.Run_Profile")); //$NON-NLS-1$
 			toolItemRun.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), true));
 
 			toolItemRunNonIter = new ToolItem(toolBarProfile, SWT.PUSH);
-			toolItemRunNonIter.setImage(guiController.getImage("Button_Run_Non_Inter.png")); //$NON-NLS-1$
+			toolItemRunNonIter.setImage(imageRepository.getImage("Button_Run_Non_Inter.png")); //$NON-NLS-1$
 			toolItemRunNonIter.setToolTipText("Run Profile - Non Interactive mode");
 			toolItemRunNonIter.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), false));
 
@@ -278,18 +280,18 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 
 			//FIXME: do we still need this toolbar item?
 			toolItemScheduleIcon = new ToolItem(toolBarScheduling, SWT.NULL);
-			toolItemScheduleIcon.setImage(guiController.getImage("Scheduler_Icon.png")); //$NON-NLS-1$
-			toolItemScheduleIcon.setDisabledImage(guiController.getImage("Scheduler_Icon.png")); //$NON-NLS-1$
+			toolItemScheduleIcon.setImage(imageRepository.getImage("Scheduler_Icon.png")); //$NON-NLS-1$
+			toolItemScheduleIcon.setDisabledImage(imageRepository.getImage("Scheduler_Icon.png")); //$NON-NLS-1$
 			toolItemScheduleIcon.setEnabled(false);
 
 			toolItemScheduleStart = new ToolItem(toolBarScheduling, SWT.NULL);
 			toolItemScheduleStart.setToolTipText(Messages.getString("MainWindow.Start_Scheduler")); //$NON-NLS-1$
-			toolItemScheduleStart.setImage(guiController.getImage("Scheduler_Start.png")); //$NON-NLS-1$
+			toolItemScheduleStart.setImage(imageRepository.getImage("Scheduler_Start.png")); //$NON-NLS-1$
 			toolItemScheduleStart.addListener(SWT.Selection, e -> scheduler.start());
 
 			toolItemScheduleStop = new ToolItem(toolBarScheduling, SWT.PUSH);
 			toolItemScheduleStop.setToolTipText(Messages.getString("MainWindow.Stop_Scheduler")); //$NON-NLS-1$
-			toolItemScheduleStop.setImage(guiController.getImage("Scheduler_Stop.png")); //$NON-NLS-1$
+			toolItemScheduleStop.setImage(imageRepository.getImage("Scheduler_Stop.png")); //$NON-NLS-1$
 			toolItemScheduleStop.addListener(SWT.Selection, e -> scheduler.stop());
 
 			// profile list
@@ -320,7 +322,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 
 		MenuItem menuItemNewProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemNewProfile.setText(Messages.getString("MainWindow.New_Profile_Menu")); //$NON-NLS-1$
-		menuItemNewProfile.setImage(guiController.getImage("Button_New.png")); //$NON-NLS-1$
+		menuItemNewProfile.setImage(imageRepository.getImage("Button_New.png")); //$NON-NLS-1$
 		menuItemNewProfile.setAccelerator(SWT.CTRL + 'N');
 		menuItemNewProfile.addListener(SWT.Selection, e -> createNewProfile());
 
@@ -328,24 +330,24 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 
 		MenuItem menuItemEditProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemEditProfile.setText(Messages.getString("MainWindow.Edit_Profile_Menu")); //$NON-NLS-1$
-		menuItemEditProfile.setImage(guiController.getImage("Button_Edit.png")); //$NON-NLS-1$
+		menuItemEditProfile.setImage(imageRepository.getImage("Button_Edit.png")); //$NON-NLS-1$
 		menuItemEditProfile.addListener(SWT.Selection, e -> editProfile(profileList.getSelectedProfile()));
 
 		MenuItem menuItemRunProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemRunProfile.setText(Messages.getString("MainWindow.Run_Profile_Menu")); //$NON-NLS-1$
-		menuItemRunProfile.setImage(guiController.getImage("Button_Run.png")); //$NON-NLS-1$
+		menuItemRunProfile.setImage(imageRepository.getImage("Button_Run.png")); //$NON-NLS-1$
 		menuItemRunProfile.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), true));
 
 		MenuItem menuItemRunProfileNonInter = new MenuItem(menuFile, SWT.PUSH);
 		menuItemRunProfileNonInter.setText("Run Profile - Non Interactive mode");
-		menuItemRunProfileNonInter.setImage(guiController.getImage("Button_Run_Non_Inter.png")); //$NON-NLS-1$
+		menuItemRunProfileNonInter.setImage(imageRepository.getImage("Button_Run_Non_Inter.png")); //$NON-NLS-1$
 		menuItemRunProfileNonInter.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), false));
 
 		new MenuItem(menuFile, SWT.SEPARATOR);
 
 		MenuItem menuItemDeleteProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemDeleteProfile.setText(Messages.getString("MainWindow.Delete_Profile_Menu")); //$NON-NLS-1$
-		menuItemDeleteProfile.setImage(guiController.getImage("Button_Delete.png")); //$NON-NLS-1$
+		menuItemDeleteProfile.setImage(imageRepository.getImage("Button_Delete.png")); //$NON-NLS-1$
 		menuItemDeleteProfile.addListener(SWT.Selection, e -> deleteProfile(profileList.getSelectedProfile()));
 
 		new MenuItem(menuFile, SWT.SEPARATOR);
@@ -394,7 +396,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		});
 
 		MenuItem menuItemTwitter = new MenuItem(menuHelp, SWT.PUSH);
-		menuItemTwitter.setImage(guiController.getImage("twitter_bird_blue_16.png")); //$NON-NLS-1$
+		menuItemTwitter.setImage(imageRepository.getImage("twitter_bird_blue_16.png")); //$NON-NLS-1$
 		menuItemTwitter.setText(Messages.getString("MainWindow.Menu_Twitter")); //$NON-NLS-1$
 		menuItemTwitter.addListener(SWT.Selection, e -> GuiController.launchProgram(GuiController.getTwitterURL()));
 
@@ -418,29 +420,29 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 
 		MenuItem runItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		runItem.setText(Messages.getString("MainWindow.Run_Profile")); //$NON-NLS-1$
-		runItem.setImage(guiController.getImage("Button_Run.png")); //$NON-NLS-1$
+		runItem.setImage(imageRepository.getImage("Button_Run.png")); //$NON-NLS-1$
 		runItem.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), true));
 
 		MenuItem runNonInterItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		runNonInterItem.setText("Run Profile - Non Interactive mode");
-		runNonInterItem.setImage(guiController.getImage("Button_Run_Non_Inter.png")); //$NON-NLS-1$
+		runNonInterItem.setImage(imageRepository.getImage("Button_Run_Non_Inter.png")); //$NON-NLS-1$
 		runNonInterItem.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), false));
 
 		MenuItem editItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		editItem.setText(Messages.getString("MainWindow.Edit_Profile")); //$NON-NLS-1$
-		editItem.setImage(guiController.getImage("Button_Edit.png")); //$NON-NLS-1$
+		editItem.setImage(imageRepository.getImage("Button_Edit.png")); //$NON-NLS-1$
 		editItem.addListener(SWT.Selection, e -> editProfile(profileList.getSelectedProfile()));
 
 		MenuItem deleteItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		deleteItem.setText(Messages.getString("MainWindow.Delete_Profile")); //$NON-NLS-1$
-		deleteItem.setImage(guiController.getImage("Button_Delete.png")); //$NON-NLS-1$
+		deleteItem.setImage(imageRepository.getImage("Button_Delete.png")); //$NON-NLS-1$
 		deleteItem.addListener(SWT.Selection, e -> deleteProfile(profileList.getSelectedProfile()));
 
 		new MenuItem(profilePopupMenu, SWT.SEPARATOR);
 
 		MenuItem addItem = new MenuItem(profilePopupMenu, SWT.PUSH);
 		addItem.setText(Messages.getString("MainWindow.New_Profile")); //$NON-NLS-1$
-		addItem.setImage(guiController.getImage("Button_New.png")); //$NON-NLS-1$
+		addItem.setImage(imageRepository.getImage("Button_New.png")); //$NON-NLS-1$
 		addItem.addListener(SWT.Selection, e -> createNewProfile());
 		return profilePopupMenu;
 	}
@@ -450,7 +452,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 			c.dispose();
 		}
 		if ("NiceListView".equals(preferences.getProfileListStyle())) {
-			profileList = new NiceListViewProfileListComposite(profileListContainer, profileManager, this);
+			profileList = new NiceListViewProfileListComposite(profileListContainer, profileManager, imageRepository, this);
 		}
 		else {
 			profileList = new ListViewProfileListComposite(profileListContainer, profileManager, this);

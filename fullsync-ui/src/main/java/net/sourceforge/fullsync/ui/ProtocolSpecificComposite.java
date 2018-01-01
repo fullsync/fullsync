@@ -111,9 +111,8 @@ class ProtocolSpecificComposite {
 			desc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
 			try (Site conn = fsm.createConnection(fullsync, desc)) {
 				FileObject base = conn.getBase();
-				FileObjectChooser foc = new FileObjectChooser(m_parent.getShell());
-				foc.setBaseFileObject(base);
-				if (foc.open()) {
+				FileObjectChooser foc = fileObjectChooserProvider.get();
+				if (foc.open(m_parent.getShell(), base)) {
 					setPath(new URI(foc.getActiveFileObject().getName().getURI()).getPath());
 				}
 			}

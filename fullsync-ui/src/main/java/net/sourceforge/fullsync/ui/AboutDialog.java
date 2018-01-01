@@ -47,12 +47,15 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
 
 class AboutDialog implements AsyncUIUpdate {
 	private static final String FULLSYNC_LICENSES_DIRECTORY = "net/sourceforge/fullsync/licenses/";
 	private static final long ANIMATION_DELAY = 750;
 	private final Shell shell;
+	private final Preferences preferences;
+	private final ImageRepository imageRepository;
 	private final List<String> licenseNames = new ArrayList<>();
 	private final List<String> licenseTexts = new ArrayList<>();
 	private int stIndex;
@@ -60,8 +63,10 @@ class AboutDialog implements AsyncUIUpdate {
 	private StyledText licenseText;
 
 	@Inject
-	AboutDialog(Shell shell) {
+	AboutDialog(Shell shell, Preferences preferences, ImageRepository imageRepository) {
 		this.shell = shell;
+		this.preferences = preferences;
+		this.imageRepository = imageRepository;
 	}
 
 	void show() {
@@ -78,7 +83,7 @@ class AboutDialog implements AsyncUIUpdate {
 			dialogShell.setLayout(dialogShellLayout);
 			dialogShell.setText(Messages.getString("AboutDialog.About_FullSync")); //$NON-NLS-1$
 
-			Composite logoComposite = new LogoHeaderComposite(dialogShell, SWT.FILL);
+			Composite logoComposite = new LogoHeaderComposite(dialogShell, SWT.FILL, imageRepository);
 			GridData logoCompositeLData = new GridData();
 			logoCompositeLData.grabExcessHorizontalSpace = true;
 			logoCompositeLData.horizontalAlignment = GridData.FILL;
@@ -245,7 +250,7 @@ class AboutDialog implements AsyncUIUpdate {
 		Composite compositeTwitter = new Composite(compositeBottom, SWT.NONE);
 		compositeTwitter.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
 		compositeTwitter.setLayout(new GridLayout(2, false));
-		Image twitterBird = GuiController.getInstance().getImage("twitter_bird_blue_16.png"); //$NON-NLS-1$
+		Image twitterBird = imageRepository.getImage("twitter_bird_blue_16.png"); //$NON-NLS-1$
 		Label twitterBirdLabel = new Label(compositeTwitter, SWT.NONE);
 		Rectangle twitterBirdBounds = twitterBird.getBounds();
 		twitterBirdLabel.setSize(twitterBirdBounds.width, twitterBirdBounds.height);

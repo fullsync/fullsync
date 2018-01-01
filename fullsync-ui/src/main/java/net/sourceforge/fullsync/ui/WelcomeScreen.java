@@ -36,11 +36,13 @@ import net.sourceforge.fullsync.Util;
 
 public class WelcomeScreen extends Dialog {
 	private final Preferences preferences;
+	private final ImageRepository imageRepository;
 
 	@Inject
-	public WelcomeScreen(Shell shell, Preferences preferences) {
+	public WelcomeScreen(Shell shell, Preferences preferences, ImageRepository imageRepository) {
 		super(shell);
 		this.preferences = preferences;
+		this.imageRepository = imageRepository;
 	}
 
 	public void show() {
@@ -51,7 +53,7 @@ public class WelcomeScreen extends Dialog {
 		dialogShell.setLayout(dialogShellLayout);
 		dialogShell.setText(title);
 
-		Composite logoComposite = new LogoHeaderComposite(dialogShell, SWT.FILL);
+		Composite logoComposite = new LogoHeaderComposite(dialogShell, SWT.FILL, imageRepository);
 		GridData logoCompositeLData = new GridData();
 		logoCompositeLData.grabExcessHorizontalSpace = true;
 		logoCompositeLData.horizontalAlignment = GridData.FILL;

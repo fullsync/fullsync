@@ -73,6 +73,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private static final String FILTER_KEY = "Filter";
 
 	private final FullSync fullsync;
+	private final ImageRepository imageRepository;
 	private final ProfileManager profileManager;
 	private final Provider<FileFilterPage> fileFilterPageProvider;
 	private final Provider<ConnectionConfiguration> connectionConfigurationProvider;
@@ -115,6 +116,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		Provider<ScheduleSelectionDialog> scheduleSelectionDialogProvider) {
 		super(shell);
 		this.fullsync = fullsync;
+		this.imageRepository = imageRepository;
 		this.profileManager = profileManager;
 		this.fileFilterPageProvider = fileFilterPageProvider;
 		this.connectionConfigurationProvider = connectionConfigurationProvider;
@@ -542,7 +544,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				if (file.isDirectory()) {
 					TreeItem item = new TreeItem(directoryTree, SWT.NULL);
 					item.setText(file.getName());
-					item.setImage(GuiController.getInstance().getImage("Node_Directory.png"));
+					item.setImage(imageRepository.getImage("Node_Directory.png"));
 					item.setData(file);
 					if (itemsMap.containsKey(file.getPath())) {
 						markItem(item);
@@ -565,7 +567,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			if (file.isDirectory()) {
 				TreeItem childrenItem = new TreeItem(item, SWT.NULL);
 				childrenItem.setText(file.getName());
-				childrenItem.setImage(GuiController.getInstance().getImage("Node_Directory.png"));
+				childrenItem.setImage(imageRepository.getImage("Node_Directory.png"));
 				childrenItem.setData(file);
 				if (itemsMap.containsKey(file.getPath())) {
 					markItem(childrenItem);
@@ -667,7 +669,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				directoryTree.removeAll();
 				TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
 				loadingIem.setText("Loading source dir...");
-				loadingIem.setImage(GuiController.getInstance().getImage("Node_Directory.png"));
+				loadingIem.setImage(imageRepository.getImage("Node_Directory.png"));
 
 				Display display = Display.getCurrent();
 				display.asyncExec(() -> {
@@ -683,7 +685,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 						else {
 							TreeItem loadingIem1 = new TreeItem(directoryTree, SWT.NULL);
 							loadingIem1.setText("Unable to load source dir");
-							loadingIem1.setImage(GuiController.getInstance().getImage("Error.png"));
+							loadingIem1.setImage(imageRepository.getImage("Error.png"));
 						}
 					}
 					catch (IOException | URISyntaxException | FileSystemException ex) {
@@ -691,7 +693,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 						directoryTree.removeAll();
 						TreeItem loadingIem2 = new TreeItem(directoryTree, SWT.NULL);
 						loadingIem2.setText("Unable to load source dir");
-						loadingIem2.setImage(GuiController.getInstance().getImage("Error.png"));
+						loadingIem2.setImage(imageRepository.getImage("Error.png"));
 					}
 				});
 			}

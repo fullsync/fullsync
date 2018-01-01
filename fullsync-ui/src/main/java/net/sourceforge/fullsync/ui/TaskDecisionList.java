@@ -76,7 +76,7 @@ public class TaskDecisionList extends Composite {
 	private boolean onlyChanges;
 	private boolean changeAllowed;
 
-	public TaskDecisionList(Composite parent) {
+	public TaskDecisionList(Composite parent, ImageRepository imageRepository) {
 		super(parent, SWT.NULL);
 		try {
 			this.setSize(550, 500);
@@ -125,7 +125,7 @@ public class TaskDecisionList extends Composite {
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
 		}
-		initializeImages();
+		initializeImages(imageRepository);
 		onlyChanges = true;
 		changeAllowed = true;
 	}
@@ -134,17 +134,16 @@ public class TaskDecisionList extends Composite {
 		this.taskTree = task;
 	}
 
-	public void initializeImages() {
-		GuiController gui = GuiController.getInstance();
-		nodeFile = gui.getImage("Node_File.png"); //$NON-NLS-1$
-		nodeDirectory = gui.getImage("Node_Directory.png"); //$NON-NLS-1$
-		nodeUndefined = gui.getImage("Node_Undefined.png"); //$NON-NLS-1$
-		locationSource = gui.getImage("Location_Source.png"); //$NON-NLS-1$
-		locationDestination = gui.getImage("Location_Destination.png"); //$NON-NLS-1$
-		locationBoth = gui.getImage("Location_Both.png"); //$NON-NLS-1$
+	public void initializeImages(ImageRepository imageRepository) {
+		nodeFile = imageRepository.getImage("Node_File.png"); //$NON-NLS-1$
+		nodeDirectory = imageRepository.getImage("Node_Directory.png"); //$NON-NLS-1$
+		nodeUndefined = imageRepository.getImage("Node_Undefined.png"); //$NON-NLS-1$
+		locationSource = imageRepository.getImage("Location_Source.png"); //$NON-NLS-1$
+		locationDestination = imageRepository.getImage("Location_Destination.png"); //$NON-NLS-1$
+		locationBoth = imageRepository.getImage("Location_Both.png"); //$NON-NLS-1$
 
 		for (ActionType action : ActionType.values()) {
-			actionImages.put(action, gui.getImage(getActionTypeImage(action)));
+			actionImages.put(action, imageRepository.getImage(getActionTypeImage(action)));
 		}
 	}
 

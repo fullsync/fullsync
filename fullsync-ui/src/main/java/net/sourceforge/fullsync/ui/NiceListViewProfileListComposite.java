@@ -195,9 +195,10 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	private Image imageEdit;
 	private Image imageDelete;
 
-	public NiceListViewProfileListComposite(Composite parent, ProfileManager profileManager, ProfileListControlHandler handler) {
+	public NiceListViewProfileListComposite(Composite parent, ProfileManager profileManager, ImageRepository imageRepository,
+		ProfileListControlHandler handler) {
 		super(parent, profileManager, handler);
-		loadImages();
+		loadImages(imageRepository);
 		scrollPane = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
 		profileList = new NiceListView(scrollPane);
 		scrollPane.setExpandHorizontal(true);
@@ -212,17 +213,16 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		populateProfileList();
 	}
 
-	private void loadImages() {
-		GuiController gc = GuiController.getInstance();
-		imageProfileDefault = gc.getImage("Profile_Default.png"); //$NON-NLS-1$
-		imageProfileScheduled = gc.getImage("Profile_Default_Scheduled.png"); //$NON-NLS-1$
-		imageProfileError = gc.getImage("Profile_Default_Error.png"); //$NON-NLS-1$
-		imageProfileErrorScheduled = gc.getImage("Profile_Default_Error_Scheduled.png"); //$NON-NLS-1$
+	private void loadImages(ImageRepository imageRepository) {
+		imageProfileDefault = imageRepository.getImage("Profile_Default.png"); //$NON-NLS-1$
+		imageProfileScheduled = imageRepository.getImage("Profile_Default_Scheduled.png"); //$NON-NLS-1$
+		imageProfileError = imageRepository.getImage("Profile_Default_Error.png"); //$NON-NLS-1$
+		imageProfileErrorScheduled = imageRepository.getImage("Profile_Default_Error_Scheduled.png"); //$NON-NLS-1$
 
-		imageRun = gc.getImage("Profile_Run.png"); //$NON-NLS-1$
-		imageRunNonInter = gc.getImage("Profile_Run_Non_Inter.png"); //$NON-NLS-1$
-		imageEdit = gc.getImage("Profile_Edit.png"); //$NON-NLS-1$
-		imageDelete = gc.getImage("Profile_Delete.png"); //$NON-NLS-1$
+		imageRun = imageRepository.getImage("Profile_Run.png"); //$NON-NLS-1$
+		imageRunNonInter = imageRepository.getImage("Profile_Run_Non_Inter.png"); //$NON-NLS-1$
+		imageEdit = imageRepository.getImage("Profile_Edit.png"); //$NON-NLS-1$
+		imageDelete = imageRepository.getImage("Profile_Delete.png"); //$NON-NLS-1$
 	}
 
 	private void updateItem(NiceListViewItem item, Profile profile) {

@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Label;
 public class LogoHeaderComposite extends Composite {
 	private Color headerBackgroundColor;
 
-	public LogoHeaderComposite(final Composite parent, final int style) {
+	public LogoHeaderComposite(final Composite parent, final int style, ImageRepository imageRepository) {
 		super(parent, style);
 		addDisposeListener(e -> headerBackgroundColor.dispose());
 		headerBackgroundColor = new Color(getDisplay(), 192, 204, 214);
@@ -45,7 +45,7 @@ public class LogoHeaderComposite extends Composite {
 		GridData labelPictureLData = new GridData();
 		labelPictureLData.horizontalAlignment = SWT.FILL;
 		labelPicture.setLayoutData(labelPictureLData);
-		Image aboutImg = GuiController.getInstance().getImage("About.png"); //$NON-NLS-1$
+		Image aboutImg = imageRepository.getImage("About.png"); //$NON-NLS-1$
 		Rectangle r = aboutImg.getBounds();
 		labelPicture.setSize(r.width, r.height);
 		labelPicture.setImage(aboutImg);
@@ -56,7 +56,7 @@ public class LogoHeaderComposite extends Composite {
 		labelLogoLData.horizontalAlignment = GridData.END;
 		labelLogoLData.verticalAlignment = GridData.VERTICAL_ALIGN_CENTER;
 		labelLogo.setLayoutData(labelLogoLData);
-		Image logoImg = GuiController.getInstance().getImage("fullsync72.png"); //$NON-NLS-1$
+		Image logoImg = imageRepository.getImage("fullsync72.png"); //$NON-NLS-1$
 		labelLogo.setImage(logoImg);
 	}
 }

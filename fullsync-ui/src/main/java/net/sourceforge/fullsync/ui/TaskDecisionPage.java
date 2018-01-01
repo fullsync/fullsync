@@ -134,7 +134,7 @@ public class TaskDecisionPage extends WizardDialog {
 		IoStatistics stats = synchronizer.getIoStatistics(taskTree);
 		labelProgress.setText("Totals: " + stats.getCountActions() + " tasks, " + UISettings.formatSize(stats.getBytesTransferred()));
 
-		list = new TaskDecisionList(content);
+		list = new TaskDecisionList(content, imageRepository);
 		list.setTaskTree(taskTree);
 		GridData listLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		listLayoutData.horizontalSpan = 2;

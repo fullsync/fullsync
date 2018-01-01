@@ -23,6 +23,8 @@ import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -34,6 +36,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -44,8 +47,10 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Preferences;
 
 class FileObjectChooser {
+	private final ImageRepository imageRepository;
 	private Shell dialogShell;
 	private Label labelBaseUrl;
 	private Text textUrlExtension;
@@ -69,7 +74,12 @@ class FileObjectChooser {
 	private FileObject activeFileObject;
 	private FileObject selectedFileObject;
 
-	FileObjectChooser(Shell parent) {
+	@Inject
+	public FileObjectChooser(Preferences preferences, ImageRepository imageRepository) {
+		this.imageRepository = imageRepository;
+	}
+
+	public boolean open(Shell parent, FileObject base) {
 		dialogShell = new Shell(parent, SWT.BORDER | SWT.TITLE | SWT.RESIZE | SWT.PRIMARY_MODAL);
 		dialogShell.setText("Choose Folder...");
 
@@ -101,12 +111,12 @@ class FileObjectChooser {
 		toolBarActions = new ToolBar(compositeTop, SWT.NONE);
 		// folder up
 		toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
-		toolItemParent.setImage(GuiController.getInstance().getImage("FS_LevelUp.gif"));
+		toolItemParent.setImage(imageRepository.getImage("FS_LevelUp.gif"));
 		toolItemParent.addListener(SWT.Selection, e -> toolItemParentWidgetSelected());
 		// new folder
 		toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
-		toolItemNewFolder.setImage(GuiController.getInstance().getImage("FS_Folder_New.gif"));
-		toolItemNewFolder.setDisabledImage(GuiController.getInstance().getImage("FS_Folder_New_disabled.gif"));
+		toolItemNewFolder.setImage(imageRepository.getImage("FS_Folder_New.gif"));
+		toolItemNewFolder.setDisabledImage(imageRepository.getImage("FS_Folder_New_disabled.gif"));
 		toolItemNewFolder.addListener(SWT.Selection, e -> toolItemNewFolderWidgetSelected());
 		toolItemNewFolder.setEnabled(false);
 
@@ -119,35 +129,8 @@ class FileObjectChooser {
 		tableItems = new Table(dialogShell, SWT.SINGLE | SWT.BORDER);
 		tableItems.setHeaderVisible(true);
 		tableItems.setLayoutData(tableItemsLData);
-		tableItems.addListener(SWT.MouseDown, e -> {
-			TableItem[] items = tableItems.getSelection();
-			if (items.length > 0) {
-				try {
-					TableItem item = items[0];
-					FileObject file = (FileObject) item.getData();
-					// FIXME if we are looking for files, just take files, otherwise just take dirs
-					setSelectedFileObject(file);
-				}
-				catch (FileSystemException fse) {
-					fse.printStackTrace();
-				}
-			}
-		});
-		tableItems.addListener(SWT.MouseDoubleClick, e -> {
-			TableItem[] items = tableItems.getSelection();
-			if (items.length > 0) {
-				try {
-					TableItem item = items[0];
-					FileObject file = (FileObject) item.getData();
-					if (file.getType().hasChildren()) {
-						setActiveFileObject(file);
-					}
-				}
-				catch (FileSystemException fse) {
-					fse.printStackTrace();
-				}
-			}
-		});
+		tableItems.addListener(SWT.MouseDown, this::tableItemSelected);
+		tableItems.addListener(SWT.MouseDoubleClick, this::tableItemDoubleClicked);
 
 		tableColumnName = new TableColumn(tableItems, SWT.NONE);
 		tableColumnName.setText("File name");
@@ -190,10 +173,7 @@ class FileObjectChooser {
 		buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
 		buttonOk.setLayoutData(buttonOkLData);
 		buttonOk.setText("Open");
-		buttonOk.addListener(SWT.Selection, e -> {
-			result = true;
-			dialogShell.getDisplay().asyncExec(() -> dialogShell.dispose());
-		});
+		buttonOk.addListener(SWT.Selection, this::okSelected);
 		// file filter
 		Label labelFileFilter = new Label(compositeBottom, SWT.NONE);
 		labelFileFilter.setText("Files of type:");
@@ -211,13 +191,10 @@ class FileObjectChooser {
 		buttonCancelLData.heightHint = UISettings.BUTTON_HEIGHT;
 		buttonCancel.setLayoutData(buttonCancelLData);
 		buttonCancel.setText("Cancel");
-		buttonCancel.addListener(SWT.Selection, e -> {
-			result = false;
-			dialogShell.getDisplay().asyncExec(() -> dialogShell.dispose());
-		});
-	}
+		buttonCancel.addListener(SWT.Selection, this::cancelSelected);
 
-	public boolean open() {
+		setBaseFileObject(base);
+
 		try {
 			result = false;
 			dialogShell.open();
@@ -233,6 +210,47 @@ class FileObjectChooser {
 		catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		}
+	}
+
+	private void okSelected(Event event) {
+		result = true;
+		dialogShell.getDisplay().asyncExec(() -> dialogShell.dispose());
+	}
+
+	private void cancelSelected(Event event) {
+		result = false;
+		dialogShell.getDisplay().asyncExec(() -> dialogShell.dispose());
+	}
+
+	private void tableItemDoubleClicked(Event event) {
+		TableItem[] items = tableItems.getSelection();
+		if (items.length > 0) {
+			try {
+				TableItem item = items[0];
+				FileObject file = (FileObject) item.getData();
+				if (file.getType().hasChildren()) {
+					setActiveFileObject(file);
+				}
+			}
+			catch (FileSystemException fse) {
+				fse.printStackTrace();
+			}
+		}
+	}
+
+	private void tableItemSelected(Event event) {
+		TableItem[] items = tableItems.getSelection();
+		if (items.length > 0) {
+			try {
+				TableItem item = items[0];
+				FileObject file = (FileObject) item.getData();
+				// FIXME if we are looking for files, just take files, otherwise just take dirs
+				setSelectedFileObject(file);
+			}
+			catch (FileSystemException fse) {
+				fse.printStackTrace();
+			}
 		}
 	}
 
@@ -286,10 +304,10 @@ class FileObjectChooser {
 			item.setText(2, type);
 
 			if (data.getType() == FileType.FOLDER) {
-				item.setImage(GuiController.getInstance().getImage("FS_Folder_Collapsed.gif"));
+				item.setImage(imageRepository.getImage("FS_Folder_Collapsed.gif"));
 			}
 			else {
-				item.setImage(GuiController.getInstance().getImage("FS_File_text_plain.gif"));
+				item.setImage(imageRepository.getImage("FS_File_text_plain.gif"));
 			}
 
 			item.setData(data);
@@ -326,8 +344,8 @@ class FileObjectChooser {
 		}
 	}
 
-	private void setActiveFileObject(final FileObject _active) throws FileSystemException {
-		activeFileObject = _active;
+	private void setActiveFileObject(final FileObject active) throws FileSystemException {
+		activeFileObject = active;
 		if (null != dialogShell) {
 			updateActiveFileObject();
 		}
