@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.FullSync;
 
 abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	private Label labelHost;
@@ -41,10 +40,6 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	private Text textUsername;
 	private Label labelPassword;
 	private Text textPassword;
-
-	public UserPasswordSpecificComposite(FullSync _fullsync) {
-		super(_fullsync);
-	}
 
 	@Override
 	public void createGUI(final Composite parent) {

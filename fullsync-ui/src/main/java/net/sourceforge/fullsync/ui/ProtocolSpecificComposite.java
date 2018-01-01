@@ -22,6 +22,9 @@ package net.sourceforge.fullsync.ui;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.apache.commons.vfs2.FileObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -37,7 +40,10 @@ import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.fs.Site;
 
 class ProtocolSpecificComposite {
-	private final FullSync fullsync;
+	@Inject
+	private FullSync fullsync;
+	@Inject
+	private Provider<FileObjectChooser> fileObjectChooserProvider;
 
 	protected Text textPath;
 	protected String m_scheme;
@@ -46,10 +52,6 @@ class ProtocolSpecificComposite {
 	private Label labelPath;
 	private Button buttonBrowse;
 	private Button buttonBuffered;
-
-	public ProtocolSpecificComposite(FullSync _fullsync) {
-		fullsync = _fullsync;
-	}
 
 	public void createGUI(final Composite parent) {
 		m_parent = parent;

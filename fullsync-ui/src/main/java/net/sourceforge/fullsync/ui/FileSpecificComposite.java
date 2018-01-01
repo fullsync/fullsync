@@ -26,13 +26,8 @@ import java.net.URISyntaxException;
 import org.eclipse.swt.widgets.DirectoryDialog;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.FullSync;
 
 class FileSpecificComposite extends ProtocolSpecificComposite {
-	public FileSpecificComposite(FullSync _fullsync) {
-		super(_fullsync);
-	}
-
 	@Override
 	public void setConnectionDescription(ConnectionDescription connection) {
 		super.setConnectionDescription(connection);

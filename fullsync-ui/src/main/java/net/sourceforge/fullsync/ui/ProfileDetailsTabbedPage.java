@@ -75,6 +75,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private final FullSync fullsync;
 	private final ProfileManager profileManager;
 	private final Provider<FileFilterPage> fileFilterPageProvider;
+	private final Provider<ConnectionConfiguration> connectionConfigurationProvider;
 	private final Provider<ScheduleSelectionDialog> scheduleSelectionDialogProvider;
 
 	private TabFolder tabs;
@@ -116,6 +117,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		this.fullsync = fullsync;
 		this.profileManager = profileManager;
 		this.fileFilterPageProvider = fileFilterPageProvider;
+		this.connectionConfigurationProvider = connectionConfigurationProvider;
 		this.scheduleSelectionDialogProvider = scheduleSelectionDialogProvider;
 	}
 
@@ -330,7 +332,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		c.setLayoutData(cData);
 
 		ConnectionDescription src = null != profile ? profile.getSource() : null;
-		srcConnectionConfiguration = new ConnectionConfiguration(c, fullsync, src);
+		srcConnectionConfiguration = connectionConfigurationProvider.get();
+		srcConnectionConfiguration.render(c, src);
 		srcConnectionConfiguration.setBufferedEnabled(false);
 		return c;
 	}
@@ -353,7 +356,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		c.setLayoutData(cData);
 
 		ConnectionDescription dst = null != profile ? profile.getDestination() : null;
-		dstConnectionConfiguration = new ConnectionConfiguration(c, fullsync, dst);
+		dstConnectionConfiguration = connectionConfigurationProvider.get();
+		dstConnectionConfiguration.render(c, dst);
 		return c;
 	}
 

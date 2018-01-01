@@ -19,13 +19,7 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import net.sourceforge.fullsync.FullSync;
-
-public class SMBSpecificComposite extends UserPasswordSpecificComposite {
-	SMBSpecificComposite(FullSync _fullsync) {
-		super(_fullsync);
-	}
-
+public class SmbSpecificComposite extends UserPasswordSpecificComposite {
 	@Override
 	public int getDefaultPort() {
 		return -1;

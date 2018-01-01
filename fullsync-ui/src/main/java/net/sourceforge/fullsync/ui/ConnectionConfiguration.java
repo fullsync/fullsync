@@ -21,9 +21,9 @@ package net.sourceforge.fullsync.ui;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -34,13 +34,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.FullSync;
 
 public class ConnectionConfiguration {
 	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" };
-	private static Map<String, Function<FullSync, ProtocolSpecificComposite>> composites;
-	private Composite m_parent; // the tabs content
-	private final FullSync fullsync;
+	private final Provider<FileSpecificComposite> fileSpecificCompositeProvider;
+	private final Provider<FtpSpecificComposite> ftpSpecificCompositeProvider;
+	private final Provider<SftpSpecificComposite> sftpSpecificCompositeProvider;
+	private final Provider<SmbSpecificComposite> smbSpecificCompositeProvider;
+	private Composite parent; // the tabs content
 	private Label labelProtocol;
 	private Combo comboProtocol;
 	private Composite compositeProtocolSpecific;
@@ -49,17 +50,18 @@ public class ConnectionConfiguration {
 	private boolean bufferedEnabled = true;
 	private boolean bufferedActive = false;
 
-	static {
-		composites = new HashMap<>();
-		composites.put("file", FileSpecificComposite::new);
-		composites.put("ftp", FTPSpecificComposite::new);
-		composites.put("sftp", SFTPSpecificComposite::new);
-		composites.put("smb", SMBSpecificComposite::new);
+	@Inject
+	public ConnectionConfiguration(Provider<FileSpecificComposite> fileSpecificCompositeProvider,
+		Provider<FtpSpecificComposite> ftpSpecificCompositeProvider, Provider<SftpSpecificComposite> sftpSpecificCompositeProvider,
+		Provider<SmbSpecificComposite> smbSpecificCompositeProvider) {
+		this.fileSpecificCompositeProvider = fileSpecificCompositeProvider;
+		this.ftpSpecificCompositeProvider = ftpSpecificCompositeProvider;
+		this.sftpSpecificCompositeProvider = sftpSpecificCompositeProvider;
+		this.smbSpecificCompositeProvider = smbSpecificCompositeProvider;
 	}
 
-	public ConnectionConfiguration(Composite parent, FullSync _fullsync, ConnectionDescription desc) {
-		m_parent = parent;
-		fullsync = _fullsync;
+	public void render(Composite parent, ConnectionDescription desc) {
+		this.parent = parent;
 		if (null != desc) {
 			URI uri = desc.getUri();
 			if (null != uri) {
@@ -70,7 +72,7 @@ public class ConnectionConfiguration {
 	}
 
 	private void initialize() {
-		compositeProtocolSpecific = new Composite(m_parent, SWT.NONE);
+		compositeProtocolSpecific = new Composite(parent, SWT.NONE);
 		compositeProtocolSpecific.setLayout(new GridLayout(3, false));
 		compositeProtocolSpecific.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
@@ -95,8 +97,8 @@ public class ConnectionConfiguration {
 		comboProtocol.select(selectedIndex);
 		comboProtocol.addModifyListener(e -> {
 			selectedScheme = comboProtocol.getText();
-			m_parent.getDisplay().asyncExec(() -> {
-				for (Control c : m_parent.getChildren()) {
+			parent.getDisplay().asyncExec(() -> {
+				for (Control c : parent.getChildren()) {
 					if (!c.isDisposed()) {
 						c.dispose();
 					}
@@ -104,7 +106,7 @@ public class ConnectionConfiguration {
 
 				initialize();
 
-				m_parent.layout(true);
+				parent.layout(true);
 			});
 		});
 
@@ -121,8 +123,22 @@ public class ConnectionConfiguration {
 	}
 
 	private void createProtocolSpecificComposite() {
-		Function<FullSync, ProtocolSpecificComposite> compositeConstructor = composites.get(selectedScheme);
-		compositeSpecific = compositeConstructor.apply(fullsync);
+		switch (selectedScheme) {
+			case "file":
+				compositeSpecific = fileSpecificCompositeProvider.get();
+				break;
+			case "ftp":
+				compositeSpecific = ftpSpecificCompositeProvider.get();
+				break;
+			case "sftp":
+				compositeSpecific = sftpSpecificCompositeProvider.get();
+				break;
+			case "smb":
+				compositeSpecific = smbSpecificCompositeProvider.get();
+				break;
+			default:
+				compositeSpecific = null;
+		}
 		if (null != compositeSpecific) {
 			compositeSpecific.createGUI(compositeProtocolSpecific);
 			compositeSpecific.reset(selectedScheme);
