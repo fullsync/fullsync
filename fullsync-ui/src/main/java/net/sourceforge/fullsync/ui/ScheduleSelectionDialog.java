@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import javax.inject.Inject;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.graphics.Point;
@@ -29,7 +31,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -37,48 +38,29 @@ import org.eclipse.swt.widgets.Shell;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.schedule.Schedule;
+import net.sourceforge.fullsync.ui.schedule.CrontabScheduleOptions;
+import net.sourceforge.fullsync.ui.schedule.IntervalScheduleOptions;
+import net.sourceforge.fullsync.ui.schedule.NullScheduleOptions;
+import net.sourceforge.fullsync.ui.schedule.ScheduleOptions;
 
-public class ScheduleSelectionDialog extends Dialog {
-	private static class NullScheduleOptions extends ScheduleOptions {
-		NullScheduleOptions(Composite parent) {
-			super(parent);
-		}
-
-		@Override
-		public String getSchedulingName() {
-			return Messages.getString("ScheduleSelectionDialog.none"); //$NON-NLS-1$
-		}
-
-		@Override
-		public boolean canHandleSchedule(final Schedule sched) {
-			return false;
-		}
-
-		@Override
-		public Schedule getSchedule() {
-			return null;
-		}
-
-		@Override
-		public void setSchedule(Schedule sched) {
-		}
-	}
-
+public class ScheduleSelectionDialog {
+	private final ImageRepository imageRepository;
 	private Group groupOptions;
 	private Combo cbType;
 	private Shell dialogShell;
 
 	private Schedule schedule;
 
-	public ScheduleSelectionDialog(Shell parent) {
-		super(parent, SWT.NULL);
+	@Inject
+	public ScheduleSelectionDialog(ImageRepository imageRepository) {
+		this.imageRepository = imageRepository;
 	}
 
-	public void open() {
+	public void open(Shell parent) {
 		try {
-			dialogShell = new Shell(getParent(), SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.RESIZE);
+			dialogShell = new Shell(parent, SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.RESIZE);
 			dialogShell.setText(Messages.getString("ScheduleSelectionDialog.EditScheduling")); //$NON-NLS-1$
-			dialogShell.setImage(GuiController.getInstance().getImage("Scheduler_Icon.png")); //$NON-NLS-1$
+			dialogShell.setImage(imageRepository.getImage("Scheduler_Icon.png")); //$NON-NLS-1$
 			GridLayout thisLayout = new GridLayout();
 			thisLayout.numColumns = 2;
 			dialogShell.setLayout(thisLayout);
@@ -161,7 +143,7 @@ public class ScheduleSelectionDialog extends Dialog {
 			Display display = dialogShell.getDisplay();
 			dialogShell.setSize(350, 350);
 
-			Rectangle rect = getParent().getBounds();
+			Rectangle rect = parent.getBounds();
 			Point dialogSize = dialogShell.getSize();
 			int x = (rect.x + (rect.width / 2)) - (dialogSize.x / 2);
 			int y = (rect.y + (rect.height / 2)) - (dialogSize.y / 2);

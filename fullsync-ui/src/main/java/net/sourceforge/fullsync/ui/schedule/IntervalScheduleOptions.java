@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
+package net.sourceforge.fullsync.ui.schedule;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.schedule.IntervalSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
+import net.sourceforge.fullsync.ui.Messages;
 
 public class IntervalScheduleOptions extends ScheduleOptions {
 	// TODO sadly we can't support "days","months" as the interval is starting with program startup

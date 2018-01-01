@@ -75,6 +75,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private final FullSync fullsync;
 	private final ProfileManager profileManager;
 	private final Provider<FileFilterPage> fileFilterPageProvider;
+	private final Provider<ScheduleSelectionDialog> scheduleSelectionDialogProvider;
 
 	private TabFolder tabs;
 	private Text textProfileName;
@@ -108,12 +109,14 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private String lastSourceLoaded;
 
 	@Inject
-	public ProfileDetailsTabbedPage(Shell shell, FullSync fullsync, ProfileManager profileManager,
-		Provider<FileFilterPage> fileFilterPageProvider) {
+	public ProfileDetailsTabbedPage(Shell shell, FullSync fullsync, ImageRepository imageRepository, ProfileManager profileManager,
+		Provider<FileFilterPage> fileFilterPageProvider, Provider<ConnectionConfiguration> connectionConfigurationProvider,
+		Provider<ScheduleSelectionDialog> scheduleSelectionDialogProvider) {
 		super(shell);
 		this.fullsync = fullsync;
 		this.profileManager = profileManager;
 		this.fileFilterPageProvider = fileFilterPageProvider;
+		this.scheduleSelectionDialogProvider = scheduleSelectionDialogProvider;
 	}
 
 	public void setProfile(Profile profile) {
@@ -297,9 +300,9 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		buttonScheduling = new Button(c, SWT.PUSH | SWT.CENTER);
 		buttonScheduling.setText(Messages.getString("ProfileDetails.Edit_Scheduling")); //$NON-NLS-1$
 		buttonScheduling.addListener(SWT.Selection, e -> {
-			ScheduleSelectionDialog dialog = new ScheduleSelectionDialog(m_parent.getShell());
+			ScheduleSelectionDialog dialog = scheduleSelectionDialogProvider.get();
 			dialog.setSchedule((Schedule) buttonScheduling.getData());
-			dialog.open();
+			dialog.open(m_parent.getShell());
 			buttonScheduling.setData(dialog.getSchedule()); //FIXME: if cancelled??
 		});
 		new Label(c, SWT.NONE); // area below the automated execution label should be empty

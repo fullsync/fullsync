@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
+package net.sourceforge.fullsync.ui.schedule;
 
 import java.util.ArrayList;
 
@@ -38,8 +38,10 @@ import net.sourceforge.fullsync.schedule.CrontabPart;
 import net.sourceforge.fullsync.schedule.CrontabPart.Instance;
 import net.sourceforge.fullsync.schedule.CrontabSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
+import net.sourceforge.fullsync.ui.Messages;
+import net.sourceforge.fullsync.ui.UISettings;
 
-class CrontabScheduleOptions extends ScheduleOptions {
+public class CrontabScheduleOptions extends ScheduleOptions {
 	private static class PartContainer {
 		private CrontabPart part;
 		private Button cbAll;
@@ -144,7 +146,7 @@ class CrontabScheduleOptions extends ScheduleOptions {
 
 	private java.util.List<PartContainer> parts = new ArrayList<>();
 
-	CrontabScheduleOptions(Composite parent) {
+	public CrontabScheduleOptions(Composite parent) {
 		super(parent);
 		try {
 			setLayout(new GridLayout(4, false));
