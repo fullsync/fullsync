@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +55,6 @@ import net.sourceforge.fullsync.ProfileChangeListener;
 import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.ProfileSchedulerListener;
-import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.schedule.Schedule;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
 import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
@@ -268,7 +268,7 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 				if (0 == newCfgFile.length()) {
 					throw new Exception("Storing profiles failed (size = 0)");
 				}
-				Util.fileRenameToPortableLegacy(newCfgFile.getName(), profilesFileName);
+				Files.move(newCfgFile.toPath(), new File(profilesFileName).toPath(), StandardCopyOption.ATOMIC_MOVE);
 			}
 			finally {
 				Files.deleteIfExists(newCfgFile.toPath());

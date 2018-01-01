@@ -28,7 +28,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -138,27 +137,5 @@ public abstract class Util {
 
 	private static ClassLoader getContextClassLoader() {
 		return Thread.currentThread().getContextClassLoader();
-	}
-
-	public static void fileRenameToPortableLegacy(String from, String to) throws Exception {
-		File srcFile = new File(from);
-		File dstFile = new File(to);
-		if (!srcFile.renameTo(dstFile)) {
-			File tmpFile = File.createTempFile("fullsync", "tmp", dstFile.getParentFile());
-			Files.deleteIfExists(tmpFile.toPath());
-			if (dstFile.renameTo(tmpFile)) {
-				// FIXME: Files.copy(srcFile.toPath(), dstFile.toPath(), StandardCopyOption.ATOMIC_MOVE); ?
-				if (srcFile.renameTo(dstFile)) {
-					Files.deleteIfExists(tmpFile.toPath());
-				}
-				else {
-					tmpFile.renameTo(dstFile);
-					throw new Exception("File.renameTo failed (cannot rename file)");
-				}
-			}
-			else {
-				throw new Exception("File.renameTo failed (cannot move old file away)");
-			}
-		}
 	}
 }
