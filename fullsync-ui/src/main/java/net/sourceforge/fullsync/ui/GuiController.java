@@ -30,7 +30,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -49,7 +48,7 @@ public class GuiController {
 	private static GuiController singleton;
 	private final Display display;
 	private final Shell shell;
-	private final ImageRepository imageRepository;
+	private final Provider<ImageRepository> imageRepositoryProvider;
 	private final FontRepository fontRepository;
 	private final Provider<MainWindow> mainWindowProvider;
 	private final Provider<SystemTrayItem> systemTrayItemProvider;
@@ -60,12 +59,12 @@ public class GuiController {
 	private ExceptionHandler oldExceptionHandler;
 
 	@Inject
-	private GuiController(Display display, Shell shell, ImageRepository imageRepository, FontRepository fontRepository,
+	private GuiController(Display display, Shell shell, Provider<ImageRepository> imageRepositoryProvider, FontRepository fontRepository,
 		Provider<MainWindow> mainWindowProvider, Provider<SystemTrayItem> systemTrayItemProvider,
 		Provider<WelcomeScreen> welcomeScreenProvider, Preferences preferences, ProfileManager profileManager) {
 		this.display = display;
 		this.shell = shell;
-		this.imageRepository = imageRepository;
+		this.imageRepositoryProvider = imageRepositoryProvider;
 		this.fontRepository = fontRepository;
 		this.mainWindowProvider = mainWindowProvider;
 		this.systemTrayItemProvider = systemTrayItemProvider;
@@ -77,10 +76,6 @@ public class GuiController {
 
 	public Preferences getPreferences() {
 		return preferences;
-	}
-
-	public Image getImage(String imageName) {
-		return imageRepository.getImage(imageName);
 	}
 
 	private void startGui() {
@@ -146,9 +141,7 @@ public class GuiController {
 	private void disposeGui() {
 		ExceptionHandler.registerExceptionHandler(oldExceptionHandler);
 		mainWindowProvider.get().dispose();
-		if (null != imageRepository) {
-			imageRepository.dispose();
-		}
+		imageRepositoryProvider.get().dispose();
 		if (null != fontRepository) {
 			fontRepository.dispose();
 		}
@@ -208,7 +201,6 @@ public class GuiController {
 				ExceptionHandler.reportException("Error opening " + uri + ".", e);
 			}
 		}
-
 	}
 
 	public Font getFont(String name, int height, int style) {
