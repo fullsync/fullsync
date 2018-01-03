@@ -31,39 +31,35 @@ public class ShellStateHandler {
 	private final Preferences preferences;
 	private final String name;
 
-	public ShellStateHandler(Shell _shell, String _name, Preferences _preferences) {
-		preferences = _preferences;
-		name = _name;
-		_shell.addListener(SWT.Close, this::shellClosed);
-		_shell.setVisible(false);
-		_shell.getDisplay().asyncExec(() -> applyPreferences(_shell));
+	public ShellStateHandler(Preferences preferences, String name, Shell shell) {
+		this.preferences = preferences;
+		this.name = name;
+		shell.addListener(SWT.Close, this::shellClosed);
+		shell.setVisible(false);
+		shell.getDisplay().asyncExec(() -> applyPreferences(shell));
 	}
 
-	public static void apply(Shell _shell, String _name) {
-		new ShellStateHandler(_shell, _name, GuiController.getInstance().getPreferences());
+	public static void apply(Preferences preferences, Shell shell, Class<?> clazz) {
+		new ShellStateHandler(preferences, clazz.getSimpleName(), shell);
 	}
 
-	public static void apply(Shell _shell, Class<?> _class) {
-		new ShellStateHandler(_shell, _class.getSimpleName(), GuiController.getInstance().getPreferences());
-	}
-
-	private void applyPreferences(Shell _shell) {
+	private void applyPreferences(Shell shell) {
 		WindowState ws = preferences.getWindowState(name);
-		_shell.setVisible(true);
-		Rectangle r = _shell.getDisplay().getBounds();
+		shell.setVisible(true);
+		Rectangle r = shell.getDisplay().getBounds();
 		if (ws.isValid() && ws.isInsideOf(r.x, r.y, r.width, r.height)) {
-			_shell.setBounds(ws.getX(), ws.getY(), ws.getWidth(), ws.getHeight());
+			shell.setBounds(ws.getX(), ws.getY(), ws.getWidth(), ws.getHeight());
 		}
 		if (ws.isMinimized()) {
-			_shell.setMinimized(true);
+			shell.setMinimized(true);
 		}
 		if (ws.isMaximized()) {
-			_shell.setMaximized(true);
+			shell.setMaximized(true);
 		}
 	}
 
-	private void shellClosed(Event _event) {
-		Shell shell = (Shell) _event.widget;
+	private void shellClosed(Event event) {
+		Shell shell = (Shell) event.widget;
 		WindowState ws = new WindowState();
 		ws.setMaximized(shell.getMaximized());
 		ws.setMinimized(shell.getMinimized());

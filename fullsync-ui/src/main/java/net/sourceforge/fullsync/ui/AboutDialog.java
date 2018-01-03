@@ -137,7 +137,7 @@ class AboutDialog implements AsyncUIUpdate {
 			dialogShell.layout(true);
 
 			dialogShell.open();
-			ShellStateHandler.apply(dialogShell, AboutDialog.class);
+			ShellStateHandler.apply(preferences, dialogShell, AboutDialog.class);
 			buttonOk.setFocus();
 			Display display = dialogShell.getDisplay();
 			while (!dialogShell.isDisposed()) {

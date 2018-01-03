@@ -38,12 +38,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.Preferences;
 
 public abstract class WizardDialog {
 	@Inject
 	protected FontRepository fontRepository;
 	@Inject
 	protected ImageRepository imageRepository;
+	@Inject
+	protected Preferences preferences;
 	private Shell dialogShell;
 	private Label labelImage;
 	private Label labelDescription;
@@ -186,7 +189,7 @@ public abstract class WizardDialog {
 
 			dialogShell.setSize(size);
 			dialogShell.open();
-			ShellStateHandler.apply(dialogShell, getClass());
+			ShellStateHandler.apply(preferences, dialogShell, getClass());
 			dialogOpened();
 
 			while (!dialogShell.isDisposed()) {

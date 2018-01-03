@@ -50,6 +50,7 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 
 class FileObjectChooser {
+	private final Preferences preferences;
 	private final ImageRepository imageRepository;
 	private Shell dialogShell;
 	private Label labelBaseUrl;
@@ -76,6 +77,7 @@ class FileObjectChooser {
 
 	@Inject
 	public FileObjectChooser(Preferences preferences, ImageRepository imageRepository) {
+		this.preferences = preferences;
 		this.imageRepository = imageRepository;
 	}
 
@@ -198,7 +200,7 @@ class FileObjectChooser {
 		try {
 			result = false;
 			dialogShell.open();
-			ShellStateHandler.apply(dialogShell, FileObjectChooser.class);
+			ShellStateHandler.apply(preferences, dialogShell, FileObjectChooser.class);
 			Display display = dialogShell.getDisplay();
 			while (!dialogShell.isDisposed()) {
 				if (!display.readAndDispatch()) {
