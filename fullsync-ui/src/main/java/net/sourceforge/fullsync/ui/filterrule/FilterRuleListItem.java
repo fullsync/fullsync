@@ -22,6 +22,8 @@ package net.sourceforge.fullsync.ui.filterrule;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
@@ -50,7 +52,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 import net.sourceforge.fullsync.ui.FileFilterPage;
-import net.sourceforge.fullsync.ui.GuiController;
+import net.sourceforge.fullsync.ui.ImageRepository;
 import net.sourceforge.fullsync.ui.Messages;
 
 public class FilterRuleListItem {
@@ -98,23 +100,27 @@ public class FilterRuleListItem {
 		reverseRuleNamesConversionTable.put(nested, SubfilterFileFilerRule.TYPE_NAME);
 	}
 
+	private final ImageRepository imageRepository;
+
 	private String ruleType;
 	private int op;
+	private FileFilterPage root;
 	private OperandValue value;
 
 	private RuleComposite ruleComposite;
 
-	private final FileFilterPage root;
-
 	private final FileFilterManager fileFilterManager = new FileFilterManager();
 
-	public FilterRuleListItem(FileFilterPage root, Composite composite, String ruleType, int op,
-		OperandValue value) {
+	@Inject
+	public FilterRuleListItem(ImageRepository imageRepository) {
+		this.imageRepository = imageRepository;
+	}
+
+	public void init(FileFilterPage root, String ruleType, int op, OperandValue value) {
 		this.ruleType = ruleType;
 		this.op = op;
 		this.root = root;
 		this.value = value;
-		init(composite);
 	}
 
 	private static Class<? extends FileFilterRule> getRuleClass(String typeName) {
@@ -133,7 +139,7 @@ public class FilterRuleListItem {
 		return fileFilterManager.createFileFilterRule(ruleType, op, value);
 	}
 
-	public void init(final Composite composite) {
+	public void render(final Composite composite) {
 		final FilterRuleListItem ruleItem = this;
 
 		final Combo comboRuleTypes = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -238,12 +244,12 @@ public class FilterRuleListItem {
 
 		ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
 		ToolItem toolItemDelete = new ToolItem(toolBar, SWT.PUSH);
-		toolItemDelete.setImage(GuiController.getInstance().getImage("Rule_Delete.png")); //$NON-NLS-1$
+		toolItemDelete.setImage(imageRepository.getImage("Rule_Delete.png")); //$NON-NLS-1$
 		toolItemDelete.setToolTipText(Messages.getString("FilterRuleListItem.Delete")); //$NON-NLS-1$
 		toolItemDelete.addListener(SWT.Selection, e -> root.deleteRule(ruleItem));
 
 		ToolItem toolItemAdd = new ToolItem(toolBar, SWT.PUSH);
-		toolItemAdd.setImage(GuiController.getInstance().getImage("Rule_Add.png")); //$NON-NLS-1$
+		toolItemAdd.setImage(imageRepository.getImage("Rule_Add.png")); //$NON-NLS-1$
 		toolItemAdd.setToolTipText(Messages.getString("FilterRuleListItem.Add")); //$NON-NLS-1$
 		toolItemAdd.addListener(SWT.Selection, e -> root.addRuleRow());
 	}

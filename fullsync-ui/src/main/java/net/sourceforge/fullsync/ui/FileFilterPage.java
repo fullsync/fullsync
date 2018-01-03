@@ -44,6 +44,7 @@ import net.sourceforge.fullsync.ui.filterrule.FilterRuleListItem;
 
 public class FileFilterPage extends WizardDialog {
 	private final Provider<FileFilterPage> fileFilterPageProvider;
+	private final Provider<FilterRuleListItem> filterRuleListItemProvider;
 
 	private Combo comboFilterType;
 	private Label label1;
@@ -59,9 +60,11 @@ public class FileFilterPage extends WizardDialog {
 	private List<FilterRuleListItem> ruleItems = new ArrayList<>();
 
 	@Inject
-	public FileFilterPage(Shell mainShell, Provider<FileFilterPage> fileFilterPageProvider) {
+	public FileFilterPage(Shell mainShell, Provider<FileFilterPage> fileFilterPageProvider,
+		Provider<FilterRuleListItem> filterRuleListItemProvider) {
 		super(mainShell);
 		this.fileFilterPageProvider = fileFilterPageProvider;
+		this.filterRuleListItemProvider = filterRuleListItemProvider;
 	}
 
 	public void setFileFilter(FileFilter fileFilter) {
@@ -195,7 +198,9 @@ public class FileFilterPage extends WizardDialog {
 	}
 
 	protected void addRuleRow(String ruleType, int op, OperandValue value) {
-		FilterRuleListItem ruleItem = new FilterRuleListItem(this, compositeRuleList, ruleType, op, value);
+		FilterRuleListItem ruleItem = filterRuleListItemProvider.get();
+		ruleItem.init(this, ruleType, op, value);
+		ruleItem.render(compositeRuleList);
 		ruleItems.add(ruleItem);
 		compositeRuleList.pack();
 	}
@@ -204,7 +209,7 @@ public class FileFilterPage extends WizardDialog {
 		compositeRuleList.dispose();
 		createCompositeRuleList();
 		for (FilterRuleListItem item : ruleItems) {
-			item.init(compositeRuleList);
+			item.render(compositeRuleList);
 		}
 		compositeRuleList.pack();
 	}
