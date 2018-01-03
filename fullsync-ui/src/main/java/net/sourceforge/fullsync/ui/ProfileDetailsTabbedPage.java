@@ -37,7 +37,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -147,13 +146,13 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	}
 
 	@Override
-	public Image getIcon() {
-		return GuiController.getInstance().getImage("Profile_Default.png"); //$NON-NLS-1$
+	public String getIconName() {
+		return "Profile_Default.png"; //$NON-NLS-1$
 	}
 
 	@Override
-	public Image getImage() {
-		return GuiController.getInstance().getImage("Profile_Wizard.png"); //$NON-NLS-1$
+	public String getImageName() {
+		return "Profile_Wizard.png"; //$NON-NLS-1$
 	}
 
 	@Override

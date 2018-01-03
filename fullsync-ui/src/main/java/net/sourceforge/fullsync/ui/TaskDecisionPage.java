@@ -25,7 +25,6 @@ import javax.inject.Inject;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -97,13 +96,13 @@ public class TaskDecisionPage extends WizardDialog {
 	}
 
 	@Override
-	public Image getIcon() {
-		return GuiController.getInstance().getImage("Tasklist_Icon.png"); //$NON-NLS-1$
+	public String getIconName() {
+		return "Tasklist_Icon.png"; //$NON-NLS-1$
 	}
 
 	@Override
-	public Image getImage() {
-		return GuiController.getInstance().getImage("Tasklist_Wizard.png"); //$NON-NLS-1$
+	public String getImageName() {
+		return "Tasklist_Wizard.png"; //$NON-NLS-1$
 	}
 
 	@Override

@@ -26,7 +26,6 @@ import javax.inject.Inject;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -276,11 +275,11 @@ public abstract class WizardDialog {
 	}
 
 	public void updateTop() {
-		dialogShell.setImage(getIcon());
+		dialogShell.setImage(imageRepository.getImage(getIconName()));
 		dialogShell.setText(getTitle());
 		labelCaption.setText(getCaption());
 		labelDescription.setText(getDescription());
-		labelImage.setImage(getImage());
+		labelImage.setImage(imageRepository.getImage(getImageName()));
 	}
 
 	public void addWizardDialogListener(WizardDialogListener listener) {
@@ -315,9 +314,9 @@ public abstract class WizardDialog {
 
 	public abstract String getDescription();
 
-	public abstract Image getIcon();
+	public abstract String getIconName();
 
-	public abstract Image getImage();
+	public abstract String getImageName();
 
 	public abstract void createContent(Composite content);
 

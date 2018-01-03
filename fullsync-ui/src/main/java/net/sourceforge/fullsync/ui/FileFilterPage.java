@@ -27,7 +27,6 @@ import javax.inject.Provider;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -91,13 +90,13 @@ public class FileFilterPage extends WizardDialog {
 	}
 
 	@Override
-	public Image getIcon() {
-		return GuiController.getInstance().getImage("FileFilter_Default.png"); //$NON-NLS-1$
+	public String getIconName() {
+		return "FileFilter_Default.png"; //$NON-NLS-1$
 	}
 
 	@Override
-	public Image getImage() {
-		return GuiController.getInstance().getImage("FileFilter_Wizard.png"); //$NON-NLS-1$
+	public String getImageName() {
+		return "FileFilter_Wizard.png"; //$NON-NLS-1$
 	}
 
 	@Override

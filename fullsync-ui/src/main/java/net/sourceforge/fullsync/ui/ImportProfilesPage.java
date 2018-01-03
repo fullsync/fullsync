@@ -25,7 +25,6 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -66,12 +65,12 @@ public class ImportProfilesPage extends WizardDialog {
 	}
 
 	@Override
-	public Image getIcon() {
+	public String getIconName() {
 		return null;
 	}
 
 	@Override
-	public Image getImage() {
+	public String getImageName() {
 		return null;
 	}
 
