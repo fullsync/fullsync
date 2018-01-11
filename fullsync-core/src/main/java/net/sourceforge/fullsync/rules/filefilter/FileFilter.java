@@ -106,7 +106,7 @@ public class FileFilter {
 	}
 
 	private boolean doMatchAny(final File file) {
-		int applyedRules = 0;
+		int appliedRules = 0;
 
 		for (FileFilterRule rule : rules) {
 			if ((!appliesToDir) && (file.isDirectory())) {
@@ -117,13 +117,13 @@ public class FileFilter {
 				if (res) {
 					return true;
 				}
-				applyedRules++;
+				appliedRules++;
 			}
 			catch (FilterRuleNotAppliableException e) {
 				// fine
 			}
 		}
-		return 0 == applyedRules;
+		return 0 == appliedRules;
 	}
 
 	@Override
