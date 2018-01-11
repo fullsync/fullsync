@@ -35,70 +35,6 @@ public class FileFilterTest {
 	private File root;
 	private File testNode;
 
-	private static class AlwaysTrueFileFilterRule extends FileFilterRule {
-		@Override
-		public boolean match(File file) {
-			return true;
-		}
-
-		@Override
-		public String toString() {
-			return "TRUE";
-		}
-
-		@Override
-		public int getOperator() {
-			return 0;
-		}
-
-		@Override
-		public String getOperatorName() {
-			return null;
-		}
-
-		@Override
-		public String getRuleType() {
-			return "True";
-		}
-
-		@Override
-		public OperandValue getValue() {
-			return null;
-		}
-	}
-
-	private static class AlwaysFalseFileFilterRule extends FileFilterRule {
-		@Override
-		public boolean match(File file) {
-			return false;
-		}
-
-		@Override
-		public String toString() {
-			return "FALSE";
-		}
-
-		@Override
-		public int getOperator() {
-			return 0;
-		}
-
-		@Override
-		public String getOperatorName() {
-			return null;
-		}
-
-		@Override
-		public String getRuleType() {
-			return "False";
-		}
-
-		@Override
-		public OperandValue getValue() {
-			return null;
-		}
-	}
-
 	@Before
 	public void setUp() {
 		root = new TestNode("root", null, true, true, 0, 0);
@@ -236,5 +172,68 @@ public class FileFilterTest {
 		assertFalse(filter.match(new TestNode("foobar.txt.", root, true, false, 0, 0)));
 		assertTrue(filter.match(new TestNode("foobar.txt.", root, true, false, 2048, 0)));
 	}
+}
 
+class AlwaysTrueFileFilterRule extends FileFilterRule {
+	@Override
+	public boolean match(File file) {
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "TRUE";
+	}
+
+	@Override
+	public int getOperator() {
+		return 0;
+	}
+
+	@Override
+	public String getOperatorName() {
+		return null;
+	}
+
+	@Override
+	public String getRuleType() {
+		return "True";
+	}
+
+	@Override
+	public OperandValue getValue() {
+		return null;
+	}
+}
+
+class AlwaysFalseFileFilterRule extends FileFilterRule {
+	@Override
+	public boolean match(File file) {
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "FALSE";
+	}
+
+	@Override
+	public int getOperator() {
+		return 0;
+	}
+
+	@Override
+	public String getOperatorName() {
+		return null;
+	}
+
+	@Override
+	public String getRuleType() {
+		return "False";
+	}
+
+	@Override
+	public OperandValue getValue() {
+		return null;
+	}
 }

@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.rules.filefilter;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -55,9 +56,8 @@ public class FileFilterManager {
 		filterElement.setAttribute(ATTRIBUTE_MATCHTYPE, String.valueOf(fileFilter.getMatchType()));
 		filterElement.setAttribute(ATTRIBUTE_FILTERTYPE, String.valueOf(fileFilter.getFilterType()));
 		filterElement.setAttribute(ATTRIBUTE_APPLIESTODIR, String.valueOf(fileFilter.appliesToDirectories()));
-		Arrays.stream(fileFilter.getFileFiltersRules())
-			.map(rule -> serializeRule(rule, document, ruleElementName))
-			.forEachOrdered(filterElement::appendChild);
+		Stream<FileFilterRule> fileFilterStream = Arrays.stream(fileFilter.getFileFiltersRules());
+		fileFilterStream.map(rule -> serializeRule(rule, document, ruleElementName)).forEachOrdered(filterElement::appendChild);
 		return filterElement;
 	}
 
