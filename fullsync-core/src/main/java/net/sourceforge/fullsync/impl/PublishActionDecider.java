@@ -50,8 +50,7 @@ public class PublishActionDecider implements ActionDecider {
 		"overwrite destination");
 	private static final Action updateDestination = new Action(ActionType.UPDATE, DESTINATION, BufferUpdate.DESTINATION, "Source changed");
 	private static final Action unexpectedDestinationChanged = new Action(ActionType.UNEXPECTED_CHANGE_ERROR, DESTINATION,
-		BufferUpdate.NONE,
-		"Destination changed");
+		BufferUpdate.NONE, "Destination changed");
 	private static final Action unexpectedBothChanged = new Action(ActionType.UNEXPECTED_CHANGE_ERROR, DESTINATION, BufferUpdate.NONE,
 		"Source changed, but changed remotely too");
 	private static final Action inSync = new Action(ActionType.NOTHING, NONE, BufferUpdate.NONE, "In Sync");
@@ -90,8 +89,8 @@ public class PublishActionDecider implements ActionDecider {
 			case FILE_SOURCE_DIR_DESTINATION:
 				State buff1 = bsd.getState(dst);
 				if (buff1.equals(State.ORPHAN_SOURCE)) {
-					actions.add(new Action(ActionType.ADD, SOURCE, BufferUpdate.DESTINATION,
-						"There was a node in buff, but its orphan, so add"));
+					actions.add(
+						new Action(ActionType.ADD, SOURCE, BufferUpdate.DESTINATION, "There was a node in buff, but its orphan, so add"));
 				}
 				else if (buff1.equals(State.FILE_SOURCE_DIR_DESTINATION)) {
 					actions.add(new Action(ActionType.UNEXPECTED_CHANGE_ERROR, DESTINATION, BufferUpdate.NONE,
