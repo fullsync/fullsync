@@ -163,9 +163,9 @@ public class FileFilterTest {
 	@Test
 	public void throwFilterRuleNotAppliableExceptionAny() {
 		FileFilter filter = new FileFilter();
-		filter
-			.setFileFilterRules(new FileFilterRule[]
-			{ new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_IS) });
+		FileFilterRule[] rules = new FileFilterRule[] {
+			new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_IS) };
+		filter.setFileFilterRules(rules);
 		filter.setMatchType(FileFilter.MATCH_ANY);
 
 		testNode.setLastModified(-1);
@@ -189,41 +189,6 @@ public class FileFilterTest {
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
 		assertFalse(filter.match(testNode));
-
-		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
-			new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
-			new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertTrue(filter.match(testNode));
-
-		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertFalse(filter.match(testNode));
-
-		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertFalse(filter.match(testNode));
-
-		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertFalse(filter.match(testNode));
-
-		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertFalse(filter.match(testNode));
-
-		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
-			new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertFalse(filter.match(testNode));
-
-		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
-			new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertFalse(filter.match(testNode));
 	}
 
 	@Test
@@ -241,31 +206,6 @@ public class FileFilterTest {
 		assertTrue(filter.match(testNode));
 
 		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertFalse(filter.match(testNode));
-
-		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
-			new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule(),
-			new AlwaysTrueFileFilterRule(), new AlwaysTrueFileFilterRule() });
-		assertTrue(filter.match(testNode));
-
-		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(filter.match(testNode));
-
-		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(filter.match(testNode));
-
-		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysTrueFileFilterRule(), new AlwaysFalseFileFilterRule() });
-		assertTrue(filter.match(testNode));
-
-		filter.setFileFilterRules(new FileFilterRule[] { new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule(),
-			new AlwaysFalseFileFilterRule(), new AlwaysFalseFileFilterRule() });
 		assertFalse(filter.match(testNode));
 	}
 
