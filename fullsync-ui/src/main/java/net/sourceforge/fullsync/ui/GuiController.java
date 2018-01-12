@@ -29,7 +29,6 @@ import javax.inject.Singleton;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -49,7 +48,7 @@ public class GuiController {
 	private final Display display;
 	private final Shell shell;
 	private final Provider<ImageRepository> imageRepositoryProvider;
-	private final FontRepository fontRepository;
+	private final Provider<FontRepository> fontRepositoryProvider;
 	private final Provider<MainWindow> mainWindowProvider;
 	private final Provider<SystemTrayItem> systemTrayItemProvider;
 	private final Provider<WelcomeScreen> welcomeScreenProvider;
@@ -59,13 +58,14 @@ public class GuiController {
 	private ExceptionHandler oldExceptionHandler;
 
 	@Inject
-	private GuiController(Display display, Shell shell, Provider<ImageRepository> imageRepositoryProvider, FontRepository fontRepository,
-		Provider<MainWindow> mainWindowProvider, Provider<SystemTrayItem> systemTrayItemProvider,
-		Provider<WelcomeScreen> welcomeScreenProvider, Preferences preferences, ProfileManager profileManager) {
+	private GuiController(Display display, Shell shell, Provider<ImageRepository> imageRepositoryProvider,
+		Provider<FontRepository> fontRepositoryProvider, Provider<MainWindow> mainWindowProvider,
+		Provider<SystemTrayItem> systemTrayItemProvider, Provider<WelcomeScreen> welcomeScreenProvider, Preferences preferences,
+		ProfileManager profileManager) {
 		this.display = display;
 		this.shell = shell;
 		this.imageRepositoryProvider = imageRepositoryProvider;
-		this.fontRepository = fontRepository;
+		this.fontRepositoryProvider = fontRepositoryProvider;
 		this.mainWindowProvider = mainWindowProvider;
 		this.systemTrayItemProvider = systemTrayItemProvider;
 		this.welcomeScreenProvider = welcomeScreenProvider;
@@ -142,9 +142,7 @@ public class GuiController {
 		ExceptionHandler.registerExceptionHandler(oldExceptionHandler);
 		mainWindowProvider.get().dispose();
 		imageRepositoryProvider.get().dispose();
-		if (null != fontRepository) {
-			fontRepository.dispose();
-		}
+		fontRepositoryProvider.get().dispose();
 		SystemTrayItem systemTrayItem = systemTrayItemProvider.get();
 		if (!systemTrayItem.isDisposed()) {
 			systemTrayItem.dispose();
@@ -201,10 +199,6 @@ public class GuiController {
 				ExceptionHandler.reportException("Error opening " + uri + ".", e);
 			}
 		}
-	}
-
-	public Font getFont(String name, int height, int style) {
-		return fontRepository.getFont(name, height, style);
 	}
 
 	private void createWelcomeScreen() {

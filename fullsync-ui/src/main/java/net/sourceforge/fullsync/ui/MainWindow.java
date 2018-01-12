@@ -64,6 +64,7 @@ import net.sourceforge.fullsync.schedule.Scheduler;
 class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	private final GuiController guiController;
 	private final ImageRepository imageRepository;
+	private final FontRepository fontRepository;
 	private final ProfileManager profileManager;
 	private final Scheduler scheduler;
 	private final Preferences preferences;
@@ -92,14 +93,15 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	private GUIUpdateQueue<String> statusLineText;
 
 	@Inject
-	MainWindow(GuiController guiController, ImageRepository imageRepository, Shell shell, ProfileManager profileManager,
-		TaskGenerator taskGenerator, Scheduler scheduler, Display display, RuntimeConfiguration runtimeConfiguration,
-		Preferences preferences, Provider<PreferencesPage> preferencesPageProvider, Provider<Synchronizer> synchronizerProvider,
-		Provider<ImportProfilesPage> importProfilesPageProvider, Provider<SystemStatusPage> systemStatusPageProvider,
-		Provider<AboutDialog> aboutDialogProvider, Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider,
-		Provider<TaskDecisionPage> taskDecisionPageProvider) {
+	MainWindow(GuiController guiController, ImageRepository imageRepository, FontRepository fontRepository, Shell shell,
+		ProfileManager profileManager, TaskGenerator taskGenerator, Scheduler scheduler, Display display,
+		RuntimeConfiguration runtimeConfiguration, Preferences preferences, Provider<PreferencesPage> preferencesPageProvider,
+		Provider<Synchronizer> synchronizerProvider, Provider<ImportProfilesPage> importProfilesPageProvider,
+		Provider<SystemStatusPage> systemStatusPageProvider, Provider<AboutDialog> aboutDialogProvider,
+		Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider, Provider<TaskDecisionPage> taskDecisionPageProvider) {
 		this.guiController = guiController;
 		this.imageRepository = imageRepository;
+		this.fontRepository = fontRepository;
 		this.profileManager = profileManager;
 		this.scheduler = scheduler;
 		this.preferences = preferences;
@@ -452,7 +454,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 			c.dispose();
 		}
 		if ("NiceListView".equals(preferences.getProfileListStyle())) {
-			profileList = new NiceListViewProfileListComposite(profileListContainer, profileManager, imageRepository, this);
+			profileList = new NiceListViewProfileListComposite(profileListContainer, profileManager, imageRepository, fontRepository, this);
 		}
 		else {
 			profileList = new ListViewProfileListComposite(profileListContainer, profileManager, this);

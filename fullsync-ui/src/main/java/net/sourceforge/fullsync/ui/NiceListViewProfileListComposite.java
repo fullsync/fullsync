@@ -196,11 +196,11 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	private Image imageDelete;
 
 	public NiceListViewProfileListComposite(Composite parent, ProfileManager profileManager, ImageRepository imageRepository,
-		ProfileListControlHandler handler) {
+		FontRepository fontRepository, ProfileListControlHandler handler) {
 		super(parent, profileManager, handler);
 		loadImages(imageRepository);
 		scrollPane = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
-		profileList = new NiceListView(scrollPane);
+		profileList = new NiceListView(scrollPane, fontRepository);
 		scrollPane.setExpandHorizontal(true);
 		scrollPane.setExpandVertical(false);
 		scrollPane.setAlwaysShowScrollBars(true);

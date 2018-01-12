@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Display;
 import net.sourceforge.fullsync.ExceptionHandler;
 
 public class NiceListView extends Composite {
+	private FontRepository fontRepository;
 	private Color colorDefault;
 	private Color colorHover;
 	private Color colorSelected;
@@ -42,8 +43,9 @@ public class NiceListView extends Composite {
 
 	private NiceListViewItem selected;
 
-	public NiceListView(Composite parent) {
+	public NiceListView(Composite parent, FontRepository fontRepository) {
 		super(parent, SWT.TRANSPARENT);
+		this.fontRepository = fontRepository;
 		Display display = getDisplay();
 		colorDefault = display.getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 		colorHover = display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
@@ -53,6 +55,10 @@ public class NiceListView extends Composite {
 
 		addKeyListener(KeyListener.keyPressedAdapter(this::keyPressed));
 		initGUI();
+	}
+
+	public FontRepository getFontRepository() {
+		return fontRepository;
 	}
 
 	public Color getColorDefault() {

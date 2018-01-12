@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Listener;
 import net.sourceforge.fullsync.Profile;
 
 public class NiceListViewItem extends Canvas implements Listener {
-	private NiceListView list;
+	private final NiceListView list;
 
 	private Label labelIcon;
 	private Label labelCaption;
@@ -89,7 +89,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 
 		// profile name
 		labelCaption = new Label(this, SWT.TRANSPARENT);
-		labelCaption.setFont(GuiController.getInstance().getFont("Tahoma", 9, 1)); //$NON-NLS-1$
+		labelCaption.setFont(parent.getFontRepository().getFont("Tahoma", 9, 1)); //$NON-NLS-1$
 		GridData labelCaptionLData = new GridData();
 		labelCaptionLData.widthHint = -1;
 		labelCaption.setLayoutData(labelCaptionLData);
