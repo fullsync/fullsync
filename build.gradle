@@ -47,7 +47,7 @@ subprojects {
 			manifest {
 				attributes 'License': 'GPLv2+'
 				attributes 'FullSync-Version': version
-				attributes 'Copyright': 'Copyright (c) 2017 the FullSync Team'
+				attributes 'Copyright': 'Copyright (c) 2018 the FullSync Team'
 			}
 		}
 		spotless {
