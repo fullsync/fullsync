@@ -349,7 +349,7 @@ task debugLauncher(type: JavaExec) {
 
 tasks.sonarqube {
 	onlyIf {
-		System.properties.'sonar.host.url'
+		System.properties.'sonar.organization'
 	}
 }
 
