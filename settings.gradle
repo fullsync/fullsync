@@ -1,3 +1,14 @@
+pluginManagement {
+	repositories {
+		maven {
+			url offlineRepositoryRoot
+		}
+		jcenter()
+		maven {
+			url 'https://plugins.gradle.org/m2/'
+		}
+	}
+}
 rootProject.name = 'FullSync'
 include 'fullsync-assets'
 include 'fullsync-build-utils'

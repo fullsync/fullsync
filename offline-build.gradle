@@ -1,0 +1,86 @@
+allprojects {
+	apply plugin: 'io.pry.gradle.offline_dependencies'
+	offlineDependencies {
+		repositories {
+			jcenter()
+			maven {
+				url 'https://plugins.gradle.org/m2/'
+			}
+		}
+		includeSources = false
+		includeJavadocs = false
+	}
+}
+
+task copyLocalGradleWrapper(type: Copy) {
+	description = 'Copy the currently referenced Gradle version from the Gradle home for offline usage to save bandwidth'
+	def gradleName = "gradle-${tasks.wrapper.gradleVersion}-" + "${tasks.wrapper.distributionType}".toLowerCase()
+	into project.buildDir
+	from("${gradle.gradleUserHomeDir}/wrapper/dists/${gradleName}/") {
+		include "*/${gradleName}.zip"
+	}
+	eachFile {
+		path = name
+	}
+	includeEmptyDirs = false
+	onlyIf {
+		!fileTree(dir: "${gradle.gradleUserHomeDir}/wrapper/dists/${gradleName}", include: "*/${gradleName}.zip.ok").empty
+	}
+}
+
+task downloadGradleVersion(type: DownloadFileTask) {
+	description = 'Download the currently referenced Gradle version for offline usage'
+	dependsOn copyLocalGradleWrapper
+	url = tasks.wrapper.distributionUrl
+	def gradleName = "gradle-${tasks.wrapper.gradleVersion}-" + "${tasks.wrapper.distributionType}".toLowerCase()
+	destinationFile = file("${project.buildDir}/${gradleName}.zip")
+	onlyIf {
+		!destinationFile.exists()
+	}
+}
+
+task createGitArchive(type: Exec) {
+	description = 'Create a source archive suitable for https://build.opensuse.org/'
+	commandLine "git", "archive", "--output=${project.buildDir}/${project.name}-${version}-src.tar.gz", "--prefix=${project.name}-${project.version}/", "HEAD"
+	doFirst {
+		project.buildDir.mkdirs()
+	}
+}
+
+task createOfflineRepositoryArchive(type: Tar) {
+	description = 'Create an archive of the offline repository for use in https://build.opensuse.org/'
+	dependsOn updateOfflineRepository
+	archiveName = "offline-repository.tar.gz"
+	into("/build/offline-repository") {
+		from "${project.buildDir}/offline-repository"
+		include "**/*"
+	}
+	destinationDir = project.buildDir
+	compression = Compression.GZIP
+}
+
+gradle.projectsEvaluated {
+	subprojects {
+		rootProject.tasks.createOfflineRepositoryArchive.dependsOn it.tasks.getByName("updateOfflineRepository")
+	}
+}
+
+task prepareObsBuild(type: DefaultTask) {
+	description = 'Prepare stuff for building FullSync releases on https://build.opensuse.org/'
+	dependsOn createOfflineRepositoryArchive
+	dependsOn createGitArchive
+	dependsOn downloadGradleVersion
+}
+
+class DownloadFileTask extends DefaultTask {
+	@Input
+	String url
+
+	@OutputFile
+	File destinationFile
+
+	@TaskAction
+	def downloadFile() {
+		destinationFile.bytes = new URL(url).bytes
+	}
+}

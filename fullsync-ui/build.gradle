@@ -1,7 +1,7 @@
 
 apply plugin: 'java'
 
-def getSWTVariant(osName, osArch) {
+def addSWTDependency(configuration, osName, osArch) {
 	def arch = osArch.contains('64') ? 'x86_64' : 'x86'
 	def os = ''
 	if (osName.contains('windows')) {
@@ -13,32 +13,31 @@ def getSWTVariant(osName, osArch) {
 	else if (osName.contains('mac')) {
 		os = 'cocoa.macosx'
 	}
-	return "org.eclipse.platform:org.eclipse.swt.${os}.${arch}:${ext.swtVersion}"
+	project.dependencies.add(configuration, "org.eclipse.platform:org.eclipse.swt.${os}.${arch}:${ext.swtVersion}") {
+		exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt'
+	}
 }
 
-def getLocalSWTVersion() {
-	return getSWTVariant(System.properties['os.name'].toLowerCase(), System.properties['os.arch'])
+def addLocalSWTVersion(configuration) {
+	return addSWTDependency(configuration, System.properties['os.name'].toLowerCase(), System.properties['os.arch'])
 }
 
 configurations {
-	dist.extendsFrom(runtime)
+	dist.extendsFrom runtime
 }
 
 dependencies {
 	compile project(':fullsync-core')
 	compile project(':fullsync-assets')
-	compile getLocalSWTVersion()
-	dist getSWTVariant("linux", "x86")
-	dist getSWTVariant("linux", "x86_64")
-	dist getSWTVariant("mac", "x86_64")
-	dist getSWTVariant("windows", "x86")
-	dist getSWTVariant("windows", "x86_64")
 	dist project(':fullsync-ui')
 }
 
-configurations {
-	all*.exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt'
-}
+addSWTDependency "dist", "linux", "x86"
+addSWTDependency "dist", "linux", "x86_64"
+addSWTDependency "dist", "mac", "x86_64"
+addSWTDependency "dist", "windows", "x86"
+addSWTDependency "dist", "windows", "x86_64"
+addLocalSWTVersion "compile"
 
 task run(type: JavaExec) {
 	main = 'net.sourceforge.fullsync.ui.DebugMain'
