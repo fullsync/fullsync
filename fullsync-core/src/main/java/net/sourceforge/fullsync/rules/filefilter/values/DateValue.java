@@ -25,8 +25,8 @@ import java.util.Date;
 
 public class DateValue implements OperandValue {
 	// TODO format for UI different form the one used to serialize.
-	// The UI format should depend on the locale or should be choosen by the user
-	private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	// The UI format should depend on the locale or should be chosen by the user
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
 	private long millis;
 
@@ -74,7 +74,7 @@ public class DateValue implements OperandValue {
 		return dateFormat.format(new Date(millis));
 	}
 
-	public boolean equals(long cmp) {
+	public boolean isEqualTo(long cmp) {
 		Date compDate = new Date(cmp);
 		Date date = new Date(this.millis);
 		return (date.getYear() == compDate.getYear()) && (date.getMonth() == compDate.getMonth()) && (date.getDay() == compDate.getDay());

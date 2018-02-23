@@ -20,66 +20,66 @@
 package net.sourceforge.fullsync.ui.filterrule;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 class SizeValueRuleComposite extends RuleComposite {
+	private Combo comboUnits;
+	private SizeValue value;
+
 	SizeValueRuleComposite(Composite parent, final SizeValue value) {
 		super(parent);
+		this.value = value;
 		this.setLayout(new GridLayout(2, true));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false);
 		this.setLayoutData(layoutData);
 
 		textValue = new Text(this, SWT.BORDER);
+		comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.FILL);
+
 		textValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-
-		final Combo comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.FILL);
-
-		if (null != value) {
-			textValue.setText(String.valueOf(value.getValue()));
-		}
-
-		textValue.addModifyListener(e -> {
-			value.fromString(textValue.getText() + " " + comboUnits.getText());
-			valueChanged(new ValueChangedEvent(value));
-		});
-
-		Listener numbersOnlyKeyboardListener = e -> {
-			// FIXME: the dot should be language specific, find a better way to achieve the same
-			if (((e.character < '0') || (e.character > '9'))
-				&& (e.character != '.')
-				&& (e.keyCode != SWT.DEL)
-				&& (e.keyCode != SWT.BS)
-				&& (e.keyCode != SWT.ARROW_LEFT)
-				&& (e.keyCode != SWT.ARROW_UP)
-				&& (e.keyCode != SWT.ARROW_DOWN)
-				&& (e.keyCode != SWT.ARROW_RIGHT)) {
-				e.doit = false;
-			}
-		};
-		textValue.addListener(SWT.KeyDown, numbersOnlyKeyboardListener);
-		textValue.addListener(SWT.KeyUp, numbersOnlyKeyboardListener);
+		textValue.setText(String.valueOf(value.getValue()));
+		textValue.addModifyListener(this::textValueChanged);
+		textValue.addListener(SWT.KeyDown, this::numbersOnlyKeyboardListener);
+		textValue.addListener(SWT.KeyUp, this::numbersOnlyKeyboardListener);
 
 		comboUnits.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		for (SizeValue.Unit unit : SizeValue.Unit.values()) {
 			comboUnits.add(unit.name()); //FIXME: TRANSLATE!!
 		}
 		comboUnits.select(value.getUnit().ordinal());
+		comboUnits.addListener(SWT.Selection, this::comboUnitsChanged);
+		comboUnits.addListener(SWT.DefaultSelection, this::comboUnitsChanged);
+	}
 
-		comboUnits.addListener(SWT.Selection, e -> {
-			value.setUnit(SizeValue.Unit.values()[comboUnits.getSelectionIndex()]);
-			valueChanged(new ValueChangedEvent(value));
-		});
+	private void numbersOnlyKeyboardListener(Event e) {
+		// FIXME: the dot should be language specific, find a better way to achieve the same
+		if (((e.character < '0') || (e.character > '9'))
+			&& (e.character != '.')
+			&& (e.keyCode != SWT.DEL)
+			&& (e.keyCode != SWT.BS)
+			&& (e.keyCode != SWT.ARROW_LEFT)
+			&& (e.keyCode != SWT.ARROW_UP)
+			&& (e.keyCode != SWT.ARROW_DOWN)
+			&& (e.keyCode != SWT.ARROW_RIGHT)) {
+			e.doit = false;
+		}
+	}
 
-		comboUnits.addListener(SWT.DefaultSelection, e -> {
-			value.setUnit(SizeValue.Unit.values()[comboUnits.getSelectionIndex()]);
-			valueChanged(new ValueChangedEvent(value));
-		});
+	private void textValueChanged(ModifyEvent e) {
+		value.fromString(textValue.getText() + " " + comboUnits.getText());
+		valueChanged(new ValueChangedEvent(value));
+	}
+
+	private void comboUnitsChanged(Event e) {
+		value.setUnit(SizeValue.Unit.values()[comboUnits.getSelectionIndex()]);
+		valueChanged(new ValueChangedEvent(value));
 	}
 }

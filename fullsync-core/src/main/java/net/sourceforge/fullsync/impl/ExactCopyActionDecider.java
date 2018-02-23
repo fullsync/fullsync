@@ -109,12 +109,7 @@ public class ExactCopyActionDecider implements ActionDecider {
 				}
 				break;
 			case FILE_CHANGE_DESTINATION:
-				if (bsd.getState(dst).equals(State.IN_SYNC)) {
-					actions.add(overwriteDestination);
-				}
-				else {
-					actions.add(overwriteDestination);
-				}
+				actions.add(overwriteDestination);
 				break;
 			case IN_SYNC:
 				// TODO this check is not neccessary, check rules whether to do or not

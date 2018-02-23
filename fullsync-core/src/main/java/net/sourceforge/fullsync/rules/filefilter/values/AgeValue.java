@@ -27,7 +27,7 @@ public class AgeValue implements OperandValue {
 		DAYS
 	}
 
-	private static final long SECONDS_PER_DAY = 60 * 60 * 24;
+	private static final long SECONDS_PER_DAY = 60L * 60L * 24L;
 
 	private double value;
 	private Unit unit;

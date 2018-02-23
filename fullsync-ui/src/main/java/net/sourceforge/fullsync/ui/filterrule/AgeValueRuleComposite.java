@@ -37,19 +37,14 @@ class AgeValueRuleComposite extends RuleComposite {
 		this.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		textValue = new Text(this, SWT.BORDER);
-		textValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
 		final Combo comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
 
-		if (null != value) {
-			textValue.setText(String.valueOf(value.getValue()));
-		}
-
+		textValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		textValue.setText(String.valueOf(value.getValue()));
 		textValue.addModifyListener(e -> {
 			value.fromString(textValue.getText() + " " + comboUnits.getText());
 			valueChanged(new ValueChangedEvent(value));
 		});
-
 		Listener numbersOnlyKeyboardListener = e -> {
 			// FIXME: the dot should be language specific, find a better way to achieve the same
 			if (((e.character < '0') || (e.character > '9'))
@@ -71,12 +66,10 @@ class AgeValueRuleComposite extends RuleComposite {
 			comboUnits.add(unit.name()); // FIXME: TRANSLATE!!
 		}
 		comboUnits.select(value.getUnit().ordinal());
-
 		comboUnits.addListener(SWT.Selection, e -> {
 			value.setUnit(AgeValue.Unit.values()[comboUnits.getSelectionIndex()]);
 			valueChanged(new ValueChangedEvent(value));
 		});
-
 		comboUnits.addListener(SWT.DefaultSelection, e -> {
 			value.setUnit(AgeValue.Unit.values()[comboUnits.getSelectionIndex()]);
 			valueChanged(new ValueChangedEvent(value));

@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.rules.filefilter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
@@ -49,11 +50,11 @@ public class DateValueTest {
 	public void testEquals() throws ParseException {
 		DateValue value = new DateValue("10/08/1994");
 
-		assertTrue(value.equals(parseDate("10/08/1994 10:00:00")));
-		assertTrue(value.equals(parseDate("10/08/1994 23:59:59")));
-		assertTrue(value.equals(parseDate("10/08/1994 00:00:00")));
-		assertTrue(!value.equals(parseDate("09/08/1994 23:59:59")));
-		assertTrue(!value.equals(parseDate("11/08/1994 00:00:00")));
+		assertTrue(value.isEqualTo(parseDate("10/08/1994 10:00:00")));
+		assertTrue(value.isEqualTo(parseDate("10/08/1994 23:59:59")));
+		assertTrue(value.isEqualTo(parseDate("10/08/1994 00:00:00")));
+		assertFalse(value.isEqualTo(parseDate("09/08/1994 23:59:59")));
+		assertFalse(value.isEqualTo(parseDate("11/08/1994 00:00:00")));
 	}
 
 	@Test

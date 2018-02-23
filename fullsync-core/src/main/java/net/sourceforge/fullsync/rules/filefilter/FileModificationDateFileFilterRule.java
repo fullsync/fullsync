@@ -73,10 +73,10 @@ public class FileModificationDateFileFilterRule extends FileFilterRule {
 		}
 		switch (op) {
 			case OP_IS:
-				return date.equals(lastModified);
+				return date.isEqualTo(lastModified);
 
 			case OP_ISNT:
-				return !date.equals(lastModified);
+				return !date.isEqualTo(lastModified);
 
 			case OP_IS_BEFORE:
 				return date.isBefore(lastModified);
