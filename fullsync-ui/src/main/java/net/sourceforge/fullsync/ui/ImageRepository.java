@@ -39,7 +39,11 @@ public class ImageRepository {
 	}
 
 	public Image getImage(String imageName) {
-		return cache.computeIfAbsent(imageName, n -> new Image(display, new FullSyncImageDataProvider(n)));
+		Image img = null;
+		if (null !=  imageName) {
+			img = cache.computeIfAbsent(imageName, n -> new Image(display, new FullSyncImageDataProvider(n)));
+		}
+		return img;
 	}
 
 	public void dispose() {
