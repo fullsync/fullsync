@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync;
 
+import java.util.concurrent.Future;
+
 public interface PromptQuestion {
-	boolean promptYesNo(String question);
+	Future<Boolean> promptYesNo(String question);
 }

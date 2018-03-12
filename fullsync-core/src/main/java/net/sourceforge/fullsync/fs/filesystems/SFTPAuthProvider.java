@@ -21,6 +21,7 @@ package net.sourceforge.fullsync.fs.filesystems;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
@@ -121,7 +122,12 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 	@Override
 	public final boolean promptYesNo(final String message) {
 		if (null != desc.getParameter(ConnectionDescription.PARAMETER_INTERACTIVE)) {
-			return fullsync.getQuestionHandler().promptYesNo(message);
+			try {
+				return fullsync.getQuestionHandler().promptYesNo(message).get();
+			}
+			catch (InterruptedException | ExecutionException ex) {
+				logger.error("UserInfo::promptYesNo failed, user may not have received a prompt", ex);
+			}
 		}
 		else {
 			logger.warn("SFTP UserInfo::promptYesNo: {}; automatic decision: No", message);

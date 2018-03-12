@@ -21,9 +21,20 @@ package net.sourceforge.fullsync;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.ExecutionException;
 
+import javax.inject.Singleton;
+
+import com.google.common.util.concurrent.Futures;
+
+@Singleton
 public class FullSync {
 	private final Deque<PromptQuestion> questionHandler = new ArrayDeque<>();
+
+	public FullSync() {
+		// deny everything by default
+		questionHandler.push(question -> Futures.immediateFailedFuture(new ExecutionException("No Question handler present", null)));
+	}
 
 	public PromptQuestion getQuestionHandler() {
 		return questionHandler.peek();

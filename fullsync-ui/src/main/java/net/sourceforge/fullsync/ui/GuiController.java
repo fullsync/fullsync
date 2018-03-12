@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.inject.Inject;
@@ -34,9 +35,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.SettableFuture;
 import com.google.inject.Injector;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Util;
@@ -45,6 +49,7 @@ import net.sourceforge.fullsync.cli.Main;
 @Singleton
 public class GuiController {
 	private static GuiController singleton;
+	private final FullSync fullSync;
 	private final Display display;
 	private final Shell shell;
 	private final Provider<ImageRepository> imageRepositoryProvider;
@@ -58,10 +63,11 @@ public class GuiController {
 	private ExceptionHandler oldExceptionHandler;
 
 	@Inject
-	private GuiController(Display display, Shell shell, Provider<ImageRepository> imageRepositoryProvider,
+	private GuiController(FullSync fullSync, Display display, Shell shell, Provider<ImageRepository> imageRepositoryProvider,
 		Provider<FontRepository> fontRepositoryProvider, Provider<MainWindow> mainWindowProvider,
 		Provider<SystemTrayItem> systemTrayItemProvider, Provider<WelcomeScreen> welcomeScreenProvider, Preferences preferences,
 		ProfileManager profileManager) {
+		this.fullSync = fullSync;
 		this.display = display;
 		this.shell = shell;
 		this.imageRepositoryProvider = imageRepositoryProvider;
@@ -79,8 +85,6 @@ public class GuiController {
 	}
 
 	private void startGui() {
-		mainWindowProvider.get();
-		systemTrayItemProvider.get().show();
 		oldExceptionHandler = ExceptionHandler.registerExceptionHandler(new ExceptionHandler() {
 			@Override
 			protected void doReportException(final String message, final Throwable exception) {
@@ -89,6 +93,9 @@ public class GuiController {
 				display.syncExec(() -> new ExceptionDialog(shell, message, exception));
 			}
 		});
+		fullSync.pushQuestionHandler(this::showQuestion);
+		mainWindowProvider.get();
+		systemTrayItemProvider.get().show();
 		createWelcomeScreen();
 	}
 
@@ -97,6 +104,29 @@ public class GuiController {
 		GuiController guiController = uiInjector.getInstance(GuiController.class);
 		singleton = guiController;
 		guiController.run(uiInjector);
+	}
+
+	private Future<Boolean> showQuestion(String question) {
+		Future<Boolean> answer;
+		if (display == Display.findDisplay(Thread.currentThread())) {
+			answer = Futures.immediateCheckedFuture(doShowQuestion(question));
+			display.syncExec(null);
+		}
+		else {
+			SettableFuture<Boolean> settableAnswer = SettableFuture.create();
+			answer = settableAnswer;
+			display.asyncExec(() -> {
+				settableAnswer.set(doShowQuestion(question));
+			});
+		}
+		return answer;
+	}
+
+	private boolean doShowQuestion(String question) {
+		MessageBox mb = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+		mb.setText(Messages.getString("SFTP.YesNoQuestion")); //$NON-NLS-1$
+		mb.setMessage(question);
+		return SWT.YES == mb.open();
 	}
 
 	public void run(Injector uiInjector) {
