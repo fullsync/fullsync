@@ -42,7 +42,7 @@ import net.sourceforge.fullsync.impl.SFTPLogger;
 
 class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive, UserInfo {
 	private static final String SSH_DIR_NAME;
-	private static final Logger logger = LoggerFactory.getLogger("FullSync");
+	private static final Logger logger = LoggerFactory.getLogger(SFTPAuthProvider.class.getSimpleName());
 
 	static {
 		JSch.setLogger(new SFTPLogger());
@@ -84,7 +84,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		if (null != SSH_DIR_NAME) {
 			cfg.setKnownHosts(options, new File(SSH_DIR_NAME, "known_hosts"));
 		}
-		logger.debug("SFTP using knownHosts: ", cfg.getKnownHosts(options));
+		logger.debug("using knownHosts: ", cfg.getKnownHosts(options));
 		cfg.setUserInfo(options, this);
 		cfg.setStrictHostKeyChecking(options, "ask");
 		if ("enabled".equals(description.getParameter("publicKeyAuth"))) {
@@ -97,25 +97,25 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	@Override
 	public final String getPassphrase() {
-		logger.debug("SFTP UserInfo::getPassphrase");
+		logger.debug("UserInfo::getPassphrase");
 		return desc.getSecretParameter("keyPassphrase");
 	}
 
 	@Override
 	public final String getPassword() {
-		logger.debug("SFTP UserInfo::getPassword");
+		logger.debug("UserInfo::getPassword");
 		return desc.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD);
 	}
 
 	@Override
 	public final boolean promptPassword(final String message) {
-		logger.debug("SFTP UserInfo::promptPassword: {}", message);
+		logger.debug("UserInfo::promptPassword: {}", message);
 		return true;
 	}
 
 	@Override
 	public final boolean promptPassphrase(final String message) {
-		logger.debug("SFTP UserInfo::promptPassphrase: {}", message);
+		logger.debug("UserInfo::promptPassphrase: {}", message);
 		return true;
 	}
 
@@ -130,14 +130,14 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 			}
 		}
 		else {
-			logger.warn("SFTP UserInfo::promptYesNo: {}; automatic decision: No", message);
+			logger.warn("UserInfo::promptYesNo: {}; automatic decision: No", message);
 		}
 		return false;
 	}
 
 	@Override
 	public final void showMessage(final String message) {
-		logger.warn("SFTP UserInfo::showMessage: {}", message);
+		logger.warn("UserInfo::showMessage: {}", message);
 	}
 
 	@Override
