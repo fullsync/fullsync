@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.SettableFuture;
 import com.google.inject.Injector;
 
@@ -113,16 +112,13 @@ public class GuiController {
 	}
 
 	private Future<Boolean> showQuestion(String question) {
-		Future<Boolean> answer;
+		SettableFuture<Boolean> answer = SettableFuture.create();
 		if (display == Display.findDisplay(Thread.currentThread())) {
-			answer = Futures.immediateCheckedFuture(doShowQuestion(question));
-			display.syncExec(null);
+			answer.set(doShowQuestion(question));
 		}
 		else {
-			SettableFuture<Boolean> settableAnswer = SettableFuture.create();
-			answer = settableAnswer;
 			display.asyncExec(() -> {
-				settableAnswer.set(doShowQuestion(question));
+				answer.set(doShowQuestion(question));
 			});
 		}
 		return answer;
