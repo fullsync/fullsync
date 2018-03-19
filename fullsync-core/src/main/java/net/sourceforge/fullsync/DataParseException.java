@@ -23,6 +23,7 @@ package net.sourceforge.fullsync;
  * Thrown when an error occurred while parsing a file.
  */
 public class DataParseException extends Exception {
+	private static final long serialVersionUID = -6313024567929944698L;
 	private static final String UNKNOWN_SOURCE = "unknown"; //$NON-NLS-1$
 	private final String sourceName;
 	private final long lineNumber;

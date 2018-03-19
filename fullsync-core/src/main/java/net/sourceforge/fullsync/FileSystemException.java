@@ -23,30 +23,16 @@ package net.sourceforge.fullsync;
  * Thrown when an error occured while accessing a file system.
  */
 public class FileSystemException extends Exception {
-	/**
-	 * Constructor for FileSystemException.
-	 *
-	 * @param text
-	 */
+	private static final long serialVersionUID = 9152101631423682164L;
+
 	public FileSystemException(String text) {
 		super(text);
 	}
 
-	/**
-	 * Constructor for FileSystemException.
-	 *
-	 * @param ex
-	 */
 	public FileSystemException(Throwable ex) {
 		super(ex);
 	}
 
-	/**
-	 * Constructor for FileSystemException.
-	 *
-	 * @param text
-	 * @param ex
-	 */
 	public FileSystemException(String text, Throwable ex) {
 		super(text, ex);
 	}
