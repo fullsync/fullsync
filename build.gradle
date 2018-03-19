@@ -117,7 +117,7 @@ gradle.projectsEvaluated {
 }
 
 wrapper {
-	gradleVersion = '4.4'
+	gradleVersion = '4.6'
 	distributionType = Wrapper.DistributionType.ALL
 }
 
