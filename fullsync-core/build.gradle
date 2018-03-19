@@ -13,7 +13,7 @@ dependencies {
 	compile "org.samba.jcifs:jcifs:${project.ext.sambaJcifsVersion}"
 	compile "com.jcraft:jsch:${project.ext.jcraftJschVersion}"
 	compile "org.slf4j:jcl-over-slf4j:${project.ext.slf4jVersion}"
-	compile "com.google.inject:guice:4.1.0"
+	compile "com.google.inject:guice:${project.ext.guiceVersion}"
 	compile files("lib/commons-vfs2-sandbox.jar")
 	testCompile "junit:junit:${project.ext.junitVersion}"
 	testCompile project(':mvn-infix-junit-sshd')
