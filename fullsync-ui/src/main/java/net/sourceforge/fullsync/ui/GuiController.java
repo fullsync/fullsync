@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
+import java.util.MissingResourceException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -48,7 +49,6 @@ import net.sourceforge.fullsync.cli.Main;
 
 @Singleton
 public class GuiController {
-	private static GuiController singleton;
 	private final FullSync fullSync;
 	private final Display display;
 	private final Shell shell;
@@ -78,6 +78,13 @@ public class GuiController {
 		this.preferences = preferences;
 		this.profileManager = profileManager;
 		executorService = new ScheduledThreadPoolExecutor(1);
+		String languageCode = preferences.getLanguageCode();
+		try {
+			Messages.setLanguage(languageCode);
+		}
+		catch (MissingResourceException ex) {
+			ExceptionHandler.reportException("Failed to set language to " + languageCode, ex);
+		}
 	}
 
 	public Preferences getPreferences() {
@@ -102,7 +109,6 @@ public class GuiController {
 	public static void launchUI(Injector injector) {
 		Injector uiInjector = injector.createChildInjector(new FullSyncUiModule());
 		GuiController guiController = uiInjector.getInstance(GuiController.class);
-		singleton = guiController;
 		guiController.run(uiInjector);
 	}
 
@@ -200,10 +206,6 @@ public class GuiController {
 		});
 	}
 
-	public static GuiController getInstance() {
-		return singleton;
-	}
-
 	public static void launchProgram(final String uri) {
 		if (System.getProperty("os.name").toLowerCase().indexOf("linux") > -1) {
 			Thread t = new Thread(() -> {
@@ -247,9 +249,8 @@ public class GuiController {
 		}
 	}
 
-	public static void backgroundExec(AsyncUIUpdate job) {
-		GuiController gc = getInstance();
-		gc.executorService.execute(new ExecuteBackgroundJob(job, gc.display));
+	public void backgroundExec(AsyncUIUpdate job) {
+		executorService.execute(new ExecuteBackgroundJob(job, display));
 	}
 
 	public static String getTwitterURL() {

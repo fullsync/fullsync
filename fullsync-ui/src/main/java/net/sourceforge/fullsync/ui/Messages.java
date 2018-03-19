@@ -27,35 +27,32 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sourceforge.fullsync.ExceptionHandler;
-
 public class Messages {
 	private static final String BUNDLE_NAME = "net.sourceforge.fullsync.ui.messages";//$NON-NLS-1$
 	private static Messages instance;
 	private static final Logger logger = LoggerFactory.getLogger(Messages.class);
 
-	private ResourceBundle bundle;
+	private ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME);
 
 	private Messages() {
-		String code = GuiController.getInstance().getPreferences().getLanguageCode();
-		Locale langLocale = new Locale(code);
-		try {
-			Locale.setDefault(langLocale);
-			bundle = ResourceBundle.getBundle(BUNDLE_NAME, langLocale);
-		}
-		catch (MissingResourceException e) {
-			ExceptionHandler.reportException("Unable to find locale for language " + code, e);
-			bundle = ResourceBundle.getBundle(BUNDLE_NAME);
-		}
 	}
 
-	public static String getString(final String key) {
+	private static Messages getInstance() {
 		if (null == instance) {
 			instance = new Messages();
 		}
+		return instance;
+	}
 
+	public static void setLanguage(String code) {
+		Locale langLocale = new Locale(code);
+		Locale.setDefault(langLocale);
+		getInstance().bundle = ResourceBundle.getBundle(BUNDLE_NAME, langLocale);
+	}
+
+	public static String getString(final String key) {
 		try {
-			String value = instance.bundle.getString(key);
+			String value = getInstance().bundle.getString(key);
 			if ((null != value) && (!value.isEmpty())) {
 				return value;
 			}

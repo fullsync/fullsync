@@ -56,6 +56,7 @@ class AboutDialog implements AsyncUIUpdate {
 	private final Shell shell;
 	private final Preferences preferences;
 	private final ImageRepository imageRepository;
+	private final GuiController guiController;
 	private final List<String> licenseNames = new ArrayList<>();
 	private final List<String> licenseTexts = new ArrayList<>();
 	private int stIndex;
@@ -63,10 +64,11 @@ class AboutDialog implements AsyncUIUpdate {
 	private StyledText licenseText;
 
 	@Inject
-	AboutDialog(Shell shell, Preferences preferences, ImageRepository imageRepository) {
+	AboutDialog(Shell shell, Preferences preferences, ImageRepository imageRepository, GuiController guiController) {
 		this.shell = shell;
 		this.preferences = preferences;
 		this.imageRepository = imageRepository;
+		this.guiController = guiController;
 	}
 
 	void show() {
@@ -154,7 +156,7 @@ class AboutDialog implements AsyncUIUpdate {
 	private Control initChangelogTab(Composite parent) {
 		final Composite tab = new Composite(parent, SWT.FILL);
 		tab.setLayout(new GridLayout(1, true));
-		ChangeLogBox changeLogBox = new ChangeLogBox(tab, "");
+		ChangeLogBox changeLogBox = new ChangeLogBox(tab, "", guiController);
 		GridData changelogBoxLData = new GridData(GridData.FILL_BOTH);
 		changelogBoxLData.heightHint = 300;
 		changeLogBox.setLayoutData(changelogBoxLData);
@@ -286,7 +288,7 @@ class AboutDialog implements AsyncUIUpdate {
 			int index = componentCombo.getSelectionIndex();
 			licenseText.setText(licenseTexts.get(index));
 		});
-		GuiController.backgroundExec(this);
+		guiController.backgroundExec(this);
 		return tab;
 	}
 
