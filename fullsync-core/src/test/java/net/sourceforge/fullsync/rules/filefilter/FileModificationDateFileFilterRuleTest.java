@@ -19,16 +19,19 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
-
-import static org.junit.Assert.*;
 
 public class FileModificationDateFileFilterRuleTest {
 	private File root = new TestNode("root", null, true, true, 0, 0);
@@ -37,7 +40,7 @@ public class FileModificationDateFileFilterRuleTest {
 	private long newtime;
 	private SimpleDateFormat dateFormat;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws ParseException {
 		dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		oldtime = dateFormat.parse("01/06/2005 06:00:00").getTime();
@@ -94,13 +97,13 @@ public class FileModificationDateFileFilterRuleTest {
 		assertFalse(filterRule.match(testNode));
 	}
 
-	@Test(expected = FilterRuleNotAppliableException.class)
-	public void throwFilterRuleNotAppliableExceptionAll() throws FilterRuleNotAppliableException {
+	@Test
+	public void throwFilterRuleNotAppliableExceptionAll() throws Exception {
 		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(new DateValue(newtime),
 			FileModificationDateFileFilterRule.OP_IS);
 
 		testNode.setLastModified(-1);
 
-		assertTrue(filterRule.match(testNode));
+		assertThrows(FilterRuleNotAppliableException.class, () -> filterRule.match(testNode));
 	}
 }

@@ -19,8 +19,7 @@
  */
 package net.sourceforge.fullsync.changelog;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -28,15 +27,16 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.StringStartsWith;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class ChangeLogTest {
 	private static File versionsDirectory;
 
-	@BeforeClass
-	public static void beforeClass() {
+	@BeforeAll
+	static void beforeClass() {
 		versionsDirectory = new File("versions");
 	}
 
@@ -90,8 +90,8 @@ public class ChangeLogTest {
 		List<ChangeLogEntry> changelog = loader.load(versionsDirectory, "^0\\.9.*\\.html$");
 		assertEquals(2, changelog.size());
 		List<ChangeLogEntry> filtered = ChangeLogLoader.filterAfter(changelog, "0.9");
-		assertEquals("only 0.9.1 came after 0.9", 1, filtered.size());
-		assertEquals("remaining version is 0.9.1", "0.9.1", filtered.get(0).getVersion());
+		assertEquals(1, filtered.size(), "only 0.9.1 came after 0.9");
+		assertEquals("0.9.1", filtered.get(0).getVersion(), "remaining version is 0.9.1");
 	}
 
 	@Test
@@ -102,10 +102,10 @@ public class ChangeLogTest {
 		changelog.write("### HEADER ### %s %s", entryPattern + "%s", sw, DateTimeFormatter.BASIC_ISO_DATE);
 		String entry = sw.toString();
 		String[] lines = entry.split("\r?\n");
-		assertEquals("first line is the header", "### HEADER ### 0.9.1 20050308", lines[0].trim());
-		assertEquals("entry has three lines ", 3, lines.length);
+		assertEquals("### HEADER ### 0.9.1 20050308", lines[0].trim(), "first line is the header");
+		assertEquals(3, lines.length, "entry has three lines");
 		for (int i = 1; i < lines.length; ++i) {
-			assertThat("Line " + i, lines[i], StringStartsWith.startsWith(entryPattern));
+			MatcherAssert.assertThat("Line " + i, lines[i], StringStartsWith.startsWith(entryPattern));
 		}
 	}
 

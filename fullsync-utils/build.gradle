@@ -2,5 +2,13 @@
 apply plugin: 'java'
 
 dependencies {
-	testCompile "junit:junit:${project.ext.junitVersion}"
+	testImplementation "org.junit.jupiter:junit-jupiter-api:${project.ext.junitVersion}"
+	testImplementation "org.hamcrest:hamcrest-core:${project.ext.hamcrestVersion}"
+	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.ext.junitVersion}"
+}
+
+test {
+	useJUnitPlatform {
+		includeEngines 'junit-jupiter'
+	}
 }

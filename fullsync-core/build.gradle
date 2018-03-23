@@ -15,8 +15,15 @@ dependencies {
 	compile "org.slf4j:jcl-over-slf4j:${project.ext.slf4jVersion}"
 	compile "com.google.inject:guice:${project.ext.guiceVersion}"
 	compile files("lib/commons-vfs2-sandbox.jar")
-	testCompile "junit:junit:${project.ext.junitVersion}"
-	testCompile project(':mvn-infix-junit-sshd')
+	testImplementation "org.junit.jupiter:junit-jupiter-api:${project.ext.junitVersion}"
+	testImplementation "org.hamcrest:hamcrest-core:${project.ext.hamcrestVersion}"
+	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.ext.junitVersion}"
+}
+
+test {
+	useJUnitPlatform {
+		includeEngines 'junit-jupiter'
+	}
 }
 
 jar {

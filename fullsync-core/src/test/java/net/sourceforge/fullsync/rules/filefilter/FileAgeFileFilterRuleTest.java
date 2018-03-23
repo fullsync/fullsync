@@ -19,15 +19,15 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.fs.File;
@@ -42,13 +42,13 @@ public class FileAgeFileFilterRuleTest {
 		return new TestNode("foobar.txt", root, true, false, 1024, lastModified);
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		SystemDate.getInstance().setTimeSpeed(0);
 		SystemDate.getInstance().setCurrent(dateFormat.parse("01/01/2005 10:00:00").getTime());
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		SystemDate.getInstance().setUseSystemTime();
 	}

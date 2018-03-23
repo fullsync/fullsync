@@ -19,19 +19,21 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class FilePathFileFilterRuleTest {
 	private File root = new TestNode("root", null, true, true, 0, 0);
 	private File testNode;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		testNode = new TestNode("foobar.txt", root, true, false, 1000, 0);
 	}
@@ -43,10 +45,9 @@ public class FilePathFileFilterRuleTest {
 		assertTrue(filterRule.match(testNode));
 	}
 
-	@Test(expected = DataParseException.class)
-	public void throwPatternSyntaxException() throws DataParseException {
-		FilePathFileFilterRule filterRule = new FilePathFileFilterRule(new TextValue("{"), FilePathFileFilterRule.OP_MATCHES_REGEXP);
-
-		filterRule.match(testNode);
+	@Test
+	public void throwPatternSyntaxException() throws Exception {
+		TextValue t = new TextValue("{");
+		assertThrows(DataParseException.class, () -> new FilePathFileFilterRule(t, FilePathFileFilterRule.OP_MATCHES_REGEXP));
 	}
 }
