@@ -136,7 +136,7 @@ public class FilterRuleListItem {
 	}
 
 	public FileFilterRule getFileFilterRule() throws DataParseException {
-		return fileFilterManager.createFileFilterRule(ruleType, op, value);
+		return fileFilterManager.createFileFilterRule(ruleType, op, ruleComposite.getValue());
 	}
 
 	public void render(final Composite composite) {
@@ -237,9 +237,6 @@ public class FilterRuleListItem {
 			textValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			textValue.setText("Missing Rule Composite");
 			textValue.setEditable(false);
-		}
-		if (null != ruleComposite) {
-			ruleComposite.addValueChangedListener(e -> value = e.getValue());
 		}
 
 		ToolBar toolBar = new ToolBar(composite, SWT.FLAT);

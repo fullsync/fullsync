@@ -29,10 +29,14 @@ import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue.Unit;
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 class AgeValueRuleComposite extends RuleComposite {
-	AgeValueRuleComposite(Composite parent, final AgeValue value) {
+	private AgeValue value;
+
+	AgeValueRuleComposite(Composite parent, final AgeValue initialValue) {
 		super(parent);
+		value = initialValue;
 		this.setLayout(new GridLayout(2, true));
 		this.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
@@ -43,7 +47,6 @@ class AgeValueRuleComposite extends RuleComposite {
 		textValue.setText(String.valueOf(value.getValue()));
 		textValue.addModifyListener(e -> {
 			value.fromString(textValue.getText() + " " + comboUnits.getText());
-			valueChanged(new ValueChangedEvent(value));
 		});
 		Listener numbersOnlyKeyboardListener = e -> {
 			// FIXME: the dot should be language specific, find a better way to achieve the same
@@ -68,11 +71,14 @@ class AgeValueRuleComposite extends RuleComposite {
 		comboUnits.select(value.getUnit().ordinal());
 		comboUnits.addListener(SWT.Selection, e -> {
 			value.setUnit(AgeValue.Unit.values()[comboUnits.getSelectionIndex()]);
-			valueChanged(new ValueChangedEvent(value));
 		});
 		comboUnits.addListener(SWT.DefaultSelection, e -> {
 			value.setUnit(AgeValue.Unit.values()[comboUnits.getSelectionIndex()]);
-			valueChanged(new ValueChangedEvent(value));
 		});
+	}
+
+	@Override
+	public OperandValue getValue() {
+		return value;
 	}
 }

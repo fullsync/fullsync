@@ -31,13 +31,16 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.values.FilterValue;
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.ui.FileFilterPage;
 
 class SubfilterRuleComposite extends RuleComposite {
 	private Button buttonFilter;
+	private FilterValue value;
 
-	SubfilterRuleComposite(Provider<FileFilterPage> fileFilterPageProvider, Composite parent, final FilterValue filterValue) {
+	SubfilterRuleComposite(Provider<FileFilterPage> fileFilterPageProvider, Composite parent, final FilterValue initialValue) {
 		super(parent);
+		value = initialValue;
 		this.setLayout(new GridLayout(4, true));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		layoutData.horizontalSpan = 2;
@@ -48,8 +51,8 @@ class SubfilterRuleComposite extends RuleComposite {
 		GridData textValueData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		textValueData.horizontalSpan = 3;
 		textValue.setLayoutData(textValueData);
-		if (null != filterValue) {
-			textValue.setText(filterValue.toString());
+		if (null != initialValue) {
+			textValue.setText(initialValue.toString());
 		}
 		textValue.setEditable(false);
 
@@ -60,18 +63,23 @@ class SubfilterRuleComposite extends RuleComposite {
 			try {
 				FileFilterPage dialog = fileFilterPageProvider.get();
 				dialog.setParent(getShell());
-				dialog.setFileFilter(filterValue.getValue());
+				dialog.setFileFilter(value.getValue());
 				dialog.show();
 				FileFilter newfilter = dialog.getFileFilter();
 				if (null != newfilter) {
-					filterValue.setValue(newfilter);
-					textValue.setText(filterValue.toString());
-					textValue.setToolTipText(filterValue.toString());
+					value.setValue(newfilter);
+					textValue.setText(value.toString());
+					textValue.setToolTipText(value.toString());
 				}
 			}
 			catch (Exception e) {
 				ExceptionHandler.reportException(e);
 			}
 		});
+	}
+
+	@Override
+	public OperandValue getValue() {
+		return value;
 	}
 }

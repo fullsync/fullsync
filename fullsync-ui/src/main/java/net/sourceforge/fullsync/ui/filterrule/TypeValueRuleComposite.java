@@ -31,13 +31,16 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 class TypeValueRuleComposite extends RuleComposite {
 	private Combo comboTypes;
+	private TypeValue value;
 
-	TypeValueRuleComposite(Composite parent, final TypeValue value) {
+	TypeValueRuleComposite(Composite parent, final TypeValue initialValue) {
 		super(parent);
+		value = initialValue;
 		GridData compositeLayoutData = new GridData();
 		compositeLayoutData.horizontalAlignment = SWT.FILL;
 		compositeLayoutData.grabExcessHorizontalSpace = true;
@@ -55,7 +58,6 @@ class TypeValueRuleComposite extends RuleComposite {
 		comboTypes.select(value.getType().ordinal());
 		Consumer<SelectionEvent> comboSelectionListener = e -> {
 			value.setType(TypeValue.Type.values()[comboTypes.getSelectionIndex()]);
-			valueChanged(new ValueChangedEvent(value));
 		};
 		comboTypes.addSelectionListener(widgetSelectedAdapter(comboSelectionListener));
 		comboTypes.addSelectionListener(widgetDefaultSelectedAdapter(comboSelectionListener));
@@ -63,5 +65,10 @@ class TypeValueRuleComposite extends RuleComposite {
 
 	@Override
 	public void setError(String message) {
+	}
+
+	@Override
+	public OperandValue getValue() {
+		return value;
 	}
 }

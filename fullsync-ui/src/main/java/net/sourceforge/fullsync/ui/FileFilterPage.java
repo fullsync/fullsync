@@ -184,7 +184,7 @@ public class FileFilterPage extends WizardDialog {
 		}
 
 		newFileFilter.setFileFilterRules(rules);
-		return true; //FIXME: return false if failed
+		return true;
 	}
 
 	@Override

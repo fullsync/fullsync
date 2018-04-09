@@ -29,13 +29,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 class DateValueRuleComposite extends RuleComposite {
 	private Button buttonCalendar;
 	private DateFormat dateFormat;
+	private DateValue value;
 
-	DateValueRuleComposite(Composite parent, final DateValue value) {
+	DateValueRuleComposite(Composite parent, final DateValue initialValue) {
 		super(parent);
+		value = initialValue;
 		this.setLayout(new GridLayout(2, true));
 		dateFormat = DateFormat.getDateInstance();
 
@@ -54,7 +57,11 @@ class DateValueRuleComposite extends RuleComposite {
 			swtCalDialog.open();
 			value.setDate(swtCalDialog.getDate());
 			textValue.setText(dateFormat.format(value.getDate()));
-			valueChanged(new ValueChangedEvent(value));
 		});
+	}
+
+	@Override
+	public OperandValue getValue() {
+		return value;
 	}
 }

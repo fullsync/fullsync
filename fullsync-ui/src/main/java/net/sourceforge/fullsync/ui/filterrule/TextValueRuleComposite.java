@@ -25,11 +25,15 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 class TextValueRuleComposite extends RuleComposite {
-	TextValueRuleComposite(Composite parent, final TextValue value) {
+	private TextValue value;
+
+	TextValueRuleComposite(Composite parent, final TextValue initialValue) {
 		super(parent);
+		value = initialValue;
 		GridData compositeLayoutData = new GridData();
 		compositeLayoutData.horizontalAlignment = SWT.FILL;
 		compositeLayoutData.grabExcessHorizontalSpace = true;
@@ -43,10 +47,14 @@ class TextValueRuleComposite extends RuleComposite {
 		textValue.setLayoutData(text1LData);
 		textValue.addModifyListener(e -> {
 			value.setValue(textValue.getText());
-			valueChanged(new ValueChangedEvent(value));
 		});
 		if (null != value) {
 			textValue.setText(value.toString());
 		}
+	}
+
+	@Override
+	public OperandValue getValue() {
+		return value;
 	}
 }

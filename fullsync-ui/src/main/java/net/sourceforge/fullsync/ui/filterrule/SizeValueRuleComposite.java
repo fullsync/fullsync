@@ -28,15 +28,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 
+import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 class SizeValueRuleComposite extends RuleComposite {
 	private Combo comboUnits;
 	private SizeValue value;
 
-	SizeValueRuleComposite(Composite parent, final SizeValue value) {
+	SizeValueRuleComposite(Composite parent, final SizeValue initialValue) {
 		super(parent);
-		this.value = value;
+		value = initialValue;
 		this.setLayout(new GridLayout(2, true));
 		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false);
 		this.setLayoutData(layoutData);
@@ -75,11 +76,14 @@ class SizeValueRuleComposite extends RuleComposite {
 
 	private void textValueChanged(ModifyEvent e) {
 		value.fromString(textValue.getText() + " " + comboUnits.getText());
-		valueChanged(new ValueChangedEvent(value));
 	}
 
 	private void comboUnitsChanged(Event e) {
 		value.setUnit(SizeValue.Unit.values()[comboUnits.getSelectionIndex()]);
-		valueChanged(new ValueChangedEvent(value));
+	}
+
+	@Override
+	public OperandValue getValue() {
+		return value;
 	}
 }
