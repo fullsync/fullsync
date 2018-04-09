@@ -45,6 +45,7 @@ import net.sourceforge.fullsync.TaskTree;
 public class TaskDecisionPage extends WizardDialog {
 	private GuiController guiController;
 	private TaskTree taskTree;
+	private boolean interactive = true;
 	private boolean processing;
 	private int tasksFinished;
 	private int tasksTotal;
@@ -70,6 +71,10 @@ public class TaskDecisionPage extends WizardDialog {
 			colorFinishedSuccessful.dispose();
 			colorFinishedUnsuccessful.dispose();
 		});
+	}
+
+	public void setInteractive(boolean interactive) {
+		this.interactive = interactive;
 	}
 
 	public void setTaskTree(TaskTree taskTree) {
@@ -241,6 +246,14 @@ public class TaskDecisionPage extends WizardDialog {
 		labelProgress.setText(String.format("%d %s %d %s", tasksFinished, of, tasksTotal, finished)); //$NON-NLS-1$
 		if (null != item) {
 			list.showItem(item);
+		}
+	}
+
+	@Override
+	protected void dialogOpened() {
+		super.dialogOpened();
+		if (!interactive) {
+			performActions();
 		}
 	}
 }

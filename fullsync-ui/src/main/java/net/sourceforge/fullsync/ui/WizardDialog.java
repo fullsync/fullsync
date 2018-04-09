@@ -19,9 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.eclipse.swt.SWT;
@@ -55,7 +52,6 @@ public abstract class WizardDialog {
 	private Button cancelButton;
 	private boolean closing;
 
-	private final List<WizardDialogListener> dialogListeners = new ArrayList<>();
 	private Shell parent;
 
 	public WizardDialog(Shell parent) {
@@ -251,12 +247,6 @@ public abstract class WizardDialog {
 		labelDescription.setLayoutData(labelDescriptionLData);
 	}
 
-	protected void dialogOpened() {
-		for (WizardDialogListener listener : dialogListeners) {
-			listener.dialogOpened();
-		}
-	}
-
 	public void dispose() {
 		for (Control control : compositeContent.getChildren()) {
 			control.dispose();
@@ -282,16 +272,6 @@ public abstract class WizardDialog {
 		labelImage.setImage(imageRepository.getImage(getImageName()));
 	}
 
-	public void addWizardDialogListener(WizardDialogListener listener) {
-		if ((null != listener) && (!dialogListeners.contains(listener))) {
-			dialogListeners.add(listener);
-		}
-	}
-
-	public void removeWizardDialogListener(WizardDialogListener listener) {
-		dialogListeners.remove(listener);
-	}
-
 	/**
 	 * enable or disable the ok button.
 	 * @param enabled
@@ -306,6 +286,9 @@ public abstract class WizardDialog {
 	 */
 	public final void setCancelButtonEnabled(final boolean enabled) {
 		cancelButton.setEnabled(enabled);
+	}
+
+	protected void dialogOpened() {
 	}
 
 	public abstract String getTitle();

@@ -525,9 +525,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 					try {
 						TaskDecisionPage dialog = taskDecisionPageProvider.get();
 						dialog.setTaskTree(taskTree);
-						if (!interactive) {
-							dialog.addWizardDialogListener(dialog::performActions);
-						}
+						dialog.setInteractive(interactive);
 						dialog.show();
 					}
 					catch (Exception ex) {
