@@ -312,6 +312,7 @@ gradle.projectsEvaluated {
 		jacocoRootReport.sourceDirectories = jacocoRootReport.sourceDirectories + subproject.jacocoTestReport.sourceDirectories
 		jacocoRootReport.classDirectories = jacocoRootReport.classDirectories + subproject.jacocoTestReport.classDirectories
 		jacocoRootReport.executionData = jacocoRootReport.executionData + subproject.jacocoTestReport.executionData
+		testReport.reportOn subproject.test
 		if (System.env.'CI') {
 			coveralls.sourceDirs += subproject.sourceSets.main.allSource.srcDirs.flatten()
 		}
@@ -344,6 +345,10 @@ task jacocoRootReport(type: JacocoReport) {
 			it.exists()
 		})
 	}
+}
+
+task testReport(type: TestReport) {
+	destinationDir = file("$buildDir/reports/allTests")
 }
 
 if (System.env.'CI') {
