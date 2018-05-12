@@ -135,11 +135,6 @@ public class PreferencesPage extends WizardDialog {
 	@Override
 	public void createContent(Composite content) {
 		content.setLayout(new GridLayout());
-		GridData thisLData = new GridData();
-		thisLData.horizontalAlignment = SWT.FILL;
-		thisLData.grabExcessHorizontalSpace = true;
-		thisLData.grabExcessVerticalSpace = true;
-		content.setLayoutData(thisLData);
 
 		groupInterface = new Group(content, SWT.FILL);
 		GridLayout generalPreferencesGroupLayout = new GridLayout(2, false);

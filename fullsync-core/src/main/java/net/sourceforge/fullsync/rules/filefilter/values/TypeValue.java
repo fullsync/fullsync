@@ -22,7 +22,7 @@ package net.sourceforge.fullsync.rules.filefilter.values;
 public class TypeValue implements OperandValue {
 	public enum Type {
 		FILE,
-		DIRECTORY
+		DIRECTORY,
 	}
 
 	private Type type;

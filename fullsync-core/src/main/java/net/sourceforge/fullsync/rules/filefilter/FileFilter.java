@@ -162,5 +162,4 @@ public class FileFilter {
 
 		return buff.toString();
 	}
-
 }

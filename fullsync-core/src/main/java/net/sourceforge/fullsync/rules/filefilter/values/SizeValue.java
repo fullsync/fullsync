@@ -24,7 +24,7 @@ public class SizeValue implements OperandValue {
 		BYTES,
 		KBYTES,
 		MBYTES,
-		GBYTES
+		GBYTES,
 	}
 
 	private double value;

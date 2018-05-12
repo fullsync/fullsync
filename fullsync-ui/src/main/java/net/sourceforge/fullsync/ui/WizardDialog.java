@@ -96,6 +96,7 @@ public abstract class WizardDialog {
 			Color white = display.getSystemColor(SWT.COLOR_WHITE);
 
 			GridLayout dialogShellLayout = new GridLayout();
+			dialogShellLayout.numColumns = 1;
 			dialogShellLayout.horizontalSpacing = 0;
 			dialogShellLayout.marginHeight = 0;
 			dialogShellLayout.marginWidth = 0;

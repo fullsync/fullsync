@@ -28,12 +28,6 @@ public abstract class RuleSetDescriptor {
 	private static final String ELEMENT_NAME = "RuleSetDescriptor"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 
-	public abstract RuleSet createRuleSet();
-
-	public abstract String getType();
-
-	public abstract Element serializeDescriptor(Document document);
-
 	public static final RuleSetDescriptor unserialize(Element element) throws DataParseException {
 		RuleSetDescriptor desc = null;
 		if (null != element) {
@@ -54,4 +48,10 @@ public abstract class RuleSetDescriptor {
 		elem.appendChild(ruleDescriptorElement);
 		return elem;
 	}
+
+	public abstract RuleSet createRuleSet();
+
+	public abstract String getType();
+
+	public abstract Element serializeDescriptor(Document document);
 }

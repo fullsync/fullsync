@@ -40,7 +40,7 @@ public class ImageRepository {
 
 	public Image getImage(String imageName) {
 		Image img = null;
-		if (null !=  imageName) {
+		if (null != imageName) {
 			img = cache.computeIfAbsent(imageName, n -> new Image(display, new FullSyncImageDataProvider(n)));
 		}
 		return img;

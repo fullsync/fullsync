@@ -71,21 +71,14 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		this.fileFilterTree = fileFilterTree;
 	}
 
-	/**
-	 * @see net.sourceforge.fullsync.RuleSetDescriptor#getType()
-	 */
 	@Override
 	public String getType() {
 		return RULESET_TYPE;
 	}
 
-	/**
-	 * @see net.sourceforge.fullsync.RuleSetDescriptor#serializeDescriptor(org.w3c.dom.Document)
-	 */
 	@Override
 	public Element serializeDescriptor(Document document) {
 		Element simpleRuleSetElement = document.createElement(ELEMENT_SIMPLE_RULE_SET);
-
 		simpleRuleSetElement.setAttribute(ATTRIBUTE_SYNC_SUBS, String.valueOf(isSyncSubDirs()));
 		simpleRuleSetElement.setAttribute(ATTRIBUTE_PATTERNS_TYPE, getPatternsType());
 		simpleRuleSetElement.setAttribute(ATTRIBUTE_IGNORE_PATTERN, getIgnorePattern());
@@ -93,7 +86,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		simpleRuleSetElement.setAttribute(ATTRIBUTE_USE_FILTER, String.valueOf(isUseFilter()));
 
 		FileFilterManager fm = new FileFilterManager();
-
 		if (null != fileFilter) {
 			Element fileFilterElement = fm.serializeFileFilter(getFileFilter(), document, ELEMENT_FILE_FILTER, ELEMENT_FILE_FILTER_RULE);
 			simpleRuleSetElement.appendChild(fileFilterElement);
@@ -111,7 +103,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 				simpleRuleSetElement.appendChild(subdirFilterElement);
 			}
 		}
-
 		return simpleRuleSetElement;
 	}
 
@@ -191,62 +182,34 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		}
 	}
 
-	/**
-	 * @return Returns the syncSubDirs.
-	 */
 	public boolean isSyncSubDirs() {
 		return syncSubDirs;
 	}
 
-	/**
-	 * @param syncSubDirs
-	 *            The syncSubDirs to set.
-	 */
 	public void setSyncSubDirs(boolean syncSubDirs) {
 		this.syncSubDirs = syncSubDirs;
 	}
 
-	/**
-	 * @return Returns the patternsType.
-	 */
 	public String getPatternsType() {
 		return patternsType;
 	}
 
-	/**
-	 * @param type
-	 *            type The patternsType to set.
-	 */
 	public void setPatternsType(String type) {
 		this.patternsType = type;
 	}
 
-	/**
-	 * @return Returns the takePattern.
-	 */
 	public String getTakePattern() {
 		return takePattern;
 	}
 
-	/**
-	 * @param takePattern
-	 *            The takePattern to set.
-	 */
 	public void setTakePattern(String takePattern) {
 		this.takePattern = takePattern;
 	}
 
-	/**
-	 * @return Returns the ignorePattern.
-	 */
 	public String getIgnorePattern() {
 		return ignorePattern;
 	}
 
-	/**
-	 * @param pattern
-	 *            The ignorePattern to set.
-	 */
 	public void setIgnorePattern(String pattern) {
 		ignorePattern = pattern;
 	}
@@ -271,9 +234,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		fileFilterTree = filterTree;
 	}
 
-	/**
-	 * @see net.sourceforge.fullsync.RuleSetDescriptor#createRuleSet()
-	 */
 	@Override
 	public RuleSet createRuleSet() {
 		SimplyfiedSyncRules ruleSet = new SimplyfiedSyncRules();
@@ -290,8 +250,6 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		ruleSet.setFileFilter(fileFilter);
 		ruleSet.setUseFilter(useFilter);
 		ruleSet.setFileFilterTree(fileFilterTree);
-
 		return ruleSet;
 	}
-
 }

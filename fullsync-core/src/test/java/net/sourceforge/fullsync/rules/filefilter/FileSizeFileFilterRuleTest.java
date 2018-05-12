@@ -39,7 +39,7 @@ public class FileSizeFileFilterRuleTest {
 	}
 
 	@Test
-	public void testOpIs() throws FilterRuleNotAppliableException {
+	public void testOpIs() throws Exception {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS);
 
 		assertTrue(filterRule.match(foobarTxt));
@@ -49,7 +49,7 @@ public class FileSizeFileFilterRuleTest {
 	}
 
 	@Test
-	public void testOpIsnt() throws FilterRuleNotAppliableException {
+	public void testOpIsnt() throws Exception {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_ISNT);
 		assertFalse(filterRule.match(foobarTxt));
 
@@ -58,7 +58,7 @@ public class FileSizeFileFilterRuleTest {
 	}
 
 	@Test
-	public void testOpIsGreaterThan() throws FilterRuleNotAppliableException {
+	public void testOpIsGreaterThan() throws Exception {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"),
 			FileSizeFileFilterRule.OP_IS_GREATER_THAN);
 
@@ -72,7 +72,7 @@ public class FileSizeFileFilterRuleTest {
 	}
 
 	@Test
-	public void testOpIsLessThan() throws FilterRuleNotAppliableException {
+	public void testOpIsLessThan() throws Exception {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS_LESS_THAN);
 
 		assertFalse(filterRule.match(foobarTxt));
@@ -93,7 +93,7 @@ public class FileSizeFileFilterRuleTest {
 	}
 
 	@Test
-	public void testOpDefault() throws FilterRuleNotAppliableException {
+	public void testOpDefault() throws Exception {
 		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), -1);
 
 		assertFalse(filterRule.match(foobarTxt));

@@ -47,7 +47,7 @@ public class DateValueTest {
 	}
 
 	@Test
-	public void testEquals() throws ParseException {
+	public void testEquals() throws Exception {
 		DateValue value = new DateValue("10/08/1994");
 
 		assertTrue(value.isEqualTo(parseDate("10/08/1994 10:00:00")));
@@ -58,7 +58,7 @@ public class DateValueTest {
 	}
 
 	@Test
-	public void testIsBefore() throws ParseException {
+	public void testIsBefore() throws Exception {
 		DateValue value = new DateValue("10/08/1994");
 
 		assertTrue(value.isBefore(parseDate("11/08/1994 00:00:00")));
@@ -69,7 +69,7 @@ public class DateValueTest {
 	}
 
 	@Test
-	public void testIsAfter() throws ParseException {
+	public void testIsAfter() throws Exception {
 		DateValue value = new DateValue("10/08/1994");
 
 		assertTrue(value.isAfter(parseDate("09/08/1994 00:00:00")));

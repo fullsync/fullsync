@@ -50,7 +50,7 @@ public class FileModificationDateFileFilterRuleTest {
 	}
 
 	@Test
-	public void testOpIs() throws ParseException, FilterRuleNotAppliableException {
+	public void testOpIs() throws Exception {
 		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(new DateValue(oldtime),
 			FileModificationDateFileFilterRule.OP_IS);
 
@@ -61,7 +61,7 @@ public class FileModificationDateFileFilterRuleTest {
 	}
 
 	@Test
-	public void testOpIsnt() throws ParseException, FilterRuleNotAppliableException {
+	public void testOpIsnt() throws Exception {
 		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(new DateValue(oldtime),
 			FileModificationDateFileFilterRule.OP_ISNT);
 
@@ -70,7 +70,7 @@ public class FileModificationDateFileFilterRuleTest {
 	}
 
 	@Test
-	public void testOpIsAfter() throws ParseException, FilterRuleNotAppliableException {
+	public void testOpIsAfter() throws Exception {
 		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(new DateValue(newtime),
 			FileModificationDateFileFilterRule.OP_IS_AFTER);
 
@@ -81,7 +81,7 @@ public class FileModificationDateFileFilterRuleTest {
 	}
 
 	@Test
-	public void testOpIsBefore() throws ParseException, FilterRuleNotAppliableException {
+	public void testOpIsBefore() throws Exception {
 		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(new DateValue(oldtime),
 			FileModificationDateFileFilterRule.OP_IS_BEFORE);
 
@@ -91,7 +91,7 @@ public class FileModificationDateFileFilterRuleTest {
 	}
 
 	@Test
-	public void testOpDefault() throws ParseException, FilterRuleNotAppliableException {
+	public void testOpDefault() throws Exception {
 		FileModificationDateFileFilterRule filterRule = new FileModificationDateFileFilterRule(new DateValue(newtime), -1);
 
 		assertFalse(filterRule.match(testNode));
