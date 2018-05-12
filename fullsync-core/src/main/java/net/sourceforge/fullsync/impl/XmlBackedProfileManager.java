@@ -131,8 +131,16 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 		while (null != getProfile(name)) {
 			name = p.getName() + " (" + (j++) + ")";
 		}
-		p.setName(name);
-		doAddProfile(p, false);
+		if (!name.equals(p.getName())) {
+			Profile newProfile = new Profile(name, p.getDescription(), p.getSynchronizationType(), p.getSource(), p.getDestination(),
+				p.getRuleSet(), p.isSchedulingEnabled(), p.getSchedule());
+			newProfile.setLastError(p.getLastErrorLevel(), p.getLastErrorString());
+			newProfile.setLastUpdate(p.getLastUpdate());
+			doAddProfile(newProfile, false);
+		}
+		else {
+			doAddProfile(p, false);
+		}
 	}
 
 	private void doAddProfile(Profile profile, boolean fireChangedEvent) {
@@ -185,7 +193,7 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 
 		for (Profile p : profiles) {
 			Schedule s = p.getSchedule();
-			if (p.isEnabled() && (null != s)) {
+			if (p.isSchedulingEnabled() && (null != s)) {
 				long o = s.getNextOccurrence(now);
 				if (nextTime > o) {
 					nextTime = o;

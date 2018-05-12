@@ -41,16 +41,16 @@ public class Profile implements Comparable<Profile> {
 	private static final String ATTRIBUTE_LAST_ERROR_LEVEL = "lastErrorLevel"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_LAST_ERROR_STRING = "lastErrorString"; //$NON-NLS-1$
 
-	private String name;
-	private String description;
-	private String synchronizationType;
-	private ConnectionDescription source;
-	private ConnectionDescription destination;
-	private RuleSetDescriptor ruleSet;
-	private Date lastUpdate;
-	private Schedule schedule;
+	private final String name;
+	private final String description;
+	private final String synchronizationType;
+	private final ConnectionDescription source;
+	private final ConnectionDescription destination;
+	private final RuleSetDescriptor ruleSet;
+	private final boolean schedulingEnabled;
+	private final Schedule schedule;
 
-	private boolean enabled;
+	private Date lastUpdate;
 	private int lastErrorLevel;
 	private String lastErrorString;
 
@@ -61,17 +61,23 @@ public class Profile implements Comparable<Profile> {
 		String profileName = element.getAttribute(ATTRIBUTE_NAME);
 		ConnectionDescription src = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0));
 		ConnectionDescription dst = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0));
-		RuleSetDescriptor ruleset = RuleSetDescriptor.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0));
-		Profile p = new Profile(profileName, src, dst, ruleset);
+		RuleSetDescriptor deserializedRuleset = RuleSetDescriptor
+			.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0));
+		RuleSetDescriptor usedRuleset = null != deserializedRuleset
+			? deserializedRuleset
+			: new SimplyfiedRuleSetDescriptor(true, null, false, null);
+		String description = element.getAttribute(ATTRIBUTE_DESCRIPTION);
+		String synchronizationType = element.getAttribute(ATTRIBUTE_TYPE);
+		boolean schedulingEnabled = true;
+		if (element.hasAttribute(ATTRIBUTE_ENABLED)) {
+			schedulingEnabled = Boolean.valueOf(element.getAttribute(ATTRIBUTE_ENABLED));
+		}
+		Schedule schedule = Schedule.unserialize((Element) element.getElementsByTagName("Schedule").item(0));
+
+		Profile p = new Profile(profileName, description, synchronizationType, src, dst, usedRuleset, schedulingEnabled, schedule);
 		// this may happen with profiles that used advanced rule sets
 		if (null == p.getRuleSet()) {
 			p.setLastError(-1, "Error: the Filters of this Profile are broken");
-			p.setRuleSet(new SimplyfiedRuleSetDescriptor(true, null, false, null));
-		}
-		p.setDescription(element.getAttribute(ATTRIBUTE_DESCRIPTION));
-		p.setSynchronizationType(element.getAttribute(ATTRIBUTE_TYPE));
-		if (element.hasAttribute(ATTRIBUTE_ENABLED)) {
-			p.setEnabled(Boolean.valueOf(element.getAttribute(ATTRIBUTE_ENABLED)));
 		}
 		if (element.hasAttribute(ATTRIBUTE_LAST_ERROR_LEVEL)) {
 			int errorLevel = Integer.parseInt(element.getAttribute(ATTRIBUTE_LAST_ERROR_LEVEL));
@@ -87,63 +93,40 @@ public class Profile implements Comparable<Profile> {
 			p.setLastUpdate(null);
 		}
 
-		p.setSchedule(Schedule.unserialize((Element) element.getElementsByTagName("Schedule").item(0)));
 		return p;
 	}
 
-	public Profile(String name, ConnectionDescription source, ConnectionDescription destination, RuleSetDescriptor ruleSet) {
+	public Profile(String name, String description, String synchronizationType, ConnectionDescription source,
+		ConnectionDescription destination, RuleSetDescriptor ruleSet, boolean schedulingEnabled, Schedule schedule) {
 		this.name = name;
-		this.description = "";
+		this.description = description;
+		this.synchronizationType = synchronizationType;
 		this.source = source;
 		this.destination = destination;
 		this.ruleSet = ruleSet;
 		this.lastUpdate = new Date();
-		this.enabled = true;
+		this.schedulingEnabled = schedulingEnabled;
+		this.schedule = schedule;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-		notifyProfileChangeListeners();
-	}
-
 	public String getSynchronizationType() {
 		return synchronizationType;
-	}
-
-	public void setSynchronizationType(String synchronizationType) {
-		this.synchronizationType = synchronizationType;
-		notifyProfileChangeListeners();
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-		notifyProfileChangeListeners();
-	}
-
 	public ConnectionDescription getDestination() {
 		return destination;
 	}
 
-	public void setDestination(ConnectionDescription destination) {
-		this.destination = destination;
-		notifyProfileChangeListeners();
-	}
-
 	public ConnectionDescription getSource() {
 		return source;
-	}
-
-	public void setSource(ConnectionDescription source) {
-		this.source = source;
-		notifyProfileChangeListeners();
 	}
 
 	public Date getLastUpdate() {
@@ -171,7 +154,7 @@ public class Profile implements Comparable<Profile> {
 		if (null == schedule) {
 			return "not scheduled";
 		}
-		else if (!enabled) {
+		else if (!schedulingEnabled) {
 			return "not enabled";
 		}
 		else {
@@ -183,27 +166,12 @@ public class Profile implements Comparable<Profile> {
 		return ruleSet;
 	}
 
-	public void setRuleSet(RuleSetDescriptor ruleSet) {
-		this.ruleSet = ruleSet;
-		notifyProfileChangeListeners();
-	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-		notifyProfileChangeListeners();
+	public boolean isSchedulingEnabled() {
+		return schedulingEnabled;
 	}
 
 	public Schedule getSchedule() {
 		return schedule;
-	}
-
-	public void setSchedule(Schedule schedule) {
-		this.schedule = schedule;
-		notifyProfileChangeListeners();
 	}
 
 	public void setLastError(int lastErrorLevel, String lastErrorString) {
@@ -241,7 +209,7 @@ public class Profile implements Comparable<Profile> {
 		elem.setAttribute(ATTRIBUTE_NAME, name);
 		elem.setAttribute(ATTRIBUTE_DESCRIPTION, description);
 		elem.setAttribute(ATTRIBUTE_TYPE, synchronizationType);
-		elem.setAttribute(ATTRIBUTE_ENABLED, String.valueOf(enabled));
+		elem.setAttribute(ATTRIBUTE_ENABLED, String.valueOf(schedulingEnabled));
 		elem.setAttribute(ATTRIBUTE_LAST_ERROR_LEVEL, String.valueOf(lastErrorLevel));
 		elem.setAttribute(ATTRIBUTE_LAST_ERROR_STRING, lastErrorString);
 		if (null != lastUpdate) {

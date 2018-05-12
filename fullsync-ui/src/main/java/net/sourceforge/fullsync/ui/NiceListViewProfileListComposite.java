@@ -227,7 +227,7 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 
 	private void updateItem(NiceListViewItem item, Profile profile) {
 		boolean isError = profile.getLastErrorLevel() > 0;
-		boolean isScheduled = profile.isEnabled() && (null != profile.getSchedule());
+		boolean isScheduled = profile.isSchedulingEnabled() && (null != profile.getSchedule());
 		if (isScheduled) {
 			item.setImage(isError ? imageProfileErrorScheduled : imageProfileScheduled);
 		}

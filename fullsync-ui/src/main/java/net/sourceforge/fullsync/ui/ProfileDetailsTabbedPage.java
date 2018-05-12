@@ -213,7 +213,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			}
 
 			buttonScheduling.setData(profile.getSchedule());
-			buttonEnabled.setSelection(profile.isEnabled());
+			buttonEnabled.setSelection(profile.isSchedulingEnabled());
 
 			RuleSetDescriptor ruleSetDescriptor = profile.getRuleSet();
 
@@ -631,11 +631,12 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubdirectories, filter, useFileFilter, getFileFilterTree());
 
 		Profile oldProfile = profile;
-		profile = new Profile(textProfileName.getText(), src, dst, ruleSetDescriptor);
-		profile.setSynchronizationType(comboType.getText());
-		profile.setDescription(textProfileDescription.getText());
-		profile.setSchedule((Schedule) buttonScheduling.getData());
-		profile.setEnabled(buttonEnabled.getSelection());
+		String name = textProfileName.getText();
+		String description = textProfileDescription.getText();
+		String synchronizationType = comboType.getText();
+		boolean schedulingEnabled = buttonEnabled.getSelection();
+		Schedule schedule = (Schedule) buttonScheduling.getData();
+		profile = new Profile(name, description, synchronizationType, src, dst, ruleSetDescriptor, schedulingEnabled, schedule);
 		if (buttonResetError.getSelection()) {
 			profile.setLastError(0, null);
 		}
