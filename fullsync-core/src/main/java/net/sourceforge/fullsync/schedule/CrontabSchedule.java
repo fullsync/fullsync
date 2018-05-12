@@ -31,26 +31,25 @@ public class CrontabSchedule extends Schedule {
 	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_PATTERN = "pattern"; //$NON-NLS-1$
 
-	private String origPattern;
-	private CrontabPart.Instance minutes;
-	private CrontabPart.Instance hours;
-	private CrontabPart.Instance daysOfMonth;
-	private CrontabPart.Instance months;
-	private CrontabPart.Instance daysOfWeek;
+	private final String origPattern;
+	private final CrontabPart.Instance minutes;
+	private final CrontabPart.Instance hours;
+	private final CrontabPart.Instance daysOfMonth;
+	private final CrontabPart.Instance months;
+	private final CrontabPart.Instance daysOfWeek;
 
 	private long lastExecution;
 
-	public CrontabSchedule(final Element element) {
+	private static String getPatternFromElement(Element element) {
 		String pattern = "* * * * *";
 		if (element.hasAttribute(ATTRIBUTE_PATTERN)) {
 			pattern = element.getAttribute(ATTRIBUTE_PATTERN);
 		}
-		try {
-			read(pattern);
-		}
-		catch (DataParseException e) {
-			throw new IllegalArgumentException(e);
-		}
+		return pattern;
+	}
+
+	public CrontabSchedule(final Element element) throws DataParseException {
+		this(getPatternFromElement(element));
 	}
 
 	@Override
@@ -61,36 +60,7 @@ public class CrontabSchedule extends Schedule {
 	}
 
 	public CrontabSchedule() throws DataParseException {
-		read("* * * * *");
-	}
-
-	public CrontabSchedule(String pattern) throws DataParseException {
-		read(pattern);
-
-		if (daysOfWeek.bArray[8]) {
-			daysOfWeek.bArray[1] = true;
-		}
-	}
-
-	public CrontabSchedule(CrontabPart.Instance minutes, CrontabPart.Instance hours, CrontabPart.Instance daysOfMonth,
-		CrontabPart.Instance months, CrontabPart.Instance daysOfWeek) {
-		this.minutes = minutes;
-		this.hours = hours;
-		this.daysOfMonth = daysOfMonth;
-		this.months = months;
-		this.daysOfWeek = daysOfWeek;
-
-		if (daysOfWeek.bArray[8]) {
-			daysOfWeek.bArray[1] = true;
-		}
-
-		StringBuilder buff = new StringBuilder();
-		buff.append(minutes.pattern).append(' ');
-		buff.append(hours.pattern).append(' ');
-		buff.append(daysOfMonth.pattern).append(' ');
-		buff.append(months.pattern).append(' ');
-		buff.append(daysOfWeek.pattern);
-		origPattern = buff.toString();
+		this("* * * * *");
 	}
 
 	/**
@@ -120,8 +90,7 @@ public class CrontabSchedule extends Schedule {
 	 * after an asterisk, so if you want to say 'every two hours', just use
 	 * '* /2'.
 	 **/
-
-	private void read(String pattern) throws DataParseException {
+	public CrontabSchedule(String pattern) throws DataParseException {
 		origPattern = pattern;
 
 		StringTokenizer tokenizer = new StringTokenizer(pattern);
@@ -130,6 +99,31 @@ public class CrontabSchedule extends Schedule {
 		daysOfMonth = CrontabPart.DAYSOFMONTH.createInstance(tokenizer.nextToken());
 		months = CrontabPart.MONTHS.createInstance(tokenizer.nextToken());
 		daysOfWeek = CrontabPart.DAYSOFWEEK.createInstance(tokenizer.nextToken());
+
+		if (daysOfWeek.bArray[8]) {
+			daysOfWeek.bArray[1] = true;
+		}
+	}
+
+	public CrontabSchedule(CrontabPart.Instance minutes, CrontabPart.Instance hours, CrontabPart.Instance daysOfMonth,
+		CrontabPart.Instance months, CrontabPart.Instance daysOfWeek) {
+		this.minutes = minutes;
+		this.hours = hours;
+		this.daysOfMonth = daysOfMonth;
+		this.months = months;
+		this.daysOfWeek = daysOfWeek;
+
+		if (daysOfWeek.bArray[8]) {
+			daysOfWeek.bArray[1] = true;
+		}
+
+		StringBuilder buff = new StringBuilder();
+		buff.append(minutes.pattern).append(' ');
+		buff.append(hours.pattern).append(' ');
+		buff.append(daysOfMonth.pattern).append(' ');
+		buff.append(months.pattern).append(' ');
+		buff.append(daysOfWeek.pattern);
+		origPattern = buff.toString();
 	}
 
 	public String getPattern() {

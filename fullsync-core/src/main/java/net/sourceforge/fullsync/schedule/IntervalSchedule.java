@@ -29,21 +29,23 @@ public class IntervalSchedule extends Schedule {
 	private static final String ATTRIBUTE_INTERVAL = "interval"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_FIRSTINTERVAL = "firstinterval"; //$NON-NLS-1$
 
-	private long firstInterval;
-	private long interval;
+	private final long firstInterval;
+	private final long interval;
+	private final String displayUnit;
 	private long next;
-	private String displayUnit;
 
 	public IntervalSchedule(Element element) {
+		String firstIntervalAttribute = null;
 		if (element.hasAttribute(ATTRIBUTE_FIRSTINTERVAL)) {
-			this.firstInterval = Long.parseLong(element.getAttribute(ATTRIBUTE_FIRSTINTERVAL));
+			firstIntervalAttribute = element.getAttribute(ATTRIBUTE_FIRSTINTERVAL);
 		}
+		String intervalAttribute = null;
 		if (element.hasAttribute(ATTRIBUTE_INTERVAL)) {
-			this.interval = Long.parseLong(element.getAttribute(ATTRIBUTE_INTERVAL));
+			intervalAttribute = element.getAttribute(ATTRIBUTE_INTERVAL);
 		}
-		if (element.hasAttribute(ATTRIBUTE_DISPLAY_UNIT)) {
-			this.displayUnit = element.getAttribute(ATTRIBUTE_DISPLAY_UNIT);
-		}
+		this.firstInterval = null != firstIntervalAttribute ? Long.parseLong(firstIntervalAttribute) : 0;
+		this.interval = null != intervalAttribute ? Long.parseLong(intervalAttribute) : 0;
+		this.displayUnit = element.getAttribute(ATTRIBUTE_DISPLAY_UNIT);
 		this.next = System.currentTimeMillis() + firstInterval;
 	}
 
