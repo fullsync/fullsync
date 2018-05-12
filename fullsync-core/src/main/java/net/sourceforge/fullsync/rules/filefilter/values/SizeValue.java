@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.rules.filefilter.values;
 
+import net.sourceforge.fullsync.DataParseException;
+
 public class SizeValue implements OperandValue {
 	public enum Unit {
 		BYTES,
@@ -27,17 +29,29 @@ public class SizeValue implements OperandValue {
 		GBYTES,
 	}
 
-	private double value;
-	private Unit unit;
+	private final double value;
+	private final Unit unit;
 
-	public SizeValue() {
-		this.value = 0;
-		this.unit = Unit.BYTES;
+	public SizeValue(double value, Unit unit) {
+		this.value = value;
+		this.unit = unit;
 	}
 
-	public SizeValue(String size) {
-		this();
-		fromString(size);
+	public SizeValue(String size) throws DataParseException {
+		int sep = size.indexOf(' ');
+		if (sep > 0) {
+			try {
+				this.value = Double.parseDouble(size.substring(0, sep));
+			}
+			catch (NumberFormatException ex) {
+				throw new DataParseException(String.format("'%s' is not a valid number", size), ex);
+			}
+			String u = size.substring(sep + 1, size.length());
+			this.unit = getUnitFromString(u);
+		}
+		else {
+			throw new DataParseException(String.format("'%s' is not a valid Size value", size));
+		}
 	}
 
 	public long getBytes() {
@@ -48,44 +62,17 @@ public class SizeValue implements OperandValue {
 		return value;
 	}
 
-	public void setValue(double value) {
-		this.value = value;
-	}
-
-	public void setValue(String bytes) {
-		try {
-			this.value = Double.parseDouble(bytes);
-		}
-		catch (NumberFormatException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public Unit getUnit() {
 		return unit;
 	}
 
-	public void setUnit(Unit unit) {
-		this.unit = unit;
-	}
-
-	@Override
-	public void fromString(String value) {
-		int sep = value.indexOf(' ');
-		if (sep > 0) {
-			this.value = Double.parseDouble(value.substring(0, sep));
-			String u = value.substring(sep + 1, value.length());
-			this.unit = getUnitFromString(u);
-		}
-	}
-
-	private Unit getUnitFromString(String unitName) {
+	private Unit getUnitFromString(String unitName) throws DataParseException {
 		for (Unit u : Unit.values()) {
 			if (u.name().equalsIgnoreCase(unitName)) {
 				return u;
 			}
 		}
-		return Unit.BYTES;
+		throw new DataParseException(String.format("'%s' is not a valid size unit", unitName));
 	}
 
 	@Override

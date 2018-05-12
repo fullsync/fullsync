@@ -20,22 +20,9 @@
 package net.sourceforge.fullsync.rules.filefilter.values;
 
 public class TextValue implements OperandValue {
-	private String value;
-
-	public TextValue() {
-		this.value = "";
-	}
+	private final String value;
 
 	public TextValue(String value) {
-		this.value = value;
-	}
-
-	@Override
-	public void fromString(String value) {
-		this.value = value;
-	}
-
-	public void setValue(String value) {
 		this.value = value;
 	}
 

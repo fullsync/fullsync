@@ -20,48 +20,53 @@
 package net.sourceforge.fullsync.ui.filterrule;
 
 import java.text.DateFormat;
+import java.util.Date;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 class DateValueRuleComposite extends RuleComposite {
 	private Button buttonCalendar;
 	private DateFormat dateFormat;
-	private DateValue value;
+	private Date value = new Date(SystemDate.getInstance().currentTimeMillis());
 
 	DateValueRuleComposite(Composite parent, final DateValue initialValue) {
 		super(parent);
-		value = initialValue;
-		this.setLayout(new GridLayout(2, true));
+		if (null != initialValue) {
+			value = initialValue.getDate();
+		}
+		render(parent);
+	}
+
+	private void render(Composite parent) {
+		this.setLayout(new FillLayout());
 		dateFormat = DateFormat.getDateInstance();
 
 		textValue = new Text(this, SWT.BORDER);
 		textValue.setEditable(false);
-		textValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		if (null != value) {
-			textValue.setText(dateFormat.format(value.getDate()));
+			textValue.setText(dateFormat.format(value));
 		}
 
 		buttonCalendar = new Button(this, SWT.PUSH | SWT.CENTER);
-		buttonCalendar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		buttonCalendar.setText("Choose Date...");
 		buttonCalendar.addListener(SWT.Selection, e -> {
-			SWTCalendarDialog swtCalDialog = new SWTCalendarDialog(getDisplay().getActiveShell(), value.getDate());
+			SWTCalendarDialog swtCalDialog = new SWTCalendarDialog(getDisplay().getActiveShell(), value);
 			swtCalDialog.open();
-			value.setDate(swtCalDialog.getDate());
-			textValue.setText(dateFormat.format(value.getDate()));
+			value = swtCalDialog.getDate();
+			textValue.setText(dateFormat.format(value));
 		});
 	}
 
 	@Override
 	public OperandValue getValue() {
-		return value;
+		return new DateValue(value);
 	}
 }

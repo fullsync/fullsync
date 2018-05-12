@@ -20,5 +20,4 @@
 package net.sourceforge.fullsync.rules.filefilter.values;
 
 public interface OperandValue {
-	void fromString(String value);
 }

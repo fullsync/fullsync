@@ -28,35 +28,24 @@ public class FileFilter {
 	public static final int INCLUDE = 0;
 	public static final int EXCLUDE = 1;
 
-	private int matchType;
-	private int filterType;
+	private final int matchType;
+	private final int filterType;
+	private final boolean appliesToDir;
+	private final FileFilterRule[] rules;
 
-	private boolean appliesToDir = true;
-
-	private FileFilterRule[] rules = new FileFilterRule[0];
-
-	public void setMatchType(int _matchType) {
-		this.matchType = _matchType;
+	public FileFilter(int matchType, int filterType, boolean appliesToDir, FileFilterRule... rules) {
+		this.matchType = matchType;
+		this.filterType = filterType;
+		this.appliesToDir = appliesToDir;
+		this.rules = rules;
 	}
 
 	public int getMatchType() {
 		return matchType;
 	}
 
-	public void setFilterType(int _filterType) {
-		this.filterType = _filterType;
-	}
-
 	public int getFilterType() {
 		return this.filterType;
-	}
-
-	public void setFileFilterRules(FileFilterRule[] rules) {
-		this.rules = rules;
-	}
-
-	public void setAppliesToDirectories(boolean appliesToDir) {
-		this.appliesToDir = appliesToDir;
 	}
 
 	public boolean appliesToDirectories() {

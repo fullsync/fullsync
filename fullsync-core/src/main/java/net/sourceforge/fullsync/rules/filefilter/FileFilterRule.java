@@ -22,18 +22,18 @@ package net.sourceforge.fullsync.rules.filefilter;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
-public abstract class FileFilterRule {
+public interface FileFilterRule {
 
-	public abstract int getOperator();
+	int getOperator();
 
-	public abstract String getOperatorName();
+	String getOperatorName();
 
-	public abstract OperandValue getValue();
+	OperandValue getValue();
 
-	public abstract boolean match(File file) throws FilterRuleNotAppliableException;
+	boolean match(File file) throws FilterRuleNotAppliableException;
 
 	@Override
-	public abstract String toString();
+	String toString();
 
-	public abstract String getRuleType();
+	String getRuleType();
 }

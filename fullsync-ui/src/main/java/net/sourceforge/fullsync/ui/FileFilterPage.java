@@ -103,7 +103,6 @@ public class FileFilterPage extends WizardDialog {
 	public void createContent(Composite content) {
 		try {
 			content.setLayout(new GridLayout(4, false));
-			content.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			content.setSize(700, 500);
 
 			// filter type combo
@@ -130,32 +129,35 @@ public class FileFilterPage extends WizardDialog {
 			// filter list
 			GridData scrolledComposite1LData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			scrolledComposite1LData.horizontalSpan = 4;
-			scrolledComposite1 = new ScrolledComposite(content, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
-			createCompositeRuleList();
+			scrolledComposite1 = new ScrolledComposite(content, SWT.V_SCROLL | SWT.BORDER);
 			scrolledComposite1.setLayoutData(scrolledComposite1LData);
-			scrolledComposite1.setAlwaysShowScrollBars(false);
+			scrolledComposite1.setAlwaysShowScrollBars(true);
+			scrolledComposite1.setExpandHorizontal(true);
+			compositeRuleList = new Composite(scrolledComposite1, SWT.FILL);
+			compositeRuleList.setLayout(new GridLayout(4, false));
+			scrolledComposite1.setContent(compositeRuleList);
 
+			int rowsAdded = 0;
 			if (null != oldFileFilter) {
 				comboMatchType.select(oldFileFilter.getMatchType());
 				comboFilterType.select(oldFileFilter.getFilterType());
 				buttonAppliesToDir.setSelection(oldFileFilter.appliesToDirectories());
 				FileFilterRule[] rules = oldFileFilter.getFileFiltersRules();
-				if (rules.length > 0) {
-					for (FileFilterRule rule : rules) {
-						addRuleRow(rule.getRuleType(), rule.getOperator(), rule.getValue());
-					}
-				}
-				else {
-					addRuleRow();
+				for (FileFilterRule rule : rules) {
+					addRuleRow(rule.getRuleType(), rule.getOperator(), rule.getValue());
+					++rowsAdded;
 				}
 			}
 			else {
 				comboMatchType.select(0);
 				comboFilterType.select(0);
 				buttonAppliesToDir.setSelection(true);
+			}
+			if (0 == rowsAdded) {
 				addRuleRow();
 			}
 
+			compositeRuleList.setSize(compositeRuleList.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 			content.layout();
 		}
 		catch (Exception e) {
@@ -165,11 +167,9 @@ public class FileFilterPage extends WizardDialog {
 
 	@Override
 	public boolean apply() {
-		newFileFilter = new FileFilter();
-
-		newFileFilter.setMatchType(comboMatchType.getSelectionIndex());
-		newFileFilter.setFilterType(comboFilterType.getSelectionIndex());
-		newFileFilter.setAppliesToDirectories(buttonAppliesToDir.getSelection());
+		int matchType = comboMatchType.getSelectionIndex();
+		int filterType = comboFilterType.getSelectionIndex();
+		boolean appliesToDirectories = buttonAppliesToDir.getSelection();
 
 		FileFilterRule[] rules = new FileFilterRule[ruleItems.size()];
 		for (int i = 0; i < rules.length; i++) {
@@ -183,7 +183,7 @@ public class FileFilterPage extends WizardDialog {
 			}
 		}
 
-		newFileFilter.setFileFilterRules(rules);
+		newFileFilter = new FileFilter(matchType, filterType, appliesToDirectories, rules);
 		return true;
 	}
 
@@ -194,6 +194,8 @@ public class FileFilterPage extends WizardDialog {
 
 	public void addRuleRow() {
 		addRuleRow(null, -1, null);
+		compositeRuleList.setSize(compositeRuleList.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		compositeRuleList.layout(true);
 	}
 
 	protected void addRuleRow(String ruleType, int op, OperandValue value) {
@@ -201,31 +203,13 @@ public class FileFilterPage extends WizardDialog {
 		ruleItem.init(this, ruleType, op, value);
 		ruleItem.render(compositeRuleList);
 		ruleItems.add(ruleItem);
-		compositeRuleList.pack();
 	}
 
-	public void recreateRuleList() {
-		compositeRuleList.dispose();
-		createCompositeRuleList();
-		for (FilterRuleListItem item : ruleItems) {
-			item.render(compositeRuleList);
-		}
-		compositeRuleList.pack();
-	}
-
-	public void deleteRule(FilterRuleListItem item) {
+	public void deleteRule(Composite composite, FilterRuleListItem item) {
 		if (ruleItems.size() > 1) {
 			ruleItems.remove(item);
-			recreateRuleList();
+			getDisplay().asyncExec(composite::dispose);
 		}
-	}
-
-	protected void createCompositeRuleList() {
-		compositeRuleList = new Composite(scrolledComposite1, SWT.FILL);
-		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		compositeRuleList.setLayoutData(layoutData);
-		scrolledComposite1.setContent(compositeRuleList);
-		compositeRuleList.setLayout(new GridLayout(4, false));
 	}
 
 	public FileFilter getFileFilter() {

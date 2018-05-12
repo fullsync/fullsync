@@ -22,18 +22,24 @@ package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.stream.Stream;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
 public class FileFilterTree {
-	private FileFilterTreeItem root = new FileFilterTreeItem();
-	private Map<String, FileFilter> itemsMap = new HashMap<>();
+	private static final String FILE_SEPARATOR = "/";
 
-	// TODO is this the correct path separator?
-	private String separator = "/";
+	private final FileFilterTreeItem root = new FileFilterTreeItem();
+	private final Map<String, FileFilter> itemsMap = new HashMap<>();
 
-	public void addFileFilter(String key, FileFilter filter) {
-		StringTokenizer tokenizer = new StringTokenizer(key, separator);
+	public FileFilterTree(Map<String, FileFilter> filters) {
+		for (Map.Entry<String, FileFilter> e : filters.entrySet()) {
+			addFileFilter(e.getKey(), e.getValue());
+		}
+	}
+
+	private void addFileFilter(String key, FileFilter filter) {
+		StringTokenizer tokenizer = new StringTokenizer(key, FILE_SEPARATOR);
 		FileFilterTreeItem item = root;
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
@@ -51,7 +57,7 @@ public class FileFilterTree {
 	public FileFilter getFilter(String key) {
 		FileFilter filter = null;
 		FileFilter parentFilter = null;
-		StringTokenizer tokenizer = new StringTokenizer(key, separator);
+		StringTokenizer tokenizer = new StringTokenizer(key, FILE_SEPARATOR);
 		FileFilterTreeItem item = root;
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
@@ -72,8 +78,8 @@ public class FileFilterTree {
 		return parentFilter;
 	}
 
-	public Map<String, FileFilter> getItemsMap() {
-		return itemsMap;
+	public Stream<Map.Entry<String, FileFilter>> stream() {
+		return itemsMap.entrySet().stream();
 	}
 
 	@Override

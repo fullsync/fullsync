@@ -27,34 +27,29 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
 class FileFilterTreeItem {
 	private FileFilter filter;
+	private final Map<String, FileFilterTreeItem> children = new HashMap<>();
 
-	private Map<String, FileFilterTreeItem> childrenMap = new HashMap<>();
-
-	public void setFilter(final FileFilter filter) {
+	public void setFilter(FileFilter filter) {
 		this.filter = filter;
+	}
+
+	public void addChildren(String key, FileFilterTreeItem item) {
+		children.put(key, item);
 	}
 
 	public FileFilter getFilter() {
 		return this.filter;
 	}
 
-	public void addChildren(final String key, final FileFilterTreeItem item) {
-		childrenMap.put(key, item);
-	}
-
-	public FileFilterTreeItem getChildren(final String key) {
-		return childrenMap.get(key);
-	}
-
-	public void removeChildren(final String key) {
-		childrenMap.remove(key);
+	public FileFilterTreeItem getChildren(String key) {
+		return children.get(key);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("[ ");
-		for (Entry<String, FileFilterTreeItem> entry : childrenMap.entrySet()) {
+		for (Entry<String, FileFilterTreeItem> entry : children.entrySet()) {
 			buffer.append(entry.getKey());
 			buffer.append("->");
 			buffer.append(entry.getValue());

@@ -35,39 +35,43 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.ui.FileFilterPage;
 
 class SubfilterRuleComposite extends RuleComposite {
-	private Button buttonFilter;
-	private FilterValue value;
+	private FileFilter value = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
+	private Provider<FileFilterPage> fileFilterPageProvider;
 
 	SubfilterRuleComposite(Provider<FileFilterPage> fileFilterPageProvider, Composite parent, final FilterValue initialValue) {
 		super(parent);
-		value = initialValue;
-		this.setLayout(new GridLayout(4, true));
-		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		layoutData.horizontalSpan = 2;
-		layoutData.grabExcessHorizontalSpace = true;
-		this.setLayoutData(layoutData);
+		this.fileFilterPageProvider = fileFilterPageProvider;
+		if (null != initialValue) {
+			value = initialValue.getValue();
+		}
+		render(parent);
+	}
+
+	private void render(Composite parent) {
+		this.setLayout(new GridLayout(3, true));
 
 		textValue = new Text(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		GridData textValueData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		textValueData.horizontalSpan = 3;
+		textValueData.heightHint = textValue.getLineHeight() * 3;
+		textValueData.horizontalSpan = 2;
 		textValue.setLayoutData(textValueData);
-		if (null != initialValue) {
-			textValue.setText(initialValue.toString());
+		if (null != value) {
+			textValue.setText(value.toString());
 		}
 		textValue.setEditable(false);
 
-		buttonFilter = new Button(this, SWT.PUSH);
+		Button buttonFilter = new Button(this, SWT.PUSH);
 		buttonFilter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		buttonFilter.setText("Set Filter...");
 		buttonFilter.addListener(SWT.Selection, evt -> {
 			try {
 				FileFilterPage dialog = fileFilterPageProvider.get();
 				dialog.setParent(getShell());
-				dialog.setFileFilter(value.getValue());
+				dialog.setFileFilter(value);
 				dialog.show();
 				FileFilter newfilter = dialog.getFileFilter();
 				if (null != newfilter) {
-					value.setValue(newfilter);
+					value = newfilter;
 					textValue.setText(value.toString());
 					textValue.setToolTipText(value.toString());
 				}
@@ -80,6 +84,6 @@ class SubfilterRuleComposite extends RuleComposite {
 
 	@Override
 	public OperandValue getValue() {
-		return value;
+		return new FilterValue(value);
 	}
 }

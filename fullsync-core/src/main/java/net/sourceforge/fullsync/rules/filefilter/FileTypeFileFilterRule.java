@@ -23,7 +23,7 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
-public class FileTypeFileFilterRule extends FileFilterRule {
+public class FileTypeFileFilterRule implements FileFilterRule {
 	public static final String TYPE_NAME = "File type";
 
 	public static final int OP_IS = 0;
@@ -31,8 +31,8 @@ public class FileTypeFileFilterRule extends FileFilterRule {
 
 	private static final String[] allOperators = new String[] { "is", "isn't" };
 
-	private TypeValue type;
-	private int op;
+	private final TypeValue type;
+	private final int op;
 
 	@Override
 	public String getRuleType() {

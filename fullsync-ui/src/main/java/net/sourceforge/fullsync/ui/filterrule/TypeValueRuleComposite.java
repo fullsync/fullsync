@@ -26,8 +26,7 @@ import java.util.function.Consumer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
@@ -35,29 +34,25 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 class TypeValueRuleComposite extends RuleComposite {
-	private Combo comboTypes;
-	private TypeValue value;
+	private TypeValue.Type value = TypeValue.Type.FILE;
 
 	TypeValueRuleComposite(Composite parent, final TypeValue initialValue) {
 		super(parent);
-		value = initialValue;
-		GridData compositeLayoutData = new GridData();
-		compositeLayoutData.horizontalAlignment = SWT.FILL;
-		compositeLayoutData.grabExcessHorizontalSpace = true;
-		this.setLayoutData(compositeLayoutData);
-		this.setLayout(new GridLayout(1, false));
+		if (null != initialValue) {
+			value = initialValue.getType();
+		}
+		render(parent);
+	}
 
-		comboTypes = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
-		GridData comboTypesLData = new GridData();
-		comboTypesLData.horizontalAlignment = SWT.FILL;
-		comboTypesLData.grabExcessHorizontalSpace = true;
-		comboTypes.setLayoutData(comboTypesLData);
+	private void render(Composite parent) {
+		this.setLayout(new FillLayout());
+		Combo comboTypes = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
 		for (TypeValue.Type type : TypeValue.Type.values()) {
 			comboTypes.add(type.name());
 		}
-		comboTypes.select(value.getType().ordinal());
+		comboTypes.select(value.ordinal());
 		Consumer<SelectionEvent> comboSelectionListener = e -> {
-			value.setType(TypeValue.Type.values()[comboTypes.getSelectionIndex()]);
+			value = TypeValue.Type.values()[comboTypes.getSelectionIndex()];
 		};
 		comboTypes.addSelectionListener(widgetSelectedAdapter(comboSelectionListener));
 		comboTypes.addSelectionListener(widgetDefaultSelectedAdapter(comboSelectionListener));
@@ -69,6 +64,6 @@ class TypeValueRuleComposite extends RuleComposite {
 
 	@Override
 	public OperandValue getValue() {
-		return value;
+		return new TypeValue(value);
 	}
 }

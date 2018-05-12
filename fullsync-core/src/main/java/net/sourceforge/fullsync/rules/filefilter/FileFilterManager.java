@@ -73,8 +73,7 @@ public class FileFilterManager {
 	}
 
 	public FileFilter unserializeFileFilter(Element fileFilterElement, String ruleElementName) throws DataParseException {
-		FileFilter fileFilter = new FileFilter();
-		int matchType = 0;
+		int matchType = FileFilter.MATCH_ALL;
 
 		try {
 			matchType = Integer.parseInt(fileFilterElement.getAttribute(ATTRIBUTE_MATCHTYPE));
@@ -82,19 +81,16 @@ public class FileFilterManager {
 		catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
-		fileFilter.setMatchType(matchType);
 
-		int filterType = 0;
+		int filterType = FileFilter.INCLUDE;
 		try {
 			filterType = Integer.parseInt(fileFilterElement.getAttribute(ATTRIBUTE_FILTERTYPE));
 		}
 		catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
-		fileFilter.setFilterType(filterType);
 
 		boolean applies = Boolean.parseBoolean(fileFilterElement.getAttribute(ATTRIBUTE_APPLIESTODIR));
-		fileFilter.setAppliesToDirectories(applies);
 
 		NodeList ruleList = fileFilterElement.getElementsByTagName(ruleElementName);
 		int numOfRules = ruleList.getLength();
@@ -103,10 +99,7 @@ public class FileFilterManager {
 		for (int i = 0; i < rules.length; i++) {
 			rules[i] = unserializeFileFilterRule((Element) ruleList.item(i));
 		}
-
-		fileFilter.setFileFilterRules(rules);
-
-		return fileFilter;
+		return new FileFilter(matchType, filterType, applies, rules);
 	}
 
 	private void serializeRuleAttributes(FileFilterRule fileFilterRule, Element ruleElement) {

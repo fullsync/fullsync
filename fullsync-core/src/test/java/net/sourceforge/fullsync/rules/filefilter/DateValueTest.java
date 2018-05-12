@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -35,15 +34,6 @@ public class DateValueTest {
 
 	private long parseDate(String date) throws ParseException {
 		return dateFormat.parse(date).getTime();
-	}
-
-	@Test
-	public void testFromString() {
-		DateValue value = new DateValue();
-		value.fromString("10/08/1994");
-
-		assertEquals("10/08/1994", value.toString());
-		assertEquals("10/08/1994", new DateValue("10/08/1994").toString());
 	}
 
 	@Test

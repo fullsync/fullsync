@@ -23,50 +23,35 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import net.sourceforge.fullsync.DataParseException;
+
 public class DateValue implements OperandValue {
 	// TODO format for UI different form the one used to serialize.
 	// The UI format should depend on the locale or should be chosen by the user
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-	private long millis;
+	private final long millis;
 
-	public DateValue() {
-		this.millis = 0;
-	}
-
-	public DateValue(long millis) {
-		this.millis = millis;
-	}
-
-	public DateValue(String date) {
-		fromString(date);
-	}
-
-	public void setDate(Date date) {
+	public DateValue(Date date) {
 		this.millis = date.getTime();
+	}
+
+	public DateValue(String date) throws DataParseException {
+		try {
+			Date d = dateFormat.parse(date);
+			millis = d.getTime();
+		}
+		catch (ParseException ex) {
+			throw new DataParseException(String.format("'%s' is not a valid date", date), ex);
+		}
 	}
 
 	public Date getDate() {
 		return new Date(millis);
 	}
 
-	public void setTime(long millis) {
-		this.millis = millis;
-	}
-
 	public long getTime() {
 		return millis;
-	}
-
-	@Override
-	public void fromString(String value) {
-		try {
-			Date date = dateFormat.parse(value);
-			millis = date.getTime();
-		}
-		catch (ParseException e) {
-			this.millis = 0;
-		}
 	}
 
 	@Override

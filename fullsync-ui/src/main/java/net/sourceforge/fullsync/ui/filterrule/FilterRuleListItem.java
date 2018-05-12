@@ -25,17 +25,17 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import net.sourceforge.fullsync.DataParseException;
-import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.rules.filefilter.FileAgeFileFilterRule;
-import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.FileFilterManager;
 import net.sourceforge.fullsync.rules.filefilter.FileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.FileModificationDateFileFilterRule;
@@ -107,9 +107,11 @@ public class FilterRuleListItem {
 	private FileFilterPage root;
 	private OperandValue value;
 
+	private Composite ruleCompositeWrapper;
 	private RuleComposite ruleComposite;
 
 	private final FileFilterManager fileFilterManager = new FileFilterManager();
+	private Combo comboOperators;
 
 	@Inject
 	public FilterRuleListItem(ImageRepository imageRepository) {
@@ -146,7 +148,14 @@ public class FilterRuleListItem {
 
 		comboRuleTypes.addListener(SWT.Selection, e -> {
 			ruleType = getRuleTypeName(comboRuleTypes.getText());
-			root.recreateRuleList();
+			value = ruleComposite.getValue();
+			composite.getDisplay().asyncExec(() -> {
+				for (Control c : ruleCompositeWrapper.getChildren()) {
+					c.dispose();
+				}
+				renderRuleComposite();
+				composite.layout();
+			});
 		});
 
 		comboRuleTypes.removeAll();
@@ -162,93 +171,102 @@ public class FilterRuleListItem {
 			comboRuleTypes.setText(getRuleGUIName(ruleType));
 		}
 
-		Class<? extends FileFilterRule> ruleClass = getRuleClass(ruleType);
-		Combo comboOperators = null;
-		if (!ruleClass.equals(SubfilterFileFilerRule.class)) {
-			comboOperators = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
-			comboOperators.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-			final Combo comboOp = comboOperators;
-			comboOperators.addListener(SWT.Selection, e -> {
-				op = comboOp.getSelectionIndex();
-				comboOp.getParent().layout();
-			});
-		}
+		comboOperators = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		comboOperators.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		comboOperators.addListener(SWT.Selection, e -> {
+			op = comboOperators.getSelectionIndex();
+			comboOperators.getParent().layout();
+		});
 
-		if (!ruleClass.equals(SubfilterFileFilerRule.class)) {
-			String[] ops = fileFilterManager.getOperatorsForRuleType(ruleType);
-			comboOperators.removeAll();
-			for (String op2 : ops) {
-				comboOperators.add(op2);
-			}
-			if ((op < 0) || (op >= comboOperators.getItemCount())) {
-				op = 0;
-			}
-			comboOperators.select(op);
-			if (ops.length == 0) {
-				comboOperators.setVisible(false);
-			}
-		}
+		ruleCompositeWrapper = new Composite(composite, SWT.FILL);
+		ruleCompositeWrapper.setLayout(new FillLayout());
+		ruleCompositeWrapper.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		if ((ruleClass.equals(FileNameFileFilterRule.class)) || (ruleClass.equals(FilePathFileFilterRule.class))) {
-			if (!(value instanceof TextValue)) {
-				value = new TextValue();
-			}
-
-			ruleComposite = new TextValueRuleComposite(composite, (TextValue) value);
-		}
-		else if (ruleClass.equals(FileTypeFileFilterRule.class)) {
-			if (!(value instanceof TypeValue)) {
-				value = new TypeValue();
-			}
-
-			ruleComposite = new TypeValueRuleComposite(composite, (TypeValue) value);
-		}
-		else if (ruleClass.equals(FileSizeFileFilterRule.class)) {
-			if (!(value instanceof SizeValue)) {
-				value = new SizeValue();
-			}
-
-			ruleComposite = new SizeValueRuleComposite(composite, (SizeValue) value);
-		}
-		else if (ruleClass.equals(FileAgeFileFilterRule.class)) {
-			if (!(value instanceof AgeValue)) {
-				value = new AgeValue();
-			}
-
-			ruleComposite = new AgeValueRuleComposite(composite, (AgeValue) value);
-		}
-		else if (ruleClass.equals(FileModificationDateFileFilterRule.class)) {
-			if (!(value instanceof DateValue)) {
-				value = new DateValue(SystemDate.getInstance().currentTimeMillis());
-			}
-
-			ruleComposite = new DateValueRuleComposite(composite, (DateValue) value);
-		}
-		else if (ruleClass.equals(SubfilterFileFilerRule.class)) {
-			if (!(value instanceof FilterValue)) {
-				value = new FilterValue(new FileFilter());
-			}
-			ruleComposite = new SubfilterRuleComposite(root.getFileFilterPageProvider(), composite, (FilterValue) value);
-		}
-		else {
-			Composite valueComposite = new Composite(composite, SWT.NULL);
-
-			Text textValue = new Text(valueComposite, SWT.BORDER);
-			textValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-			textValue.setText("Missing Rule Composite");
-			textValue.setEditable(false);
-		}
+		renderRuleComposite();
 
 		ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
 		ToolItem toolItemDelete = new ToolItem(toolBar, SWT.PUSH);
 		toolItemDelete.setImage(imageRepository.getImage("Rule_Delete.png")); //$NON-NLS-1$
 		toolItemDelete.setToolTipText(Messages.getString("FilterRuleListItem.Delete")); //$NON-NLS-1$
-		toolItemDelete.addListener(SWT.Selection, e -> root.deleteRule(ruleItem));
+		toolItemDelete.addListener(SWT.Selection, e -> root.deleteRule(composite, ruleItem));
 
 		ToolItem toolItemAdd = new ToolItem(toolBar, SWT.PUSH);
 		toolItemAdd.setImage(imageRepository.getImage("Rule_Add.png")); //$NON-NLS-1$
 		toolItemAdd.setToolTipText(Messages.getString("FilterRuleListItem.Add")); //$NON-NLS-1$
 		toolItemAdd.addListener(SWT.Selection, e -> root.addRuleRow());
+	}
+
+	private void renderRuleComposite() {
+		Class<? extends FileFilterRule> ruleClass = getRuleClass(ruleType);
+		String[] ops = fileFilterManager.getOperatorsForRuleType(ruleType);
+		comboOperators.removeAll();
+		for (String op2 : ops) {
+			comboOperators.add(op2);
+		}
+		if ((op < 0) || (op >= comboOperators.getItemCount())) {
+			op = 0;
+		}
+		comboOperators.select(op);
+		GridData comboOperatosLD = (GridData) comboOperators.getLayoutData();
+		boolean hasOperators = 0 != ops.length;
+		comboOperatosLD.exclude = !hasOperators;
+		comboOperators.setEnabled(hasOperators);
+		comboOperators.setVisible(hasOperators);
+		if (ruleClass.equals(SubfilterFileFilerRule.class)) {
+			comboOperators.setEnabled(false);
+		}
+
+		GridData compositeWrapperLD = (GridData) ruleCompositeWrapper.getLayoutData();
+		compositeWrapperLD.horizontalSpan = 1;
+
+		if ((ruleClass.equals(FileNameFileFilterRule.class)) || (ruleClass.equals(FilePathFileFilterRule.class))) {
+			if (!(value instanceof TextValue)) {
+				value = null;
+			}
+
+			ruleComposite = new TextValueRuleComposite(ruleCompositeWrapper, (TextValue) value);
+		}
+		else if (ruleClass.equals(FileTypeFileFilterRule.class)) {
+			if (!(value instanceof TypeValue)) {
+				value = null;
+			}
+
+			ruleComposite = new TypeValueRuleComposite(ruleCompositeWrapper, (TypeValue) value);
+		}
+		else if (ruleClass.equals(FileSizeFileFilterRule.class)) {
+			if (!(value instanceof SizeValue)) {
+				value = null;
+			}
+
+			ruleComposite = new SizeValueRuleComposite(ruleCompositeWrapper, (SizeValue) value);
+		}
+		else if (ruleClass.equals(FileAgeFileFilterRule.class)) {
+			if (!(value instanceof AgeValue)) {
+				value = null;
+			}
+
+			ruleComposite = new AgeValueRuleComposite(ruleCompositeWrapper, (AgeValue) value);
+		}
+		else if (ruleClass.equals(FileModificationDateFileFilterRule.class)) {
+			if (!(value instanceof DateValue)) {
+				value = null;
+			}
+
+			ruleComposite = new DateValueRuleComposite(ruleCompositeWrapper, (DateValue) value);
+		}
+		else if (ruleClass.equals(SubfilterFileFilerRule.class)) {
+			if (!(value instanceof FilterValue)) {
+				value = null;
+			}
+			compositeWrapperLD.horizontalSpan = 2;
+			ruleComposite = new SubfilterRuleComposite(root.getFileFilterPageProvider(), ruleCompositeWrapper, (FilterValue) value);
+		}
+		else {
+			compositeWrapperLD.horizontalSpan = 2;
+			Text textValue = new Text(ruleCompositeWrapper, SWT.BORDER);
+			textValue.setText("Missing Rule Composite");
+			textValue.setEditable(false);
+		}
 	}
 
 	public void setError(String message) {

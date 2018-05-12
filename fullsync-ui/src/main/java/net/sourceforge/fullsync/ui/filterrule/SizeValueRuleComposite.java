@@ -19,10 +19,15 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
+import static org.eclipse.swt.events.SelectionListener.widgetDefaultSelectedAdapter;
+import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
+
+import java.util.function.Consumer;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -32,32 +37,38 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 class SizeValueRuleComposite extends RuleComposite {
-	private Combo comboUnits;
-	private SizeValue value;
+	private SizeValue.Unit unit = SizeValue.Unit.BYTES;
+	private double value = 0.0;
 
 	SizeValueRuleComposite(Composite parent, final SizeValue initialValue) {
 		super(parent);
-		value = initialValue;
-		this.setLayout(new GridLayout(2, true));
-		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, false);
-		this.setLayoutData(layoutData);
+		if (null != initialValue) {
+			value = initialValue.getValue();
+			unit = initialValue.getUnit();
+		}
+		render(parent);
+	}
+
+	private void render(Composite parent) {
+		this.setLayout(new FillLayout());
 
 		textValue = new Text(this, SWT.BORDER);
-		comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.FILL);
+		Combo comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.FILL);
 
-		textValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		textValue.setText(String.valueOf(value.getValue()));
+		textValue.setText(String.valueOf(value));
 		textValue.addModifyListener(this::textValueChanged);
 		textValue.addListener(SWT.KeyDown, this::numbersOnlyKeyboardListener);
 		textValue.addListener(SWT.KeyUp, this::numbersOnlyKeyboardListener);
 
-		comboUnits.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		for (SizeValue.Unit unit : SizeValue.Unit.values()) {
 			comboUnits.add(unit.name()); //FIXME: TRANSLATE!!
 		}
-		comboUnits.select(value.getUnit().ordinal());
-		comboUnits.addListener(SWT.Selection, this::comboUnitsChanged);
-		comboUnits.addListener(SWT.DefaultSelection, this::comboUnitsChanged);
+		comboUnits.select(unit.ordinal());
+		Consumer<SelectionEvent> comboSelectionListener = e -> {
+			unit = SizeValue.Unit.values()[comboUnits.getSelectionIndex()];
+		};
+		comboUnits.addSelectionListener(widgetSelectedAdapter(comboSelectionListener));
+		comboUnits.addSelectionListener(widgetDefaultSelectedAdapter(comboSelectionListener));
 	}
 
 	private void numbersOnlyKeyboardListener(Event e) {
@@ -75,15 +86,16 @@ class SizeValueRuleComposite extends RuleComposite {
 	}
 
 	private void textValueChanged(ModifyEvent e) {
-		value.fromString(textValue.getText() + " " + comboUnits.getText());
-	}
-
-	private void comboUnitsChanged(Event e) {
-		value.setUnit(SizeValue.Unit.values()[comboUnits.getSelectionIndex()]);
+		try {
+			value = Double.valueOf(textValue.getText());
+		}
+		catch (NumberFormatException ex) {
+			setError("Number Format Invalid");
+		}
 	}
 
 	@Override
 	public OperandValue getValue() {
-		return value;
+		return new SizeValue(value, unit);
 	}
 }

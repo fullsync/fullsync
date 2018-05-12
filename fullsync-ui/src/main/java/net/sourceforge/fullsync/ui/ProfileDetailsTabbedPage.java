@@ -29,6 +29,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -224,7 +226,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			enableFilterControls(useFilter);
 			FileFilterTree fileFilterTree = simpleDesc.getFileFilterTree();
 			if (null != fileFilterTree) {
-				itemsMap = fileFilterTree.getItemsMap();
+				itemsMap = fileFilterTree.stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
 			}
 		}
 		catch (Exception e) {
@@ -700,13 +702,13 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	}
 
 	private FileFilterTree getFileFilterTree() {
-		FileFilterTree fileFilterTree = new FileFilterTree();
+		Map<String, FileFilter> filters = new TreeMap<>();
 		for (TreeItem item : treeItemsWithFilter) {
 			FileFilter itemFilter = (FileFilter) item.getData(FILTER_KEY);
 			File itemFile = (File) item.getData();
-			fileFilterTree.addFileFilter(itemFile.getPath(), itemFilter);
+			filters.put(itemFile.getPath(), itemFilter);
 		}
-		return fileFilterTree;
+		return new FileFilterTree(filters);
 	}
 
 	private void closeSourceSite() {

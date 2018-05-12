@@ -20,8 +20,7 @@
 package net.sourceforge.fullsync.ui.filterrule;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -29,32 +28,27 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 class TextValueRuleComposite extends RuleComposite {
-	private TextValue value;
+	private String value = "";
 
 	TextValueRuleComposite(Composite parent, final TextValue initialValue) {
 		super(parent);
-		value = initialValue;
-		GridData compositeLayoutData = new GridData();
-		compositeLayoutData.horizontalAlignment = SWT.FILL;
-		compositeLayoutData.grabExcessHorizontalSpace = true;
-		this.setLayoutData(compositeLayoutData);
-		this.setLayout(new GridLayout(1, false));
-
-		textValue = new Text(this, SWT.BORDER);
-		GridData text1LData = new GridData();
-		text1LData.horizontalAlignment = SWT.FILL;
-		text1LData.grabExcessHorizontalSpace = true;
-		textValue.setLayoutData(text1LData);
-		textValue.addModifyListener(e -> {
-			value.setValue(textValue.getText());
-		});
-		if (null != value) {
-			textValue.setText(value.toString());
+		if (null != initialValue) {
+			value = initialValue.getValue();
 		}
+		render(parent);
+	}
+
+	private void render(Composite parent) {
+		this.setLayout(new FillLayout());
+		textValue = new Text(this, SWT.BORDER);
+		textValue.addModifyListener(e -> {
+			value = textValue.getText();
+		});
+		textValue.setText(value.toString());
 	}
 
 	@Override
 	public OperandValue getValue() {
-		return value;
+		return new TextValue(value);
 	}
 }

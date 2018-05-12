@@ -19,9 +19,14 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
+import static org.eclipse.swt.events.SelectionListener.widgetDefaultSelectedAdapter;
+import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
+
+import java.util.function.Consumer;
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Listener;
@@ -32,21 +37,30 @@ import net.sourceforge.fullsync.rules.filefilter.values.AgeValue.Unit;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 class AgeValueRuleComposite extends RuleComposite {
-	private AgeValue value;
+	private AgeValue.Unit unit = AgeValue.Unit.SECONDS;
+	private double value = 0.0;
 
 	AgeValueRuleComposite(Composite parent, final AgeValue initialValue) {
 		super(parent);
-		value = initialValue;
-		this.setLayout(new GridLayout(2, true));
-		this.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		if (null != initialValue) {
+			unit = initialValue.getUnit();
+			value = initialValue.getValue();
+		}
+		render(parent);
+	}
+
+	private void render(Composite parent) {
+		this.setLayout(new FillLayout());
 
 		textValue = new Text(this, SWT.BORDER);
-		final Combo comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
-
-		textValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		textValue.setText(String.valueOf(value.getValue()));
+		textValue.setText(String.valueOf(value));
 		textValue.addModifyListener(e -> {
-			value.fromString(textValue.getText() + " " + comboUnits.getText());
+			try {
+				value = Double.valueOf(textValue.getText());
+			}
+			catch (NumberFormatException ex) {
+				setError("Invalid Number Format"); //TODO: is a double needed really?
+			}
 		});
 		Listener numbersOnlyKeyboardListener = e -> {
 			// FIXME: the dot should be language specific, find a better way to achieve the same
@@ -64,21 +78,20 @@ class AgeValueRuleComposite extends RuleComposite {
 		textValue.addListener(SWT.KeyDown, numbersOnlyKeyboardListener);
 		textValue.addListener(SWT.KeyUp, numbersOnlyKeyboardListener);
 
-		comboUnits.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		final Combo comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
 		for (Unit unit : AgeValue.Unit.values()) {
 			comboUnits.add(unit.name()); // FIXME: TRANSLATE!!
 		}
-		comboUnits.select(value.getUnit().ordinal());
-		comboUnits.addListener(SWT.Selection, e -> {
-			value.setUnit(AgeValue.Unit.values()[comboUnits.getSelectionIndex()]);
-		});
-		comboUnits.addListener(SWT.DefaultSelection, e -> {
-			value.setUnit(AgeValue.Unit.values()[comboUnits.getSelectionIndex()]);
-		});
+		comboUnits.select(unit.ordinal());
+		Consumer<SelectionEvent> comboSelectionListener = e -> {
+			unit = AgeValue.Unit.values()[comboUnits.getSelectionIndex()];
+		};
+		comboUnits.addSelectionListener(widgetSelectedAdapter(comboSelectionListener));
+		comboUnits.addSelectionListener(widgetDefaultSelectedAdapter(comboSelectionListener));
 	}
 
 	@Override
 	public OperandValue getValue() {
-		return value;
+		return new AgeValue(value, unit);
 	}
 }

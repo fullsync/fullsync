@@ -22,18 +22,9 @@ package net.sourceforge.fullsync.rules.filefilter.values;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
 public class FilterValue implements OperandValue {
-	private FileFilter value;
+	private final FileFilter value;
 
 	public FilterValue(FileFilter value) {
-		this.value = value;
-	}
-
-	@Override
-	public void fromString(String value) {
-		this.value = new FileFilter();
-	}
-
-	public void setValue(FileFilter value) {
 		this.value = value;
 	}
 

@@ -27,7 +27,7 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
-public class FileNameFileFilterRule extends FileFilterRule {
+public class FileNameFileFilterRule implements FileFilterRule {
 	public static final String TYPE_NAME = "File name";
 
 	public static final int OP_IS = 0;
@@ -53,10 +53,9 @@ public class FileNameFileFilterRule extends FileFilterRule {
 		"matches regexp",
 		"doesn't matches regexp" };
 
-	private TextValue pattern;
-	private int op;
-
-	private Pattern regexppattern;
+	private final TextValue pattern;
+	private final int op;
+	private final Pattern regexppattern;
 
 	@Override
 	public String getRuleType() {
@@ -78,6 +77,9 @@ public class FileNameFileFilterRule extends FileFilterRule {
 			catch (PatternSyntaxException e) {
 				throw new DataParseException(e);
 			}
+		}
+		else {
+			this.regexppattern = null;
 		}
 	}
 

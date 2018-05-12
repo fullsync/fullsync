@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.rules.filefilter.values;
 
+import net.sourceforge.fullsync.DataParseException;
+
 public class AgeValue implements OperandValue {
 	public enum Unit {
 		SECONDS,
@@ -29,16 +31,24 @@ public class AgeValue implements OperandValue {
 
 	private static final long SECONDS_PER_DAY = 60L * 60L * 24L;
 
-	private double value;
-	private Unit unit;
+	private final double value;
+	private final Unit unit;
 
-	public AgeValue() {
-		this.value = 0;
-		this.unit = Unit.SECONDS;
-	}
-
-	public AgeValue(String age) {
-		fromString(age);
+	public AgeValue(String age) throws DataParseException {
+		int sep = age.indexOf(' ');
+		if (sep > 0) {
+			try {
+				this.value = Double.parseDouble(age.substring(0, sep));
+			}
+			catch (NumberFormatException ex) {
+				throw new DataParseException("", ex);
+			}
+			String u = age.substring(sep + 1, age.length());
+			this.unit = getUnitFromString(u);
+		}
+		else {
+			throw new DataParseException(String.format("'%s' is not a valid Age value", age));
+		}
 	}
 
 	public AgeValue(double value, Unit unit) {
@@ -54,10 +64,6 @@ public class AgeValue implements OperandValue {
 		return unit;
 	}
 
-	public void setUnit(Unit unit) {
-		this.unit = unit;
-	}
-
 	public long getSeconds() {
 		if (Unit.DAYS.ordinal() > unit.ordinal()) {
 			return (long) Math.floor(value * Math.pow(60, unit.ordinal()));
@@ -65,23 +71,13 @@ public class AgeValue implements OperandValue {
 		return (long) Math.floor(value * SECONDS_PER_DAY);
 	}
 
-	@Override
-	public void fromString(String value) {
-		int sep = value.indexOf(' ');
-		if (sep > 0) {
-			this.value = Double.parseDouble(value.substring(0, sep));
-			String u = value.substring(sep + 1, value.length());
-			this.unit = getUnitFromString(u);
-		}
-	}
-
-	public Unit getUnitFromString(String unitName) {
+	public Unit getUnitFromString(String unitName) throws DataParseException {
 		for (Unit u : Unit.values()) {
 			if (u.name().equalsIgnoreCase(unitName)) {
 				return u;
 			}
 		}
-		return Unit.SECONDS;
+		throw new DataParseException(String.format("'%s' is not a valid unit name", unitName));
 	}
 
 	@Override

@@ -24,7 +24,7 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
-public class FileAgeFileFilterRule extends FileFilterRule {
+public class FileAgeFileFilterRule implements FileFilterRule {
 	public static final String TYPE_NAME = "File age";
 
 	public static final int OP_IS = 0;
@@ -34,8 +34,8 @@ public class FileAgeFileFilterRule extends FileFilterRule {
 
 	private static final String[] allOperators = new String[] { "is", "isn't", "is greater than", "is less than" };
 
-	private AgeValue age;
-	private int op;
+	private final AgeValue age;
+	private final int op;
 
 	@Override
 	public String getRuleType() {

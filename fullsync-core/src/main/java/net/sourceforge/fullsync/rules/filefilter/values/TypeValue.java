@@ -19,42 +19,32 @@
  */
 package net.sourceforge.fullsync.rules.filefilter.values;
 
+import net.sourceforge.fullsync.DataParseException;
+
 public class TypeValue implements OperandValue {
 	public enum Type {
 		FILE,
 		DIRECTORY,
 	}
 
-	private Type type;
-
-	public TypeValue() {
-		this.type = Type.FILE;
-	}
+	private final Type type;
 
 	public TypeValue(Type type) {
 		this.type = type;
 	}
 
-	public TypeValue(String type) {
-		fromString(type);
-	}
-
-	public void setType(Type fileType) {
-		this.type = fileType;
+	public TypeValue(String type) throws DataParseException {
+		for (Type t : Type.values()) {
+			if (t.name().equalsIgnoreCase(type)) {
+				this.type = t;
+				return;
+			}
+		}
+		throw new DataParseException(String.format("'%s' is not a valid type", type));
 	}
 
 	public Type getType() {
 		return this.type;
-	}
-
-	@Override
-	public void fromString(String str) {
-		for (Type t : Type.values()) {
-			if (t.name().equalsIgnoreCase(str)) {
-				this.type = t;
-				break;
-			}
-		}
 	}
 
 	@Override

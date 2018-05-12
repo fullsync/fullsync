@@ -23,7 +23,7 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
-public class FileModificationDateFileFilterRule extends FileFilterRule {
+public class FileModificationDateFileFilterRule implements FileFilterRule {
 	public static final String TYPE_NAME = "File modification date";
 
 	public static final int OP_IS = 0;
@@ -33,8 +33,8 @@ public class FileModificationDateFileFilterRule extends FileFilterRule {
 
 	private static final String[] allOperators = new String[] { "is", "isn't", "is before", "is after" };
 
-	private DateValue date;
-	private int op;
+	private final DateValue date;
+	private final int op;
 
 	@Override
 	public String getRuleType() {

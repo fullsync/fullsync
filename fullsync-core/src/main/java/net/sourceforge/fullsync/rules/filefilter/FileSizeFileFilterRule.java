@@ -23,7 +23,7 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
-public class FileSizeFileFilterRule extends FileFilterRule {
+public class FileSizeFileFilterRule implements FileFilterRule {
 	public static final String TYPE_NAME = "File size";
 
 	public static final int OP_IS = 0;
@@ -33,8 +33,8 @@ public class FileSizeFileFilterRule extends FileFilterRule {
 
 	private static final String[] allOperators = new String[] { "is", "isn't", "is greater than", "is less than" };
 
-	private SizeValue size;
-	private int op;
+	private final SizeValue size;
+	private final int op;
 
 	@Override
 	public String getRuleType() {

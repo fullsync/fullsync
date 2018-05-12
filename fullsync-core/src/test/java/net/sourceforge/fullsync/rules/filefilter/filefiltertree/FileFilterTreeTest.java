@@ -22,6 +22,9 @@ package net.sourceforge.fullsync.rules.filefilter.filefiltertree;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.junit.jupiter.api.Test;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -29,17 +32,16 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 public class FileFilterTreeTest {
 	@Test
 	public void testBasic() {
-		FileFilterTree tree = new FileFilterTree();
-
-		FileFilter filter1 = new FileFilter();
-		FileFilter filter2 = new FileFilter();
-		FileFilter filter3 = new FileFilter();
-		FileFilter filter4 = new FileFilter();
-
-		tree.addFileFilter("./a/c", filter1);
-		tree.addFileFilter("./b/e", filter2);
-		tree.addFileFilter("./a/c/d", filter3);
-		tree.addFileFilter("./a/c/d/g", filter4);
+		FileFilter filter1 = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
+		FileFilter filter2 = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
+		FileFilter filter3 = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
+		FileFilter filter4 = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
+		Map<String, FileFilter> filters = new TreeMap<>();
+		filters.put("./a/c", filter1);
+		filters.put("./b/e", filter2);
+		filters.put("./a/c/d", filter3);
+		filters.put("./a/c/d/g", filter4);
+		FileFilterTree tree = new FileFilterTree(filters);
 
 		assertNull(tree.getFilter("./a"));
 		assertNull(tree.getFilter("./a/f"));
