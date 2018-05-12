@@ -94,13 +94,19 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 
 	@Override
 	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
-		ConnectionDescription desc = super.getConnectionDescription();
+		String path = textPath.getText();
+		if ((null == path) || path.isEmpty()) {
+			path = "/";
+		}
+
+		URI uri = null;
 		if (null != spinnerPort) {
-			desc.setUri(new URI(m_scheme, null, textHost.getText(), spinnerPort.getSelection(), desc.getUri().getPath(), null, null));
+			uri = new URI(m_scheme, null, textHost.getText(), spinnerPort.getSelection(), path, null, null);
 		}
 		else {
-			desc.setUri(new URI(m_scheme, textHost.getText(), desc.getUri().getPath(), null));
+			uri = new URI(m_scheme, textHost.getText(), path, null);
 		}
+		ConnectionDescription desc = new ConnectionDescription(uri);
 		desc.setParameter(ConnectionDescription.PARAMETER_USERNAME, textUsername.getText());
 		desc.setSecretParameter(ConnectionDescription.PARAMETER_PASSWORD, textPassword.getText());
 		return desc;

@@ -119,8 +119,13 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 
 	@Override
 	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
-		ConnectionDescription loc = super.getConnectionDescription();
-		loc.setUri(new URI(m_scheme, null, textHost.getText(), spinnerPort.getSelection(), loc.getUri().getPath(), null, null));
+		String path = textPath.getText();
+		if ((null == path) || path.isEmpty()) {
+			path = "/";
+		}
+
+		URI uri = new URI(m_scheme, null, textHost.getText(), spinnerPort.getSelection(), path, null, null);
+		ConnectionDescription loc = new ConnectionDescription(uri);
 		loc.setParameter("username", textUsername.getText());
 		loc.setSecretParameter("password", textPassword.getText());
 		loc.setParameter("publicKeyAuth", buttonKeybased.getSelection() ? "enabled" : "disabled");

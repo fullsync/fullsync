@@ -49,9 +49,9 @@ public class ConnectionDescription {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionDescription.class);
 
-	private URI uri;
-	private Map<String, String> parameters = new HashMap<>();
-	private Map<String, String> secretParameters = new HashMap<>();
+	private final URI uri;
+	private final Map<String, String> parameters = new HashMap<>();
+	private final Map<String, String> secretParameters = new HashMap<>();
 
 	public Element serialize(String name, Document doc) {
 		Element elem = doc.createElement(name);
@@ -89,14 +89,15 @@ public class ConnectionDescription {
 	}
 
 	public static ConnectionDescription unserialize(Element element) {
-		ConnectionDescription desc = new ConnectionDescription(null);
-		String uri = element.getAttribute(ATTRIBUTE_URI);
+		String uriAttribute = element.getAttribute(ATTRIBUTE_URI);
+		URI uri = null;
 		try {
-			desc.setUri(new URI(uri));
+			uri = new URI(uriAttribute);
 		}
 		catch (URISyntaxException ex) {
-			logger.warn("could not parse '" + uri + "'", ex);
+			logger.warn("could not parse '" + uriAttribute + "'", ex);
 		}
+		ConnectionDescription desc = new ConnectionDescription(uri);
 		desc.parameters.put(PARAMETER_BUFFER_STRATEGY, element.getAttribute(ATTRIBUTE_BUFFER_STRATEGY));
 		desc.parameters.put(PARAMETER_USERNAME, element.getAttribute(ATTRIBUTE_USERNAME));
 		desc.secretParameters.put(PARAMETER_PASSWORD, element.getAttribute(ATTRIBUTE_PASSWORD));
@@ -145,10 +146,6 @@ public class ConnectionDescription {
 	@Override
 	public String toString() {
 		return uri.toString();
-	}
-
-	public void setUri(final URI uri) {
-		this.uri = uri;
 	}
 
 	public URI getUri() {

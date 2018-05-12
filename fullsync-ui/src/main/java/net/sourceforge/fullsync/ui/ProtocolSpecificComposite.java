@@ -39,7 +39,7 @@ import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.fs.Site;
 
-class ProtocolSpecificComposite {
+abstract class ProtocolSpecificComposite {
 	@Inject
 	private FullSync fullsync;
 	@Inject
@@ -74,13 +74,7 @@ class ProtocolSpecificComposite {
 		buttonBuffered.setVisible(false); //FIXME: [BUFFERING] remove to restore buffering
 	}
 
-	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
-		String path = textPath.getText();
-		if ((null == path) || path.isEmpty()) {
-			path = "/";
-		}
-		return new ConnectionDescription(new URI(m_scheme, null, path, null));
-	}
+	public abstract ConnectionDescription getConnectionDescription() throws URISyntaxException;
 
 	public void setConnectionDescription(final ConnectionDescription connection) {
 		String path = "";
