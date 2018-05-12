@@ -47,8 +47,7 @@ public class GUIUpdateQueue<ITEM> {
 		if (!updateScheduled.get()) {
 			updateScheduled.set(true);
 			display.asyncExec(() -> {
-				List<ITEM> items = new LinkedList<>();
-				getItems(items);
+				List<ITEM> items = getItems();
 				if (!items.isEmpty()) {
 					updateTask.doUpdate(items);
 				}
@@ -56,11 +55,13 @@ public class GUIUpdateQueue<ITEM> {
 		}
 	}
 
-	private synchronized void getItems(List<ITEM> items) {
+	private synchronized List<ITEM> getItems() {
+		List<ITEM> items = new LinkedList<>();
 		ITEM item;
 		while (null != (item = queue.poll())) {
 			items.add(item);
 		}
 		updateScheduled.set(false);
+		return items;
 	}
 }

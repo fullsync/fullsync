@@ -357,7 +357,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		MenuItem menuItemExitProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemExitProfile.setText(Messages.getString("MainWindow.Exit_Menu")); //$NON-NLS-1$
 		menuItemExitProfile.setAccelerator(SWT.CTRL + 'Q');
-		menuItemExitProfile.addListener(SWT.Selection, e -> Display.getCurrent().asyncExec(() -> guiController.closeGui()));
+		menuItemExitProfile.addListener(SWT.Selection, e -> Display.getCurrent().asyncExec(guiController::closeGui));
 
 		MenuItem menuItemEdit = new MenuItem(menuBarMainWindow, SWT.CASCADE);
 		menuItemEdit.setText(Messages.getString("MainWindow.Edit_Menu")); //$NON-NLS-1$

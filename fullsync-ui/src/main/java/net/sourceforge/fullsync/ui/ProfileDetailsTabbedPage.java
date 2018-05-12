@@ -527,7 +527,6 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				unmarkItem(selectedItem);
 			}
 		});
-
 		return c;
 	}
 

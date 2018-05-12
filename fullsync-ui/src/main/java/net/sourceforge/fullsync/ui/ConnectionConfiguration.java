@@ -76,7 +76,7 @@ public class ConnectionConfiguration {
 		compositeProtocolSpecific.setLayout(new GridLayout(3, false));
 		compositeProtocolSpecific.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		// protcol combo box
+		// protocol combo box
 		labelProtocol = new Label(compositeProtocolSpecific, SWT.NONE);
 		labelProtocol.setText("Protocol:"); //FIXME: externalize
 		comboProtocol = new Combo(compositeProtocolSpecific, SWT.READ_ONLY);
@@ -103,9 +103,7 @@ public class ConnectionConfiguration {
 						c.dispose();
 					}
 				}
-
 				initialize();
-
 				parent.layout(true);
 			});
 		});

@@ -49,7 +49,7 @@ class ExceptionDialog {
 
 			dialogShell = new Shell(p, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
 			dialogShell.setText(Messages.getString("ExceptionDialog.Exception")); //$NON-NLS-1$
-			dialogShell.addListener(SWT.Close, e -> display.asyncExec(() -> dialogShell.dispose()));
+			dialogShell.addListener(SWT.Close, e -> display.asyncExec(dialogShell::dispose));
 
 			GridLayout dialogShellLayout = new GridLayout();
 			dialogShellLayout.marginHeight = 0;

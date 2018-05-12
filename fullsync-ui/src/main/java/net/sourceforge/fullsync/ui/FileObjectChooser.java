@@ -217,12 +217,12 @@ class FileObjectChooser {
 
 	private void okSelected(Event event) {
 		result = true;
-		dialogShell.getDisplay().asyncExec(() -> dialogShell.dispose());
+		dialogShell.getDisplay().asyncExec(dialogShell::dispose);
 	}
 
 	private void cancelSelected(Event event) {
 		result = false;
-		dialogShell.getDisplay().asyncExec(() -> dialogShell.dispose());
+		dialogShell.getDisplay().asyncExec(dialogShell::dispose);
 	}
 
 	private void tableItemDoubleClicked(Event event) {
