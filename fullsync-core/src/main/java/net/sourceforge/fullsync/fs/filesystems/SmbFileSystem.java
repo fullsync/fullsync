@@ -50,7 +50,8 @@ public class SmbFileSystem implements FileSystem {
 	}
 
 	@Override
-	public final Site createConnection(final FullSync fullsync, final ConnectionDescription description) throws FileSystemException {
+	public final Site createConnection(final FullSync fullsync, final ConnectionDescription description, boolean isInteractive)
+		throws FileSystemException {
 		return new CommonsVfsConnection(description, new SmbAuthProvider());
 	}
 }

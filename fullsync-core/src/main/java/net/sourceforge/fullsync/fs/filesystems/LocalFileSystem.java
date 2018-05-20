@@ -30,7 +30,7 @@ import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
 public class LocalFileSystem implements FileSystem {
 	@Override
-	public final Site createConnection(final FullSync fullsync, final ConnectionDescription description)
+	public final Site createConnection(final FullSync fullsync, final ConnectionDescription description, boolean isInteractive)
 		throws FileSystemException, IOException {
 		return new CommonsVfsConnection(description, null);
 	}

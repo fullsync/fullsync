@@ -39,7 +39,6 @@ public class ConnectionDescription {
 	public static final String PARAMETER_BUFFER_STRATEGY = "bufferStrategy"; //$NON-NLS-1$
 	public static final String PARAMETER_USERNAME = "username"; //$NON-NLS-1$
 	public static final String PARAMETER_PASSWORD = "password"; //$NON-NLS-1$
-	public static final String PARAMETER_INTERACTIVE = "interactive"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_URI = "uri"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$

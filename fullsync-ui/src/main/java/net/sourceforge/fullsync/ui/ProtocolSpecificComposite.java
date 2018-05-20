@@ -102,8 +102,7 @@ abstract class ProtocolSpecificComposite {
 		try {
 			ConnectionDescription desc = getConnectionDescription();
 			FileSystemManager fsm = new FileSystemManager();
-			desc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
-			try (Site conn = fsm.createConnection(fullsync, desc)) {
+			try (Site conn = fsm.createConnection(fullsync, desc, true)) {
 				FileObject base = conn.getBase();
 				FileObjectChooser foc = fileObjectChooserProvider.get();
 				if (foc.open(m_parent.getShell(), base)) {

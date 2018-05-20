@@ -67,10 +67,12 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	private final FullSync fullsync;
 	private final ConnectionDescription desc;
+	private final boolean isInteractive;
 
-	SFTPAuthProvider(final FullSync _fullsync, final ConnectionDescription _desc) {
+	SFTPAuthProvider(final FullSync _fullsync, final ConnectionDescription _desc, boolean _isInteractive) {
 		fullsync = _fullsync;
 		desc = _desc;
+		isInteractive = _isInteractive;
 	}
 
 	@Override
@@ -121,7 +123,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	@Override
 	public final boolean promptYesNo(final String message) {
-		if (null != desc.getParameter(ConnectionDescription.PARAMETER_INTERACTIVE)) {
+		if (isInteractive) {
 			try {
 				return fullsync.getQuestionHandler().promptYesNo(message).get();
 			}

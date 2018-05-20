@@ -28,7 +28,8 @@ import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
 public class SFTPFileSystem implements FileSystem {
 	@Override
-	public final Site createConnection(final FullSync fullsync, final ConnectionDescription description) throws FileSystemException {
-		return new CommonsVfsConnection(description, new SFTPAuthProvider(fullsync, description));
+	public final Site createConnection(final FullSync fullsync, final ConnectionDescription description, boolean isInteractive)
+		throws FileSystemException {
+		return new CommonsVfsConnection(description, new SFTPAuthProvider(fullsync, description, isInteractive));
 	}
 }

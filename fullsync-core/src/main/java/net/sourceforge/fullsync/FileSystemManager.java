@@ -50,7 +50,7 @@ public class FileSystemManager {
 		}
 	}
 
-	public final Site createConnection(final FullSync fullsync, final ConnectionDescription desc)
+	public final Site createConnection(final FullSync fullsync, final ConnectionDescription desc, boolean isInteractive)
 		throws FileSystemException, IOException, URISyntaxException {
 		URI url = desc.getUri();
 		String scheme = url.getScheme();
@@ -59,7 +59,7 @@ public class FileSystemManager {
 
 		Site s = null;
 		if (null != fs) {
-			s = fs.createConnection(fullsync, desc);
+			s = fs.createConnection(fullsync, desc, isInteractive);
 			/* FIXME: [BUFFERING] uncomment to reenable buffering
 			String bufferStrategy = desc.getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
 			if ((null != bufferStrategy) && !"".equals(bufferStrategy)) {

@@ -188,16 +188,10 @@ public class TaskGeneratorImpl implements TaskGenerator {
 
 		ConnectionDescription srcDesc = profile.getSource();
 		ConnectionDescription dstDesc = profile.getDestination();
-		if (interactive) {
-			srcDesc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
-			dstDesc.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
-		}
-		else {
-			srcDesc.clearParameter(ConnectionDescription.PARAMETER_INTERACTIVE);
-			dstDesc.clearParameter(ConnectionDescription.PARAMETER_INTERACTIVE);
-		}
 		final FileSystemManager fsm = new FileSystemManager();
-		try (Site d1 = fsm.createConnection(fullsync, srcDesc); Site d2 = fsm.createConnection(fullsync, dstDesc)) {
+		try (
+			Site d1 = fsm.createConnection(fullsync, srcDesc, interactive);
+			Site d2 = fsm.createConnection(fullsync, dstDesc, interactive)) {
 			return execute(d1, d2, actionDecider, rules);
 		}
 		catch (Exception ex) {

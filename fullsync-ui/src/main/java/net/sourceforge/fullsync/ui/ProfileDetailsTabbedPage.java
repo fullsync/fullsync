@@ -678,8 +678,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 						if (null != src) {
 							closeSourceSite();
 							src.setParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY, ""); // the subdirs tab should bypass the buffer imo
-							src.setParameter(ConnectionDescription.PARAMETER_INTERACTIVE, "true");
-							sourceSite = new FileSystemManager().createConnection(fullsync, src);
+							sourceSite = new FileSystemManager().createConnection(fullsync, src, true);
 							drawDirectoryTree();
 							lastSourceLoaded = src.getUri().toString();
 						}
