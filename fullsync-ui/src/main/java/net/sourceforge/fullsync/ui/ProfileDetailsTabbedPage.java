@@ -109,7 +109,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 	private FileFilter filter;
 	private Composite m_parent;
-	private String lastSourceLoaded;
+	private ConnectionDescription lastSourceLoaded;
 
 	@Inject
 	public ProfileDetailsTabbedPage(Shell shell, FullSync fullsync, ImageRepository imageRepository, ProfileManager profileManager,
@@ -198,13 +198,13 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 			srcConnectionConfiguration.setConnectionDescription(profile.getSource());
 			if (null != profile.getSource()) {
-				String bufferStrategy = profile.getSource().getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
+				String bufferStrategy = profile.getSource().getBufferStrategy().orElse("");
 				srcConnectionConfiguration.setBuffered(FileSystemManager.BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy));
 			}
 
 			dstConnectionConfiguration.setConnectionDescription(profile.getDestination());
 			if (null != profile.getDestination()) {
-				String bufferStrategy = profile.getDestination().getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
+				String bufferStrategy = profile.getDestination().getBufferStrategy().orElse("");
 				dstConnectionConfiguration.setBuffered(FileSystemManager.BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy));
 			}
 
@@ -602,11 +602,11 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	public boolean apply() {
 		closeSourceSite();
 
-		ConnectionDescription src;
-		ConnectionDescription dst;
+		ConnectionDescription src = null;
+		ConnectionDescription dst = null;
 		try {
-			src = getConnectionDescription(srcConnectionConfiguration);
-			dst = getConnectionDescription(dstConnectionConfiguration);
+			src = getConnectionDescription(srcConnectionConfiguration).build();
+			dst = getConnectionDescription(dstConnectionConfiguration).build();
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
@@ -649,24 +649,24 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		return true; //FIXME: return false if failed
 	}
 
-	private ConnectionDescription getConnectionDescription(final ConnectionConfiguration cfg) {
-		ConnectionDescription dst = null;
+	private ConnectionDescription.Builder getConnectionDescription(final ConnectionConfiguration cfg) {
+		ConnectionDescription.Builder builder = null;
 		try {
-			dst = cfg.getConnectionDescription();
+			builder = cfg.getConnectionDescription();
 			if (cfg.getBuffered()) {
-				dst.setParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY, FileSystemManager.BUFFER_STRATEGY_SYNCFILES);
+				builder.setBufferStrategy(FileSystemManager.BUFFER_STRATEGY_SYNCFILES);
 			}
 		}
 		catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		return dst;
+		return builder;
 	}
 
 	private void treeTabsWidgetSelected(SelectionEvent evt) {
 		if (evt.item == tabSubDirs) {
-			final ConnectionDescription src = getConnectionDescription(srcConnectionConfiguration);
-			if ((null == sourceSite) || (null == src) || !src.getUri().toString().equals(lastSourceLoaded)) {
+			final ConnectionDescription src = getConnectionDescription(srcConnectionConfiguration).build();
+			if ((null == sourceSite) || (null == src) || (null == lastSourceLoaded) || !lastSourceLoaded.equals(src)) {
 				directoryTree.removeAll();
 				TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
 				loadingIem.setText("Loading source dir...");
@@ -677,10 +677,11 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 					try {
 						if (null != src) {
 							closeSourceSite();
-							src.setParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY, ""); // the subdirs tab should bypass the buffer imo
-							sourceSite = new FileSystemManager().createConnection(fullsync, src, true);
+							ConnectionDescription.Builder builder = new ConnectionDescription.Builder(src);
+							builder.setBufferStrategy(null);
+							lastSourceLoaded = builder.build();
+							sourceSite = new FileSystemManager().createConnection(fullsync, lastSourceLoaded, true);
 							drawDirectoryTree();
-							lastSourceLoaded = src.getUri().toString();
 						}
 						else {
 							TreeItem loadingIem1 = new TreeItem(directoryTree, SWT.NULL);

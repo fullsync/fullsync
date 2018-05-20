@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.ConnectionDescription.Builder;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.FullSync;
@@ -74,7 +75,10 @@ abstract class ProtocolSpecificComposite {
 		buttonBuffered.setVisible(false); //FIXME: [BUFFERING] remove to restore buffering
 	}
 
-	public abstract ConnectionDescription getConnectionDescription() throws URISyntaxException;
+	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
+		Builder builder = new ConnectionDescription.Builder();
+		return builder;
+	}
 
 	public void setConnectionDescription(final ConnectionDescription connection) {
 		String path = "";
@@ -100,7 +104,7 @@ abstract class ProtocolSpecificComposite {
 	 */
 	public void onBrowse() {
 		try {
-			ConnectionDescription desc = getConnectionDescription();
+			ConnectionDescription desc = getConnectionDescription().build();
 			FileSystemManager fsm = new FileSystemManager();
 			try (Site conn = fsm.createConnection(fullsync, desc, true)) {
 				FileObject base = conn.getBase();

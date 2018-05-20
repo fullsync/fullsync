@@ -63,7 +63,7 @@ public class FtpSpecificComposite extends UserPasswordSpecificComposite {
 	@Override
 	public void setConnectionDescription(ConnectionDescription connection) {
 		super.setConnectionDescription(connection);
-		if (FTP_ANONYMOUS_USERNAME.equals(connection.getParameter(ConnectionDescription.PARAMETER_USERNAME))) {
+		if (FTP_ANONYMOUS_USERNAME.equals(connection.getUsername())) {
 			comboAuthentication.select(0);
 		}
 		else {
@@ -73,12 +73,12 @@ public class FtpSpecificComposite extends UserPasswordSpecificComposite {
 	}
 
 	@Override
-	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
-		ConnectionDescription connection = super.getConnectionDescription();
+	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
+		ConnectionDescription.Builder builder = super.getConnectionDescription();
 		if (comboAuthentication.getSelectionIndex() == 0) {
-			connection.setParameter(ConnectionDescription.PARAMETER_USERNAME, FTP_ANONYMOUS_USERNAME);
-			connection.setSecretParameter(ConnectionDescription.PARAMETER_PASSWORD, ""); //$NON-NLS-1$
+			builder.setUsername(FTP_ANONYMOUS_USERNAME);
+			builder.setPassword(""); //$NON-NLS-1$
 		}
-		return connection;
+		return builder;
 	}
 }

@@ -116,7 +116,7 @@ public class ConnectionConfiguration {
 		compositeSpecific.setConnectionDescription(location);
 	}
 
-	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
+	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
 		return compositeSpecific.getConnectionDescription();
 	}
 

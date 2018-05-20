@@ -118,19 +118,20 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 	}
 
 	@Override
-	public ConnectionDescription getConnectionDescription() throws URISyntaxException {
+	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
+		ConnectionDescription.Builder builder = super.getConnectionDescription();
 		String path = textPath.getText();
 		if ((null == path) || path.isEmpty()) {
 			path = "/";
 		}
 
 		URI uri = new URI(m_scheme, null, textHost.getText(), spinnerPort.getSelection(), path, null, null);
-		ConnectionDescription loc = new ConnectionDescription(uri);
-		loc.setParameter("username", textUsername.getText());
-		loc.setSecretParameter("password", textPassword.getText());
-		loc.setParameter("publicKeyAuth", buttonKeybased.getSelection() ? "enabled" : "disabled");
-		loc.setSecretParameter("keyPassphrase", textKeyPassphrase.getText());
-		return loc;
+		builder.setUri(uri);
+		builder.setUsername(textUsername.getText());
+		builder.setPassword(textPassword.getText());
+		builder.setPublicKeyAuth(buttonKeybased.getSelection());
+		builder.setKeyPassphrase(textKeyPassphrase.getText());
+		return builder;
 	}
 
 	@Override
@@ -143,15 +144,13 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 			port = DEFAULT_SFTP_PORT;
 		}
 		spinnerPort.setSelection(port);
-		textUsername.setText(connection.getParameter(ConnectionDescription.PARAMETER_USERNAME));
-		textPassword.setText(connection.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD));
-		buttonKeybased.setSelection("enabled".equals(connection.getParameter("publicKeyAuth")));
-		labelKeyPassphrase.setEnabled(buttonKeybased.getSelection());
-		textKeyPassphrase.setEnabled(buttonKeybased.getSelection());
-		String keyPassphrase = connection.getSecretParameter("keyPassphrase");
-		if (null != keyPassphrase) {
-			textKeyPassphrase.setText(keyPassphrase);
-		}
+		textUsername.setText(connection.getUsername());
+		textPassword.setText(connection.getPassword());
+		boolean keybased = connection.getPublicKeyAuth().orElse(Boolean.FALSE).booleanValue();
+		buttonKeybased.setSelection(keybased);
+		labelKeyPassphrase.setEnabled(keybased);
+		textKeyPassphrase.setEnabled(keybased);
+		textKeyPassphrase.setText(connection.getKeyPassphrase().orElse(""));
 	}
 
 	@Override

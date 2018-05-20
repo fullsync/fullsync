@@ -77,8 +77,8 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	@Override
 	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws FileSystemException {
-		String username = description.getParameter(ConnectionDescription.PARAMETER_USERNAME);
-		String password = description.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD);
+		String username = description.getUsername();
+		String password = description.getPassword();
 		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 		SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
@@ -89,7 +89,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		logger.debug("using knownHosts: ", cfg.getKnownHosts(options));
 		cfg.setUserInfo(options, this);
 		cfg.setStrictHostKeyChecking(options, "ask");
-		if ("enabled".equals(description.getParameter("publicKeyAuth"))) {
+		if (description.getPublicKeyAuth().orElse(false).booleanValue()) {
 			cfg.setPreferredAuthentications(options, "publickey,password,keyboard-interactive");
 		}
 		else {
@@ -100,13 +100,13 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 	@Override
 	public final String getPassphrase() {
 		logger.debug("UserInfo::getPassphrase");
-		return desc.getSecretParameter("keyPassphrase");
+		return desc.getKeyPassphrase().orElse("");
 	}
 
 	@Override
 	public final String getPassword() {
 		logger.debug("UserInfo::getPassword");
-		return desc.getSecretParameter(ConnectionDescription.PARAMETER_PASSWORD);
+		return desc.getPassword();
 	}
 
 	@Override
