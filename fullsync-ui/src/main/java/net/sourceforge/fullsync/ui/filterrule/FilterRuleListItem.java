@@ -146,26 +146,11 @@ public class FilterRuleListItem {
 
 	public void render(final Composite composite) {
 		comboRuleTypes = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
-		final FilterRuleListItem ruleItem = this;
-
-
-		comboRuleTypes.addListener(SWT.Selection, e -> {
-			ruleType = getRuleTypeName(comboRuleTypes.getText());
-			value = ruleComposite.getValue();
-			composite.getDisplay().asyncExec(() -> {
-				for (Control c : ruleCompositeWrapper.getChildren()) {
-					c.dispose();
-				}
-				renderRuleComposite();
-				composite.layout();
-			});
-		});
-
+		comboRuleTypes.addListener(SWT.Selection, this::onRuleTypeChanged);
 		comboRuleTypes.removeAll();
 		for (String ruleTypeName : ruleTypeNames) {
 			comboRuleTypes.add(ruleTypeName);
 		}
-
 		if ((null == ruleType) || ruleType.isEmpty()) {
 			comboRuleTypes.select(0);
 			ruleType = getRuleTypeName(comboRuleTypes.getText());
@@ -176,10 +161,7 @@ public class FilterRuleListItem {
 
 		comboOperators = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboOperators.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		comboOperators.addListener(SWT.Selection, e -> {
-			op = comboOperators.getSelectionIndex();
-			comboOperators.getParent().layout();
-		});
+		comboOperators.addListener(SWT.Selection, this::onOperatorChanged);
 
 		ruleCompositeWrapper = new Composite(composite, SWT.FILL);
 		ruleCompositeWrapper.setLayout(new FillLayout());
@@ -196,7 +178,7 @@ public class FilterRuleListItem {
 		ToolItem toolItemAdd = new ToolItem(toolBar, SWT.PUSH);
 		toolItemAdd.setImage(imageRepository.getImage("Rule_Add.png")); //$NON-NLS-1$
 		toolItemAdd.setToolTipText(Messages.getString("FilterRuleListItem.Add")); //$NON-NLS-1$
-		toolItemAdd.addListener(SWT.Selection, e -> root.addRuleRow());
+		toolItemAdd.addListener(SWT.Selection, this::addNewRule);
 	}
 
 	private void deleteThisItem(Event e) {
@@ -205,6 +187,32 @@ public class FilterRuleListItem {
 			comboOperators.dispose();
 			ruleCompositeWrapper.dispose();
 			toolBar.dispose();
+		}
+	}
+
+	private void addNewRule(Event e) {
+		root.addRuleRow();
+	}
+
+	private void onOperatorChanged(Event e) {
+		op = comboOperators.getSelectionIndex();
+		comboOperators.getParent().layout();
+	}
+
+	private void onRuleTypeChanged(Event e) {
+		ruleType = getRuleTypeName(comboRuleTypes.getText());
+		value = ruleComposite.getValue();
+		ruleCompositeWrapper.getDisplay().asyncExec(this::redrawRuleComposite);
+	}
+
+	private void redrawRuleComposite() {
+		if (!ruleCompositeWrapper.isDisposed()) {
+			for (Control c : ruleCompositeWrapper.getChildren()) {
+				c.dispose();
+			}
+			renderRuleComposite();
+			ruleCompositeWrapper.layout(true);
+			root.layoutList();
 		}
 	}
 
