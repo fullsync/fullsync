@@ -194,6 +194,10 @@ public class FileFilterPage extends WizardDialog {
 
 	public void addRuleRow() {
 		addRuleRow(null, -1, null);
+		layoutList();
+	}
+
+	public void layoutList() {
 		compositeRuleList.setSize(compositeRuleList.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		compositeRuleList.layout(true);
 	}
@@ -205,11 +209,13 @@ public class FileFilterPage extends WizardDialog {
 		ruleItems.add(ruleItem);
 	}
 
-	public void deleteRule(Composite composite, FilterRuleListItem item) {
+	public boolean deleteRule(FilterRuleListItem item) {
 		if (ruleItems.size() > 1) {
 			ruleItems.remove(item);
-			getDisplay().asyncExec(composite::dispose);
+			compositeRuleList.getDisplay().asyncExec(this::layoutList);
+			return true;
 		}
+		return false;
 	}
 
 	public FileFilter getFileFilter() {

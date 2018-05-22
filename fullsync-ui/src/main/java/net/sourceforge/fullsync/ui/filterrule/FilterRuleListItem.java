@@ -30,6 +30,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -107,11 +108,13 @@ public class FilterRuleListItem {
 	private FileFilterPage root;
 	private OperandValue value;
 
-	private Composite ruleCompositeWrapper;
 	private RuleComposite ruleComposite;
 
 	private final FileFilterManager fileFilterManager = new FileFilterManager();
+	private Combo comboRuleTypes;
 	private Combo comboOperators;
+	private Composite ruleCompositeWrapper;
+	private ToolBar toolBar;
 
 	@Inject
 	public FilterRuleListItem(ImageRepository imageRepository) {
@@ -142,9 +145,9 @@ public class FilterRuleListItem {
 	}
 
 	public void render(final Composite composite) {
+		comboRuleTypes = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		final FilterRuleListItem ruleItem = this;
 
-		final Combo comboRuleTypes = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 
 		comboRuleTypes.addListener(SWT.Selection, e -> {
 			ruleType = getRuleTypeName(comboRuleTypes.getText());
@@ -184,16 +187,25 @@ public class FilterRuleListItem {
 
 		renderRuleComposite();
 
-		ToolBar toolBar = new ToolBar(composite, SWT.FLAT);
+		toolBar = new ToolBar(composite, SWT.FLAT);
 		ToolItem toolItemDelete = new ToolItem(toolBar, SWT.PUSH);
 		toolItemDelete.setImage(imageRepository.getImage("Rule_Delete.png")); //$NON-NLS-1$
 		toolItemDelete.setToolTipText(Messages.getString("FilterRuleListItem.Delete")); //$NON-NLS-1$
-		toolItemDelete.addListener(SWT.Selection, e -> root.deleteRule(composite, ruleItem));
+		toolItemDelete.addListener(SWT.Selection, this::deleteThisItem);
 
 		ToolItem toolItemAdd = new ToolItem(toolBar, SWT.PUSH);
 		toolItemAdd.setImage(imageRepository.getImage("Rule_Add.png")); //$NON-NLS-1$
 		toolItemAdd.setToolTipText(Messages.getString("FilterRuleListItem.Add")); //$NON-NLS-1$
 		toolItemAdd.addListener(SWT.Selection, e -> root.addRuleRow());
+	}
+
+	private void deleteThisItem(Event e) {
+		if (root.deleteRule(this)) {
+			comboRuleTypes.dispose();
+			comboOperators.dispose();
+			ruleCompositeWrapper.dispose();
+			toolBar.dispose();
+		}
 	}
 
 	private void renderRuleComposite() {
