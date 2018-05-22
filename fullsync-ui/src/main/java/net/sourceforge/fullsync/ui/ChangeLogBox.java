@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.StringWriter;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -36,11 +37,11 @@ public class ChangeLogBox extends StyledText implements AsyncUIUpdate {
 	private String lastFullSyncVersion;
 	private List<ChangeLogEntry> changelog;
 
-	public ChangeLogBox(Composite parent, String _lastFullSyncVersion, GuiController guiController) {
+	public ChangeLogBox(Composite parent, String _lastFullSyncVersion, ScheduledExecutorService scheduledExecutorService) {
 		super(parent, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 		setAlwaysShowScrollBars(false);
 		lastFullSyncVersion = _lastFullSyncVersion;
-		guiController.backgroundExec(this);
+		scheduledExecutorService.execute(ExecuteBackgroundJob.create(this, getDisplay()));
 	}
 
 	@Override

@@ -19,6 +19,9 @@
  */
 package net.sourceforge.fullsync.impl;
 
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
 import org.apache.commons.cli.CommandLine;
 
 import com.google.inject.AbstractModule;
@@ -49,5 +52,6 @@ public class FullSyncModule extends AbstractModule {
 		bind(ProfileManager.class).to(XmlBackedProfileManager.class);
 		bind(Scheduler.class).to(SchedulerImpl.class);
 		bind(ScheduleTaskSource.class).to(XmlBackedProfileManager.class);
+		bind(ScheduledExecutorService.class).toInstance(new ScheduledThreadPoolExecutor(1));
 	}
 }

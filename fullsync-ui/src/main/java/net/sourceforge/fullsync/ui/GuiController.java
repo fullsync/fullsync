@@ -22,7 +22,7 @@ package net.sourceforge.fullsync.ui;
 import java.io.IOException;
 import java.util.MissingResourceException;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -56,13 +56,13 @@ public class GuiController {
 	private final Provider<WelcomeScreen> welcomeScreenProvider;
 	private final Preferences preferences;
 	private final ProfileManager profileManager;
-	private final ScheduledThreadPoolExecutor executorService;
+	private final ScheduledExecutorService scheduledExecutorService;
 	private ExceptionHandler oldExceptionHandler;
 
 	@Inject
 	private GuiController(FullSync fullSync, Display display, Shell shell, Provider<MainWindow> mainWindowProvider,
 		Provider<SystemTrayItem> systemTrayItemProvider, Provider<WelcomeScreen> welcomeScreenProvider, Preferences preferences,
-		ProfileManager profileManager) {
+		ProfileManager profileManager, ScheduledExecutorService scheduledExecutorService) {
 		this.fullSync = fullSync;
 		this.display = display;
 		this.shell = shell;
@@ -71,7 +71,7 @@ public class GuiController {
 		this.welcomeScreenProvider = welcomeScreenProvider;
 		this.preferences = preferences;
 		this.profileManager = profileManager;
-		executorService = new ScheduledThreadPoolExecutor(1);
+		this.scheduledExecutorService = scheduledExecutorService;
 		String languageCode = preferences.getLanguageCode();
 		try {
 			Messages.setLanguage(languageCode);
@@ -128,7 +128,7 @@ public class GuiController {
 
 	public void run(Injector uiInjector) {
 		startGui();
-		executorService.submit(() -> Main.finishStartup(uiInjector));
+		scheduledExecutorService.submit(() -> Main.finishStartup(uiInjector));
 		while (!display.isDisposed()) {
 			try {
 				if (!display.readAndDispatch()) {
@@ -140,7 +140,6 @@ public class GuiController {
 			}
 		}
 		disposeGui();
-		executorService.shutdown();
 	}
 
 	public void closeGui() {
@@ -235,7 +234,7 @@ public class GuiController {
 	}
 
 	public void backgroundExec(AsyncUIUpdate job) {
-		executorService.execute(new ExecuteBackgroundJob(job, display));
+		scheduledExecutorService.execute(ExecuteBackgroundJob.create(job, display));
 	}
 
 	public static String getTwitterURL() {

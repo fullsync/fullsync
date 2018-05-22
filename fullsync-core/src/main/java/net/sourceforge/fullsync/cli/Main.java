@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -176,6 +178,7 @@ public class Main implements Launcher { // NO_UCD
 		final Injector injector = Guice.createInjector(new FullSyncModule(line, prefrencesFile));
 		final RuntimeConfiguration rtConfig = injector.getInstance(RuntimeConfiguration.class);
 		injector.getInstance(ProfileManager.class).setProfilesFileName(profilesFile);
+		final ScheduledExecutorService scheduledExecutorService = injector.getInstance(ScheduledExecutorService.class);
 
 		if (rtConfig.isDaemon().orElse(false).booleanValue()) {
 			finishStartup(injector);
@@ -184,6 +187,8 @@ public class Main implements Launcher { // NO_UCD
 		else {
 			launcher.launchGui(injector);
 		}
+		scheduledExecutorService.shutdown();
+		scheduledExecutorService.awaitTermination(5, TimeUnit.MINUTES);
 	}
 
 	private static void upgradeLegacyProfilesXmlLocation(String profilesFile) throws IOException {

@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.inject.Inject;
 
@@ -56,7 +57,7 @@ class AboutDialog implements AsyncUIUpdate {
 	private final Shell shell;
 	private final Preferences preferences;
 	private final ImageRepository imageRepository;
-	private final GuiController guiController;
+	private final ScheduledExecutorService scheduledExecutorService;
 	private final List<String> licenseNames = new ArrayList<>();
 	private final List<String> licenseTexts = new ArrayList<>();
 	private int stIndex;
@@ -64,11 +65,11 @@ class AboutDialog implements AsyncUIUpdate {
 	private StyledText licenseText;
 
 	@Inject
-	AboutDialog(Shell shell, Preferences preferences, ImageRepository imageRepository, GuiController guiController) {
+	AboutDialog(Shell shell, Preferences preferences, ImageRepository imageRepository, ScheduledExecutorService scheduledExecutorService) {
 		this.shell = shell;
 		this.preferences = preferences;
 		this.imageRepository = imageRepository;
-		this.guiController = guiController;
+		this.scheduledExecutorService = scheduledExecutorService;
 	}
 
 	void show() {
@@ -156,7 +157,7 @@ class AboutDialog implements AsyncUIUpdate {
 	private Control initChangelogTab(Composite parent) {
 		final Composite tab = new Composite(parent, SWT.FILL);
 		tab.setLayout(new GridLayout(1, true));
-		ChangeLogBox changeLogBox = new ChangeLogBox(tab, "", guiController);
+		ChangeLogBox changeLogBox = new ChangeLogBox(tab, "", scheduledExecutorService);
 		GridData changelogBoxLData = new GridData(GridData.FILL_BOTH);
 		changelogBoxLData.heightHint = 300;
 		changeLogBox.setLayoutData(changelogBoxLData);
@@ -288,7 +289,7 @@ class AboutDialog implements AsyncUIUpdate {
 			int index = componentCombo.getSelectionIndex();
 			licenseText.setText(licenseTexts.get(index));
 		});
-		guiController.backgroundExec(this);
+		scheduledExecutorService.execute(ExecuteBackgroundJob.create(this, parent.getDisplay()));
 		return tab;
 	}
 
