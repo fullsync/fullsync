@@ -28,6 +28,7 @@ import javax.inject.Singleton;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -66,6 +67,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 	public void show() {
 		ImageRepository imageRepository = imageRepositoryProvider.get();
 		trayItem = new TrayItem(shell.getDisplay().getSystemTray(), SWT.NULL);
+		shell.getDisplay().addListener(SWT.Dispose, this::displayDisposed);
 
 		imageList = new Image[2];
 		imageList[0] = imageRepository.getImage("fullsync48.png"); //$NON-NLS-1$
@@ -98,11 +100,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 		trayItem.setVisible(visible);
 	}
 
-	public boolean isDisposed() {
-		return trayItem.isDisposed();
-	}
-
-	public void dispose() {
+	private void displayDisposed(Event e) {
 		taskGeneratorProvider.get().removeTaskGenerationListener(this);
 		trayItem.dispose();
 		menu.dispose();

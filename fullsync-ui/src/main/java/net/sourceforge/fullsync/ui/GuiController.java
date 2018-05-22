@@ -168,10 +168,6 @@ public class GuiController {
 	private void disposeGui() {
 		ExceptionHandler.registerExceptionHandler(oldExceptionHandler);
 		mainWindowProvider.get().dispose();
-		SystemTrayItem systemTrayItem = systemTrayItemProvider.get();
-		if (!systemTrayItem.isDisposed()) {
-			systemTrayItem.dispose();
-		}
 		if ((null != display) && !display.isDisposed()) {
 			display.dispose();
 		}
