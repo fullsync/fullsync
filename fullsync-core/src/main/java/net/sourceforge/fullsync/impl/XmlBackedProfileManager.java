@@ -27,8 +27,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -68,7 +70,7 @@ import net.sourceforge.fullsync.schedule.Scheduler;
 public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManager, ProfileChangeListener {
 	private final Provider<Scheduler> schedulerProvider;
 	private String profilesFileName;
-	private List<Profile> profiles = new ArrayList<>();
+	private Set<Profile> profiles = new TreeSet<>();
 	private List<ProfileListChangeListener> changeListeners = new ArrayList<>();
 	private List<ProfileSchedulerListener> scheduleListeners = new ArrayList<>();
 
@@ -101,7 +103,6 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 			catch (ParserConfigurationException | SAXException | IOException ex) {
 				ExceptionHandler.reportException("Profile loading failed", ex);
 			}
-			Collections.sort(profiles);
 			fireProfilesChangeEvent();
 			return true;
 		}
@@ -171,7 +172,7 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	}
 
 	@Override
-	public List<Profile> getProfiles() {
+	public Collection<Profile> getProfiles() {
 		return profiles;
 	}
 

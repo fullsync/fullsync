@@ -19,7 +19,7 @@
  */
 package net.sourceforge.fullsync;
 
-import java.util.List;
+import java.util.Collection;
 
 import net.sourceforge.fullsync.schedule.ScheduleTask;
 
@@ -37,7 +37,7 @@ public interface ProfileManager {
 
 	void removeProfile(Profile profile);
 
-	List<Profile> getProfiles();
+	Collection<Profile> getProfiles();
 
 	Profile getProfile(String name);
 
