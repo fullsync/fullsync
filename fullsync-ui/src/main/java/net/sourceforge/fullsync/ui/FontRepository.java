@@ -25,9 +25,11 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 
 @Singleton
 public class FontRepository {
@@ -65,6 +67,7 @@ public class FontRepository {
 	@Inject
 	public FontRepository(Display display) {
 		this.device = display;
+		display.addListener(SWT.Dispose, this::dispose);
 	}
 
 	public Font getFont(String name, int height, int style) {
@@ -72,7 +75,7 @@ public class FontRepository {
 		return cache.computeIfAbsent(key, k -> new Font(device, k.name, k.height, k.style));
 	}
 
-	public void dispose() {
+	private void dispose(Event e) {
 		for (Font f : cache.values()) {
 			f.dispose();
 		}

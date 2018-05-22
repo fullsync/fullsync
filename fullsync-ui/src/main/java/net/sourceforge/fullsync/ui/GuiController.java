@@ -51,8 +51,6 @@ public class GuiController {
 	private final FullSync fullSync;
 	private final Display display;
 	private final Shell shell;
-	private final Provider<ImageRepository> imageRepositoryProvider;
-	private final Provider<FontRepository> fontRepositoryProvider;
 	private final Provider<MainWindow> mainWindowProvider;
 	private final Provider<SystemTrayItem> systemTrayItemProvider;
 	private final Provider<WelcomeScreen> welcomeScreenProvider;
@@ -62,15 +60,12 @@ public class GuiController {
 	private ExceptionHandler oldExceptionHandler;
 
 	@Inject
-	private GuiController(FullSync fullSync, Display display, Shell shell, Provider<ImageRepository> imageRepositoryProvider,
-		Provider<FontRepository> fontRepositoryProvider, Provider<MainWindow> mainWindowProvider,
+	private GuiController(FullSync fullSync, Display display, Shell shell, Provider<MainWindow> mainWindowProvider,
 		Provider<SystemTrayItem> systemTrayItemProvider, Provider<WelcomeScreen> welcomeScreenProvider, Preferences preferences,
 		ProfileManager profileManager) {
 		this.fullSync = fullSync;
 		this.display = display;
 		this.shell = shell;
-		this.imageRepositoryProvider = imageRepositoryProvider;
-		this.fontRepositoryProvider = fontRepositoryProvider;
 		this.mainWindowProvider = mainWindowProvider;
 		this.systemTrayItemProvider = systemTrayItemProvider;
 		this.welcomeScreenProvider = welcomeScreenProvider;
@@ -173,8 +168,6 @@ public class GuiController {
 	private void disposeGui() {
 		ExceptionHandler.registerExceptionHandler(oldExceptionHandler);
 		mainWindowProvider.get().dispose();
-		imageRepositoryProvider.get().dispose();
-		fontRepositoryProvider.get().dispose();
 		SystemTrayItem systemTrayItem = systemTrayItemProvider.get();
 		if (!systemTrayItem.isDisposed()) {
 			systemTrayItem.dispose();

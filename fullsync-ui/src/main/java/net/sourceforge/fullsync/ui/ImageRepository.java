@@ -25,8 +25,10 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 
 @Singleton
 public class ImageRepository {
@@ -36,6 +38,7 @@ public class ImageRepository {
 	@Inject
 	public ImageRepository(Display display) {
 		this.display = display;
+		display.addListener(SWT.Dispose, this::dispose);
 	}
 
 	public Image getImage(String imageName) {
@@ -46,7 +49,7 @@ public class ImageRepository {
 		return img;
 	}
 
-	public void dispose() {
+	private void dispose(Event e) {
 		for (Image i : cache.values()) {
 			if (!i.isDisposed()) {
 				i.dispose();
