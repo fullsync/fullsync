@@ -78,10 +78,6 @@ public class GuiController {
 		}
 	}
 
-	public Preferences getPreferences() {
-		return preferences;
-	}
-
 	private void startGui() {
 		oldExceptionHandler = ExceptionHandler.registerExceptionHandler(new ExceptionHandler() {
 			@Override

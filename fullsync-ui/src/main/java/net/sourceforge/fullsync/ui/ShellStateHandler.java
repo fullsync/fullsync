@@ -30,20 +30,22 @@ import net.sourceforge.fullsync.WindowState;
 public class ShellStateHandler {
 	private final Preferences preferences;
 	private final String name;
+	private final Shell shell;
 
 	public ShellStateHandler(Preferences preferences, String name, Shell shell) {
 		this.preferences = preferences;
 		this.name = name;
+		this.shell = shell;
 		shell.addListener(SWT.Close, this::shellClosed);
 		shell.setVisible(false);
-		shell.getDisplay().asyncExec(() -> applyPreferences(shell));
+		shell.getDisplay().asyncExec(this::applyPreferences);
 	}
 
 	public static void apply(Preferences preferences, Shell shell, Class<?> clazz) {
 		new ShellStateHandler(preferences, clazz.getSimpleName(), shell);
 	}
 
-	private void applyPreferences(Shell shell) {
+	private void applyPreferences() {
 		WindowState ws = preferences.getWindowState(name);
 		shell.setVisible(true);
 		Rectangle r = shell.getDisplay().getBounds();
@@ -59,7 +61,6 @@ public class ShellStateHandler {
 	}
 
 	private void shellClosed(Event event) {
-		Shell shell = (Shell) event.widget;
 		WindowState ws = new WindowState();
 		ws.setMaximized(shell.getMaximized());
 		ws.setMinimized(shell.getMinimized());
