@@ -28,6 +28,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -62,7 +63,7 @@ import net.sourceforge.fullsync.schedule.Scheduler;
 
 @Singleton
 class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
-	private final GuiController guiController;
+	private final Display display;
 	private final ImageRepository imageRepository;
 	private final FontRepository fontRepository;
 	private final ProfileManager profileManager;
@@ -93,13 +94,13 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	private GUIUpdateQueue<String> statusLineText;
 
 	@Inject
-	MainWindow(GuiController guiController, ImageRepository imageRepository, FontRepository fontRepository, Shell shell,
-		ProfileManager profileManager, TaskGenerator taskGenerator, Scheduler scheduler, Display display,
-		RuntimeConfiguration runtimeConfiguration, Preferences preferences, Provider<PreferencesPage> preferencesPageProvider,
-		Provider<Synchronizer> synchronizerProvider, Provider<ImportProfilesPage> importProfilesPageProvider,
-		Provider<SystemStatusPage> systemStatusPageProvider, Provider<AboutDialog> aboutDialogProvider,
-		Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider, Provider<TaskDecisionPage> taskDecisionPageProvider) {
-		this.guiController = guiController;
+	MainWindow(Display display, ImageRepository imageRepository, FontRepository fontRepository, Shell shell, ProfileManager profileManager,
+		TaskGenerator taskGenerator, Scheduler scheduler, RuntimeConfiguration runtimeConfiguration, Preferences preferences,
+		Provider<PreferencesPage> preferencesPageProvider, Provider<Synchronizer> synchronizerProvider,
+		Provider<ImportProfilesPage> importProfilesPageProvider, Provider<SystemStatusPage> systemStatusPageProvider,
+		Provider<AboutDialog> aboutDialogProvider, Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider,
+		Provider<TaskDecisionPage> taskDecisionPageProvider) {
+		this.display = display;
 		this.imageRepository = imageRepository;
 		this.fontRepository = fontRepository;
 		this.profileManager = profileManager;
@@ -122,7 +123,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 				minimizeToTray();
 			}
 			else {
-				guiController.closeGui();
+				closeGui();
 			}
 		});
 
@@ -357,7 +358,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		MenuItem menuItemExitProfile = new MenuItem(menuFile, SWT.PUSH);
 		menuItemExitProfile.setText(Messages.getString("MainWindow.Exit_Menu")); //$NON-NLS-1$
 		menuItemExitProfile.setAccelerator(SWT.CTRL + 'Q');
-		menuItemExitProfile.addListener(SWT.Selection, e -> Display.getCurrent().asyncExec(guiController::closeGui));
+		menuItemExitProfile.addListener(SWT.Selection, e -> Display.getCurrent().asyncExec(this::closeGui));
 
 		MenuItem menuItemEdit = new MenuItem(menuBarMainWindow, SWT.CASCADE);
 		menuItemEdit.setText(Messages.getString("MainWindow.Edit_Menu")); //$NON-NLS-1$
@@ -510,7 +511,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	}
 
 	private synchronized void doRunProfile(Profile p, boolean interactive) {
-		guiController.showBusyCursor(true);
+		showBusyCursor(true);
 		try {
 			Synchronizer synchronizer = synchronizerProvider.get();
 			statusLineText.add(Messages.getString("MainWindow.Starting_Profile") + p.getName() + "..."); //$NON-NLS-1$ //$NON-NLS-2$
@@ -538,7 +539,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 			ExceptionHandler.reportException(e);
 		}
 		finally {
-			guiController.showBusyCursor(false);
+			showBusyCursor(false);
 		}
 	}
 
@@ -576,9 +577,43 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		// TODO make sure Tray is visible here
 	}
 
-	public void dispose() {
-		if (!mainComposite.isDisposed()) {
-			mainComposite.getShell().dispose();
+	// TODO the busy cursor should be applied only to the window that is busy
+	// difficulty: getShell() can only be accessed by the display thread :-/
+	public void showBusyCursor(final boolean show) {
+		display.asyncExec(() -> {
+			try {
+				Cursor cursor = show ? display.getSystemCursor(SWT.CURSOR_WAIT) : null;
+				Shell[] shells = display.getShells();
+
+				for (Shell shell : shells) {
+					shell.setCursor(cursor);
+				}
+			}
+			catch (Exception ex) {
+				ExceptionHandler.reportException(ex);
+			}
+		});
+	}
+
+	public void closeGui() {
+		// TODO before closing anything we need to find out whether there are operations
+		// currently running / windows open that should/may not be closed
+
+		// Close the application, but give him a chance to
+		// confirm his action first
+		if ((null != profileManager.getNextScheduleTask()) && preferences.confirmExit()) {
+			MessageBox mb = new MessageBox(mainComposite.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
+			String doYouWantToQuit = Messages.getString("GuiController.Do_You_Want_To_Quit"); //$NON-NLS-1$
+			String scheduleIsStopped = Messages.getString("GuiController.Schedule_is_stopped"); //$NON-NLS-1$
+			mb.setMessage(String.format("%s%n%s", doYouWantToQuit, scheduleIsStopped)); //$NON-NLS-1$
+
+			// check whether the user really wants to close
+			if (mb.open() != SWT.YES) {
+				return;
+			}
 		}
+		storeWindowState();
+		display.dispose();
 	}
 }

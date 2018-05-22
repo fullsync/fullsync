@@ -43,15 +43,15 @@ import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskTree;
 
 public class TaskDecisionPage extends WizardDialog {
-	private GuiController guiController;
+	private final Display display;
+	private final Synchronizer synchronizer;
+	private final MainWindow mainWindow;
 	private TaskTree taskTree;
 	private boolean interactive = true;
 	private boolean processing;
 	private int tasksFinished;
 	private int tasksTotal;
 
-	private final Synchronizer synchronizer;
-	private final Display display;
 	private final Color colorFinishedSuccessful;
 	private final Color colorFinishedUnsuccessful;
 
@@ -60,11 +60,11 @@ public class TaskDecisionPage extends WizardDialog {
 	private Label labelProgress;
 
 	@Inject
-	public TaskDecisionPage(Shell shell, Display display, Synchronizer synchronizer, GuiController guiController) {
+	public TaskDecisionPage(Shell shell, Display display, Synchronizer synchronizer, MainWindow mainWindow) {
 		super(shell);
 		this.display = display;
 		this.synchronizer = synchronizer;
-		this.guiController = guiController;
+		this.mainWindow = mainWindow;
 		colorFinishedSuccessful = new Color(display, 150, 255, 150);
 		colorFinishedUnsuccessful = new Color(display, 255, 150, 150);
 		shell.addDisposeListener(e -> {
@@ -190,7 +190,7 @@ public class TaskDecisionPage extends WizardDialog {
 	}
 
 	private void doPerformActions() {
-		guiController.showBusyCursor(true);
+		mainWindow.showBusyCursor(true);
 		try {
 			processing = true;
 			list.setChangeAllowed(false);
@@ -217,7 +217,7 @@ public class TaskDecisionPage extends WizardDialog {
 			ExceptionHandler.reportException(e);
 		}
 		finally {
-			guiController.showBusyCursor(false);
+			mainWindow.showBusyCursor(false);
 			processing = false;
 			list.setChangeAllowed(true);
 		}

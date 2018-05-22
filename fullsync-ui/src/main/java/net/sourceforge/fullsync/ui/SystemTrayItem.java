@@ -43,7 +43,6 @@ import net.sourceforge.fullsync.fs.File;
 @Singleton
 public class SystemTrayItem implements TaskGenerationListener {
 	private final Shell shell;
-	private final Provider<GuiController> guiControllerProvider;
 	private final Provider<ImageRepository> imageRepositoryProvider;
 	private final Provider<MainWindow> mainWindowProvider;
 	private final Provider<TaskGenerator> taskGeneratorProvider;
@@ -55,10 +54,9 @@ public class SystemTrayItem implements TaskGenerationListener {
 	private boolean isBusy;
 
 	@Inject
-	public SystemTrayItem(Shell shell, Provider<GuiController> guiControllerProvider, Provider<ImageRepository> imageRepositoryProvider,
-		Provider<MainWindow> mainWindowProvider, Provider<TaskGenerator> taskGeneratorProvider) {
+	public SystemTrayItem(Shell shell, Provider<ImageRepository> imageRepositoryProvider, Provider<MainWindow> mainWindowProvider,
+		Provider<TaskGenerator> taskGeneratorProvider) {
 		this.shell = shell;
-		this.guiControllerProvider = guiControllerProvider;
 		this.imageRepositoryProvider = imageRepositoryProvider;
 		this.mainWindowProvider = mainWindowProvider;
 		this.taskGeneratorProvider = taskGeneratorProvider;
@@ -91,7 +89,7 @@ public class SystemTrayItem implements TaskGenerationListener {
 
 		item = new MenuItem(menu, SWT.NULL);
 		item.setText(Messages.getString("SystemTrayItem.Exit")); //$NON-NLS-1$
-		item.addListener(SWT.Selection, e -> guiControllerProvider.get().closeGui());
+		item.addListener(SWT.Selection, e -> mainWindowProvider.get().closeGui());
 
 		taskGeneratorProvider.get().addTaskGenerationListener(this);
 	}

@@ -30,9 +30,9 @@ import javax.inject.Singleton;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -42,7 +42,6 @@ import com.google.inject.Injector;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Preferences;
-import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.cli.Main;
 
@@ -55,14 +54,13 @@ public class GuiController {
 	private final Provider<SystemTrayItem> systemTrayItemProvider;
 	private final Provider<WelcomeScreen> welcomeScreenProvider;
 	private final Preferences preferences;
-	private final ProfileManager profileManager;
 	private final ScheduledExecutorService scheduledExecutorService;
 	private ExceptionHandler oldExceptionHandler;
 
 	@Inject
-	private GuiController(FullSync fullSync, Display display, Shell shell, Provider<MainWindow> mainWindowProvider,
-		Provider<SystemTrayItem> systemTrayItemProvider, Provider<WelcomeScreen> welcomeScreenProvider, Preferences preferences,
-		ProfileManager profileManager, ScheduledExecutorService scheduledExecutorService) {
+	private GuiController(FullSync fullSync, ScheduledExecutorService scheduledExecutorService, Display display, Shell shell,
+		Provider<MainWindow> mainWindowProvider, Provider<SystemTrayItem> systemTrayItemProvider,
+		Provider<WelcomeScreen> welcomeScreenProvider, Preferences preferences) {
 		this.fullSync = fullSync;
 		this.display = display;
 		this.shell = shell;
@@ -70,7 +68,6 @@ public class GuiController {
 		this.systemTrayItemProvider = systemTrayItemProvider;
 		this.welcomeScreenProvider = welcomeScreenProvider;
 		this.preferences = preferences;
-		this.profileManager = profileManager;
 		this.scheduledExecutorService = scheduledExecutorService;
 		String languageCode = preferences.getLanguageCode();
 		try {
@@ -94,6 +91,7 @@ public class GuiController {
 				display.syncExec(() -> new ExceptionDialog(shell, message, exception));
 			}
 		});
+		display.addListener(SWT.Dispose, this::disposeGui);
 		fullSync.pushQuestionHandler(this::showQuestion);
 		mainWindowProvider.get();
 		systemTrayItemProvider.get().show();
@@ -139,55 +137,10 @@ public class GuiController {
 				ex.printStackTrace();
 			}
 		}
-		disposeGui();
 	}
 
-	public void closeGui() {
-		// TODO before closing anything we need to find out whether there are operations
-		// currently running / windows open that should/may not be closed
-
-		// Close the application, but give him a chance to
-		// confirm his action first
-		if ((null != profileManager.getNextScheduleTask()) && preferences.confirmExit()) {
-			MessageBox mb = new MessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
-			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
-			String doYouWantToQuit = Messages.getString("GuiController.Do_You_Want_To_Quit"); //$NON-NLS-1$
-			String scheduleIsStopped = Messages.getString("GuiController.Schedule_is_stopped"); //$NON-NLS-1$
-			mb.setMessage(String.format("%s%n%s", doYouWantToQuit, scheduleIsStopped)); //$NON-NLS-1$
-
-			// check whether the user really wants to close
-			if (mb.open() != SWT.YES) {
-				return;
-			}
-		}
-		mainWindowProvider.get().storeWindowState();
-		disposeGui();
-	}
-
-	private void disposeGui() {
+	private void disposeGui(Event e) {
 		ExceptionHandler.registerExceptionHandler(oldExceptionHandler);
-		mainWindowProvider.get().dispose();
-		if ((null != display) && !display.isDisposed()) {
-			display.dispose();
-		}
-	}
-
-	// TODO the busy cursor should be applied only to the window that is busy
-	// difficulty: getShell() can only be accessed by the display thread :-/
-	public void showBusyCursor(final boolean show) {
-		display.asyncExec(() -> {
-			try {
-				Cursor cursor = show ? display.getSystemCursor(SWT.CURSOR_WAIT) : null;
-				Shell[] shells = display.getShells();
-
-				for (Shell shell : shells) {
-					shell.setCursor(cursor);
-				}
-			}
-			catch (Exception ex) {
-				ExceptionHandler.reportException(ex);
-			}
-		});
 	}
 
 	public static void launchProgram(final String uri) {
