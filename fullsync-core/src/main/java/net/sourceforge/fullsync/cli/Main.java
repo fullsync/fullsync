@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.cli.CommandLine;
@@ -44,6 +45,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -180,15 +183,31 @@ public class Main implements Launcher { // NO_UCD
 		injector.getInstance(ProfileManager.class).setProfilesFileName(profilesFile);
 		final ScheduledExecutorService scheduledExecutorService = injector.getInstance(ScheduledExecutorService.class);
 
-		if (rtConfig.isDaemon().orElse(false).booleanValue()) {
+		final Semaphore sem = new Semaphore(0);
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			Logger logger = LoggerFactory.getLogger(Main.class);
+			logger.debug("shutdown hook called, starting orderly shutdown");
+			//TODO: dispatch shutdown event to notify running stuff about VM termination
+			scheduledExecutorService.shutdown();
+			try {
+				scheduledExecutorService.awaitTermination(5, TimeUnit.MINUTES);
+			}
+			catch (InterruptedException e) {
+				// not relevant
+			}
+			logger.debug("shutdown hook finished, releaseing main thread semaphore");
+			sem.release();
+		}));
+		if (rtConfig.isDaemon().orElse(false).booleanValue() || rtConfig.getProfileToRun().isPresent()) {
 			finishStartup(injector);
-			//TODO: keep process running here
+			sem.acquireUninterruptibly();
+			System.exit(0);
 		}
 		else {
 			launcher.launchGui(injector);
+			System.exit(0);
+			sem.acquireUninterruptibly();
 		}
-		scheduledExecutorService.shutdown();
-		scheduledExecutorService.awaitTermination(5, TimeUnit.MINUTES);
 	}
 
 	private static void upgradeLegacyProfilesXmlLocation(String profilesFile) throws IOException {
