@@ -26,13 +26,7 @@ public interface Scheduler {
 
 	void stop();
 
-	boolean isRunning();
-
 	boolean isEnabled();
-
-	void setSource(ScheduleTaskSource source);
-
-	ScheduleTaskSource getSource();
 
 	void addSchedulerChangeListener(SchedulerChangeListener listener);
 

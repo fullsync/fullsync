@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class SchedulerImpl implements Scheduler, Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerImpl.class);
-	private ScheduleTaskSource scheduleSource;
+	private final ScheduleTaskSource scheduleSource;
 	private final ScheduledExecutorService scheduledExecutorService;
 	private Thread worker;
 	private boolean running;
@@ -44,16 +44,6 @@ public class SchedulerImpl implements Scheduler, Runnable {
 	public SchedulerImpl(ScheduleTaskSource source, ScheduledExecutorService scheduledExecutorService) {
 		scheduleSource = source;
 		this.scheduledExecutorService = scheduledExecutorService;
-	}
-
-	@Override
-	public void setSource(ScheduleTaskSource source) {
-		scheduleSource = source;
-	}
-
-	@Override
-	public ScheduleTaskSource getSource() {
-		return scheduleSource;
 	}
 
 	@Override
@@ -70,11 +60,6 @@ public class SchedulerImpl implements Scheduler, Runnable {
 		for (SchedulerChangeListener listener : schedulerListeners) {
 			listener.schedulerStatusChanged(enabled);
 		}
-	}
-
-	@Override
-	public boolean isRunning() {
-		return running;
 	}
 
 	@Override
@@ -147,7 +132,6 @@ public class SchedulerImpl implements Scheduler, Runnable {
 			catch (InterruptedException ex) {
 				ex.printStackTrace();
 			}
-
 		}
 		running = false;
 		if (enabled) {
