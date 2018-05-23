@@ -21,6 +21,7 @@ package net.sourceforge.fullsync.schedule;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 public class SchedulerImpl implements Scheduler, Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerImpl.class);
 	private ScheduleTaskSource scheduleSource;
+	private final ScheduledExecutorService scheduledExecutorService;
 	private Thread worker;
 	private boolean running;
 	private boolean enabled;
@@ -39,8 +41,9 @@ public class SchedulerImpl implements Scheduler, Runnable {
 	private List<SchedulerChangeListener> schedulerListeners = new ArrayList<>();
 
 	@Inject
-	public SchedulerImpl(ScheduleTaskSource source) {
+	public SchedulerImpl(ScheduleTaskSource source, ScheduledExecutorService scheduledExecutorService) {
 		scheduleSource = source;
+		this.scheduledExecutorService = scheduledExecutorService;
 	}
 
 	@Override
@@ -139,7 +142,7 @@ public class SchedulerImpl implements Scheduler, Runnable {
 					Thread.sleep(nextTime - now);
 				}
 				logger.debug("Running task {}", task);
-				task.run();
+				scheduledExecutorService.submit(task);
 			}
 			catch (InterruptedException ex) {
 				ex.printStackTrace();

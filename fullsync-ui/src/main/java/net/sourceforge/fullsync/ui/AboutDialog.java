@@ -289,7 +289,7 @@ class AboutDialog implements AsyncUIUpdate {
 			int index = componentCombo.getSelectionIndex();
 			licenseText.setText(licenseTexts.get(index));
 		});
-		scheduledExecutorService.execute(ExecuteBackgroundJob.create(this, parent.getDisplay()));
+		scheduledExecutorService.submit(ExecuteBackgroundJob.create(this, parent.getDisplay()));
 		return tab;
 	}
 

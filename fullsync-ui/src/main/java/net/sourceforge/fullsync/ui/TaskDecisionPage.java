@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui;
 
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.inject.Inject;
 
@@ -46,6 +47,7 @@ public class TaskDecisionPage extends WizardDialog {
 	private final Display display;
 	private final Synchronizer synchronizer;
 	private final MainWindow mainWindow;
+	private final ScheduledExecutorService scheduledExecutorService;
 	private TaskTree taskTree;
 	private boolean interactive = true;
 	private boolean processing;
@@ -60,11 +62,13 @@ public class TaskDecisionPage extends WizardDialog {
 	private Label labelProgress;
 
 	@Inject
-	public TaskDecisionPage(Shell shell, Display display, Synchronizer synchronizer, MainWindow mainWindow) {
+	public TaskDecisionPage(Shell shell, Display display, Synchronizer synchronizer, MainWindow mainWindow,
+		ScheduledExecutorService scheduledExecutorService) {
 		super(shell);
 		this.display = display;
 		this.synchronizer = synchronizer;
 		this.mainWindow = mainWindow;
+		this.scheduledExecutorService = scheduledExecutorService;
 		colorFinishedSuccessful = new Color(display, 150, 255, 150);
 		colorFinishedUnsuccessful = new Color(display, 255, 150, 150);
 		shell.addDisposeListener(e -> {
@@ -185,8 +189,7 @@ public class TaskDecisionPage extends WizardDialog {
 	}
 
 	void performActions() {
-		Thread worker = new Thread(this::doPerformActions, "ActionPerformer"); //$NON-NLS-1$
-		worker.start();
+		scheduledExecutorService.submit(this::doPerformActions);
 	}
 
 	private void doPerformActions() {

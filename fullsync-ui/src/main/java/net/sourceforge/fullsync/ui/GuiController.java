@@ -183,7 +183,7 @@ public class GuiController {
 	}
 
 	public void backgroundExec(AsyncUIUpdate job) {
-		scheduledExecutorService.execute(ExecuteBackgroundJob.create(job, display));
+		scheduledExecutorService.submit(ExecuteBackgroundJob.create(job, display));
 	}
 
 	public static String getTwitterURL() {

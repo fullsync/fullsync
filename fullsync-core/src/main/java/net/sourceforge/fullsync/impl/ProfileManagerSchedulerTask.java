@@ -35,9 +35,8 @@ class ProfileManagerSchedulerTask implements ScheduleTask {
 
 	@Override
 	public void run() {
-		Thread worker = new Thread(() -> profileManager.fireProfileSchedulerEvent(profile));
-		worker.start();
 		profile.getSchedule().setLastOccurrence(System.currentTimeMillis());
+		profileManager.fireProfileSchedulerEvent(profile);
 	}
 
 	@Override

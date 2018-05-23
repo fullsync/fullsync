@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.ui;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -69,6 +70,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	private final ProfileManager profileManager;
 	private final Scheduler scheduler;
 	private final Preferences preferences;
+	private final ScheduledExecutorService scheduledExecutorService;
 	private final Provider<PreferencesPage> preferencesPageProvider;
 	private final Provider<Synchronizer> synchronizerProvider;
 	private final Provider<ImportProfilesPage> importProfilesPageProvider;
@@ -96,16 +98,17 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	@Inject
 	MainWindow(Display display, ImageRepository imageRepository, FontRepository fontRepository, Shell shell, ProfileManager profileManager,
 		TaskGenerator taskGenerator, Scheduler scheduler, RuntimeConfiguration runtimeConfiguration, Preferences preferences,
-		Provider<PreferencesPage> preferencesPageProvider, Provider<Synchronizer> synchronizerProvider,
-		Provider<ImportProfilesPage> importProfilesPageProvider, Provider<SystemStatusPage> systemStatusPageProvider,
-		Provider<AboutDialog> aboutDialogProvider, Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider,
-		Provider<TaskDecisionPage> taskDecisionPageProvider) {
+		ScheduledExecutorService scheduledExecutorService, Provider<PreferencesPage> preferencesPageProvider,
+		Provider<Synchronizer> synchronizerProvider, Provider<ImportProfilesPage> importProfilesPageProvider,
+		Provider<SystemStatusPage> systemStatusPageProvider, Provider<AboutDialog> aboutDialogProvider,
+		Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider, Provider<TaskDecisionPage> taskDecisionPageProvider) {
 		this.display = display;
 		this.imageRepository = imageRepository;
 		this.fontRepository = fontRepository;
 		this.profileManager = profileManager;
 		this.scheduler = scheduler;
 		this.preferences = preferences;
+		this.scheduledExecutorService = scheduledExecutorService;
 		this.preferencesPageProvider = preferencesPageProvider;
 		this.synchronizerProvider = synchronizerProvider;
 		this.importProfilesPageProvider = importProfilesPageProvider;
@@ -505,8 +508,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 					return;
 				}
 			}
-			Thread worker = new Thread(() -> doRunProfile(p, interactive));
-			worker.start();
+			scheduledExecutorService.submit(() -> doRunProfile(p, interactive));
 		}
 	}
 
