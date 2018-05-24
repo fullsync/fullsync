@@ -367,7 +367,7 @@ if (System.env.'CI') {
 
 	tasks.sonarqube {
 		onlyIf {
-			System.properties.'sonar.organization'
+			System.properties.'sonar.organization' || System.env.SCRUTINIZER
 		}
 	}
 }
