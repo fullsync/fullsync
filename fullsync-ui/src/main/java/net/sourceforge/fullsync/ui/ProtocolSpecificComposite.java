@@ -30,6 +30,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -66,7 +67,7 @@ abstract class ProtocolSpecificComposite {
 		textPath.setLayoutData(gridData);
 		buttonBrowse = new Button(parent, SWT.NONE);
 		buttonBrowse.setText("...");
-		buttonBrowse.addListener(SWT.Selection, e -> onBrowse());
+		buttonBrowse.addListener(SWT.Selection, this::onBrowse);
 		buttonBuffered = new Button(parent, SWT.CHECK | SWT.LEFT);
 		GridData buttonDestinationBufferedData = new GridData();
 		buttonDestinationBufferedData.horizontalSpan = 3;
@@ -98,10 +99,10 @@ abstract class ProtocolSpecificComposite {
 		textPath.setText(path);
 	}
 
-	/**
-	 * onBrowse
-	 * open a browse dialog and let the user choose a path.
-	 */
+	private void onBrowse(Event e) {
+		onBrowse();
+	}
+
 	public void onBrowse() {
 		try {
 			ConnectionDescription desc = getConnectionDescription().build();

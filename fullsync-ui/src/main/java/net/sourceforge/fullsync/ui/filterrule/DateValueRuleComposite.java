@@ -26,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.SystemDate;
@@ -56,12 +57,14 @@ class DateValueRuleComposite extends RuleComposite {
 
 		buttonCalendar = new Button(this, SWT.PUSH | SWT.CENTER);
 		buttonCalendar.setText("Choose Date...");
-		buttonCalendar.addListener(SWT.Selection, e -> {
-			SWTCalendarDialog swtCalDialog = new SWTCalendarDialog(getDisplay().getActiveShell(), value);
-			swtCalDialog.open();
-			value = swtCalDialog.getDate();
-			textValue.setText(dateFormat.format(value));
-		});
+		buttonCalendar.addListener(SWT.Selection, this::onChooseDate);
+	}
+
+	private void onChooseDate(Event e) {
+		SWTCalendarDialog swtCalDialog = new SWTCalendarDialog(getDisplay().getActiveShell(), value);
+		swtCalDialog.open();
+		value = swtCalDialog.getDate();
+		textValue.setText(dateFormat.format(value));
 	}
 
 	@Override

@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.ExceptionHandler;
@@ -63,23 +64,25 @@ class SubfilterRuleComposite extends RuleComposite {
 		Button buttonFilter = new Button(this, SWT.PUSH);
 		buttonFilter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		buttonFilter.setText("Set Filter...");
-		buttonFilter.addListener(SWT.Selection, evt -> {
-			try {
-				FileFilterPage dialog = fileFilterPageProvider.get();
-				dialog.setParent(getShell());
-				dialog.setFileFilter(value);
-				dialog.show();
-				FileFilter newfilter = dialog.getFileFilter();
-				if (null != newfilter) {
-					value = newfilter;
-					textValue.setText(value.toString());
-					textValue.setToolTipText(value.toString());
-				}
+		buttonFilter.addListener(SWT.Selection, this::onEditSubfilter);
+	}
+
+	private void onEditSubfilter(Event e) {
+		try {
+			FileFilterPage dialog = fileFilterPageProvider.get();
+			dialog.setParent(getShell());
+			dialog.setFileFilter(value);
+			dialog.show();
+			FileFilter newfilter = dialog.getFileFilter();
+			if (null != newfilter) {
+				value = newfilter;
+				textValue.setText(value.toString());
+				textValue.setToolTipText(value.toString());
 			}
-			catch (Exception e) {
-				ExceptionHandler.reportException(e);
-			}
-		});
+		}
+		catch (Exception ex) {
+			ExceptionHandler.reportException(ex);
+		}
 	}
 
 	@Override

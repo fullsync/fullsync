@@ -22,8 +22,6 @@ package net.sourceforge.fullsync.ui.filterrule;
 import static org.eclipse.swt.events.SelectionListener.widgetDefaultSelectedAdapter;
 import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
 
-import java.util.function.Consumer;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -35,6 +33,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 class TypeValueRuleComposite extends RuleComposite {
 	private TypeValue.Type value = TypeValue.Type.FILE;
+	private Combo comboTypes;
 
 	TypeValueRuleComposite(Composite parent, final TypeValue initialValue) {
 		super(parent);
@@ -46,16 +45,17 @@ class TypeValueRuleComposite extends RuleComposite {
 
 	private void render(Composite parent) {
 		this.setLayout(new FillLayout());
-		Combo comboTypes = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
+		comboTypes = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
 		for (TypeValue.Type type : TypeValue.Type.values()) {
 			comboTypes.add(type.name());
 		}
 		comboTypes.select(value.ordinal());
-		Consumer<SelectionEvent> comboSelectionListener = e -> {
-			value = TypeValue.Type.values()[comboTypes.getSelectionIndex()];
-		};
-		comboTypes.addSelectionListener(widgetSelectedAdapter(comboSelectionListener));
-		comboTypes.addSelectionListener(widgetDefaultSelectedAdapter(comboSelectionListener));
+		comboTypes.addSelectionListener(widgetSelectedAdapter(this::onTypeChanged));
+		comboTypes.addSelectionListener(widgetDefaultSelectedAdapter(this::onTypeChanged));
+	}
+
+	private void onTypeChanged(SelectionEvent e) {
+		value = TypeValue.Type.values()[comboTypes.getSelectionIndex()];
 	}
 
 	@Override

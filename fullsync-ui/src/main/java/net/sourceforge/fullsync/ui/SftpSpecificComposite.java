@@ -24,7 +24,6 @@ import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.function.Consumer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -98,14 +97,8 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 		GridData radioKeybasedData = new GridData();
 		radioKeybasedData.horizontalSpan = 3;
 		buttonKeybased.setLayoutData(radioKeybasedData);
-		Consumer<SelectionEvent> keybasedSelectionListener = e -> {
-			boolean enabled = buttonKeybased.getSelection();
-			labelKeyPassphrase.setEnabled(enabled);
-			textKeyPassphrase.setEnabled(enabled);
-		};
-
-		buttonKeybased.addSelectionListener(widgetDefaultSelectedAdapter(keybasedSelectionListener));
-		buttonKeybased.addSelectionListener(widgetSelectedAdapter(keybasedSelectionListener));
+		buttonKeybased.addSelectionListener(widgetDefaultSelectedAdapter(this::toggleKeybasedAuthentication));
+		buttonKeybased.addSelectionListener(widgetSelectedAdapter(this::toggleKeybasedAuthentication));
 
 		labelKeyPassphrase = new Label(m_parent, SWT.NONE);
 		labelKeyPassphrase.setText(Messages.getString("ProtocolSpecificComposite.KeyPassphrase"));
@@ -115,6 +108,12 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 		textKeyPassphraseData.horizontalSpan = 2;
 		textKeyPassphrase.setLayoutData(textKeyPassphraseData);
 		super.createGUI(parent);
+	}
+
+	private void toggleKeybasedAuthentication(SelectionEvent e) {
+		boolean enabled = buttonKeybased.getSelection();
+		labelKeyPassphrase.setEnabled(enabled);
+		textKeyPassphrase.setEnabled(enabled);
 	}
 
 	@Override

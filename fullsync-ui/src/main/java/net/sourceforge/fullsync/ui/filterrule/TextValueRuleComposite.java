@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.ui.filterrule;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -41,10 +42,12 @@ class TextValueRuleComposite extends RuleComposite {
 	private void render(Composite parent) {
 		this.setLayout(new FillLayout());
 		textValue = new Text(this, SWT.BORDER);
-		textValue.addModifyListener(e -> {
-			value = textValue.getText();
-		});
+		textValue.addModifyListener(this::onTextValueChanged);
 		textValue.setText(value.toString());
+	}
+
+	private void onTextValueChanged(ModifyEvent e) {
+		value = textValue.getText();
 	}
 
 	@Override

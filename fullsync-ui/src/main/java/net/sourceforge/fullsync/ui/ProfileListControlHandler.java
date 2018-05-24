@@ -19,11 +19,9 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.util.EventListener;
-
 import net.sourceforge.fullsync.Profile;
 
-public interface ProfileListControlHandler extends EventListener {
+public interface ProfileListControlHandler {
 	void createNewProfile();
 
 	void runProfile(Profile profile, boolean interactive);

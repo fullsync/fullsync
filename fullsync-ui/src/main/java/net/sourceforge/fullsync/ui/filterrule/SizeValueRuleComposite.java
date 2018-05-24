@@ -22,8 +22,6 @@ package net.sourceforge.fullsync.ui.filterrule;
 import static org.eclipse.swt.events.SelectionListener.widgetDefaultSelectedAdapter;
 import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
 
-import java.util.function.Consumer;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.SelectionEvent;
@@ -39,6 +37,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 class SizeValueRuleComposite extends RuleComposite {
 	private SizeValue.Unit unit = SizeValue.Unit.BYTES;
 	private double value = 0.0;
+	private Combo comboUnits;
 
 	SizeValueRuleComposite(Composite parent, final SizeValue initialValue) {
 		super(parent);
@@ -53,7 +52,7 @@ class SizeValueRuleComposite extends RuleComposite {
 		this.setLayout(new FillLayout());
 
 		textValue = new Text(this, SWT.BORDER);
-		Combo comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.FILL);
+		comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.FILL);
 
 		textValue.setText(String.valueOf(value));
 		textValue.addModifyListener(this::textValueChanged);
@@ -64,11 +63,12 @@ class SizeValueRuleComposite extends RuleComposite {
 			comboUnits.add(unit.name()); //FIXME: TRANSLATE!!
 		}
 		comboUnits.select(unit.ordinal());
-		Consumer<SelectionEvent> comboSelectionListener = e -> {
-			unit = SizeValue.Unit.values()[comboUnits.getSelectionIndex()];
-		};
-		comboUnits.addSelectionListener(widgetSelectedAdapter(comboSelectionListener));
-		comboUnits.addSelectionListener(widgetDefaultSelectedAdapter(comboSelectionListener));
+		comboUnits.addSelectionListener(widgetSelectedAdapter(this::onUnitChanged));
+		comboUnits.addSelectionListener(widgetDefaultSelectedAdapter(this::onUnitChanged));
+	}
+
+	private void onUnitChanged(SelectionEvent e) {
+		unit = SizeValue.Unit.values()[comboUnits.getSelectionIndex()];
 	}
 
 	private void numbersOnlyKeyboardListener(Event e) {
