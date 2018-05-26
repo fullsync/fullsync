@@ -55,8 +55,7 @@ public class Profile implements Comparable<Profile> {
 	private String lastErrorString;
 	private long lastScheduleTime;
 
-	private transient boolean eventsAllowed;
-	private transient List<ProfileChangeListener> listeners = new ArrayList<>();
+	private final List<ProfileChangeListener> listeners = new ArrayList<>();
 
 	public static Profile unserialize(Element element) throws DataParseException {
 		String profileName = element.getAttribute(ATTRIBUTE_NAME);
@@ -207,10 +206,8 @@ public class Profile implements Comparable<Profile> {
 	}
 
 	protected void notifyProfileChangeListeners() {
-		if (eventsAllowed) {
-			for (ProfileChangeListener listener : listeners) {
-				listener.profileChanged(this);
-			}
+		for (ProfileChangeListener listener : listeners) {
+			listener.profileChanged(this);
 		}
 	}
 
