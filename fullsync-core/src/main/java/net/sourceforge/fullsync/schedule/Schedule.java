@@ -46,7 +46,5 @@ public abstract class Schedule {
 
 	public abstract Element serialize(Element element);
 
-	public abstract long getNextOccurrence(long now);
-
-	public abstract void setLastOccurrence(long now);
+	public abstract long getNextOccurrence(long lastOccurence, long now);
 }

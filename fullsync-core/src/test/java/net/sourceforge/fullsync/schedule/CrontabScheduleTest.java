@@ -40,7 +40,7 @@ public class CrontabScheduleTest {
 	private void assertNextOccurence(String pattern) throws Exception {
 		Schedule schedule = new CrontabSchedule(pattern);
 
-		long res = schedule.getNextOccurrence(now.getTimeInMillis());
+		long res = schedule.getNextOccurrence(0, now.getTimeInMillis());
 
 		assertEquals(new Date(expectedResult.getTimeInMillis()), new Date(res));
 	}
@@ -72,14 +72,13 @@ public class CrontabScheduleTest {
 		Schedule schedule = new CrontabSchedule("0 0 * * *");
 		long res;
 
-		res = schedule.getNextOccurrence(now.getTimeInMillis());
+		res = schedule.getNextOccurrence(0, now.getTimeInMillis());
 		assertEquals(new Date(expectedResult.getTimeInMillis()), new Date(res));
 
-		schedule.setLastOccurrence(now.getTimeInMillis());
 		expectedResult.set(2004, 0, 2, 0, 0, 0);
 		expectedResult.set(Calendar.MILLISECOND, 0);
 
-		res = schedule.getNextOccurrence(now.getTimeInMillis());
+		res = schedule.getNextOccurrence(now.getTimeInMillis(), now.getTimeInMillis());
 		assertEquals(new Date(expectedResult.getTimeInMillis()), new Date(res));
 	}
 

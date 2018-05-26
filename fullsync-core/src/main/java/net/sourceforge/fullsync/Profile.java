@@ -53,6 +53,7 @@ public class Profile implements Comparable<Profile> {
 	private Date lastUpdate;
 	private int lastErrorLevel;
 	private String lastErrorString;
+	private long lastScheduleTime;
 
 	private transient boolean eventsAllowed;
 	private transient List<ProfileChangeListener> listeners = new ArrayList<>();
@@ -158,7 +159,7 @@ public class Profile implements Comparable<Profile> {
 			return "not enabled";
 		}
 		else {
-			return DateFormat.getDateTimeInstance().format(new Date(schedule.getNextOccurrence(new Date().getTime())));
+			return DateFormat.getDateTimeInstance().format(new Date(schedule.getNextOccurrence(lastScheduleTime, new Date().getTime())));
 		}
 	}
 
@@ -177,6 +178,15 @@ public class Profile implements Comparable<Profile> {
 	public void setLastError(int lastErrorLevel, String lastErrorString) {
 		this.lastErrorLevel = lastErrorLevel;
 		this.lastErrorString = lastErrorString;
+		notifyProfileChangeListeners();
+	}
+
+	public long getLastScheduleTime() {
+		return lastScheduleTime;
+	}
+
+	public void setLastScheduleTime(long lastScheduleTime) {
+		this.lastScheduleTime = lastScheduleTime;
 		notifyProfileChangeListeners();
 	}
 

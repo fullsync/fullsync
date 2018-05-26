@@ -195,7 +195,7 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 		for (Profile p : profiles) {
 			Schedule s = p.getSchedule();
 			if (p.isSchedulingEnabled() && (null != s)) {
-				long o = s.getNextOccurrence(now);
+				long o = s.getNextOccurrence(p.getLastScheduleTime(), now);
 				if (nextTime > o) {
 					nextTime = o;
 					nextProfile = p;

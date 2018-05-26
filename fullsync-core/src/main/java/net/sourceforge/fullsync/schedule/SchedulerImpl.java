@@ -127,10 +127,11 @@ public class SchedulerImpl implements Scheduler, Runnable {
 					Thread.sleep(nextTime - now);
 				}
 				logger.debug("Running task {}", task);
+				task.onBeforeExecution();
 				scheduledExecutorService.submit(task);
 			}
 			catch (InterruptedException ex) {
-				ex.printStackTrace();
+				// expected during shutdown
 			}
 		}
 		running = false;

@@ -38,8 +38,6 @@ public class CrontabSchedule extends Schedule {
 	private final CrontabPart.Instance months;
 	private final CrontabPart.Instance daysOfWeek;
 
-	private long lastExecution;
-
 	private static String getPatternFromElement(Element element) {
 		String pattern = "* * * * *";
 		if (element.hasAttribute(ATTRIBUTE_PATTERN)) {
@@ -132,8 +130,8 @@ public class CrontabSchedule extends Schedule {
 	}
 
 	@Override
-	public long getNextOccurrence(long now) {
-		if (now == lastExecution) {
+	public long getNextOccurrence(long lastOccurence, long now) {
+		if (now == lastOccurence) {
 			now += 1000;
 		}
 		Calendar cal = Calendar.getInstance();
@@ -230,11 +228,6 @@ public class CrontabSchedule extends Schedule {
 			}
 		}
 		cal.set(field, now);
-	}
-
-	@Override
-	public void setLastOccurrence(long now) {
-		lastExecution = now;
 	}
 
 	public CrontabPart.Instance[] getParts() {

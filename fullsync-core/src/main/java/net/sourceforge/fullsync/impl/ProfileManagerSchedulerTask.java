@@ -35,13 +35,17 @@ class ProfileManagerSchedulerTask implements ScheduleTask {
 
 	@Override
 	public void run() {
-		profile.getSchedule().setLastOccurrence(System.currentTimeMillis());
 		profileManager.fireProfileSchedulerEvent(profile);
 	}
 
 	@Override
 	public long getExecutionTime() {
 		return executionTime;
+	}
+
+	@Override
+	public void onBeforeExecution() {
+		profile.setLastScheduleTime(System.currentTimeMillis());
 	}
 
 	@Override

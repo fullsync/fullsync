@@ -32,7 +32,7 @@ public class IntervalSchedule extends Schedule {
 	private final long firstInterval;
 	private final long interval;
 	private final String displayUnit;
-	private long next;
+	private final long creationTime;
 
 	public IntervalSchedule(Element element) {
 		String firstIntervalAttribute = null;
@@ -46,15 +46,14 @@ public class IntervalSchedule extends Schedule {
 		this.firstInterval = null != firstIntervalAttribute ? Long.parseLong(firstIntervalAttribute) : 0;
 		this.interval = null != intervalAttribute ? Long.parseLong(intervalAttribute) : 0;
 		this.displayUnit = element.getAttribute(ATTRIBUTE_DISPLAY_UNIT);
-		this.next = System.currentTimeMillis() + firstInterval;
+		this.creationTime = System.currentTimeMillis();
 	}
 
 	public IntervalSchedule(long firstInterval, long interval, String displayUnit) {
 		this.firstInterval = firstInterval;
 		this.interval = interval;
 		this.displayUnit = displayUnit;
-
-		this.next = System.currentTimeMillis() + firstInterval;
+		this.creationTime = System.currentTimeMillis();
 	}
 
 	@Override
@@ -67,13 +66,9 @@ public class IntervalSchedule extends Schedule {
 	}
 
 	@Override
-	public long getNextOccurrence(long now) {
+	public long getNextOccurrence(long lastOccurence, long now) {
+		long next = 0 == lastOccurence ? creationTime + firstInterval : lastOccurence + interval;
 		return next > now ? next : now;
-	}
-
-	@Override
-	public void setLastOccurrence(long now) {
-		this.next = now + interval;
 	}
 
 	public long getFirstInterval() {
