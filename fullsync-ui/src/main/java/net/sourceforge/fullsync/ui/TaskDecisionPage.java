@@ -58,7 +58,6 @@ public class TaskDecisionPage extends WizardDialog {
 	private final Color colorFinishedUnsuccessful;
 
 	private TaskDecisionList list;
-	private Combo comboFilter;
 	private Label labelProgress;
 
 	@Inject
@@ -119,7 +118,7 @@ public class TaskDecisionPage extends WizardDialog {
 		content.setLayout(new GridLayout(2, false));
 
 		// filter combo
-		comboFilter = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
+		Combo comboFilter = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboFilter.add(Messages.getString("TaskDecisionPage.Everything")); //$NON-NLS-1$
 		comboFilter.add(Messages.getString("TaskDecisionPage.ChangesOnly")); //$NON-NLS-1$
 		comboFilter.select(1);

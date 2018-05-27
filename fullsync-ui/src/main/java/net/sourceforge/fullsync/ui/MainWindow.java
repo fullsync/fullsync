@@ -79,14 +79,8 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	private final Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider;
 	private final Provider<TaskDecisionPage> taskDecisionPageProvider;
 	private final Composite mainComposite;
-	private ToolItem toolItemNew;
 	private Menu menuBarMainWindow;
 	private Label statusLine;
-	private ToolItem toolItemRun;
-	private ToolItem toolItemRunNonIter;
-	private ToolItem toolItemDelete;
-	private ToolItem toolItemEdit;
-	private ToolItem toolItemScheduleIcon;
 	private ToolItem toolItemScheduleStart;
 	private ToolItem toolItemScheduleStop;
 
@@ -256,27 +250,27 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 
 			ToolBar toolBarProfile = new ToolBar(cToolBar, SWT.FLAT);
 
-			toolItemNew = new ToolItem(toolBarProfile, SWT.PUSH);
+			ToolItem toolItemNew = new ToolItem(toolBarProfile, SWT.PUSH);
 			toolItemNew.setImage(imageRepository.getImage("Button_New.png")); //$NON-NLS-1$
 			toolItemNew.setToolTipText(Messages.getString("MainWindow.New_Profile")); //$NON-NLS-1$
 			toolItemNew.addListener(SWT.Selection, e -> createNewProfile());
 
-			toolItemEdit = new ToolItem(toolBarProfile, SWT.PUSH);
+			ToolItem toolItemEdit = new ToolItem(toolBarProfile, SWT.PUSH);
 			toolItemEdit.setImage(imageRepository.getImage("Button_Edit.png")); //$NON-NLS-1$
 			toolItemEdit.setToolTipText(Messages.getString("MainWindow.Edit_Profile")); //$NON-NLS-1$
 			toolItemEdit.addListener(SWT.Selection, e -> editProfile(profileList.getSelectedProfile()));
 
-			toolItemDelete = new ToolItem(toolBarProfile, SWT.PUSH);
+			ToolItem toolItemDelete = new ToolItem(toolBarProfile, SWT.PUSH);
 			toolItemDelete.setImage(imageRepository.getImage("Button_Delete.png")); //$NON-NLS-1$
 			toolItemDelete.setToolTipText(Messages.getString("MainWindow.Delete_Profile")); //$NON-NLS-1$
 			toolItemDelete.addListener(SWT.Selection, e -> deleteProfile(profileList.getSelectedProfile()));
 
-			toolItemRun = new ToolItem(toolBarProfile, SWT.PUSH);
+			ToolItem toolItemRun = new ToolItem(toolBarProfile, SWT.PUSH);
 			toolItemRun.setImage(imageRepository.getImage("Button_Run.png")); //$NON-NLS-1$
 			toolItemRun.setToolTipText(Messages.getString("MainWindow.Run_Profile")); //$NON-NLS-1$
 			toolItemRun.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), true));
 
-			toolItemRunNonIter = new ToolItem(toolBarProfile, SWT.PUSH);
+			ToolItem toolItemRunNonIter = new ToolItem(toolBarProfile, SWT.PUSH);
 			toolItemRunNonIter.setImage(imageRepository.getImage("Button_Run_Non_Inter.png")); //$NON-NLS-1$
 			toolItemRunNonIter.setToolTipText("Run Profile - Non Interactive mode");
 			toolItemRunNonIter.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), false));
@@ -285,7 +279,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 			new ToolItem(toolBarScheduling, SWT.SEPARATOR);
 
 			//FIXME: do we still need this toolbar item?
-			toolItemScheduleIcon = new ToolItem(toolBarScheduling, SWT.NULL);
+			ToolItem toolItemScheduleIcon = new ToolItem(toolBarScheduling, SWT.NULL);
 			toolItemScheduleIcon.setImage(imageRepository.getImage("Scheduler_Icon.png")); //$NON-NLS-1$
 			toolItemScheduleIcon.setDisabledImage(imageRepository.getImage("Scheduler_Icon.png")); //$NON-NLS-1$
 			toolItemScheduleIcon.setEnabled(false);

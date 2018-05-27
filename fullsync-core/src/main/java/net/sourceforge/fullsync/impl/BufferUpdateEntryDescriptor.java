@@ -61,6 +61,7 @@ public class BufferUpdateEntryDescriptor implements EntryDescriptor {
 
 	@Override
 	public void finishStore() throws IOException {
+		// nothing to do
 	}
 
 	@Override
@@ -77,5 +78,4 @@ public class BufferUpdateEntryDescriptor implements EntryDescriptor {
 	public String getOperationDescription() {
 		return null;
 	}
-
 }

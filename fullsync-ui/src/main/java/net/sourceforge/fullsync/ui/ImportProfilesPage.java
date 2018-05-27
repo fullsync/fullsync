@@ -41,7 +41,6 @@ public class ImportProfilesPage extends WizardDialog {
 	private final ProfileManager profileManager;
 	private Composite composite;
 	private Text textPath;
-	private Button buttonBrowse;
 
 	@Inject
 	public ImportProfilesPage(Shell shell, ProfileManager profileManager) {
@@ -85,7 +84,7 @@ public class ImportProfilesPage extends WizardDialog {
 		textData.grabExcessVerticalSpace = true;
 		textData.verticalAlignment = SWT.CENTER;
 		textPath.setLayoutData(textData);
-		buttonBrowse = new Button(content, SWT.NONE);
+		Button buttonBrowse = new Button(content, SWT.NONE);
 		buttonBrowse.setText("...");
 		buttonBrowse.addListener(SWT.Selection, e -> {
 			FileDialog fd = new FileDialog(content.getShell());

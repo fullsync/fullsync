@@ -29,7 +29,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ChangeLogEntry implements Comparable<ChangeLogEntry> {
+public class ChangeLogEntry {
 	private Node ul;
 	private String manual;
 	private LocalDate date;
@@ -69,11 +69,6 @@ public class ChangeLogEntry implements Comparable<ChangeLogEntry> {
 		}
 		pw.println();
 		pw.flush();
-	}
-
-	@Override
-	public int compareTo(ChangeLogEntry o) {
-		return o.date.compareTo(date);
 	}
 
 	public String getVersion() {

@@ -74,13 +74,11 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private static final String FILTER_KEY = "Filter";
 
 	private final FullSync fullsync;
-	private final ImageRepository imageRepository;
 	private final ProfileManager profileManager;
 	private final Provider<FileFilterPage> fileFilterPageProvider;
 	private final Provider<ConnectionConfiguration> connectionConfigurationProvider;
 	private final Provider<ScheduleSelectionDialog> scheduleSelectionDialogProvider;
 
-	private TabFolder tabs;
 	private Text textProfileName;
 	private Text textProfileDescription;
 	private Label labelFilesFilter;
@@ -112,12 +110,11 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private ConnectionDescription lastSourceLoaded;
 
 	@Inject
-	public ProfileDetailsTabbedPage(Shell shell, FullSync fullsync, ImageRepository imageRepository, ProfileManager profileManager,
+	public ProfileDetailsTabbedPage(Shell shell, FullSync fullsync, ProfileManager profileManager,
 		Provider<FileFilterPage> fileFilterPageProvider, Provider<ConnectionConfiguration> connectionConfigurationProvider,
 		Provider<ScheduleSelectionDialog> scheduleSelectionDialogProvider) {
 		super(shell);
 		this.fullsync = fullsync;
-		this.imageRepository = imageRepository;
 		this.profileManager = profileManager;
 		this.fileFilterPageProvider = fileFilterPageProvider;
 		this.connectionConfigurationProvider = connectionConfigurationProvider;
@@ -162,7 +159,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		m_parent = content;
 		content.addDisposeListener(e -> closeSourceSite());
 		try {
-			tabs = new TabFolder(content, SWT.NULL);
+			TabFolder tabs = new TabFolder(content, SWT.NULL);
 			GridData tabsData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			tabs.setLayoutData(tabsData);
 			TabItem tabGeneral = new TabItem(tabs, SWT.NULL);

@@ -33,8 +33,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import net.sourceforge.fullsync.Preferences;
-
 public class PreferencesPage extends WizardDialog {
 	/**
 	 * supported language codes.
@@ -89,7 +87,6 @@ public class PreferencesPage extends WizardDialog {
 		return arraySearch(languageCodes, languageNames, code);
 	}
 
-	private Group groupInterface;
 	private Button cbConfirmExit;
 	private Button cbCloseMinimizesToSystemTray;
 	private Button cbMinimizeMinimizesToSystemTray;
@@ -97,13 +94,11 @@ public class PreferencesPage extends WizardDialog {
 	private Button cbAutostartScheduler;
 	private Combo comboProfileList;
 
-	private final Preferences preferences;
 	private final MainWindow mainWindow;
 
 	@Inject
-	public PreferencesPage(Shell shell, MainWindow mainWindow, Preferences preferences) {
+	public PreferencesPage(Shell shell, MainWindow mainWindow) {
 		super(shell);
-		this.preferences = preferences;
 		this.mainWindow = mainWindow;
 	}
 
@@ -136,7 +131,7 @@ public class PreferencesPage extends WizardDialog {
 	public void createContent(Composite content) {
 		content.setLayout(new GridLayout());
 
-		groupInterface = new Group(content, SWT.FILL);
+		Group groupInterface = new Group(content, SWT.FILL);
 		GridLayout generalPreferencesGroupLayout = new GridLayout(2, false);
 		GridData generalPreferencesGroupLData = new GridData();
 		generalPreferencesGroupLData.grabExcessHorizontalSpace = true;

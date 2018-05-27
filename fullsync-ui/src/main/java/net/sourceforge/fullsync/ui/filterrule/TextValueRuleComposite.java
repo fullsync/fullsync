@@ -36,14 +36,14 @@ class TextValueRuleComposite extends RuleComposite {
 		if (null != initialValue) {
 			value = initialValue.getValue();
 		}
-		render(parent);
+		render();
 	}
 
-	private void render(Composite parent) {
+	private void render() {
 		this.setLayout(new FillLayout());
 		textValue = new Text(this, SWT.BORDER);
 		textValue.addModifyListener(this::onTextValueChanged);
-		textValue.setText(value.toString());
+		textValue.setText(value);
 	}
 
 	private void onTextValueChanged(ModifyEvent e) {

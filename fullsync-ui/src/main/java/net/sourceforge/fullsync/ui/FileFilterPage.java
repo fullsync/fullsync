@@ -46,10 +46,7 @@ public class FileFilterPage extends WizardDialog {
 	private final Provider<FilterRuleListItem> filterRuleListItemProvider;
 
 	private Combo comboFilterType;
-	private Label label1;
 	private Combo comboMatchType;
-	private Label label2;
-	private ScrolledComposite scrolledComposite1;
 	private Composite compositeRuleList;
 	private Button buttonAppliesToDir;
 
@@ -109,14 +106,14 @@ public class FileFilterPage extends WizardDialog {
 			comboFilterType = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
 			comboFilterType.add("Include");
 			comboFilterType.add("Exclude");
-			label1 = new Label(content, SWT.NONE);
+			Label label1 = new Label(content, SWT.NONE);
 			label1.setText(" any file that matches ");
 
 			// match type combo
 			comboMatchType = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
 			comboMatchType.add("all");
 			comboMatchType.add("any");
-			label2 = new Label(content, SWT.NONE);
+			Label label2 = new Label(content, SWT.NONE);
 			label2.setText("of the following");
 
 			// applies to directories
@@ -129,7 +126,7 @@ public class FileFilterPage extends WizardDialog {
 			// filter list
 			GridData scrolledComposite1LData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			scrolledComposite1LData.horizontalSpan = 4;
-			scrolledComposite1 = new ScrolledComposite(content, SWT.V_SCROLL | SWT.BORDER);
+			ScrolledComposite scrolledComposite1 = new ScrolledComposite(content, SWT.V_SCROLL | SWT.BORDER);
 			scrolledComposite1.setLayoutData(scrolledComposite1LData);
 			scrolledComposite1.setAlwaysShowScrollBars(true);
 			scrolledComposite1.setExpandHorizontal(true);

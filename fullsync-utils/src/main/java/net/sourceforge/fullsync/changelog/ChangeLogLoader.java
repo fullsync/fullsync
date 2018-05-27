@@ -56,7 +56,7 @@ public class ChangeLogLoader {
 				}
 			}
 		}
-		Collections.sort(changelogEntries);
+		Collections.sort(changelogEntries, (a, b) -> b.getDate().compareTo(a.getDate()));
 		return changelogEntries;
 	}
 

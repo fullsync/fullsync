@@ -106,9 +106,7 @@ public class GuiController {
 			answer.set(doShowQuestion(question));
 		}
 		else {
-			display.asyncExec(() -> {
-				answer.set(doShowQuestion(question));
-			});
+			display.asyncExec(() -> answer.set(doShowQuestion(question)));
 		}
 		return answer;
 	}

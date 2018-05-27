@@ -47,7 +47,6 @@ public class ScheduleSelectionDialog {
 	private final ImageRepository imageRepository;
 	private Group groupOptions;
 	private Combo cbType;
-	private Shell dialogShell;
 
 	private Schedule schedule;
 
@@ -58,7 +57,7 @@ public class ScheduleSelectionDialog {
 
 	public void open(Shell parent) {
 		try {
-			dialogShell = new Shell(parent, SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.RESIZE);
+			Shell dialogShell = new Shell(parent, SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.RESIZE);
 			dialogShell.setText(Messages.getString("ScheduleSelectionDialog.EditScheduling")); //$NON-NLS-1$
 			dialogShell.setImage(imageRepository.getImage("Scheduler_Icon.png")); //$NON-NLS-1$
 			GridLayout thisLayout = new GridLayout();

@@ -45,10 +45,10 @@ class SubfilterRuleComposite extends RuleComposite {
 		if (null != initialValue) {
 			value = initialValue.getValue();
 		}
-		render(parent);
+		render();
 	}
 
-	private void render(Composite parent) {
+	private void render() {
 		this.setLayout(new GridLayout(3, true));
 
 		textValue = new Text(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);

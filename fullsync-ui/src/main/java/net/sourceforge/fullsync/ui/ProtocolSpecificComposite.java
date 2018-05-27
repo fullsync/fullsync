@@ -51,8 +51,6 @@ abstract class ProtocolSpecificComposite {
 	protected String m_scheme;
 	protected Composite m_parent;
 
-	private Label labelPath;
-	private Button buttonBrowse;
 	private Button buttonBuffered;
 
 	public void createGUI(final Composite parent) {
@@ -61,11 +59,11 @@ abstract class ProtocolSpecificComposite {
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.verticalAlignment = SWT.CENTER;
-		labelPath = new Label(parent, SWT.NONE);
+		Label labelPath = new Label(parent, SWT.NONE);
 		labelPath.setText("Path:");
 		textPath = new Text(parent, SWT.BORDER);
 		textPath.setLayoutData(gridData);
-		buttonBrowse = new Button(parent, SWT.NONE);
+		Button buttonBrowse = new Button(parent, SWT.NONE);
 		buttonBrowse.setText("...");
 		buttonBrowse.addListener(SWT.Selection, this::onBrowse);
 		buttonBuffered = new Button(parent, SWT.CHECK | SWT.LEFT);

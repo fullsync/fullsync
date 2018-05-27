@@ -65,7 +65,7 @@ public class DirCreationEntryDescriptor implements EntryDescriptor {
 
 	@Override
 	public void finishStore() throws IOException {
-
+		// nothing to do
 	}
 
 	@Override

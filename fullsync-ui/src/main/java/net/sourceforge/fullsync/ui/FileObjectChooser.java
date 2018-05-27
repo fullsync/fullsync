@@ -56,18 +56,7 @@ class FileObjectChooser {
 	private Label labelBaseUrl;
 	private Text textUrlExtension;
 	private Text textFilename;
-	private ToolItem toolItemNewFolder;
-	private Composite compositeBottom;
-	private TableColumn tableColumnName;
-	private TableColumn tableColumnDateModified;
-	private TableColumn tableColumnType;
-	private TableColumn tableColumnSize;
-	private ToolItem toolItemParent;
-	private Button buttonCancel;
-	private Button buttonOk;
 	private Combo comboFileFilter;
-	private ToolBar toolBarActions;
-	private Composite compositeTop;
 	private Table tableItems;
 
 	private boolean result;
@@ -91,7 +80,7 @@ class FileObjectChooser {
 		dialogShell.setSize(550, 400);
 
 		// top area
-		compositeTop = new Composite(dialogShell, SWT.NONE);
+		Composite compositeTop = new Composite(dialogShell, SWT.NONE);
 		GridLayout composite1Layout = new GridLayout(4, false);
 		GridData compositeTopLData = new GridData();
 		compositeTopLData.horizontalAlignment = SWT.FILL;
@@ -110,13 +99,13 @@ class FileObjectChooser {
 		textUrlExtension.setLayoutData(textUrlExtensionLData);
 
 		// toolbar: folder up, create new folder
-		toolBarActions = new ToolBar(compositeTop, SWT.NONE);
+		ToolBar toolBarActions = new ToolBar(compositeTop, SWT.NONE);
 		// folder up
-		toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
+		ToolItem toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
 		toolItemParent.setImage(imageRepository.getImage("FS_LevelUp.gif"));
 		toolItemParent.addListener(SWT.Selection, e -> toolItemParentWidgetSelected());
 		// new folder
-		toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
+		ToolItem toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
 		toolItemNewFolder.setImage(imageRepository.getImage("FS_Folder_New.gif"));
 		toolItemNewFolder.setDisabledImage(imageRepository.getImage("FS_Folder_New_disabled.gif"));
 		toolItemNewFolder.addListener(SWT.Selection, e -> toolItemNewFolderWidgetSelected());
@@ -134,24 +123,24 @@ class FileObjectChooser {
 		tableItems.addListener(SWT.MouseDown, this::tableItemSelected);
 		tableItems.addListener(SWT.MouseDoubleClick, this::tableItemDoubleClicked);
 
-		tableColumnName = new TableColumn(tableItems, SWT.NONE);
+		TableColumn tableColumnName = new TableColumn(tableItems, SWT.NONE);
 		tableColumnName.setText("File name");
 		tableColumnName.setWidth(200);
 
-		tableColumnSize = new TableColumn(tableItems, SWT.NONE);
+		TableColumn tableColumnSize = new TableColumn(tableItems, SWT.NONE);
 		tableColumnSize.setText("Size");
 		tableColumnSize.setWidth(60);
 
-		tableColumnType = new TableColumn(tableItems, SWT.NONE);
+		TableColumn tableColumnType = new TableColumn(tableItems, SWT.NONE);
 		tableColumnType.setText("Type");
 		tableColumnType.setWidth(100);
 
-		tableColumnDateModified = new TableColumn(tableItems, SWT.NONE);
+		TableColumn tableColumnDateModified = new TableColumn(tableItems, SWT.NONE);
 		tableColumnDateModified.setText("Date Modified");
 		tableColumnDateModified.setWidth(145);
 
 		// bottom area
-		compositeBottom = new Composite(dialogShell, SWT.NONE);
+		Composite compositeBottom = new Composite(dialogShell, SWT.NONE);
 		GridLayout compositeBottomLayout = new GridLayout();
 		compositeBottomLayout.numColumns = 3;
 		GridData compositeBottomLData = new GridData();
@@ -168,7 +157,7 @@ class FileObjectChooser {
 		textFilename = new Text(compositeBottom, SWT.BORDER);
 		textFilename.setLayoutData(textFilenameLData);
 
-		buttonOk = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
+		Button buttonOk = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
 		GridData buttonOkLData = new GridData();
 		buttonOkLData.horizontalAlignment = GridData.CENTER;
 		buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
@@ -187,7 +176,7 @@ class FileObjectChooser {
 		comboFileFilter.setText("all files");
 		comboFileFilter.setEnabled(false);
 
-		buttonCancel = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
+		Button buttonCancel = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
 		GridData buttonCancelLData = new GridData();
 		buttonCancelLData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonCancelLData.heightHint = UISettings.BUTTON_HEIGHT;

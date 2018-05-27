@@ -58,6 +58,7 @@ public class DeleteNodeEntryDescriptor implements EntryDescriptor {
 
 	@Override
 	public void finishStore() throws IOException {
+		// nothing to do
 	}
 
 	@Override
@@ -69,5 +70,4 @@ public class DeleteNodeEntryDescriptor implements EntryDescriptor {
 	public String getOperationDescription() {
 		return "Deleted File " + node.getPath();
 	}
-
 }

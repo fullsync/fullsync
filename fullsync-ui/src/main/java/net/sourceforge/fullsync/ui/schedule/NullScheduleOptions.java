@@ -46,5 +46,6 @@ public class NullScheduleOptions extends ScheduleOptions {
 
 	@Override
 	public void setSchedule(Schedule sched) {
+		// nothing to do
 	}
 }

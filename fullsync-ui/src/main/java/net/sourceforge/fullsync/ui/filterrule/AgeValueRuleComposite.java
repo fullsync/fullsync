@@ -46,10 +46,10 @@ class AgeValueRuleComposite extends RuleComposite {
 			unit = initialValue.getUnit();
 			value = initialValue.getValue();
 		}
-		render(parent);
+		render();
 	}
 
-	private void render(Composite parent) {
+	private void render() {
 		this.setLayout(new FillLayout());
 
 		textValue = new Text(this, SWT.BORDER);
@@ -59,8 +59,8 @@ class AgeValueRuleComposite extends RuleComposite {
 		textValue.addListener(SWT.KeyUp, this::onKeyEvent);
 
 		comboUnits = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
-		for (Unit unit : AgeValue.Unit.values()) {
-			comboUnits.add(unit.name()); // FIXME: TRANSLATE!!
+		for (Unit u : AgeValue.Unit.values()) {
+			comboUnits.add(u.name()); // FIXME: TRANSLATE!!
 		}
 		comboUnits.select(unit.ordinal());
 		comboUnits.addSelectionListener(widgetSelectedAdapter(this::onUnitChanged));

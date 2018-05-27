@@ -129,10 +129,10 @@ public class ConnectionDescription {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((bufferStrategy == null) ? 0 : bufferStrategy.hashCode());
-		result = (prime * result) + ((keyPassphrase == null) ? 0 : keyPassphrase.hashCode());
+		result = (prime * result) + bufferStrategy.hashCode();
+		result = (prime * result) + keyPassphrase.hashCode();
 		result = (prime * result) + ((password == null) ? 0 : password.hashCode());
-		result = (prime * result) + ((publicKeyAuth == null) ? 0 : publicKeyAuth.hashCode());
+		result = (prime * result) + publicKeyAuth.hashCode();
 		result = (prime * result) + ((uri == null) ? 0 : uri.hashCode());
 		result = (prime * result) + ((username == null) ? 0 : username.hashCode());
 		return result;
@@ -150,16 +150,16 @@ public class ConnectionDescription {
 			return false;
 		}
 		ConnectionDescription other = (ConnectionDescription) obj;
-		if (bufferStrategy == null) {
-			if (other.bufferStrategy != null) {
+		if (!bufferStrategy.isPresent()) {
+			if (other.bufferStrategy.isPresent()) {
 				return false;
 			}
 		}
 		else if (!bufferStrategy.equals(other.bufferStrategy)) {
 			return false;
 		}
-		if (keyPassphrase == null) {
-			if (other.keyPassphrase != null) {
+		if (!keyPassphrase.isPresent()) {
+			if (other.keyPassphrase.isPresent()) {
 				return false;
 			}
 		}
@@ -174,8 +174,8 @@ public class ConnectionDescription {
 		else if (!password.equals(other.password)) {
 			return false;
 		}
-		if (publicKeyAuth == null) {
-			if (other.publicKeyAuth != null) {
+		if (!publicKeyAuth.isPresent()) {
+			if (other.publicKeyAuth.isPresent()) {
 				return false;
 			}
 		}

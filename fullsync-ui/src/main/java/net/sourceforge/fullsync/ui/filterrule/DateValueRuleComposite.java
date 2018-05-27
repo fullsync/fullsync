@@ -35,7 +35,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 class DateValueRuleComposite extends RuleComposite {
 	private final DateFormat dateFormat = DateFormat.getDateInstance();
-	private Button buttonCalendar;
 	private Date value = new Date(SystemDate.getInstance().currentTimeMillis());
 
 	DateValueRuleComposite(Composite parent, final DateValue initialValue) {
@@ -43,10 +42,10 @@ class DateValueRuleComposite extends RuleComposite {
 		if (null != initialValue) {
 			value = initialValue.getDate();
 		}
-		render(parent);
+		render();
 	}
 
-	private void render(Composite parent) {
+	private void render() {
 		this.setLayout(new FillLayout());
 
 		textValue = new Text(this, SWT.BORDER);
@@ -55,7 +54,7 @@ class DateValueRuleComposite extends RuleComposite {
 			textValue.setText(dateFormat.format(value));
 		}
 
-		buttonCalendar = new Button(this, SWT.PUSH | SWT.CENTER);
+		Button buttonCalendar = new Button(this, SWT.PUSH | SWT.CENTER);
 		buttonCalendar.setText("Choose Date...");
 		buttonCalendar.addListener(SWT.Selection, this::onChooseDate);
 	}

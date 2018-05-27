@@ -39,13 +39,9 @@ import net.sourceforge.fullsync.ConnectionDescription;
 class SftpSpecificComposite extends ProtocolSpecificComposite {
 	private static final int DEFAULT_SFTP_PORT = 22;
 
-	private Label labelHost;
 	private Text textHost;
-	private Label labelPort;
 	private Spinner spinnerPort;
-	private Label labelUsername;
 	private Text textUsername;
-	private Label labelPassword;
 	private Text textPassword;
 	private Button buttonKeybased;
 	private Label labelKeyPassphrase;
@@ -59,7 +55,7 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 		gridData1.horizontalSpan = 2;
 
 		// hostname
-		labelHost = new Label(m_parent, SWT.NONE);
+		Label labelHost = new Label(m_parent, SWT.NONE);
 		labelHost.setText(Messages.getString("ProtocolSpecificComposite.Host"));
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
@@ -70,7 +66,7 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 		gridData3.horizontalSpan = 2;
 		textHost.setLayoutData(gridData3);
 
-		labelPort = new Label(parent, SWT.NONE);
+		Label labelPort = new Label(parent, SWT.NONE);
 		labelPort.setText("Port:");
 		spinnerPort = new Spinner(parent, SWT.BORDER);
 		spinnerPort.setMinimum(1);
@@ -80,13 +76,13 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 		gridData4.horizontalSpan = 2;
 		spinnerPort.setLayoutData(gridData4);
 
-		labelUsername = new Label(m_parent, SWT.NONE);
+		Label labelUsername = new Label(m_parent, SWT.NONE);
 		labelUsername.setText(Messages.getString("ProtocolSpecificComposite.Username"));
 		textUsername = new Text(m_parent, SWT.BORDER);
 		GridData gridData2 = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gridData2.horizontalSpan = 2;
 		textUsername.setLayoutData(gridData2);
-		labelPassword = new Label(m_parent, SWT.NONE);
+		Label labelPassword = new Label(m_parent, SWT.NONE);
 		labelPassword.setText(Messages.getString("ProtocolSpecificComposite.Password"));
 		textPassword = new Text(m_parent, SWT.BORDER);
 		textPassword.setLayoutData(gridData1);

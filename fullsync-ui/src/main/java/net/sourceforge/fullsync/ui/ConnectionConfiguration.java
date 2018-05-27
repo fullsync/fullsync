@@ -42,8 +42,6 @@ public class ConnectionConfiguration {
 	private final Provider<SftpSpecificComposite> sftpSpecificCompositeProvider;
 	private final Provider<SmbSpecificComposite> smbSpecificCompositeProvider;
 	private Composite parent; // the tabs content
-	private Label labelProtocol;
-	private Combo comboProtocol;
 	private Composite compositeProtocolSpecific;
 	private ProtocolSpecificComposite compositeSpecific;
 	private String selectedScheme;
@@ -77,9 +75,9 @@ public class ConnectionConfiguration {
 		compositeProtocolSpecific.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		// protocol combo box
-		labelProtocol = new Label(compositeProtocolSpecific, SWT.NONE);
+		Label labelProtocol = new Label(compositeProtocolSpecific, SWT.NONE);
 		labelProtocol.setText("Protocol:"); //FIXME: externalize
-		comboProtocol = new Combo(compositeProtocolSpecific, SWT.READ_ONLY);
+		Combo comboProtocol = new Combo(compositeProtocolSpecific, SWT.READ_ONLY);
 		GridData protocolData = new GridData();
 		protocolData.horizontalSpan = 2;
 		protocolData.horizontalAlignment = SWT.FILL;

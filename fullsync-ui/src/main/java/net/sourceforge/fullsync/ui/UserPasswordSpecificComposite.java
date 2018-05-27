@@ -32,9 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.ConnectionDescription;
 
 abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
-	private Label labelHost;
 	private Text textHost;
-	private Label labelPort;
 	private Spinner spinnerPort;
 	private Label labelUsername;
 	private Text textUsername;
@@ -43,7 +41,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 
 	@Override
 	public void createGUI(final Composite parent) {
-		labelHost = new Label(parent, SWT.NONE);
+		Label labelHost = new Label(parent, SWT.NONE);
 		labelHost.setText("Host:");
 		GridData gridData = getGridData();
 		gridData.grabExcessHorizontalSpace = true;
@@ -52,7 +50,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 
 		int port = getDefaultPort();
 		if (-1 != port) {
-			labelPort = new Label(parent, SWT.NONE);
+			Label labelPort = new Label(parent, SWT.NONE);
 			labelPort.setText("Port:");
 			spinnerPort = new Spinner(parent, SWT.BORDER);
 			spinnerPort.setMinimum(1);
