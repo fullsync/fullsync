@@ -23,49 +23,48 @@ import java.io.File;
 import java.io.StringWriter;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 
+import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.changelog.ChangeLogEntry;
 import net.sourceforge.fullsync.changelog.ChangeLogLoader;
 
-public class ChangeLogBox extends StyledText implements AsyncUIUpdate {
+public class ChangeLogBox extends StyledText {
 	private String lastFullSyncVersion;
-	private List<ChangeLogEntry> changelog;
 
-	public ChangeLogBox(Composite parent, String _lastFullSyncVersion, ScheduledExecutorService scheduledExecutorService) {
+	public ChangeLogBox(Composite parent, String _lastFullSyncVersion, BackgroundExecutor backgroundExecutor) {
 		super(parent, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 		setAlwaysShowScrollBars(false);
 		lastFullSyncVersion = _lastFullSyncVersion;
-		scheduledExecutorService.submit(ExecuteBackgroundJob.create(this, getDisplay()));
+		backgroundExecutor.runAsync(this::calculateChangeLog, this::updateUI, this::changelogCalculationFailed);
 	}
 
-	@Override
-	public void execute() throws Exception {
+	private List<ChangeLogEntry> calculateChangeLog() throws Exception {
 		ChangeLogLoader loader = new ChangeLogLoader();
 		File directory = new File(Util.getInstalllocation(), "versions"); //$NON-NLS-1$
-		changelog = ChangeLogLoader.filterAfter(loader.load(directory, ".+\\.html"), lastFullSyncVersion); //$NON-NLS-1$
+		return ChangeLogLoader.filterAfter(loader.load(directory, ".+\\.html"), lastFullSyncVersion); //$NON-NLS-1$
 	}
 
-	@Override
-	public void updateUI(boolean succeeded) {
+	private void updateUI(List<ChangeLogEntry> changelog) {
 		if (!isDisposed()) {
-			if (succeeded) {
-				StringWriter sw = new StringWriter();
-				DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM d, uuuu");
-				for (ChangeLogEntry entry : changelog) {
-					entry.write("FullSync %s released on %s", " - %s", sw, dateFormat);
-				}
-				sw.flush();
-				setText(sw.toString());
+			StringWriter sw = new StringWriter();
+			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM d, uuuu");
+			for (ChangeLogEntry entry : changelog) {
+				entry.write("FullSync %s released on %s", " - %s", sw, dateFormat);
 			}
-			else {
-				setText("Failed to load Changelogs.");
-			}
+			sw.flush();
+			setText(sw.toString());
+		}
+	}
+
+	private void changelogCalculationFailed(Exception ex) {
+		if (!isDisposed()) {
+			setText("Failed to load Changelogs.");
+			ExceptionHandler.reportException(ex);
 		}
 	}
 }

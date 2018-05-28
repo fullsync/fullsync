@@ -180,10 +180,6 @@ public class GuiController {
 		}
 	}
 
-	public void backgroundExec(AsyncUIUpdate job) {
-		scheduledExecutorService.submit(ExecuteBackgroundJob.create(job, display));
-	}
-
 	public static String getTwitterURL() {
 		return Util.getResourceAsString("net/sourceforge/fullsync/twitter-url.txt").trim();
 	}

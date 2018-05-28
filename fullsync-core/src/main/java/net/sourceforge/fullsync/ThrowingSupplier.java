@@ -17,10 +17,9 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
+package net.sourceforge.fullsync;
 
-interface AsyncUIUpdate {
-	void execute() throws Exception;
-
-	void updateUI(boolean succeeded);
+@FunctionalInterface
+public interface ThrowingSupplier<T> {
+	T get() throws Exception;
 }

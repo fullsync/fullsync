@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ScheduledExecutorService;
 
 import javax.inject.Inject;
 
@@ -51,25 +50,24 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
 
-class AboutDialog implements AsyncUIUpdate {
+class AboutDialog {
 	private static final String FULLSYNC_LICENSES_DIRECTORY = "net/sourceforge/fullsync/licenses/";
 	private static final long ANIMATION_DELAY = 750;
 	private final Shell shell;
 	private final Preferences preferences;
 	private final ImageRepository imageRepository;
-	private final ScheduledExecutorService scheduledExecutorService;
-	private final List<String> licenseNames = new ArrayList<>();
-	private final List<String> licenseTexts = new ArrayList<>();
+	private final BackgroundExecutor backgroundExecutor;
+	private List<LicenseEntry> licenses = Collections.emptyList();
 	private int stIndex;
 	private Combo componentCombo;
 	private StyledText licenseText;
 
 	@Inject
-	AboutDialog(Shell shell, Preferences preferences, ImageRepository imageRepository, ScheduledExecutorService scheduledExecutorService) {
+	AboutDialog(Shell shell, Preferences preferences, ImageRepository imageRepository, BackgroundExecutor backgroundExecutor) {
 		this.shell = shell;
 		this.preferences = preferences;
 		this.imageRepository = imageRepository;
-		this.scheduledExecutorService = scheduledExecutorService;
+		this.backgroundExecutor = backgroundExecutor;
 	}
 
 	void show() {
@@ -157,7 +155,7 @@ class AboutDialog implements AsyncUIUpdate {
 	private Control initChangelogTab(Composite parent) {
 		final Composite tab = new Composite(parent, SWT.FILL);
 		tab.setLayout(new GridLayout(1, true));
-		ChangeLogBox changeLogBox = new ChangeLogBox(tab, "", scheduledExecutorService);
+		ChangeLogBox changeLogBox = new ChangeLogBox(tab, "", backgroundExecutor);
 		GridData changelogBoxLData = new GridData(GridData.FILL_BOTH);
 		changelogBoxLData.heightHint = 300;
 		changeLogBox.setLayoutData(changelogBoxLData);
@@ -287,47 +285,54 @@ class AboutDialog implements AsyncUIUpdate {
 
 		componentCombo.addModifyListener(e -> {
 			int index = componentCombo.getSelectionIndex();
-			licenseText.setText(licenseTexts.get(index));
+			licenseText.setText(licenses.get(index).license);
 		});
-		scheduledExecutorService.submit(ExecuteBackgroundJob.create(this, parent.getDisplay()));
+		backgroundExecutor.runAsync(this::loadLicenses, this::updateLicenses, this::loadLicensesFailed);
+
 		return tab;
 	}
 
 	private static class LicenseEntry {
-		public String name;
-		public String license;
+		public final String name;
+		public final String license;
+
+		public LicenseEntry(String name, String license) {
+			this.name = name;
+			this.license = license;
+		}
 	}
 
-	@Override
-	public void execute() throws Exception {
+	private List<LicenseEntry> loadLicenses() throws Exception {
 		List<LicenseEntry> licenses = new ArrayList<>();
 		for (String name : Util.loadDirectoryFromClasspath(FULLSYNC_LICENSES_DIRECTORY)) {
 			if (name.endsWith(".txt")) { //$NON-NLS-1$
-				LicenseEntry entry = new LicenseEntry();
-				entry.name = name.substring(0, name.length() - 4);
-				entry.license = Util.getResourceAsString(FULLSYNC_LICENSES_DIRECTORY + name);
-				licenses.add(entry);
+				String n = name.substring(0, name.length() - 4);
+				String license = Util.getResourceAsString(FULLSYNC_LICENSES_DIRECTORY + name);
+				licenses.add(new LicenseEntry(n, license));
 			}
 		}
 		Collections.sort(licenses, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-		for (LicenseEntry lic : licenses) {
-			licenseNames.add(lic.name);
-			licenseTexts.add(lic.license);
-		}
+		return licenses;
 	}
 
-	@Override
-	public void updateUI(boolean succeeded) {
+	private void updateLicenses(List<LicenseEntry> licenseList) {
 		int idx = 0;
 		int fsIdx = 0;
-		for (String licenseName : licenseNames) {
-			componentCombo.add(licenseName);
-			if ("FullSync".equals(licenseName)) { //$NON-NLS-1$
+		licenses = licenseList;
+		for (LicenseEntry license : licenses) {
+			componentCombo.add(license.name);
+			if ("FullSync".equals(license.name)) { //$NON-NLS-1$
 				fsIdx = idx;
 			}
 			++idx;
 		}
 		componentCombo.select(fsIdx);
-		licenseText.setText(licenseTexts.get(fsIdx));
+		licenseText.setText(licenses.get(fsIdx).license);
+	}
+
+	private void loadLicensesFailed(Exception ex) {
+		if (!shell.isDisposed()) {
+			ExceptionHandler.reportException(ex);
+		}
 	}
 }

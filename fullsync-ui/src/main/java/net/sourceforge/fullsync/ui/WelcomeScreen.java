@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.util.concurrent.ScheduledExecutorService;
-
 import javax.inject.Inject;
 
 import org.eclipse.swt.SWT;
@@ -39,15 +37,14 @@ import net.sourceforge.fullsync.Util;
 public class WelcomeScreen extends Dialog {
 	private final Preferences preferences;
 	private final ImageRepository imageRepository;
-	private final ScheduledExecutorService scheduledExecutorService;
+	private final BackgroundExecutor backgroundExecutor;
 
 	@Inject
-	public WelcomeScreen(Shell shell, Preferences preferences, ImageRepository imageRepository,
-		ScheduledExecutorService scheduledExecutorService) {
+	public WelcomeScreen(Shell shell, Preferences preferences, ImageRepository imageRepository, BackgroundExecutor backgroundExecutor) {
 		super(shell);
 		this.preferences = preferences;
 		this.imageRepository = imageRepository;
-		this.scheduledExecutorService = scheduledExecutorService;
+		this.backgroundExecutor = backgroundExecutor;
 	}
 
 	public void show() {
@@ -79,7 +76,7 @@ public class WelcomeScreen extends Dialog {
 		lrel.grabExcessHorizontalSpace = true;
 		labelReleases.setLayoutData(lrel);
 
-		ChangeLogBox changelogText = new ChangeLogBox(dialogShell, preferences.getLastVersion(), scheduledExecutorService);
+		ChangeLogBox changelogText = new ChangeLogBox(dialogShell, preferences.getLastVersion(), backgroundExecutor);
 		GridData changelogTextLData = new GridData(GridData.FILL_BOTH);
 		changelogTextLData.heightHint = 300;
 		changelogText.setLayoutData(changelogTextLData);
