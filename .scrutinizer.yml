@@ -2,7 +2,7 @@ build:
         tests:
                 override:
                         -
-                                command: ./gradlew test jacocoRootReport
+                                command: ./gradlew --console=plain test jacocoRootReport
                                 coverage:
                                         file: 'build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml'
                                         format: 'jacoco'

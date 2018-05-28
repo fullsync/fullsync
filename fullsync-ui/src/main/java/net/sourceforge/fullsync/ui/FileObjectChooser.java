@@ -56,7 +56,6 @@ class FileObjectChooser {
 	private Label labelBaseUrl;
 	private Text textUrlExtension;
 	private Text textFilename;
-	private Combo comboFileFilter;
 	private Table tableItems;
 
 	private boolean result;
@@ -169,7 +168,7 @@ class FileObjectChooser {
 		Label labelFileFilter = new Label(compositeBottom, SWT.NONE);
 		labelFileFilter.setText("Files of type:");
 
-		comboFileFilter = new Combo(compositeBottom, SWT.NONE);
+		Combo comboFileFilter = new Combo(compositeBottom, SWT.NONE);
 		GridData comboFileFilterLData = new GridData();
 		comboFileFilterLData.horizontalAlignment = SWT.FILL;
 		comboFileFilter.setLayoutData(comboFileFilterLData);
