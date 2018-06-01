@@ -126,12 +126,12 @@ public class SystemStatusPage extends WizardDialog {
 			buttonMemoryGcLData.horizontalSpan = 2;
 			buttonMemoryGc.setLayoutData(buttonMemoryGcLData);
 
-			updateView();
+			timerFired();
 			timer = new Timer(true);
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					updateView();
+					timerFired();
 				}
 			}, 1000, 1000);
 		}
@@ -150,26 +150,30 @@ public class SystemStatusPage extends WizardDialog {
 		return true;
 	}
 
-	public void updateView() {
+	private void timerFired() {
 		if (!content.isDisposed()) {
 			Display display = getDisplay();
 			if ((null == display) || display.isDisposed()) {
 				timer.cancel();
 				return;
 			}
-			display.syncExec(() -> {
-				Runtime rt = Runtime.getRuntime();
-				long ltotalMemory = rt.totalMemory();
-				long lmaxMemory = rt.maxMemory();
-				long lfreeMemory = rt.freeMemory();
+			display.asyncExec(this::updateView);
+		}
+	}
 
-				totalMemory.setText(UISettings.formatSize(ltotalMemory));
-				maxMemory.setText(UISettings.formatSize(lmaxMemory));
-				freeMemory.setText(UISettings.formatSize(lfreeMemory));
-				progressBarMemory.setMaximum((int) (ltotalMemory / 1024));
-				progressBarMemory.setSelection((int) ((ltotalMemory - lfreeMemory) / 1024));
-				content.layout();
-			});
+	private void updateView() {
+		if (!content.isDisposed()) {
+			Runtime rt = Runtime.getRuntime();
+			long ltotalMemory = rt.totalMemory();
+			long lmaxMemory = rt.maxMemory();
+			long lfreeMemory = rt.freeMemory();
+
+			totalMemory.setText(UISettings.formatSize(ltotalMemory));
+			maxMemory.setText(UISettings.formatSize(lmaxMemory));
+			freeMemory.setText(UISettings.formatSize(lfreeMemory));
+			progressBarMemory.setMaximum((int) (ltotalMemory / 1024));
+			progressBarMemory.setSelection((int) ((ltotalMemory - lfreeMemory) / 1024));
+			content.layout();
 		}
 	}
 

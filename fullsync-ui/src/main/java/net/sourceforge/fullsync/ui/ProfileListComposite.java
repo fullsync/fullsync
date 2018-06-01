@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.ui;
 import java.util.Objects;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
 
 import net.sourceforge.fullsync.Profile;
@@ -34,6 +35,7 @@ public abstract class ProfileListComposite extends Composite implements ProfileL
 
 	public ProfileListComposite(Composite parent, ProfileManager pm, ProfileListControlHandler handler) {
 		super(parent, SWT.NULL);
+		parent.addDisposeListener(this::onDisposed);
 		Objects.requireNonNull(pm);
 		Objects.requireNonNull(handler);
 		profileManager = pm;
@@ -43,6 +45,10 @@ public abstract class ProfileListComposite extends Composite implements ProfileL
 
 	public ProfileManager getProfileManager() {
 		return profileManager;
+	}
+
+	private void onDisposed(DisposeEvent e) {
+		dispose();
 	}
 
 	@Override

@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.ui;
 import javax.inject.Inject;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -83,6 +84,7 @@ public abstract class WizardDialog {
 	public void show() {
 		try {
 			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.PRIMARY_MODAL);
+			dialogShell.addDisposeListener(this::onDisposed);
 			final Display display = dialogShell.getDisplay();
 			dialogShell.addListener(SWT.Close, e -> {
 				if (!closing) {
@@ -248,9 +250,15 @@ public abstract class WizardDialog {
 		labelDescription.setLayoutData(labelDescriptionLData);
 	}
 
+	private void onDisposed(DisposeEvent e) {
+		dispose();
+	}
+
 	public void dispose() {
-		for (Control control : compositeContent.getChildren()) {
-			control.dispose();
+		if (!compositeContent.isDisposed()) {
+			for (Control control : compositeContent.getChildren()) {
+				control.dispose();
+			}
 		}
 		dialogShell.dispose();
 		// TODO dispose images ?
