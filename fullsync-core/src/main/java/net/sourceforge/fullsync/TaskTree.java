@@ -19,7 +19,9 @@
  */
 package net.sourceforge.fullsync;
 
+import net.sourceforge.fullsync.buffer.BlockBuffer;
 import net.sourceforge.fullsync.fs.Site;
+import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 
 public class TaskTree {
 	private Site source;
@@ -49,5 +51,12 @@ public class TaskTree {
 
 	public int getTaskCount() {
 		return root.getTaskCount();
+	}
+
+	public IoStatistics getIoStatistics() {
+		//FIXME HACK omg, that's not the way io stats are intended to be generated / used
+		BlockBuffer buffer = new BlockBuffer(null);
+		TaskExecutor queue = new FillBufferTaskExecutor(buffer);
+		return queue.createStatistics(this);
 	}
 }

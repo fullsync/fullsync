@@ -138,7 +138,7 @@ public class TaskDecisionPage extends WizardDialog {
 		labelProgressLData.horizontalIndent = 5;
 		labelProgressLData.grabExcessHorizontalSpace = true;
 		labelProgress.setLayoutData(labelProgressLData);
-		IoStatistics stats = synchronizer.getIoStatistics(taskTree);
+		IoStatistics stats = taskTree.getIoStatistics();
 		labelProgress.setText("Totals: " + stats.getCountActions() + " tasks, " + UISettings.formatSize(stats.getBytesTransferred()));
 
 		list = new TaskDecisionList(content, imageRepository);
@@ -197,7 +197,7 @@ public class TaskDecisionPage extends WizardDialog {
 			processing = true;
 			list.setChangeAllowed(false);
 
-			IoStatistics stats = synchronizer.getIoStatistics(taskTree);
+			IoStatistics stats = taskTree.getIoStatistics();
 			tasksTotal = stats.getCountActions();
 			tasksFinished = 0;
 			display.syncExec(() -> setOkButtonEnabled(false));

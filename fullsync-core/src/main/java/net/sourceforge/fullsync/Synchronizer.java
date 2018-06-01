@@ -103,12 +103,4 @@ public class Synchronizer {
 		logger.info("------------------------------------------------------------");
 		return 0;
 	}
-
-	public IoStatistics getIoStatistics(TaskTree taskTree) { //FIXME: move to TaskTree
-		// HACK omg, that's not the way io stats are intended to be generated / used
-		Logger tmpLogger = LoggerFactory.getLogger(Synchronizer.class);
-		BlockBuffer buffer = new BlockBuffer(tmpLogger);
-		TaskExecutor queue = new FillBufferTaskExecutor(buffer);
-		return queue.createStatistics(taskTree);
-	}
 }

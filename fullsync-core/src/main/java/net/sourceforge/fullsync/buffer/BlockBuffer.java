@@ -25,11 +25,12 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 
 public class BlockBuffer implements ExecutionBuffer {
-	private final Logger logger;
+	private final Optional<Logger> logger;
 
 	private int maxSize;
 	private int maxEntries;
@@ -41,7 +42,7 @@ public class BlockBuffer implements ExecutionBuffer {
 	private List<EntryFinishedListener> finishedListeners;
 
 	public BlockBuffer(Logger logger) {
-		this.logger = logger;
+		this.logger = Optional.ofNullable(logger);
 
 		maxSize = 1024 * 1024 * 10;
 		maxEntries = 5000;
@@ -83,14 +84,16 @@ public class BlockBuffer implements ExecutionBuffer {
 				if (e.isLastSegment()) {
 					desc.finishWrite();
 					String opDesc = desc.getOperationDescription();
-					if (null != opDesc) {
-						logger.info(opDesc);
+					if ((null != opDesc) && (logger.isPresent())) {
+						logger.get().info(opDesc);
 					}
 				}
 			}
 			catch (IOException ex) {
 				ioe = ex;
-				logger.error("Exception", ex);
+				if (logger.isPresent()) {
+					logger.get().error("Exception", ex);
+				}
 			}
 			if (e.isLastSegment()) {
 				for (EntryFinishedListener listener : finishedListeners) {
