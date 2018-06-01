@@ -597,7 +597,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 
 		// Close the application, but give him a chance to
 		// confirm his action first
-		if ((null != profileManager.getNextScheduleTask()) && preferences.confirmExit()) {
+		if (scheduler.isEnabled() && (null != profileManager.getNextScheduleTask()) && preferences.confirmExit()) {
 			MessageBox mb = new MessageBox(mainComposite.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
 			String doYouWantToQuit = Messages.getString("GuiController.Do_You_Want_To_Quit"); //$NON-NLS-1$
