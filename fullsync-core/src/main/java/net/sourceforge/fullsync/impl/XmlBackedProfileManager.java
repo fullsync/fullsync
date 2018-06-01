@@ -26,11 +26,11 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -71,8 +71,8 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	private final Provider<Scheduler> schedulerProvider;
 	private String profilesFileName;
 	private Set<Profile> profiles = new TreeSet<>();
-	private List<ProfileListChangeListener> changeListeners = new ArrayList<>();
-	private List<ProfileSchedulerListener> scheduleListeners = new ArrayList<>();
+	private List<ProfileListChangeListener> changeListeners = new CopyOnWriteArrayList<>();
+	private List<ProfileSchedulerListener> scheduleListeners = new CopyOnWriteArrayList<>();
 
 	@Inject
 	public XmlBackedProfileManager(Provider<Scheduler> schedulerProvider) {
@@ -93,12 +93,9 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	public boolean loadProfiles(String profilesFileName) {
 		File file = new File(profilesFileName);
 		if (file.exists() && (file.length() > 0)) {
-			DocumentBuilder builder;
 			try {
-				builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				Document doc = builder.parse(file);
-
-				deserializeProfileList(doc);
+				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				deserializeProfileList(builder.parse(file));
 			}
 			catch (ParserConfigurationException | SAXException | IOException ex) {
 				ExceptionHandler.reportException("Profile loading failed", ex);

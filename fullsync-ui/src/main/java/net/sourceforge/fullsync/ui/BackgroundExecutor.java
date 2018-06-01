@@ -40,7 +40,7 @@ public class BackgroundExecutor {
 		this.display = display;
 	}
 
-	public <T, R> void runAsync(ThrowingSupplier<R> supplier, Consumer<R> successConsumer, Consumer<Exception> errorConsumer) {
+	public <R> void runAsync(ThrowingSupplier<R> supplier, Consumer<R> successConsumer, Consumer<Exception> errorConsumer) {
 		CompletableFuture<R> future = CompletableFuture.supplyAsync(unchecked(supplier), scheduledExecutorService);
 		UIUpdateTask<R> task = new UIUpdateTask<>(display, future, successConsumer, errorConsumer);
 		future.thenRun(task);

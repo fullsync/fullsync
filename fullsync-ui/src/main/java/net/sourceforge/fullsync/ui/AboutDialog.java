@@ -19,11 +19,11 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -303,16 +303,16 @@ class AboutDialog {
 	}
 
 	private List<LicenseEntry> loadLicenses() throws Exception {
-		List<LicenseEntry> licenses = new ArrayList<>();
-		for (String name : Util.loadDirectoryFromClasspath(FULLSYNC_LICENSES_DIRECTORY)) {
-			if (name.endsWith(".txt")) { //$NON-NLS-1$
+		return Util.loadDirectoryFromClasspath(FULLSYNC_LICENSES_DIRECTORY)
+			.parallelStream()
+			.filter(name -> name.endsWith(".txt")) ////$NON-NLS-1$
+			.map(name -> {
 				String n = name.substring(0, name.length() - 4);
 				String license = Util.getResourceAsString(FULLSYNC_LICENSES_DIRECTORY + name);
-				licenses.add(new LicenseEntry(n, license));
-			}
-		}
-		Collections.sort(licenses, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-		return licenses;
+				return new LicenseEntry(n, license);
+			})
+			.sorted((o1, o2) -> o1.name.compareToIgnoreCase(o2.name))
+			.collect(Collectors.toList());
 	}
 
 	private void updateLicenses(List<LicenseEntry> licenseList) {
