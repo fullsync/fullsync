@@ -45,6 +45,7 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.event.ProfileListChanged;
 
 public class NiceListViewProfileListComposite extends ProfileListComposite implements ProfileListChangeListener {
 	private static class ContentComposite extends Composite {
@@ -310,8 +311,8 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		super.setMenu(menu);
 	}
 
-	@Override
-	public void profileListChanged() {
+	@Subscribe
+	private void profileListChanged(ProfileListChanged profileListChanged) {
 		// use something like a de-bounced setTimeout
 		getDisplay().syncExec(this::populateProfileList);
 	}

@@ -50,6 +50,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.google.common.eventbus.EventBus;
+
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
@@ -57,6 +59,7 @@ import net.sourceforge.fullsync.ProfileChangeListener;
 import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.ProfileSchedulerListener;
+import net.sourceforge.fullsync.event.ProfileListChanged;
 import net.sourceforge.fullsync.schedule.Schedule;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
 import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
@@ -68,6 +71,7 @@ import net.sourceforge.fullsync.schedule.Scheduler;
  */
 @Singleton
 public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManager, ProfileChangeListener {
+	private final EventBus eventBus;
 	private final Provider<Scheduler> schedulerProvider;
 	private String profilesFileName;
 	private Set<Profile> profiles = new TreeSet<>();
@@ -75,8 +79,9 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	private List<ProfileSchedulerListener> scheduleListeners = new CopyOnWriteArrayList<>();
 
 	@Inject
-	public XmlBackedProfileManager(Provider<Scheduler> schedulerProvider) {
+	public XmlBackedProfileManager(Provider<Scheduler> schedulerProvider, EventBus eventBus) {
 		this.schedulerProvider = schedulerProvider;
+		this.eventBus = eventBus;
 	}
 
 	@Override
@@ -100,7 +105,7 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 			catch (ParserConfigurationException | SAXException | IOException ex) {
 				ExceptionHandler.reportException("Profile loading failed", ex);
 			}
-			fireProfilesChangeEvent();
+			eventBus.post(new ProfileListChanged());
 			return true;
 		}
 		return false;
@@ -145,7 +150,7 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 		profiles.add(profile);
 		profile.addProfileChangeListener(this);
 		if (fireChangedEvent) {
-			fireProfilesChangeEvent();
+			eventBus.post(new ProfileListChanged());
 		}
 	}
 
@@ -165,7 +170,7 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	public void removeProfile(Profile profile) {
 		profile.removeProfileChangeListener(this);
 		profiles.remove(profile);
-		fireProfilesChangeEvent();
+		eventBus.post(new ProfileListChanged());
 	}
 
 	@Override
@@ -214,12 +219,6 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	@Override
 	public void removeProfilesChangeListener(ProfileListChangeListener listener) {
 		changeListeners.remove(listener);
-	}
-
-	protected void fireProfilesChangeEvent() {
-		for (ProfileListChangeListener changeListener : changeListeners) {
-			changeListener.profileListChanged();
-		}
 	}
 
 	@Override

@@ -35,6 +35,7 @@ import com.google.inject.assistedinject.Assisted;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.event.ProfileListChanged;
 
 public class ListViewProfileListComposite extends ProfileListComposite implements ProfileListChangeListener {
 	private Table tableProfiles;
@@ -122,11 +123,11 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 
 	@Override
 	public void profileChanged(Profile p) {
-		profileListChanged();
+		profileListChanged(null);
 	}
 
-	@Override
-	public void profileListChanged() {
+	@Subscribe
+	private void profileListChanged(ProfileListChanged event) {
 		getDisplay().asyncExec(this::populateProfileList);
 	}
 }
