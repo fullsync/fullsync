@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.name.Names;
 
 public class FullSyncUiModule extends AbstractModule {
 	@Override
@@ -31,5 +33,9 @@ public class FullSyncUiModule extends AbstractModule {
 		Display display = Display.getDefault();
 		bind(Display.class).toInstance(display);
 		bind(Shell.class).toInstance(new Shell(display));
+		FactoryModuleBuilder profileListCompositeFactory = new FactoryModuleBuilder();
+		profileListCompositeFactory.implement(ProfileListComposite.class, Names.named("list"), ListViewProfileListComposite.class);
+		profileListCompositeFactory.implement(ProfileListComposite.class, Names.named("nice"), NiceListViewProfileListComposite.class);
+		install(profileListCompositeFactory.build(ProfileListCompositeFactory.class));
 	}
 }

@@ -66,7 +66,6 @@ import net.sourceforge.fullsync.schedule.Scheduler;
 class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	private final Display display;
 	private final ImageRepository imageRepository;
-	private final FontRepository fontRepository;
 	private final ProfileManager profileManager;
 	private final Scheduler scheduler;
 	private final Preferences preferences;
@@ -78,6 +77,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	private final Provider<AboutDialog> aboutDialogProvider;
 	private final Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider;
 	private final Provider<TaskDecisionPage> taskDecisionPageProvider;
+	private final ProfileListCompositeFactory profileListCompositeFactory;
 	private final Composite mainComposite;
 	private Menu menuBarMainWindow;
 	private Label statusLine;
@@ -90,15 +90,15 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	private GUIUpdateQueue<String> statusLineText;
 
 	@Inject
-	MainWindow(Display display, ImageRepository imageRepository, FontRepository fontRepository, Shell shell, ProfileManager profileManager,
-		TaskGenerator taskGenerator, Scheduler scheduler, RuntimeConfiguration runtimeConfiguration, Preferences preferences,
+	MainWindow(Display display, ImageRepository imageRepository, Shell shell, ProfileManager profileManager, TaskGenerator taskGenerator,
+		Scheduler scheduler, RuntimeConfiguration runtimeConfiguration, Preferences preferences,
 		ScheduledExecutorService scheduledExecutorService, Provider<PreferencesPage> preferencesPageProvider,
 		Provider<Synchronizer> synchronizerProvider, Provider<ImportProfilesPage> importProfilesPageProvider,
 		Provider<SystemStatusPage> systemStatusPageProvider, Provider<AboutDialog> aboutDialogProvider,
-		Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider, Provider<TaskDecisionPage> taskDecisionPageProvider) {
+		Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider, Provider<TaskDecisionPage> taskDecisionPageProvider,
+		ProfileListCompositeFactory profileListCompositeFactory) {
 		this.display = display;
 		this.imageRepository = imageRepository;
-		this.fontRepository = fontRepository;
 		this.profileManager = profileManager;
 		this.scheduler = scheduler;
 		this.preferences = preferences;
@@ -110,6 +110,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		this.aboutDialogProvider = aboutDialogProvider;
 		this.profileDetailsTabbedPageProvider = profileDetailsTabbedPageProvider;
 		this.taskDecisionPageProvider = taskDecisionPageProvider;
+		this.profileListCompositeFactory = profileListCompositeFactory;
 		shell.setLayout(new FillLayout());
 		shell.setText("FullSync"); //$NON-NLS-1$
 		shell.setImage(imageRepository.getImage("fullsync48.png")); //$NON-NLS-1$
@@ -452,10 +453,10 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 			c.dispose();
 		}
 		if ("NiceListView".equals(preferences.getProfileListStyle())) {
-			profileList = new NiceListViewProfileListComposite(profileListContainer, profileManager, imageRepository, fontRepository, this);
+			profileList = profileListCompositeFactory.createNiceListViewComposite(profileListContainer, this);
 		}
 		else {
-			profileList = new ListViewProfileListComposite(profileListContainer, profileManager, this);
+			profileList = profileListCompositeFactory.createListViewComposite(profileListContainer, this);
 		}
 		profileList.setMenu(createPopupMenu());
 		profileListContainer.layout();

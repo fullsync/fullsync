@@ -14,6 +14,7 @@ dependencies {
 	compile "com.jcraft:jsch:${project.ext.jcraftJschVersion}"
 	compile "org.slf4j:jcl-over-slf4j:${project.ext.slf4jVersion}"
 	compile "com.google.inject:guice:${project.ext.guiceVersion}"
+	compile "com.google.inject.extensions:guice-assistedinject:${project.ext.guiceVersion}"
 	compile files("lib/commons-vfs2-sandbox.jar")
 	testImplementation "org.junit.jupiter:junit-jupiter-api:${project.ext.junitVersion}"
 	testImplementation "org.hamcrest:hamcrest-core:${project.ext.hamcrestVersion}"

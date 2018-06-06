@@ -22,6 +22,8 @@ package net.sourceforge.fullsync.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Color;
@@ -35,6 +37,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+
+import com.google.common.eventbus.Subscribe;
+import com.google.inject.assistedinject.Assisted;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.Profile;
@@ -195,8 +200,9 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	private Image imageEdit;
 	private Image imageDelete;
 
-	public NiceListViewProfileListComposite(Composite parent, ProfileManager profileManager, ImageRepository imageRepository,
-		FontRepository fontRepository, ProfileListControlHandler handler) {
+	@Inject
+	public NiceListViewProfileListComposite(@Assisted Composite parent, @Assisted ProfileListControlHandler handler,
+		ProfileManager profileManager, ImageRepository imageRepository, FontRepository fontRepository) {
 		super(parent, profileManager, handler);
 		loadImages(imageRepository);
 		scrollPane = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);

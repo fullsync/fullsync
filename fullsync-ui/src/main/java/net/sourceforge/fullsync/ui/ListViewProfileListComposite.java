@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import javax.inject.Inject;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -26,6 +28,9 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+
+import com.google.common.eventbus.Subscribe;
+import com.google.inject.assistedinject.Assisted;
 
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileListChangeListener;
@@ -39,8 +44,11 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 	private TableColumn tableColumnSource;
 	private TableColumn tableColumnDestination;
 
-	public ListViewProfileListComposite(Composite parent, ProfileManager profileManager, ProfileListControlHandler handler) {
+	@Inject
+	public ListViewProfileListComposite(@Assisted Composite parent, @Assisted ProfileListControlHandler handler,
+		ProfileManager profileManager) {
 		super(parent, profileManager, handler);
+
 		tableProfiles = new Table(this, SWT.FULL_SELECTION | SWT.BORDER);
 
 		tableColumnName = new TableColumn(tableProfiles, SWT.NONE);
