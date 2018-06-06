@@ -24,7 +24,13 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import org.apache.commons.cli.CommandLine;
 
+import com.google.common.eventbus.AsyncEventBus;
+import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import com.google.inject.matcher.Matchers;
+import com.google.inject.spi.InjectionListener;
+import com.google.inject.spi.TypeEncounter;
 
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
@@ -38,6 +44,8 @@ import net.sourceforge.fullsync.schedule.SchedulerImpl;
 public class FullSyncModule extends AbstractModule {
 	private final CommandLine line;
 	private final String prefrencesFile;
+	private final ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(1);
+	private final EventBus eventBus = new AsyncEventBus(scheduledExecutorService);
 
 	public FullSyncModule(CommandLine line, String prefrencesFile) {
 		this.line = line;
@@ -52,6 +60,12 @@ public class FullSyncModule extends AbstractModule {
 		bind(ProfileManager.class).to(XmlBackedProfileManager.class);
 		bind(Scheduler.class).to(SchedulerImpl.class);
 		bind(ScheduleTaskSource.class).to(XmlBackedProfileManager.class);
-		bind(ScheduledExecutorService.class).toInstance(new ScheduledThreadPoolExecutor(1));
+		bind(ScheduledExecutorService.class).toInstance(scheduledExecutorService);
+		bind(EventBus.class).toInstance(eventBus);
+		bindListener(Matchers.any(), this::hear);
+	}
+
+	private <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
+		typeEncounter.register((InjectionListener<I>) i -> eventBus.register(i));
 	}
 }

@@ -32,6 +32,7 @@ import java.nio.file.Paths;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EventListener;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
@@ -48,6 +49,9 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.eventbus.DeadEvent;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -59,6 +63,7 @@ import net.sourceforge.fullsync.RuntimeConfiguration;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
+import net.sourceforge.fullsync.event.ShutdownEvent;
 import net.sourceforge.fullsync.impl.FullSyncModule;
 import net.sourceforge.fullsync.schedule.Scheduler;
 
@@ -182,12 +187,24 @@ public class Main implements Launcher { // NO_UCD
 		final RuntimeConfiguration rtConfig = injector.getInstance(RuntimeConfiguration.class);
 		injector.getInstance(ProfileManager.class).setProfilesFileName(profilesFile);
 		final ScheduledExecutorService scheduledExecutorService = injector.getInstance(ScheduledExecutorService.class);
+		final EventListener deadEventListener = new EventListener() {
+			private final Logger logger = LoggerFactory.getLogger("DeadEventLogger"); //$NON-NLS-1$
+
+			@Subscribe
+			private void onDeadEvent(DeadEvent deadEvent) {
+				if (!(deadEvent.getEvent() instanceof ShutdownEvent)) {
+					logger.warn("Dead event triggered: {}", deadEvent); //$NON-NLS-1$
+				}
+			}
+		};
+		final EventBus eventBus = injector.getInstance(EventBus.class);
+		eventBus.register(deadEventListener);
 
 		final Semaphore sem = new Semaphore(0);
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			Logger logger = LoggerFactory.getLogger(Main.class);
-			logger.debug("shutdown hook called, starting orderly shutdown");
-			//TODO: dispatch shutdown event to notify running stuff about VM termination
+			logger.debug("shutdown hook called, starting orderly shutdown"); //$NON-NLS-1$
+			eventBus.post(new ShutdownEvent());
 			scheduledExecutorService.shutdown();
 			try {
 				scheduledExecutorService.awaitTermination(5, TimeUnit.MINUTES);
@@ -195,7 +212,7 @@ public class Main implements Launcher { // NO_UCD
 			catch (InterruptedException e) {
 				// not relevant
 			}
-			logger.debug("shutdown hook finished, releaseing main thread semaphore");
+			logger.debug("shutdown hook finished, releaseing main thread semaphore"); //$NON-NLS-1$
 			sem.release();
 		}));
 		if (rtConfig.isDaemon().orElse(false).booleanValue() || rtConfig.getProfileToRun().isPresent()) {
