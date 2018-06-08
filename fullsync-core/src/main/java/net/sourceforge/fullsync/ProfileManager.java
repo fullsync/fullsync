@@ -41,10 +41,6 @@ public interface ProfileManager {
 
 	Profile getProfile(String name);
 
-	void addProfilesChangeListener(ProfileListChangeListener listener);
-
-	void removeProfilesChangeListener(ProfileListChangeListener listener);
-
 	void save();
 
 	void addSchedulerListener(ProfileSchedulerListener listener);

@@ -43,11 +43,11 @@ import com.google.inject.assistedinject.Assisted;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.Profile;
-import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.event.ProfileListChanged;
 
-public class NiceListViewProfileListComposite extends ProfileListComposite implements ProfileListChangeListener {
+public class NiceListViewProfileListComposite extends ProfileListComposite {
 	private static class ContentComposite extends Composite {
 		private NiceListViewProfileListComposite niceListViewProfileListComposite;
 		private Profile profile;
@@ -188,10 +188,11 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		}
 	}
 
+	private final ProfileListControlHandler handler;
+	private final ProfileManager profileManager;
 	private ScrolledComposite scrollPane;
 	private NiceListView profileList;
 	private Map<Profile, NiceListViewItem> profilesToItems;
-
 	private Image imageProfileDefault;
 	private Image imageProfileScheduled;
 	private Image imageProfileError;
@@ -204,7 +205,9 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	@Inject
 	public NiceListViewProfileListComposite(@Assisted Composite parent, @Assisted ProfileListControlHandler handler,
 		ProfileManager profileManager, ImageRepository imageRepository, FontRepository fontRepository) {
-		super(parent, profileManager, handler);
+		super(parent);
+		this.handler = handler;
+		this.profileManager = profileManager;
 		loadImages(imageRepository);
 		scrollPane = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
 		profileList = new NiceListView(scrollPane, fontRepository);
@@ -218,6 +221,10 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		setLayout(new FillLayout());
 		layout();
 		populateProfileList();
+	}
+
+	public ProfileListControlHandler getHandler() {
+		return handler;
 	}
 
 	private void loadImages(ImageRepository imageRepository) {
@@ -262,32 +269,33 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 	}
 
 	private void populateProfileList() {
-		profilesToItems = new HashMap<>();
-		setItemsMenu(null);
-		profileList.clear();
-		ProfileListControlHandler handler = getHandler();
-		for (Profile p : getProfileManager().getProfiles()) {
-			NiceListViewItem item = null;
-			try {
-				item = new NiceListViewItem(profileList);
-				ContentComposite content = new ContentComposite(this, item);
-				content.setProfile(p);
-				item.setContent(content);
-				item.setMenu(getMenu());
-				item.setHandler(handler);
-				item.setProfile(p);
-				updateItem(item, p);
+		if (!isDisposed()) {
+			profilesToItems = new HashMap<>();
+			setItemsMenu(null);
+			profileList.clear();
+			for (Profile p : profileManager.getProfiles()) {
+				NiceListViewItem item = null;
+				try {
+					item = new NiceListViewItem(profileList);
+					ContentComposite content = new ContentComposite(this, item);
+					content.setProfile(p);
+					item.setContent(content);
+					item.setMenu(getMenu());
+					item.setHandler(handler);
+					item.setProfile(p);
+					updateItem(item, p);
 
-				profilesToItems.put(p, item);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				if (null != item) {
-					item.dispose();
+					profilesToItems.put(p, item);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+					if (null != item) {
+						item.dispose();
+					}
 				}
 			}
+			profileList.pack();
 		}
-		profileList.pack();
 	}
 
 	@Override
@@ -317,17 +325,19 @@ public class NiceListViewProfileListComposite extends ProfileListComposite imple
 		getDisplay().syncExec(this::populateProfileList);
 	}
 
-	@Override
-	public void profileChanged(final Profile p) {
+	@Subscribe
+	private void profileChanged(ProfileChanged p) {
 		getDisplay().syncExec(() -> {
-			NiceListViewItem item = profilesToItems.get(p);
-			if (null == item) {
-				populateProfileList();
-			}
-			else {
-				ContentComposite content = (ContentComposite) item.getContent();
-				updateItem(item, content.getProfile());
-				content.updateComponent();
+			if (!isDisposed()) {
+				NiceListViewItem item = profilesToItems.get(p.getProfile());
+				if (null == item) {
+					populateProfileList();
+				}
+				else {
+					ContentComposite content = (ContentComposite) item.getContent();
+					updateItem(item, content.getProfile());
+					content.updateComponent();
+				}
 			}
 		});
 	}

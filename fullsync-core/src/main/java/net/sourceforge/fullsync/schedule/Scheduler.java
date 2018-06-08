@@ -22,8 +22,6 @@ package net.sourceforge.fullsync.schedule;
 public interface Scheduler {
 	void start();
 
-	void refresh();
-
 	void stop();
 
 	boolean isEnabled();

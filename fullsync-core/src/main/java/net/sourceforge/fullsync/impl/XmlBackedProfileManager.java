@@ -56,8 +56,8 @@ import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileChangeListener;
-import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.ProfileSchedulerListener;
 import net.sourceforge.fullsync.event.ProfileListChanged;
 import net.sourceforge.fullsync.schedule.Schedule;
@@ -75,7 +75,6 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	private final Provider<Scheduler> schedulerProvider;
 	private String profilesFileName;
 	private Set<Profile> profiles = new TreeSet<>();
-	private List<ProfileListChangeListener> changeListeners = new CopyOnWriteArrayList<>();
 	private List<ProfileSchedulerListener> scheduleListeners = new CopyOnWriteArrayList<>();
 
 	@Inject
@@ -212,21 +211,8 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	}
 
 	@Override
-	public void addProfilesChangeListener(ProfileListChangeListener listener) {
-		changeListeners.add(listener);
-	}
-
-	@Override
-	public void removeProfilesChangeListener(ProfileListChangeListener listener) {
-		changeListeners.remove(listener);
-	}
-
-	@Override
 	public void profileChanged(Profile profile) {
-		schedulerProvider.get().refresh();
-		for (ProfileListChangeListener changeListener : changeListeners) {
-			changeListener.profileChanged(profile);
-		}
+		eventBus.post(new ProfileChanged(profile));
 	}
 
 	@Override

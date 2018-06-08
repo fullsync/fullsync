@@ -17,8 +17,18 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync;
+package net.sourceforge.fullsync.event;
 
-public interface ProfileListChangeListener {
-	void profileChanged(Profile p);
+import net.sourceforge.fullsync.Profile;
+
+public class ProfileChanged {
+	private final Profile profile;
+
+	public ProfileChanged(Profile profile) {
+		this.profile = profile;
+	}
+
+	public Profile getProfile() {
+		return profile;
+	}
 }

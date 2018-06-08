@@ -29,6 +29,11 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.eventbus.Subscribe;
+
+import net.sourceforge.fullsync.event.ProfileChanged;
+import net.sourceforge.fullsync.event.ProfileListChanged;
+
 @Singleton
 public class SchedulerImpl implements Scheduler, Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerImpl.class);
@@ -100,11 +105,20 @@ public class SchedulerImpl implements Scheduler, Runnable {
 		}
 	}
 
-	@Override
-	public void refresh() {
+	private void refresh() {
 		if (null != worker) {
 			worker.interrupt();
 		}
+	}
+
+	@Subscribe
+	private void profileChanged(ProfileChanged profileChanged) {
+		refresh();
+	}
+
+	@Subscribe
+	private void profileListChanged(ProfileListChanged profileListChanged) {
+		refresh();
 	}
 
 	@Override

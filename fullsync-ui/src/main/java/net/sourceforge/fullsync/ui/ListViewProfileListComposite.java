@@ -33,11 +33,12 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.assistedinject.Assisted;
 
 import net.sourceforge.fullsync.Profile;
-import net.sourceforge.fullsync.ProfileListChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.event.ProfileListChanged;
 
-public class ListViewProfileListComposite extends ProfileListComposite implements ProfileListChangeListener {
+public class ListViewProfileListComposite extends ProfileListComposite {
+	private final ProfileManager profileManager;
 	private Table tableProfiles;
 	private TableColumn tableColumnName;
 	private TableColumn tableColumnLastUpdate;
@@ -48,7 +49,8 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 	@Inject
 	public ListViewProfileListComposite(@Assisted Composite parent, @Assisted ProfileListControlHandler handler,
 		ProfileManager profileManager) {
-		super(parent, profileManager, handler);
+		super(parent);
+		this.profileManager = profileManager;
 
 		tableProfiles = new Table(this, SWT.FULL_SELECTION | SWT.BORDER);
 
@@ -81,24 +83,26 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 	}
 
 	public void populateProfileList() {
-		tableProfiles.clearAll();
-		tableProfiles.setItemCount(0);
-		for (Profile p : getProfileManager().getProfiles()) {
-			String[] cells = new String[5];
-			cells[0] = p.getName();
-			cells[1] = p.getLastUpdateText();
-			cells[2] = p.getNextUpdateText();
-			cells[3] = p.getSource().toString();
-			cells[4] = p.getDestination().toString();
-			TableItem item = new TableItem(tableProfiles, SWT.NULL);
-			item.setText(cells);
-			item.setData(p);
+		if (!isDisposed()) {
+			tableProfiles.clearAll();
+			tableProfiles.setItemCount(0);
+			for (Profile p : profileManager.getProfiles()) {
+				String[] cells = new String[5];
+				cells[0] = p.getName();
+				cells[1] = p.getLastUpdateText();
+				cells[2] = p.getNextUpdateText();
+				cells[3] = p.getSource().toString();
+				cells[4] = p.getDestination().toString();
+				TableItem item = new TableItem(tableProfiles, SWT.NULL);
+				item.setText(cells);
+				item.setData(p);
+			}
+			tableColumnName.pack();
+			tableColumnLastUpdate.pack();
+			tableColumnNextUpdate.pack();
+			tableColumnSource.pack();
+			tableColumnDestination.pack();
 		}
-		tableColumnName.pack();
-		tableColumnLastUpdate.pack();
-		tableColumnNextUpdate.pack();
-		tableColumnSource.pack();
-		tableColumnDestination.pack();
 	}
 
 	@Override
@@ -121,9 +125,9 @@ public class ListViewProfileListComposite extends ProfileListComposite implement
 		return tableProfiles.getMenu();
 	}
 
-	@Override
-	public void profileChanged(Profile p) {
-		profileListChanged(null);
+	@Subscribe
+	private void profileChanged(ProfileChanged p) {
+		getDisplay().asyncExec(this::populateProfileList);
 	}
 
 	@Subscribe
