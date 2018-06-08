@@ -9,6 +9,9 @@ allprojects {
 		}
 		includeSources = false
 		includeJavadocs = false
+		includePoms = true
+		includeIvyXmls = false
+		includeBuildscriptDependencies = true
 	}
 }
 
