@@ -39,6 +39,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -63,6 +65,7 @@ import net.sourceforge.fullsync.RuntimeConfiguration;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
+import net.sourceforge.fullsync.event.ScheduledProfileExecution;
 import net.sourceforge.fullsync.event.ShutdownEvent;
 import net.sourceforge.fullsync.impl.FullSyncModule;
 import net.sourceforge.fullsync.schedule.Scheduler;
@@ -71,6 +74,8 @@ public class Main implements Launcher { // NO_UCD
 	private static final String PREFERENCES_PROPERTIES = "preferences.properties"; //$NON-NLS-1$
 	private static final String PROFILES_XML = "profiles.xml"; //$NON-NLS-1$
 	private static final Options options = new Options();
+	@SuppressWarnings("unused")
+	private static DaemonSchedulerListener daemonSchedulerListener;
 
 	private static void initOptions() {
 		options.addOption("h", "help", false, "this help");
@@ -261,7 +266,8 @@ public class Main implements Launcher { // NO_UCD
 			handleRunProfile(synchronizer, profileManager, profile.get());
 		}
 		if (rt.isDaemon().orElse(false).booleanValue()) {
-			handleIsDaemon(synchronizer, profileManager, scheduler);
+			daemonSchedulerListener = injector.getInstance(DaemonSchedulerListener.class);
+			scheduler.start();
 		}
 		if (preferences.getAutostartScheduler()) {
 			scheduler.start();
@@ -284,8 +290,17 @@ public class Main implements Launcher { // NO_UCD
 		System.exit(errorlevel);
 	}
 
-	private static void handleIsDaemon(Synchronizer synchronizer, ProfileManager profileManager, Scheduler scheduler) {
-		profileManager.addSchedulerListener(profile -> {
+	private static class DaemonSchedulerListener {
+		private final Synchronizer synchronizer;
+
+		@Inject
+		public DaemonSchedulerListener(Synchronizer synchronizer) {
+			this.synchronizer = synchronizer;
+		}
+
+		@Subscribe
+		private void profileExecutionScheduled(ScheduledProfileExecution scheduledProfileExecution) {
+			Profile profile = scheduledProfileExecution.getProfile();
 			TaskTree tree = synchronizer.executeProfile(profile, false);
 			if (null == tree) {
 				profile.setLastError(1, "An error occured while comparing filesystems.");
@@ -299,8 +314,7 @@ public class Main implements Launcher { // NO_UCD
 					profile.setLastUpdate(new Date());
 				}
 			}
-		});
-		scheduler.start();
+		}
 	}
 
 	@Override

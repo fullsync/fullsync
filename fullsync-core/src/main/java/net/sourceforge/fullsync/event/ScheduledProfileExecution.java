@@ -17,31 +17,18 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync;
+package net.sourceforge.fullsync.event;
 
-import java.util.Collection;
+import net.sourceforge.fullsync.Profile;
 
-import net.sourceforge.fullsync.schedule.ScheduleTask;
+public class ScheduledProfileExecution {
+	private final Profile profile;
 
-public interface ProfileManager {
+	public ScheduledProfileExecution(Profile profile) {
+		this.profile = profile;
+	}
 
-	void setProfilesFileName(String profilesFileName);
-
-	boolean loadProfiles();
-
-	boolean loadProfiles(String profilesFileName);
-
-	void addProfile(Profile profile);
-
-	void updateProfile(Profile oldProfile, Profile newProfile);
-
-	void removeProfile(Profile profile);
-
-	Collection<Profile> getProfiles();
-
-	Profile getProfile(String name);
-
-	void save();
-
-	ScheduleTask getNextScheduleTask();
+	public Profile getProfile() {
+		return profile;
+	}
 }

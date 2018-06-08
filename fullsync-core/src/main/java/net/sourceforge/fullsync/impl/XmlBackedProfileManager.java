@@ -27,13 +27,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -58,12 +55,10 @@ import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileChangeListener;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.event.ProfileChanged;
-import net.sourceforge.fullsync.ProfileSchedulerListener;
 import net.sourceforge.fullsync.event.ProfileListChanged;
 import net.sourceforge.fullsync.schedule.Schedule;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
 import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
-import net.sourceforge.fullsync.schedule.Scheduler;
 
 /**
  * A ProfileManager handles persistence of Profiles and provides
@@ -72,15 +67,14 @@ import net.sourceforge.fullsync.schedule.Scheduler;
 @Singleton
 public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManager, ProfileChangeListener {
 	private final EventBus eventBus;
-	private final Provider<Scheduler> schedulerProvider;
+	private final ProfileManagerSchedulerTaskFactory profileManagerSchedulerTaskFactory;
 	private String profilesFileName;
 	private Set<Profile> profiles = new TreeSet<>();
-	private List<ProfileSchedulerListener> scheduleListeners = new CopyOnWriteArrayList<>();
 
 	@Inject
-	public XmlBackedProfileManager(Provider<Scheduler> schedulerProvider, EventBus eventBus) {
-		this.schedulerProvider = schedulerProvider;
+	public XmlBackedProfileManager(EventBus eventBus, ProfileManagerSchedulerTaskFactory profileManagerSchedulerTaskFactory) {
 		this.eventBus = eventBus;
+		this.profileManagerSchedulerTaskFactory = profileManagerSchedulerTaskFactory;
 	}
 
 	@Override
@@ -205,7 +199,7 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 		}
 
 		if (null != nextProfile) {
-			return new ProfileManagerSchedulerTask(this, nextProfile, nextTime);
+			return profileManagerSchedulerTaskFactory.create(nextProfile, nextTime);
 		}
 		return null;
 	}
@@ -213,22 +207,6 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	@Override
 	public void profileChanged(Profile profile) {
 		eventBus.post(new ProfileChanged(profile));
-	}
-
-	@Override
-	public void addSchedulerListener(ProfileSchedulerListener listener) {
-		scheduleListeners.add(listener);
-	}
-
-	@Override
-	public void removeSchedulerListener(ProfileSchedulerListener listener) {
-		scheduleListeners.remove(listener);
-	}
-
-	protected void fireProfileSchedulerEvent(Profile profile) {
-		for (ProfileSchedulerListener schedulerListener : scheduleListeners) {
-			schedulerListener.profileExecutionScheduled(profile);
-		}
 	}
 
 	@Override

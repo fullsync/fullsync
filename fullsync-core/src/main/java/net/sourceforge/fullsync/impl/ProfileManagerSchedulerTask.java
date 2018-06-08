@@ -19,23 +19,30 @@
  */
 package net.sourceforge.fullsync.impl;
 
+import javax.inject.Inject;
+
+import com.google.common.eventbus.EventBus;
+import com.google.inject.assistedinject.Assisted;
+
 import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.event.ScheduledProfileExecution;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
 
 class ProfileManagerSchedulerTask implements ScheduleTask {
-	private XmlBackedProfileManager profileManager;
-	private Profile profile;
-	private long executionTime;
+	private final EventBus eventBus;
+	private final Profile profile;
+	private final long executionTime;
 
-	ProfileManagerSchedulerTask(XmlBackedProfileManager pm, Profile p, long ts) {
-		profileManager = pm;
-		profile = p;
-		executionTime = ts;
+	@Inject
+	ProfileManagerSchedulerTask(EventBus eventBus, @Assisted Profile profile, @Assisted long executionTime) {
+		this.eventBus = eventBus;
+		this.profile = profile;
+		this.executionTime = executionTime;
 	}
 
 	@Override
 	public void run() {
-		profileManager.fireProfileSchedulerEvent(profile);
+		eventBus.post(new ScheduledProfileExecution(profile));
 	}
 
 	@Override

@@ -46,6 +46,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import com.google.common.eventbus.Subscribe;
+
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Profile;
@@ -59,6 +61,7 @@ import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.WindowState;
 import net.sourceforge.fullsync.cli.Main;
+import net.sourceforge.fullsync.event.ScheduledProfileExecution;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.schedule.Scheduler;
 
@@ -134,7 +137,6 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		mainComposite = new Composite(shell, SWT.NULL);
 		initGUI();
 
-		profileManager.addSchedulerListener(this::executeScheduledProfile);
 		scheduler.addSchedulerChangeListener(enabled -> display.syncExec(() -> {
 			toolItemScheduleStart.setEnabled(!enabled);
 			toolItemScheduleStop.setEnabled(enabled);
@@ -165,7 +167,9 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		}
 	}
 
-	private void executeScheduledProfile(Profile profile) {
+	@Subscribe
+	private void executeScheduledProfile(ScheduledProfileExecution scheduledProfileExecution) {
+		Profile profile = scheduledProfileExecution.getProfile();
 		Synchronizer synchronizer = synchronizerProvider.get();
 		TaskTree tree = synchronizer.executeProfile(profile, false);
 		if (null == tree) {
