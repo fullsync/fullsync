@@ -25,8 +25,4 @@ public interface Scheduler {
 	void stop();
 
 	boolean isEnabled();
-
-	void addSchedulerChangeListener(SchedulerChangeListener listener);
-
-	void removeSchedulerChangeListener(SchedulerChangeListener listener);
 }

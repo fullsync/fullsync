@@ -17,11 +17,16 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.schedule;
+package net.sourceforge.fullsync.event;
 
-/**
- * Interface for listener interested in changes in the timer status.
- */
-public interface SchedulerChangeListener {
-	void schedulerStatusChanged(boolean status);
+public class SchedulerStatusChanged {
+	private final boolean enabled;
+
+	public SchedulerStatusChanged(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
 }

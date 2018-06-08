@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync.schedule;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
 import javax.inject.Inject;
@@ -29,42 +27,32 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.event.ProfileListChanged;
+import net.sourceforge.fullsync.event.SchedulerStatusChanged;
 
 @Singleton
 public class SchedulerImpl implements Scheduler, Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerImpl.class);
 	private final ScheduleTaskSource scheduleSource;
 	private final ScheduledExecutorService scheduledExecutorService;
+	private final EventBus eventBus;
 	private Thread worker;
 	private boolean running;
 	private boolean enabled;
 
-	private List<SchedulerChangeListener> schedulerListeners = new ArrayList<>();
-
 	@Inject
-	public SchedulerImpl(ScheduleTaskSource source, ScheduledExecutorService scheduledExecutorService) {
+	public SchedulerImpl(ScheduleTaskSource source, ScheduledExecutorService scheduledExecutorService, EventBus eventBus) {
 		scheduleSource = source;
 		this.scheduledExecutorService = scheduledExecutorService;
+		this.eventBus = eventBus;
 	}
 
-	@Override
-	public void addSchedulerChangeListener(SchedulerChangeListener listener) {
-		schedulerListeners.add(listener);
-	}
-
-	@Override
-	public void removeSchedulerChangeListener(SchedulerChangeListener listener) {
-		schedulerListeners.remove(listener);
-	}
-
-	protected void fireSchedulerChangedEvent() {
-		for (SchedulerChangeListener listener : schedulerListeners) {
-			listener.schedulerStatusChanged(enabled);
-		}
+	private void fireSchedulerChangedEvent() {
+		eventBus.post(new SchedulerStatusChanged(enabled));
 	}
 
 	@Override

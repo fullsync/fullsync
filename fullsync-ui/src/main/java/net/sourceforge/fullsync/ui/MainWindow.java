@@ -62,6 +62,7 @@ import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.WindowState;
 import net.sourceforge.fullsync.cli.Main;
 import net.sourceforge.fullsync.event.ScheduledProfileExecution;
+import net.sourceforge.fullsync.event.SchedulerStatusChanged;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.schedule.Scheduler;
 
@@ -137,11 +138,6 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		mainComposite = new Composite(shell, SWT.NULL);
 		initGUI();
 
-		scheduler.addSchedulerChangeListener(enabled -> display.syncExec(() -> {
-			toolItemScheduleStart.setEnabled(!enabled);
-			toolItemScheduleStop.setEnabled(enabled);
-		}));
-
 		statusLineText = new GUIUpdateQueue<>(display, texts -> {
 			String statusMessage = texts.get(texts.size() - 1);
 			statusLine.setText(statusMessage);
@@ -165,6 +161,16 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		if (minimized.orElse(false).booleanValue()) {
 			shell.setVisible(false);
 		}
+	}
+
+	@Subscribe
+	private void schedulerStatusChanged(SchedulerStatusChanged schedulerStatusChanged) {
+		display.syncExec(() -> {
+			if (!mainComposite.isDisposed()) {
+				toolItemScheduleStart.setEnabled(!schedulerStatusChanged.isEnabled());
+				toolItemScheduleStop.setEnabled(schedulerStatusChanged.isEnabled());
+			}
+		});
 	}
 
 	@Subscribe
