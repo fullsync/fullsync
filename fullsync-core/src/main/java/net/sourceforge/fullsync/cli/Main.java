@@ -228,7 +228,6 @@ public class Main implements Launcher { // NO_UCD
 		else {
 			launcher.launchGui(injector);
 			System.exit(0);
-			sem.acquireUninterruptibly();
 		}
 	}
 
