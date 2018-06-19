@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +38,6 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
-import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.IgnoreDecider;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Profile;
@@ -52,9 +50,9 @@ import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
 
-@Singleton
 public class TaskGeneratorImpl implements TaskGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
+	private final FileSystemManager fileSystemManager;
 	private final List<TaskGenerationListener> taskGenerationListeners = new ArrayList<>();
 	// TODO this should be execution local so the class
 	// itself is multithreadable
@@ -63,11 +61,10 @@ public class TaskGeneratorImpl implements TaskGenerator {
 	private IgnoreDecider takeIgnoreDecider;
 	private StateDeciderImpl stateDecider;
 	private BufferStateDeciderImpl bufferStateDecider;
-	private final FullSync fullsync;
 
 	@Inject
-	public TaskGeneratorImpl(FullSync fullsync) {
-		this.fullsync = fullsync;
+	public TaskGeneratorImpl(FileSystemManager fileSystemManager) {
+		this.fileSystemManager = fileSystemManager;
 	}
 
 	protected RuleSet updateRules(File src, File dst, RuleSet rules) throws DataParseException, IOException {
@@ -188,10 +185,9 @@ public class TaskGeneratorImpl implements TaskGenerator {
 
 		ConnectionDescription srcDesc = profile.getSource();
 		ConnectionDescription dstDesc = profile.getDestination();
-		final FileSystemManager fsm = new FileSystemManager();
 		try (
-			Site d1 = fsm.createConnection(fullsync, srcDesc, interactive);
-			Site d2 = fsm.createConnection(fullsync, dstDesc, interactive)) {
+			Site d1 = fileSystemManager.createConnection(srcDesc, interactive);
+			Site d2 = fileSystemManager.createConnection(dstDesc, interactive)) {
 			return execute(d1, d2, actionDecider, rules);
 		}
 		catch (Exception ex) {

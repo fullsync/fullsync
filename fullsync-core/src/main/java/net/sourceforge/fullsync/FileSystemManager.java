@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javax.inject.Inject;
+
 import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
@@ -34,6 +36,12 @@ import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 
 public class FileSystemManager {
 	public static final String BUFFER_STRATEGY_SYNCFILES = "syncfiles"; //$NON-NLS-1$
+	private final FullSync fullSync;
+
+	@Inject
+	public FileSystemManager(FullSync fullSync) {
+		this.fullSync = fullSync;
+	}
 
 	private FileSystem getFilesystem(final String scheme) {
 		switch (scheme) {
@@ -50,7 +58,7 @@ public class FileSystemManager {
 		}
 	}
 
-	public final Site createConnection(final FullSync fullsync, final ConnectionDescription desc, boolean isInteractive)
+	public final Site createConnection(final ConnectionDescription desc, boolean isInteractive)
 		throws FileSystemException, IOException, URISyntaxException {
 		URI url = desc.getUri();
 		String scheme = url.getScheme();
@@ -59,7 +67,7 @@ public class FileSystemManager {
 
 		Site s = null;
 		if (null != fs) {
-			s = fs.createConnection(fullsync, desc, isInteractive);
+			s = fs.createConnection(fullSync, desc, isInteractive);
 			/* FIXME: [BUFFERING] uncomment to reenable buffering
 			String bufferStrategy = desc.getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
 			if ((null != bufferStrategy) && !"".equals(bufferStrategy)) {

@@ -58,7 +58,6 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
-import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
@@ -73,11 +72,11 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private static final String EXPANDED_KEY = "Expanded";
 	private static final String FILTER_KEY = "Filter";
 
-	private final FullSync fullsync;
 	private final ProfileManager profileManager;
 	private final Provider<FileFilterPage> fileFilterPageProvider;
 	private final Provider<ConnectionConfiguration> connectionConfigurationProvider;
 	private final Provider<ScheduleSelectionDialog> scheduleSelectionDialogProvider;
+	private final Provider<FileSystemManager> fileSystemManagerProvider;
 
 	private Text textProfileName;
 	private Text textProfileDescription;
@@ -110,15 +109,15 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private ConnectionDescription lastSourceLoaded;
 
 	@Inject
-	public ProfileDetailsTabbedPage(Shell shell, FullSync fullsync, ProfileManager profileManager,
-		Provider<FileFilterPage> fileFilterPageProvider, Provider<ConnectionConfiguration> connectionConfigurationProvider,
-		Provider<ScheduleSelectionDialog> scheduleSelectionDialogProvider) {
+	public ProfileDetailsTabbedPage(Shell shell, ProfileManager profileManager, Provider<FileFilterPage> fileFilterPageProvider,
+		Provider<ConnectionConfiguration> connectionConfigurationProvider,
+		Provider<ScheduleSelectionDialog> scheduleSelectionDialogProvider, Provider<FileSystemManager> fileSystemManagerProvider) {
 		super(shell);
-		this.fullsync = fullsync;
 		this.profileManager = profileManager;
 		this.fileFilterPageProvider = fileFilterPageProvider;
 		this.connectionConfigurationProvider = connectionConfigurationProvider;
 		this.scheduleSelectionDialogProvider = scheduleSelectionDialogProvider;
+		this.fileSystemManagerProvider = fileSystemManagerProvider;
 	}
 
 	public void setProfile(Profile profile) {
@@ -677,7 +676,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 							ConnectionDescription.Builder builder = new ConnectionDescription.Builder(src);
 							builder.setBufferStrategy(null);
 							lastSourceLoaded = builder.build();
-							sourceSite = new FileSystemManager().createConnection(fullsync, lastSourceLoaded, true);
+							sourceSite = fileSystemManagerProvider.get().createConnection(lastSourceLoaded, true);
 							drawDirectoryTree();
 						}
 						else {

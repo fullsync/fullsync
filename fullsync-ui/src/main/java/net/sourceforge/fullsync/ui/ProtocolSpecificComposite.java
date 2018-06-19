@@ -38,14 +38,13 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ConnectionDescription.Builder;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemManager;
-import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.fs.Site;
 
 abstract class ProtocolSpecificComposite {
 	@Inject
-	private FullSync fullsync;
-	@Inject
 	private Provider<FileObjectChooser> fileObjectChooserProvider;
+	@Inject
+	private Provider<FileSystemManager> fileSystemManagerProvider;
 
 	protected Text textPath;
 	protected String m_scheme;
@@ -104,8 +103,8 @@ abstract class ProtocolSpecificComposite {
 	public void onBrowse() {
 		try {
 			ConnectionDescription desc = getConnectionDescription().build();
-			FileSystemManager fsm = new FileSystemManager();
-			try (Site conn = fsm.createConnection(fullsync, desc, true)) {
+			FileSystemManager fsm = fileSystemManagerProvider.get();
+			try (Site conn = fsm.createConnection(desc, true)) {
 				FileObject base = conn.getBase();
 				FileObjectChooser foc = fileObjectChooserProvider.get();
 				if (foc.open(m_parent.getShell(), base)) {

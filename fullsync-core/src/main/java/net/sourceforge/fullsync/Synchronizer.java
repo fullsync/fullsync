@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +28,7 @@ import org.slf4j.LoggerFactory;
 import net.sourceforge.fullsync.buffer.BlockBuffer;
 import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 
-/**
- * This class should provide wrappers for most common synchronization tasks
- * like synchronizing a profile or perfoming a task tree.
- */
+@Singleton
 public class Synchronizer {
 	private static final Logger logger = LoggerFactory.getLogger(Synchronizer.class);
 
@@ -51,24 +49,10 @@ public class Synchronizer {
 		return null;
 	}
 
-	/**
-	 * @return Returns the ErrorLevel
-	 */
 	public int performActions(TaskTree taskTree) {
 		return performActions(taskTree, null);
 	}
 
-	/**
-	 * TODO if we add some listener/feedback receiver here we could
-	 * easily use this for visual action performing as well.
-	 * -- done ?
-	 *
-	 * now we still need the action count info before everything is performed
-	 * and later we'll need to cancel/stop the whole process
-	 * looks like we really need to single thread the whole class !
-	 *
-	 * @return Returns the ErrorLevel
-	 */
 	public int performActions(TaskTree taskTree, TaskFinishedListener listener) {
 		try {
 			logger.info("Synchronization started");
