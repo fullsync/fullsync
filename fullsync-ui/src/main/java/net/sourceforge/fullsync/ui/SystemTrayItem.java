@@ -34,18 +34,16 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TrayItem;
 
-import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskGenerationListener;
-import net.sourceforge.fullsync.TaskGenerator;
-import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.fs.File;
+import com.google.common.eventbus.Subscribe;
+
+import net.sourceforge.fullsync.event.TaskTreeFinished;
+import net.sourceforge.fullsync.event.TaskTreeStarted;
 
 @Singleton
-public class SystemTrayItem implements TaskGenerationListener {
+public class SystemTrayItem {
 	private final Shell shell;
 	private final Provider<ImageRepository> imageRepositoryProvider;
 	private final Provider<MainWindow> mainWindowProvider;
-	private final Provider<TaskGenerator> taskGeneratorProvider;
 	private TrayItem trayItem;
 	private Image[] imageList;
 	private Menu menu;
@@ -54,12 +52,10 @@ public class SystemTrayItem implements TaskGenerationListener {
 	private boolean isBusy;
 
 	@Inject
-	public SystemTrayItem(Shell shell, Provider<ImageRepository> imageRepositoryProvider, Provider<MainWindow> mainWindowProvider,
-		Provider<TaskGenerator> taskGeneratorProvider) {
+	public SystemTrayItem(Shell shell, Provider<ImageRepository> imageRepositoryProvider, Provider<MainWindow> mainWindowProvider) {
 		this.shell = shell;
 		this.imageRepositoryProvider = imageRepositoryProvider;
 		this.mainWindowProvider = mainWindowProvider;
-		this.taskGeneratorProvider = taskGeneratorProvider;
 	}
 
 	public void show() {
@@ -90,8 +86,6 @@ public class SystemTrayItem implements TaskGenerationListener {
 		item = new MenuItem(menu, SWT.NULL);
 		item.setText(Messages.getString("SystemTrayItem.Exit")); //$NON-NLS-1$
 		item.addListener(SWT.Selection, e -> mainWindowProvider.get().closeGui());
-
-		taskGeneratorProvider.get().addTaskGenerationListener(this);
 	}
 
 	public void setVisible(boolean visible) {
@@ -99,7 +93,6 @@ public class SystemTrayItem implements TaskGenerationListener {
 	}
 
 	private void displayDisposed(Event e) {
-		taskGeneratorProvider.get().removeTaskGenerationListener(this);
 		trayItem.dispose();
 		menu.dispose();
 		if (null != timer) {
@@ -107,18 +100,8 @@ public class SystemTrayItem implements TaskGenerationListener {
 		}
 	}
 
-	@Override
-	public void taskGenerationStarted(File source, File destination) {
-		// not relevant
-	}
-
-	@Override
-	public void taskGenerationFinished(Task task) {
-		// not relevant
-	}
-
-	@Override
-	public synchronized void taskTreeStarted(TaskTree tree) {
+	@Subscribe
+	private synchronized void taskTreeStarted(TaskTreeStarted taskTreeStarted) {
 		if (!isBusy) {
 			this.timer = new Timer();
 			isBusy = true;
@@ -132,8 +115,8 @@ public class SystemTrayItem implements TaskGenerationListener {
 		}
 	}
 
-	@Override
-	public synchronized void taskTreeFinished(TaskTree tree) {
+	@Subscribe
+	private synchronized void taskTreeFinished(TaskTreeFinished taskTreeFinished) {
 		if (isBusy) {
 			isBusy = false;
 			timer.cancel();

@@ -17,16 +17,25 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync;
+package net.sourceforge.fullsync.event;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import net.sourceforge.fullsync.Task;
+import net.sourceforge.fullsync.TaskTree;
 
-import net.sourceforge.fullsync.fs.Site;
+public class TaskGenerationFinished {
+	private final TaskTree taskTree;
+	private final Task task;
 
-public interface TaskGenerator {
-	TaskTree execute(Profile profile, boolean interactive) throws FileSystemException, DataParseException, URISyntaxException, IOException;
+	public TaskGenerationFinished(TaskTree taskTree, Task task) {
+		this.taskTree = taskTree;
+		this.task = task;
+	}
 
-	TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet initialRules)
-		throws FileSystemException, DataParseException, IOException;
+	public TaskTree getTaskTree() {
+		return taskTree;
+	}
+
+	public Task getTask() {
+		return task;
+	}
 }

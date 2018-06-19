@@ -21,7 +21,9 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 
 import javax.inject.Inject;
@@ -54,19 +56,20 @@ import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuntimeConfiguration;
 import net.sourceforge.fullsync.Synchronizer;
-import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskGenerationListener;
-import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.cli.Main;
 import net.sourceforge.fullsync.event.ScheduledProfileExecution;
 import net.sourceforge.fullsync.event.SchedulerStatusChanged;
+import net.sourceforge.fullsync.event.TaskGenerationFinished;
+import net.sourceforge.fullsync.event.TaskTreeFinished;
+import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.schedule.Scheduler;
 
 @Singleton
-class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
+class MainWindow implements ProfileListControlHandler {
+	private final Set<TaskTree> runningTaskTrees = new HashSet<>();
 	private final Display display;
 	private final ImageRepository imageRepository;
 	private final ProfileManager profileManager;
@@ -94,13 +97,12 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	private GUIUpdateQueue<String> statusLineText;
 
 	@Inject
-	MainWindow(Display display, ImageRepository imageRepository, Shell shell, ProfileManager profileManager, TaskGenerator taskGenerator,
-		Scheduler scheduler, RuntimeConfiguration runtimeConfiguration, Preferences preferences,
-		ScheduledExecutorService scheduledExecutorService, Provider<PreferencesPage> preferencesPageProvider,
-		Provider<Synchronizer> synchronizerProvider, Provider<ImportProfilesPage> importProfilesPageProvider,
-		Provider<SystemStatusPage> systemStatusPageProvider, Provider<AboutDialog> aboutDialogProvider,
-		Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider, Provider<TaskDecisionPage> taskDecisionPageProvider,
-		ProfileListCompositeFactory profileListCompositeFactory) {
+	MainWindow(Display display, ImageRepository imageRepository, Shell shell, ProfileManager profileManager, Scheduler scheduler,
+		RuntimeConfiguration runtimeConfiguration, Preferences preferences, ScheduledExecutorService scheduledExecutorService,
+		Provider<PreferencesPage> preferencesPageProvider, Provider<Synchronizer> synchronizerProvider,
+		Provider<ImportProfilesPage> importProfilesPageProvider, Provider<SystemStatusPage> systemStatusPageProvider,
+		Provider<AboutDialog> aboutDialogProvider, Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider,
+		Provider<TaskDecisionPage> taskDecisionPageProvider, ProfileListCompositeFactory profileListCompositeFactory) {
 		this.display = display;
 		this.imageRepository = imageRepository;
 		this.profileManager = profileManager;
@@ -147,8 +149,6 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 			File lastCheckedFile = files.get(files.size() - 1);
 			statusLineText.add(Messages.getString("MainWindow.Checking_File", lastCheckedFile.getPath())); //$NON-NLS-1$
 		});
-
-		taskGenerator.addTaskGenerationListener(this);
 
 		boolean enabled = scheduler.isEnabled();
 		toolItemScheduleStart.setEnabled(!enabled);
@@ -440,23 +440,21 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		profileListContainer.layout();
 	}
 
-	@Override
-	public void taskTreeStarted(TaskTree tree) {
-		// not significant
+	@Subscribe
+	private void taskTreeStarted(TaskTreeStarted taskTreeStarted) {
+		runningTaskTrees.add(taskTreeStarted.getTaskTree());
 	}
 
-	@Override
-	public void taskGenerationStarted(final File source, final File destination) {
-		lastFileChecked.add(source);
+	@Subscribe
+	private void taskGenerationFinished(TaskGenerationFinished taskGenerationFinished) {
+		if (runningTaskTrees.contains(taskGenerationFinished.getTaskTree())) {
+			lastFileChecked.add(taskGenerationFinished.getTask().getSource());
+		}
 	}
 
-	@Override
-	public void taskGenerationFinished(Task task) {
-		// not significant
-	}
-
-	@Override
-	public void taskTreeFinished(TaskTree tree) {
+	@Subscribe
+	private void taskTreeFinished(TaskTreeFinished taskTreeFinished) {
+		runningTaskTrees.remove(taskTreeFinished.getTaskTree());
 		statusLineText.add(Messages.getString("MainWindow.Sync_Finished")); //$NON-NLS-1$
 	}
 

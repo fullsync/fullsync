@@ -23,12 +23,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.eventbus.EventBus;
 
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
@@ -44,16 +45,18 @@ import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.event.TaskGenerationFinished;
+import net.sourceforge.fullsync.event.TaskTreeFinished;
+import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
 
 public class TaskGeneratorImpl implements TaskGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
 	private final FileSystemManager fileSystemManager;
-	private final List<TaskGenerationListener> taskGenerationListeners = new ArrayList<>();
+	private final EventBus eventBus;
 	// TODO this should be execution local so the class
 	// itself is multithreadable
 	// so maybe just put them all into a inmutable
@@ -63,8 +66,9 @@ public class TaskGeneratorImpl implements TaskGenerator {
 	private BufferStateDeciderImpl bufferStateDecider;
 
 	@Inject
-	public TaskGeneratorImpl(FileSystemManager fileSystemManager) {
+	public TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus eventBus) {
 		this.fileSystemManager = fileSystemManager;
+		this.eventBus = eventBus;
 	}
 
 	protected RuleSet updateRules(File src, File dst, RuleSet rules) throws DataParseException, IOException {
@@ -78,31 +82,25 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		return rules;
 	}
 
-	protected void recurse(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
+	protected void recurse(TaskTree taskTree, File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
 		throws DataParseException, IOException {
 		if (src.isDirectory() && dst.isDirectory()) {
-			synchronizeDirectories(src, dst, rules, parent, actionDecider);
+			synchronizeDirectories(taskTree, src, dst, rules, parent, actionDecider);
 		}
 		// TODO [DirHereFileThere, ?]
 		// handle case where src is dir but dst is file
 	}
 
-	public void synchronizeNodes(File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
+	private void synchronizeNodes(TaskTree taskTree, File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
 		throws DataParseException, IOException {
 		if (!takeIgnoreDecider.isNodeIgnored(src)) {
-			for (TaskGenerationListener listener : taskGenerationListeners) {
-				listener.taskGenerationStarted(src, dst);
-			}
-
 			Task task = actionDecider.getTask(src, dst, stateDecider, bufferStateDecider);
 			logger.debug("{}: {}", src.getName(), task);
 
-			for (TaskGenerationListener listener : taskGenerationListeners) {
-				listener.taskGenerationFinished(task);
-			}
+			eventBus.post(new TaskGenerationFinished(taskTree, task));
 
 			if (rules.isUsingRecursion()) {
-				recurse(src, dst, rules, task, actionDecider);
+				recurse(taskTree, src, dst, rules, task, actionDecider);
 			}
 			parent.addChild(task);
 		}
@@ -112,7 +110,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 	 * we could updateRules in synchronizeNodes and apply synchronizeDirectories
 	 * to the given src and dst if they are directories
 	 */
-	public void synchronizeDirectories(File src, File dst, RuleSet oldrules, Task parent, ActionDecider actionDecider)
+	public void synchronizeDirectories(TaskTree taskTree, File src, File dst, RuleSet oldrules, Task parent, ActionDecider actionDecider)
 		throws DataParseException, IOException {
 		// update rules to current directory
 		RuleSet rules = updateRules(src, dst, oldrules);
@@ -129,7 +127,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 				dstFiles.remove(dfile);
 			}
 
-			synchronizeNodes(sfile, dfile, rules, parent, actionDecider);
+			synchronizeNodes(taskTree, sfile, dfile, rules, parent, actionDecider);
 		}
 
 		for (File dfile : dstFiles) {
@@ -138,23 +136,13 @@ public class TaskGeneratorImpl implements TaskGenerator {
 				sfile = src.createChild(dfile.getName(), dfile.isDirectory());
 			}
 
-			synchronizeNodes(sfile, dfile, rules, parent, actionDecider);
+			synchronizeNodes(taskTree, sfile, dfile, rules, parent, actionDecider);
 		}
 
 		/* HACK OMG, that is utterly wrong !! */
 		this.takeIgnoreDecider = oldrules;
 		this.stateDecider = new StateDeciderImpl(oldrules);
 		this.bufferStateDecider = new BufferStateDeciderImpl(oldrules);
-	}
-
-	@Override
-	public void addTaskGenerationListener(TaskGenerationListener listener) {
-		taskGenerationListeners.add(listener);
-	}
-
-	@Override
-	public void removeTaskGenerationListener(TaskGenerationListener listener) {
-		taskGenerationListeners.remove(listener);
 	}
 
 	@Override
@@ -210,16 +198,15 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		Task root = new Task(null, null, State.IN_SYNC, new Action[] { rootAction });
 		tree.setRoot(root);
 
-		for (TaskGenerationListener listener : taskGenerationListeners) {
-			listener.taskTreeStarted(tree);
+		try {
+			eventBus.post(new TaskTreeStarted(tree));
+
+			// TODO use syncnodes here [?]
+			// TODO get traversal type and start correct traversal action
+			synchronizeDirectories(tree, source.getRoot(), destination.getRoot(), rules, root, actionDecider);
 		}
-
-		// TODO use syncnodes here [?]
-		// TODO get traversal type and start correct traversal action
-		synchronizeDirectories(source.getRoot(), destination.getRoot(), rules, root, actionDecider);
-
-		for (TaskGenerationListener listener : taskGenerationListeners) {
-			listener.taskTreeFinished(tree);
+		finally {
+			eventBus.post(new TaskTreeFinished(tree));
 		}
 
 		return tree;

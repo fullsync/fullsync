@@ -17,18 +17,18 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync;
+package net.sourceforge.fullsync.event;
 
-import java.util.EventListener;
+import net.sourceforge.fullsync.TaskTree;
 
-import net.sourceforge.fullsync.fs.File;
+public class TaskTreeStarted {
+	private final TaskTree taskTree;
 
-public interface TaskGenerationListener extends EventListener {
-	void taskTreeStarted(TaskTree tree);
+	public TaskTreeStarted(TaskTree taskTree) {
+		this.taskTree = taskTree;
+	}
 
-	void taskGenerationStarted(File source, File destination);
-
-	void taskGenerationFinished(Task task);
-
-	void taskTreeFinished(TaskTree tree);
+	public TaskTree getTaskTree() {
+		return taskTree;
+	}
 }
