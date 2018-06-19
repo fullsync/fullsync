@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
@@ -199,10 +198,6 @@ class MainWindow implements ProfileListControlHandler {
 		shell.setMinimized(!visible);
 	}
 
-	/**
-	 * Initializes the GUI.
-	 * @throws IOException
-	 */
 	private void initGUI() {
 		try {
 			mainComposite.setSize(600, 300);
