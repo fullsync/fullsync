@@ -142,6 +142,7 @@ class MainWindow implements ProfileListControlHandler {
 		statusLineText = new GUIUpdateQueue<>(display, texts -> {
 			String statusMessage = texts.get(texts.size() - 1);
 			statusLine.setText(statusMessage);
+			mainComposite.layout(new Control[] { statusLine }); // workaround SWT layout bug on GTK
 		});
 
 		lastFileChecked = new GUIUpdateQueue<>(display, files -> {
