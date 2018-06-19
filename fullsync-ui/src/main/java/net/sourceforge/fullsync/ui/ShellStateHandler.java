@@ -32,7 +32,7 @@ public class ShellStateHandler {
 	private final String name;
 	private final Shell shell;
 
-	public ShellStateHandler(Preferences preferences, String name, Shell shell) {
+	private ShellStateHandler(Preferences preferences, String name, Shell shell) {
 		this.preferences = preferences;
 		this.name = name;
 		this.shell = shell;
@@ -41,8 +41,8 @@ public class ShellStateHandler {
 		shell.getDisplay().asyncExec(this::applyPreferences);
 	}
 
-	public static void apply(Preferences preferences, Shell shell, Class<?> clazz) {
-		new ShellStateHandler(preferences, clazz.getSimpleName(), shell);
+	public static ShellStateHandler apply(Preferences preferences, Shell shell, Class<?> clazz) {
+		return new ShellStateHandler(preferences, clazz.getSimpleName(), shell);
 	}
 
 	private void applyPreferences() {
@@ -61,7 +61,11 @@ public class ShellStateHandler {
 	}
 
 	private void shellClosed(Event event) {
-		WindowState ws = new WindowState();
+		saveWindowState();
+	}
+
+	public void saveWindowState() {
+		WindowState ws = preferences.getWindowState(name);
 		ws.setMaximized(shell.getMaximized());
 		ws.setMinimized(shell.getMinimized());
 		if (!ws.isMaximized()) {

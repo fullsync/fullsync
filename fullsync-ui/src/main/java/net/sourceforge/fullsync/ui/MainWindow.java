@@ -59,7 +59,6 @@ import net.sourceforge.fullsync.TaskGenerationListener;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
-import net.sourceforge.fullsync.WindowState;
 import net.sourceforge.fullsync.cli.Main;
 import net.sourceforge.fullsync.event.ScheduledProfileExecution;
 import net.sourceforge.fullsync.event.SchedulerStatusChanged;
@@ -83,6 +82,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 	private final Provider<TaskDecisionPage> taskDecisionPageProvider;
 	private final ProfileListCompositeFactory profileListCompositeFactory;
 	private final Composite mainComposite;
+	private final ShellStateHandler shellStateHandler;
 	private Menu menuBarMainWindow;
 	private Label statusLine;
 	private ToolItem toolItemScheduleStart;
@@ -156,7 +156,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 		Point size = mainComposite.getSize();
 		Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
 		shell.setSize(shellBounds.width, shellBounds.height);
-		restoreWindowState();
+		shellStateHandler = ShellStateHandler.apply(preferences, shell, MainWindow.class);
 		Optional<Boolean> minimized = runtimeConfiguration.isStartMinimized();
 		if (minimized.orElse(false).booleanValue()) {
 			shell.setVisible(false);
@@ -191,37 +191,6 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 				profile.setLastUpdate(new Date());
 			}
 		}
-	}
-
-	private void restoreWindowState() {
-		Shell shell = mainComposite.getShell();
-		shell.setVisible(true);
-		WindowState ws = preferences.getWindowState(null);
-		Rectangle r = shell.getDisplay().getBounds();
-		if (ws.isValid() && ws.isInsideOf(r.x, r.y, r.width, r.height)) {
-			shell.setBounds(ws.getX(), ws.getY(), ws.getWidth(), ws.getHeight());
-		}
-		if (ws.isMinimized()) {
-			shell.setMinimized(true);
-		}
-		if (ws.isMaximized()) {
-			shell.setMaximized(true);
-		}
-	}
-
-	public void storeWindowState() {
-		Shell shell = mainComposite.getShell();
-		WindowState ws = new WindowState();
-		ws.setMaximized(shell.getMaximized());
-		ws.setMinimized(shell.getMinimized());
-		if (!ws.isMaximized()) {
-			Rectangle r = shell.getBounds();
-			ws.setX(r.x);
-			ws.setY(r.y);
-			ws.setWidth(r.width);
-			ws.setHeight(r.height);
-		}
-		preferences.setWindowState(null, ws);
 	}
 
 	public void setVisible(boolean visible) {
@@ -619,7 +588,7 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 				return;
 			}
 		}
-		storeWindowState();
+		shellStateHandler.saveWindowState();
 		display.dispose();
 	}
 }
