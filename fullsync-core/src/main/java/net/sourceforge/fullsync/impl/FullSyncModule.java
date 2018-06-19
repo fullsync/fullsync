@@ -30,9 +30,11 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.matcher.Matchers;
+import com.google.inject.name.Names;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuntimeConfiguration;
@@ -56,8 +58,9 @@ public class FullSyncModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+		bind(String.class).annotatedWith(Names.named(FullSync.PREFERENCES_PROPERTIES)).toInstance(prefrencesFile);
 		bind(TaskGenerator.class).to(TaskGeneratorImpl.class);
-		bind(Preferences.class).toInstance(new ConfigurationPreferences(prefrencesFile));
+		bind(Preferences.class).to(ConfigurationPreferences.class);
 		bind(RuntimeConfiguration.class).toInstance(new CliRuntimeConfiguration(line));
 		bind(ProfileManager.class).to(XmlBackedProfileManager.class);
 		bind(Scheduler.class).to(SchedulerImpl.class);

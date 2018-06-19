@@ -222,7 +222,6 @@ class MainWindow implements ProfileListControlHandler, TaskGenerationListener {
 			ws.setHeight(r.height);
 		}
 		preferences.setWindowState(null, ws);
-		preferences.save();
 	}
 
 	public void setVisible(boolean visible) {

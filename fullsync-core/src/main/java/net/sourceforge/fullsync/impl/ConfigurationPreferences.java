@@ -25,14 +25,24 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
+import com.google.common.eventbus.Subscribe;
+
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.WindowState;
+import net.sourceforge.fullsync.event.ShutdownEvent;
 
 @Singleton
 public class ConfigurationPreferences implements Preferences {
@@ -58,7 +68,8 @@ public class ConfigurationPreferences implements Preferences {
 	private final Properties props;
 	private final String lastFullSyncVersion;
 
-	public ConfigurationPreferences(final String configFile) {
+	@Inject
+	public ConfigurationPreferences(@Named(FullSync.PREFERENCES_PROPERTIES) String configFile) {
 		configFileName = configFile;
 		props = new Properties();
 
@@ -72,6 +83,11 @@ public class ConfigurationPreferences implements Preferences {
 			}
 		}
 		lastFullSyncVersion = props.getProperty(PREFERENCE_FULLSYNC_VERSION, "");
+	}
+
+	@Subscribe
+	private void onShutdown(ShutdownEvent shutdownEvent) {
+		save();
 	}
 
 	private boolean getProperty(String name, boolean defaultValue) {
@@ -104,12 +120,22 @@ public class ConfigurationPreferences implements Preferences {
 	public void save() {
 		String currentFullSyncVersion = Util.getFullSyncVersion();
 		props.setProperty(PREFERENCE_FULLSYNC_VERSION, currentFullSyncVersion);
-		try (Writer writer = new FileWriter(configFileName)) {
-			props.store(writer, null);
-			writer.flush();
+		try {
+			Path targetPath = Paths.get(configFileName);
+			File tmpFile = File.createTempFile(FullSync.PREFERENCES_PROPERTIES, ".tmp", targetPath.getParent().toFile());
+			try (Writer writer = new FileWriter(tmpFile)) {
+				props.store(writer, null);
+				writer.flush();
+				writer.close();
+				Files.move(Paths.get(tmpFile.toURI()), targetPath, StandardCopyOption.ATOMIC_MOVE);
+			}
+			catch (IOException e) {
+				ExceptionHandler.reportException(e);
+			}
+			Files.deleteIfExists(Paths.get(tmpFile.toURI()));
 		}
-		catch (IOException e) {
-			ExceptionHandler.reportException(e);
+		catch (IOException tmpFileError) {
+			ExceptionHandler.reportException(tmpFileError);
 		}
 	}
 
