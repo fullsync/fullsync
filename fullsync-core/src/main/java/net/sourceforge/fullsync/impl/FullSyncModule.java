@@ -46,9 +46,11 @@ import net.sourceforge.fullsync.schedule.Scheduler;
 import net.sourceforge.fullsync.schedule.SchedulerImpl;
 
 public class FullSyncModule extends AbstractModule {
+	// 10 threads per core for a Quad Core + HT CPU?
+	private static final int MAX_THREAD_POOL_SIZE = 80;
 	private final CommandLine line;
 	private final String prefrencesFile;
-	private final ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(1);
+	private final ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(MAX_THREAD_POOL_SIZE);
 	private final EventBus eventBus = new AsyncEventBus(scheduledExecutorService);
 
 	public FullSyncModule(CommandLine line, String prefrencesFile) {
