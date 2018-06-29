@@ -26,9 +26,12 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Collection;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -52,9 +55,8 @@ import com.google.common.eventbus.EventBus;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
-import net.sourceforge.fullsync.ProfileChangeListener;
+import net.sourceforge.fullsync.ProfileBuilder;
 import net.sourceforge.fullsync.ProfileManager;
-import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.event.ProfileListChanged;
 import net.sourceforge.fullsync.schedule.Schedule;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
@@ -65,11 +67,11 @@ import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
  * a scheduler for creating events when a Profile should be executed.
  */
 @Singleton
-public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManager, ProfileChangeListener {
+public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManager {
 	private final EventBus eventBus;
 	private final ProfileManagerSchedulerTaskFactory profileManagerSchedulerTaskFactory;
 	private String profilesFileName;
-	private Set<Profile> profiles = new TreeSet<>();
+	private Map<String, Profile> profiles = new HashMap<>();
 
 	@Inject
 	public XmlBackedProfileManager(EventBus eventBus, ProfileManagerSchedulerTaskFactory profileManagerSchedulerTaskFactory) {
@@ -121,27 +123,19 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	}
 
 	private void deserializeProfile(Node n) throws DataParseException {
-		Profile p = Profile.unserialize((Element) n);
-		String name = p.getName();
-		int j = 1;
-		while (null != getProfile(name)) {
-			name = p.getName() + " (" + (j++) + ")";
+		Profile p = ProfileImpl.unserialize(eventBus, (Element) n);
+		String id = p.getId();
+		while ((null == id) || "".equals(id) || (null != getProfileById(id))) {
+			id = getUnusedProfileId();
 		}
-		if (!name.equals(p.getName())) {
-			Profile newProfile = new Profile(name, p.getDescription(), p.getSynchronizationType(), p.getSource(), p.getDestination(),
-				p.getRuleSet(), p.isSchedulingEnabled(), p.getSchedule());
-			newProfile.setLastError(p.getLastErrorLevel(), p.getLastErrorString());
-			newProfile.setLastUpdate(p.getLastUpdate());
-			doAddProfile(newProfile, false);
+		if (!id.equals(p.getId())) {
+			p = getProfileBuilder(p).setId(id).build();
 		}
-		else {
-			doAddProfile(p, false);
-		}
+		doAddProfile(p, false);
 	}
 
-	private void doAddProfile(Profile profile, boolean fireChangedEvent) {
-		profiles.add(profile);
-		profile.addProfileChangeListener(this);
+	private synchronized void doAddProfile(Profile profile, boolean fireChangedEvent) {
+		profiles.put(profile.getId(), profile);
 		if (fireChangedEvent) {
 			eventBus.post(new ProfileListChanged());
 		}
@@ -153,41 +147,47 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	}
 
 	@Override
-	public void updateProfile(Profile oldProfile, Profile newProfile) {
-		oldProfile.removeProfileChangeListener(this);
-		profiles.remove(oldProfile);
+	public synchronized void updateProfile(Profile oldProfile, Profile newProfile) {
+		profiles.remove(oldProfile.getId());
 		doAddProfile(newProfile, true);
 	}
 
 	@Override
-	public void removeProfile(Profile profile) {
-		profile.removeProfileChangeListener(this);
-		profiles.remove(profile);
+	public synchronized void removeProfile(Profile profile) {
+		profiles.remove(profile.getId());
 		eventBus.post(new ProfileListChanged());
 	}
 
 	@Override
-	public Collection<Profile> getProfiles() {
-		return profiles;
+	public synchronized List<Profile> getProfiles() {
+		List<Profile> profileList = new ArrayList<>(profiles.values());
+		Collections.sort(profileList, new Profile.SortByNameAndIdComparator());
+		return profileList;
 	}
 
 	@Override
-	public Profile getProfile(String name) {
-		for (Profile p : profiles) {
-			if (p.getName().equals(name)) {
-				return p;
+	public synchronized Profile getProfileByName(String name) {
+		for (Map.Entry<String, Profile> entry : profiles.entrySet()) {
+			if (entry.getValue().getName().equals(name)) {
+				return entry.getValue();
 			}
 		}
 		return null;
 	}
 
 	@Override
-	public ScheduleTask getNextScheduleTask() {
+	public synchronized Profile getProfileById(String uuid) {
+		return profiles.get(uuid);
+	}
+
+	@Override
+	public synchronized ScheduleTask getNextScheduleTask() {
 		long now = System.currentTimeMillis();
 		long nextTime = Long.MAX_VALUE;
 		Profile nextProfile = null;
 
-		for (Profile p : profiles) {
+		for (Map.Entry<String, Profile> entry : profiles.entrySet()) {
+			Profile p = entry.getValue();
 			Schedule s = p.getSchedule();
 			if (p.isSchedulingEnabled() && (null != s)) {
 				long o = s.getNextOccurrence(p.getLastScheduleTime(), now);
@@ -205,19 +205,14 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	}
 
 	@Override
-	public void profileChanged(Profile profile) {
-		eventBus.post(new ProfileChanged(profile));
-	}
-
-	@Override
-	public void save() {
+	public synchronized void save() {
 		try {
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = docBuilder.newDocument();
 
 			Element e = doc.createElement("Profiles");
-			e.setAttribute("version", "1.1");
-			profiles.stream().map(p -> p.serialize(doc)).forEachOrdered(e::appendChild);
+			e.setAttribute("version", "1.2");
+			profiles.values().stream().map(p -> ((ProfileImpl) p).serialize(doc)).forEachOrdered(e::appendChild);
 			doc.appendChild(e);
 
 			TransformerFactory fac = TransformerFactory.newInstance();
@@ -246,5 +241,23 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 		catch (Exception ex) {
 			ExceptionHandler.reportException(ex);
 		}
+	}
+
+	private String getUnusedProfileId() {
+		UUID uuid;
+		do {
+			uuid = UUID.randomUUID();
+		} while (getProfileById(uuid.toString()) != null);
+		return uuid.toString();
+	}
+
+	@Override
+	public ProfileBuilder getProfileBuilder() {
+		return new ProfileBuilderImpl(eventBus, null, this::getUnusedProfileId);
+	}
+
+	@Override
+	public ProfileBuilder getProfileBuilder(Profile profile) {
+		return new ProfileBuilderImpl(eventBus, profile, this::getUnusedProfileId);
 	}
 }

@@ -273,7 +273,7 @@ public class Main implements Launcher { // NO_UCD
 	}
 
 	private static void handleRunProfile(Synchronizer synchronizer, ProfileManager profileManager, String profileName) {
-		Profile p = profileManager.getProfile(profileName);
+		Profile p = profileManager.getProfileByName(profileName);
 		int errorlevel = 1;
 		if (null != p) {
 			TaskTree tree = synchronizer.executeProfile(p, false);

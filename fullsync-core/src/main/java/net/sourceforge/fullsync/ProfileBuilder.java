@@ -19,8 +19,35 @@
  */
 package net.sourceforge.fullsync;
 
-import java.util.EventListener;
+import java.util.Date;
 
-public interface ProfileChangeListener extends EventListener {
-	void profileChanged(Profile profile);
+import net.sourceforge.fullsync.schedule.Schedule;
+
+public interface ProfileBuilder {
+
+	ProfileBuilder setId(String id);
+
+	ProfileBuilder setName(String name);
+
+	ProfileBuilder setDescription(String description);
+
+	ProfileBuilder setSynchronizationType(String synchronizationType);
+
+	ProfileBuilder setSource(ConnectionDescription source);
+
+	ProfileBuilder setDestination(ConnectionDescription destination);
+
+	ProfileBuilder setRuleSet(RuleSetDescriptor ruleSet);
+
+	ProfileBuilder setSchedulingEnabled(boolean schedulingEnabled);
+
+	ProfileBuilder setSchedule(Schedule schedule);
+
+	ProfileBuilder setLastError(int i, String lastErrorString);
+
+	ProfileBuilder setLastScheduleTime(long lastScheduleTime);
+
+	ProfileBuilder setLastUpdate(Date lastUpdate);
+
+	Profile build();
 }

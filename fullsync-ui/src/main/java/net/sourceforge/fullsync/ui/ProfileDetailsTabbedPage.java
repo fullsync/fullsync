@@ -59,6 +59,7 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ProfileBuilder;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.fs.File;
@@ -610,8 +611,9 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		}
 		boolean isNewProfile = null == profile;
 
+		//TODO: no longer necessary, keep or remove?
 		if (isNewProfile || !textProfileName.getText().equals(profile.getName())) {
-			Profile pr = profileManager.getProfile(textProfileName.getText());
+			Profile pr = profileManager.getProfileByName(textProfileName.getText());
 			if (null != pr) {
 				MessageBox mb = new MessageBox(m_parent.getShell(), SWT.ICON_ERROR);
 				mb.setText(Messages.getString("ProfileDetails.Duplicate_Entry")); //$NON-NLS-1$
@@ -620,26 +622,28 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				return false;
 			}
 		}
-		RuleSetDescriptor ruleSetDescriptor = null;
-		boolean syncSubdirectories = syncSubsButton.getSelection();
-		boolean useFileFilter = buttonUseFileFilter.getSelection();
-		ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubdirectories, filter, useFileFilter, getFileFilterTree());
-
 		Profile oldProfile = profile;
-		String name = textProfileName.getText();
-		String description = textProfileDescription.getText();
-		String synchronizationType = comboType.getText();
-		boolean schedulingEnabled = buttonEnabled.getSelection();
-		Schedule schedule = (Schedule) buttonScheduling.getData();
-		profile = new Profile(name, description, synchronizationType, src, dst, ruleSetDescriptor, schedulingEnabled, schedule);
+		ProfileBuilder builder = isNewProfile ? profileManager.getProfileBuilder() : profileManager.getProfileBuilder(profile);
+
+		RuleSetDescriptor ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), filter,
+			buttonUseFileFilter.getSelection(), getFileFilterTree());
+
+		builder.setName(textProfileName.getText())
+			.setDescription(textProfileDescription.getText())
+			.setSynchronizationType(comboType.getText())
+			.setSchedulingEnabled(buttonEnabled.getSelection())
+			.setSchedule((Schedule) buttonScheduling.getData())
+			.setSource(src)
+			.setDestination(dst)
+			.setRuleSet(ruleSetDescriptor);
 		if (buttonResetError.getSelection()) {
-			profile.setLastError(0, null);
+			builder.setLastError(0, null);
 		}
 		if (isNewProfile) {
-			profileManager.addProfile(profile);
+			profileManager.addProfile(builder.build());
 		}
 		else {
-			profileManager.updateProfile(oldProfile, profile);
+			profileManager.updateProfile(oldProfile, builder.build());
 		}
 		profileManager.save();
 		return true; //FIXME: return false if failed
