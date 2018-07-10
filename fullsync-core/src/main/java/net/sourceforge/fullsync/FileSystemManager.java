@@ -20,7 +20,6 @@
 package net.sourceforge.fullsync;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.inject.Inject;
@@ -60,8 +59,7 @@ public class FileSystemManager {
 
 	public final Site createConnection(final ConnectionDescription desc, boolean isInteractive)
 		throws FileSystemException, IOException, URISyntaxException {
-		URI url = desc.getUri();
-		String scheme = url.getScheme();
+		String scheme = desc.getScheme();
 
 		FileSystem fs = getFilesystem(scheme);
 

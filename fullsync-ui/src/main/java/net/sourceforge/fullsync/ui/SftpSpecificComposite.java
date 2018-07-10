@@ -22,7 +22,6 @@ package net.sourceforge.fullsync.ui;
 import static org.eclipse.swt.events.SelectionListener.widgetDefaultSelectedAdapter;
 import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.eclipse.swt.SWT;
@@ -46,6 +45,17 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 	private Button buttonKeybased;
 	private Label labelKeyPassphrase;
 	private Text textKeyPassphrase;
+	private Button userDirIsRootCheckbox;
+
+	@Override
+	protected void onBeforePathHook(Composite parent) {
+		super.onBeforePathHook(parent);
+		userDirIsRootCheckbox = new Button(parent, SWT.CHECK | SWT.LEFT);
+		userDirIsRootCheckbox.setText("Restrict to the default directory.");
+		GridData userDirIsRootCheckboxData = new GridData();
+		userDirIsRootCheckboxData.horizontalSpan = 3;
+		userDirIsRootCheckbox.setLayoutData(userDirIsRootCheckboxData);
+	}
 
 	@Override
 	public void createGUI(final Composite parent) {
@@ -115,37 +125,33 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 	@Override
 	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
 		ConnectionDescription.Builder builder = super.getConnectionDescription();
-		String path = textPath.getText();
-		if ((null == path) || path.isEmpty()) {
-			path = "/";
-		}
-
-		URI uri = new URI(m_scheme, null, textHost.getText(), spinnerPort.getSelection(), path, null, null);
-		builder.setUri(uri);
+		builder.setHost(textHost.getText());
+		builder.setPort(spinnerPort.getSelection());
 		builder.setUsername(textUsername.getText());
 		builder.setPassword(textPassword.getText());
 		builder.setPublicKeyAuth(buttonKeybased.getSelection());
 		builder.setKeyPassphrase(textKeyPassphrase.getText());
+		builder.setUserDirIsRoot(userDirIsRootCheckbox.getSelection());
 		return builder;
 	}
 
 	@Override
 	public void setConnectionDescription(final ConnectionDescription connection) {
 		super.setConnectionDescription(connection);
-		URI uri = connection.getUri();
-		textHost.setText(uri.getHost());
-		int port = uri.getPort();
+		textHost.setText(connection.getHost().orElse(""));
+		int port = connection.getPort().orElse(Integer.valueOf(-1)).intValue();
 		if (-1 == port) {
 			port = DEFAULT_SFTP_PORT;
 		}
 		spinnerPort.setSelection(port);
-		textUsername.setText(connection.getUsername());
-		textPassword.setText(connection.getPassword());
+		textUsername.setText(connection.getUsername().orElse(""));
+		textPassword.setText(connection.getPassword().orElse(""));
 		boolean keybased = connection.getPublicKeyAuth().orElse(Boolean.FALSE).booleanValue();
 		buttonKeybased.setSelection(keybased);
 		labelKeyPassphrase.setEnabled(keybased);
 		textKeyPassphrase.setEnabled(keybased);
 		textKeyPassphrase.setText(connection.getKeyPassphrase().orElse(""));
+		userDirIsRootCheckbox.setSelection(connection.isUserDirIsRoot());
 	}
 
 	@Override
@@ -159,5 +165,6 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 		textKeyPassphrase.setText("");
 		textKeyPassphrase.setEnabled(false);
 		labelKeyPassphrase.setEnabled(false);
+		userDirIsRootCheckbox.setSelection(false);
 	}
 }

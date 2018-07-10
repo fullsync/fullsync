@@ -47,13 +47,14 @@ abstract class ProtocolSpecificComposite {
 	private Provider<FileSystemManager> fileSystemManagerProvider;
 
 	protected Text textPath;
-	protected String m_scheme;
+	private String m_scheme;
 	protected Composite m_parent;
 
 	private Button buttonBuffered;
 
 	public void createGUI(final Composite parent) {
 		m_parent = parent;
+		onBeforePathHook(parent);
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
@@ -73,17 +74,18 @@ abstract class ProtocolSpecificComposite {
 		buttonBuffered.setVisible(false); //FIXME: [BUFFERING] remove to restore buffering
 	}
 
+	protected void onBeforePathHook(Composite parent) {
+	}
+
 	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
 		Builder builder = new ConnectionDescription.Builder();
+		builder.setScheme(m_scheme);
+		builder.setPath(textPath.getText());
 		return builder;
 	}
 
 	public void setConnectionDescription(final ConnectionDescription connection) {
-		String path = "";
-		URI uri = (null != connection) ? connection.getUri() : null;
-		if (null != uri) {
-			path = uri.getPath();
-		}
+		String path = (null != connection) ? connection.getPath() : "";
 		textPath.setText(path);
 	}
 

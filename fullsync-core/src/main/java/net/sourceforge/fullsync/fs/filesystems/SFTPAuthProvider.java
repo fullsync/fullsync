@@ -77,23 +77,23 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	@Override
 	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws FileSystemException {
-		String username = description.getUsername();
-		String password = description.getPassword();
+		String username = description.getUsername().orElse(""); //$NON-NLS-1$
+		String password = description.getPassword().orElse(""); //$NON-NLS-1$
 		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 		SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
-		//TODO: add cfg.setUserDirIsRoot(opts, false); and handle profile updates
+		cfg.setUserDirIsRoot(options, desc.isUserDirIsRoot());
 		if (null != SSH_DIR_NAME) {
-			cfg.setKnownHosts(options, new File(SSH_DIR_NAME, "known_hosts"));
+			cfg.setKnownHosts(options, new File(SSH_DIR_NAME, "known_hosts")); //$NON-NLS-1$
 		}
 		logger.debug("using knownHosts: ", cfg.getKnownHosts(options));
 		cfg.setUserInfo(options, this);
-		cfg.setStrictHostKeyChecking(options, "ask");
+		cfg.setStrictHostKeyChecking(options, "ask"); //$NON-NLS-1$
 		if (description.getPublicKeyAuth().orElse(false).booleanValue()) {
-			cfg.setPreferredAuthentications(options, "publickey,password,keyboard-interactive");
+			cfg.setPreferredAuthentications(options, "publickey,password,keyboard-interactive"); //$NON-NLS-1$
 		}
 		else {
-			cfg.setPreferredAuthentications(options, "password,keyboard-interactive");
+			cfg.setPreferredAuthentications(options, "password,keyboard-interactive"); //$NON-NLS-1$
 		}
 	}
 
@@ -106,7 +106,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 	@Override
 	public final String getPassword() {
 		logger.debug("UserInfo::getPassword");
-		return desc.getPassword();
+		return desc.getPassword().orElse("");
 	}
 
 	@Override

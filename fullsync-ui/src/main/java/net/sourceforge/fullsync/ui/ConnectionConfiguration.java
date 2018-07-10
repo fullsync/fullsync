@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.inject.Inject;
@@ -61,10 +60,7 @@ public class ConnectionConfiguration {
 	public void render(Composite parent, ConnectionDescription desc) {
 		this.parent = parent;
 		if (null != desc) {
-			URI uri = desc.getUri();
-			if (null != uri) {
-				selectedScheme = uri.getScheme();
-			}
+			selectedScheme = desc.getScheme();
 		}
 		initialize();
 	}
