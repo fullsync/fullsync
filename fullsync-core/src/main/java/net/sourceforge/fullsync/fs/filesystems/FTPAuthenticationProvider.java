@@ -31,10 +31,12 @@ import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 class FTPAuthenticationProvider implements FileSystemAuthProvider {
 	@Override
 	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws FileSystemException {
-		String username = description.getUsername();
-		String password = description.getPassword();
+		String username = description.getUsername().orElse(""); //$NON-NLS-1$
+		String password = description.getPassword().orElse(""); //$NON-NLS-1$
 		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
-		FtpFileSystemConfigBuilder.getInstance().setPassiveMode(options, true);
+		FtpFileSystemConfigBuilder cfg = FtpFileSystemConfigBuilder.getInstance();
+		cfg.setPassiveMode(options, true);
+		cfg.setUserDirIsRoot(options, description.isUserDirIsRoot());
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 	}
 }

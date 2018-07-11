@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -39,56 +41,85 @@ public class ConnectionDescription {
 	private static final String PUBLIC_KEY_AUTH_ENABLED = "enabled"; //$NON-NLS-1$
 	private static final String PUBLIC_KEY_AUTH_DISABLED = "disabled"; //$NON-NLS-1$
 	private static final String PARAMETER_KEY_PASSPHRASE = "keyPassphrase";
+	private static final String ATTRIBUTE_SCHEME = "scheme"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_HOST = "host"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_PORT = "port"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_PATH = "path"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_URI = "uri"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_BUFFER_STRATEGY = "buffer"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_USERNAME = "username"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_PASSWORD = "password"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_USER_DIR_IS_ROOT = "userDirIsRoot"; //$NON-NLS-1$
 
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionDescription.class);
 
-	private final URI uri;
-	private final String username;
-	private final String password;
+	private final String scheme;
+	private final Optional<String> host;
+	private final Optional<Integer> port;
+	private final String path;
+	private final Optional<String> username;
+	private final Optional<String> password;
 	private final Optional<String> bufferStrategy;
 	private final Optional<Boolean> publicKeyAuth;
 	private final Optional<String> keyPassphrase;
+	private final boolean userDirIsRoot;
 
 	public Element serialize(String name, Document doc) {
 		Element elem = doc.createElement(name);
-		elem.setAttribute(ATTRIBUTE_URI, uri.toString());
-		elem.setAttribute(ATTRIBUTE_USERNAME, username);
-		elem.setAttribute(ATTRIBUTE_PASSWORD, Obfuscator.obfuscate(password));
-		if (bufferStrategy.isPresent()) {
-			elem.setAttribute(ATTRIBUTE_BUFFER_STRATEGY, bufferStrategy.get());
-		}
-		if (publicKeyAuth.isPresent()) {
+		elem.setAttribute(ATTRIBUTE_SCHEME, scheme);
+		host.ifPresent(s -> elem.setAttribute(ATTRIBUTE_HOST, s));
+		port.ifPresent(integer -> elem.setAttribute(ATTRIBUTE_PORT, integer.toString()));
+		elem.setAttribute(ATTRIBUTE_PATH, path);
+		username.ifPresent(s -> elem.setAttribute(ATTRIBUTE_USERNAME, s));
+		password.ifPresent(s -> elem.setAttribute(ATTRIBUTE_PASSWORD, Obfuscator.obfuscate(s)));
+		bufferStrategy.ifPresent(s -> elem.setAttribute(ATTRIBUTE_BUFFER_STRATEGY, s));
+		publicKeyAuth.ifPresent(aBoolean -> {
 			Element p = doc.createElement(ELEMENT_PARAM);
 			p.setAttribute(ATTRIBUTE_NAME, PARAMETER_PUBLIC_KEY_AUTH);
-			p.setAttribute(ATTRIBUTE_VALUE, publicKeyAuth.get().booleanValue() ? PUBLIC_KEY_AUTH_ENABLED : PUBLIC_KEY_AUTH_DISABLED);
+			p.setAttribute(ATTRIBUTE_VALUE, aBoolean.booleanValue() ? PUBLIC_KEY_AUTH_ENABLED : PUBLIC_KEY_AUTH_DISABLED);
 			elem.appendChild(p);
-		}
-		if (keyPassphrase.isPresent()) {
+		});
+		keyPassphrase.ifPresent(s -> {
 			Element p = doc.createElement(ELEMENT_SECRET_PARAM);
 			p.setAttribute(ATTRIBUTE_NAME, PARAMETER_KEY_PASSPHRASE);
-			p.setAttribute(ATTRIBUTE_VALUE, Obfuscator.obfuscate(keyPassphrase.get()));
+			p.setAttribute(ATTRIBUTE_VALUE, Obfuscator.obfuscate(s));
 			elem.appendChild(p);
-		}
+		});
+		elem.setAttribute(ATTRIBUTE_USER_DIR_IS_ROOT, Boolean.toString(userDirIsRoot));
 		return elem;
 	}
 
 	public static ConnectionDescription unserialize(Element element) {
 		Builder builder = new Builder();
-		String uriAttribute = element.getAttribute(ATTRIBUTE_URI);
-		URI uri = null;
-		try {
-			uri = new URI(uriAttribute);
+		if (element.hasAttribute(ATTRIBUTE_URI)) {
+			String uriAttribute = element.getAttribute(ATTRIBUTE_URI);
+			URI uri = null;
+			try {
+				uri = new URI(uriAttribute);
+			}
+			catch (URISyntaxException ex) {
+				logger.warn("could not parse '" + uriAttribute + "'", ex);
+			}
+
+			builder.setScheme(uri.getScheme());
+			builder.setHost(uri.getHost());
+			builder.setPort(uri.getPort());
+			builder.setPath(uri.getPath());
+			builder.setUserDirIsRoot(true);
 		}
-		catch (URISyntaxException ex) {
-			logger.warn("could not parse '" + uriAttribute + "'", ex);
+		else {
+			builder.setScheme(element.getAttribute(ATTRIBUTE_SCHEME));
+			if (element.hasAttribute(ATTRIBUTE_HOST)) {
+				builder.setHost(element.getAttribute(ATTRIBUTE_HOST));
+			}
+			if (element.hasAttribute(ATTRIBUTE_PORT)) {
+				builder.setPort(Integer.valueOf(element.getAttribute(ATTRIBUTE_PORT)));
+			}
+			builder.setPath(element.getAttribute(ATTRIBUTE_PATH));
+			builder.setUserDirIsRoot(Boolean.valueOf(element.getAttribute(ATTRIBUTE_USER_DIR_IS_ROOT)));
 		}
-		builder.setUri(uri);
 		builder.setUsername(element.getAttribute(ATTRIBUTE_USERNAME));
 		builder.setPassword(Obfuscator.deobfuscate(element.getAttribute(ATTRIBUTE_PASSWORD)));
 		builder.setBufferStrategy(element.getAttribute(ATTRIBUTE_BUFFER_STRATEGY));
@@ -115,97 +146,70 @@ public class ConnectionDescription {
 		return builder.build();
 	}
 
-	public ConnectionDescription(URI uri, String username, String password, Optional<String> bufferStrategy,
-		Optional<Boolean> publicKeyAuthEnabled, Optional<String> keyPassphrase) {
-		this.uri = uri;
+	public ConnectionDescription(String scheme, Optional<String> host, Optional<Integer> port, String path, Optional<String> username,
+		Optional<String> password, Optional<String> bufferStrategy, Optional<Boolean> publicKeyAuthEnabled, Optional<String> keyPassphrase,
+		boolean userDirIsRoot) {
+		Objects.requireNonNull(scheme, "Scheme must be provided");
+		Objects.requireNonNull(path, "Path must be provided");
+		this.scheme = scheme;
+		this.host = host;
+		this.port = port;
+		this.path = path;
 		this.username = username;
 		this.password = password;
 		this.publicKeyAuth = publicKeyAuthEnabled;
 		this.keyPassphrase = keyPassphrase;
 		this.bufferStrategy = bufferStrategy;
+		this.userDirIsRoot = userDirIsRoot;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		ConnectionDescription that = (ConnectionDescription) o;
+		return (userDirIsRoot == that.userDirIsRoot)
+			&& Objects.equals(scheme, that.scheme)
+			&& Objects.equals(host, that.host)
+			&& Objects.equals(port, that.port)
+			&& Objects.equals(path, that.path)
+			&& Objects.equals(username, that.username)
+			&& Objects.equals(password, that.password)
+			&& Objects.equals(bufferStrategy, that.bufferStrategy)
+			&& Objects.equals(publicKeyAuth, that.publicKeyAuth)
+			&& Objects.equals(keyPassphrase, that.keyPassphrase);
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = (prime * result) + bufferStrategy.hashCode();
-		result = (prime * result) + keyPassphrase.hashCode();
-		result = (prime * result) + ((password == null) ? 0 : password.hashCode());
-		result = (prime * result) + publicKeyAuth.hashCode();
-		result = (prime * result) + ((uri == null) ? 0 : uri.hashCode());
-		result = (prime * result) + ((username == null) ? 0 : username.hashCode());
-		return result;
+		return Objects.hash(scheme, host, port, path, username, password, bufferStrategy, publicKeyAuth, keyPassphrase, userDirIsRoot);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		ConnectionDescription other = (ConnectionDescription) obj;
-		if (!bufferStrategy.isPresent()) {
-			if (other.bufferStrategy.isPresent()) {
-				return false;
-			}
-		}
-		else if (!bufferStrategy.equals(other.bufferStrategy)) {
-			return false;
-		}
-		if (!keyPassphrase.isPresent()) {
-			if (other.keyPassphrase.isPresent()) {
-				return false;
-			}
-		}
-		else if (!keyPassphrase.equals(other.keyPassphrase)) {
-			return false;
-		}
-		if (password == null) {
-			if (other.password != null) {
-				return false;
-			}
-		}
-		else if (!password.equals(other.password)) {
-			return false;
-		}
-		if (!publicKeyAuth.isPresent()) {
-			if (other.publicKeyAuth.isPresent()) {
-				return false;
-			}
-		}
-		else if (!publicKeyAuth.equals(other.publicKeyAuth)) {
-			return false;
-		}
-		if (uri == null) {
-			if (other.uri != null) {
-				return false;
-			}
-		}
-		else if (!uri.equals(other.uri)) {
-			return false;
-		}
-		if (username == null) {
-			if (other.username != null) {
-				return false;
-			}
-		}
-		else if (!username.equals(other.username)) {
-			return false;
-		}
-		return true;
+	public String getScheme() {
+		return scheme;
 	}
 
-	public String getUsername() {
+	public Optional<String> getHost() {
+		return host;
+	}
+
+	public Optional<Integer> getPort() {
+		return port;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public Optional<String> getUsername() {
 		return username;
 	}
 
-	public String getPassword() {
+	public Optional<String> getPassword() {
 		return password;
 	}
 
@@ -221,18 +225,13 @@ public class ConnectionDescription {
 		return keyPassphrase;
 	}
 
-	@Override
-	public String toString() {
-		return uri.toString();
-	}
-
-	public URI getUri() {
-		return uri;
+	public boolean isUserDirIsRoot() {
+		return userDirIsRoot;
 	}
 
 	public String getDisplayPath() {
-		if ("file".equals(uri.getScheme())) {
-			File f = new File(uri);
+		if ("file".equals(getScheme())) {
+			File f = new File(getPath());
 			try {
 				return f.getCanonicalPath();
 			}
@@ -240,43 +239,79 @@ public class ConnectionDescription {
 				logger.debug("failed to canonicalize file path", ex);
 			}
 		}
-		return uri.toString();
+		try {
+			String portSuffix = port.map(integer -> ":" + integer).orElse("");
+			if ("sftp".equals(scheme) && (22 == port.orElse(-1))) { //$NON-NLS-1$
+				String userPrefix = username.map(s -> s + "@").orElse(""); //$NON-NLS-1$ //$NON-NLS-2$
+				String displayPath = userDirIsRoot ? path : '/' + path;
+				return String.format("%s%s:%s", userPrefix, host.get(), displayPath); //$NON-NLS-1$
+			}
+			else {
+				return String.format("%s://%s%s%s", getScheme(), host.get(), portSuffix, path); //$NON-NLS-1$
+			}
+		}
+		catch (NoSuchElementException ex) {
+			// NoSuchElementException should never happen as file is the only protocol without host and port
+			logger.debug("failed to construct display URL", ex); //$NON-NLS-1$
+		}
+		return "<error>"; //$NON-NLS-1$
 	}
 
 	public static class Builder {
-		private URI uri;
-		private String username;
-		private String password;
+		private String scheme;
+		private Optional<String> host = Optional.empty();
+		private Optional<Integer> port = Optional.empty();
+		private String path;
+		private Optional<String> username = Optional.empty();
+		private Optional<String> password = Optional.empty();
 		private Optional<String> bufferStrategy = Optional.empty();
 		private Optional<Boolean> publicKeyAuth = Optional.empty();
 		private Optional<String> keyPassphrase = Optional.empty();
+		private boolean userDirIsRoot = false;
 
 		public Builder() {
 		}
 
 		public Builder(ConnectionDescription desc) {
-			uri = desc.getUri();
+			scheme = desc.getScheme();
+			host = desc.getHost();
+			port = desc.getPort();
+			path = desc.getPath();
 			username = desc.getUsername();
 			password = desc.getPassword();
 			bufferStrategy = desc.getBufferStrategy();
 			publicKeyAuth = desc.getPublicKeyAuth();
 			keyPassphrase = desc.getKeyPassphrase();
+			userDirIsRoot = desc.isUserDirIsRoot();
 		}
 
 		public ConnectionDescription build() {
-			return new ConnectionDescription(uri, username, password, bufferStrategy, publicKeyAuth, keyPassphrase);
+			return new ConnectionDescription(scheme, host, port, path, username, password, bufferStrategy, publicKeyAuth, keyPassphrase,
+				userDirIsRoot);
 		}
 
-		public void setUri(URI uri) {
-			this.uri = uri;
+		public void setScheme(String scheme) {
+			this.scheme = scheme;
+		}
+
+		public void setHost(String host) {
+			this.host = Optional.ofNullable(host);
+		}
+
+		public void setPort(int port) {
+			this.port = port > 0 ? Optional.of(port) : Optional.empty();
+		}
+
+		public void setPath(String path) {
+			this.path = path;
 		}
 
 		public void setUsername(String username) {
-			this.username = username;
+			this.username = Optional.ofNullable(username);
 		}
 
 		public void setPassword(String password) {
-			this.password = password;
+			this.password = Optional.ofNullable(password);
 		}
 
 		public void setBufferStrategy(String bufferStrategy) {
@@ -284,11 +319,15 @@ public class ConnectionDescription {
 		}
 
 		public void setPublicKeyAuth(boolean publicKeyAuth) {
-			this.publicKeyAuth = Optional.ofNullable(publicKeyAuth);
+			this.publicKeyAuth = Optional.of(publicKeyAuth);
 		}
 
 		public void setKeyPassphrase(String keyPassphrase) {
 			this.keyPassphrase = Optional.ofNullable(keyPassphrase);
+		}
+
+		public void setUserDirIsRoot(boolean userDirIsRoot) {
+			this.userDirIsRoot = userDirIsRoot;
 		}
 	}
 }

@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.eclipse.swt.SWT;
@@ -93,19 +92,10 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	@Override
 	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
 		ConnectionDescription.Builder builder = super.getConnectionDescription();
-		String path = textPath.getText();
-		if ((null == path) || path.isEmpty()) {
-			path = "/";
-		}
-
-		URI uri = null;
+		builder.setHost(textHost.getText());
 		if (null != spinnerPort) {
-			uri = new URI(m_scheme, null, textHost.getText(), spinnerPort.getSelection(), path, null, null);
+			builder.setPort(spinnerPort.getSelection());
 		}
-		else {
-			uri = new URI(m_scheme, textHost.getText(), path, null);
-		}
-		builder.setUri(uri);
 		builder.setUsername(textUsername.getText());
 		builder.setPassword(textPassword.getText());
 		return builder;
@@ -114,17 +104,16 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	@Override
 	public void setConnectionDescription(final ConnectionDescription connection) {
 		super.setConnectionDescription(connection);
-		URI uri = connection.getUri();
-		textHost.setText(uri.getHost());
-		int port = uri.getPort();
-		if (-1 == port) {
-			port = getDefaultPort();
-		}
+		textHost.setText(connection.getHost().orElse(""));
 		if (null != spinnerPort) {
+			int port = connection.getPort().orElse(-1).intValue();
+			if (-1 == port) {
+				port = getDefaultPort();
+			}
 			spinnerPort.setSelection(port);
 		}
-		textUsername.setText(connection.getUsername());
-		textPassword.setText(connection.getPassword());
+		textUsername.setText(connection.getUsername().orElse(""));
+		textPassword.setText(connection.getPassword().orElse(""));
 	}
 
 	@Override

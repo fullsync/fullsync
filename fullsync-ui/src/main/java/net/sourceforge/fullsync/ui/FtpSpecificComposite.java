@@ -23,6 +23,7 @@ import java.net.URISyntaxException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -32,6 +33,7 @@ import net.sourceforge.fullsync.ConnectionDescription;
 public class FtpSpecificComposite extends UserPasswordSpecificComposite {
 	private static final String FTP_ANONYMOUS_USERNAME = "Anonymous"; //$NON-NLS-1$
 	private Combo comboAuthentication;
+	private Button userDirIsRootCheckbox;
 
 	@Override
 	public int getDefaultPort() {
@@ -53,6 +55,16 @@ public class FtpSpecificComposite extends UserPasswordSpecificComposite {
 	}
 
 	@Override
+	protected void onBeforePathHook(Composite parent) {
+		super.onBeforePathHook(parent);
+		userDirIsRootCheckbox = new Button(parent, SWT.CHECK | SWT.LEFT);
+		userDirIsRootCheckbox.setText("Restrict to the default directory.");
+		GridData userDirIsRootCheckboxData = new GridData();
+		userDirIsRootCheckboxData.horizontalSpan = 3;
+		userDirIsRootCheckbox.setLayoutData(userDirIsRootCheckboxData);
+	}
+
+	@Override
 	public void createGUI(final Composite parent) {
 		super.createGUI(parent);
 		setUserPasswordEnabled(false);
@@ -63,13 +75,14 @@ public class FtpSpecificComposite extends UserPasswordSpecificComposite {
 	@Override
 	public void setConnectionDescription(ConnectionDescription connection) {
 		super.setConnectionDescription(connection);
-		if (FTP_ANONYMOUS_USERNAME.equals(connection.getUsername())) {
+		if (FTP_ANONYMOUS_USERNAME.equals(connection.getUsername().orElse(""))) {
 			comboAuthentication.select(0);
 		}
 		else {
 			comboAuthentication.select(1);
 		}
 		setUserPasswordEnabled(comboAuthentication.getSelectionIndex() == 1);
+		userDirIsRootCheckbox.setSelection(connection.isUserDirIsRoot());
 	}
 
 	@Override
@@ -79,6 +92,14 @@ public class FtpSpecificComposite extends UserPasswordSpecificComposite {
 			builder.setUsername(FTP_ANONYMOUS_USERNAME);
 			builder.setPassword(""); //$NON-NLS-1$
 		}
+		builder.setUserDirIsRoot(userDirIsRootCheckbox.getSelection());
 		return builder;
+	}
+
+	@Override
+	public void reset(String scheme) {
+		super.reset(scheme);
+		comboAuthentication.select(0);
+		userDirIsRootCheckbox.setSelection(false);
 	}
 }

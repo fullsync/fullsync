@@ -22,6 +22,8 @@ package net.sourceforge.fullsync.fs.connection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,12 +53,15 @@ public class CommonsVfsConnection implements FileSystemConnection {
 			if (null != fsAuthProvider) {
 				fsAuthProvider.authSetup(desc, options);
 			}
-			base = VFS.getManager().resolveFile(desc.getUri().toString(), options);
+			int port = desc.getPort().orElse(Integer.valueOf(1)).intValue();
+			String host = desc.getHost().orElse("");
+			URI url = new URI(desc.getScheme(), null, host, port, desc.getPath(), null, null);
+			base = VFS.getManager().resolveFile(url.toString(), options);
 			root = new AbstractFile(this, ".", null, true, base.exists());
 			canSetLastModifiedFile = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FILE);
 			canSetLastModifiedFolder = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FOLDER);
 		}
-		catch (org.apache.commons.vfs2.FileSystemException e) {
+		catch (org.apache.commons.vfs2.FileSystemException | URISyntaxException e) {
 			throw new FileSystemException(e);
 		}
 	}

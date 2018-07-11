@@ -21,13 +21,11 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.eclipse.swt.widgets.DirectoryDialog;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.ConnectionDescription.Builder;
 
 class FileSpecificComposite extends ProtocolSpecificComposite {
 	@Override
@@ -42,17 +40,6 @@ class FileSpecificComposite extends ProtocolSpecificComposite {
 	}
 
 	@Override
-	public Builder getConnectionDescription() throws URISyntaxException {
-		Builder builder = super.getConnectionDescription();
-		builder.setUri(getURI());
-		return builder;
-	}
-
-	protected URI getURI() {
-		return new File(textPath.getText()).toURI();
-	}
-
-	@Override
 	public void onBrowse() {
 		ConnectionDescription desc = null;
 		try {
@@ -63,7 +50,7 @@ class FileSpecificComposite extends ProtocolSpecificComposite {
 		}
 		DirectoryDialog d = new DirectoryDialog(m_parent.getShell());
 		if (null != desc) {
-			d.setFilterPath(desc.getUri().getPath());
+			d.setFilterPath(desc.getPath());
 		}
 		String dir = d.open();
 		if (null != dir) {
