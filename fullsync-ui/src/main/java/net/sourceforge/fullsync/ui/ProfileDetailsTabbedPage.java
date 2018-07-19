@@ -70,8 +70,8 @@ import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 public class ProfileDetailsTabbedPage extends WizardDialog {
-	private static final String EXPANDED_KEY = "Expanded";
-	private static final String FILTER_KEY = "Filter";
+	private static final String EXPANDED_KEY = "Expanded"; //$NON-NLS-1$
+	private static final String FILTER_KEY = "Filter"; //$NON-NLS-1$
 
 	private final ProfileManager profileManager;
 	private final Provider<FileFilterPage> fileFilterPageProvider;
@@ -195,13 +195,13 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 			srcConnectionConfiguration.setConnectionDescription(profile.getSource());
 			if (null != profile.getSource()) {
-				String bufferStrategy = profile.getSource().getBufferStrategy().orElse("");
+				String bufferStrategy = profile.getSource().getBufferStrategy().orElse(""); //$NON-NLS-1$
 				srcConnectionConfiguration.setBuffered(FileSystemManager.BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy));
 			}
 
 			dstConnectionConfiguration.setConnectionDescription(profile.getDestination());
 			if (null != profile.getDestination()) {
-				String bufferStrategy = profile.getDestination().getBufferStrategy().orElse("");
+				String bufferStrategy = profile.getDestination().getBufferStrategy().orElse(""); //$NON-NLS-1$
 				dstConnectionConfiguration.setBuffered(FileSystemManager.BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy));
 			}
 
@@ -217,7 +217,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor) ruleSetDescriptor;
 			syncSubsButton.setSelection(simpleDesc.isSyncSubDirs());
 			filter = simpleDesc.getFileFilter();
-			textFilterDescription.setText(null != filter ? filter.toString() : "");
+			textFilterDescription.setText(null != filter ? filter.toString() : ""); //$NON-NLS-1$
 			boolean useFilter = simpleDesc.isUseFilter();
 			buttonUseFileFilter.setSelection(useFilter);
 			enableFilterControls(useFilter);
@@ -268,17 +268,17 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		comboType.addModifyListener(evt -> {
 			srcConnectionConfiguration.setBuffered(false);
 			dstConnectionConfiguration.setBuffered(false);
-			if (comboType.getText().equals("Publish/Update")) {
+			if (comboType.getText().equals("Publish/Update")) { //$NON-NLS-1$
 				labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.Publish")); //$NON-NLS-1$
 				srcConnectionConfiguration.setBuffered(true);
 			}
-			else if (comboType.getText().equals("Backup Copy")) {
+			else if (comboType.getText().equals("Backup Copy")) { //$NON-NLS-1$
 				labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.BackupCopy")); //$NON-NLS-1$
 			}
-			else if (comboType.getText().equals("Exact Copy")) {
+			else if (comboType.getText().equals("Exact Copy")) { //$NON-NLS-1$
 				labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.ExactCopy")); //$NON-NLS-1$
 			}
-			else if (comboType.getText().equals("Two Way Sync")) {
+			else if (comboType.getText().equals("Two Way Sync")) { //$NON-NLS-1$
 				labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.TwoWaySync")); //$NON-NLS-1$
 			}
 		});
@@ -420,7 +420,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		labelFilterDescriptionData.heightHint = 120;
 		labelFilterDescriptionData.grabExcessHorizontalSpace = true;
 		textFilterDescription.setLayoutData(labelFilterDescriptionData);
-		textFilterDescription.setText("");
+		textFilterDescription.setText(""); //$NON-NLS-1$
 		textFilterDescription.setEditable(false);
 
 		enableFilterControls(false);
@@ -541,7 +541,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				if (file.isDirectory()) {
 					TreeItem item = new TreeItem(directoryTree, SWT.NULL);
 					item.setText(file.getName());
-					item.setImage(imageRepository.getImage("Node_Directory.png"));
+					item.setImage(imageRepository.getImage("Node_Directory.png")); //$NON-NLS-1$
 					item.setData(file);
 					if (itemsMap.containsKey(file.getPath())) {
 						markItem(item);
@@ -564,7 +564,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			if (file.isDirectory()) {
 				TreeItem childrenItem = new TreeItem(item, SWT.NULL);
 				childrenItem.setText(file.getName());
-				childrenItem.setImage(imageRepository.getImage("Node_Directory.png"));
+				childrenItem.setImage(imageRepository.getImage("Node_Directory.png")); //$NON-NLS-1$
 				childrenItem.setData(file);
 				if (itemsMap.containsKey(file.getPath())) {
 					markItem(childrenItem);
@@ -670,7 +670,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				directoryTree.removeAll();
 				TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
 				loadingIem.setText("Loading source dir...");
-				loadingIem.setImage(imageRepository.getImage("Node_Directory.png"));
+				loadingIem.setImage(imageRepository.getImage("Node_Directory.png")); //$NON-NLS-1$
 
 				Display display = Display.getCurrent();
 				display.asyncExec(() -> {
@@ -686,7 +686,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 						else {
 							TreeItem loadingIem1 = new TreeItem(directoryTree, SWT.NULL);
 							loadingIem1.setText("Unable to load source dir");
-							loadingIem1.setImage(imageRepository.getImage("Error.png"));
+							loadingIem1.setImage(imageRepository.getImage("Error.png")); //$NON-NLS-1$
 						}
 					}
 					catch (IOException | URISyntaxException | FileSystemException ex) {
@@ -694,7 +694,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 						directoryTree.removeAll();
 						TreeItem loadingIem2 = new TreeItem(directoryTree, SWT.NULL);
 						loadingIem2.setText("Unable to load source dir");
-						loadingIem2.setImage(imageRepository.getImage("Error.png"));
+						loadingIem2.setImage(imageRepository.getImage("Error.png")); //$NON-NLS-1$
 					}
 				});
 			}

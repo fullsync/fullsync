@@ -79,7 +79,7 @@ public class SystemTrayItem {
 		menu = new Menu(shell, SWT.POP_UP);
 		MenuItem item;
 		item = new MenuItem(menu, SWT.NULL);
-		item.setImage(imageRepository.getImage("fullsync16.png"));
+		item.setImage(imageRepository.getImage("fullsync16.png")); //$NON-NLS-1$
 		item.setText(Messages.getString("SystemTrayItem.OpenFullSync")); //$NON-NLS-1$
 		item.addListener(SWT.Selection, e -> mainWindowProvider.get().setVisible(true));
 

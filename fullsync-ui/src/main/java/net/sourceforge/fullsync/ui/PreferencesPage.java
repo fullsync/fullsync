@@ -37,11 +37,11 @@ public class PreferencesPage extends WizardDialog {
 	/**
 	 * supported language codes.
 	 */
-	private static String[] languageCodes = { "en", "it", "de", "fr", "es", "ar", "el" };
+	private static String[] languageCodes = { "en", "it", "de", "fr", "es", "ar", "el" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 	/**
 	 * supported language names.
 	 */
-	private static String[] languageNames = { "English", "Italiano", "Deutsch", "Français", "Español", "Arabic", "Ελληνικά" };
+	private static String[] languageNames = { "English", "Italiano", "Deutsch", "Français", "Español", "Arabic", "Ελληνικά" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 
 	/**
 	 * search an element in an array and get the result from another array at the same index.
@@ -62,7 +62,7 @@ public class PreferencesPage extends WizardDialog {
 			}
 			++i;
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/**

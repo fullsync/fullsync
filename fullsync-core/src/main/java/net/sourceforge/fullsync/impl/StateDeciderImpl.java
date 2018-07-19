@@ -38,34 +38,34 @@ public class StateDeciderImpl implements StateDecider {
 
 	@Override
 	public State getState(final File source, final File destination) throws DataParseException {
-		logger.debug("{} vs. {}", source, destination);
+		logger.debug("{} vs. {}", source, destination); //$NON-NLS-1$
 		if (!source.exists()) {
 			if (!destination.exists()) {
-				logger.debug("both missing"); // FIXME: impossible?!
+				logger.debug("both missing"); // FIXME: impossible?! //$NON-NLS-1$
 				return State.IN_SYNC;
 			}
 			else {
-				logger.debug("source missing");
+				logger.debug("source missing"); //$NON-NLS-1$
 				return State.ORPHAN_DESTINATION;
 			}
 		}
 		else if (!destination.exists()) {
-			logger.debug("destination missing");
+			logger.debug("destination missing"); //$NON-NLS-1$
 			return State.ORPHAN_SOURCE;
 		}
 
 		if (source.isDirectory()) {
 			if (destination.isDirectory()) {
-				logger.debug("both are dirs");
+				logger.debug("both are dirs"); //$NON-NLS-1$
 				return State.IN_SYNC;
 			}
 			else {
-				logger.debug("source directory, destination file");
+				logger.debug("source directory, destination file"); //$NON-NLS-1$
 				return State.DIR_SOURCE_FILE_DESTINATION;
 			}
 		}
 		else if (destination.isDirectory()) {
-			logger.debug("source file, destination directory");
+			logger.debug("source file, destination directory"); //$NON-NLS-1$
 			return State.FILE_SOURCE_DIR_DESTINATION;
 		}
 

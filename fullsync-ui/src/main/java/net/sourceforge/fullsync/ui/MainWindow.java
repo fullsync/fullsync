@@ -366,7 +366,8 @@ class MainWindow implements ProfileListControlHandler {
 				GuiController.launchProgram(helpIndex.getAbsolutePath());
 			}
 			else {
-				GuiController.launchProgram(GuiController.getWebsiteURL() + "docs/manual-" + Util.getFullSyncVersion() + "/manual.html"); //$NON-NLS-1$ //$NON-NLS-2$
+				String url = String.format("%sdocs/manual-%s/manual.html", GuiController.getWebsiteURL(), Util.getFullSyncVersion()); //$NON-NLS-1$S
+				GuiController.launchProgram(url);
 			}
 		});
 
@@ -378,7 +379,7 @@ class MainWindow implements ProfileListControlHandler {
 		new MenuItem(menuHelp, SWT.SEPARATOR);
 
 		MenuItem menuItemSystem = new MenuItem(menuHelp, SWT.PUSH);
-		menuItemSystem.setText(Messages.getString("MainWindow.Menu_SystemInfo"));
+		menuItemSystem.setText(Messages.getString("MainWindow.Menu_SystemInfo")); //$NON-NLS-1$
 		menuItemSystem.addListener(SWT.Selection, e -> systemStatusPageProvider.get().show());
 
 		new MenuItem(menuHelp, SWT.SEPARATOR);
@@ -426,7 +427,7 @@ class MainWindow implements ProfileListControlHandler {
 		for (Control c : profileListContainer.getChildren()) {
 			c.dispose();
 		}
-		if ("NiceListView".equals(preferences.getProfileListStyle())) {
+		if ("NiceListView".equals(preferences.getProfileListStyle())) { //$NON-NLS-1$
 			profileList = profileListCompositeFactory.createNiceListViewComposite(profileListContainer, this);
 		}
 		else {

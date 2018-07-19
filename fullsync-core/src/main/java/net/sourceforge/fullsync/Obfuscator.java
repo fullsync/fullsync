@@ -57,17 +57,17 @@ public class Obfuscator {
 			int number = 0;
 			digit = str.charAt(i * 3);
 			if ((digit < '0') || (digit > '9')) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 			number += (digit - '0') * 100;
 			digit = str.charAt((i * 3) + 1);
 			if ((digit < '0') || (digit > '9')) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 			number += (digit - '0') * 10;
 			digit = str.charAt((i * 3) + 2);
 			if ((digit < '0') || (digit > '9')) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 			number += digit - '0';
 			ret.append((char) (number ^ OBFUSCATION_KEY.charAt((i + pos) % OBFUSCATION_KEY.length())));

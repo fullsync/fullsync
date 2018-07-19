@@ -39,7 +39,7 @@ public class CrontabSchedule extends Schedule {
 	private final CrontabPart.Instance daysOfWeek;
 
 	private static String getPatternFromElement(Element element) {
-		String pattern = "* * * * *";
+		String pattern = "* * * * *"; //$NON-NLS-1$
 		if (element.hasAttribute(ATTRIBUTE_PATTERN)) {
 			pattern = element.getAttribute(ATTRIBUTE_PATTERN);
 		}
@@ -58,7 +58,7 @@ public class CrontabSchedule extends Schedule {
 	}
 
 	public CrontabSchedule() throws DataParseException {
-		this("* * * * *");
+		this("* * * * *"); //$NON-NLS-1$
 	}
 
 	/**

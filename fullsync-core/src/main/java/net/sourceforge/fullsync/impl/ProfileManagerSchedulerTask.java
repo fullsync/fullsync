@@ -57,6 +57,6 @@ class ProfileManagerSchedulerTask implements ScheduleTask {
 
 	@Override
 	public String toString() {
-		return "Scheduled execution of " + profile.getName();
+		return "Scheduled execution of " + profile.getName(); //$NON-NLS-1$
 	}
 }

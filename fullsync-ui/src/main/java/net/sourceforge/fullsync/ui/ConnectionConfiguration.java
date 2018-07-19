@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Label;
 import net.sourceforge.fullsync.ConnectionDescription;
 
 public class ConnectionConfiguration {
-	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" };
+	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private final Provider<FileSpecificComposite> fileSpecificCompositeProvider;
 	private final Provider<FtpSpecificComposite> ftpSpecificCompositeProvider;
 	private final Provider<SftpSpecificComposite> sftpSpecificCompositeProvider;
@@ -116,16 +116,16 @@ public class ConnectionConfiguration {
 
 	private void createProtocolSpecificComposite() {
 		switch (selectedScheme) {
-			case "file":
+			case "file": //$NON-NLS-1$
 				compositeSpecific = fileSpecificCompositeProvider.get();
 				break;
-			case "ftp":
+			case "ftp": //$NON-NLS-1$
 				compositeSpecific = ftpSpecificCompositeProvider.get();
 				break;
-			case "sftp":
+			case "sftp": //$NON-NLS-1$
 				compositeSpecific = sftpSpecificCompositeProvider.get();
 				break;
-			case "smb":
+			case "smb": //$NON-NLS-1$
 				compositeSpecific = smbSpecificCompositeProvider.get();
 				break;
 			default:

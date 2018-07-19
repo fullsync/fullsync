@@ -38,10 +38,10 @@ public class ChangeLogEntry {
 	public ChangeLogEntry(Document doc) {
 		ul = doc.getFirstChild();
 		NamedNodeMap attrs = ul.getAttributes();
-		version = attr(attrs, "data-version");
-		manual = attr(attrs, "data-manual");
-		String d = attr(attrs, "data-date");
-		if ("00000000".equals(d)) {
+		version = attr(attrs, "data-version"); //$NON-NLS-1$
+		manual = attr(attrs, "data-manual"); //$NON-NLS-1$
+		String d = attr(attrs, "data-date"); //$NON-NLS-1$
+		if ("00000000".equals(d)) { //$NON-NLS-1$
 			date = LocalDate.now();
 		}
 		else {

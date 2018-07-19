@@ -167,7 +167,7 @@ public class TaskDecisionList extends Composite {
 				return "Action_DirHereFileThereError.png"; //$NON-NLS-1$
 			default:
 				assert false;
-				return "";
+				return ""; //$NON-NLS-1$
 		}
 	}
 

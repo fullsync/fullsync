@@ -44,12 +44,12 @@ class FullSyncImageDataProvider implements ImageDataProvider {
 			}
 		}
 		catch (IOException e) {
-			logger.debug("Failed to close image stream", e);
+			logger.debug("Failed to close image stream", e); //$NON-NLS-1$
 		}
 		return data;
 	}
 
 	private InputStream getImageStream(int zoom) {
-		return getClass().getClassLoader().getResourceAsStream("net/sourceforge/fullsync/images/zoom" + zoom + "/" + name);
+		return getClass().getClassLoader().getResourceAsStream("net/sourceforge/fullsync/images/zoom" + zoom + "/" + name); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

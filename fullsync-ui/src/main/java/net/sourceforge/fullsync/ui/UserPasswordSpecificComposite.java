@@ -104,7 +104,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	@Override
 	public void setConnectionDescription(final ConnectionDescription connection) {
 		super.setConnectionDescription(connection);
-		textHost.setText(connection.getHost().orElse(""));
+		textHost.setText(connection.getHost().orElse("")); //$NON-NLS-1$
 		if (null != spinnerPort) {
 			int port = connection.getPort().orElse(-1).intValue();
 			if (-1 == port) {
@@ -112,19 +112,19 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 			}
 			spinnerPort.setSelection(port);
 		}
-		textUsername.setText(connection.getUsername().orElse(""));
-		textPassword.setText(connection.getPassword().orElse(""));
+		textUsername.setText(connection.getUsername().orElse("")); //$NON-NLS-1$
+		textPassword.setText(connection.getPassword().orElse("")); //$NON-NLS-1$
 	}
 
 	@Override
 	public void reset(final String scheme) {
 		super.reset(scheme);
-		textHost.setText("");
+		textHost.setText(""); //$NON-NLS-1$
 		if (null != spinnerPort) {
 			spinnerPort.setSelection(getDefaultPort());
 		}
-		textUsername.setText("");
-		textPassword.setText("");
+		textUsername.setText(""); //$NON-NLS-1$
+		textPassword.setText(""); //$NON-NLS-1$
 	}
 
 	public abstract int getDefaultPort();

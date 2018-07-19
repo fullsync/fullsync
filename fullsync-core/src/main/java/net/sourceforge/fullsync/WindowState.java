@@ -41,13 +41,13 @@ public class WindowState {
 		sb.append(getClass().getSimpleName());
 		sb.append('{');
 		if (!maximized) {
-			sb.append(String.format("%d, %d, %d, %d", x, y, width, height));
+			sb.append(String.format("%d, %d, %d, %d", x, y, width, height)); //$NON-NLS-1$
 		}
 		else {
-			sb.append("maximized");
+			sb.append("maximized"); //$NON-NLS-1$
 		}
 		if (minimized) {
-			sb.append(", minimized");
+			sb.append(", minimized"); //$NON-NLS-1$
 		}
 		sb.append('}');
 		return sb.toString();

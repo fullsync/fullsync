@@ -85,13 +85,13 @@ abstract class ProtocolSpecificComposite {
 	}
 
 	public void setConnectionDescription(final ConnectionDescription connection) {
-		String path = (null != connection) ? connection.getPath() : "";
+		String path = (null != connection) ? connection.getPath() : ""; //$NON-NLS-1$
 		textPath.setText(path);
 	}
 
 	public void reset(final String scheme) {
 		m_scheme = scheme;
-		textPath.setText("");
+		textPath.setText(""); //$NON-NLS-1$
 	}
 
 	protected void setPath(final String path) {

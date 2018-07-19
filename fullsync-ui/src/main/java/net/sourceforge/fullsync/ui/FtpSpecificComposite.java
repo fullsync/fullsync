@@ -75,7 +75,7 @@ public class FtpSpecificComposite extends UserPasswordSpecificComposite {
 	@Override
 	public void setConnectionDescription(ConnectionDescription connection) {
 		super.setConnectionDescription(connection);
-		if (FTP_ANONYMOUS_USERNAME.equals(connection.getUsername().orElse(""))) {
+		if (FTP_ANONYMOUS_USERNAME.equals(connection.getUsername().orElse(""))) { //$NON-NLS-1$
 			comboAuthentication.select(0);
 		}
 		else {

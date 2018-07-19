@@ -144,9 +144,9 @@ public class NiceListViewProfileListComposite extends ProfileListComposite {
 
 		public void updateComponent() {
 			ConnectionDescription desc = profile.getSource();
-			lSource.setText((null != desc) ? desc.getDisplayPath() : "");
+			lSource.setText((null != desc) ? desc.getDisplayPath() : ""); //$NON-NLS-1$
 			desc = profile.getDestination();
-			lDestination.setText((null != desc) ? desc.getDisplayPath() : "");
+			lDestination.setText((null != desc) ? desc.getDisplayPath() : ""); //$NON-NLS-1$
 			lLastUpdate.setText(profile.getLastUpdateText());
 			lNextUpdate.setText(profile.getNextUpdateText());
 			layout();

@@ -38,7 +38,7 @@ public class Entry {
 
 	@Override
 	public String toString() {
-		return String.format("%10d-%10d: %s", start, (start + length) - 1, descriptor.toString());
+		return String.format("%10d-%10d: %s", start, (start + length) - 1, descriptor.toString()); //$NON-NLS-1$
 	}
 
 	public int getStart() {

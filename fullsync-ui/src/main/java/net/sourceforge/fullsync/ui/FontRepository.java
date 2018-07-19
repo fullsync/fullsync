@@ -43,7 +43,7 @@ public class FontRepository {
 			name = _name;
 			height = _height;
 			style = _style;
-			hash = (name + "#" + height + "#" + style).hashCode();
+			hash = (name + "#" + height + "#" + style).hashCode(); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		@Override

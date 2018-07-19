@@ -101,12 +101,12 @@ class FileObjectChooser {
 		ToolBar toolBarActions = new ToolBar(compositeTop, SWT.NONE);
 		// folder up
 		ToolItem toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
-		toolItemParent.setImage(imageRepository.getImage("FS_LevelUp.gif"));
+		toolItemParent.setImage(imageRepository.getImage("FS_LevelUp.gif")); //$NON-NLS-1$
 		toolItemParent.addListener(SWT.Selection, e -> toolItemParentWidgetSelected());
 		// new folder
 		ToolItem toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
-		toolItemNewFolder.setImage(imageRepository.getImage("FS_Folder_New.gif"));
-		toolItemNewFolder.setDisabledImage(imageRepository.getImage("FS_Folder_New_disabled.gif"));
+		toolItemNewFolder.setImage(imageRepository.getImage("FS_Folder_New.gif")); //$NON-NLS-1$
+		toolItemNewFolder.setDisabledImage(imageRepository.getImage("FS_Folder_New_disabled.gif")); //$NON-NLS-1$
 		toolItemNewFolder.addListener(SWT.Selection, e -> toolItemNewFolderWidgetSelected());
 		toolItemNewFolder.setEnabled(false);
 
@@ -282,22 +282,22 @@ class FileObjectChooser {
 				FileContent content = data.getContent();
 				String contentType = content.getContentInfo().getContentType();
 				if (null != contentType) {
-					type += " (" + contentType + ")";
+					type += " (" + contentType + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				item.setText(1, String.valueOf(content.getSize()));
 				item.setText(3, df.format(new Date(content.getLastModifiedTime())));
 			}
 			else {
-				item.setText(1, "");
-				item.setText(3, "");
+				item.setText(1, ""); //$NON-NLS-1$
+				item.setText(3, ""); //$NON-NLS-1$
 			}
 			item.setText(2, type);
 
 			if (data.getType() == FileType.FOLDER) {
-				item.setImage(imageRepository.getImage("FS_Folder_Collapsed.gif"));
+				item.setImage(imageRepository.getImage("FS_Folder_Collapsed.gif")); //$NON-NLS-1$
 			}
 			else {
-				item.setImage(imageRepository.getImage("FS_File_text_plain.gif"));
+				item.setImage(imageRepository.getImage("FS_File_text_plain.gif")); //$NON-NLS-1$
 			}
 
 			item.setData(data);
@@ -316,7 +316,7 @@ class FileObjectChooser {
 			textFilename.setText(selectedFileObject.getName().getBaseName());
 		}
 		else {
-			textFilename.setText("");
+			textFilename.setText(""); //$NON-NLS-1$
 		}
 	}
 
@@ -325,7 +325,7 @@ class FileObjectChooser {
 			activeFileObject = base;
 		}
 		try {
-			rootFileObject = base.resolveFile("/");
+			rootFileObject = base.resolveFile("/"); //$NON-NLS-1$
 			labelBaseUrl.setText(rootFileObject.getName().toString());
 			setActiveFileObject(activeFileObject);
 		}

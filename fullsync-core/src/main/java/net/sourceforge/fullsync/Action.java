@@ -65,10 +65,10 @@ public class Action {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[" + type.toString() + "(" + getLocation().toString() + ") BU: ");
-		sb.append(bufferUpdate.toString() + "; Rec: ");
+		sb.append("[" + type.toString() + "(" + getLocation().toString() + ") BU: "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		sb.append(bufferUpdate.toString() + "; Rec: "); //$NON-NLS-1$
 		sb.append(isBeforeRecursion());
-		sb.append(" - " + explanation + "]");
+		sb.append(" - " + explanation + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 		return sb.toString();
 	}
 

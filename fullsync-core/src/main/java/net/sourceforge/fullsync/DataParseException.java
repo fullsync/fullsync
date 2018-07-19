@@ -115,7 +115,7 @@ public class DataParseException extends Exception {
 
 	@Override
 	public String getMessage() {
-		return sourceName + "[" + lineNumber + "]: " + super.getMessage();
+		return String.format("%s[%d]: %s", sourceName, lineNumber, super.getMessage()); //$NON-NLS-1$
 	}
 
 	/**

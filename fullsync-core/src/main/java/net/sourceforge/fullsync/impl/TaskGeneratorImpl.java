@@ -95,7 +95,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		throws DataParseException, IOException {
 		if (!takeIgnoreDecider.isNodeIgnored(src)) {
 			Task task = actionDecider.getTask(src, dst, stateDecider, bufferStateDecider);
-			logger.debug("{}: {}", src.getName(), task);
+			logger.debug("{}: {}", src.getName(), task); //$NON-NLS-1$
 
 			eventBus.post(new TaskGenerationFinished(taskTree, task));
 
@@ -168,7 +168,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 			actionDecider = new TwoWaySyncActionDecider();
 		}
 		else {
-			throw new IllegalArgumentException("Profile has unknown synchronization type.");
+			throw new IllegalArgumentException("Profile has unknown synchronization type."); //$NON-NLS-1$
 		}
 
 		ConnectionDescription srcDesc = profile.getSource();
@@ -194,7 +194,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		}
 
 		TaskTree tree = new TaskTree(source, destination);
-		Action rootAction = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "Root");
+		Action rootAction = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "Root"); //$NON-NLS-1$
 		Task root = new Task(null, null, State.IN_SYNC, new Action[] { rootAction });
 		tree.setRoot(root);
 

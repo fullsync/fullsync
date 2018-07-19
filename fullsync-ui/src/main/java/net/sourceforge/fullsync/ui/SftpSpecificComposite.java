@@ -66,7 +66,7 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 
 		// hostname
 		Label labelHost = new Label(m_parent, SWT.NONE);
-		labelHost.setText(Messages.getString("ProtocolSpecificComposite.Host"));
+		labelHost.setText(Messages.getString("ProtocolSpecificComposite.Host")); //$NON-NLS-1$
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
@@ -87,19 +87,19 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 		spinnerPort.setLayoutData(gridData4);
 
 		Label labelUsername = new Label(m_parent, SWT.NONE);
-		labelUsername.setText(Messages.getString("ProtocolSpecificComposite.Username"));
+		labelUsername.setText(Messages.getString("ProtocolSpecificComposite.Username")); //$NON-NLS-1$
 		textUsername = new Text(m_parent, SWT.BORDER);
 		GridData gridData2 = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gridData2.horizontalSpan = 2;
 		textUsername.setLayoutData(gridData2);
 		Label labelPassword = new Label(m_parent, SWT.NONE);
-		labelPassword.setText(Messages.getString("ProtocolSpecificComposite.Password"));
+		labelPassword.setText(Messages.getString("ProtocolSpecificComposite.Password")); //$NON-NLS-1$
 		textPassword = new Text(m_parent, SWT.BORDER);
 		textPassword.setLayoutData(gridData1);
 		textPassword.setEchoChar('*');
 
 		buttonKeybased = new Button(m_parent, SWT.CHECK);
-		buttonKeybased.setText(Messages.getString("ProtocolSpecificComposite.Keybased"));
+		buttonKeybased.setText(Messages.getString("ProtocolSpecificComposite.Keybased")); //$NON-NLS-1$
 		GridData radioKeybasedData = new GridData();
 		radioKeybasedData.horizontalSpan = 3;
 		buttonKeybased.setLayoutData(radioKeybasedData);
@@ -107,7 +107,7 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 		buttonKeybased.addSelectionListener(widgetSelectedAdapter(this::toggleKeybasedAuthentication));
 
 		labelKeyPassphrase = new Label(m_parent, SWT.NONE);
-		labelKeyPassphrase.setText(Messages.getString("ProtocolSpecificComposite.KeyPassphrase"));
+		labelKeyPassphrase.setText(Messages.getString("ProtocolSpecificComposite.KeyPassphrase")); //$NON-NLS-1$
 		textKeyPassphrase = new Text(m_parent, SWT.BORDER);
 		textKeyPassphrase.setEchoChar('*');
 		GridData textKeyPassphraseData = new GridData(SWT.FILL, SWT.CENTER, true, false);
@@ -138,31 +138,31 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 	@Override
 	public void setConnectionDescription(final ConnectionDescription connection) {
 		super.setConnectionDescription(connection);
-		textHost.setText(connection.getHost().orElse(""));
+		textHost.setText(connection.getHost().orElse("")); //$NON-NLS-1$
 		int port = connection.getPort().orElse(Integer.valueOf(-1)).intValue();
 		if (-1 == port) {
 			port = DEFAULT_SFTP_PORT;
 		}
 		spinnerPort.setSelection(port);
-		textUsername.setText(connection.getUsername().orElse(""));
-		textPassword.setText(connection.getPassword().orElse(""));
+		textUsername.setText(connection.getUsername().orElse("")); //$NON-NLS-1$
+		textPassword.setText(connection.getPassword().orElse("")); //$NON-NLS-1$
 		boolean keybased = connection.getPublicKeyAuth().orElse(Boolean.FALSE).booleanValue();
 		buttonKeybased.setSelection(keybased);
 		labelKeyPassphrase.setEnabled(keybased);
 		textKeyPassphrase.setEnabled(keybased);
-		textKeyPassphrase.setText(connection.getKeyPassphrase().orElse(""));
+		textKeyPassphrase.setText(connection.getKeyPassphrase().orElse("")); //$NON-NLS-1$
 		userDirIsRootCheckbox.setSelection(connection.isUserDirIsRoot());
 	}
 
 	@Override
 	public void reset(final String scheme) {
 		super.reset(scheme);
-		textHost.setText("");
+		textHost.setText(""); //$NON-NLS-1$
 		spinnerPort.setSelection(DEFAULT_SFTP_PORT);
-		textUsername.setText("");
-		textPassword.setText("");
+		textUsername.setText(""); //$NON-NLS-1$
+		textPassword.setText(""); //$NON-NLS-1$
 		buttonKeybased.setSelection(false);
-		textKeyPassphrase.setText("");
+		textKeyPassphrase.setText(""); //$NON-NLS-1$
 		textKeyPassphrase.setEnabled(false);
 		labelKeyPassphrase.setEnabled(false);
 		userDirIsRootCheckbox.setSelection(false);

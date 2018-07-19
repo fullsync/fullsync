@@ -83,7 +83,7 @@ public class FileFilterPage extends WizardDialog {
 
 	@Override
 	public String getDescription() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override

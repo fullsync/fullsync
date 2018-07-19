@@ -63,9 +63,9 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 
 	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, FileFilter fileFilter, boolean useFilter, FileFilterTree fileFilterTree) {
 		this.syncSubDirs = syncSubDirs;
-		this.ignorePattern = "";
-		this.takePattern = "";
-		this.patternsType = "";
+		this.ignorePattern = ""; //$NON-NLS-1$
+		this.takePattern = ""; //$NON-NLS-1$
+		this.patternsType = ""; //$NON-NLS-1$
 		this.fileFilter = fileFilter;
 		this.useFilter = useFilter;
 		this.fileFilterTree = fileFilterTree;
@@ -109,8 +109,8 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		if (ruleSetConfigNodeList.getLength() == 0) {
 			syncSubDirs = true;
 			useFilter = false;
-			ignorePattern = "";
-			takePattern = "";
+			ignorePattern = ""; //$NON-NLS-1$
+			takePattern = ""; //$NON-NLS-1$
 			patternsType = PATTERN_TYPE_REG_EXP;
 			fileFilter = null;
 			fileFilterTree = null;

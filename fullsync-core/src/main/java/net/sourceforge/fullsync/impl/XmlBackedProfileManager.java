@@ -125,7 +125,7 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	private void deserializeProfile(Node n) throws DataParseException {
 		Profile p = ProfileImpl.unserialize(eventBus, (Element) n);
 		String id = p.getId();
-		while ((null == id) || "".equals(id) || (null != getProfileById(id))) {
+		while ((null == id) || "".equals(id) || (null != getProfileById(id))) { //$NON-NLS-1$
 			id = getUnusedProfileId();
 		}
 		if (!id.equals(p.getId())) {
@@ -210,20 +210,20 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = docBuilder.newDocument();
 
-			Element e = doc.createElement("Profiles");
-			e.setAttribute("version", "1.2");
+			Element e = doc.createElement("Profiles"); //$NON-NLS-1$
+			e.setAttribute("version", "1.2"); //$NON-NLS-1$ //$NON-NLS-2$
 			profiles.values().stream().map(p -> ((ProfileImpl) p).serialize(doc)).forEachOrdered(e::appendChild);
 			doc.appendChild(e);
 
 			TransformerFactory fac = TransformerFactory.newInstance();
-			fac.setAttribute("indent-number", 2);
+			fac.setAttribute("indent-number", 2); //$NON-NLS-1$
 			Transformer tf = fac.newTransformer();
-			tf.setOutputProperty(OutputKeys.METHOD, "xml");
-			tf.setOutputProperty(OutputKeys.VERSION, "1.0");
-			tf.setOutputProperty(OutputKeys.INDENT, "yes");
-			tf.setOutputProperty(OutputKeys.STANDALONE, "no");
+			tf.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
+			tf.setOutputProperty(OutputKeys.VERSION, "1.0"); //$NON-NLS-1$
+			tf.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+			tf.setOutputProperty(OutputKeys.STANDALONE, "no"); //$NON-NLS-1$
 			DOMSource source = new DOMSource(doc);
-			File newCfgFile = new File(profilesFileName + ".tmp");
+			File newCfgFile = new File(profilesFileName + ".tmp"); //$NON-NLS-1$
 			try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(newCfgFile), StandardCharsets.UTF_8)) {
 				tf.transform(source, new StreamResult(osw));
 				osw.flush();
