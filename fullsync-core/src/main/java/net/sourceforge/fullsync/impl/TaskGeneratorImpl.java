@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,7 @@ import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
 
+@Singleton // effectively a singleton because the Synchronizer is a singleton
 public class TaskGeneratorImpl implements TaskGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
 	private final FileSystemManager fileSystemManager;
@@ -183,7 +185,6 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		}
 	}
 
-	@Override
 	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules)
 		throws DataParseException, FileSystemException, IOException {
 		if (!source.isAvailable()) {
