@@ -28,85 +28,34 @@ public class DataParseException extends Exception {
 	private final String sourceName;
 	private final long lineNumber;
 
-	/**
-	 * Constructor for ParseException.
-	 *
-	 * @param text
-	 */
 	public DataParseException(String text) {
-		super(text);
-		sourceName = UNKNOWN_SOURCE;
-		lineNumber = -1;
+		this(text, -1, UNKNOWN_SOURCE);
 	}
 
-	/**
-	 * Constructor for ParseException.
-	 *
-	 * @param text
-	 * @param line
-	 */
 	public DataParseException(String text, long line) {
-		super(text);
-		sourceName = UNKNOWN_SOURCE;
-		lineNumber = line;
+		this(text, line, UNKNOWN_SOURCE);
 	}
 
-	/**
-	 * Constructor for ParseException.
-	 *
-	 * @param text
-	 * @param line
-	 * @param source
-	 */
 	public DataParseException(String text, long line, String source) {
 		super(text);
 		sourceName = source;
 		lineNumber = line;
 	}
 
-	/**
-	 * Constructor for ParseException.
-	 *
-	 * @param cause
-	 */
 	public DataParseException(Throwable cause) {
-		super(cause);
-		sourceName = UNKNOWN_SOURCE;
-		lineNumber = -1;
+		this(cause, -1);
 	}
 
-	/**
-	 * Constructor for ParseException.
-	 *
-	 * @param cause
-	 * @param line
-	 */
 	public DataParseException(Throwable cause, long line) {
 		super(cause);
 		sourceName = UNKNOWN_SOURCE;
 		lineNumber = line;
 	}
 
-	/**
-	 * Constructor for ParseException.
-	 *
-	 * @param text
-	 * @param cause
-	 */
 	public DataParseException(String text, Throwable cause) {
-		super(text, cause);
-		sourceName = UNKNOWN_SOURCE;
-		lineNumber = -1;
+		this(text, cause, -1, UNKNOWN_SOURCE);
 	}
 
-	/**
-	 * Constructor DataParseException.
-	 *
-	 * @param text
-	 * @param cause
-	 * @param line
-	 * @param source
-	 */
 	public DataParseException(String text, Throwable cause, int line, String source) {
 		super(text, cause);
 		sourceName = source;
@@ -118,20 +67,10 @@ public class DataParseException extends Exception {
 		return String.format("%s[%d]: %s", sourceName, lineNumber, super.getMessage()); //$NON-NLS-1$
 	}
 
-	/**
-	 * Returns the file name.
-	 *
-	 * @return String
-	 */
 	public String getSourceName() {
 		return sourceName;
 	}
 
-	/**
-	 * Returns the line number.
-	 *
-	 * @return long
-	 */
 	public long getLineNumber() {
 		return lineNumber;
 	}

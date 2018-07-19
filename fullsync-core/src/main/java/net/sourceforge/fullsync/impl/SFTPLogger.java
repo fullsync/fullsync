@@ -57,5 +57,4 @@ public class SFTPLogger implements com.jcraft.jsch.Logger {
 				break;
 		}
 	}
-
 }

@@ -31,18 +31,19 @@ import org.eclipse.swt.widgets.Label;
 import net.sourceforge.fullsync.ConnectionDescription;
 
 public class FtpSpecificComposite extends UserPasswordSpecificComposite {
+	private static final int DEFAULT_FTP_PORT = 21;
 	private static final String FTP_ANONYMOUS_USERNAME = "Anonymous"; //$NON-NLS-1$
 	private Combo comboAuthentication;
 	private Button userDirIsRootCheckbox;
 
 	@Override
 	public int getDefaultPort() {
-		return 21;
+		return DEFAULT_FTP_PORT;
 	}
 
 	@Override
-	protected void onBeforePasswordHook(Composite parent) {
-		super.onBeforePasswordHook(parent);
+	protected void onBeforeUsernameHook(Composite parent) {
+		super.onBeforeUsernameHook(parent);
 		Label labelAuthenticationType = new Label(parent, SWT.NONE);
 		labelAuthenticationType.setText(Messages.getString("ProtocolSpecificComposite.FTPAuthType")); //$NON-NLS-1$
 		comboAuthentication = new Combo(parent, SWT.READ_ONLY);

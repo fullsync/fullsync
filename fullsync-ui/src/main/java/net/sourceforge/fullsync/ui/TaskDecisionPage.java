@@ -148,9 +148,7 @@ public class TaskDecisionPage extends WizardDialog {
 		list.setLayoutData(listLayoutData);
 
 		list.setOnlyChanges(true);
-		if (null != taskTree) {
-			list.rebuildActionList();
-		}
+		list.rebuildActionList();
 	}
 
 	@Override

@@ -126,5 +126,4 @@ public class ExactCopyActionDecider implements ActionDecider {
 		actions.toArray(as);
 		return new Task(src, dst, state, as);
 	}
-
 }

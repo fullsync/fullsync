@@ -35,13 +35,13 @@ public class CliRuntimeConfiguration implements RuntimeConfiguration {
 
 	public CliRuntimeConfiguration(CommandLine args) {
 		profileToRun = parseProfileToRun(args);
-		daemon = Optional.of(args.hasOption("d"));
+		daemon = Optional.of(args.hasOption('d'));
 		startMinimized = Optional.of(args.hasOption('m'));
 	}
 
 	private Optional<String> parseProfileToRun(CommandLine args) {
-		if (args.hasOption("r")) {
-			return Optional.of(args.getOptionValue("r"));
+		if (args.hasOption('r')) {
+			return Optional.of(args.getOptionValue('r'));
 		}
 		return Optional.empty();
 	}

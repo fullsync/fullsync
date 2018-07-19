@@ -58,7 +58,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 			spinnerPort.setLayoutData(getGridData());
 		}
 
-		onBeforePasswordHook(parent);
+		onBeforeUsernameHook(parent);
 		labelUsername = new Label(parent, SWT.NONE);
 		labelUsername.setText("Username:");
 		textUsername = new Text(parent, SWT.BORDER);
@@ -68,10 +68,14 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 		textPassword = new Text(parent, SWT.BORDER);
 		textPassword.setLayoutData(getGridData());
 		textPassword.setEchoChar('*');
+		onAfterPasswordHook(parent);
 		super.createGUI(parent);
 	}
 
-	protected void onBeforePasswordHook(final Composite parent) {
+	protected void onBeforeUsernameHook(final Composite parent) {
+	}
+
+	protected void onAfterPasswordHook(final Composite parent) {
 	}
 
 	protected void setUserPasswordEnabled(boolean enabled) {

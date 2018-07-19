@@ -141,5 +141,4 @@ public class PublishActionDecider implements ActionDecider {
 		actions.toArray(as);
 		return new Task(src, dst, state, as);
 	}
-
 }
