@@ -66,7 +66,7 @@ public class FilterRuleListItem {
 		final String name = Messages.getString("FilterRuleListItem.FileNameFilter"); //$NON-NLS-1$
 		final String path = Messages.getString("FilterRuleListItem.FilePathFilter"); //$NON-NLS-1$
 		final String type = Messages.getString("FilterRuleListItem.FileTypeFilter"); //$NON-NLS-1$
-		final String size = Messages.getString("FilterRuleListItem.FilSizeFilter"); //$NON-NLS-1$
+		final String size = Messages.getString("FilterRuleListItem.FileSizeFilter"); //$NON-NLS-1$
 		final String modificationDate = Messages.getString("FilterRuleListItem.FileModificationDateFilter"); //$NON-NLS-1$
 		final String age = Messages.getString("FilterRuleListItem.FileAgeFilter"); //$NON-NLS-1$
 		final String nested = Messages.getString("FilterRuleListItem.NestedFilter"); //$NON-NLS-1$
