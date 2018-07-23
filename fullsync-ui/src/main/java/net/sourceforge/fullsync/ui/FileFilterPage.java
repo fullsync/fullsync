@@ -73,12 +73,12 @@ public class FileFilterPage extends WizardDialog {
 
 	@Override
 	public String getTitle() {
-		return "File Filter";
+		return Messages.getString("FileFilterPage.Title"); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getCaption() {
-		return "Edit the file filter";
+		return Messages.getString("FileFilterPage.Caption"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -104,21 +104,21 @@ public class FileFilterPage extends WizardDialog {
 
 			// filter type combo
 			comboFilterType = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
-			comboFilterType.add("Include");
-			comboFilterType.add("Exclude");
+			comboFilterType.add(Messages.getString("FileFilterPage.Include")); //$NON-NLS-1$
+			comboFilterType.add(Messages.getString("FileFilterPage.Exclude")); //$NON-NLS-1$
 			Label label1 = new Label(content, SWT.NONE);
-			label1.setText(" any file that matches ");
+			label1.setText(Messages.getString("FileFilterPage.AnyFileThatMatches")); //$NON-NLS-1$
 
 			// match type combo
 			comboMatchType = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
-			comboMatchType.add("all");
-			comboMatchType.add("any");
+			comboMatchType.add(Messages.getString("FileFilterPage.RequireAll")); //$NON-NLS-1$
+			comboMatchType.add(Messages.getString("FileFilterPage.RequireAny")); //$NON-NLS-1$
 			Label label2 = new Label(content, SWT.NONE);
-			label2.setText("of the following");
+			label2.setText(Messages.getString("FileFilterPage.OfTheFollowing")); //$NON-NLS-1$
 
 			// applies to directories
 			buttonAppliesToDir = new Button(content, SWT.CHECK | SWT.LEFT);
-			buttonAppliesToDir.setText("Applies to directories");
+			buttonAppliesToDir.setText(Messages.getString("FileFilterPage.AppliesToDirectories")); //$NON-NLS-1$
 			GridData buttonAppliesToDirLData = new GridData();
 			buttonAppliesToDirLData.horizontalSpan = 4;
 			buttonAppliesToDir.setLayoutData(buttonAppliesToDirLData);

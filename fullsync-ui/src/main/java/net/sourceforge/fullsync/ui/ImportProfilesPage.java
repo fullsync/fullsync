@@ -85,7 +85,7 @@ public class ImportProfilesPage extends WizardDialog {
 		textData.verticalAlignment = SWT.CENTER;
 		textPath.setLayoutData(textData);
 		Button buttonBrowse = new Button(content, SWT.NONE);
-		buttonBrowse.setText("...");
+		buttonBrowse.setText(Messages.getString("ImportProfilesPage.Browse")); //$NON-NLS-1$
 		buttonBrowse.addListener(SWT.Selection, e -> {
 			FileDialog fd = new FileDialog(content.getShell());
 			fd.setFileName("profiles.xml"); //$NON-NLS-1$

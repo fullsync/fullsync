@@ -247,7 +247,7 @@ class MainWindow implements ProfileListControlHandler {
 
 			ToolItem toolItemRunNonIter = new ToolItem(toolBarProfile, SWT.PUSH);
 			toolItemRunNonIter.setImage(imageRepository.getImage("Button_Run_Non_Inter.png")); //$NON-NLS-1$
-			toolItemRunNonIter.setToolTipText("Run Profile - Non Interactive mode");
+			toolItemRunNonIter.setToolTipText(Messages.getString("MainWindow.RunProfileNonInteractive")); //$NON-NLS-1$
 			toolItemRunNonIter.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), false));
 
 			ToolBar toolBarScheduling = new ToolBar(cToolBar, SWT.FLAT);
@@ -314,7 +314,7 @@ class MainWindow implements ProfileListControlHandler {
 		menuItemRunProfile.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), true));
 
 		MenuItem menuItemRunProfileNonInter = new MenuItem(menuFile, SWT.PUSH);
-		menuItemRunProfileNonInter.setText("Run Profile - Non Interactive mode");
+		menuItemRunProfileNonInter.setText(Messages.getString("MainWindow.RunProfileNonInteractive")); //$NON-NLS-1$
 		menuItemRunProfileNonInter.setImage(imageRepository.getImage("Button_Run_Non_Inter.png")); //$NON-NLS-1$
 		menuItemRunProfileNonInter.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), false));
 
@@ -400,7 +400,7 @@ class MainWindow implements ProfileListControlHandler {
 		runItem.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), true));
 
 		MenuItem runNonInterItem = new MenuItem(profilePopupMenu, SWT.PUSH);
-		runNonInterItem.setText("Run Profile - Non Interactive mode");
+		runNonInterItem.setText(Messages.getString("MainWindow.RunProfileNonInteractive")); //$NON-NLS-1$
 		runNonInterItem.setImage(imageRepository.getImage("Button_Run_Non_Inter.png")); //$NON-NLS-1$
 		runNonInterItem.addListener(SWT.Selection, e -> runProfile(profileList.getSelectedProfile(), false));
 
@@ -471,7 +471,7 @@ class MainWindow implements ProfileListControlHandler {
 			if (!interactive) {
 				MessageBox mb = new MessageBox(mainComposite.getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 				mb.setText(Messages.getString("MainWindow.Confirmation")); //$NON-NLS-1$
-				mb.setMessage("You're about to start the profile in non-interactive mode.\n Are you sure?");
+				mb.setMessage(Messages.getString("MainWindow.RunProfileNonInteractiveConfirmationMessage")); //$NON-NLS-1$
 				if (mb.open() != SWT.YES) {
 					return;
 				}
@@ -484,7 +484,7 @@ class MainWindow implements ProfileListControlHandler {
 		showBusyCursor(true);
 		try {
 			Synchronizer synchronizer = synchronizerProvider.get();
-			statusLineText.add(Messages.getString("MainWindow.Starting_Profile") + p.getName() + "..."); //$NON-NLS-1$ //$NON-NLS-2$
+			statusLineText.add(Messages.getString("MainWindow.Starting_Profile", p.getName())); //$NON-NLS-1$
 			final TaskTree taskTree = synchronizer.executeProfile(p, interactive);
 			if (null == taskTree) {
 				p.setLastError(1, Messages.getString("MainWindow.Error_Comparing_Filesystems")); //$NON-NLS-1$
@@ -530,7 +530,7 @@ class MainWindow implements ProfileListControlHandler {
 		if (null != p) {
 			MessageBox mb = new MessageBox(mainComposite.getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("MainWindow.Confirmation")); //$NON-NLS-1$
-			mb.setMessage(Messages.getString("MainWindow.Do_You_Want_To_Delete_Profile") + " " + p.getName() + " ?"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			mb.setMessage(Messages.getString("MainWindow.Do_You_Want_To_Delete_Profile", p.getName())); //$NON-NLS-1$
 			if (mb.open() == SWT.YES) {
 				profileManager.removeProfile(p);
 				profileManager.save();

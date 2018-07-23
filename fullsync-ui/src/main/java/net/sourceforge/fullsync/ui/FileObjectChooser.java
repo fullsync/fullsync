@@ -71,7 +71,7 @@ class FileObjectChooser {
 
 	public boolean open(Shell parent, FileObject base) {
 		dialogShell = new Shell(parent, SWT.BORDER | SWT.TITLE | SWT.RESIZE | SWT.PRIMARY_MODAL);
-		dialogShell.setText("Choose Folder...");
+		dialogShell.setText(Messages.getString("FileObjectChooser.Title")); //$NON-NLS-1$
 
 		dialogShell.setLayout(new GridLayout());
 		dialogShell.layout();
@@ -87,7 +87,7 @@ class FileObjectChooser {
 		compositeTop.setLayout(composite1Layout);
 
 		Label labelUrl = new Label(compositeTop, SWT.NONE);
-		labelUrl.setText("Url:");
+		labelUrl.setText(Messages.getString("FileObjectChooser.URL")); //$NON-NLS-1$
 
 		labelBaseUrl = new Label(compositeTop, SWT.NONE);
 
@@ -123,19 +123,19 @@ class FileObjectChooser {
 		tableItems.addListener(SWT.MouseDoubleClick, this::tableItemDoubleClicked);
 
 		TableColumn tableColumnName = new TableColumn(tableItems, SWT.NONE);
-		tableColumnName.setText("File name");
+		tableColumnName.setText(Messages.getString("FileObjectChooser.TableHeaderFileName")); //$NON-NLS-1$
 		tableColumnName.setWidth(200);
 
 		TableColumn tableColumnSize = new TableColumn(tableItems, SWT.NONE);
-		tableColumnSize.setText("Size");
+		tableColumnSize.setText(Messages.getString("FileObjectChooser.TableHeaderSize")); //$NON-NLS-1$
 		tableColumnSize.setWidth(60);
 
 		TableColumn tableColumnType = new TableColumn(tableItems, SWT.NONE);
-		tableColumnType.setText("Type");
+		tableColumnType.setText(Messages.getString("FileObjectChooser.TableHeaderType")); //$NON-NLS-1$
 		tableColumnType.setWidth(100);
 
 		TableColumn tableColumnDateModified = new TableColumn(tableItems, SWT.NONE);
-		tableColumnDateModified.setText("Date Modified");
+		tableColumnDateModified.setText(Messages.getString("FileObjectChooser.TableHeaderDateModified")); //$NON-NLS-1$
 		tableColumnDateModified.setWidth(145);
 
 		// bottom area
@@ -148,7 +148,7 @@ class FileObjectChooser {
 		compositeBottom.setLayout(compositeBottomLayout);
 
 		Label labelFilename = new Label(compositeBottom, SWT.NONE);
-		labelFilename.setText("File name:");
+		labelFilename.setText(Messages.getString("FileObjectChooser.SelectedFileName")); //$NON-NLS-1$
 
 		GridData textFilenameLData = new GridData();
 		textFilenameLData.horizontalAlignment = SWT.FILL;
@@ -162,17 +162,17 @@ class FileObjectChooser {
 		buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
 		buttonOk.setLayoutData(buttonOkLData);
-		buttonOk.setText("Open");
+		buttonOk.setText(Messages.getString("FileObjectChooser.Open")); //$NON-NLS-1$
 		buttonOk.addListener(SWT.Selection, this::okSelected);
 		// file filter
 		Label labelFileFilter = new Label(compositeBottom, SWT.NONE);
-		labelFileFilter.setText("Files of type:");
+		labelFileFilter.setText(Messages.getString("FileObjectChooser.FileTypeFilter")); //$NON-NLS-1$
 
 		Combo comboFileFilter = new Combo(compositeBottom, SWT.NONE);
 		GridData comboFileFilterLData = new GridData();
 		comboFileFilterLData.horizontalAlignment = SWT.FILL;
 		comboFileFilter.setLayoutData(comboFileFilterLData);
-		comboFileFilter.setText("all files");
+		comboFileFilter.setText(Messages.getString("FileObjectChooser.FileTypeFilter.AllFiles")); //$NON-NLS-1$
 		comboFileFilter.setEnabled(false);
 
 		Button buttonCancel = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
@@ -180,7 +180,7 @@ class FileObjectChooser {
 		buttonCancelLData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonCancelLData.heightHint = UISettings.BUTTON_HEIGHT;
 		buttonCancel.setLayoutData(buttonCancelLData);
-		buttonCancel.setText("Cancel");
+		buttonCancel.setText(Messages.getString("FileObjectChooser.Cancel")); //$NON-NLS-1$
 		buttonCancel.addListener(SWT.Selection, this::cancelSelected);
 
 		setBaseFileObject(base);

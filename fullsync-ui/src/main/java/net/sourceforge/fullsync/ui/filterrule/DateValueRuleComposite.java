@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.SystemDate;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
+import net.sourceforge.fullsync.ui.Messages;
 
 class DateValueRuleComposite extends RuleComposite {
 	private final DateFormat dateFormat = DateFormat.getDateInstance();
@@ -55,7 +56,7 @@ class DateValueRuleComposite extends RuleComposite {
 		}
 
 		Button buttonCalendar = new Button(this, SWT.PUSH | SWT.CENTER);
-		buttonCalendar.setText("Choose Date...");
+		buttonCalendar.setText(Messages.getString("DateValueRuleComposite.ChooseDate")); //$NON-NLS-1$
 		buttonCalendar.addListener(SWT.Selection, this::onChooseDate);
 	}
 

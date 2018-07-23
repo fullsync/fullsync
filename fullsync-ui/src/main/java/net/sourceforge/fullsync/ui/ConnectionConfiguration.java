@@ -72,7 +72,7 @@ public class ConnectionConfiguration {
 
 		// protocol combo box
 		Label labelProtocol = new Label(compositeProtocolSpecific, SWT.NONE);
-		labelProtocol.setText("Protocol:"); //FIXME: externalize
+		labelProtocol.setText(Messages.getString("ConnectionConfiguration.Protocol")); //$NON-NLS-1$
 		Combo comboProtocol = new Combo(compositeProtocolSpecific, SWT.READ_ONLY);
 		GridData protocolData = new GridData();
 		protocolData.horizontalSpan = 2;

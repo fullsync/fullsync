@@ -60,11 +60,11 @@ abstract class ProtocolSpecificComposite {
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.verticalAlignment = SWT.CENTER;
 		Label labelPath = new Label(parent, SWT.NONE);
-		labelPath.setText("Path:");
+		labelPath.setText(Messages.getString("ProtocolSpecificComposite.Path")); //$NON-NLS-1$
 		textPath = new Text(parent, SWT.BORDER);
 		textPath.setLayoutData(gridData);
 		Button buttonBrowse = new Button(parent, SWT.NONE);
-		buttonBrowse.setText("...");
+		buttonBrowse.setText(Messages.getString("ProtocolSpecificComposite.Browse")); //$NON-NLS-1$
 		buttonBrowse.addListener(SWT.Selection, this::onBrowse);
 		buttonBuffered = new Button(parent, SWT.CHECK | SWT.LEFT);
 		GridData buttonDestinationBufferedData = new GridData();

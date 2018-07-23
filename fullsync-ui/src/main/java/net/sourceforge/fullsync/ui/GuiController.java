@@ -74,7 +74,7 @@ public class GuiController {
 			Messages.setLanguage(languageCode);
 		}
 		catch (MissingResourceException ex) {
-			ExceptionHandler.reportException("Failed to set language to " + languageCode, ex);
+			ExceptionHandler.reportException(Messages.getString("GuiController.FailedToSetLanguageTo", languageCode), ex); //$NON-NLS-1$
 		}
 	}
 
@@ -145,7 +145,7 @@ public class GuiController {
 					p.waitFor();
 				}
 				catch (IOException | InterruptedException e) {
-					ExceptionHandler.reportException("Error opening " + uri + ".", e);
+					ExceptionHandler.reportException(Messages.getString("GuiController.FailedToLaunchProgramOrUrl", uri), e); //$NON-NLS-1$
 				}
 			});
 			// set this thread as a daemon to avoid hanging the FullSync shutdown
@@ -159,7 +159,7 @@ public class GuiController {
 				Program.launch(uri);
 			}
 			catch (Exception e) {
-				ExceptionHandler.reportException("Error opening " + uri + ".", e);
+				ExceptionHandler.reportException(Messages.getString("GuiController.FailedToLaunchProgramOrUrl", uri), e); //$NON-NLS-1$
 			}
 		}
 	}

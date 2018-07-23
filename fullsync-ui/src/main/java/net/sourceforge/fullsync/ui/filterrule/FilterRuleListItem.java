@@ -284,7 +284,7 @@ public class FilterRuleListItem {
 		else {
 			compositeWrapperLD.horizontalSpan = 2;
 			Text textValue = new Text(ruleCompositeWrapper, SWT.BORDER);
-			textValue.setText("Missing Rule Composite");
+			textValue.setText(Messages.getString("FilterRuleListItem.MissingRuleComposite")); //$NON-NLS-1$
 			textValue.setEditable(false);
 		}
 	}

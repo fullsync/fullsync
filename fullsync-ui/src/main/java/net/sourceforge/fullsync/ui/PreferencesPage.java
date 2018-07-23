@@ -177,7 +177,7 @@ public class PreferencesPage extends WizardDialog {
 
 		// profile list style
 		Label labelProfileListStyle = new Label(groupInterface, SWT.NONE);
-		labelProfileListStyle.setText(Messages.getString("PreferencesComposite.ProfileListStyle") + ": "); //$NON-NLS-1$ //$NON-NLS-2$
+		labelProfileListStyle.setText(Messages.getString("PreferencesComposite.ProfileListStyle")); //$NON-NLS-1$
 
 		comboProfileList = new Combo(groupInterface, SWT.DROP_DOWN | SWT.READ_ONLY);
 		GridData comboProfileListLData = new GridData();
@@ -188,7 +188,7 @@ public class PreferencesPage extends WizardDialog {
 
 		// language
 		Label labelLanguage = new Label(groupInterface, SWT.NONE);
-		labelLanguage.setText(Messages.getString("PreferencesComposite.Language") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		labelLanguage.setText(Messages.getString("PreferencesComposite.Language")); //$NON-NLS-1$
 
 		comboLanguage = new Combo(groupInterface, SWT.DROP_DOWN | SWT.READ_ONLY);
 		GridData comboLanguageLData = new GridData();

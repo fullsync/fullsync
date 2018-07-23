@@ -80,14 +80,14 @@ public class NiceListViewProfileListComposite extends ProfileListComposite {
 
 			// source label
 			Label labelSource = new Label(cSourceDestination, SWT.NULL);
-			labelSource.setText(Messages.getString("NiceListViewProfileListComposite.Source") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+			labelSource.setText(Messages.getString("NiceListViewProfileListComposite.Source")); //$NON-NLS-1$
 			lSource = new Label(cSourceDestination, SWT.NULL);
 			GridData lSourceData = new GridData(SWT.FILL, SWT.CENTER, true, false);
 			lSource.setLayoutData(lSourceData);
 
 			// destination label
 			Label labelDestination = new Label(cSourceDestination, SWT.NULL);
-			labelDestination.setText(Messages.getString("NiceListViewProfileListComposite.Destination") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+			labelDestination.setText(Messages.getString("NiceListViewProfileListComposite.Destination")); //$NON-NLS-1$
 			lDestination = new Label(cSourceDestination, SWT.NULL);
 			GridData lDestinationData = new GridData(SWT.FILL, SWT.CENTER, true, false);
 			lDestination.setLayoutData(lDestinationData);
@@ -107,13 +107,13 @@ public class NiceListViewProfileListComposite extends ProfileListComposite {
 
 			// last update
 			Label labelLastUpdate = new Label(cUpdate, SWT.NULL);
-			labelLastUpdate.setText(Messages.getString("NiceListViewProfileListComposite.LastUpdate") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+			labelLastUpdate.setText(Messages.getString("NiceListViewProfileListComposite.LastUpdate")); //$NON-NLS-1$
 			lLastUpdate = new Label(cUpdate, SWT.NULL);
 			lLastUpdate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 			// next update
 			Label labelNextUpdate = new Label(cUpdate, SWT.NULL);
-			labelNextUpdate.setText(Messages.getString("NiceListViewProfileListComposite.NextUpdate") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+			labelNextUpdate.setText(Messages.getString("NiceListViewProfileListComposite.NextUpdate")); //$NON-NLS-1$
 			lNextUpdate = new Label(cUpdate, SWT.NULL);
 			lNextUpdate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 

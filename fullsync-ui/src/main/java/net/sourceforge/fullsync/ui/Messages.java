@@ -66,8 +66,8 @@ public class Messages {
 		return '!' + key + '!';
 	}
 
-	public static String getString(final String key, final String value) {
+	public static String getString(final String key, Object... arguments) {
 		String msg = getString(key);
-		return MessageFormat.format(msg, value);
+		return MessageFormat.format(msg, arguments);
 	}
 }

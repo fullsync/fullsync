@@ -34,6 +34,7 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.values.FilterValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.ui.FileFilterPage;
+import net.sourceforge.fullsync.ui.Messages;
 
 class SubfilterRuleComposite extends RuleComposite {
 	private FileFilter value = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
@@ -63,7 +64,7 @@ class SubfilterRuleComposite extends RuleComposite {
 
 		Button buttonFilter = new Button(this, SWT.PUSH);
 		buttonFilter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		buttonFilter.setText("Set Filter...");
+		buttonFilter.setText(Messages.getString("SubfilterRuleComposite.SetFilter")); //$NON-NLS-1$
 		buttonFilter.addListener(SWT.Selection, this::onEditSubfilter);
 	}
 
