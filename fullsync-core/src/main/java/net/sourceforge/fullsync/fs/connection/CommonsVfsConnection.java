@@ -54,7 +54,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 				fsAuthProvider.authSetup(desc, options);
 			}
 			int port = desc.getPort().orElse(Integer.valueOf(1)).intValue();
-			String host = desc.getHost().orElse(""); //$NON-NLS-1$
+			String host = desc.getHost().orElse(null);
 			URI url = new URI(desc.getScheme(), null, host, port, desc.getPath(), null, null);
 			base = VFS.getManager().resolveFile(url.toString(), options);
 			root = new AbstractFile(this, ".", null, true, base.exists()); //$NON-NLS-1$
