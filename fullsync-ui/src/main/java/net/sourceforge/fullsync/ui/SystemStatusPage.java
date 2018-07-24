@@ -50,17 +50,17 @@ public class SystemStatusPage extends WizardDialog {
 
 	@Override
 	public String getTitle() {
-		return "System Status";
+		return Messages.getString("SystemStatusPage.Title"); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getCaption() {
-		return "System Status";
+		return Messages.getString("SystemStatusPage.Caption"); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getDescription() {
-		return "";
+		return Messages.getString("SystemStatusPage.Description"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class SystemStatusPage extends WizardDialog {
 			content.setLayout(new GridLayout());
 			Group groupMemory = new Group(content, SWT.NONE);
 			groupMemory.setLayout(new GridLayout(2, false));
-			groupMemory.setText("VM Memory");
+			groupMemory.setText(Messages.getString("SystemStatusPage.JVMMemory")); //$NON-NLS-1$
 
 			progressBarMemory = new ProgressBar(groupMemory, SWT.NONE);
 			GridData progressBarMemoryLData = new GridData();
@@ -92,7 +92,7 @@ public class SystemStatusPage extends WizardDialog {
 
 			// total memory
 			Label labelTotalMemory = new Label(groupMemory, SWT.NONE);
-			labelTotalMemory.setText("Total Memory:");
+			labelTotalMemory.setText(Messages.getString("SystemStatusPage.TotalMemory")); //$NON-NLS-1$
 			totalMemory = new Label(groupMemory, SWT.RIGHT);
 			GridData totalMemoryLData = new GridData();
 			totalMemoryLData.horizontalAlignment = SWT.FILL;
@@ -100,7 +100,7 @@ public class SystemStatusPage extends WizardDialog {
 
 			// max memory
 			Label labelMaxMemory = new Label(groupMemory, SWT.NONE);
-			labelMaxMemory.setText("Max Memory:");
+			labelMaxMemory.setText(Messages.getString("SystemStatusPage.MaxMemory")); //$NON-NLS-1$
 
 			maxMemory = new Label(groupMemory, SWT.RIGHT);
 			GridData maxMemoryLData = new GridData();
@@ -109,17 +109,17 @@ public class SystemStatusPage extends WizardDialog {
 
 			// free memory
 			Label labelFreeMemory = new Label(groupMemory, SWT.NONE);
-			labelFreeMemory.setText("Free Memory:");
+			labelFreeMemory.setText(Messages.getString("SystemStatusPage.FreeMemory")); //$NON-NLS-1$
 
 			freeMemory = new Label(groupMemory, SWT.RIGHT);
-			freeMemory.setText("<free memory>");
+			freeMemory.setText(""); //$NON-NLS-1$
 			GridData freeMemoryLData = new GridData();
 			freeMemoryLData.horizontalAlignment = SWT.FILL;
 			freeMemory.setLayoutData(freeMemoryLData);
 
 			// gc button
 			Button buttonMemoryGc = new Button(groupMemory, SWT.PUSH | SWT.CENTER);
-			buttonMemoryGc.setText("Clean up");
+			buttonMemoryGc.setText(Messages.getString("SystemStatusPage.CleanUp")); //$NON-NLS-1$
 			GridData buttonMemoryGcLData = new GridData();
 			buttonMemoryGc.addListener(SWT.Selection, e -> System.gc());
 			buttonMemoryGcLData.horizontalAlignment = SWT.END;

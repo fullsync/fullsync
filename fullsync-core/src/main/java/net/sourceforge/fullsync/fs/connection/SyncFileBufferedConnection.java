@@ -59,15 +59,15 @@ import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
 public class SyncFileBufferedConnection implements BufferedConnection {
-	private static final String BUFFER_FILENAME = ".syncfiles";
-	private static final String ELEMENT_SYNC_FILES = "SyncFiles";
-	private static final String ELEMENT_FILE = "File";
-	private static final String ELEMENT_DIRECTORY = "Directory";
-	private static final String ATTRIBUTE_FILE_SYSTEM_LAST_MODIFIED = "FileSystemLastModified";
-	private static final String ATTRIBUTE_FILE_SYSTEM_LENGTH = "FileSystemLength";
-	private static final String ATTRIBUTE_BUFFERED_LAST_MODIFIED = "BufferedLastModified";
-	private static final String ATTRIBUTE_BUFFERED_LENGTH = "BufferedLength";
-	private static final String ATTRIBUTE_NAME = "Name";
+	private static final String BUFFER_FILENAME = ".syncfiles"; //$NON-NLS-1$
+	private static final String ELEMENT_SYNC_FILES = "SyncFiles"; //$NON-NLS-1$
+	private static final String ELEMENT_FILE = "File"; //$NON-NLS-1$
+	private static final String ELEMENT_DIRECTORY = "Directory"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_FILE_SYSTEM_LAST_MODIFIED = "FileSystemLastModified"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_FILE_SYSTEM_LENGTH = "FileSystemLength"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_BUFFERED_LAST_MODIFIED = "BufferedLastModified"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_BUFFERED_LENGTH = "BufferedLength"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_NAME = "Name"; //$NON-NLS-1$
 
 	private static class SyncFileDefaultHandler extends DefaultHandler {
 		private BufferedConnection bufferedConnection;
@@ -83,7 +83,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			String name = attributes.getValue(ATTRIBUTE_NAME);
 
 			if (ELEMENT_DIRECTORY.equals(qName)) {
-				if ("/".equals(name) || ".".equals(name)) {
+				if ("/".equals(name) || ".".equals(name)) { //$NON-NLS-1$ //$NON-NLS-2$
 					return;
 				}
 				AbstractBufferedFile newDir = new AbstractBufferedFile(bufferedConnection, name, current, true, true);
@@ -223,10 +223,10 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		}
 		catch (SAXParseException spe) {
 			StringBuilder sb = new StringBuilder(spe.toString());
-			sb.append("\n Line number: " + spe.getLineNumber());
-			sb.append("\n Column number: " + spe.getColumnNumber());
-			sb.append("\n Public ID: " + spe.getPublicId());
-			sb.append("\n System ID: " + spe.getSystemId() + "\n");
+			sb.append("\n Line number: " + spe.getLineNumber()); //$NON-NLS-1$
+			sb.append("\n Column number: " + spe.getColumnNumber()); //$NON-NLS-1$
+			sb.append("\n Public ID: " + spe.getPublicId()); //$NON-NLS-1$
+			sb.append("\n System ID: " + spe.getSystemId() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			System.err.println(sb.toString());
 		}
 		catch (IOException | SAXException | ParserConfigurationException | FactoryConfigurationError e) {
@@ -272,12 +272,12 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			e.appendChild(serializeFile(root, doc));
 			doc.appendChild(e);
 			TransformerFactory fac = TransformerFactory.newInstance();
-			fac.setAttribute("indent-number", 2);
+			fac.setAttribute("indent-number", 2); //$NON-NLS-1$
 			Transformer tf = fac.newTransformer();
-			tf.setOutputProperty(OutputKeys.METHOD, "xml");
-			tf.setOutputProperty(OutputKeys.VERSION, "1.0");
-			tf.setOutputProperty(OutputKeys.INDENT, "yes");
-			tf.setOutputProperty(OutputKeys.STANDALONE, "no");
+			tf.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
+			tf.setOutputProperty(OutputKeys.VERSION, "1.0"); //$NON-NLS-1$
+			tf.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+			tf.setOutputProperty(OutputKeys.STANDALONE, "no"); //$NON-NLS-1$
 			DOMSource source = new DOMSource(doc);
 
 			try (OutputStreamWriter osw = new OutputStreamWriter(new GZIPOutputStream(node.getOutputStream()), StandardCharsets.UTF_8)) {

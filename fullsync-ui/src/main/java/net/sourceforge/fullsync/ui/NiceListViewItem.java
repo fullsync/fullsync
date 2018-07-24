@@ -189,7 +189,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 			labelStatus.setText(""); //$NON-NLS-1$
 		}
 		else {
-			labelStatus.setText("(" + status + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+			labelStatus.setText(String.format("(%s)", status)); //$NON-NLS-1$
 		}
 		labelStatus.pack();
 	}

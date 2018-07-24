@@ -65,10 +65,10 @@ class ProfileImpl implements Profile {
 	public static Profile unserialize(EventBus eventBus, Element element) throws DataParseException {
 		String profileId = element.getAttribute(ATTRIBUTE_ID);
 		String profileName = element.getAttribute(ATTRIBUTE_NAME);
-		ConnectionDescription src = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0));
-		ConnectionDescription dst = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0));
+		ConnectionDescription src = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)); //$NON-NLS-1$
+		ConnectionDescription dst = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)); //$NON-NLS-1$
 		RuleSetDescriptor deserializedRuleset = RuleSetDescriptor
-			.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0));
+			.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)); //$NON-NLS-1$
 		RuleSetDescriptor usedRuleset = null != deserializedRuleset
 			? deserializedRuleset
 			: new SimplyfiedRuleSetDescriptor(true, null, false, null);
@@ -78,7 +78,7 @@ class ProfileImpl implements Profile {
 		if (element.hasAttribute(ATTRIBUTE_ENABLED)) {
 			schedulingEnabled = Boolean.valueOf(element.getAttribute(ATTRIBUTE_ENABLED));
 		}
-		Schedule schedule = Schedule.unserialize((Element) element.getElementsByTagName("Schedule").item(0));
+		Schedule schedule = Schedule.unserialize((Element) element.getElementsByTagName("Schedule").item(0)); //$NON-NLS-1$
 
 		Date lastUpdate = null;
 		int lastErrorLevel = 0;
@@ -91,7 +91,7 @@ class ProfileImpl implements Profile {
 		}
 
 		try {
-			Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+			Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT")); //$NON-NLS-1$
 			c.setTimeInMillis(Integer.parseInt(element.getAttribute(ATTRIBUTE_LAST_UPDATE)));
 			lastUpdate = c.getTime();
 		}
@@ -233,7 +233,7 @@ class ProfileImpl implements Profile {
 	}
 
 	public Element serialize(final Document doc) {
-		Element elem = doc.createElement("Profile");
+		Element elem = doc.createElement("Profile"); //$NON-NLS-1$
 		elem.setAttribute(ATTRIBUTE_ID, id);
 		elem.setAttribute(ATTRIBUTE_NAME, name);
 		elem.setAttribute(ATTRIBUTE_DESCRIPTION, description);
@@ -250,10 +250,10 @@ class ProfileImpl implements Profile {
 			elem.appendChild(Schedule.serialize(schedule, doc));
 		}
 		if (null != source) {
-			elem.appendChild(source.serialize("Source", doc));
+			elem.appendChild(source.serialize("Source", doc)); //$NON-NLS-1$
 		}
 		if (null != destination) {
-			elem.appendChild(destination.serialize("Destination", doc));
+			elem.appendChild(destination.serialize("Destination", doc)); //$NON-NLS-1$
 		}
 
 		return elem;

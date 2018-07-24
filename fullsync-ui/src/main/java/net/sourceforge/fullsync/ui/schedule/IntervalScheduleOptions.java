@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.ui.schedule;
 
+import java.util.Arrays;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -34,20 +36,20 @@ import net.sourceforge.fullsync.ui.Messages;
 
 public class IntervalScheduleOptions extends ScheduleOptions {
 	// TODO sadly we can't support "days","months" as the interval is starting with program startup
-	private static final SchedulingIntervalItem[] schedulingIntervals;
-
-	static {
-		SchedulingIntervalItem seconds = new SchedulingIntervalItem("seconds", "IntervalScheduleOptions.seconds", 1000);
-		SchedulingIntervalItem minutes = new SchedulingIntervalItem("minutes", "IntervalScheduleOptions.minutes", 60 * 1000);
-		SchedulingIntervalItem hours = new SchedulingIntervalItem("hours", "IntervalScheduleOptions.hours", 60 * 60 * 1000);
-		schedulingIntervals = new SchedulingIntervalItem[] { seconds, minutes, hours };
-	}
-
+	private final SchedulingIntervalItem[] schedulingIntervals;
 	private Text textCount;
 	private Combo cbUnit;
 
 	public IntervalScheduleOptions(Composite parent) {
 		super(parent);
+		final String secondsName = Messages.getString("IntervalScheduleOptions.seconds"); //$NON-NLS-1$
+		final String minutesName = Messages.getString("IntervalScheduleOptions.minutes"); //$NON-NLS-1$
+		final String hoursName = Messages.getString("IntervalScheduleOptions.hours"); //$NON-NLS-1$
+		final SchedulingIntervalItem seconds = new SchedulingIntervalItem("seconds", secondsName, 1000); //$NON-NLS-1$
+		final SchedulingIntervalItem minutes = new SchedulingIntervalItem("minutes", minutesName, 60 * 1000); //$NON-NLS-1$
+		final SchedulingIntervalItem hours = new SchedulingIntervalItem("hours", hoursName, 60 * 60 * 1000); //$NON-NLS-1$
+		schedulingIntervals = new SchedulingIntervalItem[] { seconds, minutes, hours };
+
 		try {
 			GridLayout thisLayout = new GridLayout(3, false);
 			this.setLayout(thisLayout);
@@ -65,12 +67,7 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 			textCount.setLayoutData(textCountLData);
 
 			cbUnit = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
-			String[] names = new String[schedulingIntervals.length];
-			int idx = 0;
-			for (SchedulingIntervalItem item : schedulingIntervals) {
-				names[idx++] = Messages.getString(item.messageName);
-			}
-			cbUnit.setItems(names);
+			cbUnit.setItems(Arrays.stream(schedulingIntervals).map(el -> el.text).toArray(String[]::new));
 			this.layout();
 			cbUnit.select(0);
 		}
@@ -114,12 +111,12 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 
 	private static class SchedulingIntervalItem {
 		public String unit;
-		public String messageName;
+		public String text;
 		public long factor;
 
-		SchedulingIntervalItem(String unit, String messageName, long factor) {
+		SchedulingIntervalItem(String unit, String text, long factor) {
 			this.unit = unit;
-			this.messageName = messageName;
+			this.text = text;
 			this.factor = factor;
 		}
 	}

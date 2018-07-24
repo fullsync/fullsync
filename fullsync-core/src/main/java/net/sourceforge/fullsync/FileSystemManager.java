@@ -44,13 +44,13 @@ public class FileSystemManager {
 
 	private FileSystem getFilesystem(final String scheme) {
 		switch (scheme) {
-			case "file":
+			case "file": //$NON-NLS-1$
 				return new LocalFileSystem();
-			case "ftp":
+			case "ftp": //$NON-NLS-1$
 				return new FTPFileSystem();
-			case "sftp":
+			case "sftp": //$NON-NLS-1$
 				return new SFTPFileSystem();
-			case "smb":
+			case "smb": //$NON-NLS-1$
 				return new SmbFileSystem();
 			default:
 				return null;
@@ -83,7 +83,7 @@ public class FileSystemManager {
 		}
 
 		if (null == p) {
-			throw new FileSystemException("BufferStrategy '" + bufferStrategy + "' not found");
+			throw new FileSystemException("BufferStrategy '" + bufferStrategy + "' not found"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		return p.createBufferedSite(dir);

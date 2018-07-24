@@ -29,7 +29,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 class TextValueRuleComposite extends RuleComposite {
-	private String value = "";
+	private String value = ""; //$NON-NLS-1$
 
 	TextValueRuleComposite(Composite parent, final TextValue initialValue) {
 		super(parent);

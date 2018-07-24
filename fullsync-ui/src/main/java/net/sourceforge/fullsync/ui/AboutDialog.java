@@ -51,7 +51,7 @@ import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
 
 class AboutDialog {
-	private static final String FULLSYNC_LICENSES_DIRECTORY = "net/sourceforge/fullsync/licenses/";
+	private static final String FULLSYNC_LICENSES_DIRECTORY = "net/sourceforge/fullsync/licenses/"; //$NON-NLS-1$
 	private static final long ANIMATION_DELAY = 750;
 	private final Shell shell;
 	private final Preferences preferences;
@@ -155,7 +155,7 @@ class AboutDialog {
 	private Control initChangelogTab(Composite parent) {
 		final Composite tab = new Composite(parent, SWT.FILL);
 		tab.setLayout(new GridLayout(1, true));
-		ChangeLogBox changeLogBox = new ChangeLogBox(tab, "", backgroundExecutor);
+		ChangeLogBox changeLogBox = new ChangeLogBox(tab, "", backgroundExecutor); //$NON-NLS-1$
 		GridData changelogBoxLData = new GridData(GridData.FILL_BOTH);
 		changelogBoxLData.heightHint = 300;
 		changeLogBox.setLayoutData(changelogBoxLData);
@@ -305,7 +305,7 @@ class AboutDialog {
 	private List<LicenseEntry> loadLicenses() throws Exception {
 		return Util.loadDirectoryFromClasspath(FULLSYNC_LICENSES_DIRECTORY)
 			.parallelStream()
-			.filter(name -> name.endsWith(".txt")) ////$NON-NLS-1$
+			.filter(name -> name.endsWith(".txt")) //$NON-NLS-1$
 			.map(name -> {
 				String n = name.substring(0, name.length() - 4);
 				String license = Util.getResourceAsString(FULLSYNC_LICENSES_DIRECTORY + name);

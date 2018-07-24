@@ -64,24 +64,24 @@ public abstract class Util {
 			}
 		}
 		catch (IOException ex) {
-			logger.warn("Failed to load " + name, ex);
+			logger.warn("Failed to load " + name, ex); //$NON-NLS-1$
 		}
 		return out.toString();
 	}
 
 	public static String getFullSyncVersion() {
-		return Util.getResourceAsString("net/sourceforge/fullsync/version.txt").trim();
+		return Util.getResourceAsString("net/sourceforge/fullsync/version.txt").trim(); //$NON-NLS-1$
 	}
 
 	public static File getInstalllocation() {
 		URL codeSource = Util.class.getProtectionDomain().getCodeSource().getLocation();
 		try {
-			return new File(codeSource.toURI().resolve("../"));
+			return new File(codeSource.toURI().resolve("../")); //$NON-NLS-1$
 		}
 		catch (URISyntaxException ex) {
-			logger.warn("Failed to get installlocation ", ex);
+			logger.warn("Failed to get installlocation ", ex); //$NON-NLS-1$
 		}
-		return new File(".");
+		return new File("."); //$NON-NLS-1$
 	}
 
 	public static Set<String> loadDirectoryFromClasspath(String path) throws URISyntaxException, IOException {
@@ -91,8 +91,8 @@ public abstract class Util {
 		while (urls.hasMoreElements()) {
 			URL url = urls.nextElement();
 			URI uri = null;
-			if ("jar".equals(url.getProtocol())) {
-				uri = new URI(url.toString().replaceAll("^jar:(.+)!/.*$", "$1"));
+			if ("jar".equals(url.getProtocol())) { //$NON-NLS-1$
+				uri = new URI(url.toString().replaceAll("^jar:(.+)!/.*$", "$1")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			else {
 				uri = url.toURI();

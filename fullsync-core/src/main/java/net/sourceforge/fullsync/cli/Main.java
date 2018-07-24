@@ -77,29 +77,29 @@ public class Main implements Launcher { // NO_UCD
 	private static DaemonSchedulerListener daemonSchedulerListener;
 
 	private static void initOptions() {
-		options.addOption("h", "help", false, "this help");
-		options.addOption("v", "verbose", false, "verbose output to stdout");
-		options.addOption("V", "version", false, "display the version and exit");
-		options.addOption("m", "minimized", false, "starts fullsync gui in system tray ");
+		options.addOption("h", "help", false, "this help"); //$NON-NLS-1$ //$NON-NLS-2$
+		options.addOption("v", "verbose", false, "verbose output to stdout"); //$NON-NLS-1$ //$NON-NLS-2$
+		options.addOption("V", "version", false, "display the version and exit"); //$NON-NLS-1$ //$NON-NLS-2$
+		options.addOption("m", "minimized", false, "starts fullsync gui in system tray "); //$NON-NLS-1$ //$NON-NLS-2$
 
-		Option profilesFile = Option.builder("P")
-			.longOpt("profiles-file")
+		Option profilesFile = Option.builder("P") //$NON-NLS-1$
+			.longOpt("profiles-file") //$NON-NLS-1$
 			.desc("uses the specified file instead of profiles.xml")
 			.hasArg()
-			.argName("filename")
+			.argName("filename") //$NON-NLS-1$
 			.build();
 		options.addOption(profilesFile);
 
-		Option run = Option.builder("r")
-			.longOpt("run")
+		Option run = Option.builder("r") //$NON-NLS-1$
+			.longOpt("run") //$NON-NLS-1$
 			.desc("run the specified profile and then exit FullSync")
 			.hasArg()
-			.argName("profile")
+			.argName("profile") //$NON-NLS-1$
 			.build();
 		options.addOption(run);
 
-		Option daemon = Option.builder("d")
-			.longOpt("daemon")
+		Option daemon = Option.builder("d") //$NON-NLS-1$
+			.longOpt("daemon") //$NON-NLS-1$
 			.desc("disables the gui and runs in daemon mode with scheduler")
 			.hasArg(false)
 			.build();
@@ -109,18 +109,18 @@ public class Main implements Launcher { // NO_UCD
 
 	private static void printHelp() {
 		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp(85, "fullsync", "", options, "", true);
+		formatter.printHelp(85, "fullsync", "", options, "", true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	public static String getConfigDir() {
-		String configDir = System.getProperty("net.sourceforge.fullsync.configDir");
+		String configDir = System.getProperty("net.sourceforge.fullsync.configDir"); //$NON-NLS-1$
 		if (null == configDir) {
-			configDir = System.getenv("XDG_CONFIG_HOME");
+			configDir = System.getenv("XDG_CONFIG_HOME"); //$NON-NLS-1$
 		}
 		if (null == configDir) {
-			configDir = System.getProperty("user.home") + File.separator + ".config";
+			configDir = System.getProperty("user.home") + File.separator + ".config"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		configDir = configDir + File.separator + "fullsync" + File.separator;
+		configDir = configDir + File.separator + "fullsync" + File.separator; //$NON-NLS-1$
 		File dir = new File(configDir);
 		if (!dir.exists()) {
 			dir.mkdirs();
@@ -129,7 +129,7 @@ public class Main implements Launcher { // NO_UCD
 	}
 
 	public static String getLogFileName() {
-		return Paths.get(getConfigDir(), "fullsync.log").toFile().getAbsolutePath();
+		return Paths.get(getConfigDir(), "fullsync.log").toFile().getAbsolutePath(); //$NON-NLS-1$
 	}
 
 	private static void backupFile(final File old, final File current, final String backupName) throws IOException {
@@ -162,16 +162,16 @@ public class Main implements Launcher { // NO_UCD
 		}
 
 		if (line.hasOption('V')) {
-			System.out.println(String.format("FullSync version %s", Util.getFullSyncVersion()));
+			System.out.println(String.format("FullSync version %s", Util.getFullSyncVersion())); //$NON-NLS-1$
 			System.exit(0);
 		}
 
 		// Apply modifying options
-		if (!line.hasOption("v")) {
+		if (!line.hasOption("v")) { //$NON-NLS-1$
 			System.setErr(new PrintStream(new FileOutputStream(getLogFileName())));
 		}
 
-		if (line.hasOption("h")) {
+		if (line.hasOption("h")) { //$NON-NLS-1$
 			printHelp();
 			System.exit(0);
 		}
@@ -179,8 +179,8 @@ public class Main implements Launcher { // NO_UCD
 		upgradeLegacyPreferencesLocation(configDir);
 
 		String profilesFile;
-		if (line.hasOption("P")) {
-			profilesFile = line.getOptionValue("P");
+		if (line.hasOption("P")) { //$NON-NLS-1$
+			profilesFile = line.getOptionValue("P"); //$NON-NLS-1$
 		}
 		else {
 			profilesFile = configDir + FullSync.PROFILES_XML;
@@ -236,10 +236,10 @@ public class Main implements Launcher { // NO_UCD
 		if (!newProfiles.exists()) {
 			if (!oldProfiles.exists()) {
 				// on windows FullSync 0.9.1 installs itself into %ProgramFiles%\FullSync while 0.10.0 installs itself into %ProgramFiles%\FullSync\FullSync by default
-				oldProfiles = new File(".." + File.separator + FullSync.PROFILES_XML);
+				oldProfiles = new File(".." + File.separator + FullSync.PROFILES_XML); //$NON-NLS-1$
 			}
 			if (oldProfiles.exists()) {
-				backupFile(oldProfiles, newProfiles, "profiles_old.xml");
+				backupFile(oldProfiles, newProfiles, "profiles_old.xml"); //$NON-NLS-1$
 			}
 		}
 	}
@@ -248,7 +248,7 @@ public class Main implements Launcher { // NO_UCD
 		File newPreferences = new File(configDir + FullSync.PREFERENCES_PROPERTIES);
 		File oldPreferences = new File(FullSync.PREFERENCES_PROPERTIES);
 		if (!newPreferences.exists() && oldPreferences.exists()) {
-			backupFile(oldPreferences, newPreferences, "preferences_old.properties");
+			backupFile(oldPreferences, newPreferences, "preferences_old.properties"); //$NON-NLS-1$
 		}
 	}
 
@@ -317,35 +317,35 @@ public class Main implements Launcher { // NO_UCD
 
 	@Override
 	public void launchGui(Injector injector) throws Exception {
-		String arch = "x86";
-		String osName = System.getProperty("os.name").toLowerCase();
-		String os = "unknown";
-		if (-1 != System.getProperty("os.arch").indexOf("64")) {
-			arch = "x86_64";
+		String arch = "x86"; //$NON-NLS-1$
+		String osName = System.getProperty("os.name").toLowerCase(); //$NON-NLS-1$
+		String os = "unknown"; //$NON-NLS-1$
+		if (-1 != System.getProperty("os.arch").indexOf("64")) { //$NON-NLS-1$ //$NON-NLS-2$
+			arch = "x86_64"; //$NON-NLS-1$
 		}
-		if (-1 != osName.indexOf("linux")) {
-			os = "gtk.linux";
+		if (-1 != osName.indexOf("linux")) { //$NON-NLS-1$
+			os = "gtk.linux"; //$NON-NLS-1$
 		}
-		else if (-1 != osName.indexOf("windows")) {
-			os = "win32.win32";
+		else if (-1 != osName.indexOf("windows")) { //$NON-NLS-1$
+			os = "win32.win32"; //$NON-NLS-1$
 		}
-		else if (-1 != osName.indexOf("mac")) {
-			os = "cocoa.macosx";
+		else if (-1 != osName.indexOf("mac")) { //$NON-NLS-1$
+			os = "cocoa.macosx"; //$NON-NLS-1$
 		}
 		CodeSource cs = getClass().getProtectionDomain().getCodeSource();
-		String libDirectory = cs.getLocation().toURI().toString().replaceAll("^(.*)/[^/]+\\.jar$", "$1/");
+		String libDirectory = cs.getLocation().toURI().toString().replaceAll("^(.*)/[^/]+\\.jar$", "$1/"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		List<URL> jars = new ArrayList<>();
-		jars.add(new URL(libDirectory + "net.sourceforge.fullsync-fullsync-assets.jar"));
-		jars.add(new URL(libDirectory + "net.sourceforge.fullsync-fullsync-ui.jar"));
+		jars.add(new URL(libDirectory + "net.sourceforge.fullsync-fullsync-assets.jar")); //$NON-NLS-1$
+		jars.add(new URL(libDirectory + "net.sourceforge.fullsync-fullsync-ui.jar")); //$NON-NLS-1$
 		// add correct SWT implementation to the class-loader
-		jars.add(new URL(libDirectory + "org.eclipse.platform-org.eclipse.swt." + os + "." + arch + ".jar"));
+		jars.add(new URL(libDirectory + String.format("org.eclipse.platform-org.eclipse.swt.%s.%s.jar", os, arch))); //$NON-NLS-1$
 
 		// instantiate an URL class-loader with the constructed class-path and load the UI
 		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Main.class.getClassLoader());
 		Thread.currentThread().setContextClassLoader(cl);
-		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.ui.GuiController");
-		Method launchUI = cls.getDeclaredMethod("launchUI", Injector.class);
+		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.ui.GuiController"); //$NON-NLS-1$
+		Method launchUI = cls.getDeclaredMethod("launchUI", Injector.class); //$NON-NLS-1$
 		launchUI.invoke(null, injector);
 	}
 }

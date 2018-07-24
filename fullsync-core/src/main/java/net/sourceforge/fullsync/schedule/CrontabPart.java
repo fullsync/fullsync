@@ -29,14 +29,11 @@ import net.sourceforge.fullsync.DataParseException;
  * daysOfWeek.bArray[1] = true;
  */
 public class CrontabPart {
-	// REVISIT we can't localize those names as we don't have an guicontroller at this point of time
-	// atm the name isn't used anywhere, but if it is used, we need to think of some nice trick
-	public static final CrontabPart MINUTES = new CrontabPart("minutes", 0, 59, 0); //$NON-NLS-1$
-	public static final CrontabPart HOURS = new CrontabPart("hours", 0, 23, 0); //$NON-NLS-1$
-	public static final CrontabPart DAYSOFMONTH = new CrontabPart("daysOfMonth", 1, 31, 0); //$NON-NLS-1$
-	public static final CrontabPart MONTHS = new CrontabPart("months", 1, 12, -1); //$NON-NLS-1$
-	public static final CrontabPart DAYSOFWEEK = new CrontabPart("daysOfWeek", 0, 7, +1); //$NON-NLS-1$
-	public static final CrontabPart[] ALL_PARTS = new CrontabPart[] { MINUTES, HOURS, DAYSOFMONTH, MONTHS, DAYSOFWEEK };
+	public static final CrontabPart MINUTES = new CrontabPart(0, 59, 0);
+	public static final CrontabPart HOURS = new CrontabPart(0, 23, 0);
+	public static final CrontabPart DAYSOFMONTH = new CrontabPart(1, 31, 0);
+	public static final CrontabPart MONTHS = new CrontabPart(1, 12, -1);
+	public static final CrontabPart DAYSOFWEEK = new CrontabPart(0, 7, +1);
 
 	public class Instance {
 		public final String pattern;
@@ -91,7 +88,7 @@ public class CrontabPart {
 				}
 			}
 			if (p.length() == 0) {
-				return "0";
+				return "0"; //$NON-NLS-1$
 			}
 			else {
 				return p.substring(0, p.length() - 1);
@@ -110,13 +107,13 @@ public class CrontabPart {
 				if (index > 0) {
 					each = Integer.parseInt(token.substring(index + 1));
 					if (each == 0) {
-						throw new DataParseException("CrontabPart.NeverUseExpressions"); // FIXME: Messages.getString("CrontabPart.NeverUseExpressions")); //$NON-NLS-1$
+						throw new DataParseException("CrontabPart.NeverUseExpressions"); // FIXME: Messages.getString("CrontabPart.NeverUseExpressions"));
 					}
 
 					token = token.substring(0, index);
 				}
 
-				if ("*".equals(token)) {
+				if ("*".equals(token)) { //$NON-NLS-1$
 					for (i = low; i < (bArray.length - offset); i += each) {
 						bArray[i + offset] = true;
 					}
@@ -125,7 +122,7 @@ public class CrontabPart {
 
 				index = token.indexOf(',');
 				if (index > 0) {
-					StringTokenizer tokenizer = new StringTokenizer(token, ",");
+					StringTokenizer tokenizer = new StringTokenizer(token, ","); //$NON-NLS-1$
 					while (tokenizer.hasMoreElements()) {
 						parseToken(tokenizer.nextToken());
 					}
@@ -148,19 +145,16 @@ public class CrontabPart {
 				return false;
 			}
 			catch (Exception e) {
-				throw new DataParseException("CrontabPart.SomethingWasWrong" + token, e); //$NON-NLS-1$ // FIXME: translation Messages.getString("CrontabPart.SomethingWasWrong") + token
+				throw new DataParseException("CrontabPart.SomethingWasWrong" + token, e); // FIXME: translation Messages.getString("CrontabPart.SomethingWasWrong") + token
 			}
 		}
 	}
-
-	public final String name;
 
 	public final int low;
 	public final int offset;
 	public final int high;
 
-	public CrontabPart(String name, int low, int high, int offset) {
-		this.name = name;
+	public CrontabPart(int low, int high, int offset) {
 		this.low = low;
 		this.high = high;
 		this.offset = offset;

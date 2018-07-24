@@ -38,7 +38,7 @@ public abstract class UISettings {
 
 	private static final int K = 1024;
 
-	private static String[] UNITS = { "B", "KiB", "MiB", "GiB", "TiB" };
+	private static String[] UNITS = { "B", "KiB", "MiB", "GiB", "TiB" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
 	public static String formatSize(long size) {
 		int i = 1;
@@ -48,10 +48,10 @@ public abstract class UISettings {
 			}
 		}
 		--i;
-		String result = "";
+		String result = ""; //$NON-NLS-1$
 		if (-1 != size) {
 			int scaledSize = (int) Math.ceil(size / Math.pow(K, i));
-			result = String.format("%d %s", scaledSize, UNITS[i]);
+			result = String.format("%d %s", scaledSize, UNITS[i]); //$NON-NLS-1$
 		}
 		return result;
 	}

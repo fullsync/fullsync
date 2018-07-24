@@ -70,8 +70,8 @@ import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 public class ProfileDetailsTabbedPage extends WizardDialog {
-	private static final String EXPANDED_KEY = "Expanded";
-	private static final String FILTER_KEY = "Filter";
+	private static final String EXPANDED_KEY = "Expanded"; //$NON-NLS-1$
+	private static final String FILTER_KEY = "Filter"; //$NON-NLS-1$
 
 	private final ProfileManager profileManager;
 	private final Provider<FileFilterPage> fileFilterPageProvider;
@@ -163,7 +163,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			GridData tabsData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			tabs.setLayoutData(tabsData);
 			TabItem tabGeneral = new TabItem(tabs, SWT.NULL);
-			tabGeneral.setText("General"); // FIXME: move text to translation file
+			tabGeneral.setText(Messages.getString("ProfileDetailsTabbedPage.General")); //$NON-NLS-1$
 			tabGeneral.setControl(initGeneralTab(tabs));
 
 			TabItem tabSource = new TabItem(tabs, SWT.NULL);
@@ -175,11 +175,11 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			tabDestination.setControl(initDestinationTab(tabs));
 
 			TabItem tabFilters = new TabItem(tabs, SWT.NULL);
-			tabFilters.setText("Filters"); // FIXME: move text to translation file
+			tabFilters.setText(Messages.getString("ProfileDetailsTabbedPage.Filters")); //$NON-NLS-1$
 			tabFilters.setControl(initFiltersTab(tabs));
 
 			tabSubDirs = new TabItem(tabs, SWT.NULL);
-			tabSubDirs.setText("Subdirectories"); // FIXME: move text to translation file
+			tabSubDirs.setText(Messages.getString("ProfileDetailsTabbedPage.Subdirectories")); //$NON-NLS-1$
 			tabSubDirs.setControl(initSubDirsTab(tabs));
 
 			tabs.addSelectionListener(widgetDefaultSelectedAdapter(this::treeTabsWidgetSelected));
@@ -195,13 +195,13 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 			srcConnectionConfiguration.setConnectionDescription(profile.getSource());
 			if (null != profile.getSource()) {
-				String bufferStrategy = profile.getSource().getBufferStrategy().orElse("");
+				String bufferStrategy = profile.getSource().getBufferStrategy().orElse(""); //$NON-NLS-1$
 				srcConnectionConfiguration.setBuffered(FileSystemManager.BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy));
 			}
 
 			dstConnectionConfiguration.setConnectionDescription(profile.getDestination());
 			if (null != profile.getDestination()) {
-				String bufferStrategy = profile.getDestination().getBufferStrategy().orElse("");
+				String bufferStrategy = profile.getDestination().getBufferStrategy().orElse(""); //$NON-NLS-1$
 				dstConnectionConfiguration.setBuffered(FileSystemManager.BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy));
 			}
 
@@ -217,7 +217,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor) ruleSetDescriptor;
 			syncSubsButton.setSelection(simpleDesc.isSyncSubDirs());
 			filter = simpleDesc.getFileFilter();
-			textFilterDescription.setText(null != filter ? filter.toString() : "");
+			textFilterDescription.setText(null != filter ? filter.toString() : ""); //$NON-NLS-1$
 			boolean useFilter = simpleDesc.isUseFilter();
 			buttonUseFileFilter.setSelection(useFilter);
 			enableFilterControls(useFilter);
@@ -244,7 +244,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 		// profile name
 		Label nameLabel = new Label(c, SWT.NONE);
-		nameLabel.setText(Messages.getString("ProfileDetails.Name.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		nameLabel.setText(Messages.getString("ProfileDetails.Name.Label")); //$NON-NLS-1$
 		GridData textNameData = new GridData();
 		textNameData.grabExcessHorizontalSpace = true;
 		textNameData.horizontalAlignment = SWT.FILL;
@@ -253,7 +253,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		textProfileName.setToolTipText(Messages.getString("ProfileDetails.Name.ToolTip")); //$NON-NLS-1$
 		// profile description
 		Label descriptionLabel = new Label(c, SWT.NONE);
-		descriptionLabel.setText(Messages.getString("ProfileDetails.Description.Label") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		descriptionLabel.setText(Messages.getString("ProfileDetails.Description.Label")); //$NON-NLS-1$
 		GridData textDescriptionData = new GridData();
 		textDescriptionData.horizontalAlignment = SWT.FILL;
 		textProfileDescription = new Text(c, SWT.BORDER);
@@ -268,17 +268,17 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		comboType.addModifyListener(evt -> {
 			srcConnectionConfiguration.setBuffered(false);
 			dstConnectionConfiguration.setBuffered(false);
-			if (comboType.getText().equals("Publish/Update")) {
+			if (comboType.getText().equals("Publish/Update")) { //$NON-NLS-1$
 				labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.Publish")); //$NON-NLS-1$
 				srcConnectionConfiguration.setBuffered(true);
 			}
-			else if (comboType.getText().equals("Backup Copy")) {
+			else if (comboType.getText().equals("Backup Copy")) { //$NON-NLS-1$
 				labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.BackupCopy")); //$NON-NLS-1$
 			}
-			else if (comboType.getText().equals("Exact Copy")) {
+			else if (comboType.getText().equals("Exact Copy")) { //$NON-NLS-1$
 				labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.ExactCopy")); //$NON-NLS-1$
 			}
-			else if (comboType.getText().equals("Two Way Sync")) {
+			else if (comboType.getText().equals("Two Way Sync")) { //$NON-NLS-1$
 				labelTypeDescription.setText(Messages.getString("ProfileDetails.ProfileDescription.TwoWaySync")); //$NON-NLS-1$
 			}
 		});
@@ -295,7 +295,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		labelTypeDescription.setText(Messages.getString("ProfileDetails.Description.Label")); //$NON-NLS-1$
 		// automated execution
 		Label labelAutomatedExecution = new Label(c, SWT.NONE);
-		labelAutomatedExecution.setText("Automated Execution");
+		labelAutomatedExecution.setText(Messages.getString("ProfileDetailsTabbedPage.AutomatedExecution")); //$NON-NLS-1$
 		buttonEnabled = new Button(c, SWT.CHECK | SWT.RIGHT);
 		buttonEnabled.setText(Messages.getString("ProfileDetails.Enabled")); //$NON-NLS-1$
 		new Label(c, SWT.NONE); // area below the automated execution label should be empty
@@ -385,14 +385,14 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		GridData buttonUseFileFilterData = new GridData();
 		buttonUseFileFilterData.horizontalSpan = 2;
 		buttonUseFileFilter.setLayoutData(buttonUseFileFilterData);
-		buttonUseFileFilter.setText("Use file filter");
+		buttonUseFileFilter.setText(Messages.getString("ProfileDetailsTabbedPage.EnableFileFilter")); //$NON-NLS-1$
 		buttonUseFileFilter.setSelection(false);
 		buttonUseFileFilter.addListener(SWT.Selection, e -> enableFilterControls(buttonUseFileFilter.getSelection()));
 
 		labelFilesFilter = new Label(c, SWT.NONE);
-		labelFilesFilter.setText("Files Filter: ");
+		labelFilesFilter.setText(Messages.getString("ProfileDetailsTabbedPage.FileFilter")); //$NON-NLS-1$
 		buttonFileFilter = new Button(c, SWT.PUSH | SWT.CENTER);
-		buttonFileFilter.setText("Set Filter...");
+		buttonFileFilter.setText(Messages.getString("ProfileDetailsTabbedPage.SetFileFilter")); //$NON-NLS-1$
 		GridData buttonFileFilterData = new GridData();
 		buttonFileFilterData.grabExcessHorizontalSpace = true;
 		buttonFileFilterData.widthHint = UISettings.BUTTON_WIDTH;
@@ -420,7 +420,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		labelFilterDescriptionData.heightHint = 120;
 		labelFilterDescriptionData.grabExcessHorizontalSpace = true;
 		textFilterDescription.setLayoutData(labelFilterDescriptionData);
-		textFilterDescription.setText("");
+		textFilterDescription.setText(""); //$NON-NLS-1$
 		textFilterDescription.setEditable(false);
 
 		enableFilterControls(false);
@@ -486,7 +486,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		GridData buttonSetFilterData = new GridData();
 		buttonSetFilterData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonSetFilter.setLayoutData(buttonSetFilterData);
-		buttonSetFilter.setText("Set Filter...");
+		buttonSetFilter.setText(Messages.getString("ProfileDetailsTabbedPage.SetFileFilter")); //$NON-NLS-1$
 		buttonSetFilter.addListener(SWT.Selection, e -> {
 			TreeItem[] selectedItems = directoryTree.getSelection();
 			if (selectedItems.length > 0) {
@@ -512,7 +512,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		GridData buttonRemoveFilterData = new GridData();
 		buttonRemoveFilterData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonRemoveFilter.setLayoutData(buttonRemoveFilterData);
-		buttonRemoveFilter.setText("Remove Filter");
+		buttonRemoveFilter.setText(Messages.getString("ProfileDetailsTabbedPage.RemoveFilter")); //$NON-NLS-1$
 		buttonRemoveFilter.setEnabled(false);
 		buttonRemoveFilter.addListener(SWT.Selection, e -> {
 			TreeItem[] selectedItems = directoryTree.getSelection();
@@ -541,7 +541,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				if (file.isDirectory()) {
 					TreeItem item = new TreeItem(directoryTree, SWT.NULL);
 					item.setText(file.getName());
-					item.setImage(imageRepository.getImage("Node_Directory.png"));
+					item.setImage(imageRepository.getImage("Node_Directory.png")); //$NON-NLS-1$
 					item.setData(file);
 					if (itemsMap.containsKey(file.getPath())) {
 						markItem(item);
@@ -564,7 +564,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			if (file.isDirectory()) {
 				TreeItem childrenItem = new TreeItem(item, SWT.NULL);
 				childrenItem.setText(file.getName());
-				childrenItem.setImage(imageRepository.getImage("Node_Directory.png"));
+				childrenItem.setImage(imageRepository.getImage("Node_Directory.png")); //$NON-NLS-1$
 				childrenItem.setData(file);
 				if (itemsMap.containsKey(file.getPath())) {
 					markItem(childrenItem);
@@ -669,8 +669,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			if ((null == sourceSite) || (null == src) || (null == lastSourceLoaded) || !lastSourceLoaded.equals(src)) {
 				directoryTree.removeAll();
 				TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
-				loadingIem.setText("Loading source dir...");
-				loadingIem.setImage(imageRepository.getImage("Node_Directory.png"));
+				loadingIem.setText(Messages.getString("ProfileDetailsTabbedPage.Loading")); //$NON-NLS-1$
+				loadingIem.setImage(imageRepository.getImage("Node_Directory.png")); //$NON-NLS-1$
 
 				Display display = Display.getCurrent();
 				display.asyncExec(() -> {
@@ -685,16 +685,16 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 						}
 						else {
 							TreeItem loadingIem1 = new TreeItem(directoryTree, SWT.NULL);
-							loadingIem1.setText("Unable to load source dir");
-							loadingIem1.setImage(imageRepository.getImage("Error.png"));
+							loadingIem1.setText(Messages.getString("ProfileDetailsTabbedPage.LoadingFailed")); //$NON-NLS-1$
+							loadingIem1.setImage(imageRepository.getImage("Error.png")); //$NON-NLS-1$
 						}
 					}
 					catch (IOException | URISyntaxException | FileSystemException ex) {
 						ExceptionHandler.reportException(ex);
 						directoryTree.removeAll();
 						TreeItem loadingIem2 = new TreeItem(directoryTree, SWT.NULL);
-						loadingIem2.setText("Unable to load source dir");
-						loadingIem2.setImage(imageRepository.getImage("Error.png"));
+						loadingIem2.setText(Messages.getString("ProfileDetailsTabbedPage.LoadingFailed")); //$NON-NLS-1$
+						loadingIem2.setImage(imageRepository.getImage("Error.png")); //$NON-NLS-1$
 					}
 				});
 			}

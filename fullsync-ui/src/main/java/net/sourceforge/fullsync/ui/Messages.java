@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Messages {
-	private static final String BUNDLE_NAME = "net.sourceforge.fullsync.ui.messages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "net.sourceforge.fullsync.ui.messages"; //$NON-NLS-1$
 	private static Messages instance;
 	private static final Logger logger = LoggerFactory.getLogger(Messages.class);
 
@@ -57,17 +57,17 @@ public class Messages {
 				return value;
 			}
 			else {
-				throw new MissingResourceException("Can't find resource for key " + key, Messages.class.getName(), key);
+				throw new MissingResourceException("Can't find resource for key " + key, Messages.class.getName(), key); //$NON-NLS-1$
 			}
 		}
 		catch (Exception e) {
-			logger.warn("Missing translation for key " + key, e);
+			logger.warn("Missing translation for key " + key, e); //$NON-NLS-1$
 		}
 		return '!' + key + '!';
 	}
 
-	public static String getString(final String key, final String value) {
+	public static String getString(final String key, Object... arguments) {
 		String msg = getString(key);
-		return MessageFormat.format(msg, value);
+		return MessageFormat.format(msg, arguments);
 	}
 }

@@ -138,5 +138,4 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 			unbuffered = getParent().getUnbuffered().createChild(getName(), directory);
 		}
 	}
-
 }

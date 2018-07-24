@@ -41,7 +41,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	@Override
 	public void createGUI(final Composite parent) {
 		Label labelHost = new Label(parent, SWT.NONE);
-		labelHost.setText("Host:");
+		labelHost.setText(Messages.getString("UserPasswordSpecificComposite.Host")); //$NON-NLS-1$
 		GridData gridData = getGridData();
 		gridData.grabExcessHorizontalSpace = true;
 		textHost = new Text(parent, SWT.BORDER);
@@ -50,7 +50,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 		int port = getDefaultPort();
 		if (-1 != port) {
 			Label labelPort = new Label(parent, SWT.NONE);
-			labelPort.setText("Port:");
+			labelPort.setText(Messages.getString("UserPasswordSpecificComposite.Port")); //$NON-NLS-1$
 			spinnerPort = new Spinner(parent, SWT.BORDER);
 			spinnerPort.setMinimum(1);
 			spinnerPort.setMaximum(0xFFFF);
@@ -58,20 +58,24 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 			spinnerPort.setLayoutData(getGridData());
 		}
 
-		onBeforePasswordHook(parent);
+		onBeforeUsernameHook(parent);
 		labelUsername = new Label(parent, SWT.NONE);
-		labelUsername.setText("Username:");
+		labelUsername.setText(Messages.getString("UserPasswordSpecificComposite.Username")); //$NON-NLS-1$
 		textUsername = new Text(parent, SWT.BORDER);
 		textUsername.setLayoutData(getGridData());
 		labelPassword = new Label(parent, SWT.NONE);
-		labelPassword.setText("Password:");
+		labelPassword.setText(Messages.getString("UserPasswordSpecificComposite.Password")); //$NON-NLS-1$
 		textPassword = new Text(parent, SWT.BORDER);
 		textPassword.setLayoutData(getGridData());
 		textPassword.setEchoChar('*');
+		onAfterPasswordHook(parent);
 		super.createGUI(parent);
 	}
 
-	protected void onBeforePasswordHook(final Composite parent) {
+	protected void onBeforeUsernameHook(final Composite parent) {
+	}
+
+	protected void onAfterPasswordHook(final Composite parent) {
 	}
 
 	protected void setUserPasswordEnabled(boolean enabled) {
@@ -104,7 +108,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	@Override
 	public void setConnectionDescription(final ConnectionDescription connection) {
 		super.setConnectionDescription(connection);
-		textHost.setText(connection.getHost().orElse(""));
+		textHost.setText(connection.getHost().orElse("")); //$NON-NLS-1$
 		if (null != spinnerPort) {
 			int port = connection.getPort().orElse(-1).intValue();
 			if (-1 == port) {
@@ -112,19 +116,19 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 			}
 			spinnerPort.setSelection(port);
 		}
-		textUsername.setText(connection.getUsername().orElse(""));
-		textPassword.setText(connection.getPassword().orElse(""));
+		textUsername.setText(connection.getUsername().orElse("")); //$NON-NLS-1$
+		textPassword.setText(connection.getPassword().orElse("")); //$NON-NLS-1$
 	}
 
 	@Override
 	public void reset(final String scheme) {
 		super.reset(scheme);
-		textHost.setText("");
+		textHost.setText(""); //$NON-NLS-1$
 		if (null != spinnerPort) {
 			spinnerPort.setSelection(getDefaultPort());
 		}
-		textUsername.setText("");
-		textPassword.setText("");
+		textUsername.setText(""); //$NON-NLS-1$
+		textPassword.setText(""); //$NON-NLS-1$
 	}
 
 	public abstract int getDefaultPort();

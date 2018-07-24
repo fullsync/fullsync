@@ -46,24 +46,24 @@ import net.sourceforge.fullsync.event.ShutdownEvent;
 
 @Singleton
 public class ConfigurationPreferences implements Preferences {
-	private static final String PREFERENCE_DEFAULT_PROFILE_LIST_STYLE = "NiceListView";
-	private static final String PREFERENCE_DEFAULT_LANGUAGE_CODE = "en";
-	private static final String PREFERENCE_SKIP_WELCOME_SCREEN = "Interface.SkipWelcomeScreen";
-	private static final String PREFERENCE_HELP_SHOWN = "Interface.HelpShown";
-	private static final String PREFERENCE_LANGUAGE_CODE = "Interface.LanguageCode";
-	private static final String PREFERENCE_AUTOSTART_SCHEDULER = "Interface.AutostartScheduler";
-	private static final String PREFERENCE_PROFILE_LIST_STYLE = "Interface.ProfileList.Style";
-	private static final String PREFERENCE_MINIMIZE_MINIMIZES_TO_SYSTEM_TRAY = "Interface.MinimizeMinimizesToSystemTray";
-	private static final String PREFERENCE_CLOSE_MINIMIZES_TO_SYSTEM_TRAY = "Interface.CloseMinimizesToSystemTray";
-	private static final String PREFERENCE_CONFIRM_EXIT = "Interface.ConfirmExit";
-	private static final String PREFERENCE_FULLSYNC_VERSION = "FullSync.Version";
-	private static final String PREFERENCE_WINDOW_STATE_PREFIX = "Interface.WindowState";
-	private static final String PROPERTY_HEIGHT = "height";
-	private static final String PROPERTY_WIDTH = "width";
-	private static final String PROPERTY_Y = "y";
-	private static final String PROPERTY_X = "x";
-	private static final String PROPERTY_MINIMIZED = "minimized";
-	private static final String PROPERTY_MAXIMIZED = "maximized";
+	private static final String PREFERENCE_DEFAULT_PROFILE_LIST_STYLE = "NiceListView"; //$NON-NLS-1$
+	private static final String PREFERENCE_DEFAULT_LANGUAGE_CODE = "en"; //$NON-NLS-1$
+	private static final String PREFERENCE_SKIP_WELCOME_SCREEN = "Interface.SkipWelcomeScreen"; //$NON-NLS-1$
+	private static final String PREFERENCE_HELP_SHOWN = "Interface.HelpShown"; //$NON-NLS-1$
+	private static final String PREFERENCE_LANGUAGE_CODE = "Interface.LanguageCode"; //$NON-NLS-1$
+	private static final String PREFERENCE_AUTOSTART_SCHEDULER = "Interface.AutostartScheduler"; //$NON-NLS-1$
+	private static final String PREFERENCE_PROFILE_LIST_STYLE = "Interface.ProfileList.Style"; //$NON-NLS-1$
+	private static final String PREFERENCE_MINIMIZE_MINIMIZES_TO_SYSTEM_TRAY = "Interface.MinimizeMinimizesToSystemTray"; //$NON-NLS-1$
+	private static final String PREFERENCE_CLOSE_MINIMIZES_TO_SYSTEM_TRAY = "Interface.CloseMinimizesToSystemTray"; //$NON-NLS-1$
+	private static final String PREFERENCE_CONFIRM_EXIT = "Interface.ConfirmExit"; //$NON-NLS-1$
+	private static final String PREFERENCE_FULLSYNC_VERSION = "FullSync.Version"; //$NON-NLS-1$
+	private static final String PREFERENCE_WINDOW_STATE_PREFIX = "Interface.WindowState"; //$NON-NLS-1$
+	private static final String PROPERTY_HEIGHT = "height"; //$NON-NLS-1$
+	private static final String PROPERTY_WIDTH = "width"; //$NON-NLS-1$
+	private static final String PROPERTY_Y = "y"; //$NON-NLS-1$
+	private static final String PROPERTY_X = "x"; //$NON-NLS-1$
+	private static final String PROPERTY_MINIMIZED = "minimized"; //$NON-NLS-1$
+	private static final String PROPERTY_MAXIMIZED = "maximized"; //$NON-NLS-1$
 	private final String configFileName;
 	private final Properties props;
 	private final String lastFullSyncVersion;
@@ -82,7 +82,7 @@ public class ConfigurationPreferences implements Preferences {
 				ExceptionHandler.reportException(e);
 			}
 		}
-		lastFullSyncVersion = props.getProperty(PREFERENCE_FULLSYNC_VERSION, "");
+		lastFullSyncVersion = props.getProperty(PREFERENCE_FULLSYNC_VERSION, ""); //$NON-NLS-1$
 	}
 
 	@Subscribe
@@ -122,7 +122,7 @@ public class ConfigurationPreferences implements Preferences {
 		props.setProperty(PREFERENCE_FULLSYNC_VERSION, currentFullSyncVersion);
 		try {
 			Path targetPath = Paths.get(configFileName);
-			File tmpFile = File.createTempFile(FullSync.PREFERENCES_PROPERTIES, ".tmp", targetPath.getParent().toFile());
+			File tmpFile = File.createTempFile(FullSync.PREFERENCES_PROPERTIES, ".tmp", targetPath.getParent().toFile()); //$NON-NLS-1$
 			try (Writer writer = new FileWriter(tmpFile)) {
 				props.store(writer, null);
 				writer.flush();

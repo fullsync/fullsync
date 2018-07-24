@@ -40,17 +40,10 @@ public class SimplyfiedSyncRules implements RuleSet {
 		return name;
 	}
 
-	/**
-	 * @param name
-	 *            The name to set.
-	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/**
-	 * @see net.sourceforge.fullsync.RuleSet#isUsingRecursion()
-	 */
 	@Override
 	public boolean isUsingRecursion() {
 		return isUsingRecursion;
@@ -76,16 +69,10 @@ public class SimplyfiedSyncRules implements RuleSet {
 		this.takePattern = pattern;
 	}
 
-	/**
-	 * @return Returns the ignorePattern.
-	 */
 	public String getIgnorePattern() {
 		return ignorePattern;
 	}
 
-	/**
-	 * @return Returns the takePattern.
-	 */
 	public String getTakePattern() {
 		return takePattern;
 	}
@@ -110,17 +97,11 @@ public class SimplyfiedSyncRules implements RuleSet {
 		return fileFilterTree;
 	}
 
-	/**
-	 * @see net.sourceforge.fullsync.RuleSet#isJustLogging()
-	 */
 	@Override
 	public boolean isJustLogging() {
 		return false;
 	}
 
-	/**
-	 * @see net.sourceforge.fullsync.IgnoreDecider#isNodeIgnored(net.sourceforge.fullsync.fs.File)
-	 */
 	@Override
 	public boolean isNodeIgnored(final File node) {
 		if (useFilter) {
@@ -140,10 +121,6 @@ public class SimplyfiedSyncRules implements RuleSet {
 		return false;
 	}
 
-	/**
-	 * @see net.sourceforge.fullsync.FileComparer#compareFiles(net.sourceforge.fullsync.fs.FileAttributes,
-	 *      net.sourceforge.fullsync.fs.FileAttributes)
-	 */
 	@Override
 	public State compareFiles(final File src, final File dst) {
 		if (Math.floor(src.getLastModified() / 1000.0) > Math.floor(dst.getLastModified() / 1000.0)) {
@@ -158,9 +135,6 @@ public class SimplyfiedSyncRules implements RuleSet {
 		return State.IN_SYNC;
 	}
 
-	/**
-	 * @see net.sourceforge.fullsync.RuleSet#createChild(net.sourceforge.fullsync.fs.File, net.sourceforge.fullsync.fs.File)
-	 */
 	@Override
 	public RuleSet createChild(final File src, final File dst) {
 		// TODO even simple sync rules should allow override rules

@@ -75,7 +75,7 @@ public class ScheduleSelectionDialog {
 			compositeTop.setLayout(compositeTopLayout);
 
 			Label labelScheduleType = new Label(compositeTop, SWT.NONE);
-			labelScheduleType.setText(Messages.getString("ScheduleSelectionDialog.SchedulingType") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+			labelScheduleType.setText(Messages.getString("ScheduleSelectionDialog.SchedulingType")); //$NON-NLS-1$
 			GridData labelScheduleTypeLData = new GridData();
 			labelScheduleType.setLayoutData(labelScheduleTypeLData);
 

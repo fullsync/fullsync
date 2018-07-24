@@ -71,7 +71,7 @@ class FileObjectChooser {
 
 	public boolean open(Shell parent, FileObject base) {
 		dialogShell = new Shell(parent, SWT.BORDER | SWT.TITLE | SWT.RESIZE | SWT.PRIMARY_MODAL);
-		dialogShell.setText("Choose Folder...");
+		dialogShell.setText(Messages.getString("FileObjectChooser.Title")); //$NON-NLS-1$
 
 		dialogShell.setLayout(new GridLayout());
 		dialogShell.layout();
@@ -87,7 +87,7 @@ class FileObjectChooser {
 		compositeTop.setLayout(composite1Layout);
 
 		Label labelUrl = new Label(compositeTop, SWT.NONE);
-		labelUrl.setText("Url:");
+		labelUrl.setText(Messages.getString("FileObjectChooser.URL")); //$NON-NLS-1$
 
 		labelBaseUrl = new Label(compositeTop, SWT.NONE);
 
@@ -101,12 +101,12 @@ class FileObjectChooser {
 		ToolBar toolBarActions = new ToolBar(compositeTop, SWT.NONE);
 		// folder up
 		ToolItem toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
-		toolItemParent.setImage(imageRepository.getImage("FS_LevelUp.gif"));
+		toolItemParent.setImage(imageRepository.getImage("FS_LevelUp.gif")); //$NON-NLS-1$
 		toolItemParent.addListener(SWT.Selection, e -> toolItemParentWidgetSelected());
 		// new folder
 		ToolItem toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
-		toolItemNewFolder.setImage(imageRepository.getImage("FS_Folder_New.gif"));
-		toolItemNewFolder.setDisabledImage(imageRepository.getImage("FS_Folder_New_disabled.gif"));
+		toolItemNewFolder.setImage(imageRepository.getImage("FS_Folder_New.gif")); //$NON-NLS-1$
+		toolItemNewFolder.setDisabledImage(imageRepository.getImage("FS_Folder_New_disabled.gif")); //$NON-NLS-1$
 		toolItemNewFolder.addListener(SWT.Selection, e -> toolItemNewFolderWidgetSelected());
 		toolItemNewFolder.setEnabled(false);
 
@@ -123,19 +123,19 @@ class FileObjectChooser {
 		tableItems.addListener(SWT.MouseDoubleClick, this::tableItemDoubleClicked);
 
 		TableColumn tableColumnName = new TableColumn(tableItems, SWT.NONE);
-		tableColumnName.setText("File name");
+		tableColumnName.setText(Messages.getString("FileObjectChooser.TableHeaderFileName")); //$NON-NLS-1$
 		tableColumnName.setWidth(200);
 
 		TableColumn tableColumnSize = new TableColumn(tableItems, SWT.NONE);
-		tableColumnSize.setText("Size");
+		tableColumnSize.setText(Messages.getString("FileObjectChooser.TableHeaderSize")); //$NON-NLS-1$
 		tableColumnSize.setWidth(60);
 
 		TableColumn tableColumnType = new TableColumn(tableItems, SWT.NONE);
-		tableColumnType.setText("Type");
+		tableColumnType.setText(Messages.getString("FileObjectChooser.TableHeaderType")); //$NON-NLS-1$
 		tableColumnType.setWidth(100);
 
 		TableColumn tableColumnDateModified = new TableColumn(tableItems, SWT.NONE);
-		tableColumnDateModified.setText("Date Modified");
+		tableColumnDateModified.setText(Messages.getString("FileObjectChooser.TableHeaderDateModified")); //$NON-NLS-1$
 		tableColumnDateModified.setWidth(145);
 
 		// bottom area
@@ -148,7 +148,7 @@ class FileObjectChooser {
 		compositeBottom.setLayout(compositeBottomLayout);
 
 		Label labelFilename = new Label(compositeBottom, SWT.NONE);
-		labelFilename.setText("File name:");
+		labelFilename.setText(Messages.getString("FileObjectChooser.SelectedFileName")); //$NON-NLS-1$
 
 		GridData textFilenameLData = new GridData();
 		textFilenameLData.horizontalAlignment = SWT.FILL;
@@ -162,17 +162,17 @@ class FileObjectChooser {
 		buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
 		buttonOk.setLayoutData(buttonOkLData);
-		buttonOk.setText("Open");
+		buttonOk.setText(Messages.getString("FileObjectChooser.Open")); //$NON-NLS-1$
 		buttonOk.addListener(SWT.Selection, this::okSelected);
 		// file filter
 		Label labelFileFilter = new Label(compositeBottom, SWT.NONE);
-		labelFileFilter.setText("Files of type:");
+		labelFileFilter.setText(Messages.getString("FileObjectChooser.FileTypeFilter")); //$NON-NLS-1$
 
 		Combo comboFileFilter = new Combo(compositeBottom, SWT.NONE);
 		GridData comboFileFilterLData = new GridData();
 		comboFileFilterLData.horizontalAlignment = SWT.FILL;
 		comboFileFilter.setLayoutData(comboFileFilterLData);
-		comboFileFilter.setText("all files");
+		comboFileFilter.setText(Messages.getString("FileObjectChooser.FileTypeFilter.AllFiles")); //$NON-NLS-1$
 		comboFileFilter.setEnabled(false);
 
 		Button buttonCancel = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
@@ -180,7 +180,7 @@ class FileObjectChooser {
 		buttonCancelLData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonCancelLData.heightHint = UISettings.BUTTON_HEIGHT;
 		buttonCancel.setLayoutData(buttonCancelLData);
-		buttonCancel.setText("Cancel");
+		buttonCancel.setText(Messages.getString("FileObjectChooser.Cancel")); //$NON-NLS-1$
 		buttonCancel.addListener(SWT.Selection, this::cancelSelected);
 
 		setBaseFileObject(base);
@@ -282,22 +282,22 @@ class FileObjectChooser {
 				FileContent content = data.getContent();
 				String contentType = content.getContentInfo().getContentType();
 				if (null != contentType) {
-					type += " (" + contentType + ")";
+					type += " (" + contentType + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				item.setText(1, String.valueOf(content.getSize()));
 				item.setText(3, df.format(new Date(content.getLastModifiedTime())));
 			}
 			else {
-				item.setText(1, "");
-				item.setText(3, "");
+				item.setText(1, ""); //$NON-NLS-1$
+				item.setText(3, ""); //$NON-NLS-1$
 			}
 			item.setText(2, type);
 
 			if (data.getType() == FileType.FOLDER) {
-				item.setImage(imageRepository.getImage("FS_Folder_Collapsed.gif"));
+				item.setImage(imageRepository.getImage("FS_Folder_Collapsed.gif")); //$NON-NLS-1$
 			}
 			else {
-				item.setImage(imageRepository.getImage("FS_File_text_plain.gif"));
+				item.setImage(imageRepository.getImage("FS_File_text_plain.gif")); //$NON-NLS-1$
 			}
 
 			item.setData(data);
@@ -316,7 +316,7 @@ class FileObjectChooser {
 			textFilename.setText(selectedFileObject.getName().getBaseName());
 		}
 		else {
-			textFilename.setText("");
+			textFilename.setText(""); //$NON-NLS-1$
 		}
 	}
 
@@ -325,7 +325,7 @@ class FileObjectChooser {
 			activeFileObject = base;
 		}
 		try {
-			rootFileObject = base.resolveFile("/");
+			rootFileObject = base.resolveFile("/"); //$NON-NLS-1$
 			labelBaseUrl.setText(rootFileObject.getName().toString());
 			setActiveFileObject(activeFileObject);
 		}

@@ -52,9 +52,11 @@ public class ChangeLogBox extends StyledText {
 	private void updateUI(List<ChangeLogEntry> changelog) {
 		if (!isDisposed()) {
 			StringWriter sw = new StringWriter();
-			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM d, uuuu");
+			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(Messages.getString("ChangeLogBox.ReleaseDatePattern")); //$NON-NLS-1$
+			String releaseHeading = Messages.getString("ChangeLogBox.ReleaseHeading"); //$NON-NLS-1$
+			String releaseBulletPoint = Messages.getString("ChangeLogBox.ReleaseBulletPoint"); //$NON-NLS-1$
 			for (ChangeLogEntry entry : changelog) {
-				entry.write("FullSync %s released on %s", " - %s", sw, dateFormat);
+				entry.write(releaseHeading, releaseBulletPoint, sw, dateFormat);
 			}
 			sw.flush();
 			setText(sw.toString());
@@ -63,7 +65,7 @@ public class ChangeLogBox extends StyledText {
 
 	private void changelogCalculationFailed(Exception ex) {
 		if (!isDisposed()) {
-			setText("Failed to load Changelogs.");
+			setText(Messages.getString("ChangeLogBox.LoadErrorMessage")); //$NON-NLS-1$
 			ExceptionHandler.reportException(ex);
 		}
 	}

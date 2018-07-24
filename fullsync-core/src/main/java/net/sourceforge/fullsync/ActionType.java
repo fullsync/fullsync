@@ -40,6 +40,6 @@ public enum ActionType {
 			case DIR_HERE_FILE_THERE_ERROR:
 				return true;
 		}
-		throw new RuntimeException("Implementation bug in ActionType::isError, ordinal: " + ordinal());
+		throw new RuntimeException("Implementation bug in ActionType::isError, ordinal: " + ordinal()); //$NON-NLS-1$
 	}
 }

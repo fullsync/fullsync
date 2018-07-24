@@ -35,7 +35,7 @@ class FileSpecificComposite extends ProtocolSpecificComposite {
 			textPath.setText(connection.getDisplayPath());
 		}
 		else {
-			textPath.setText("");
+			textPath.setText(""); //$NON-NLS-1$
 		}
 	}
 
@@ -59,7 +59,7 @@ class FileSpecificComposite extends ProtocolSpecificComposite {
 				setPath(f.getCanonicalPath());
 			}
 			catch (IOException e) {
-				setPath("");
+				setPath(""); //$NON-NLS-1$
 				e.printStackTrace();
 			}
 		}

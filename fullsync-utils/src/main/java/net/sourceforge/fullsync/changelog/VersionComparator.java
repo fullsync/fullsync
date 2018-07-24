@@ -24,7 +24,7 @@ import java.util.Comparator;
 public class VersionComparator implements Comparator<String> {
 
 	private int[] parseVersion(String v) {
-		String[] components = v.split("\\.");
+		String[] components = v.split("\\."); //$NON-NLS-1$
 		int[] numbers = new int[components.length];
 		for (int i = 0; i < components.length; ++i) {
 			if (!components[i].isEmpty()) {

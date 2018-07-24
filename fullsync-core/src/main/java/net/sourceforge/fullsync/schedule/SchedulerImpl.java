@@ -65,7 +65,7 @@ public class SchedulerImpl implements Scheduler, Runnable {
 		if (!enabled) {
 			enabled = true;
 			if ((null == worker) || !worker.isAlive()) {
-				worker = new Thread(this, "Scheduler");
+				worker = new Thread(this, "Scheduler"); //$NON-NLS-1$
 				worker.setDaemon(true);
 				worker.start();
 			}
@@ -114,21 +114,21 @@ public class SchedulerImpl implements Scheduler, Runnable {
 		running = true;
 		while (enabled) {
 			long now = System.currentTimeMillis();
-			logger.debug("searching for next task after {}", now);
+			logger.debug("searching for next task after {}", now); //$NON-NLS-1$
 			ScheduleTask task = scheduleSource.getNextScheduleTask();
 			if (null == task) {
-				logger.info("could not find a scheduled task, aborting");
+				logger.info("could not find a scheduled task, aborting"); //$NON-NLS-1$
 				break;
 			}
-			logger.debug("found: {} at {}", task, task.getExecutionTime());
+			logger.debug("found: {} at {}", task, task.getExecutionTime()); //$NON-NLS-1$
 
 			long nextTime = task.getExecutionTime();
 			try {
-				logger.debug("waiting for {} microseconds", nextTime - now);
+				logger.debug("waiting for {} microseconds", nextTime - now); //$NON-NLS-1$
 				if (nextTime >= now) {
 					Thread.sleep(nextTime - now);
 				}
-				logger.debug("Running task {}", task);
+				logger.debug("Running task {}", task); //$NON-NLS-1$
 				task.onBeforeExecution();
 				scheduledExecutorService.submit(task);
 			}

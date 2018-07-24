@@ -64,7 +64,7 @@ class AbstractFile implements File {
 		if (null != parent) {
 			parentPath = parent.getPath();
 		}
-		return null != parentPath ? parentPath + "/" + name : name;
+		return null != parentPath ? parentPath + "/" + name : name; //$NON-NLS-1$
 	}
 
 	@Override
@@ -218,11 +218,11 @@ class AbstractFile implements File {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name);
-		sb.append("; ");
+		sb.append("; "); //$NON-NLS-1$
 		if ((size >= 0) || (lastModified > 0)) {
 			if (size >= 0) {
 				sb.append(size);
-				sb.append(" Bytes");
+				sb.append(" Bytes"); //$NON-NLS-1$
 			}
 			if (lastModified > 0) {
 				sb.append(' ');

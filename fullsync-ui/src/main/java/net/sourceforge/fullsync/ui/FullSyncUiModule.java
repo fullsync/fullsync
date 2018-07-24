@@ -29,13 +29,13 @@ import com.google.inject.name.Names;
 public class FullSyncUiModule extends AbstractModule {
 	@Override
 	protected void configure() {
-		Display.setAppName("FullSync");
+		Display.setAppName("FullSync"); //$NON-NLS-1$
 		Display display = Display.getDefault();
 		bind(Display.class).toInstance(display);
 		bind(Shell.class).toInstance(new Shell(display));
 		FactoryModuleBuilder profileListCompositeFactory = new FactoryModuleBuilder();
-		profileListCompositeFactory.implement(ProfileListComposite.class, Names.named("list"), ListViewProfileListComposite.class);
-		profileListCompositeFactory.implement(ProfileListComposite.class, Names.named("nice"), NiceListViewProfileListComposite.class);
+		profileListCompositeFactory.implement(ProfileListComposite.class, Names.named("list"), ListViewProfileListComposite.class); //$NON-NLS-1$
+		profileListCompositeFactory.implement(ProfileListComposite.class, Names.named("nice"), NiceListViewProfileListComposite.class); //$NON-NLS-1$
 		install(profileListCompositeFactory.build(ProfileListCompositeFactory.class));
 	}
 }

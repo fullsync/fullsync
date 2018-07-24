@@ -37,10 +37,10 @@ import org.w3c.dom.NodeList;
 public class ConnectionDescription {
 	private static final String ELEMENT_SECRET_PARAM = "SecretParam"; //$NON-NLS-1$
 	private static final String ELEMENT_PARAM = "Param"; //$NON-NLS-1$
-	private static final String PARAMETER_PUBLIC_KEY_AUTH = "publicKeyAuth";
+	private static final String PARAMETER_PUBLIC_KEY_AUTH = "publicKeyAuth"; //$NON-NLS-1$
 	private static final String PUBLIC_KEY_AUTH_ENABLED = "enabled"; //$NON-NLS-1$
 	private static final String PUBLIC_KEY_AUTH_DISABLED = "disabled"; //$NON-NLS-1$
-	private static final String PARAMETER_KEY_PASSPHRASE = "keyPassphrase";
+	private static final String PARAMETER_KEY_PASSPHRASE = "keyPassphrase"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_SCHEME = "scheme"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_HOST = "host"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_PORT = "port"; //$NON-NLS-1$
@@ -52,7 +52,6 @@ public class ConnectionDescription {
 	private static final String ATTRIBUTE_USERNAME = "username"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_PASSWORD = "password"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_USER_DIR_IS_ROOT = "userDirIsRoot"; //$NON-NLS-1$
-
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionDescription.class);
 
 	private final String scheme;
@@ -100,7 +99,7 @@ public class ConnectionDescription {
 				uri = new URI(uriAttribute);
 			}
 			catch (URISyntaxException ex) {
-				logger.warn("could not parse '" + uriAttribute + "'", ex);
+				logger.warn("could not parse '" + uriAttribute + "'", ex); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			builder.setScheme(uri.getScheme());
@@ -149,8 +148,8 @@ public class ConnectionDescription {
 	public ConnectionDescription(String scheme, Optional<String> host, Optional<Integer> port, String path, Optional<String> username,
 		Optional<String> password, Optional<String> bufferStrategy, Optional<Boolean> publicKeyAuthEnabled, Optional<String> keyPassphrase,
 		boolean userDirIsRoot) {
-		Objects.requireNonNull(scheme, "Scheme must be provided");
-		Objects.requireNonNull(path, "Path must be provided");
+		Objects.requireNonNull(scheme, "Scheme must be provided"); //$NON-NLS-1$
+		Objects.requireNonNull(path, "Path must be provided"); //$NON-NLS-1$
 		this.scheme = scheme;
 		this.host = host;
 		this.port = port;
@@ -230,17 +229,17 @@ public class ConnectionDescription {
 	}
 
 	public String getDisplayPath() {
-		if ("file".equals(getScheme())) {
+		if ("file".equals(getScheme())) { //$NON-NLS-1$
 			File f = new File(getPath());
 			try {
 				return f.getCanonicalPath();
 			}
 			catch (IOException ex) {
-				logger.debug("failed to canonicalize file path", ex);
+				logger.debug("failed to canonicalize file path", ex); //$NON-NLS-1$
 			}
 		}
 		try {
-			String portSuffix = port.map(integer -> ":" + integer).orElse("");
+			String portSuffix = port.map(integer -> ":" + integer).orElse(""); //$NON-NLS-1$ //$NON-NLS-2$
 			if ("sftp".equals(scheme) && (22 == port.orElse(-1))) { //$NON-NLS-1$
 				String userPrefix = username.map(s -> s + "@").orElse(""); //$NON-NLS-1$ //$NON-NLS-2$
 				String displayPath = userDirIsRoot ? path : '/' + path;

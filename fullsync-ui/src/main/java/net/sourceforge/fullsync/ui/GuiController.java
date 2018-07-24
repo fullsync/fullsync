@@ -74,7 +74,7 @@ public class GuiController {
 			Messages.setLanguage(languageCode);
 		}
 		catch (MissingResourceException ex) {
-			ExceptionHandler.reportException("Failed to set language to " + languageCode, ex);
+			ExceptionHandler.reportException(Messages.getString("GuiController.FailedToSetLanguageTo", languageCode), ex); //$NON-NLS-1$
 		}
 	}
 
@@ -138,14 +138,14 @@ public class GuiController {
 	}
 
 	public static void launchProgram(final String uri) {
-		if (System.getProperty("os.name").toLowerCase().indexOf("linux") > -1) {
+		if (System.getProperty("os.name").toLowerCase().indexOf("linux") > -1) { //$NON-NLS-1$ //$NON-NLS-2$
 			Thread t = new Thread(() -> {
 				try {
-					Process p = Runtime.getRuntime().exec(new String[] { "xdg-open", uri });
+					Process p = Runtime.getRuntime().exec(new String[] { "xdg-open", uri }); //$NON-NLS-1$
 					p.waitFor();
 				}
 				catch (IOException | InterruptedException e) {
-					ExceptionHandler.reportException("Error opening " + uri + ".", e);
+					ExceptionHandler.reportException(Messages.getString("GuiController.FailedToLaunchProgramOrUrl", uri), e); //$NON-NLS-1$
 				}
 			});
 			// set this thread as a daemon to avoid hanging the FullSync shutdown
@@ -159,13 +159,13 @@ public class GuiController {
 				Program.launch(uri);
 			}
 			catch (Exception e) {
-				ExceptionHandler.reportException("Error opening " + uri + ".", e);
+				ExceptionHandler.reportException(Messages.getString("GuiController.FailedToLaunchProgramOrUrl", uri), e); //$NON-NLS-1$
 			}
 		}
 	}
 
 	private void createWelcomeScreen() {
-		if ((null != System.getProperty("net.sourceforge.fullsync.skipWelcomeScreen", null)) || preferences.getSkipWelcomeScreen()) {
+		if ((null != System.getProperty("net.sourceforge.fullsync.skipWelcomeScreen", null)) || preferences.getSkipWelcomeScreen()) { //$NON-NLS-1$
 			return;
 		}
 		if (!preferences.getLastVersion().equals(Util.getFullSyncVersion())) {
@@ -181,10 +181,10 @@ public class GuiController {
 	}
 
 	public static String getTwitterURL() {
-		return Util.getResourceAsString("net/sourceforge/fullsync/twitter-url.txt").trim();
+		return Util.getResourceAsString("net/sourceforge/fullsync/twitter-url.txt").trim(); //$NON-NLS-1$
 	}
 
 	public static String getWebsiteURL() {
-		return Util.getResourceAsString("net/sourceforge/fullsync/website-url.txt").trim();
+		return Util.getResourceAsString("net/sourceforge/fullsync/website-url.txt").trim(); //$NON-NLS-1$
 	}
 }

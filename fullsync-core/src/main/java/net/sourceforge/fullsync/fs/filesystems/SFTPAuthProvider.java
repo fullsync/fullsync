@@ -46,14 +46,14 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	static {
 		JSch.setLogger(new SFTPLogger());
-		String sshDirPath = System.getProperty("vfs.sftp.sshdir");
+		String sshDirPath = System.getProperty("vfs.sftp.sshdir"); //$NON-NLS-1$
 		if (null == sshDirPath) {
-			sshDirPath = System.getProperty("user.home") + File.separator + ".ssh";
+			sshDirPath = System.getProperty("user.home") + File.separator + ".ssh"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		File sshDir = new File(sshDirPath);
 		if (!sshDir.exists() && !sshDir.mkdirs()) {
 			String path = sshDir.getAbsolutePath();
-			logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... tried: {}", path);
+			logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... tried: {}", path); //$NON-NLS-1$
 			sshDir = null;
 			SSH_DIR_NAME = null;
 		}
@@ -61,7 +61,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 			SSH_DIR_NAME = sshDirPath;
 		}
 		if (null != sshDir) {
-			System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath());
+			System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath()); //$NON-NLS-1$
 		}
 	}
 
@@ -86,7 +86,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		if (null != SSH_DIR_NAME) {
 			cfg.setKnownHosts(options, new File(SSH_DIR_NAME, "known_hosts")); //$NON-NLS-1$
 		}
-		logger.debug("using knownHosts: ", cfg.getKnownHosts(options));
+		logger.debug("using knownHosts: ", cfg.getKnownHosts(options)); //$NON-NLS-1$
 		cfg.setUserInfo(options, this);
 		cfg.setStrictHostKeyChecking(options, "ask"); //$NON-NLS-1$
 		if (description.getPublicKeyAuth().orElse(false).booleanValue()) {
@@ -99,25 +99,25 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	@Override
 	public final String getPassphrase() {
-		logger.debug("UserInfo::getPassphrase");
-		return desc.getKeyPassphrase().orElse("");
+		logger.debug("UserInfo::getPassphrase"); //$NON-NLS-1$
+		return desc.getKeyPassphrase().orElse(""); //$NON-NLS-1$
 	}
 
 	@Override
 	public final String getPassword() {
-		logger.debug("UserInfo::getPassword");
-		return desc.getPassword().orElse("");
+		logger.debug("UserInfo::getPassword"); //$NON-NLS-1$
+		return desc.getPassword().orElse(""); //$NON-NLS-1$
 	}
 
 	@Override
 	public final boolean promptPassword(final String message) {
-		logger.debug("UserInfo::promptPassword: {}", message);
+		logger.debug("UserInfo::promptPassword: {}", message); //$NON-NLS-1$
 		return true;
 	}
 
 	@Override
 	public final boolean promptPassphrase(final String message) {
-		logger.debug("UserInfo::promptPassphrase: {}", message);
+		logger.debug("UserInfo::promptPassphrase: {}", message); //$NON-NLS-1$
 		return true;
 	}
 
@@ -128,31 +128,31 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 				return fullsync.getQuestionHandler().promptYesNo(message).get();
 			}
 			catch (InterruptedException | ExecutionException ex) {
-				logger.error("UserInfo::promptYesNo failed, user may not have received a prompt", ex);
+				logger.error("UserInfo::promptYesNo failed, user may not have received a prompt", ex); //$NON-NLS-1$
 			}
 		}
 		else {
-			logger.warn("UserInfo::promptYesNo: {}; automatic decision: No", message);
+			logger.warn("UserInfo::promptYesNo: {}; automatic decision: No", message); //$NON-NLS-1$
 		}
 		return false;
 	}
 
 	@Override
 	public final void showMessage(final String message) {
-		logger.warn("UserInfo::showMessage: {}", message);
+		logger.warn("UserInfo::showMessage: {}", message); //$NON-NLS-1$
 	}
 
 	@Override
 	public final String[] promptKeyboardInteractive(final String destination, final String name, final String instruction,
 		final String[] prompt, final boolean[] echo) {
 		if (logger.isWarnEnabled()) {
-			logger.warn("Suppressed promptKeyboardInteractive:");
-			logger.warn("Destination: {}", destination);
-			logger.warn("Name: {}", name);
-			logger.warn("Instruction: {}", instruction);
-			logger.warn("Prompt (#{}): {}", prompt.length, Arrays.toString(prompt));
-			logger.warn("echo: (#{}): {}", echo.length, Arrays.toString(echo));
-			logger.warn("rejecting prompt automatically");
+			logger.warn("Suppressed promptKeyboardInteractive:"); //$NON-NLS-1$
+			logger.warn("Destination: {}", destination); //$NON-NLS-1$
+			logger.warn("Name: {}", name); //$NON-NLS-1$
+			logger.warn("Instruction: {}", instruction); //$NON-NLS-1$
+			logger.warn("Prompt (#{}): {}", prompt.length, Arrays.toString(prompt)); //$NON-NLS-1$
+			logger.warn("echo: (#{}): {}", echo.length, Arrays.toString(echo)); //$NON-NLS-1$
+			logger.warn("rejecting prompt automatically"); //$NON-NLS-1$
 		}
 		return null;
 	}

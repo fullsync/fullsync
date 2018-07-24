@@ -139,7 +139,9 @@ public class TaskDecisionPage extends WizardDialog {
 		labelProgressLData.grabExcessHorizontalSpace = true;
 		labelProgress.setLayoutData(labelProgressLData);
 		IoStatistics stats = taskTree.getIoStatistics();
-		labelProgress.setText("Totals: " + stats.getCountActions() + " tasks, " + UISettings.formatSize(stats.getBytesTransferred()));
+		int numberOfActions = stats.getCountActions();
+		String totalBytesTransferred = UISettings.formatSize(stats.getBytesTransferred());
+		labelProgress.setText(Messages.getString("TaskDecisionPage.TaskSummary", numberOfActions, totalBytesTransferred)); //$NON-NLS-1$
 
 		list = new TaskDecisionList(content, imageRepository);
 		list.setTaskTree(taskTree);
@@ -148,9 +150,7 @@ public class TaskDecisionPage extends WizardDialog {
 		list.setLayoutData(listLayoutData);
 
 		list.setOnlyChanges(true);
-		if (null != taskTree) {
-			list.rebuildActionList();
-		}
+		list.rebuildActionList();
 	}
 
 	@Override
@@ -242,10 +242,8 @@ public class TaskDecisionPage extends WizardDialog {
 				}
 			}
 		}
-		String of = Messages.getString("TaskDecisionPage.of"); //$NON-NLS-1$
-		String finished = Messages.getString("TaskDecisionPage.tasksFinished"); //$NON-NLS-1$
-		// TODO: move this into one translatable string with arguments
-		labelProgress.setText(String.format("%d %s %d %s", tasksFinished, of, tasksTotal, finished)); //$NON-NLS-1$
+		labelProgress.setText(Messages.getString("TaskDecisionPage.XofYTasksFinished", tasksFinished, tasksTotal)); //$NON-NLS-1$
+
 		if (null != item) {
 			list.showItem(item);
 		}

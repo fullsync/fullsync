@@ -63,13 +63,13 @@ public class FilterRuleListItem {
 	private static final String[] ruleTypeNames;
 
 	static {
-		final String name = Messages.getString("FilterRuleListItem.FileNameFilter");
-		final String path = Messages.getString("FilterRuleListItem.FilePathFilter");
-		final String type = Messages.getString("FilterRuleListItem.FileTypeFilter");
-		final String size = Messages.getString("FilterRuleListItem.FilSizeFilter");
-		final String modificationDate = Messages.getString("FilterRuleListItem.FileModificationDateFilter");
-		final String age = Messages.getString("FilterRuleListItem.FileAgeFilter");
-		final String nested = Messages.getString("FilterRuleListItem.NestedFilter");
+		final String name = Messages.getString("FilterRuleListItem.FileNameFilter"); //$NON-NLS-1$
+		final String path = Messages.getString("FilterRuleListItem.FilePathFilter"); //$NON-NLS-1$
+		final String type = Messages.getString("FilterRuleListItem.FileTypeFilter"); //$NON-NLS-1$
+		final String size = Messages.getString("FilterRuleListItem.FileSizeFilter"); //$NON-NLS-1$
+		final String modificationDate = Messages.getString("FilterRuleListItem.FileModificationDateFilter"); //$NON-NLS-1$
+		final String age = Messages.getString("FilterRuleListItem.FileAgeFilter"); //$NON-NLS-1$
+		final String nested = Messages.getString("FilterRuleListItem.NestedFilter"); //$NON-NLS-1$
 
 		ruleTypeNames = new String[] { name, path, type, size, modificationDate, age, nested };
 
@@ -284,7 +284,7 @@ public class FilterRuleListItem {
 		else {
 			compositeWrapperLD.horizontalSpan = 2;
 			Text textValue = new Text(ruleCompositeWrapper, SWT.BORDER);
-			textValue.setText("Missing Rule Composite");
+			textValue.setText(Messages.getString("FilterRuleListItem.MissingRuleComposite")); //$NON-NLS-1$
 			textValue.setEditable(false);
 		}
 	}

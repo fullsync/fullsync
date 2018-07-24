@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,7 @@ import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
 
+@Singleton // effectively a singleton because the Synchronizer is a singleton
 public class TaskGeneratorImpl implements TaskGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
 	private final FileSystemManager fileSystemManager;
@@ -95,7 +97,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		throws DataParseException, IOException {
 		if (!takeIgnoreDecider.isNodeIgnored(src)) {
 			Task task = actionDecider.getTask(src, dst, stateDecider, bufferStateDecider);
-			logger.debug("{}: {}", src.getName(), task);
+			logger.debug("{}: {}", src.getName(), task); //$NON-NLS-1$
 
 			eventBus.post(new TaskGenerationFinished(taskTree, task));
 
@@ -168,7 +170,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 			actionDecider = new TwoWaySyncActionDecider();
 		}
 		else {
-			throw new IllegalArgumentException("Profile has unknown synchronization type.");
+			throw new IllegalArgumentException("Profile has unknown synchronization type."); //$NON-NLS-1$
 		}
 
 		ConnectionDescription srcDesc = profile.getSource();
@@ -183,7 +185,6 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		}
 	}
 
-	@Override
 	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules)
 		throws DataParseException, FileSystemException, IOException {
 		if (!source.isAvailable()) {
@@ -194,7 +195,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		}
 
 		TaskTree tree = new TaskTree(source, destination);
-		Action rootAction = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "Root");
+		Action rootAction = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "Root"); //$NON-NLS-1$
 		Task root = new Task(null, null, State.IN_SYNC, new Action[] { rootAction });
 		tree.setRoot(root);
 

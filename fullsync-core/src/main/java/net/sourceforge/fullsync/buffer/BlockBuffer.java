@@ -92,7 +92,7 @@ public class BlockBuffer implements ExecutionBuffer {
 			catch (IOException ex) {
 				ioe = ex;
 				if (logger.isPresent()) {
-					logger.get().error("Exception", ex);
+					logger.get().error("Exception", ex); //$NON-NLS-1$
 				}
 			}
 			if (e.isLastSegment()) {
