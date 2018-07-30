@@ -90,14 +90,6 @@ public class SystemStatusPage extends WizardDialog {
 			progressBarMemoryLData.horizontalSpan = 2;
 			progressBarMemory.setLayoutData(progressBarMemoryLData);
 
-			// total memory
-			Label labelTotalMemory = new Label(groupMemory, SWT.NONE);
-			labelTotalMemory.setText(Messages.getString("SystemStatusPage.TotalMemory")); //$NON-NLS-1$
-			totalMemory = new Label(groupMemory, SWT.RIGHT);
-			GridData totalMemoryLData = new GridData();
-			totalMemoryLData.horizontalAlignment = SWT.FILL;
-			totalMemory.setLayoutData(totalMemoryLData);
-
 			// max memory
 			Label labelMaxMemory = new Label(groupMemory, SWT.NONE);
 			labelMaxMemory.setText(Messages.getString("SystemStatusPage.MaxMemory")); //$NON-NLS-1$
@@ -106,6 +98,14 @@ public class SystemStatusPage extends WizardDialog {
 			GridData maxMemoryLData = new GridData();
 			maxMemoryLData.horizontalAlignment = SWT.FILL;
 			maxMemory.setLayoutData(maxMemoryLData);
+
+			// total memory
+			Label labelTotalMemory = new Label(groupMemory, SWT.NONE);
+			labelTotalMemory.setText(Messages.getString("SystemStatusPage.TotalMemory")); //$NON-NLS-1$
+			totalMemory = new Label(groupMemory, SWT.RIGHT);
+			GridData totalMemoryLData = new GridData();
+			totalMemoryLData.horizontalAlignment = SWT.FILL;
+			totalMemory.setLayoutData(totalMemoryLData);
 
 			// free memory
 			Label labelFreeMemory = new Label(groupMemory, SWT.NONE);

@@ -113,7 +113,7 @@ public class GuiController {
 
 	private boolean doShowQuestion(String question) {
 		MessageBox mb = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-		mb.setText(Messages.getString("SFTP.YesNoQuestion")); //$NON-NLS-1$
+		mb.setText(Messages.getString("GuiController.YesNoQuestion")); //$NON-NLS-1$
 		mb.setMessage(question);
 		return SWT.YES == mb.open();
 	}
