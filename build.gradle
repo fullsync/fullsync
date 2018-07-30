@@ -13,7 +13,7 @@ buildscript {
 	dependencies {
 		if (System.env.'CI') {
 			classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2"
-			classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.1"
+			classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
 		}
 		if (!System.env.'FULLSYNC_OFFLINE_BUILD') {
 			classpath 'gradle.plugin.io.pry.gradle.offline_dependencies:gradle-offline-dependencies-plugin:0.3'
