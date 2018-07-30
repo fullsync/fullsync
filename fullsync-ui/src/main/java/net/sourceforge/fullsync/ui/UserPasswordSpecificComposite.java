@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.net.URISyntaxException;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -94,7 +92,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	}
 
 	@Override
-	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
+	public ConnectionDescription.Builder getConnectionDescription() {
 		ConnectionDescription.Builder builder = super.getConnectionDescription();
 		builder.setHost(textHost.getText());
 		if (null != spinnerPort) {

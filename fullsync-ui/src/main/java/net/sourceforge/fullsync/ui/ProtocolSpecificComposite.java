@@ -20,7 +20,6 @@
 package net.sourceforge.fullsync.ui;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -77,7 +76,7 @@ abstract class ProtocolSpecificComposite {
 	protected void onBeforePathHook(Composite parent) {
 	}
 
-	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
+	public ConnectionDescription.Builder getConnectionDescription() {
 		Builder builder = new ConnectionDescription.Builder();
 		builder.setScheme(m_scheme);
 		builder.setPath(textPath.getText());

@@ -22,8 +22,6 @@ package net.sourceforge.fullsync.ui;
 import static org.eclipse.swt.events.SelectionListener.widgetDefaultSelectedAdapter;
 import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
 
-import java.net.URISyntaxException;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -123,7 +121,7 @@ class SftpSpecificComposite extends ProtocolSpecificComposite {
 	}
 
 	@Override
-	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
+	public ConnectionDescription.Builder getConnectionDescription() {
 		ConnectionDescription.Builder builder = super.getConnectionDescription();
 		builder.setHost(textHost.getText());
 		builder.setPort(spinnerPort.getSelection());

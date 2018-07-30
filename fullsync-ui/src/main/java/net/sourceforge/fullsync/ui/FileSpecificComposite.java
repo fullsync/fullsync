@@ -21,7 +21,6 @@ package net.sourceforge.fullsync.ui;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import org.eclipse.swt.widgets.DirectoryDialog;
 
@@ -41,13 +40,7 @@ class FileSpecificComposite extends ProtocolSpecificComposite {
 
 	@Override
 	public void onBrowse() {
-		ConnectionDescription desc = null;
-		try {
-			desc = getConnectionDescription().build();
-		}
-		catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		ConnectionDescription desc = getConnectionDescription().build();
 		DirectoryDialog d = new DirectoryDialog(m_parent.getShell());
 		if (null != desc) {
 			d.setFilterPath(desc.getPath());

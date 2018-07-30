@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.net.URISyntaxException;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -87,7 +85,7 @@ public class FtpSpecificComposite extends UserPasswordSpecificComposite {
 	}
 
 	@Override
-	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
+	public ConnectionDescription.Builder getConnectionDescription() {
 		ConnectionDescription.Builder builder = super.getConnectionDescription();
 		if (comboAuthentication.getSelectionIndex() == 0) {
 			builder.setUsername(FTP_ANONYMOUS_USERNAME);
