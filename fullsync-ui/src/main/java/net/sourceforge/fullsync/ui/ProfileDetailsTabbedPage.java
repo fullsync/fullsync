@@ -288,8 +288,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		comboType.add("Two Way Sync");
 
 		new Label(c, SWT.NONE); // area below the type label should be empty
-		GridData labelTypeDescriptionData = new GridData();
-		labelTypeDescriptionData.horizontalAlignment = SWT.FILL;
+		GridData labelTypeDescriptionData = new GridData(SWT.FILL, SWT.TOP, true, false);
 		labelTypeDescription = new Label(c, SWT.WRAP);
 		labelTypeDescription.setLayoutData(labelTypeDescriptionData);
 		labelTypeDescription.setText(Messages.getString("ProfileDetails.Description.Label")); //$NON-NLS-1$
