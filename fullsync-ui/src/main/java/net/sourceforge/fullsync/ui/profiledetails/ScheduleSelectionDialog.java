@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
+package net.sourceforge.fullsync.ui.profiledetails;
 
 import javax.inject.Inject;
 
@@ -38,6 +38,9 @@ import org.eclipse.swt.widgets.Shell;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.schedule.Schedule;
+import net.sourceforge.fullsync.ui.ImageRepository;
+import net.sourceforge.fullsync.ui.Messages;
+import net.sourceforge.fullsync.ui.UISettings;
 import net.sourceforge.fullsync.ui.schedule.CrontabScheduleOptions;
 import net.sourceforge.fullsync.ui.schedule.IntervalScheduleOptions;
 import net.sourceforge.fullsync.ui.schedule.NullScheduleOptions;

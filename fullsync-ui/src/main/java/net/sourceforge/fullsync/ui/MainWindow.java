@@ -65,6 +65,7 @@ import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.schedule.Scheduler;
+import net.sourceforge.fullsync.ui.profiledetails.ProfileDetailsTabbedPage;
 
 @Singleton
 class MainWindow implements ProfileListControlHandler {

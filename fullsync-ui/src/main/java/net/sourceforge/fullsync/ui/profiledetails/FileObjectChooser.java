@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
+package net.sourceforge.fullsync.ui.profiledetails;
 
 import java.text.DateFormat;
 import java.util.Arrays;
@@ -48,6 +48,10 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
+import net.sourceforge.fullsync.ui.ImageRepository;
+import net.sourceforge.fullsync.ui.Messages;
+import net.sourceforge.fullsync.ui.ShellStateHandler;
+import net.sourceforge.fullsync.ui.UISettings;
 
 class FileObjectChooser {
 	private final Preferences preferences;
