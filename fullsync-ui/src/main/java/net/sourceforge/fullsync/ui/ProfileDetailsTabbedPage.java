@@ -69,7 +69,7 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 import net.sourceforge.fullsync.schedule.Schedule;
 
-public class ProfileDetailsTabbedPage extends WizardDialog {
+class ProfileDetailsTabbedPage extends WizardDialog {
 	private static final String EXPANDED_KEY = "Expanded"; //$NON-NLS-1$
 	private static final String FILTER_KEY = "Filter"; //$NON-NLS-1$
 

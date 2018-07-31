@@ -26,7 +26,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
-public class FullSyncUiModule extends AbstractModule {
+class FullSyncUiModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		Display.setAppName("FullSync"); //$NON-NLS-1$

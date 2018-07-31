@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Preferences;
 
-public abstract class WizardDialog {
+public abstract class WizardDialog { // NO_UCD (use default)
 	@Inject
 	protected FontRepository fontRepository;
 	@Inject
@@ -55,7 +55,7 @@ public abstract class WizardDialog {
 
 	private Shell parent;
 
-	public WizardDialog(Shell parent) {
+	public WizardDialog(Shell parent) { // NO_UCD (use default)
 		this.parent = parent;
 	}
 
@@ -63,7 +63,7 @@ public abstract class WizardDialog {
 		this.parent = parent;
 	}
 
-	public boolean checkAndApply() {
+	public boolean checkAndApply() { // NO_UCD (use private)
 		boolean applied = apply();
 		if (applied) {
 			closing = true;
@@ -72,7 +72,7 @@ public abstract class WizardDialog {
 		return applied;
 	}
 
-	public boolean checkAndCancel() {
+	public boolean checkAndCancel() { // NO_UCD (use private)
 		boolean closed = cancel();
 		if (closed) {
 			closing = true;
@@ -201,7 +201,7 @@ public abstract class WizardDialog {
 		}
 	}
 
-	protected void createHeader(Composite parent) {
+	protected void createHeader(Composite parent) { // NO_UCD (use private)
 		GridLayout compositeTopLayout = new GridLayout(2, false);
 		compositeTopLayout.horizontalSpacing = 0;
 		compositeTopLayout.marginRight = 0;
@@ -273,7 +273,7 @@ public abstract class WizardDialog {
 		return dialogShell;
 	}
 
-	public void updateTop() {
+	private void updateTop() {
 		dialogShell.setImage(imageRepository.getImage(getIconName()));
 		dialogShell.setText(getTitle());
 		labelCaption.setText(getCaption());

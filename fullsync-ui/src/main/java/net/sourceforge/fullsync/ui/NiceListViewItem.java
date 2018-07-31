@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Listener;
 
 import net.sourceforge.fullsync.Profile;
 
-public class NiceListViewItem extends Canvas implements Listener {
+class NiceListViewItem extends Canvas implements Listener {
 	private final NiceListView list;
 
 	private Label labelIcon;
@@ -49,7 +49,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 	private boolean mouseOver;
 	private boolean selected;
 
-	public NiceListViewItem(NiceListView parent) {
+	NiceListViewItem(NiceListView parent) {
 		super(parent, SWT.NULL);
 		this.list = parent;
 
@@ -164,7 +164,7 @@ public class NiceListViewItem extends Canvas implements Listener {
 		}
 	}
 
-	public void updateBackground() {
+	private void updateBackground() {
 		if (selected) {
 			setBackground(list.getColorSelected());
 		}

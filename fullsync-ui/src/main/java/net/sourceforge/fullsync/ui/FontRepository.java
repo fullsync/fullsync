@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 
 @Singleton
-public class FontRepository {
+public class FontRepository { // NO_UCD (use default)
 	private static class Key {
 		private String name;
 		private int height;
@@ -70,7 +70,7 @@ public class FontRepository {
 		display.addListener(SWT.Dispose, this::dispose);
 	}
 
-	public Font getFont(String name, int height, int style) {
+	public Font getFont(String name, int height, int style) { // NO_UCD (use default)
 		Key key = new Key(name, height, style);
 		return cache.computeIfAbsent(key, k -> new Font(device, k.name, k.height, k.style));
 	}

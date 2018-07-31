@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.ProfileManager;
 
-public class ImportProfilesPage extends WizardDialog {
+class ImportProfilesPage extends WizardDialog {
 	private final ProfileManager profileManager;
 	private Composite composite;
 	private Text textPath;

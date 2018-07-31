@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.Composite;
 
 import net.sourceforge.fullsync.Profile;
 
-public abstract class ProfileListComposite extends Composite {
+abstract class ProfileListComposite extends Composite {
 
-	public ProfileListComposite(Composite parent) {
+	ProfileListComposite(Composite parent) {
 		super(parent, SWT.NULL);
 	}
 

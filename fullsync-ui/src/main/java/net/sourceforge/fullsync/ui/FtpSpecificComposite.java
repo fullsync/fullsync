@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Label;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 
-public class FtpSpecificComposite extends UserPasswordSpecificComposite {
+class FtpSpecificComposite extends UserPasswordSpecificComposite {
 	private static final int DEFAULT_FTP_PORT = 21;
 	private static final String FTP_ANONYMOUS_USERNAME = "Anonymous"; //$NON-NLS-1$
 	private Combo comboAuthentication;

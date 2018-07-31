@@ -43,7 +43,7 @@ import net.sourceforge.fullsync.ui.schedule.IntervalScheduleOptions;
 import net.sourceforge.fullsync.ui.schedule.NullScheduleOptions;
 import net.sourceforge.fullsync.ui.schedule.ScheduleOptions;
 
-public class ScheduleSelectionDialog {
+class ScheduleSelectionDialog {
 	private final ImageRepository imageRepository;
 	private Group groupOptions;
 	private Combo cbType;
@@ -55,7 +55,7 @@ public class ScheduleSelectionDialog {
 		this.imageRepository = imageRepository;
 	}
 
-	public void open(Shell parent) {
+	void open(Shell parent) {
 		try {
 			Shell dialogShell = new Shell(parent, SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.RESIZE);
 			dialogShell.setText(Messages.getString("ScheduleSelectionDialog.EditScheduling")); //$NON-NLS-1$
@@ -160,7 +160,7 @@ public class ScheduleSelectionDialog {
 		}
 	}
 
-	public void addScheduleOptions(ScheduleOptions options) {
+	private void addScheduleOptions(ScheduleOptions options) {
 		cbType.add(options.getSchedulingName());
 		if (options.canHandleSchedule(schedule)) {
 			cbType.setText(options.getSchedulingName());

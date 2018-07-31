@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Shell;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.WindowState;
 
-public class ShellStateHandler {
+public class ShellStateHandler { // NO_UCD (use default)
 	private final Preferences preferences;
 	private final String name;
 	private final Shell shell;
@@ -41,7 +41,7 @@ public class ShellStateHandler {
 		shell.getDisplay().asyncExec(this::applyPreferences);
 	}
 
-	public static ShellStateHandler apply(Preferences preferences, Shell shell, Class<?> clazz) {
+	public static ShellStateHandler apply(Preferences preferences, Shell shell, Class<?> clazz) { // NO_UCD (use default)
 		return new ShellStateHandler(preferences, clazz.getSimpleName(), shell);
 	}
 
@@ -64,7 +64,7 @@ public class ShellStateHandler {
 		saveWindowState();
 	}
 
-	public void saveWindowState() {
+	public void saveWindowState() { // NO_UCD (use default)
 		WindowState ws = preferences.getWindowState(name);
 		ws.setMaximized(shell.getMaximized());
 		ws.setMinimized(shell.getMinimized());

@@ -40,7 +40,7 @@ import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
 
 @Singleton
-public class SystemTrayItem {
+public class SystemTrayItem { // NO_UCD (use default)
 	private final Shell shell;
 	private final Provider<ImageRepository> imageRepositoryProvider;
 	private final Provider<MainWindow> mainWindowProvider;
@@ -58,7 +58,7 @@ public class SystemTrayItem {
 		this.mainWindowProvider = mainWindowProvider;
 	}
 
-	public void show() {
+	public void show() { // NO_UCD (use default)
 		ImageRepository imageRepository = imageRepositoryProvider.get();
 		trayItem = new TrayItem(shell.getDisplay().getSystemTray(), SWT.NULL);
 		shell.getDisplay().addListener(SWT.Dispose, this::displayDisposed);

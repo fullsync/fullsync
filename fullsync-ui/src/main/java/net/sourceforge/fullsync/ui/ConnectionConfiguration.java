@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Label;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 
-public class ConnectionConfiguration {
+class ConnectionConfiguration {
 	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private final Provider<FileSpecificComposite> fileSpecificCompositeProvider;
 	private final Provider<FtpSpecificComposite> ftpSpecificCompositeProvider;
@@ -57,7 +57,7 @@ public class ConnectionConfiguration {
 		this.smbSpecificCompositeProvider = smbSpecificCompositeProvider;
 	}
 
-	public void render(Composite parent, ConnectionDescription desc) {
+	void render(Composite parent, ConnectionDescription desc) {
 		this.parent = parent;
 		if (null != desc) {
 			selectedScheme = desc.getScheme();

@@ -21,7 +21,7 @@ package net.sourceforge.fullsync.ui;
 
 import net.sourceforge.fullsync.Profile;
 
-public interface ProfileListControlHandler {
+interface ProfileListControlHandler {
 	void createNewProfile();
 
 	void runProfile(Profile profile, boolean interactive);

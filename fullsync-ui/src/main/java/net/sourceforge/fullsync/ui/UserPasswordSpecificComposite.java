@@ -73,7 +73,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	protected void onBeforeUsernameHook(final Composite parent) {
 	}
 
-	protected void onAfterPasswordHook(final Composite parent) {
+	protected void onAfterPasswordHook(final Composite parent) { // NO_UCD (use private)
 	}
 
 	protected void setUserPasswordEnabled(boolean enabled) {
