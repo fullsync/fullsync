@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.channels.FileChannel;
@@ -216,7 +215,7 @@ public class Main implements Launcher { // NO_UCD
 			catch (InterruptedException e) {
 				// not relevant
 			}
-			logger.debug("shutdown hook finished, releaseing main thread semaphore"); //$NON-NLS-1$
+			logger.debug("shutdown hook finished, releasing main thread semaphore"); //$NON-NLS-1$
 			sem.release();
 		}));
 		if (rtConfig.isDaemon().orElse(false).booleanValue() || rtConfig.getProfileToRun().isPresent()) {
@@ -344,8 +343,8 @@ public class Main implements Launcher { // NO_UCD
 		// instantiate an URL class-loader with the constructed class-path and load the UI
 		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Main.class.getClassLoader());
 		Thread.currentThread().setContextClassLoader(cl);
-		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.ui.GuiController"); //$NON-NLS-1$
-		Method launchUI = cls.getDeclaredMethod("launchUI", Injector.class); //$NON-NLS-1$
-		launchUI.invoke(null, injector);
+		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.ui.GuiMain"); //$NON-NLS-1$
+		Launcher guiMain = (Launcher)cls.newInstance();
+		guiMain.launchGui(injector);
 	}
 }

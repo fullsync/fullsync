@@ -40,6 +40,6 @@ addSWTDependency "dist", "windows", "x86_64"
 addLocalSWTVersion "compile"
 
 task run(type: JavaExec) {
-	main = 'net.sourceforge.fullsync.ui.DebugMain'
+	main = 'net.sourceforge.fullsync.ui.GuiMain'
 	classpath = configurations.runtime + sourceSets.main.output
 }
