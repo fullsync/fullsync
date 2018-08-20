@@ -19,7 +19,7 @@ buildscript {
 			classpath 'gradle.plugin.io.pry.gradle.offline_dependencies:gradle-offline-dependencies-plugin:0.3'
 		}
 		classpath "com.github.ben-manes:gradle-versions-plugin:0.20.0"
-		classpath "com.diffplug.spotless:spotless-plugin-gradle:3.13.0"
+		classpath "com.diffplug.spotless:spotless-plugin-gradle:3.14.0"
 		classpath "com.diffplug.spotless:spotless-ext-eclipse-jdt:4.7.2"
 	}
 }
@@ -316,6 +316,9 @@ gradle.projectsEvaluated {
 		if (System.env.'CI') {
 			coveralls.sourceDirs += subproject.sourceSets.main.allSource.srcDirs.flatten()
 		}
+	}
+	task test {
+		dependsOn ':spotlessCheck'
 	}
 }
 
