@@ -344,7 +344,7 @@ public class Main implements Launcher { // NO_UCD
 		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Main.class.getClassLoader());
 		Thread.currentThread().setContextClassLoader(cl);
 		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.ui.GuiMain"); //$NON-NLS-1$
-		Launcher guiMain = (Launcher)cls.newInstance();
+		Launcher guiMain = (Launcher) cls.newInstance();
 		guiMain.launchGui(injector);
 	}
 }
