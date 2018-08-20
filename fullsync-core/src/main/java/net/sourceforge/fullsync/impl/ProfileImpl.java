@@ -78,7 +78,7 @@ class ProfileImpl implements Profile {
 		if (element.hasAttribute(ATTRIBUTE_ENABLED)) {
 			schedulingEnabled = Boolean.valueOf(element.getAttribute(ATTRIBUTE_ENABLED));
 		}
-		Schedule schedule = Schedule.unserialize((Element) element.getElementsByTagName("Schedule").item(0)); //$NON-NLS-1$
+		Schedule schedule = Schedule.unserialize((Element) element.getElementsByTagName(Schedule.ELEMENT_NAME).item(0));
 
 		Date lastUpdate = null;
 		int lastErrorLevel = 0;

@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 import net.sourceforge.fullsync.DataParseException;
 
 public abstract class Schedule {
-	private static final String ELEMENT_NAME = "Schedule"; //$NON-NLS-1$
+	public static final String ELEMENT_NAME = "Schedule"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 
 	public static final Schedule unserialize(final Element element) throws DataParseException {

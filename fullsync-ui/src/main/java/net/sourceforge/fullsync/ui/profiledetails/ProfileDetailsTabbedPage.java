@@ -692,7 +692,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 							loadingIem1.setImage(imageRepository.getImage("Error.png")); //$NON-NLS-1$
 						}
 					}
-					catch (IOException | URISyntaxException | FileSystemException ex) {
+					catch (IOException | FileSystemException ex) {
 						ExceptionHandler.reportException(ex);
 						directoryTree.removeAll();
 						TreeItem loadingIem2 = new TreeItem(directoryTree, SWT.NULL);
