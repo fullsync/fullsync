@@ -4,21 +4,21 @@ apply plugin: 'java'
 dependencies {
 	compile project(':fullsync-logger')
 	compile project(':fullsync-utils')
-	compile "commons-cli:commons-cli:${project.ext.commonsCliVersion}"
-	compile "commons-net:commons-net:${project.ext.commonsNetVersion}"
-	compile("org.apache.commons:commons-vfs2:${project.ext.commonsVfsVersion}") {
+	compile libraries.apacheCommonsCli
+	compile libraries.apacheCommonsNet
+	compile(libraries.apacheCommonsVfs) {
 		exclude group: "commons-logging"
 		exclude group: "org.apache.maven.scm"
 	}
-	compile "org.samba.jcifs:jcifs:${project.ext.sambaJcifsVersion}"
-	compile "com.jcraft:jsch:${project.ext.jcraftJschVersion}"
-	compile "org.slf4j:jcl-over-slf4j:${project.ext.slf4jVersion}"
-	compile "com.google.inject:guice:${project.ext.guiceVersion}"
-	compile "com.google.inject.extensions:guice-assistedinject:${project.ext.guiceVersion}"
+	compile libraries.orgSambaJcifs
+	compile libraries.comJcraftJsch
+	compile libraries.orgSlf4jJclOverSlf4j
+	compile libraries.guice
+	compile libraries.guiceAssistedInject
 	compile files("lib/commons-vfs2-sandbox.jar")
-	testImplementation "org.junit.jupiter:junit-jupiter-api:${project.ext.junitVersion}"
-	testImplementation "org.hamcrest:hamcrest-core:${project.ext.hamcrestVersion}"
-	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.ext.junitVersion}"
+	testImplementation libraries.junitJupiterApi
+	testImplementation libraries.hamcrestCore
+	testRuntimeOnly libraries.junitJuipiterEngine
 }
 
 test {

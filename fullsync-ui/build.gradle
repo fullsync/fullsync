@@ -13,7 +13,7 @@ def addSWTDependency(configuration, osName, osArch) {
 	else if (osName.contains('mac')) {
 		os = 'cocoa.macosx'
 	}
-	project.dependencies.add(configuration, "org.eclipse.platform:org.eclipse.swt.${os}.${arch}:${ext.swtVersion}") {
+	project.dependencies.add(configuration, "org.eclipse.platform:org.eclipse.swt.${os}.${arch}:${swtVersion}") {
 		exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt'
 	}
 }

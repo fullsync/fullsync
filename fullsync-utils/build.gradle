@@ -2,9 +2,9 @@
 apply plugin: 'java'
 
 dependencies {
-	testImplementation "org.junit.jupiter:junit-jupiter-api:${project.ext.junitVersion}"
-	testImplementation "org.hamcrest:hamcrest-core:${project.ext.hamcrestVersion}"
-	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.ext.junitVersion}"
+	testImplementation libraries.junitJupiterApi
+	testImplementation libraries.hamcrestCore
+	testRuntimeOnly libraries.junitJuipiterEngine
 }
 
 test {
