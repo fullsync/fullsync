@@ -2,11 +2,6 @@ sudo: false
 dist: trusty
 group: edge
 
-addons:
-  apt:
-    packages:
-      - oracle-java9-installer
-
 language: java
 
 jdk:
