@@ -1,4 +1,9 @@
 build:
+  nodes:
+    analysis:
+      tests:
+        override:
+          - java-scrutinizer-run
   tests:
     override:
       -
