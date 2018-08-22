@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
+package net.sourceforge.fullsync.ui.profiledetails;
 
 import java.net.URISyntaxException;
 
@@ -33,8 +33,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.ui.Messages;
 
-public class ConnectionConfiguration {
+class ConnectionConfiguration {
 	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private final Provider<FileSpecificComposite> fileSpecificCompositeProvider;
 	private final Provider<FtpSpecificComposite> ftpSpecificCompositeProvider;
@@ -57,7 +58,7 @@ public class ConnectionConfiguration {
 		this.smbSpecificCompositeProvider = smbSpecificCompositeProvider;
 	}
 
-	public void render(Composite parent, ConnectionDescription desc) {
+	void render(Composite parent, ConnectionDescription desc) {
 		this.parent = parent;
 		if (null != desc) {
 			selectedScheme = desc.getScheme();

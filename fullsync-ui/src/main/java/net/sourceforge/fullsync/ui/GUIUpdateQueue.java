@@ -24,32 +24,29 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import org.eclipse.swt.widgets.Display;
 
-public class GUIUpdateQueue<ITEM> {
-	public interface GUIUpdateTask<Item> {
-		void doUpdate(List<Item> items);
-	}
-
+public class GUIUpdateQueue<ITEM> { // NO_UCD (use default)
 	private Display display;
 	private final Queue<ITEM> queue = new ConcurrentLinkedQueue<>();
 	private final AtomicBoolean updateScheduled = new AtomicBoolean(false);
-	private GUIUpdateTask<ITEM> updateTask;
+	private Consumer<List<ITEM>> updateTask;
 
-	public GUIUpdateQueue(Display d, GUIUpdateTask<ITEM> task) {
+	public GUIUpdateQueue(Display d, Consumer<List<ITEM>> task) { // NO_UCD (use default)
 		display = d;
 		updateTask = task;
 	}
 
-	public synchronized void add(ITEM item) {
+	public synchronized void add(ITEM item) { // NO_UCD (use default)
 		queue.add(item);
 		if (!updateScheduled.get()) {
 			updateScheduled.set(true);
 			display.asyncExec(() -> {
 				List<ITEM> items = getItems();
 				if (!items.isEmpty()) {
-					updateTask.doUpdate(items);
+					updateTask.accept(items);
 				}
 			});
 		}

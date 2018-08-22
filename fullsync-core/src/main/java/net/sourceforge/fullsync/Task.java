@@ -30,7 +30,6 @@ public class Task {
 	private State state;
 	private Action[] actions;
 	private int currentAction;
-
 	private List<Task> children;
 
 	public Task(File source, File destination, State state, Action[] actions) {

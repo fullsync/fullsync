@@ -17,9 +17,9 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
+package net.sourceforge.fullsync.ui.profiledetails;
 
-public class SmbSpecificComposite extends UserPasswordSpecificComposite {
+class SmbSpecificComposite extends UserPasswordSpecificComposite {
 	@Override
 	public int getDefaultPort() {
 		return -1;

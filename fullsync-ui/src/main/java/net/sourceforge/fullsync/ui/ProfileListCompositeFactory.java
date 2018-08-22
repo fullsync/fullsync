@@ -23,7 +23,7 @@ import javax.inject.Named;
 
 import org.eclipse.swt.widgets.Composite;
 
-public interface ProfileListCompositeFactory {
+interface ProfileListCompositeFactory {
 	@Named("list")
 	ProfileListComposite createListViewComposite(Composite parent, ProfileListControlHandler handler);
 

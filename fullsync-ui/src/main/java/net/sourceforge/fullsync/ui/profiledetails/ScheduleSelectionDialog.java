@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
+package net.sourceforge.fullsync.ui.profiledetails;
 
 import javax.inject.Inject;
 
@@ -38,12 +38,15 @@ import org.eclipse.swt.widgets.Shell;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.schedule.Schedule;
+import net.sourceforge.fullsync.ui.ImageRepository;
+import net.sourceforge.fullsync.ui.Messages;
+import net.sourceforge.fullsync.ui.UISettings;
 import net.sourceforge.fullsync.ui.schedule.CrontabScheduleOptions;
 import net.sourceforge.fullsync.ui.schedule.IntervalScheduleOptions;
 import net.sourceforge.fullsync.ui.schedule.NullScheduleOptions;
 import net.sourceforge.fullsync.ui.schedule.ScheduleOptions;
 
-public class ScheduleSelectionDialog {
+class ScheduleSelectionDialog {
 	private final ImageRepository imageRepository;
 	private Group groupOptions;
 	private Combo cbType;
@@ -55,7 +58,7 @@ public class ScheduleSelectionDialog {
 		this.imageRepository = imageRepository;
 	}
 
-	public void open(Shell parent) {
+	void open(Shell parent) {
 		try {
 			Shell dialogShell = new Shell(parent, SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.RESIZE);
 			dialogShell.setText(Messages.getString("ScheduleSelectionDialog.EditScheduling")); //$NON-NLS-1$
@@ -160,7 +163,7 @@ public class ScheduleSelectionDialog {
 		}
 	}
 
-	public void addScheduleOptions(ScheduleOptions options) {
+	private void addScheduleOptions(ScheduleOptions options) {
 		cbType.add(options.getSchedulingName());
 		if (options.canHandleSchedule(schedule)) {
 			cbType.setText(options.getSchedulingName());

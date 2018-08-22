@@ -37,7 +37,7 @@ import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.event.ProfileListChanged;
 
-public class ListViewProfileListComposite extends ProfileListComposite {
+class ListViewProfileListComposite extends ProfileListComposite {
 	private final ProfileManager profileManager;
 	private Table tableProfiles;
 	private TableColumn tableColumnName;
@@ -82,7 +82,7 @@ public class ListViewProfileListComposite extends ProfileListComposite {
 		populateProfileList();
 	}
 
-	public void populateProfileList() {
+	private void populateProfileList() {
 		if (!isDisposed()) {
 			tableProfiles.clearAll();
 			tableProfiles.setItemCount(0);

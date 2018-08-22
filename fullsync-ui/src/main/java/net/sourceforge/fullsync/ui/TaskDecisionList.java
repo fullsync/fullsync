@@ -53,7 +53,7 @@ import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.fs.File;
 
-public class TaskDecisionList extends Composite {
+class TaskDecisionList extends Composite {
 	private TableColumn tableColumnExplanation;
 	private TableColumn tableColumnFilename;
 	private TableColumn tableColumnAction;
@@ -77,7 +77,7 @@ public class TaskDecisionList extends Composite {
 	private boolean onlyChanges;
 	private boolean changeAllowed;
 
-	public TaskDecisionList(Composite parent, ImageRepository imageRepository) {
+	TaskDecisionList(Composite parent, ImageRepository imageRepository) {
 		super(parent, SWT.NULL);
 		parent.addDisposeListener(this::onDisposed);
 		try {
@@ -136,7 +136,7 @@ public class TaskDecisionList extends Composite {
 		this.taskTree = task;
 	}
 
-	public void initializeImages(ImageRepository imageRepository) {
+	private void initializeImages(ImageRepository imageRepository) {
 		nodeFile = imageRepository.getImage("Node_File.png"); //$NON-NLS-1$
 		nodeDirectory = imageRepository.getImage("Node_Directory.png"); //$NON-NLS-1$
 		nodeUndefined = imageRepository.getImage("Node_Undefined.png"); //$NON-NLS-1$
@@ -192,7 +192,7 @@ public class TaskDecisionList extends Composite {
 		super.dispose();
 	}
 
-	protected void drawSide(GC g, Task t, Action a, Location location) {
+	private void drawSide(GC g, Task t, Action a, Location location) {
 		File n;
 		if (null == t) {
 			n = null;
@@ -234,7 +234,7 @@ public class TaskDecisionList extends Composite {
 	}
 
 	//FIXME: implement using ImageDataProvider?
-	protected void drawLocation(GC g, Action a) {
+	private void drawLocation(GC g, Action a) {
 		switch (a.getLocation()) {
 			case SOURCE:
 				g.drawImage(locationSource, 16 + 2, 0);
@@ -252,7 +252,7 @@ public class TaskDecisionList extends Composite {
 		}
 	}
 
-	protected Integer calcTaskImageHash(Task t, Action a) {
+	private Integer calcTaskImageHash(Task t, Action a) {
 		int hash = 0;
 
 		// using 5 bits for files
@@ -283,7 +283,7 @@ public class TaskDecisionList extends Composite {
 		return Integer.valueOf(hash);
 	}
 
-	protected Image buildTaskImage(Task t, Action a) {
+	private Image buildTaskImage(Task t, Action a) {
 		ImageData data = new ImageData((16 * 3) + 2, 16, 8, new PaletteData(255, 255, 255));
 		data.transparentPixel = data.palette.getPixel(new RGB(0, 0, 0));
 
@@ -300,17 +300,17 @@ public class TaskDecisionList extends Composite {
 		return image;
 	}
 
-	protected Image getTaskImage(Task t, Action a) {
+	private Image getTaskImage(Task t, Action a) {
 		return taskImages.computeIfAbsent(calcTaskImageHash(t, a), key -> buildTaskImage(t, a));
 	}
 
-	protected void addTaskChildren(Task task) {
+	private void addTaskChildren(Task task) {
 		for (Task t : task.getChildren()) {
 			addTask(t);
 		}
 	}
 
-	protected void addTask(Task t) {
+	private void addTask(Task t) {
 		if (!onlyChanges || (t.getCurrentAction().getType() != ActionType.NOTHING)) {
 			Image image = getTaskImage(t, t.getCurrentAction());
 
@@ -355,14 +355,14 @@ public class TaskDecisionList extends Composite {
 		return UISettings.formatSize(size);
 	}
 
-	protected void updateTask(TableItem item) {
+	private void updateTask(TableItem item) {
 		Task t = (Task) item.getData();
 		Image image = getTaskImage(t, t.getCurrentAction());
 		item.setImage(2, image);
 		item.setText(3, t.getCurrentAction().getExplanation());
 	}
 
-	public void rebuildActionList() {
+	void rebuildActionList() {
 		tableLogLinesFillIndex = 0;
 		tableLogLinesFillCount = tableLogLines.getItemCount();
 
@@ -402,7 +402,7 @@ public class TaskDecisionList extends Composite {
 		}
 	}
 
-	protected void showPopup(int x, int y) {
+	private void showPopup(int x, int y) {
 		final TableItem[] tableItemList = tableLogLines.getSelection();
 		// TODO impl some kind of ActionList supporting "containsAction"
 		// and "indexOfAction" using own comparison rules
@@ -471,17 +471,17 @@ public class TaskDecisionList extends Composite {
 		this.changeAllowed = changeAllowed;
 	}
 
-	public void showItem(TableItem item) {
+	void showItem(TableItem item) {
 		tableLogLines.showItem(item);
 	}
 
-	protected void tableLogLinesMouseUp(MouseEvent evt) {
+	private void tableLogLinesMouseUp(MouseEvent evt) {
 		if (changeAllowed && (evt.button == 3)) {
 			showPopup(evt.x, evt.y);
 		}
 	}
 
-	public TableItem getTableItemForTask(Task task) {
+	TableItem getTableItemForTask(Task task) {
 		return taskItemMap.get(task);
 	}
 }

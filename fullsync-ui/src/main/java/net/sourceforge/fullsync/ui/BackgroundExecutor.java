@@ -40,14 +40,14 @@ public class BackgroundExecutor {
 		this.display = display;
 	}
 
-	public <R> void runAsync(ThrowingSupplier<R> supplier, Consumer<R> successConsumer, Consumer<Exception> errorConsumer) {
+	public <R> void runAsync(ThrowingSupplier<R> supplier, Consumer<R> successConsumer, Consumer<Exception> errorConsumer) { // NO_UCD (use default)
 		CompletableFuture<R> future = CompletableFuture.supplyAsync(unchecked(supplier), scheduledExecutorService);
 		UIUpdateTask<R> task = new UIUpdateTask<>(display, future, successConsumer, errorConsumer);
 		future.thenRun(task);
 	}
 
 	// from http://4comprehension.com/sneakily-throwing-exceptions-in-lambda-expressions-in-java/
-	static <R> Supplier<R> unchecked(ThrowingSupplier<R> f) {
+	static <R> Supplier<R> unchecked(ThrowingSupplier<R> f) { // NO_UCD (use private)
 		return () -> {
 			try {
 				return f.get();
@@ -60,7 +60,7 @@ public class BackgroundExecutor {
 
 	// from http://4comprehension.com/sneakily-throwing-exceptions-in-lambda-expressions-in-java/
 	@SuppressWarnings("unchecked")
-	static <T extends Exception, R> R sneakyThrow(Exception t) throws T {
+	static <T extends Exception, R> R sneakyThrow(Exception t) throws T { // NO_UCD (use private)
 		throw (T) t; // ( ͡° ͜ʖ ͡°)
 	}
 

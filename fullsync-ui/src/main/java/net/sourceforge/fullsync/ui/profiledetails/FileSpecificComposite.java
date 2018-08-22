@@ -17,11 +17,10 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
+package net.sourceforge.fullsync.ui.profiledetails;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import org.eclipse.swt.widgets.DirectoryDialog;
 
@@ -41,13 +40,7 @@ class FileSpecificComposite extends ProtocolSpecificComposite {
 
 	@Override
 	public void onBrowse() {
-		ConnectionDescription desc = null;
-		try {
-			desc = getConnectionDescription().build();
-		}
-		catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		ConnectionDescription desc = getConnectionDescription().build();
 		DirectoryDialog d = new DirectoryDialog(m_parent.getShell());
 		if (null != desc) {
 			d.setFilterPath(desc.getPath());

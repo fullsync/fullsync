@@ -44,7 +44,7 @@ public class Messages {
 		return instance;
 	}
 
-	public static void setLanguage(String code) {
+	public static void setLanguage(String code) { // NO_UCD (use default)
 		Locale langLocale = new Locale(code);
 		Locale.setDefault(langLocale);
 		getInstance().bundle = ResourceBundle.getBundle(BUNDLE_NAME, langLocale);

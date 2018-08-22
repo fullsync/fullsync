@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Shell;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Util;
 
-public class WelcomeScreen extends Dialog {
+class WelcomeScreen extends Dialog {
 	private final Preferences preferences;
 	private final ImageRepository imageRepository;
 	private final BackgroundExecutor backgroundExecutor;
@@ -47,7 +47,7 @@ public class WelcomeScreen extends Dialog {
 		this.backgroundExecutor = backgroundExecutor;
 	}
 
-	public void show() {
+	void show() {
 		final Shell dialogShell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
 		String title = Messages.getString("WelcomeScreen.WelcomeMessage", Util.getFullSyncVersion()); //$NON-NLS-1$
 

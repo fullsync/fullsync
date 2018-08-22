@@ -46,7 +46,7 @@ import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.cli.Main;
 
 @Singleton
-public class GuiController {
+public class GuiController { // NO_UCD (use default)
 	private final FullSync fullSync;
 	private final Display display;
 	private final Shell shell;
@@ -94,7 +94,7 @@ public class GuiController {
 		createWelcomeScreen();
 	}
 
-	public static void launchUI(Injector injector) {
+	static void launchUI(Injector injector) {
 		Injector uiInjector = injector.createChildInjector(new FullSyncUiModule());
 		GuiController guiController = uiInjector.getInstance(GuiController.class);
 		guiController.run(uiInjector);
@@ -118,7 +118,7 @@ public class GuiController {
 		return SWT.YES == mb.open();
 	}
 
-	public void run(Injector uiInjector) {
+	private void run(Injector uiInjector) {
 		startGui();
 		scheduledExecutorService.submit(() -> Main.finishStartup(uiInjector));
 		while (!display.isDisposed()) {
@@ -137,7 +137,7 @@ public class GuiController {
 		ExceptionHandler.registerExceptionHandler(oldExceptionHandler);
 	}
 
-	public static void launchProgram(final String uri) {
+	public static void launchProgram(final String uri) { // NO_UCD (use default)
 		if (System.getProperty("os.name").toLowerCase().indexOf("linux") > -1) { //$NON-NLS-1$ //$NON-NLS-2$
 			Thread t = new Thread(() -> {
 				try {
@@ -180,11 +180,11 @@ public class GuiController {
 		}
 	}
 
-	public static String getTwitterURL() {
+	public static String getTwitterURL() { // NO_UCD (use default)
 		return Util.getResourceAsString("net/sourceforge/fullsync/twitter-url.txt").trim(); //$NON-NLS-1$
 	}
 
-	public static String getWebsiteURL() {
+	public static String getWebsiteURL() { // NO_UCD (use default)
 		return Util.getResourceAsString("net/sourceforge/fullsync/website-url.txt").trim(); //$NON-NLS-1$
 	}
 }

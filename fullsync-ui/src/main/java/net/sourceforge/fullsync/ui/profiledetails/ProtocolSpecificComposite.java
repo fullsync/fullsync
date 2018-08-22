@@ -17,10 +17,9 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
+package net.sourceforge.fullsync.ui.profiledetails;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -39,6 +38,7 @@ import net.sourceforge.fullsync.ConnectionDescription.Builder;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.fs.Site;
+import net.sourceforge.fullsync.ui.Messages;
 
 abstract class ProtocolSpecificComposite {
 	@Inject
@@ -77,7 +77,7 @@ abstract class ProtocolSpecificComposite {
 	protected void onBeforePathHook(Composite parent) {
 	}
 
-	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
+	public ConnectionDescription.Builder getConnectionDescription() {
 		Builder builder = new ConnectionDescription.Builder();
 		builder.setScheme(m_scheme);
 		builder.setPath(textPath.getText());

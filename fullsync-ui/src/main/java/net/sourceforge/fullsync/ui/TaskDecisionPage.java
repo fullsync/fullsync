@@ -43,7 +43,7 @@ import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskTree;
 
-public class TaskDecisionPage extends WizardDialog {
+class TaskDecisionPage extends WizardDialog {
 	private final Display display;
 	private final Synchronizer synchronizer;
 	private final MainWindow mainWindow;
@@ -187,7 +187,7 @@ public class TaskDecisionPage extends WizardDialog {
 		return false;
 	}
 
-	void performActions() {
+	private void performActions() {
 		scheduledExecutorService.submit(this::doPerformActions);
 	}
 

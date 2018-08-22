@@ -47,7 +47,7 @@ import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.event.ProfileListChanged;
 
-public class NiceListViewProfileListComposite extends ProfileListComposite {
+class NiceListViewProfileListComposite extends ProfileListComposite {
 	private static class ContentComposite extends Composite {
 		private NiceListViewProfileListComposite niceListViewProfileListComposite;
 		private Profile profile;

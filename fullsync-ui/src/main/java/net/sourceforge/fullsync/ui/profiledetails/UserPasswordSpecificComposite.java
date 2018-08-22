@@ -17,9 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
-
-import java.net.URISyntaxException;
+package net.sourceforge.fullsync.ui.profiledetails;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -29,6 +27,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.ui.Messages;
 
 abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	private Text textHost;
@@ -75,7 +74,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	protected void onBeforeUsernameHook(final Composite parent) {
 	}
 
-	protected void onAfterPasswordHook(final Composite parent) {
+	protected void onAfterPasswordHook(final Composite parent) { // NO_UCD (use private)
 	}
 
 	protected void setUserPasswordEnabled(boolean enabled) {
@@ -94,7 +93,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	}
 
 	@Override
-	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
+	public ConnectionDescription.Builder getConnectionDescription() {
 		ConnectionDescription.Builder builder = super.getConnectionDescription();
 		builder.setHost(textHost.getText());
 		if (null != spinnerPort) {

@@ -1,8 +1,13 @@
 build:
-        tests:
-                override:
-                        -
-                                command: ./gradlew --console=plain test jacocoRootReport
-                                coverage:
-                                        file: 'build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml'
-                                        format: 'jacoco'
+  nodes:
+    analysis:
+      tests:
+        override:
+          - java-scrutinizer-run
+  tests:
+    override:
+      -
+        command: ./gradlew --console=plain test jacocoRootReport
+        coverage:
+          file: 'build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml'
+          format: 'jacoco'

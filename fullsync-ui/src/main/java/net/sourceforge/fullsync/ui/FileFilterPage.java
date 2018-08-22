@@ -199,7 +199,7 @@ public class FileFilterPage extends WizardDialog {
 		compositeRuleList.layout(true);
 	}
 
-	protected void addRuleRow(String ruleType, int op, OperandValue value) {
+	private void addRuleRow(String ruleType, int op, OperandValue value) {
 		FilterRuleListItem ruleItem = filterRuleListItemProvider.get();
 		ruleItem.init(this, ruleType, op, value);
 		ruleItem.render(compositeRuleList);

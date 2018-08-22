@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Display;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 
-public class NiceListView extends Composite {
+class NiceListView extends Composite {
 	private FontRepository fontRepository;
 	private Color colorDefault;
 	private Color colorHover;
@@ -43,7 +43,7 @@ public class NiceListView extends Composite {
 
 	private NiceListViewItem selected;
 
-	public NiceListView(Composite parent, FontRepository fontRepository) {
+	NiceListView(Composite parent, FontRepository fontRepository) {
 		super(parent, SWT.TRANSPARENT);
 		this.fontRepository = fontRepository;
 		Display display = getDisplay();
@@ -176,7 +176,7 @@ public class NiceListView extends Composite {
 		return false;
 	}
 
-	public void clear() {
+	void clear() {
 		Control[] children = this.getChildren();
 		for (Control element : children) {
 			element.dispose();

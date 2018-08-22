@@ -26,7 +26,7 @@ import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 public abstract class ScheduleOptions extends Composite {
-	public ScheduleOptions(Composite parent) {
+	ScheduleOptions(Composite parent) {
 		super(parent, SWT.NULL);
 	}
 

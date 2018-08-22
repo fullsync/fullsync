@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.ui;
+package net.sourceforge.fullsync.ui.profiledetails;
 
 import static org.eclipse.swt.events.SelectionListener.widgetDefaultSelectedAdapter;
 import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
@@ -68,6 +68,10 @@ import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 import net.sourceforge.fullsync.schedule.Schedule;
+import net.sourceforge.fullsync.ui.FileFilterPage;
+import net.sourceforge.fullsync.ui.Messages;
+import net.sourceforge.fullsync.ui.UISettings;
+import net.sourceforge.fullsync.ui.WizardDialog;
 
 public class ProfileDetailsTabbedPage extends WizardDialog {
 	private static final String EXPANDED_KEY = "Expanded"; //$NON-NLS-1$
@@ -688,7 +692,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 							loadingIem1.setImage(imageRepository.getImage("Error.png")); //$NON-NLS-1$
 						}
 					}
-					catch (IOException | URISyntaxException | FileSystemException ex) {
+					catch (IOException | FileSystemException ex) {
 						ExceptionHandler.reportException(ex);
 						directoryTree.removeAll();
 						TreeItem loadingIem2 = new TreeItem(directoryTree, SWT.NULL);

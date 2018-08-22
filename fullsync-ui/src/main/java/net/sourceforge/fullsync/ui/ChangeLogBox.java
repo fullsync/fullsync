@@ -33,10 +33,10 @@ import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.changelog.ChangeLogEntry;
 import net.sourceforge.fullsync.changelog.ChangeLogLoader;
 
-public class ChangeLogBox extends StyledText {
+class ChangeLogBox extends StyledText {
 	private String lastFullSyncVersion;
 
-	public ChangeLogBox(Composite parent, String _lastFullSyncVersion, BackgroundExecutor backgroundExecutor) {
+	ChangeLogBox(Composite parent, String _lastFullSyncVersion, BackgroundExecutor backgroundExecutor) {
 		super(parent, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 		setAlwaysShowScrollBars(false);
 		lastFullSyncVersion = _lastFullSyncVersion;

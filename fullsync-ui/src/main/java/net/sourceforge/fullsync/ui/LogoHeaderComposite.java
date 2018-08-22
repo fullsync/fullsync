@@ -28,10 +28,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-public class LogoHeaderComposite extends Composite {
+public class LogoHeaderComposite extends Composite { // NO_UCD (use default)
 	private Color headerBackgroundColor;
 
-	public LogoHeaderComposite(final Composite parent, final int style, ImageRepository imageRepository) {
+	public LogoHeaderComposite(final Composite parent, final int style, ImageRepository imageRepository) { // NO_UCD (use default)
 		super(parent, style);
 		addDisposeListener(e -> headerBackgroundColor.dispose());
 		headerBackgroundColor = new Color(getDisplay(), 192, 204, 214);

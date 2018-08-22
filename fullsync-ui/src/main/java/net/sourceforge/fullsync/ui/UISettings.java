@@ -40,7 +40,7 @@ public abstract class UISettings {
 
 	private static String[] UNITS = { "B", "KiB", "MiB", "GiB", "TiB" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
-	public static String formatSize(long size) {
+	public static String formatSize(long size) { // NO_UCD (use default)
 		int i = 1;
 		for (; i < UNITS.length; ++i) {
 			if (size < Math.pow(K, i)) {

@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public class PreferencesPage extends WizardDialog {
+class PreferencesPage extends WizardDialog {
 	/**
 	 * supported language codes.
 	 */
@@ -216,7 +216,7 @@ public class PreferencesPage extends WizardDialog {
 	/**
 	 * update all controls with the settings from the preferences object.
 	 */
-	public void updateComponent() {
+	private void updateComponent() {
 		cbConfirmExit.setSelection(preferences.confirmExit());
 		cbCloseMinimizesToSystemTray.setSelection(preferences.closeMinimizesToSystemTray());
 		cbMinimizeMinimizesToSystemTray.setSelection(preferences.minimizeMinimizesToSystemTray());
