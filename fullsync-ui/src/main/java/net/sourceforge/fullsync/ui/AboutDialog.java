@@ -311,7 +311,7 @@ class AboutDialog {
 
 	private List<LicenseEntry> loadLicenses() throws Exception {
 		return Util.loadDirectoryFromClasspath(FULLSYNC_LICENSES_DIRECTORY)
-			.parallelStream()
+			.stream()
 			.filter(name -> name.endsWith(".txt")) //$NON-NLS-1$
 			.map(name -> {
 				String n = name.substring(0, name.length() - 4);
