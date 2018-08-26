@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.GC;
@@ -76,7 +75,6 @@ class TaskDecisionList extends Composite {
 
 	TaskDecisionList(Composite parent, ImageRepository imageRepository) {
 		super(parent, SWT.NULL);
-		parent.addDisposeListener(this::onDisposed);
 		try {
 			this.setSize(550, 500);
 
@@ -166,27 +164,6 @@ class TaskDecisionList extends Composite {
 				assert false;
 				return ""; //$NON-NLS-1$
 		}
-	}
-
-	private void onDisposed(DisposeEvent e) {
-		dispose();
-	}
-
-	@Override
-	public void dispose() {
-		nodeFile.dispose();
-		nodeDirectory.dispose();
-		nodeUndefined.dispose();
-		locationSource.dispose();
-		locationDestination.dispose();
-		locationBoth.dispose();
-		for (Image i : actionImages.values()) {
-			i.dispose();
-		}
-		for (Image i : taskImages.values()) {
-			i.dispose();
-		}
-		super.dispose();
 	}
 
 	private void drawSide(GC g, Task t, Action a, Location location) {
@@ -294,6 +271,7 @@ class TaskDecisionList extends Composite {
 		finally {
 			g.dispose();
 		}
+		addDisposeListener(e -> image.dispose());
 		return image;
 	}
 
