@@ -124,7 +124,7 @@ gradle.projectsEvaluated {
 }
 
 wrapper {
-	gradleVersion = '4.6'
+	gradleVersion = '5.1.1'
 	distributionType = Wrapper.DistributionType.ALL
 }
 
@@ -314,9 +314,9 @@ gradle.projectsEvaluated {
 	subprojects.findAll { subproject ->
 		subproject.pluginManager.hasPlugin('java')
 	}.each { subproject ->
-		jacocoRootReport.sourceDirectories = jacocoRootReport.sourceDirectories + subproject.jacocoTestReport.sourceDirectories
-		jacocoRootReport.classDirectories = jacocoRootReport.classDirectories + subproject.jacocoTestReport.classDirectories
-		jacocoRootReport.executionData = jacocoRootReport.executionData + subproject.jacocoTestReport.executionData
+		jacocoRootReport.sourceDirectories = files(jacocoRootReport.sourceDirectories.files + subproject.jacocoTestReport.sourceDirectories.files)
+		jacocoRootReport.classDirectories = files(jacocoRootReport.classDirectories.files + subproject.jacocoTestReport.classDirectories.files)
+		jacocoRootReport.executionData = files(jacocoRootReport.executionData.files + subproject.jacocoTestReport.executionData.files)
 		testReport.reportOn subproject.test
 		if (System.env.'CI') {
 			coveralls.sourceDirs += subproject.sourceSets.main.allSource.srcDirs.flatten()
