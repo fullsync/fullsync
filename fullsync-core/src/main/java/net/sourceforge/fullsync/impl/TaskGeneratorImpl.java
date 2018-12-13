@@ -154,23 +154,24 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		RuleSet rules = profile.getRuleSet().createRuleSet();
 
 		ActionDecider actionDecider;
-		if ("Publish/Update".equals(profile.getSynchronizationType())) {
-			actionDecider = new PublishActionDecider();
-		}
-		else if ("Publish/Update Overwrite".equals(profile.getSynchronizationType())) {
-			actionDecider = new PublishOverwriteActionDecider();
-		}
-		else if ("Backup Copy".equals(profile.getSynchronizationType())) {
-			actionDecider = new BackupActionDecider();
-		}
-		else if ("Exact Copy".equals(profile.getSynchronizationType())) {
-			actionDecider = new ExactCopyActionDecider();
-		}
-		else if ("Two Way Sync".equals(profile.getSynchronizationType())) {
-			actionDecider = new TwoWaySyncActionDecider();
-		}
-		else {
-			throw new IllegalArgumentException("Profile has unknown synchronization type."); //$NON-NLS-1$
+		switch (profile.getSynchronizationType()) {
+			case "Publish/Update":
+				actionDecider = new PublishActionDecider();
+				break;
+			case "Publish/Update Overwrite":
+				actionDecider = new PublishOverwriteActionDecider();
+				break;
+			case "Backup Copy":
+				actionDecider = new BackupActionDecider();
+				break;
+			case "Exact Copy":
+				actionDecider = new ExactCopyActionDecider();
+				break;
+			case "Two Way Sync":
+				actionDecider = new TwoWaySyncActionDecider();
+				break;
+			default:
+				throw new IllegalArgumentException("Profile has unknown synchronization type."); //$NON-NLS-1$
 		}
 
 		ConnectionDescription srcDesc = profile.getSource();
