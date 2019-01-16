@@ -17,7 +17,7 @@ dependencies {
 	compile libraries.guiceAssistedInject
 	compile files("lib/commons-vfs2-sandbox.jar")
 	testImplementation libraries.junitJupiterApi
-	testImplementation libraries.hamcrestCore
+	testImplementation libraries.hamcrest
 	testRuntimeOnly libraries.junitJuipiterEngine
 }
 

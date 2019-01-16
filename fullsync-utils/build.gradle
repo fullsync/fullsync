@@ -3,7 +3,7 @@ apply plugin: 'java'
 
 dependencies {
 	testImplementation libraries.junitJupiterApi
-	testImplementation libraries.hamcrestCore
+	testImplementation libraries.hamcrest
 	testRuntimeOnly libraries.junitJuipiterEngine
 }
 
