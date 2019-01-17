@@ -1,14 +1,11 @@
-sudo: false
 dist: trusty
 group: edge
 
 language: java
 
 jdk:
-  - oraclejdk8
-  - oraclejdk10
   - openjdk8
-  - openjdk10
+  - openjdk11
 
 script:
   - ./gradlew assemble
