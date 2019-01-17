@@ -6,9 +6,7 @@ buildscript {
 			url offlineRepositoryRoot
 		}
 		jcenter()
-		maven {
-			url 'https://plugins.gradle.org/m2/'
-		}
+		gradlePluginPortal()
 	}
 	dependencies {
 		if (System.env.'CI') {

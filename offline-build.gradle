@@ -3,9 +3,7 @@ allprojects {
 	offlineDependencies {
 		repositories {
 			jcenter()
-			maven {
-				url 'https://plugins.gradle.org/m2/'
-			}
+			gradlePluginPortal()
 		}
 		includeSources = false
 		includeJavadocs = false

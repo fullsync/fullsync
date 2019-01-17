@@ -4,9 +4,7 @@ pluginManagement {
 			url offlineRepositoryRoot
 		}
 		jcenter()
-		maven {
-			url 'https://plugins.gradle.org/m2/'
-		}
+		gradlePluginPortal()
 	}
 }
 rootProject.name = 'FullSync'
