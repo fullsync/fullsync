@@ -56,8 +56,7 @@ public class FileSystemManager {
 		}
 	}
 
-	public final Site createConnection(final ConnectionDescription desc, boolean isInteractive)
-		throws FileSystemException, IOException {
+	public final Site createConnection(final ConnectionDescription desc, boolean isInteractive) throws FileSystemException, IOException {
 		String scheme = desc.getScheme();
 
 		FileSystem fs = getFilesystem(scheme);
