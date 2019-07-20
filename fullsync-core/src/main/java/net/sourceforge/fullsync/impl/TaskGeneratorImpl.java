@@ -175,10 +175,10 @@ public class TaskGeneratorImpl implements TaskGenerator {
 
 		ConnectionDescription srcDesc = profile.getSource();
 		ConnectionDescription dstDesc = profile.getDestination();
-		try (
-			Site d1 = fileSystemManager.createConnection(srcDesc, interactive);
-			Site d2 = fileSystemManager.createConnection(dstDesc, interactive)) {
-			return execute(d1, d2, actionDecider, rules);
+		try (Site d1 = fileSystemManager.createConnection(srcDesc, interactive)) {
+			try (Site d2 = fileSystemManager.createConnection(dstDesc, interactive)) {
+				return execute(d1, d2, actionDecider, rules);
+			}
 		}
 		catch (Exception ex) {
 			throw new FileSystemException(ex);

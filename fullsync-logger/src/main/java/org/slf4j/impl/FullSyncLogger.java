@@ -245,8 +245,8 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 	 *
 	 * @param level
 	 * @param format
-	 * @param param1
-	 * @param param2
+	 * @param arg1
+	 * @param arg2
 	 */
 	private void formatAndLog(final String level, final String format, final Object arg1, final Object arg2) {
 		final FormattingTuple tp = MessageFormatter.format(format, arg1, arg2);

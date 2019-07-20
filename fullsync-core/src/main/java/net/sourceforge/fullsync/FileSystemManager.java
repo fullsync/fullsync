@@ -41,7 +41,7 @@ public class FileSystemManager {
 		this.fullSync = fullSync;
 	}
 
-	private FileSystem getFilesystem(final String scheme) {
+	private FileSystem getFilesystem(final String scheme) throws FileSystemException {
 		switch (scheme) {
 			case "file": //$NON-NLS-1$
 				return new LocalFileSystem();
@@ -52,7 +52,7 @@ public class FileSystemManager {
 			case "smb": //$NON-NLS-1$
 				return new SmbFileSystem();
 			default:
-				return null;
+				throw new FileSystemException("Unknown scheme: " + scheme); //$NON-NLS-1$
 		}
 	}
 

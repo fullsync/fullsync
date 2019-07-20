@@ -86,7 +86,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		if (null != SSH_DIR_NAME) {
 			cfg.setKnownHosts(options, new File(SSH_DIR_NAME, "known_hosts")); //$NON-NLS-1$
 		}
-		logger.debug("using knownHosts: ", cfg.getKnownHosts(options)); //$NON-NLS-1$
+		logger.debug("using knownHosts: {0}", cfg.getKnownHosts(options)); //$NON-NLS-1$
 		cfg.setUserInfo(options, this);
 		cfg.setStrictHostKeyChecking(options, "ask"); //$NON-NLS-1$
 		if (description.getPublicKeyAuth().orElse(false).booleanValue()) {

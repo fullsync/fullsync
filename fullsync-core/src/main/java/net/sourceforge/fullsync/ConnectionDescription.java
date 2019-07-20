@@ -94,19 +94,17 @@ public class ConnectionDescription {
 		Builder builder = new Builder();
 		if (element.hasAttribute(ATTRIBUTE_URI)) {
 			String uriAttribute = element.getAttribute(ATTRIBUTE_URI);
-			URI uri = null;
 			try {
-				uri = new URI(uriAttribute);
+				URI uri = new URI(uriAttribute);
+				builder.setScheme(uri.getScheme());
+				builder.setHost(uri.getHost());
+				builder.setPort(uri.getPort());
+				builder.setPath(uri.getPath());
+				builder.setUserDirIsRoot(true);
 			}
 			catch (URISyntaxException ex) {
 				logger.warn("could not parse '" + uriAttribute + "'", ex); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-
-			builder.setScheme(uri.getScheme());
-			builder.setHost(uri.getHost());
-			builder.setPort(uri.getPort());
-			builder.setPath(uri.getPath());
-			builder.setUserDirIsRoot(true);
 		}
 		else {
 			builder.setScheme(element.getAttribute(ATTRIBUTE_SCHEME));

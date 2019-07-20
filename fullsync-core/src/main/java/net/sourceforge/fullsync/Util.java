@@ -53,14 +53,15 @@ public abstract class Util {
 		try (InputStream is = getContextClassLoader().getResourceAsStream(name)) {
 			if (null != is) {
 				final char[] buffer = new char[IOBUFFERSIZE];
-				Reader in = new InputStreamReader(is, StandardCharsets.UTF_8);
-				int read;
-				do {
-					read = in.read(buffer, 0, buffer.length);
-					if (read > 0) {
-						out.append(buffer, 0, read);
-					}
-				} while (read >= 0);
+				try (Reader in = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+					int read;
+					do {
+						read = in.read(buffer, 0, buffer.length);
+						if (read > 0) {
+							out.append(buffer, 0, read);
+						}
+					} while (read >= 0);
+				}
 			}
 		}
 		catch (IOException ex) {

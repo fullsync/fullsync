@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.fs.filesystems;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs2.provider.smb.SmbFileProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,7 @@ public class SmbFileSystem implements FileSystem {
 			FileSystemManager fsm = VFS.getManager();
 			if (!fsm.hasProvider("smb") && (fsm instanceof DefaultFileSystemManager)) { //$NON-NLS-1$
 				DefaultFileSystemManager dfsm = (DefaultFileSystemManager) fsm;
-				dfsm.addProvider("smb", new org.apache.commons.vfs2.provider.smb.SmbFileProvider()); //$NON-NLS-1$
+				dfsm.addProvider("smb", new SmbFileProvider()); //$NON-NLS-1$
 			}
 		}
 		catch (org.apache.commons.vfs2.FileSystemException ex) {
