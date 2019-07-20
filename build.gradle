@@ -49,7 +49,7 @@ ext {
 
 libraries.apacheCommonsCli = 'commons-cli:commons-cli:1.4'
 libraries.apacheCommonsNet = 'commons-net:commons-net:3.6'
-libraries.apacheCommonsVfs = 'org.apache.commons:commons-vfs2:2.3'
+libraries.apacheCommonsVfs = 'org.apache.commons:commons-vfs2:2.4'
 libraries.orgSambaJcifs = 'org.samba.jcifs:jcifs:1.3.17'
 libraries.comJcraftJsch = 'com.jcraft:jsch:0.1.55'
 libraries.orgSlf4jJclOverSlf4j = 'org.slf4j:jcl-over-slf4j:1.7.26'
