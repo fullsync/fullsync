@@ -58,7 +58,7 @@ libraries.guiceAssistedInject = 'com.google.inject.extensions:guice-assistedinje
 libraries.junitJupiterApi = 'org.junit.jupiter:junit-jupiter-api:5.5.1'
 libraries.junitJuipiterEngine = 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
 libraries.hamcrest = 'org.hamcrest:hamcrest:2.1'
-libraries.slf4jApi = 'org.slf4j:slf4j-api:1.7.26'
+libraries.slf4jApi = 'org.slf4j:slf4j-api:1.7.28'
 
 group = "net.sourceforge.fullsync"
 version = '0.11.0'
