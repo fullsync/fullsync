@@ -47,7 +47,7 @@ ext {
 	swtVersion = "3.106.3"
 	slf4jVersion = "1.7.28"
 	guiceVersion = "4.2.2"
-	jUnitVersion = "5.5.1"
+	jUnitVersion = "5.5.2"
 	commonsCliVersion = "1.4"
 	commonsNetVersion = "3.6"
 	commonsVfsVersion = "2.4.1"
