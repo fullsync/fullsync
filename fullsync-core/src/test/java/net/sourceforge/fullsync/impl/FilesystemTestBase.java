@@ -182,7 +182,9 @@ public abstract class FilesystemTestBase {
 			out.print(content);
 		}
 		File f = new File(dir, filename);
-		assertTrue(f.setLastModified(lm), "File.setLastModified failed for: " + f.getAbsolutePath());
+		if (lm > 0) {
+			assertTrue(f.setLastModified(lm), "File.setLastModified failed for: " + f.getAbsolutePath());
+		}
 	}
 
 	@Subscribe

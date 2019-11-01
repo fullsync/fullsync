@@ -48,26 +48,32 @@ public abstract class Util {
 	 */
 	private static final int IOBUFFERSIZE = 0x1000;
 
-	public static String getResourceAsString(final String name) {
+	public static String getInputStreamAsString(final InputStream is) throws IOException {
 		StringBuilder out = new StringBuilder();
+		final char[] buffer = new char[IOBUFFERSIZE];
+		try (Reader in = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+			int read;
+			do {
+				read = in.read(buffer, 0, buffer.length);
+				if (read > 0) {
+					out.append(buffer, 0, read);
+				}
+			} while (read >= 0);
+		}
+		return out.toString();
+	}
+
+	public static String getResourceAsString(final String name) {
+		String s = "";
 		try (InputStream is = getContextClassLoader().getResourceAsStream(name)) {
 			if (null != is) {
-				final char[] buffer = new char[IOBUFFERSIZE];
-				try (Reader in = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-					int read;
-					do {
-						read = in.read(buffer, 0, buffer.length);
-						if (read > 0) {
-							out.append(buffer, 0, read);
-						}
-					} while (read >= 0);
-				}
+				s = getInputStreamAsString(is);
 			}
 		}
 		catch (IOException ex) {
 			logger.warn("Failed to load " + name, ex); //$NON-NLS-1$
 		}
-		return out.toString();
+		return s;
 	}
 
 	public static String getFullSyncVersion() {

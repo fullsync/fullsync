@@ -54,6 +54,7 @@ ext {
 	jcifsVersion = "1.3.17"
 	jschVersion = "0.1.55"
 	hamcrestVersion = "2.2"
+	testcontainersVersion = "1.12.3"
 }
 
 libraries.apacheCommonsCli = "commons-cli:commons-cli:${commonsCliVersion}"
@@ -67,6 +68,8 @@ libraries.guiceAssistedInject = "com.google.inject.extensions:guice-assistedinje
 libraries.junitJupiter = "org.junit.jupiter:junit-jupiter:${jUnitVersion}"
 libraries.hamcrest = "org.hamcrest:hamcrest:${hamcrestVersion}"
 libraries.slf4jApi = "org.slf4j:slf4j-api:${slf4jVersion}"
+libraries.testcontainers = "org.testcontainers:testcontainers:${testcontainersVersion}"
+libraries.testcontainersJUnit = "org.testcontainers:junit-jupiter:${testcontainersVersion}"
 
 group = "net.sourceforge.fullsync"
 version = '0.11.0'

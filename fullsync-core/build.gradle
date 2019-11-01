@@ -18,6 +18,8 @@ dependencies {
 	compile files("lib/commons-vfs2-sandbox.jar")
 	testImplementation libraries.junitJupiter
 	testImplementation libraries.hamcrest
+	testCompile libraries.testcontainers
+	testCompile libraries.testcontainersJUnit
 }
 
 test {

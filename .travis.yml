@@ -1,6 +1,9 @@
 dist: xenial
 group: edge
 
+services:
+  - docker
+
 language: java
 
 jdk:
