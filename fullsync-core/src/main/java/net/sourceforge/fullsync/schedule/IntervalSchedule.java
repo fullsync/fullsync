@@ -21,6 +21,8 @@ package net.sourceforge.fullsync.schedule;
 
 import org.w3c.dom.Element;
 
+import java.util.Objects;
+
 public class IntervalSchedule extends Schedule {
 	public static final String SCHEDULE_TYPE = "interval"; //$NON-NLS-1$
 
@@ -81,5 +83,37 @@ public class IntervalSchedule extends Schedule {
 
 	public String getIntervalDisplayUnit() {
 		return displayUnit;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		IntervalSchedule that = (IntervalSchedule) o;
+		return firstInterval == that.firstInterval && interval == that.interval && displayUnit.equals(that.displayUnit);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(firstInterval, interval, displayUnit);
+	}
+
+	@Override
+	public String toString() {
+		return "IntervalSchedule{"
+			+ "firstInterval="
+			+ firstInterval
+			+ ", interval="
+			+ interval
+			+ ", displayUnit='"
+			+ displayUnit
+			+ '\''
+			+ ", creationTime="
+			+ creationTime
+			+ '}';
 	}
 }

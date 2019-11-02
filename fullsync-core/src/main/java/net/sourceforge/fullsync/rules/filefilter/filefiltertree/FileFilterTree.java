@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
 public class FileFilterTree {
-	private static final String FILE_SEPARATOR = "/";
+	private static final String FILE_SEPARATOR = "/"; //$NON-NLS-1$
 
 	private final FileFilterTreeItem root = new FileFilterTreeItem();
 	private final Map<String, FileFilter> itemsMap = new HashMap<>();

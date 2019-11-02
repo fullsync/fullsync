@@ -20,6 +20,7 @@
 package net.sourceforge.fullsync.impl;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 import org.w3c.dom.Document;
@@ -223,5 +224,51 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		ruleSet.setUseFilter(useFilter);
 		ruleSet.setFileFilterTree(fileFilterTree);
 		return ruleSet;
+	}
+
+	@Override
+	public String toString() {
+		return "SimplyfiedRuleSetDescriptor{"
+			+ "syncSubDirs="
+			+ syncSubDirs
+			+ ", ignorePattern='"
+			+ ignorePattern
+			+ '\''
+			+ ", takePattern='"
+			+ takePattern
+			+ '\''
+			+ ", patternsType='"
+			+ patternsType
+			+ '\''
+			+ ", fileFilter="
+			+ fileFilter
+			+ ", useFilter="
+			+ useFilter
+			+ ", fileFilterTree="
+			+ fileFilterTree
+			+ '}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		SimplyfiedRuleSetDescriptor that = (SimplyfiedRuleSetDescriptor) o;
+		return syncSubDirs == that.syncSubDirs
+			&& useFilter == that.useFilter
+			&& Objects.equals(ignorePattern, that.ignorePattern)
+			&& Objects.equals(takePattern, that.takePattern)
+			&& Objects.equals(patternsType, that.patternsType)
+			&& Objects.equals(fileFilter, that.fileFilter)
+			&& Objects.equals(fileFilterTree, that.fileFilterTree);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(syncSubDirs, ignorePattern, takePattern, patternsType, fileFilter, useFilter, fileFilterTree);
 	}
 }

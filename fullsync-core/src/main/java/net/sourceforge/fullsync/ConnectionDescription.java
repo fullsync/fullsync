@@ -90,6 +90,14 @@ public class ConnectionDescription {
 		return elem;
 	}
 
+	private static String getAttributeOrNull(Element element, String attribute) {
+		String value = null;
+		if (element.hasAttribute(attribute)) {
+			value = element.getAttribute(attribute);
+		}
+		return value;
+	}
+
 	public static ConnectionDescription unserialize(Element element) {
 		Builder builder = new Builder();
 		if (element.hasAttribute(ATTRIBUTE_URI)) {
@@ -108,35 +116,33 @@ public class ConnectionDescription {
 		}
 		else {
 			builder.setScheme(element.getAttribute(ATTRIBUTE_SCHEME));
-			if (element.hasAttribute(ATTRIBUTE_HOST)) {
-				builder.setHost(element.getAttribute(ATTRIBUTE_HOST));
-			}
+			builder.setHost(getAttributeOrNull(element, ATTRIBUTE_HOST));
 			if (element.hasAttribute(ATTRIBUTE_PORT)) {
 				builder.setPort(Integer.valueOf(element.getAttribute(ATTRIBUTE_PORT)));
 			}
 			builder.setPath(element.getAttribute(ATTRIBUTE_PATH));
 			builder.setUserDirIsRoot(Boolean.valueOf(element.getAttribute(ATTRIBUTE_USER_DIR_IS_ROOT)));
 		}
-		builder.setUsername(element.getAttribute(ATTRIBUTE_USERNAME));
-		builder.setPassword(Obfuscator.deobfuscate(element.getAttribute(ATTRIBUTE_PASSWORD)));
-		builder.setBufferStrategy(element.getAttribute(ATTRIBUTE_BUFFER_STRATEGY));
+		builder.setUsername(getAttributeOrNull(element, ATTRIBUTE_USERNAME));
+		builder.setPassword(Obfuscator.deobfuscate(getAttributeOrNull(element, ATTRIBUTE_PASSWORD)));
+		builder.setBufferStrategy(getAttributeOrNull(element, ATTRIBUTE_BUFFER_STRATEGY));
 
 		NodeList list = element.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
 			Node n = list.item(i);
 			if (n.getNodeType() == Node.ELEMENT_NODE) {
 				Element e = (Element) n;
-				if (ELEMENT_PARAM.equals(n.getNodeName())) {
-					String attribute = e.getAttribute(ATTRIBUTE_NAME);
-					if (PARAMETER_PUBLIC_KEY_AUTH.equals(attribute)) {
-						builder.setPublicKeyAuth(PUBLIC_KEY_AUTH_ENABLED.equals(e.getAttribute(ATTRIBUTE_VALUE)));
-					}
-				}
-				if (ELEMENT_SECRET_PARAM.equals(n.getNodeName())) {
-					String attribute = e.getAttribute(ATTRIBUTE_NAME);
-					if (PARAMETER_KEY_PASSPHRASE.equals(attribute)) {
-						builder.setKeyPassphrase(Obfuscator.deobfuscate(e.getAttribute(ATTRIBUTE_VALUE)));
-					}
+				switch (n.getNodeName()) {
+					case ELEMENT_PARAM:
+						if (PARAMETER_PUBLIC_KEY_AUTH.equals(e.getAttribute(ATTRIBUTE_NAME))) {
+							builder.setPublicKeyAuth(PUBLIC_KEY_AUTH_ENABLED.equals(e.getAttribute(ATTRIBUTE_VALUE)));
+						}
+						break;
+					case ELEMENT_SECRET_PARAM:
+						if (PARAMETER_KEY_PASSPHRASE.equals(e.getAttribute(ATTRIBUTE_NAME))) {
+							builder.setKeyPassphrase(Obfuscator.deobfuscate(e.getAttribute(ATTRIBUTE_VALUE)));
+						}
+						break;
 				}
 			}
 		}

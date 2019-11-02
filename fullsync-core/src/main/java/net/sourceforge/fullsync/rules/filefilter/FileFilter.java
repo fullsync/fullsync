@@ -21,6 +21,9 @@ package net.sourceforge.fullsync.rules.filefilter;
 
 import net.sourceforge.fullsync.fs.File;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class FileFilter {
 	public static final int MATCH_ALL = 0;
 	public static final int MATCH_ANY = 1;
@@ -150,5 +153,27 @@ public class FileFilter {
 		}
 
 		return buff.toString();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		FileFilter that = (FileFilter) o;
+		return matchType == that.matchType
+			&& filterType == that.filterType
+			&& appliesToDir == that.appliesToDir
+			&& Arrays.equals(rules, that.rules);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Objects.hash(matchType, filterType, appliesToDir);
+		result = 31 * result + Arrays.hashCode(rules);
+		return result;
 	}
 }
