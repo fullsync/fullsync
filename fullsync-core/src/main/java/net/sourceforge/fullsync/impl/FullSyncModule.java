@@ -66,7 +66,7 @@ public class FullSyncModule extends AbstractModule {
 		bind(RuntimeConfiguration.class).toInstance(new CliRuntimeConfiguration(line));
 		bind(ProfileManager.class).to(XmlBackedProfileManager.class);
 		bind(Scheduler.class).to(SchedulerImpl.class);
-		bind(ScheduleTaskSource.class).to(XmlBackedProfileManager.class);
+		bind(ScheduleTaskSource.class).to(ScheduleTaskSourceImpl.class);
 		bind(ScheduledExecutorService.class).toInstance(scheduledExecutorService);
 		bind(EventBus.class).toInstance(eventBus);
 		bindListener(Matchers.any(), this::hear);

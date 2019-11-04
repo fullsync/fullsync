@@ -58,25 +58,20 @@ import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileBuilder;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.event.ProfileListChanged;
-import net.sourceforge.fullsync.schedule.Schedule;
-import net.sourceforge.fullsync.schedule.ScheduleTask;
-import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
 
 /**
  * A ProfileManager handles persistence of Profiles and provides
  * a scheduler for creating events when a Profile should be executed.
  */
 @Singleton
-public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManager {
+public class XmlBackedProfileManager implements ProfileManager {
 	private final EventBus eventBus;
-	private final ProfileManagerSchedulerTaskFactory profileManagerSchedulerTaskFactory;
 	private String profilesFileName;
 	private Map<String, Profile> profiles = new HashMap<>();
 
 	@Inject
-	public XmlBackedProfileManager(EventBus eventBus, ProfileManagerSchedulerTaskFactory profileManagerSchedulerTaskFactory) {
+	public XmlBackedProfileManager(EventBus eventBus) {
 		this.eventBus = eventBus;
-		this.profileManagerSchedulerTaskFactory = profileManagerSchedulerTaskFactory;
 	}
 
 	@Override
@@ -178,30 +173,6 @@ public class XmlBackedProfileManager implements ScheduleTaskSource, ProfileManag
 	@Override
 	public synchronized Profile getProfileById(String uuid) {
 		return profiles.get(uuid);
-	}
-
-	@Override
-	public synchronized ScheduleTask getNextScheduleTask() {
-		long now = System.currentTimeMillis();
-		long nextTime = Long.MAX_VALUE;
-		Profile nextProfile = null;
-
-		for (Map.Entry<String, Profile> entry : profiles.entrySet()) {
-			Profile p = entry.getValue();
-			Schedule s = p.getSchedule();
-			if (p.isSchedulingEnabled() && (null != s)) {
-				long o = s.getNextOccurrence(p.getLastScheduleTime(), now);
-				if (nextTime > o) {
-					nextTime = o;
-					nextProfile = p;
-				}
-			}
-		}
-
-		if (null != nextProfile) {
-			return profileManagerSchedulerTaskFactory.create(nextProfile, nextTime);
-		}
-		return null;
 	}
 
 	@Override

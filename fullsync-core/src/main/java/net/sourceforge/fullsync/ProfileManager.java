@@ -21,8 +21,6 @@ package net.sourceforge.fullsync;
 
 import java.util.List;
 
-import net.sourceforge.fullsync.schedule.ScheduleTask;
-
 public interface ProfileManager {
 	void setProfilesFileName(String profilesFileName);
 
@@ -47,6 +45,4 @@ public interface ProfileManager {
 	Profile getProfileById(String uuid);
 
 	void save();
-
-	ScheduleTask getNextScheduleTask();
 }
