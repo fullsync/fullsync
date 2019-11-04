@@ -115,7 +115,7 @@ public class SchedulerImpl implements Scheduler, Runnable {
 		while (enabled) {
 			long now = System.currentTimeMillis();
 			logger.debug("searching for next task after {}", now); //$NON-NLS-1$
-			ScheduleTask task = scheduleSource.getNextScheduleTask();
+			ScheduleTask task = scheduleSource.getNextScheduleTask(now);
 			if (null == task) {
 				logger.info("could not find a scheduled task, aborting"); //$NON-NLS-1$
 				break;

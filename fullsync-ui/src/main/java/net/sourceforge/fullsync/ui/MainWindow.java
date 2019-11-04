@@ -64,6 +64,7 @@ import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
 import net.sourceforge.fullsync.schedule.Scheduler;
 import net.sourceforge.fullsync.ui.profiledetails.ProfileDetailsTabbedPage;
 
@@ -74,6 +75,7 @@ class MainWindow implements ProfileListControlHandler {
 	private final ImageRepository imageRepository;
 	private final ProfileManager profileManager;
 	private final Scheduler scheduler;
+	private final ScheduleTaskSource scheduleTaskSource;
 	private final Preferences preferences;
 	private final ScheduledExecutorService scheduledExecutorService;
 	private final Provider<PreferencesPage> preferencesPageProvider;
@@ -97,15 +99,17 @@ class MainWindow implements ProfileListControlHandler {
 
 	@Inject
 	MainWindow(Display display, ImageRepository imageRepository, Shell shell, ProfileManager profileManager, Scheduler scheduler,
-		RuntimeConfiguration runtimeConfiguration, Preferences preferences, ScheduledExecutorService scheduledExecutorService,
-		Provider<PreferencesPage> preferencesPageProvider, Provider<Synchronizer> synchronizerProvider,
-		Provider<ImportProfilesPage> importProfilesPageProvider, Provider<SystemStatusPage> systemStatusPageProvider,
-		Provider<AboutDialog> aboutDialogProvider, Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider,
-		Provider<TaskDecisionPage> taskDecisionPageProvider, ProfileListCompositeFactory profileListCompositeFactory) {
+		ScheduleTaskSource scheduleTaskSource, RuntimeConfiguration runtimeConfiguration, Preferences preferences,
+		ScheduledExecutorService scheduledExecutorService, Provider<PreferencesPage> preferencesPageProvider,
+		Provider<Synchronizer> synchronizerProvider, Provider<ImportProfilesPage> importProfilesPageProvider,
+		Provider<SystemStatusPage> systemStatusPageProvider, Provider<AboutDialog> aboutDialogProvider,
+		Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider, Provider<TaskDecisionPage> taskDecisionPageProvider,
+		ProfileListCompositeFactory profileListCompositeFactory) {
 		this.display = display;
 		this.imageRepository = imageRepository;
 		this.profileManager = profileManager;
 		this.scheduler = scheduler;
+		this.scheduleTaskSource = scheduleTaskSource;
 		this.preferences = preferences;
 		this.scheduledExecutorService = scheduledExecutorService;
 		this.preferencesPageProvider = preferencesPageProvider;
@@ -574,7 +578,8 @@ class MainWindow implements ProfileListControlHandler {
 
 		// Close the application, but give him a chance to
 		// confirm his action first
-		if (scheduler.isEnabled() && (null != profileManager.getNextScheduleTask()) && preferences.confirmExit()) {
+		long now = System.currentTimeMillis();
+		if (scheduler.isEnabled() && (null != scheduleTaskSource.getNextScheduleTask(now)) && preferences.confirmExit()) {
 			MessageBox mb = new MessageBox(mainComposite.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
 			String doYouWantToQuit = Messages.getString("GuiController.Do_You_Want_To_Quit"); //$NON-NLS-1$

@@ -43,7 +43,7 @@ public class ProfileManagerTest {
 	public void beforeEach() {
 		eventBus = new EventBus();
 		eventBus.register(this);
-		profileManager = new XmlBackedProfileManager(eventBus, null);
+		profileManager = new XmlBackedProfileManager(eventBus);
 	}
 
 	@AfterEach
