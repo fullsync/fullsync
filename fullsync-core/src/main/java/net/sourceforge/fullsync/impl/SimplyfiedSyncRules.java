@@ -26,7 +26,6 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 
 public class SimplyfiedSyncRules implements RuleSet {
-	private String name;
 	private boolean isUsingRecursion = true;
 	private String patternsType;
 	private String ignorePattern;
@@ -34,15 +33,6 @@ public class SimplyfiedSyncRules implements RuleSet {
 	private FileFilter fileFilter;
 	private FileFilterTree fileFilterTree;
 	private boolean useFilter;
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	@Override
 	public boolean isUsingRecursion() {
@@ -95,11 +85,6 @@ public class SimplyfiedSyncRules implements RuleSet {
 
 	public FileFilterTree getFileFilterTree() {
 		return fileFilterTree;
-	}
-
-	@Override
-	public boolean isJustLogging() {
-		return false;
 	}
 
 	@Override

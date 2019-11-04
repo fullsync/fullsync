@@ -57,19 +57,12 @@ public class Synchronizer {
 			logger.info("Synchronization started");
 			logger.info("  source:      " + taskTree.getSource().getConnectionDescription().getDisplayPath());
 			logger.info("  destination: " + taskTree.getDestination().getConnectionDescription().getDisplayPath());
-
-			BlockBuffer buffer = new BlockBuffer(logger);
-			TaskExecutor queue = new FillBufferTaskExecutor(buffer);
-
+			TaskExecutor queue = new FillBufferTaskExecutor(new BlockBuffer(logger));
 			if (null != listener) {
 				queue.addTaskFinishedListener(listener);
 			}
-
-			buffer.load();
 			queue.enqueue(taskTree);
 			queue.flush();
-			buffer.unload();
-
 			taskTree.getSource().flush();
 			taskTree.getDestination().flush();
 			taskTree.getSource().close();

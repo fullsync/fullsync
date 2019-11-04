@@ -22,10 +22,6 @@ package net.sourceforge.fullsync.buffer;
 import java.io.IOException;
 
 public interface ExecutionBuffer {
-	void load();
-
-	void unload();
-
 	void flush() throws IOException;
 
 	void storeEntry(EntryDescriptor descriptor) throws IOException;

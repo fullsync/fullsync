@@ -24,11 +24,7 @@ import java.io.IOException;
 import net.sourceforge.fullsync.fs.File;
 
 public interface RuleSet extends IgnoreDecider, FileComparer {
-	String getName();
-
 	boolean isUsingRecursion();
-
-	boolean isJustLogging();
 
 	RuleSet createChild(File src, File dst) throws IOException, DataParseException;
 }

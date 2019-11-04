@@ -42,9 +42,9 @@ import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 public class CommonsVfsConnection implements FileSystemConnection {
 	private final boolean canSetLastModifiedFile;
 	private final boolean canSetLastModifiedFolder;
-	private ConnectionDescription desc;
-	private FileObject base;
-	private File root;
+	private final ConnectionDescription desc;
+	private final FileObject base;
+	private final File root;
 
 	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystemAuthProvider fsAuthProvider) throws FileSystemException {
 		try {
