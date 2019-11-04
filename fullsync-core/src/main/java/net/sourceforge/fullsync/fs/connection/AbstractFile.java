@@ -29,9 +29,9 @@ import java.util.Map;
 import net.sourceforge.fullsync.fs.File;
 
 class AbstractFile implements File {
-	protected FileSystemConnection fs;
-	protected String name;
-	protected File parent;
+	protected final FileSystemConnection fs;
+	protected final String name;
+	protected final File parent;
 	protected boolean exists;
 	protected boolean directory;
 	protected Map<String, File> children;

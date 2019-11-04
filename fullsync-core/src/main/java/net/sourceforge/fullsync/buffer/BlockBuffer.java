@@ -31,14 +31,14 @@ import org.slf4j.Logger;
 
 public class BlockBuffer implements ExecutionBuffer {
 	private final Optional<Logger> logger;
-	private int maxSize;
-	private int maxEntries;
+	private final int maxSize;
+	private final int maxEntries;
 	private int freeBytes;
 	private int numberBytes;
 	private int numberEntries;
-	private byte[] buffer;
-	private Entry[] entries;
-	private List<EntryFinishedListener> finishedListeners;
+	private final byte[] buffer;
+	private final Entry[] entries;
+	private final List<EntryFinishedListener> finishedListeners = new ArrayList<>();
 
 	public BlockBuffer(Logger logger) {
 		this.logger = Optional.ofNullable(logger);
@@ -49,24 +49,8 @@ public class BlockBuffer implements ExecutionBuffer {
 		numberEntries = 0;
 		freeBytes = maxSize;
 
-		buffer = null;
-		entries = null;
-
-		finishedListeners = new ArrayList<>();
-	}
-
-	@Override
-	public void load() {
-		if (null == buffer) {
-			buffer = new byte[maxSize];
-			entries = new Entry[maxEntries];
-		}
-	}
-
-	@Override
-	public void unload() {
-		buffer = null;
-		entries = null;
+		buffer = new byte[maxSize];
+		entries = new Entry[maxEntries];
 	}
 
 	@Override

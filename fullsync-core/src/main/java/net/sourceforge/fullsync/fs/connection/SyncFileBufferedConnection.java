@@ -70,7 +70,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	private static final String ATTRIBUTE_NAME = "Name"; //$NON-NLS-1$
 
 	private static class SyncFileDefaultHandler extends DefaultHandler {
-		private BufferedConnection bufferedConnection;
+		private final BufferedConnection bufferedConnection;
 		private AbstractBufferedFile current;
 
 		SyncFileDefaultHandler(SyncFileBufferedConnection bc) {
