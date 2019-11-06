@@ -64,7 +64,7 @@ import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
-import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
+import net.sourceforge.fullsync.impl.SimplifiedRuleSetDescriptor;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 import net.sourceforge.fullsync.schedule.Schedule;
@@ -212,7 +212,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 			RuleSetDescriptor ruleSetDescriptor = profile.getRuleSet();
 
-			SimplyfiedRuleSetDescriptor simpleDesc = (SimplyfiedRuleSetDescriptor) ruleSetDescriptor;
+			SimplifiedRuleSetDescriptor simpleDesc = (SimplifiedRuleSetDescriptor) ruleSetDescriptor;
 			syncSubsButton.setSelection(simpleDesc.isSyncSubDirs());
 			filter = simpleDesc.getFileFilter();
 			textFilterDescription.setText(null != filter ? filter.toString() : ""); //$NON-NLS-1$
@@ -622,7 +622,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		Profile oldProfile = profile;
 		ProfileBuilder builder = isNewProfile ? profileManager.getProfileBuilder() : profileManager.getProfileBuilder(profile);
 
-		RuleSetDescriptor ruleSetDescriptor = new SimplyfiedRuleSetDescriptor(syncSubsButton.getSelection(), filter,
+		RuleSetDescriptor ruleSetDescriptor = new SimplifiedRuleSetDescriptor(syncSubsButton.getSelection(), filter,
 			buttonUseFileFilter.getSelection(), getFileFilterTree());
 
 		builder.setName(textProfileName.getText())

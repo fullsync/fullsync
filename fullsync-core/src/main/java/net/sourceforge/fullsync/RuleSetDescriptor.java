@@ -22,7 +22,7 @@ package net.sourceforge.fullsync;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import net.sourceforge.fullsync.impl.SimplyfiedRuleSetDescriptor;
+import net.sourceforge.fullsync.impl.SimplifiedRuleSetDescriptor;
 
 public abstract class RuleSetDescriptor {
 	private static final String ELEMENT_NAME = "RuleSetDescriptor"; //$NON-NLS-1$
@@ -33,8 +33,8 @@ public abstract class RuleSetDescriptor {
 		if (null != element) {
 			String ruleSetType = element.getAttribute(ATTRIBUTE_TYPE);
 			switch (ruleSetType) {
-				case SimplyfiedRuleSetDescriptor.RULESET_TYPE:
-					desc = new SimplyfiedRuleSetDescriptor(element);
+				case SimplifiedRuleSetDescriptor.RULESET_TYPE:
+					desc = new SimplifiedRuleSetDescriptor(element);
 					break;
 			}
 		}

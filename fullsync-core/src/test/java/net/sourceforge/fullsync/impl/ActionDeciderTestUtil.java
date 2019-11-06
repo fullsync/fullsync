@@ -43,7 +43,7 @@ public class ActionDeciderTestUtil {
 	protected File directoryTestNode;
 
 	protected void setUp() {
-		fileComparer = new SimplyfiedSyncRules();
+		fileComparer = new SimplifiedSyncRules();
 		bufferedStateDecider = new BufferStateDeciderImpl(fileComparer);
 		stateDecider = new StateDeciderImpl(fileComparer);
 		root = new TestNode("root", null, true, true, 0, 0);

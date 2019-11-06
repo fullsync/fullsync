@@ -69,7 +69,7 @@ class ProfileImpl implements Profile {
 			.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)); //$NON-NLS-1$
 		RuleSetDescriptor usedRuleset = null != deserializedRuleset
 			? deserializedRuleset
-			: new SimplyfiedRuleSetDescriptor(true, null, false, null);
+			: new SimplifiedRuleSetDescriptor(true, null, false, null);
 		String description = element.getAttribute(ATTRIBUTE_DESCRIPTION);
 		String synchronizationType = element.getAttribute(ATTRIBUTE_TYPE);
 		boolean schedulingEnabled = true;

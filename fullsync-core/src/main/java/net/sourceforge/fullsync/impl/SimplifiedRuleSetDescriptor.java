@@ -37,7 +37,7 @@ import net.sourceforge.fullsync.rules.filefilter.FileNameFileFilterRule;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
-public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
+public class SimplifiedRuleSetDescriptor extends RuleSetDescriptor {
 	public static final String RULESET_TYPE = "simple"; //$NON-NLS-1$
 	private static final String ELEMENT_SIMPLE_RULE_SET = "SimpleRuleSet"; //$NON-NLS-1$
 	private static final String ELEMENT_FILE_FILTER_RULE = "FileFilterRule"; //$NON-NLS-1$
@@ -58,7 +58,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	private final boolean useFilter;
 	private final FileFilterTree fileFilterTree;
 
-	public SimplyfiedRuleSetDescriptor(boolean syncSubDirs, FileFilter fileFilter, boolean useFilter, FileFilterTree fileFilterTree) {
+	public SimplifiedRuleSetDescriptor(boolean syncSubDirs, FileFilter fileFilter, boolean useFilter, FileFilterTree fileFilterTree) {
 		this.syncSubDirs = syncSubDirs;
 		this.ignorePattern = ""; //$NON-NLS-1$
 		this.takePattern = ""; //$NON-NLS-1$
@@ -100,7 +100,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		return simpleRuleSetElement;
 	}
 
-	public SimplyfiedRuleSetDescriptor(Element element) throws DataParseException {
+	public SimplifiedRuleSetDescriptor(Element element) throws DataParseException {
 		NodeList ruleSetConfigNodeList = element.getElementsByTagName(ELEMENT_SIMPLE_RULE_SET);
 
 		if (ruleSetConfigNodeList.getLength() == 0) {
@@ -205,7 +205,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 
 	@Override
 	public RuleSet createRuleSet() {
-		SimplyfiedSyncRules ruleSet = new SimplyfiedSyncRules();
+		SimplifiedSyncRules ruleSet = new SimplifiedSyncRules();
 		ruleSet.setUsingRecursion(syncSubDirs);
 
 		if ((null != patternsType) && !patternsType.isEmpty()) {
@@ -253,7 +253,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
-		SimplyfiedRuleSetDescriptor that = (SimplyfiedRuleSetDescriptor) o;
+		SimplifiedRuleSetDescriptor that = (SimplifiedRuleSetDescriptor) o;
 		return (syncSubDirs == that.syncSubDirs)
 			&& (useFilter == that.useFilter)
 			&& Objects.equals(ignorePattern, that.ignorePattern)
