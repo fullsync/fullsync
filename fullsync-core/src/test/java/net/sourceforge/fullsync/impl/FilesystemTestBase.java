@@ -103,7 +103,7 @@ public abstract class FilesystemTestBase {
 		String synchronizationType = syncType;
 		ConnectionDescription src = srcBuilder.build();
 		ConnectionDescription dst = getDestinationConnectionDescription();
-		RuleSetDescriptor ruleSet = new SimplyfiedRuleSetDescriptor(true, null, false, null);
+		RuleSetDescriptor ruleSet = new SimplifiedRuleSetDescriptor(true, null, false, null);
 		boolean schedulingEnabled = false;
 		Schedule schedule = null;
 		Date lastUpdate = null;

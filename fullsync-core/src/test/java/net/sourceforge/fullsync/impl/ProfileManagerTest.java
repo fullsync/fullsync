@@ -74,7 +74,7 @@ public class ProfileManagerTest {
 		assertEquals("Test Profile with Schedule", p.getName(), "Loaded profile with known name");
 		assertNotEquals("not scheduled", p.getNextUpdateText(), "Loaded profile has scheduling configured");
 		assertNotEquals("not enabled", p.getNextUpdateText(), "Loaded profile has scheduling configured");
-		assertEquals(new SimplyfiedRuleSetDescriptor(false, null, true, null), p.getRuleSet(), "Loaded profile ruleset");
+		assertEquals(new SimplifiedRuleSetDescriptor(false, null, true, null), p.getRuleSet(), "Loaded profile ruleset");
 		assertEquals(new IntervalSchedule(3600000, 3600000, "hours"), p.getSchedule(), "Loaded profile schedule");
 		ConnectionDescription.Builder srcBuilder = new ConnectionDescription.Builder();
 		srcBuilder.setScheme("file");
