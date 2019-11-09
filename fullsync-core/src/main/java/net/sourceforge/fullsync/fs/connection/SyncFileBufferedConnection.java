@@ -122,7 +122,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		}
 	}
 
-	private Site fs;
+	private final Site fs;
 	private BufferedFile root;
 	private boolean monitoringFileSystem;
 

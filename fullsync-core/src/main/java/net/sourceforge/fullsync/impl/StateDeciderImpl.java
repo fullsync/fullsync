@@ -30,7 +30,7 @@ import net.sourceforge.fullsync.fs.File;
 
 public class StateDeciderImpl implements StateDecider {
 	private static final Logger logger = LoggerFactory.getLogger(StateDeciderImpl.class.getSimpleName());
-	protected FileComparer comparer;
+	protected final FileComparer comparer;
 
 	public StateDeciderImpl(FileComparer comparer) {
 		this.comparer = comparer;

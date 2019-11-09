@@ -28,9 +28,9 @@ import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
 public class FileCopyEntryDescriptor implements EntryDescriptor {
-	private Task reference;
-	private File src;
-	private File dst;
+	private final Task reference;
+	private final File src;
+	private final File dst;
 	private InputStream inputStream;
 	private OutputStream outputStream;
 

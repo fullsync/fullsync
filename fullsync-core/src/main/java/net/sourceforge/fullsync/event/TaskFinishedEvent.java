@@ -17,13 +17,15 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync;
+package net.sourceforge.fullsync.event;
+
+import net.sourceforge.fullsync.Task;
 
 public class TaskFinishedEvent {
-	private Task task;
-	private boolean successful;
-	private String errorMsg;
-	private int bytesTransferred;
+	private final Task task;
+	private final boolean successful;
+	private final String errorMsg;
+	private final int bytesTransferred;
 
 	public TaskFinishedEvent(Task task, int bytesTransferred) {
 		this.task = task;

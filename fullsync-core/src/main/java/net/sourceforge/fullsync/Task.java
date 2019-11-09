@@ -25,10 +25,10 @@ import java.util.List;
 import net.sourceforge.fullsync.fs.File;
 
 public class Task {
-	private File source;
-	private File destination;
-	private State state;
-	private Action[] actions;
+	private final File source;
+	private final File destination;
+	private final State state;
+	private final Action[] actions;
 	private int currentAction;
 	private List<Task> children;
 
@@ -43,16 +43,8 @@ public class Task {
 		return destination;
 	}
 
-	public void setDestination(File destination) {
-		this.destination = destination;
-	}
-
 	public File getSource() {
 		return source;
-	}
-
-	public void setSource(File source) {
-		this.source = source;
 	}
 
 	public Action getCurrentAction() {
@@ -71,23 +63,15 @@ public class Task {
 		return state;
 	}
 
-	public void setState(State state) {
-		this.state = state;
-	}
-
 	public Action[] getActions() {
 		return actions;
-	}
-
-	public void setActions(Action[] actions) {
-		this.actions = actions;
 	}
 
 	public void addChild(Task child) {
 		if (null == children) {
 			children = new ArrayList<>(5);
 		}
-		this.children.add(child);
+		children.add(child);
 	}
 
 	public List<Task> getChildren() {

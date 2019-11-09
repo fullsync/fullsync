@@ -67,7 +67,7 @@ import net.sourceforge.fullsync.event.ProfileListChanged;
 public class XmlBackedProfileManager implements ProfileManager {
 	private final EventBus eventBus;
 	private String profilesFileName;
-	private Map<String, Profile> profiles = new HashMap<>();
+	private final Map<String, Profile> profiles = new HashMap<>();
 
 	@Inject
 	public XmlBackedProfileManager(EventBus eventBus) {

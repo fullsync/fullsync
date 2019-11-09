@@ -21,6 +21,8 @@ package net.sourceforge.fullsync;
 
 import java.util.EventListener;
 
+import net.sourceforge.fullsync.event.TaskFinishedEvent;
+
 public interface TaskFinishedListener extends EventListener {
 	// TODO better use some action class given to the taskexecutor
 	void taskFinished(TaskFinishedEvent event);

@@ -24,21 +24,18 @@ import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 
 public class TaskTree {
-	private Site source;
-	private Site destination;
-	private Task root;
+	private final Site source;
+	private final Site destination;
+	private final Task root;
 
-	public TaskTree(Site source, Site destination) {
+	public TaskTree(Site source, Site destination, Task root) {
 		this.source = source;
 		this.destination = destination;
+		this.root = root;
 	}
 
 	public Task getRoot() {
 		return root;
-	}
-
-	public void setRoot(Task root) {
-		this.root = root;
 	}
 
 	public Site getDestination() {

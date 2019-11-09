@@ -20,16 +20,16 @@
 package net.sourceforge.fullsync.buffer;
 
 public class Entry {
-	private int start;
-	private int length;
-	private int internalSegment;
-	private EntryDescriptor descriptor;
+	private final int start;
+	private final int length;
+	private final int internalSegment;
+	private final EntryDescriptor descriptor;
 
-	public Entry(int start, int length) {
+	public Entry(int start, int length, int segment, EntryDescriptor descriptor) {
 		this.start = start;
 		this.length = length;
-		this.internalSegment = Segment.ONLY;
-		this.descriptor = null;
+		this.internalSegment = segment;
+		this.descriptor = descriptor;
 	}
 
 	public boolean isLastSegment() {
@@ -45,31 +45,15 @@ public class Entry {
 		return start;
 	}
 
-	public void setStart(int start) {
-		this.start = start;
-	}
-
 	public int getLength() {
 		return length;
-	}
-
-	public void setLength(int length) {
-		this.length = length;
 	}
 
 	public int getInternalSegment() {
 		return internalSegment;
 	}
 
-	public void setInternalSegment(int internalSegment) {
-		this.internalSegment = internalSegment;
-	}
-
 	public EntryDescriptor getDescriptor() {
 		return descriptor;
-	}
-
-	public void setDescriptor(EntryDescriptor descriptor) {
-		this.descriptor = descriptor;
 	}
 }

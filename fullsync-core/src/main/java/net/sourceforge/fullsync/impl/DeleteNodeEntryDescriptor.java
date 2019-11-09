@@ -28,8 +28,8 @@ import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
 public class DeleteNodeEntryDescriptor implements EntryDescriptor {
-	private Task reference;
-	private File node;
+	private final Task reference;
+	private final File node;
 
 	public DeleteNodeEntryDescriptor(Task reference, File node) {
 		this.reference = reference;
