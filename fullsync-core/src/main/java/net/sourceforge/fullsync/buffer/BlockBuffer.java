@@ -90,8 +90,8 @@ public class BlockBuffer implements ExecutionBuffer {
 		freeBytes = maxSize;
 	}
 
-	// may not read as much as length says
-	protected Entry storeBytes(InputStream inStream, long length) throws IOException {
+	private int store(InputStream inStream, long alreadyRead, long lengthLeft, EntryDescriptor descriptor) throws IOException {
+		long length = lengthLeft;
 		if (length > freeBytes) {
 			length = freeBytes;
 		}
@@ -102,28 +102,16 @@ public class BlockBuffer implements ExecutionBuffer {
 		numberBytes += read;
 		freeBytes -= read;
 
-		Entry entry = new Entry(start, read);
-		entries[numberEntries] = entry;
-		numberEntries++;
-
-		return entry;
-	}
-
-	private int store(InputStream inStream, long alreadyRead, long lengthLeft, EntryDescriptor descriptor) throws IOException {
-		Entry entry = storeBytes(inStream, lengthLeft);
-
 		int s = Segment.MIDDLE;
 		if (alreadyRead == 0) {
 			s |= Segment.FIRST;
 		}
-		if (entry.getLength() == lengthLeft) {
+		if (read == lengthLeft) {
 			s |= Segment.LAST;
 		}
-
-		entry.setInternalSegment(s);
-		entry.setDescriptor(descriptor);
-
-		return entry.getLength();
+		entries[numberEntries] = new Entry(start, read, s, descriptor);
+		numberEntries++;
+		return read;
 	}
 
 	private void storeEntry(InputStream data, long size, EntryDescriptor descriptor) throws IOException {
@@ -142,14 +130,11 @@ public class BlockBuffer implements ExecutionBuffer {
 
 	@Override
 	public void storeEntry(final EntryDescriptor descriptor) throws IOException {
-		Entry entry;
 		if (descriptor.getSize() == 0) {
 			if (numberEntries == maxEntries) {
 				flush();
 			}
-			entry = new Entry(numberBytes, 0);
-			entry.setDescriptor(descriptor);
-			entries[numberEntries] = entry;
+			entries[numberEntries] = new Entry(numberBytes, 0, Segment.ONLY, descriptor);
 			numberEntries++;
 		}
 		else {

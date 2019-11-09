@@ -30,17 +30,17 @@ import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskExecutor;
-import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.buffer.ExecutionBuffer;
+import net.sourceforge.fullsync.event.TaskFinishedEvent;
 import net.sourceforge.fullsync.fs.File;
 
 public class FillBufferTaskExecutor implements TaskExecutor {
-	private List<TaskFinishedListener> listeners = new ArrayList<>();
+	private final List<TaskFinishedListener> listeners = new ArrayList<>();
 	private boolean statisticsOnly;
 	private IoStatisticsImpl stats;
-	private ExecutionBuffer buffer;
+	private final ExecutionBuffer buffer;
 
 	public FillBufferTaskExecutor(ExecutionBuffer buffer) {
 		this.statisticsOnly = false;

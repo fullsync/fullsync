@@ -29,9 +29,9 @@ import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
 public class BufferUpdateEntryDescriptor implements EntryDescriptor {
-	private BufferUpdate bufferUpdate;
-	private File src;
-	private File dst;
+	private final BufferUpdate bufferUpdate;
+	private final File src;
+	private final File dst;
 
 	public BufferUpdateEntryDescriptor(File src, File dst, BufferUpdate bufferUpdate) {
 		this.bufferUpdate = bufferUpdate;

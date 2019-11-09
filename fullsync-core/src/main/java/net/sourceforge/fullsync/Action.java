@@ -20,11 +20,11 @@
 package net.sourceforge.fullsync;
 
 public class Action {
-	private ActionType type;
-	private Location location;
-	private BufferUpdate bufferUpdate;
-	private boolean beforeRecursion;
-	private String explanation;
+	private final ActionType type;
+	private final Location location;
+	private final BufferUpdate bufferUpdate;
+	private final boolean beforeRecursion;
+	private final String explanation;
 
 	public Action(ActionType type, Location location, BufferUpdate bufferUpdate, String explanation) {
 		this(type, location, bufferUpdate, explanation, true);

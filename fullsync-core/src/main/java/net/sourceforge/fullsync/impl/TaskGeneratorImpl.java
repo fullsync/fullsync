@@ -195,12 +195,11 @@ public class TaskGeneratorImpl implements TaskGenerator {
 			throw new FileSystemException("destination is unavailable");
 		}
 
-		TaskTree tree = new TaskTree(source, destination);
 		Action rootAction = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "Root"); //$NON-NLS-1$
 		Task root = new Task(null, null, State.IN_SYNC, new Action[] {
 			rootAction
 		});
-		tree.setRoot(root);
+		TaskTree tree = new TaskTree(source, destination, root);
 
 		try {
 			eventBus.post(new TaskTreeStarted(tree));

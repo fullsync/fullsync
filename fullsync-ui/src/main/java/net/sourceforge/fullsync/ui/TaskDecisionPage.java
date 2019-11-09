@@ -40,8 +40,8 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.TaskFinishedEvent;
 import net.sourceforge.fullsync.TaskTree;
+import net.sourceforge.fullsync.event.TaskFinishedEvent;
 
 class TaskDecisionPage extends WizardDialog {
 	private final Display display;
