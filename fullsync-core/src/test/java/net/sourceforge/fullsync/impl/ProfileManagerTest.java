@@ -54,8 +54,19 @@ public class ProfileManagerTest {
 	}
 
 	@Test
+	public void unknownProfileUUIDYieldsNull() {
+		assertNull(profileManager.getProfileById(""), "Unknown profile UUID yields null");
+	}
+
+	@Test
+	public void unknownProfileNameYieldsNull() {
+		assertNull(profileManager.getProfileByName(""), "Unknown profile name yields null");
+	}
+
+	@Test
 	public void testLoadV1_1ProfileWithScheduling() {
-		assertTrue(profileManager.loadProfiles("src/test/resources/profile-1_1-schedule.xml"), "Load v1.1 profile with scheduling");
+		profileManager.setProfilesFileName("src/test/resources/profile-1_1-schedule.xml");
+		assertTrue(profileManager.loadProfiles(), "Load v1.1 profile with scheduling");
 		assertEquals(1, profileManager.getProfiles().size(), "Loaded one profile");
 		Profile p = profileManager.getProfileByName("Test Profile with Schedule");
 		assertNotNull(p, "Loaded profile 'Test Profile with Schedule'");
@@ -82,5 +93,15 @@ public class ProfileManagerTest {
 		srcBuilder.setUserDirIsRoot(true);
 		assertEquals(srcBuilder.build(), p.getSource(), "Loaded profile destination");
 		assertEquals("Publish/Update", p.getSynchronizationType(), "Loaded profile synchronization type");
+	}
+
+	@Test
+	public void testLoadV1_2ProfileWithSimplifiedRuleSet() {
+		profileManager.setProfilesFileName("src/test/resources/profile-1_2-filefilter.xml");
+		assertTrue(profileManager.loadProfiles(), "Load v1.2 profile with simplified rule set");
+		assertEquals(1, profileManager.getProfiles().size(), "Loaded one profile");
+		Profile p = profileManager.getProfileById("5ed254fc-ac55-4a50-a0db-ac9c03f071fc");
+		assertNotNull(p, "Loaded profile '5ed254fc-ac55-4a50-a0db-ac9c03f071fc'");
+		assertEquals("Ignore System Volume Information", p.getName(), "Loaded profile by id has correct name");
 	}
 }
