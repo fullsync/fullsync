@@ -18,8 +18,8 @@ dependencies {
 	compile files("lib/commons-vfs2-sandbox.jar")
 	testImplementation libraries.junitJupiter
 	testImplementation libraries.hamcrest
-	testCompile libraries.testcontainers
-	testCompile libraries.testcontainersJUnit
+	testImplementation libraries.testcontainers
+	testImplementation libraries.testcontainersJUnit
 }
 
 test {
@@ -31,7 +31,7 @@ test {
 jar {
 	manifest {
 		attributes 'Main-Class': 'net.sourceforge.fullsync.cli.Main'
-		def resolvedRuntime = configurations.runtime.resolvedConfiguration
+		def resolvedRuntime = configurations.runtimeClasspath.resolvedConfiguration
 		def jarFiles = resolvedRuntime.resolvedArtifacts.collect { a ->
 			rootProject.mapArtifactToFilename a
 		}
