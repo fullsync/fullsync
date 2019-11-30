@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Profiles version="1.2">
+  <Profile description="" enabled="false" id="5ed254fc-ac55-4a50-a0db-ac9c03f071fc" name="Ignore System Volume Information" type="Two Way Sync">
+    <RuleSetDescriptor type="simple">
+      <SimpleRuleSet ignorePattern="" patternsType="" syncSubs="true" takePattern="" useFilter="false">
+        <FileFilter appliestodir="true" filtertype="1" matchtype="1">
+          <FileFilterRule op="0" pattern="System Volume Information" ruletype="File name"/>
+        </FileFilter>
+      </SimpleRuleSet>
+    </RuleSetDescriptor>
+    <Source buffer="" password="" path="/a/" scheme="file" userDirIsRoot="true" username=""/>
+    <Destination buffer="" password="" path="/b/" scheme="file" userDirIsRoot="true" username=""/>
+  </Profile>
+</Profiles>
