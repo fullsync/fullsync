@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,16 +34,17 @@ import com.google.common.eventbus.EventBus;
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionDecider;
 import net.sourceforge.fullsync.ActionType;
+import net.sourceforge.fullsync.BufferStateDecider;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
-import net.sourceforge.fullsync.IgnoreDecider;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
+import net.sourceforge.fullsync.StateDecider;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.TaskTree;
@@ -54,18 +54,10 @@ import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
 
-@Singleton // effectively a singleton because the Synchronizer is a singleton
 public class TaskGeneratorImpl implements TaskGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
 	private final FileSystemManager fileSystemManager;
 	private final EventBus eventBus;
-	// TODO this should be execution local so the class
-	// itself is multithreadable
-	// so maybe just put them all into a inmutable
-	// state container
-	private IgnoreDecider takeIgnoreDecider;
-	private StateDeciderImpl stateDecider;
-	private BufferStateDeciderImpl bufferStateDecider;
 
 	@Inject
 	public TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus eventBus) {
@@ -73,38 +65,60 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		this.eventBus = eventBus;
 	}
 
-	protected RuleSet updateRules(File src, File dst, RuleSet rules) throws DataParseException, IOException {
-		rules = rules.createChild(src, dst);
-
-		/* HACK OMG, that is utterly wrong !! */
-		this.takeIgnoreDecider = rules;
-		this.stateDecider = new StateDeciderImpl(rules);
-		this.bufferStateDecider = new BufferStateDeciderImpl(rules);
-
-		return rules;
-	}
-
-	protected void recurse(TaskTree taskTree, File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
-		throws DataParseException, IOException {
+	private void recurse(TaskTree taskTree, File src, File dst, Task parent, Deciders deciders) throws DataParseException, IOException {
 		if (src.isDirectory() && dst.isDirectory()) {
-			synchronizeDirectories(taskTree, src, dst, rules, parent, actionDecider);
+			synchronizeDirectories(taskTree, src, dst, parent, deciders);
 		}
 		// TODO [DirHereFileThere, ?]
 		// handle case where src is dir but dst is file
 	}
 
-	private void synchronizeNodes(TaskTree taskTree, File src, File dst, RuleSet rules, Task parent, ActionDecider actionDecider)
+	private void synchronizeNodes(TaskTree taskTree, File src, File dst, Task parent, Deciders deciders)
 		throws DataParseException, IOException {
-		if (!takeIgnoreDecider.isNodeIgnored(src)) {
-			Task task = actionDecider.getTask(src, dst, stateDecider, bufferStateDecider);
+		if (!deciders.getRules().isNodeIgnored(src)) {
+			Task task = deciders.getActionDecider().getTask(src, dst, deciders.getStateDecider(), deciders.getBufferStateDecider());
 			logger.debug("{}: {}", src.getName(), task); //$NON-NLS-1$
 
 			eventBus.post(new TaskGenerationFinished(taskTree, task));
 
-			if (rules.isUsingRecursion()) {
-				recurse(taskTree, src, dst, rules, task, actionDecider);
+			if (deciders.getRules().isUsingRecursion()) {
+				recurse(taskTree, src, dst, task, deciders);
 			}
 			parent.addChild(task);
+		}
+	}
+
+	private static class Deciders {
+		private final RuleSet rules;
+		private final ActionDecider actionDecider;
+		private final StateDecider stateDecider;
+		private final BufferStateDecider bufferStateDecider;
+
+		public Deciders(RuleSet rules, ActionDecider actionDecider) {
+			this.rules = rules;
+			this.actionDecider = actionDecider;
+			this.stateDecider = new StateDeciderImpl(rules);
+			this.bufferStateDecider = new BufferStateDeciderImpl(rules);
+		}
+
+		public RuleSet getRules() {
+			return rules;
+		}
+
+		public ActionDecider getActionDecider() {
+			return actionDecider;
+		}
+
+		public StateDecider getStateDecider() {
+			return stateDecider;
+		}
+
+		public BufferStateDecider getBufferStateDecider() {
+			return bufferStateDecider;
+		}
+
+		public Deciders createChild(File src, File dst) throws IOException, DataParseException {
+			return new Deciders(rules.createChild(src, dst), actionDecider);
 		}
 	}
 
@@ -112,14 +126,11 @@ public class TaskGeneratorImpl implements TaskGenerator {
 	 * we could updateRules in synchronizeNodes and apply synchronizeDirectories
 	 * to the given src and dst if they are directories
 	 */
-	public void synchronizeDirectories(TaskTree taskTree, File src, File dst, RuleSet oldrules, Task parent, ActionDecider actionDecider)
+	private void synchronizeDirectories(TaskTree taskTree, File src, File dst, Task parent, Deciders parentDeciders)
 		throws DataParseException, IOException {
-		// update rules to current directory
-		RuleSet rules = updateRules(src, dst, oldrules);
-
+		Deciders deciders = parentDeciders.createChild(src, dst);
 		Collection<File> srcFiles = src.getChildren();
 		Collection<File> dstFiles = new ArrayList<>(dst.getChildren());
-
 		for (File sfile : srcFiles) {
 			File dfile = dst.getChild(sfile.getName());
 			if (null == dfile) {
@@ -128,8 +139,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 			else {
 				dstFiles.remove(dfile);
 			}
-
-			synchronizeNodes(taskTree, sfile, dfile, rules, parent, actionDecider);
+			synchronizeNodes(taskTree, sfile, dfile, parent, deciders);
 		}
 
 		for (File dfile : dstFiles) {
@@ -137,22 +147,14 @@ public class TaskGeneratorImpl implements TaskGenerator {
 			if (null == sfile) {
 				sfile = src.createChild(dfile.getName(), dfile.isDirectory());
 			}
-
-			synchronizeNodes(taskTree, sfile, dfile, rules, parent, actionDecider);
+			synchronizeNodes(taskTree, sfile, dfile, parent, deciders);
 		}
-
-		/* HACK OMG, that is utterly wrong !! */
-		this.takeIgnoreDecider = oldrules;
-		this.stateDecider = new StateDeciderImpl(oldrules);
-		this.bufferStateDecider = new BufferStateDeciderImpl(oldrules);
 	}
 
 	@Override
 	public TaskTree execute(Profile profile, boolean interactive)
 		throws FileSystemException, URISyntaxException, DataParseException, IOException {
-
 		RuleSet rules = profile.getRuleSet().createRuleSet();
-
 		ActionDecider actionDecider;
 		switch (profile.getSynchronizationType()) {
 			case "Publish/Update":
@@ -206,12 +208,11 @@ public class TaskGeneratorImpl implements TaskGenerator {
 
 			// TODO use syncnodes here [?]
 			// TODO get traversal type and start correct traversal action
-			synchronizeDirectories(tree, source.getRoot(), destination.getRoot(), rules, root, actionDecider);
+			synchronizeDirectories(tree, source.getRoot(), destination.getRoot(), root, new Deciders(rules, actionDecider));
 		}
 		finally {
 			eventBus.post(new TaskTreeFinished(tree));
 		}
-
 		return tree;
 	}
 }
