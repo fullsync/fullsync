@@ -91,7 +91,7 @@ subprojects {
 		jar {
 			manifest {
 				attributes 'License': 'GPLv2+'
-				attributes 'FullSync-Version': version
+				attributes 'FullSync-Version': rootProject.version
 				attributes 'Copyright': 'Copyright (c) 2020 the FullSync Team'
 			}
 		}

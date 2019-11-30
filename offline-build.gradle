@@ -51,12 +51,12 @@ task createGitArchive(type: Exec) {
 task createOfflineRepositoryArchive(type: Tar) {
 	description = 'Create an archive of the offline repository for use in https://build.opensuse.org/'
 	dependsOn updateOfflineRepository
-	archiveName = "offline-repository.tar.gz"
+	archiveFileName = "offline-repository.tar.gz"
 	into("/build/offline-repository") {
 		from "${project.buildDir}/offline-repository"
 		include "**/*"
 	}
-	destinationDir = project.buildDir
+	destinationDirectory = project.buildDir
 	compression = Compression.GZIP
 }
 
