@@ -133,7 +133,6 @@ gradle.projectsEvaluated {
 }
 
 wrapper {
-	gradleVersion = '5.5.1'
 	distributionType = Wrapper.DistributionType.ALL
 }
 
@@ -323,9 +322,11 @@ gradle.projectsEvaluated {
 	subprojects.findAll { subproject ->
 		subproject.pluginManager.hasPlugin('java')
 	}.each { subproject ->
-		jacocoRootReport.sourceDirectories = files(jacocoRootReport.sourceDirectories.files + subproject.jacocoTestReport.sourceDirectories.files)
-		jacocoRootReport.classDirectories = files(jacocoRootReport.classDirectories.files + subproject.jacocoTestReport.classDirectories.files)
-		jacocoRootReport.executionData = files(jacocoRootReport.executionData.files + subproject.jacocoTestReport.executionData.files)
+		jacocoRootReport.sourceDirectories.from(subproject.jacocoTestReport.sourceDirectories.files)
+		jacocoRootReport.classDirectories.from(subproject.jacocoTestReport.classDirectories.files)
+		if (subproject.file('src/test/java').exists()) {
+			jacocoRootReport.executionData.from(subproject.jacocoTestReport.executionData)
+		}
 		testReport.reportOn subproject.test
 		if (System.env.'CI') {
 			coveralls.sourceDirs += subproject.sourceSets.main.allSource.srcDirs.flatten()
@@ -343,9 +344,6 @@ jacoco {
 }
 
 task jacocoRootReport(type: JacocoReport) {
-	sourceDirectories = files()
-	classDirectories = files()
-	executionData = files()
 	reports {
 		html.enabled = true
 		xml.enabled = true
@@ -355,12 +353,6 @@ task jacocoRootReport(type: JacocoReport) {
 	// Work-around to allow us to build list of executionData files in doFirst
 	onlyIf = {
 		true
-	}
-
-	doFirst {
-		executionData = files(executionData.findAll {
-			it.exists()
-		})
 	}
 }
 
