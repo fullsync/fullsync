@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 
 public class BlockBuffer implements ExecutionBuffer {
 	private final Optional<Logger> logger;
-
 	private int maxSize;
 	private int maxEntries;
 	private int freeBytes;
@@ -84,7 +83,7 @@ public class BlockBuffer implements ExecutionBuffer {
 				if (e.isLastSegment()) {
 					desc.finishWrite();
 					String opDesc = desc.getOperationDescription();
-					if ((null != opDesc) && (logger.isPresent())) {
+					if ((null != opDesc) && logger.isPresent()) {
 						logger.get().info(opDesc);
 					}
 				}
@@ -115,7 +114,7 @@ public class BlockBuffer implements ExecutionBuffer {
 
 		int start = numberBytes;
 		int read = inStream.read(buffer, start, (int) length);
-		//FIXME: read might return -1 which subsequently (in flush) throws an exception
+		// FIXME: read might return -1 which subsequently (in flush) throws an exception
 		numberBytes += read;
 		freeBytes -= read;
 

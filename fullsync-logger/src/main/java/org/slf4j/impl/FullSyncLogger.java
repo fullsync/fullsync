@@ -76,9 +76,7 @@ import org.slf4j.helpers.MessageFormatter;
  * @author Ceki G&uuml;lc&uuml;
  */
 public class FullSyncLogger extends MarkerIgnoringBase {
-
 	private static final long serialVersionUID = -1504986506259137575L;
-
 	/**
 	 * Mark the time when this class gets loaded into memory.
 	 */

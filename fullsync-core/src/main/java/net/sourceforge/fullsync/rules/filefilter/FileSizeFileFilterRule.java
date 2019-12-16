@@ -25,14 +25,16 @@ import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 public class FileSizeFileFilterRule implements FileFilterRule {
 	public static final String TYPE_NAME = "File size";
-
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
 	public static final int OP_IS_GREATER_THAN = 2;
 	public static final int OP_IS_LESS_THAN = 3;
-
-	private static final String[] allOperators = new String[] { "is", "isn't", "is greater than", "is less than" };
-
+	private static final String[] allOperators = new String[] {
+		"is",
+		"isn't",
+		"is greater than",
+		"is less than"
+	};
 	private final SizeValue size;
 	private final int op;
 

@@ -52,7 +52,6 @@ public abstract class WizardDialog { // NO_UCD (use default)
 	private Button okButton;
 	private Button cancelButton;
 	private boolean closing;
-
 	private Shell parent;
 
 	public WizardDialog(Shell parent) { // NO_UCD (use default)
@@ -283,6 +282,7 @@ public abstract class WizardDialog { // NO_UCD (use default)
 
 	/**
 	 * enable or disable the ok button.
+	 *
 	 * @param enabled
 	 */
 	public final void setOkButtonEnabled(final boolean enabled) {
@@ -291,6 +291,7 @@ public abstract class WizardDialog { // NO_UCD (use default)
 
 	/**
 	 * enable or disable the cancel button.
+	 *
 	 * @param enabled
 	 */
 	public final void setCancelButtonEnabled(final boolean enabled) {

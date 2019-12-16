@@ -40,7 +40,6 @@ class NiceListView extends Composite {
 	private Color colorSelected;
 	private Color colorForeground;
 	private Color colorSelectedForegroud;
-
 	private NiceListViewItem selected;
 
 	NiceListView(Composite parent, FontRepository fontRepository) {

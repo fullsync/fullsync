@@ -71,7 +71,15 @@ public class FilterRuleListItem {
 		final String age = Messages.getString("FilterRuleListItem.FileAgeFilter"); //$NON-NLS-1$
 		final String nested = Messages.getString("FilterRuleListItem.NestedFilter"); //$NON-NLS-1$
 
-		ruleTypeNames = new String[] { name, path, type, size, modificationDate, age, nested };
+		ruleTypeNames = new String[] {
+			name,
+			path,
+			type,
+			size,
+			modificationDate,
+			age,
+			nested
+		};
 
 		rulesTable = new HashMap<>();
 		rulesTable.put(name, FileNameFileFilterRule.class);
@@ -100,16 +108,12 @@ public class FilterRuleListItem {
 		reverseRuleNamesConversionTable.put(age, FileAgeFileFilterRule.TYPE_NAME);
 		reverseRuleNamesConversionTable.put(nested, SubfilterFileFilerRule.TYPE_NAME);
 	}
-
 	private final ImageRepository imageRepository;
-
 	private String ruleType;
 	private int op;
 	private FileFilterPage root;
 	private OperandValue value;
-
 	private RuleComposite ruleComposite;
-
 	private final FileFilterManager fileFilterManager = new FileFilterManager();
 	private Combo comboRuleTypes;
 	private Combo comboOperators;
@@ -239,7 +243,7 @@ public class FilterRuleListItem {
 		GridData compositeWrapperLD = (GridData) ruleCompositeWrapper.getLayoutData();
 		compositeWrapperLD.horizontalSpan = 1;
 
-		if ((ruleClass.equals(FileNameFileFilterRule.class)) || (ruleClass.equals(FilePathFileFilterRule.class))) {
+		if (ruleClass.equals(FileNameFileFilterRule.class) || ruleClass.equals(FilePathFileFilterRule.class)) {
 			if (!(value instanceof TextValue)) {
 				value = null;
 			}

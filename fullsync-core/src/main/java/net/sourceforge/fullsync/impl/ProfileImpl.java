@@ -45,7 +45,6 @@ class ProfileImpl implements Profile {
 	private static final String ATTRIBUTE_LAST_UPDATE = "lastUpdate"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_LAST_ERROR_LEVEL = "lastErrorLevel"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_LAST_ERROR_STRING = "lastErrorString"; //$NON-NLS-1$
-
 	private final EventBus eventBus;
 	private final String id;
 	private final String name;
@@ -56,7 +55,6 @@ class ProfileImpl implements Profile {
 	private final RuleSetDescriptor ruleSet;
 	private final boolean schedulingEnabled;
 	private final Schedule schedule;
-
 	private Date lastUpdate;
 	private int lastErrorLevel;
 	private String lastErrorString;
@@ -96,7 +94,7 @@ class ProfileImpl implements Profile {
 			lastUpdate = c.getTime();
 		}
 		catch (NumberFormatException e) {
-			//TODO: log a warning
+			// TODO: log a warning
 		}
 
 		return new ProfileImpl(eventBus, profileId, profileName, description, synchronizationType, src, dst, usedRuleset, schedulingEnabled,
@@ -174,7 +172,7 @@ class ProfileImpl implements Profile {
 		}
 	}
 
-	//FIXME: this needs updates!
+	// FIXME: this needs updates!
 	@Override
 	public String getNextUpdateText() {
 		// TODO this doesnt belong here (l18n)

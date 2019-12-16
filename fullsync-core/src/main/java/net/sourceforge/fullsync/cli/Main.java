@@ -234,7 +234,8 @@ public class Main implements Launcher { // NO_UCD
 		File oldProfiles = new File(FullSync.PROFILES_XML);
 		if (!newProfiles.exists()) {
 			if (!oldProfiles.exists()) {
-				// on windows FullSync 0.9.1 installs itself into %ProgramFiles%\FullSync while 0.10.0 installs itself into %ProgramFiles%\FullSync\FullSync by default
+				// on windows FullSync 0.9.1 installs itself into %ProgramFiles%\FullSync while 0.10.0 installs itself into
+				// %ProgramFiles%\FullSync\FullSync by default
 				oldProfiles = new File(".." + File.separator + FullSync.PROFILES_XML); //$NON-NLS-1$
 			}
 			if (oldProfiles.exists()) {
@@ -262,7 +263,7 @@ public class Main implements Launcher { // NO_UCD
 		if (profile.isPresent()) {
 			handleRunProfile(synchronizer, profileManager, profile.get());
 		}
-		if (rt.isDaemon().orElse(false).booleanValue()) {
+		if (rt.isDaemon().orElse(false)) {
 			daemonSchedulerListener = injector.getInstance(DaemonSchedulerListener.class);
 			scheduler.start();
 		}
@@ -281,7 +282,7 @@ public class Main implements Launcher { // NO_UCD
 			profileManager.save();
 		}
 		else {
-			//FIXME: this should be on STDERR really... but that is "abused" as the log output.
+			// FIXME: this should be on STDERR really... but that is "abused" as the log output.
 			System.out.println(String.format("Error: The profile with the name %s couldn't be found.", profileName));
 		}
 		System.exit(errorlevel);

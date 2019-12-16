@@ -25,14 +25,16 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 public class FileModificationDateFileFilterRule implements FileFilterRule {
 	public static final String TYPE_NAME = "File modification date";
-
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
 	public static final int OP_IS_BEFORE = 2;
 	public static final int OP_IS_AFTER = 3;
-
-	private static final String[] allOperators = new String[] { "is", "isn't", "is before", "is after" };
-
+	private static final String[] allOperators = new String[] {
+		"is",
+		"isn't",
+		"is before",
+		"is after"
+	};
 	private final DateValue date;
 	private final int op;
 

@@ -36,7 +36,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 public class FileFilterManager {
-
 	private static final String ELEMENT_NESTED_FILE_FILTER_RULE = "NestedFileFilterRule"; //$NON-NLS-1$
 	private static final String ELEMENT_NESTED_FILE_FILTER = "NestedFileFilter"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_AGE = "age"; //$NON-NLS-1$
@@ -64,7 +63,7 @@ public class FileFilterManager {
 	public Element serializeRule(FileFilterRule fileFilterRule, Document document, String elementName) {
 		Element ruleElement = document.createElement(elementName);
 
-		String ruleType = (null != fileFilterRule) ? fileFilterRule.getRuleType() : null;
+		String ruleType = null != fileFilterRule ? fileFilterRule.getRuleType() : null;
 
 		ruleElement.setAttribute(ATTRIBUTE_RULETYPE, ruleType);
 		serializeRuleAttributes(fileFilterRule, ruleElement);
@@ -268,6 +267,8 @@ public class FileFilterManager {
 			return new String[0];
 		}
 
-		return new String[] { "N/A" };
+		return new String[] {
+			"N/A"
+		};
 	}
 }

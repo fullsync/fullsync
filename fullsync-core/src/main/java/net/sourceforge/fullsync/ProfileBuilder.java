@@ -24,7 +24,6 @@ import java.util.Date;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 public interface ProfileBuilder {
-
 	ProfileBuilder setId(String id);
 
 	ProfileBuilder setName(String name);

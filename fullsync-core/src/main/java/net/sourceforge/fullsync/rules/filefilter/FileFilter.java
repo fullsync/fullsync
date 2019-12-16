@@ -19,18 +19,16 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import net.sourceforge.fullsync.fs.File;
-
 import java.util.Arrays;
 import java.util.Objects;
+
+import net.sourceforge.fullsync.fs.File;
 
 public class FileFilter {
 	public static final int MATCH_ALL = 0;
 	public static final int MATCH_ANY = 1;
-
 	public static final int INCLUDE = 0;
 	public static final int EXCLUDE = 1;
-
 	private final int matchType;
 	private final int filterType;
 	private final boolean appliesToDir;
@@ -61,7 +59,7 @@ public class FileFilter {
 
 	public boolean match(final File file) {
 		boolean result = doMmatch(file);
-		return (filterType == INCLUDE) ? result : !result;
+		return filterType == INCLUDE ? result : !result;
 	}
 
 	private boolean doMmatch(final File file) {
@@ -81,7 +79,7 @@ public class FileFilter {
 
 	private boolean doMatchAll(final File file) {
 		for (FileFilterRule rule : rules) {
-			if ((!appliesToDir) && (file.isDirectory())) {
+			if (!appliesToDir && file.isDirectory()) {
 				continue;
 			}
 			try {
@@ -101,7 +99,7 @@ public class FileFilter {
 		int appliedRules = 0;
 
 		for (FileFilterRule rule : rules) {
-			if ((!appliesToDir) && (file.isDirectory())) {
+			if (!appliesToDir && file.isDirectory()) {
 				continue;
 			}
 			try {
@@ -160,20 +158,20 @@ public class FileFilter {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
 		FileFilter that = (FileFilter) o;
-		return matchType == that.matchType
-			&& filterType == that.filterType
-			&& appliesToDir == that.appliesToDir
+		return (matchType == that.matchType)
+			&& (filterType == that.filterType)
+			&& (appliesToDir == that.appliesToDir)
 			&& Arrays.equals(rules, that.rules);
 	}
 
 	@Override
 	public int hashCode() {
 		int result = Objects.hash(matchType, filterType, appliesToDir);
-		result = 31 * result + Arrays.hashCode(rules);
+		result = (31 * result) + Arrays.hashCode(rules);
 		return result;
 	}
 }

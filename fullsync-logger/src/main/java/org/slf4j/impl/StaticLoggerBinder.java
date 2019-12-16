@@ -55,7 +55,6 @@ import org.slf4j.spi.LoggerFactoryBinder;
  * @author Ceki G&uuml;lc&uuml;
  */
 public final class StaticLoggerBinder implements LoggerFactoryBinder { // NO_UCD
-
 	/**
 	 * The unique instance of this class.
 	 *
@@ -77,9 +76,7 @@ public final class StaticLoggerBinder implements LoggerFactoryBinder { // NO_UCD
 	 */
 	// to avoid constant folding by the compiler, this field must *not* be final
 	public static String REQUESTED_API_VERSION = "1.6"; // !final
-
 	private static final String loggerFactoryClassStr = FullSyncLoggerFactory.class.getName();
-
 	/**
 	 * The ILoggerFactory instance returned by the {@link #getLoggerFactory}
 	 * method should always be the same object.

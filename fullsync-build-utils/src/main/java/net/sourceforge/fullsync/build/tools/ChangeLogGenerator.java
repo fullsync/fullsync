@@ -34,7 +34,6 @@ import net.sourceforge.fullsync.changelog.ChangeLogEntry;
 import net.sourceforge.fullsync.changelog.ChangeLogLoader;
 
 public class ChangeLogGenerator {
-
 	private static void usage() {
 		System.out.println("Usage: [--src-dir source-directory] [--pattern file-pattern] [--changelog output-file]");
 		System.out.println("  --src-dir ..... directory in which to look for source files");
@@ -78,7 +77,7 @@ public class ChangeLogGenerator {
 		}
 		ChangeLogLoader c = new ChangeLogLoader();
 		List<ChangeLogEntry> changelogEntries = c.load(dir, pattern);
-		PrintWriter pw = (null == changelog) ? new PrintWriter(System.out) : new PrintWriter(changelog);
+		PrintWriter pw = null == changelog ? new PrintWriter(System.out) : new PrintWriter(changelog);
 		for (ChangeLogEntry entry : changelogEntries) {
 			entry.write("FullSync %s %s", " - %s", pw, DateTimeFormatter.ofPattern("MMMM d, uuuu"));
 		}

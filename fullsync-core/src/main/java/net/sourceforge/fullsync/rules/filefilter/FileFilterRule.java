@@ -23,7 +23,6 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 public interface FileFilterRule {
-
 	int getOperator();
 
 	String getOperatorName();

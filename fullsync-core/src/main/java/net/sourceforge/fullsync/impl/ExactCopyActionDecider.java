@@ -41,7 +41,6 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class ExactCopyActionDecider implements ActionDecider {
 	// TODO param keep orphans/exact copy
-
 	private static final Action addDestination = new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION, "Add");
 	private static final Action overwriteDestination = new Action(ActionType.UPDATE, Location.DESTINATION, BufferUpdate.DESTINATION,
 		"overwrite destination");

@@ -25,7 +25,6 @@ import java.util.Date;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 public interface Profile {
-
 	public static class SortByNameAndIdComparator implements Comparator<Profile> {
 		@Override
 		public int compare(Profile o1, Profile o2) {
@@ -55,7 +54,7 @@ public interface Profile {
 
 	String getLastUpdateText();
 
-	//FIXME: this needs updates!
+	// FIXME: this needs updates!
 	String getNextUpdateText();
 
 	RuleSetDescriptor getRuleSet();

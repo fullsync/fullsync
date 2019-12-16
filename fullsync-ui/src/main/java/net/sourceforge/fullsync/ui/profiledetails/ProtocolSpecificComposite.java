@@ -45,11 +45,9 @@ abstract class ProtocolSpecificComposite {
 	private Provider<FileObjectChooser> fileObjectChooserProvider;
 	@Inject
 	private Provider<FileSystemManager> fileSystemManagerProvider;
-
 	protected Text textPath;
 	private String m_scheme;
 	protected Composite m_parent;
-
 	private Button buttonBuffered;
 
 	public void createGUI(final Composite parent) {
@@ -71,7 +69,7 @@ abstract class ProtocolSpecificComposite {
 		buttonDestinationBufferedData.horizontalSpan = 3;
 		buttonBuffered.setLayoutData(buttonDestinationBufferedData);
 		buttonBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
-		buttonBuffered.setVisible(false); //FIXME: [BUFFERING] remove to restore buffering
+		buttonBuffered.setVisible(false); // FIXME: [BUFFERING] remove to restore buffering
 	}
 
 	protected void onBeforePathHook(Composite parent) {
@@ -85,7 +83,7 @@ abstract class ProtocolSpecificComposite {
 	}
 
 	public void setConnectionDescription(final ConnectionDescription connection) {
-		String path = (null != connection) ? connection.getPath() : ""; //$NON-NLS-1$
+		String path = null != connection ? connection.getPath() : ""; //$NON-NLS-1$
 		textPath.setText(path);
 	}
 
@@ -120,8 +118,8 @@ abstract class ProtocolSpecificComposite {
 	}
 
 	/**
-	 * getBuffered
-	 * return the state of the buffered checkbox.
+	 * getBuffered return the state of the buffered checkbox.
+	 *
 	 * @return true if the buffered checkbox is set and enabled
 	 */
 	public boolean getBuffered() {
@@ -129,18 +127,20 @@ abstract class ProtocolSpecificComposite {
 	}
 
 	/**
-	 * setBuffered
-	 * set or clear the buffering checkbox.
-	 * @param buffered true to set the checkbox
+	 * setBuffered set or clear the buffering checkbox.
+	 *
+	 * @param buffered
+	 *            true to set the checkbox
 	 */
 	public void setBuffered(final boolean buffered) {
 		buttonBuffered.setSelection(buffered);
 	}
 
 	/**
-	 * setBufferedEnabled
-	 * en/disable buffering.
-	 * @param enabled true to enable
+	 * setBufferedEnabled en/disable buffering.
+	 *
+	 * @param enabled
+	 *            true to enable
 	 */
 	public void setBufferedEnabled(final boolean enabled) {
 		buttonBuffered.setEnabled(enabled);

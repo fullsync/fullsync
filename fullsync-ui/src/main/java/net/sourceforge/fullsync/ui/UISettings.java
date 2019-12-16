@@ -30,15 +30,18 @@ public abstract class UISettings {
 	 * preferred button width.
 	 */
 	public static final int BUTTON_WIDTH = 100;
-
 	/**
 	 * preferred button height.
 	 */
 	public static final int BUTTON_HEIGHT = 25;
-
 	private static final int K = 1024;
-
-	private static String[] UNITS = { "B", "KiB", "MiB", "GiB", "TiB" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+	private static String[] UNITS = {
+		"B", //$NON-NLS-1$
+		"KiB", //$NON-NLS-1$
+		"MiB", //$NON-NLS-1$
+		"GiB", //$NON-NLS-1$
+		"TiB" //$NON-NLS-1$
+	};
 
 	public static String formatSize(long size) { // NO_UCD (use default)
 		int i = 1;

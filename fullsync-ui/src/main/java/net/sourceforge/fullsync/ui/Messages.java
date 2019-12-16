@@ -31,7 +31,6 @@ public class Messages {
 	private static final String BUNDLE_NAME = "net.sourceforge.fullsync.ui.messages"; //$NON-NLS-1$
 	private static Messages instance;
 	private static final Logger logger = LoggerFactory.getLogger(Messages.class);
-
 	private ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME);
 
 	private Messages() {
@@ -53,7 +52,7 @@ public class Messages {
 	public static String getString(final String key) {
 		try {
 			String value = getInstance().bundle.getString(key);
-			if ((null != value) && (!value.isEmpty())) {
+			if ((null != value) && !value.isEmpty()) {
 				return value;
 			}
 			else {

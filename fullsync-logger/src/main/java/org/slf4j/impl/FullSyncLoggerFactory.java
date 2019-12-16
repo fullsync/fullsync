@@ -56,9 +56,7 @@ import org.slf4j.Logger;
  * @author Ceki G&uuml;lc&uuml;
  */
 public class FullSyncLoggerFactory implements ILoggerFactory {
-
 	static final FullSyncLoggerFactory INSTANCE = new FullSyncLoggerFactory();
-
 	Map<String, Logger> loggerMap;
 
 	public FullSyncLoggerFactory() {

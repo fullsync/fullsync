@@ -50,7 +50,6 @@ class ScheduleSelectionDialog {
 	private final ImageRepository imageRepository;
 	private Group groupOptions;
 	private Combo cbType;
-
 	private Schedule schedule;
 
 	@Inject

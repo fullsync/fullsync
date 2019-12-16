@@ -61,7 +61,6 @@ class TaskDecisionList extends Composite {
 	private Table tableLogLines;
 	private int tableLogLinesFillIndex;
 	private int tableLogLinesFillCount;
-
 	private final Map<ActionType, Image> actionImages = new EnumMap<>(ActionType.class);
 	private final Map<Integer, Image> taskImages = new HashMap<>();
 	private Image locationSource;
@@ -70,10 +69,8 @@ class TaskDecisionList extends Composite {
 	private Image nodeFile;
 	private Image nodeDirectory;
 	private Image nodeUndefined;
-
 	private TaskTree taskTree;
 	private final Map<Task, TableItem> taskItemMap = new HashMap<>();
-
 	private boolean onlyChanges;
 	private boolean changeAllowed;
 
@@ -233,7 +230,7 @@ class TaskDecisionList extends Composite {
 		}
 	}
 
-	//FIXME: implement using ImageDataProvider?
+	// FIXME: implement using ImageDataProvider?
 	private void drawLocation(GC g, Action a) {
 		switch (a.getLocation()) {
 			case SOURCE:
@@ -280,7 +277,7 @@ class TaskDecisionList extends Composite {
 		hash |= a.getLocation().ordinal() << 6;
 		hash |= a.getType().ordinal() << 8;
 
-		return Integer.valueOf(hash);
+		return hash;
 	}
 
 	private Image buildTaskImage(Task t, Action a) {

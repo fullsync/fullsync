@@ -36,7 +36,12 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ui.Messages;
 
 class ConnectionConfiguration {
-	private static String[] schemes = new String[] { "file", "ftp", "sftp", "smb" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static String[] schemes = new String[] {
+		"file", //$NON-NLS-1$
+		"ftp", //$NON-NLS-1$
+		"sftp", //$NON-NLS-1$
+		"smb" //$NON-NLS-1$
+	};
 	private final Provider<FileSpecificComposite> fileSpecificCompositeProvider;
 	private final Provider<FtpSpecificComposite> ftpSpecificCompositeProvider;
 	private final Provider<SftpSpecificComposite> sftpSpecificCompositeProvider;

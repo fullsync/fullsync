@@ -48,7 +48,11 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 		final SchedulingIntervalItem seconds = new SchedulingIntervalItem("seconds", secondsName, 1000); //$NON-NLS-1$
 		final SchedulingIntervalItem minutes = new SchedulingIntervalItem("minutes", minutesName, 60 * 1000); //$NON-NLS-1$
 		final SchedulingIntervalItem hours = new SchedulingIntervalItem("hours", hoursName, 60 * 60 * 1000); //$NON-NLS-1$
-		schedulingIntervals = new SchedulingIntervalItem[] { seconds, minutes, hours };
+		schedulingIntervals = new SchedulingIntervalItem[] {
+			seconds,
+			minutes,
+			hours
+		};
 
 		try {
 			GridLayout thisLayout = new GridLayout(3, false);

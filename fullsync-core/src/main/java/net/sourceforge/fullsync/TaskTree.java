@@ -54,7 +54,7 @@ public class TaskTree {
 	}
 
 	public IoStatistics getIoStatistics() {
-		//FIXME HACK omg, that's not the way io stats are intended to be generated / used
+		// FIXME HACK omg, that's not the way io stats are intended to be generated / used
 		BlockBuffer buffer = new BlockBuffer(null);
 		TaskExecutor queue = new FillBufferTaskExecutor(buffer);
 		return queue.createStatistics(this);

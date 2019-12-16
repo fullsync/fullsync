@@ -40,9 +40,9 @@ public class BackgroundExecutor {
 		this.display = display;
 	}
 
-	public <R> void runAsync(ThrowingSupplier<R> supplier, Consumer<R> successConsumer, Consumer<Exception> errorConsumer) { // NO_UCD (use default)
+	public <R> void runAsync(ThrowingSupplier<R> supplier, Consumer<R> success, Consumer<Exception> error) { // NO_UCD (use default)
 		CompletableFuture<R> future = CompletableFuture.supplyAsync(unchecked(supplier), scheduledExecutorService);
-		UIUpdateTask<R> task = new UIUpdateTask<>(display, future, successConsumer, errorConsumer);
+		UIUpdateTask<R> task = new UIUpdateTask<>(display, future, success, error);
 		future.thenRun(task);
 	}
 
@@ -67,14 +67,14 @@ public class BackgroundExecutor {
 	private static class UIUpdateTask<T> implements Runnable {
 		private final Display display;
 		private final CompletableFuture<T> future;
-		private final Consumer<T> successConsumer;
-		private final Consumer<Exception> errorConsumer;
+		private final Consumer<T> success;
+		private final Consumer<Exception> error;
 
-		public UIUpdateTask(Display display, CompletableFuture<T> future, Consumer<T> successConsumer, Consumer<Exception> errorConsumer) {
+		public UIUpdateTask(Display display, CompletableFuture<T> future, Consumer<T> success, Consumer<Exception> error) {
 			this.display = display;
 			this.future = future;
-			this.successConsumer = successConsumer;
-			this.errorConsumer = errorConsumer;
+			this.success = success;
+			this.error = error;
 		}
 
 		@Override
@@ -84,10 +84,10 @@ public class BackgroundExecutor {
 
 		private void notifyOnUiThread() {
 			try {
-				successConsumer.accept(future.get());
+				success.accept(future.get());
 			}
 			catch (Exception ex) {
-				errorConsumer.accept(ex);
+				error.accept(ex);
 			}
 		}
 	}

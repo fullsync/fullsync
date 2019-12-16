@@ -24,7 +24,6 @@ import java.util.List;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
 
 public interface ProfileManager {
-
 	void setProfilesFileName(String profilesFileName);
 
 	boolean loadProfiles();

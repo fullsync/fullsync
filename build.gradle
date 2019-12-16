@@ -98,7 +98,7 @@ subprojects {
 		spotless {
 			java {
 				licenseHeaderFile rootProject.file('resources/License-header.txt')
-				eclipse('4.7.2').configFile rootProject.file('resources/eclipse-jdt-formatter.xml')
+				eclipse('4.13.0').configFile rootProject.file('resources/eclipse-jdt-formatter.xml')
 				removeUnusedImports()
 				trimTrailingWhitespace()
 				endWithNewline()

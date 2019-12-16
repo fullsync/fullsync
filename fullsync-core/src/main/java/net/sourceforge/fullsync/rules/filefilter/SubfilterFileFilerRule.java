@@ -25,7 +25,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 public class SubfilterFileFilerRule implements FileFilterRule {
 	public static final String TYPE_NAME = "Nested Filter";
-
 	private final FileFilter fileFilter;
 
 	public SubfilterFileFilerRule(FileFilter fileFilter) {

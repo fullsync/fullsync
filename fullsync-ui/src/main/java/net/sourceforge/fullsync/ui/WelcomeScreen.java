@@ -69,7 +69,7 @@ class WelcomeScreen extends Dialog {
 		lvd.grabExcessHorizontalSpace = true;
 		labelVersion.setLayoutData(lvd);
 
-		//releases label
+		// releases label
 		Label labelReleases = new Label(dialogShell, SWT.FILL);
 		labelReleases.setText(Messages.getString("WelcomeScreen.ReadBelow")); //$NON-NLS-1$
 		GridData lrel = new GridData(SWT.FILL);

@@ -49,6 +49,6 @@ class WindowsLauncher {
 			Class<?> mainClass = Class.forName(manifestAttributes.getValue(Attributes.Name.MAIN_CLASS), true, classloader);
 			mainMethod = mainClass.getDeclaredMethod("main", String[].class);
 		}
-		mainMethod.invoke(null, new Object[] { args });
+		mainMethod.invoke(null, args);
 	}
 }

@@ -109,7 +109,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 		super.setConnectionDescription(connection);
 		textHost.setText(connection.getHost().orElse("")); //$NON-NLS-1$
 		if (null != spinnerPort) {
-			int port = connection.getPort().orElse(-1).intValue();
+			int port = connection.getPort().orElse(-1);
 			if (-1 == port) {
 				port = getDefaultPort();
 			}

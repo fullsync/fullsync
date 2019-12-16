@@ -56,12 +56,10 @@ import org.slf4j.spi.MarkerFactoryBinder;
  * @author Ceki G&uuml;lc&uuml;
  */
 public final class StaticMarkerBinder implements MarkerFactoryBinder { // NO_UCD
-
 	/**
 	 * The unique instance of this class.
 	 */
 	public static final StaticMarkerBinder SINGLETON = new StaticMarkerBinder();
-
 	final IMarkerFactory markerFactory = new BasicMarkerFactory();
 
 	private StaticMarkerBinder() {
@@ -84,5 +82,4 @@ public final class StaticMarkerBinder implements MarkerFactoryBinder { // NO_UCD
 	public String getMarkerFactoryClassStr() {
 		return BasicMarkerFactory.class.getName();
 	}
-
 }

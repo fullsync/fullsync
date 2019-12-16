@@ -31,7 +31,6 @@ import com.google.common.util.concurrent.Futures;
 public class FullSync {
 	public static final String PREFERENCES_PROPERTIES = "preferences.properties"; //$NON-NLS-1$
 	public static final String PROFILES_XML = "profiles.xml"; //$NON-NLS-1$
-
 	private final Deque<PromptQuestion> questionHandler = new ArrayDeque<>();
 
 	public FullSync() {

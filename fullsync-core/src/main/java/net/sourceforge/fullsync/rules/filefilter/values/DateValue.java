@@ -29,7 +29,6 @@ public class DateValue implements OperandValue {
 	// TODO format for UI different form the one used to serialize.
 	// The UI format should depend on the locale or should be chosen by the user
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
 	private final long millis;
 
 	public DateValue(Date date) {
@@ -68,15 +67,15 @@ public class DateValue implements OperandValue {
 	public boolean isBefore(long cmp) {
 		Date compDate = new Date(cmp);
 		Date date = new Date(this.millis);
-		if ((date.getYear() < compDate.getYear())) {
+		if (date.getYear() < compDate.getYear()) {
 			return true;
 		}
-		else if ((date.getYear() == compDate.getYear())) {
-			if ((date.getMonth() < compDate.getMonth())) {
+		else if (date.getYear() == compDate.getYear()) {
+			if (date.getMonth() < compDate.getMonth()) {
 				return true;
 			}
-			else if ((date.getMonth() == compDate.getMonth())) {
-				if ((date.getDay() < compDate.getDay())) {
+			else if (date.getMonth() == compDate.getMonth()) {
+				if (date.getDay() < compDate.getDay()) {
 					return true;
 				}
 			}
@@ -87,15 +86,15 @@ public class DateValue implements OperandValue {
 	public boolean isAfter(long cmp) {
 		Date compDate = new Date(cmp);
 		Date date = new Date(this.millis);
-		if ((date.getYear() > compDate.getYear())) {
+		if (date.getYear() > compDate.getYear()) {
 			return true;
 		}
-		else if ((date.getYear() == compDate.getYear())) {
-			if ((date.getMonth() > compDate.getMonth())) {
+		else if (date.getYear() == compDate.getYear()) {
+			if (date.getMonth() > compDate.getMonth()) {
 				return true;
 			}
-			else if ((date.getMonth() == compDate.getMonth())) {
-				if ((date.getDay() > compDate.getDay())) {
+			else if (date.getMonth() == compDate.getMonth()) {
+				if (date.getDay() > compDate.getDay()) {
 					return true;
 				}
 			}

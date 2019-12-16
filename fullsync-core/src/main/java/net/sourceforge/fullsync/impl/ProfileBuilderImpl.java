@@ -31,9 +31,7 @@ import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 public class ProfileBuilderImpl implements ProfileBuilder {
-
 	private final EventBus eventBus;
-
 	private String id;
 	private String name;
 	private String description;

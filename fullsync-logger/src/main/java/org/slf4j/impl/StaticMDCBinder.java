@@ -52,7 +52,6 @@ import org.slf4j.spi.MDCAdapter;
  * @author Ceki G&uuml;lc&uuml;
  */
 public final class StaticMDCBinder { // NO_UCD
-
 	/**
 	 * The unique instance of this class.
 	 */

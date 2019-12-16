@@ -29,7 +29,6 @@ import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
 class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	protected File unbuffered;
-
 	private long fsSize;
 	private long fsLastModified;
 

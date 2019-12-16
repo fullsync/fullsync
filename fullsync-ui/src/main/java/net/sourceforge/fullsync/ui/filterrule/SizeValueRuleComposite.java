@@ -60,7 +60,7 @@ class SizeValueRuleComposite extends RuleComposite {
 		textValue.addListener(SWT.KeyUp, this::numbersOnlyKeyboardListener);
 
 		for (SizeValue.Unit unit : SizeValue.Unit.values()) {
-			comboUnits.add(unit.name()); //FIXME: TRANSLATE!!
+			comboUnits.add(unit.name()); // FIXME: TRANSLATE!!
 		}
 		comboUnits.select(unit.ordinal());
 		comboUnits.addSelectionListener(widgetSelectedAdapter(this::onUnitChanged));

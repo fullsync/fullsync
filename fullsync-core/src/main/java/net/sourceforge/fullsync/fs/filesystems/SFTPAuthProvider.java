@@ -64,7 +64,6 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 			System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath()); //$NON-NLS-1$
 		}
 	}
-
 	private final FullSync fullsync;
 	private final ConnectionDescription desc;
 	private final boolean isInteractive;
@@ -89,7 +88,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		logger.debug("using knownHosts: {0}", cfg.getKnownHosts(options)); //$NON-NLS-1$
 		cfg.setUserInfo(options, this);
 		cfg.setStrictHostKeyChecking(options, "ask"); //$NON-NLS-1$
-		if (description.getPublicKeyAuth().orElse(false).booleanValue()) {
+		if (description.getPublicKeyAuth().orElse(false)) {
 			cfg.setPreferredAuthentications(options, "publickey,password,keyboard-interactive"); //$NON-NLS-1$
 		}
 		else {

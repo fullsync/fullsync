@@ -53,7 +53,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 			if (null != fsAuthProvider) {
 				fsAuthProvider.authSetup(desc, options);
 			}
-			int port = desc.getPort().orElse(Integer.valueOf(1)).intValue();
+			int port = desc.getPort().orElse(1);
 			String host = desc.getHost().orElse(null);
 			URI url = new URI(desc.getScheme(), null, host, port, desc.getPath(), null, null);
 			base = VFS.getManager().resolveFile(url.toString(), options);
@@ -156,7 +156,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	@Override
 	public void flush() throws IOException {
-		//FIXME: implement?
+		// FIXME: implement?
 	}
 
 	@Override

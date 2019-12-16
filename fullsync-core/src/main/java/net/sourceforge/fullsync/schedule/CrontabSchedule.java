@@ -30,7 +30,6 @@ public class CrontabSchedule extends Schedule {
 	public static final String SCHEDULE_TYPE = "crontab"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_PATTERN = "pattern"; //$NON-NLS-1$
-
 	private final String origPattern;
 	private final CrontabPart.Instance minutes;
 	private final CrontabPart.Instance hours;
@@ -231,7 +230,13 @@ public class CrontabSchedule extends Schedule {
 	}
 
 	public CrontabPart.Instance[] getParts() {
-		return new CrontabPart.Instance[] { minutes, hours, daysOfMonth, months, daysOfWeek };
+		return new CrontabPart.Instance[] {
+			minutes,
+			hours,
+			daysOfMonth,
+			months,
+			daysOfWeek
+		};
 	}
 
 	@Override

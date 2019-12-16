@@ -69,7 +69,7 @@ public class FileSystemManager {
 			if ((null != bufferStrategy) && !"".equals(bufferStrategy)) {
 				s = resolveBuffering(s, bufferStrategy);
 			}
-			*/
+			 */
 		}
 		return s;
 	}

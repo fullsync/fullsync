@@ -90,7 +90,6 @@ class MainWindow implements ProfileListControlHandler {
 	private Label statusLine;
 	private ToolItem toolItemScheduleStart;
 	private ToolItem toolItemScheduleStop;
-
 	private Composite profileListContainer;
 	private ProfileListComposite profileList;
 	private GUIUpdateQueue<File> lastFileChecked;
@@ -143,7 +142,10 @@ class MainWindow implements ProfileListControlHandler {
 		statusLineText = new GUIUpdateQueue<>(display, texts -> {
 			String statusMessage = texts.get(texts.size() - 1);
 			statusLine.setText(statusMessage);
-			mainComposite.layout(new Control[] { statusLine }); // workaround SWT layout bug on GTK
+			Control[] changed = new Control[] {
+				statusLine
+			};
+			mainComposite.layout(changed); // workaround SWT layout bug on GTK
 		});
 
 		lastFileChecked = new GUIUpdateQueue<>(display, files -> {
@@ -159,7 +161,7 @@ class MainWindow implements ProfileListControlHandler {
 		shell.setSize(shellBounds.width, shellBounds.height);
 		shellStateHandler = ShellStateHandler.apply(preferences, shell, MainWindow.class);
 		Optional<Boolean> minimized = runtimeConfiguration.isStartMinimized();
-		if (minimized.orElse(false).booleanValue()) {
+		if (minimized.orElse(false)) {
 			shell.setVisible(false);
 		}
 	}
@@ -254,7 +256,7 @@ class MainWindow implements ProfileListControlHandler {
 			ToolBar toolBarScheduling = new ToolBar(cToolBar, SWT.FLAT);
 			new ToolItem(toolBarScheduling, SWT.SEPARATOR);
 
-			//FIXME: do we still need this toolbar item?
+			// FIXME: do we still need this toolbar item?
 			ToolItem toolItemScheduleIcon = new ToolItem(toolBarScheduling, SWT.NULL);
 			toolItemScheduleIcon.setImage(imageRepository.getImage("Scheduler_Icon.png")); //$NON-NLS-1$
 			toolItemScheduleIcon.setDisabledImage(imageRepository.getImage("Scheduler_Icon.png")); //$NON-NLS-1$
@@ -367,7 +369,7 @@ class MainWindow implements ProfileListControlHandler {
 				GuiController.launchProgram(helpIndex.getAbsolutePath());
 			}
 			else {
-				String url = String.format("%sdocs/manual-%s/manual.html", GuiController.getWebsiteURL(), Util.getFullSyncVersion()); //$NON-NLS-1$S
+				String url = String.format("%sdocs/manual-%s/manual.html", GuiController.getWebsiteURL(), Util.getFullSyncVersion()); //$NON-NLS-1$
 				GuiController.launchProgram(url);
 			}
 		});

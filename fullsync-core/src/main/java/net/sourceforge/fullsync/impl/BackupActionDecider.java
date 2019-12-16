@@ -43,7 +43,6 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class BackupActionDecider implements ActionDecider {
 	// TODO param keep orphans/exact copy
-
 	private static final Action addDestination = new Action(ActionType.ADD, DESTINATION, BufferUpdate.DESTINATION, "Add");
 	private static final Action overwriteDestination = new Action(ActionType.UPDATE, DESTINATION, BufferUpdate.DESTINATION,
 		"overwrite destination");

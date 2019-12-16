@@ -76,13 +76,11 @@ import net.sourceforge.fullsync.ui.WizardDialog;
 public class ProfileDetailsTabbedPage extends WizardDialog {
 	private static final String EXPANDED_KEY = "Expanded"; //$NON-NLS-1$
 	private static final String FILTER_KEY = "Filter"; //$NON-NLS-1$
-
 	private final ProfileManager profileManager;
 	private final Provider<FileFilterPage> fileFilterPageProvider;
 	private final Provider<ConnectionConfiguration> connectionConfigurationProvider;
 	private final Provider<ScheduleSelectionDialog> scheduleSelectionDialogProvider;
 	private final Provider<FileSystemManager> fileSystemManagerProvider;
-
 	private Text textProfileName;
 	private Text textProfileDescription;
 	private Label labelFilesFilter;
@@ -97,18 +95,14 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private Button buttonUseFileFilter;
 	private Text textFilterDescription;
 	private Button syncSubsButton;
-
 	private TabItem tabSubDirs;
 	private Button buttonSetFilter;
 	private Button buttonRemoveFilter;
-
 	private Tree directoryTree;
 	private final List<TreeItem> treeItemsWithFilter = new ArrayList<>();
 	private Map<String, FileFilter> itemsMap = new HashMap<>();
 	private Site sourceSite;
-
 	private Profile profile;
-
 	private FileFilter filter;
 	private Composite m_parent;
 	private ConnectionDescription lastSourceLoaded;
@@ -308,7 +302,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			ScheduleSelectionDialog dialog = scheduleSelectionDialogProvider.get();
 			dialog.setSchedule((Schedule) buttonScheduling.getData());
 			dialog.open(m_parent.getShell());
-			buttonScheduling.setData(dialog.getSchedule()); //FIXME: if cancelled??
+			buttonScheduling.setData(dialog.getSchedule()); // FIXME: if cancelled??
 		});
 		new Label(c, SWT.NONE); // area below the automated execution label should be empty
 		buttonResetError = new Button(c, SWT.CHECK | SWT.RIGHT); // TODO: make this a button?
@@ -614,7 +608,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		}
 		boolean isNewProfile = null == profile;
 
-		//TODO: no longer necessary, keep or remove?
+		// TODO: no longer necessary, keep or remove?
 		if (isNewProfile || !textProfileName.getText().equals(profile.getName())) {
 			Profile pr = profileManager.getProfileByName(textProfileName.getText());
 			if (null != pr) {
@@ -649,7 +643,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			profileManager.updateProfile(oldProfile, builder.build());
 		}
 		profileManager.save();
-		return true; //FIXME: return false if failed
+		return true; // FIXME: return false if failed
 	}
 
 	private ConnectionDescription.Builder getConnectionDescription(final ConnectionConfiguration cfg) {

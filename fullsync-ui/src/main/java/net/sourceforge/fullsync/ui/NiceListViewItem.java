@@ -37,15 +37,12 @@ import net.sourceforge.fullsync.Profile;
 
 class NiceListViewItem extends Canvas implements Listener {
 	private final NiceListView list;
-
 	private Label labelIcon;
 	private Label labelCaption;
 	private Label labelStatus;
 	private Composite compositeContent;
-
 	private ProfileListControlHandler handler;
 	private Profile profile;
-
 	private boolean mouseOver;
 	private boolean selected;
 

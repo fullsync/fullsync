@@ -37,7 +37,7 @@ public class SmbFileSystem implements FileSystem {
 	private static final Logger logger = LoggerFactory.getLogger(SmbFileSystem.class);
 	static {
 		// even tough VFS-552 is fixed this si still needed
-		//[VFS-552][sandbox] include vfs-providers.xml in JAR for dynamic registration of mime and smb providers.
+		// [VFS-552][sandbox] include vfs-providers.xml in JAR for dynamic registration of mime and smb providers.
 		try {
 			FileSystemManager fsm = VFS.getManager();
 			if (!fsm.hasProvider("smb") && (fsm instanceof DefaultFileSystemManager)) { //$NON-NLS-1$

@@ -41,7 +41,6 @@ import net.sourceforge.fullsync.fs.File;
  */
 public class TwoWaySyncActionDecider implements ActionDecider {
 	// TODO param keep orphans/exact copy
-
 	private static final Action addToDestination = new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION, "Add");
 	private static final Action addToSource = new Action(ActionType.ADD, Location.SOURCE, BufferUpdate.SOURCE, "Add");
 	private static final Action updateDestination = new Action(ActionType.UPDATE, Location.DESTINATION, BufferUpdate.DESTINATION,
@@ -105,5 +104,4 @@ public class TwoWaySyncActionDecider implements ActionDecider {
 		actions.toArray(as);
 		return new Task(src, dst, state, as);
 	}
-
 }

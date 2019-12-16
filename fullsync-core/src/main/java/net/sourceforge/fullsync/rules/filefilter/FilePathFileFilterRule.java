@@ -29,7 +29,6 @@ import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class FilePathFileFilterRule implements FileFilterRule {
 	public static final String TYPE_NAME = "File path";
-
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
 	public static final int OP_CONTAINS = 2;
@@ -40,7 +39,6 @@ public class FilePathFileFilterRule implements FileFilterRule {
 	public static final int OP_DOESNT_ENDS_WITH = 7;
 	public static final int OP_MATCHES_REGEXP = 8;
 	public static final int OP_DOESNT_MATCHES_REGEXP = 9;
-
 	private static final String[] allOperators = new String[] {
 		"is",
 		"isn't",
@@ -51,8 +49,8 @@ public class FilePathFileFilterRule implements FileFilterRule {
 		"ends with",
 		"doesn't ends with",
 		"matches regexp",
-		"doesn't matches regexp" };
-
+		"doesn't matches regexp"
+	};
 	private final TextValue pattern;
 	private final int op;
 	private final Pattern regexppattern;

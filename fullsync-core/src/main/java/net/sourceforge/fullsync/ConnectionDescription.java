@@ -53,7 +53,6 @@ public class ConnectionDescription {
 	private static final String ATTRIBUTE_PASSWORD = "password"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_USER_DIR_IS_ROOT = "userDirIsRoot"; //$NON-NLS-1$
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionDescription.class);
-
 	private final String scheme;
 	private final Optional<String> host;
 	private final Optional<Integer> port;
@@ -77,7 +76,7 @@ public class ConnectionDescription {
 		publicKeyAuth.ifPresent(aBoolean -> {
 			Element p = doc.createElement(ELEMENT_PARAM);
 			p.setAttribute(ATTRIBUTE_NAME, PARAMETER_PUBLIC_KEY_AUTH);
-			p.setAttribute(ATTRIBUTE_VALUE, aBoolean.booleanValue() ? PUBLIC_KEY_AUTH_ENABLED : PUBLIC_KEY_AUTH_DISABLED);
+			p.setAttribute(ATTRIBUTE_VALUE, aBoolean ? PUBLIC_KEY_AUTH_ENABLED : PUBLIC_KEY_AUTH_DISABLED);
 			elem.appendChild(p);
 		});
 		keyPassphrase.ifPresent(s -> {

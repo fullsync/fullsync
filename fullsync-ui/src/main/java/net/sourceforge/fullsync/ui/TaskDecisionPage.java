@@ -53,10 +53,8 @@ class TaskDecisionPage extends WizardDialog {
 	private boolean processing;
 	private int tasksFinished;
 	private int tasksTotal;
-
 	private final Color colorFinishedSuccessful;
 	private final Color colorFinishedUnsuccessful;
-
 	private TaskDecisionList list;
 	private Label labelProgress;
 
@@ -183,7 +181,7 @@ class TaskDecisionPage extends WizardDialog {
 		mb.setText(Messages.getString("TaskDecisionPage.Error")); //$NON-NLS-1$
 		mb.setMessage(Messages.getString("TaskDecisionPage.SyncWindowCantBeClosed")); //$NON-NLS-1$
 		mb.open();
-		//TODO: implement canceling a running profile
+		// TODO: implement canceling a running profile
 		return false;
 	}
 

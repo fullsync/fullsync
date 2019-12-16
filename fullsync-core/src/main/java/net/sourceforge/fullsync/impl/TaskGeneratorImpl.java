@@ -196,7 +196,9 @@ public class TaskGeneratorImpl implements TaskGenerator {
 
 		TaskTree tree = new TaskTree(source, destination);
 		Action rootAction = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "Root"); //$NON-NLS-1$
-		Task root = new Task(null, null, State.IN_SYNC, new Action[] { rootAction });
+		Task root = new Task(null, null, State.IN_SYNC, new Action[] {
+			rootAction
+		});
 		tree.setRoot(root);
 
 		try {

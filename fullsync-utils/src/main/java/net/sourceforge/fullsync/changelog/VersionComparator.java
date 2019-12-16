@@ -22,7 +22,6 @@ package net.sourceforge.fullsync.changelog;
 import java.util.Comparator;
 
 public class VersionComparator implements Comparator<String> {
-
 	private int[] parseVersion(String v) {
 		String[] components = v.split("\\."); //$NON-NLS-1$
 		int[] numbers = new int[components.length];
@@ -40,8 +39,8 @@ public class VersionComparator implements Comparator<String> {
 		int[] v2components = parseVersion(o2);
 		int num = Math.max(v1components.length, v2components.length);
 		for (int i = 0; i < num; ++i) {
-			int v1 = (i < v1components.length) ? v1components[i] : 0;
-			int v2 = (i < v2components.length) ? v2components[i] : 0;
+			int v1 = i < v1components.length ? v1components[i] : 0;
+			int v2 = i < v2components.length ? v2components[i] : 0;
 			if (v1 > v2) {
 				return 1;
 			}

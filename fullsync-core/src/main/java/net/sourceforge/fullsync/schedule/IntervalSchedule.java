@@ -19,18 +19,16 @@
  */
 package net.sourceforge.fullsync.schedule;
 
-import org.w3c.dom.Element;
-
 import java.util.Objects;
+
+import org.w3c.dom.Element;
 
 public class IntervalSchedule extends Schedule {
 	public static final String SCHEDULE_TYPE = "interval"; //$NON-NLS-1$
-
 	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_DISPLAY_UNIT = "displayUnit"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_INTERVAL = "interval"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_FIRSTINTERVAL = "firstinterval"; //$NON-NLS-1$
-
 	private final long firstInterval;
 	private final long interval;
 	private final String displayUnit;
@@ -90,11 +88,11 @@ public class IntervalSchedule extends Schedule {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
 		IntervalSchedule that = (IntervalSchedule) o;
-		return firstInterval == that.firstInterval && interval == that.interval && displayUnit.equals(that.displayUnit);
+		return (firstInterval == that.firstInterval) && (interval == that.interval) && displayUnit.equals(that.displayUnit);
 	}
 
 	@Override

@@ -35,7 +35,6 @@ import net.sourceforge.fullsync.ui.Messages;
 
 class SftpSpecificComposite extends UserPasswordSpecificComposite {
 	private static final int DEFAULT_SFTP_PORT = 22;
-
 	private Button buttonKeybased;
 	private Label labelKeyPassphrase;
 	private Text textKeyPassphrase;
@@ -90,7 +89,7 @@ class SftpSpecificComposite extends UserPasswordSpecificComposite {
 	@Override
 	public void setConnectionDescription(final ConnectionDescription connection) {
 		super.setConnectionDescription(connection);
-		boolean keybased = connection.getPublicKeyAuth().orElse(Boolean.FALSE).booleanValue();
+		boolean keybased = connection.getPublicKeyAuth().orElse(false);
 		buttonKeybased.setSelection(keybased);
 		labelKeyPassphrase.setEnabled(keybased);
 		textKeyPassphrase.setEnabled(keybased);

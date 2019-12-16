@@ -34,7 +34,7 @@ abstract class RuleComposite extends Composite {
 
 	public void setError(String message) {
 		textValue.setToolTipText(message);
-		//TODO: mark field as invalid
+		// TODO: mark field as invalid
 	}
 
 	public abstract OperandValue getValue();

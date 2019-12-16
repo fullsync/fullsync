@@ -51,7 +51,6 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 	private static class ContentComposite extends Composite {
 		private NiceListViewProfileListComposite niceListViewProfileListComposite;
 		private Profile profile;
-
 		private Label lSource;
 		private Label lDestination;
 		private Label lLastUpdate;
@@ -144,9 +143,9 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 
 		public void updateComponent() {
 			ConnectionDescription desc = profile.getSource();
-			lSource.setText((null != desc) ? desc.getDisplayPath() : ""); //$NON-NLS-1$
+			lSource.setText(null != desc ? desc.getDisplayPath() : ""); //$NON-NLS-1$
 			desc = profile.getDestination();
-			lDestination.setText((null != desc) ? desc.getDisplayPath() : ""); //$NON-NLS-1$
+			lDestination.setText(null != desc ? desc.getDisplayPath() : ""); //$NON-NLS-1$
 			lLastUpdate.setText(profile.getLastUpdateText());
 			lNextUpdate.setText(profile.getNextUpdateText());
 			layout();

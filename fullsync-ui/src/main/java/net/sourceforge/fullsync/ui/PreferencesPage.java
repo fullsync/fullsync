@@ -37,11 +37,27 @@ class PreferencesPage extends WizardDialog {
 	/**
 	 * supported language codes.
 	 */
-	private static String[] languageCodes = { "en", "it", "de", "fr", "es", "ar", "el" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+	private static String[] languageCodes = {
+		"en", //$NON-NLS-1$
+		"it", //$NON-NLS-1$
+		"de", //$NON-NLS-1$
+		"fr", //$NON-NLS-1$
+		"es", //$NON-NLS-1$
+		"ar", //$NON-NLS-1$
+		"el" //$NON-NLS-1$
+	};
 	/**
 	 * supported language names.
 	 */
-	private static String[] languageNames = { "English", "Italiano", "Deutsch", "Français", "Español", "Arabic", "Ελληνικά" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+	private static String[] languageNames = {
+		"English", //$NON-NLS-1$
+		"Italiano", //$NON-NLS-1$
+		"Deutsch", //$NON-NLS-1$
+		"Français", //$NON-NLS-1$
+		"Español", //$NON-NLS-1$
+		"Arabic", //$NON-NLS-1$
+		"Ελληνικά" //$NON-NLS-1$
+	};
 
 	/**
 	 * search an element in an array and get the result from another array at the same index.
@@ -93,7 +109,6 @@ class PreferencesPage extends WizardDialog {
 	private Combo comboLanguage;
 	private Button cbAutostartScheduler;
 	private Combo comboProfileList;
-
 	private final MainWindow mainWindow;
 
 	@Inject
@@ -240,7 +255,7 @@ class PreferencesPage extends WizardDialog {
 		}
 
 		preferences.save();
-		return true; //FIXME: return false if failed
+		return true; // FIXME: return false if failed
 	}
 
 	@Override

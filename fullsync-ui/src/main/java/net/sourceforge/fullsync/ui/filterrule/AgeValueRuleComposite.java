@@ -72,7 +72,7 @@ class AgeValueRuleComposite extends RuleComposite {
 			value = Double.valueOf(textValue.getText());
 		}
 		catch (NumberFormatException ex) {
-			setError("Invalid Number Format"); //TODO: is a double needed really?
+			setError("Invalid Number Format"); // TODO: is a double needed really?
 		}
 	}
 

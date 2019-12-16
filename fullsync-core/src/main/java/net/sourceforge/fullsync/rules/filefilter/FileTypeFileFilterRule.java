@@ -25,12 +25,12 @@ import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 public class FileTypeFileFilterRule implements FileFilterRule {
 	public static final String TYPE_NAME = "File type";
-
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
-
-	private static final String[] allOperators = new String[] { "is", "isn't" };
-
+	private static final String[] allOperators = new String[] {
+		"is",
+		"isn't"
+	};
 	private final TypeValue type;
 	private final int op;
 
@@ -67,10 +67,10 @@ public class FileTypeFileFilterRule implements FileFilterRule {
 	public boolean match(File file) {
 		switch (op) {
 			case OP_IS:
-				return ((type.isFile()) && file.isFile()) || ((type.isDirectory()) && file.isDirectory());
+				return (type.isFile() && file.isFile()) || (type.isDirectory() && file.isDirectory());
 
 			case OP_ISNT:
-				return !(((type.isFile()) && file.isFile()) || ((type.isDirectory()) && file.isDirectory()));
+				return (!type.isFile() || !file.isFile()) && (!type.isDirectory() || !file.isDirectory());
 
 			default:
 				return false;

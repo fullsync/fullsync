@@ -38,7 +38,6 @@ class ExceptionDialog {
 	private Shell dialogShell;
 	private Composite compositeBase;
 	private Button buttonDetails;
-
 	private boolean expanded;
 
 	ExceptionDialog(Shell parent, String message, Throwable throwable) {

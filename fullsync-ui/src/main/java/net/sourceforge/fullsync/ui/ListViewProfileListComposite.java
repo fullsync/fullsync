@@ -110,7 +110,7 @@ class ListViewProfileListComposite extends ProfileListComposite {
 		Profile p = null;
 		TableItem[] sel = tableProfiles.getSelection();
 		if (sel.length > 0) {
-			p = (Profile) (sel[0].getData());
+			p = (Profile) sel[0].getData();
 		}
 		return p;
 	}

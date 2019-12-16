@@ -61,7 +61,6 @@ class FileObjectChooser {
 	private Text textUrlExtension;
 	private Text textFilename;
 	private Table tableItems;
-
 	private boolean result;
 	private FileObject rootFileObject;
 	private FileObject activeFileObject;
@@ -280,7 +279,7 @@ class FileObjectChooser {
 			}
 
 			item.setText(0, data.getName().getBaseName());
-			String type = data.getType().getName(); //FIXME: translate type name {file,folder}
+			String type = data.getType().getName(); // FIXME: translate type name {file,folder}
 
 			if (data.getType().hasContent()) {
 				FileContent content = data.getContent();
@@ -369,6 +368,6 @@ class FileObjectChooser {
 	}
 
 	private void toolItemNewFolderWidgetSelected() {
-		//FIXME: create new folder
+		// FIXME: create new folder
 	}
 }

@@ -107,7 +107,8 @@ public class CrontabPart {
 				if (index > 0) {
 					each = Integer.parseInt(token.substring(index + 1));
 					if (each == 0) {
-						throw new DataParseException("CrontabPart.NeverUseExpressions"); // FIXME: Messages.getString("CrontabPart.NeverUseExpressions"));
+						// FIXME: Messages.getString("CrontabPart.NeverUseExpressions"));
+						throw new DataParseException("CrontabPart.NeverUseExpressions");
 					}
 
 					token = token.substring(0, index);
@@ -145,7 +146,8 @@ public class CrontabPart {
 				return false;
 			}
 			catch (Exception e) {
-				throw new DataParseException("CrontabPart.SomethingWasWrong" + token, e); // FIXME: translation Messages.getString("CrontabPart.SomethingWasWrong") + token
+				// FIXME: translation Messages.getString("CrontabPart.SomethingWasWrong") + token
+				throw new DataParseException("CrontabPart.SomethingWasWrong" + token, e);
 			}
 		}
 	}

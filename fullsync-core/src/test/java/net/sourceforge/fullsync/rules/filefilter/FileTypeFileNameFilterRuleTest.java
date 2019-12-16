@@ -79,5 +79,4 @@ public class FileTypeFileNameFilterRuleTest {
 		assertTrue(filterRule.match(createTestNode(false)));
 		assertFalse(filterRule.match(createTestNode(true)));
 	}
-
 }

@@ -141,7 +141,11 @@ public class GuiController { // NO_UCD (use default)
 		if (System.getProperty("os.name").toLowerCase().indexOf("linux") > -1) { //$NON-NLS-1$ //$NON-NLS-2$
 			Thread t = new Thread(() -> {
 				try {
-					Process p = Runtime.getRuntime().exec(new String[] { "xdg-open", uri }); //$NON-NLS-1$
+					String[] args = new String[] {
+						"xdg-open", //$NON-NLS-1$
+						uri
+					};
+					Process p = Runtime.getRuntime().exec(args);
 					p.waitFor();
 				}
 				catch (IOException | InterruptedException e) {

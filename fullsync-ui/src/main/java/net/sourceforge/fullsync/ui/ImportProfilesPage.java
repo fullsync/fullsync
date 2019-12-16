@@ -38,6 +38,11 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.ProfileManager;
 
 class ImportProfilesPage extends WizardDialog {
+	private static final String[] PROFILE_EXTENSIONS = new String[] {
+		"profiles.xml", //$NON-NLS-1$
+		"*.xml", //$NON-NLS-1$
+		"*" //$NON-NLS-1$
+	};
 	private final ProfileManager profileManager;
 	private Composite composite;
 	private Text textPath;
@@ -89,7 +94,7 @@ class ImportProfilesPage extends WizardDialog {
 		buttonBrowse.addListener(SWT.Selection, e -> {
 			FileDialog fd = new FileDialog(content.getShell());
 			fd.setFileName("profiles.xml"); //$NON-NLS-1$
-			fd.setFilterExtensions(new String[] { "profiles.xml", "*.xml", "*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			fd.setFilterExtensions(PROFILE_EXTENSIONS);
 			fd.setFilterIndex(0);
 			fd.setFilterPath(textPath.getText());
 			String file = fd.open();

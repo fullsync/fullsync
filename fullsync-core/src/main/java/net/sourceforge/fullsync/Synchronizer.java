@@ -31,7 +31,6 @@ import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 @Singleton
 public class Synchronizer {
 	private static final Logger logger = LoggerFactory.getLogger(Synchronizer.class);
-
 	private final TaskGenerator taskGenerator;
 
 	@Inject

@@ -44,15 +44,12 @@ import net.sourceforge.fullsync.ui.filterrule.FilterRuleListItem;
 public class FileFilterPage extends WizardDialog {
 	private final Provider<FileFilterPage> fileFilterPageProvider;
 	private final Provider<FilterRuleListItem> filterRuleListItemProvider;
-
 	private Combo comboFilterType;
 	private Combo comboMatchType;
 	private Composite compositeRuleList;
 	private Button buttonAppliesToDir;
-
 	private FileFilter oldFileFilter;
 	private FileFilter newFileFilter;
-
 	private List<FilterRuleListItem> ruleItems = new ArrayList<>();
 
 	@Inject

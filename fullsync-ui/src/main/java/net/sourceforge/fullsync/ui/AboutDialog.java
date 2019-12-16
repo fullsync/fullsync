@@ -204,7 +204,11 @@ class AboutDialog {
 		}
 		else {
 			sp = ""; //$NON-NLS-1$
-			specialThanks = new String[] { sp, sp, sp };
+			specialThanks = new String[] {
+				sp,
+				sp,
+				sp
+			};
 		}
 		stTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -218,7 +222,10 @@ class AboutDialog {
 
 						labelThanks.setText(specialThanks[firstLine] + '\n' + specialThanks[secondLine] + '\n' + specialThanks[thirdLine]);
 						labelThanks.pack(true);
-						tab.layout(new Control[] { labelThanks });
+						Control[] changed = new Control[] {
+							labelThanks
+						};
+						tab.layout(changed);
 						stIndex = (stIndex + 1) % specialThanks.length;
 					}
 				});

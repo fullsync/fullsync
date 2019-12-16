@@ -39,21 +39,17 @@ import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 	public static final String RULESET_TYPE = "simple"; //$NON-NLS-1$
-
 	private static final String ELEMENT_SIMPLE_RULE_SET = "SimpleRuleSet"; //$NON-NLS-1$
 	private static final String ELEMENT_FILE_FILTER_RULE = "FileFilterRule"; //$NON-NLS-1$
 	private static final String ELEMENT_FILE_FILTER = "FileFilter"; //$NON-NLS-1$
 	private static final String ELEMENT_SUBDIRECTORY_FILE_FILTER = "SubdirectoryFileFilter"; //$NON-NLS-1$
-
 	private static final String ATTRIBUTE_PATH = "path"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_USE_FILTER = "useFilter"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_TAKE_PATTERN = "takePattern"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_IGNORE_PATTERN = "ignorePattern"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_PATTERNS_TYPE = "patternsType"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_SYNC_SUBS = "syncSubs"; //$NON-NLS-1$
-
 	private static final String PATTERN_TYPE_REG_EXP = "RegExp"; //$NON-NLS-1$
-
 	private final boolean syncSubDirs;
 	private final String ignorePattern;
 	private final String takePattern;
@@ -212,7 +208,7 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		SimplyfiedSyncRules ruleSet = new SimplyfiedSyncRules();
 		ruleSet.setUsingRecursion(syncSubDirs);
 
-		if ((null != patternsType) && (!patternsType.isEmpty())) {
+		if ((null != patternsType) && !patternsType.isEmpty()) {
 			ruleSet.setPatternsType(patternsType);
 		}
 		else {
@@ -254,12 +250,12 @@ public class SimplyfiedRuleSetDescriptor extends RuleSetDescriptor {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
 		SimplyfiedRuleSetDescriptor that = (SimplyfiedRuleSetDescriptor) o;
-		return syncSubDirs == that.syncSubDirs
-			&& useFilter == that.useFilter
+		return (syncSubDirs == that.syncSubDirs)
+			&& (useFilter == that.useFilter)
 			&& Objects.equals(ignorePattern, that.ignorePattern)
 			&& Objects.equals(takePattern, that.takePattern)
 			&& Objects.equals(patternsType, that.patternsType)

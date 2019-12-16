@@ -21,7 +21,6 @@ package net.sourceforge.fullsync;
 
 public class SystemDate {
 	private static SystemDate instance;
-
 	private long baseTime = -1;
 	private long timeOfBaseTime = -1;
 	private int speed = 1;

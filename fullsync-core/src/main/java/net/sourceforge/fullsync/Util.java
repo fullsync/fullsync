@@ -125,7 +125,7 @@ public abstract class Util {
 			while (jarEntries.hasMoreElements()) {
 				JarEntry entry = jarEntries.nextElement();
 				String name = entry.getName();
-				if (!entry.isDirectory() && name.startsWith(prefix)) { //filter according to the path
+				if (!entry.isDirectory() && name.startsWith(prefix)) { // filter according to the path
 					name = name.substring(prefix.length());
 					children.add(name);
 				}
