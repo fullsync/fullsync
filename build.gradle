@@ -45,7 +45,7 @@ if (System.env.'CI') {
 ext {
 	libraries = [:]
 	swtVersion = "3.106.3"
-	slf4jVersion = "1.7.29"
+	slf4jVersion = "1.7.30"
 	guiceVersion = "4.2.2"
 	jUnitVersion = "5.5.2"
 	commonsCliVersion = "1.4"
