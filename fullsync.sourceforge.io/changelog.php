@@ -19,16 +19,12 @@
  * at the AUTHORS file in the root of this project.
  */
 
-include( "html.php" );
-	HtmlHeader( "FullSync Changelog" );
-?>
-	<ol>
-<?php
-		$versions = getVersions(0);
-		foreach ($versions as $v) {
-			echo "\t\t<li>Version ${v['version']} (${v['releaseDate']}):<br />${v['changes']}</li>\n";
-		}
-?>
-	</ol>
-<?php
-	HtmlFooter();
+include "html.php";
+HtmlHeader("FullSync Changelog");
+echo "	<ol>\n";
+$versions = getVersions(0);
+foreach ($versions as $v) {
+	echo "\t\t<li>Version {$v['version']} ({$v['releaseDate']}):<br />{$v['changes']}</li>\n";
+}
+echo "	</ol>\n";
+HtmlFooter();

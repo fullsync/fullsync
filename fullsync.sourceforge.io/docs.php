@@ -19,11 +19,11 @@
  * at the AUTHORS file in the root of this project.
  */
 
-include( "html.php" );
-HtmlHeader( "Documentation" );
+include "html.php";
+HtmlHeader("Documentation");
 
 $versions = getVersions(3);
 foreach ($versions as $v) {
-	echo "\t<p>for <a href=\"docs/manual-${v['version']}/${v['manual']}\">FullSync ${v['version']}</a></p>\n";
+	echo "\t<p>for <a href=\"docs/manual-{$v['version']}/{$v['manual']}\">FullSync {$v['version']}</a></p>\n";
 }
 HtmlFooter();

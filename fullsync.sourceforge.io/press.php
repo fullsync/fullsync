@@ -19,14 +19,19 @@
  * at the AUTHORS file in the root of this project.
  */
 
-include( "html.php" );
-	HtmlHeader( "FullSync in the Press" );
+include "html.php";
+HtmlHeader("FullSync in the Press");
 ?>
 	<dl>
 		<dt>Softpedia 02/2006</dt>
-		<dd>FullSync 0.9.1 - SOFTPEDIA "100% CLEAN" AWARD <a href="http://www.softpedia.com/get/Windows-Widgets/System-Utilities/FullSync.shtml">Read more...</a></dd>
+		<dd>FullSync 0.9.1 - SOFTPEDIA "100% CLEAN" AWARD
+			<a href="http://www.softpedia.com/get/Windows-Widgets/System-Utilities/FullSync.shtml">Read more...</a>
+		</dd>
 		<dt>Framasoft 02/2006</dt>
-		<dd>"FullSync est très simple à prendre en main, même pour des actions complexes. A essayer lorsquon veut éviter dutiliser un client FTP notamment." <a href="http://www.framasoft.net/article4281.html">Read more...</a></dd>
+		<dd>"FullSync est très simple à prendre en main, même pour des actions complexes.
+			A essayer lorsquon veut éviter dutiliser un client FTP notamment."
+			<a href="http://www.framasoft.net/article4281.html">Read more...</a>
+		</dd>
 		<dt>LinuxUser Magazine (p.14), 04/2005</dt>
 		<dd>"Geht es um die Synchronisation von Dateien und Verzeichnissen zwischen verschiedenen
 			Datenträgern oder Rechnern, ist für die meisten Anwender das Konsolenprogramm Rsync
@@ -34,4 +39,4 @@ include( "html.php" );
 			etwas komfortabler geht, zeigt das Programm FullSync."</dd>
 	</dl>
 <?php
-	HtmlFooter();
+HtmlFooter();

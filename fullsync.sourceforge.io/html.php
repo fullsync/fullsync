@@ -19,6 +19,8 @@
  * at the AUTHORS file in the root of this project.
  */
 
+ define('SOURCEFORGE_PROJECTS_URL', 'https://sourceforge.net/projects/fullsync');
+
 function readVersion($major, $minor, $patch) {
 	$content = file_get_contents("versions/$major.$minor.$patch.html");
 	if ($content) {
@@ -103,12 +105,51 @@ function getVersions($countOrCallback) {
 	return $versions;
 }
 
+function getScreesnhots($screenshotsDir, $major, $minor, $patch) {
+	$screenshots = array();
+	$dir = $screenshotsDir . '/' . "$major.$minor.$patch/";
+	$d = dir($dir);
+	if (false !== $d) {
+		while (false !== ($entry = $d->read())) {
+			if (preg_match('/\.(png|jpg|jpeg|gif)$/i', $entry)) {
+				$content = '';
+				if (file_exists($dir . $entry . '.html')) {
+					$content = file_get_contents($dir . $entry . '.html');
+				}
+				$screenshots[$dir . $entry] = $content;
+			}
+		}
+		$d->close();
+	}
+	return $screenshots;
+}
+
+function getAllScreenshots() {
+	$screenshots = array();
+	$screenshotsDir = "screenshots";
+	$d = dir($screenshotsDir);
+	if (false !== $d) {
+		while (false !== ($entry = $d->read())) {
+			if (preg_match('/^(\d+)\.(\d+)\.(\d+)$/', $entry, $version)) {
+				$screenshots[] = array(
+					'major' => $version[1],
+					'minor' => $version[2],
+					'patch' => $version[3],
+					'screenshots' => getScreesnhots($screenshotsDir, $version[1], $version[2], $version[3])
+				);
+			}
+		}
+		$d->close();
+	}
+	usort($screenshots, 'versionComparator');
+	return $screenshots;
+}
+
 function HtmlHeader($caption, $skip = '') {
-	header( "Content-Type: text/html; charset=UTF-8" );
+	header("Content-Type: text/html; charset=UTF-8");
 	$script = explode('/', $_SERVER['PHP_SELF']);
 	$script = end($script);
-?>
-<!doctype html>
+	?><!doctype html>
 <html>
 	<head>
 		<title>FullSync - <?php echo $caption; ?></title>
@@ -129,8 +170,8 @@ function HtmlHeader($caption, $skip = '') {
 	</head>
 	<body>
 		<div id="header">
-			<img alt="" src="img/fullsync72.png" />
-			<h1>FullSync</h1>
+			<a href="index.php"><img alt="" src="img/fullsync72.png" /></a>
+			<h1><a href="index.php">FullSync</a></h1>
 			<span>Publishing, Backup, Synchronization</span>
 		</div>
 		<div id="menu">
@@ -143,32 +184,34 @@ function HtmlHeader($caption, $skip = '') {
 			<a href="contribute.php">Contribute</a>
 			<a href="press.php">In The Press</a>
 		</div>
-<?php if ('help-banner' !== $skip) { ?>
+	<?php if ('help-banner' !== $skip) { ?>
 		<div id="help-banner">
 			<div>
 				FullSync is looking for you! Check out the <a href="contribute.php">Contribute</a> page for more infos!
 			</div>
 		</div>
-<?php } ?>
+	<?php } ?>
 		<div id="content">
 			<h1><?php echo $caption; ?></h1>
-<?php
+	<?php
 }
 
 function HtmlFooter($skip = '') {
-?>
-<?php if ('download-button' !== $skip) : ?>
-			<a href="download.php" id="global-download-button">Get FullSync now for free &rarr;</a>
-<?php endif; ?>
-			<a href="https://twitter.com/FullSyncNews" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @FullSyncNews</a>
-			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	if ('download-button' !== $skip) {
+		echo "<a href=\"download.php\" id=\"global-download-button\">Get FullSync now for free &rarr;</a>";
+	}
+	?>
+			<a href="https://twitter.com/FullSyncNews" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @FullSyncNews</a>
+			<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 			<div id="footer-copyright">
-				<span style="font-size: 10pt; color: #999999;">Copyright &copy; 2004-2016 The FullSync Authors. All Rights Reserved.</span>
-				<a href="https://sourceforge.net" style="float: right;"><img src="https://sourceforge.net/sflogo.php?group_id=115436&amp;type=1" alt="SourceForge Logo"/></a>
+				<span>Copyright &copy; 2004-2020 The FullSync Authors. All Rights Reserved.</span>
+				<a href="https://sourceforge.net">
+					<img src="https://sourceforge.net/sflogo.php?group_id=115436&amp;type=1" alt="SourceForge Logo"/>
+				</a>
 			</div>
 		</div>
 		<div id="footer"> </div>
 	</body>
 </html>
-<?php
+	<?php
 }

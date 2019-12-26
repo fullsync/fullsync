@@ -19,8 +19,8 @@
  * at the AUTHORS file in the root of this project.
  */
 
-include("html.php");
-	HtmlHeader("Contribute to FullSync", 'help-banner');
+include "html.php";
+HtmlHeader("Contribute to FullSync", 'help-banner');
 ?>
 	FullSync is looking for:<br />
 	<ul>
@@ -46,4 +46,4 @@ include("html.php");
 	</ul>
 	Get in touch in the <a href="https://sourceforge.net/p/fullsync/discussion/">Fullsync discussion forum</a>.
 <?php
-	HtmlFooter();
+HtmlFooter();

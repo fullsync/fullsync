@@ -139,7 +139,7 @@ ol ul {
 		#3f6b33 50%,
 		#175705);
 	background: -webkit-gradient(
-		linear, left top, left bottom, 
+		linear, left top, left bottom,
 		from(#83af77),
 		color-stop(0.50, #3b692e),
 		color-stop(0.50, #3f6b33),
@@ -165,6 +165,15 @@ ol ul {
 #footer-copyright {
 	padding-top: 1em;
 	line-height: 31px;
+}
+
+#footer-copyright > span {
+	font-size: 10pt;
+	color: #999999;
+}
+
+#footer-copyright > a {
+	float: right;
 }
 
 #footer-copyright:after {

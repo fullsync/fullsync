@@ -1,3 +1,0 @@
-FullSync is a powerful tool that helps you keep multiple copies of various data in sync. It can update your Website using FTP or SFTP, backup your data on the local disk or refresh a working copy from a remote server on your local drive, and much more. It features multiple protocol support, flexible rules, a scheduler, and many other features that give you a solid basis for nearly all situations.
-
-FullSync publishes and updates websites, synchronizes local dirs or backs up data. special features are configuration per dir, buffered filesystems (so the tools only sees files it created itself), multiple protocols (FTP, SFTP...) and flexible rules.
