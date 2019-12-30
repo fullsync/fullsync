@@ -317,11 +317,10 @@ public class Main implements Launcher { // NO_UCD
 
 	@Override
 	public void launchGui(Injector injector) throws Exception {
-		String arch = "x86"; //$NON-NLS-1$
 		String osName = System.getProperty("os.name").toLowerCase(); //$NON-NLS-1$
 		String os = "unknown"; //$NON-NLS-1$
-		if (-1 != System.getProperty("os.arch").indexOf("64")) { //$NON-NLS-1$ //$NON-NLS-2$
-			arch = "x86_64"; //$NON-NLS-1$
+		if (-1 == System.getProperty("os.arch").indexOf("64")) { //$NON-NLS-1$ //$NON-NLS-2$
+			throw new Exception("32 bit Operating Systems are not supported anymore!");
 		}
 		if (-1 != osName.indexOf("linux")) { //$NON-NLS-1$
 			os = "gtk.linux"; //$NON-NLS-1$
@@ -339,7 +338,7 @@ public class Main implements Launcher { // NO_UCD
 		jars.add(new URL(libDirectory + "net.sourceforge.fullsync-fullsync-assets.jar")); //$NON-NLS-1$
 		jars.add(new URL(libDirectory + "net.sourceforge.fullsync-fullsync-ui.jar")); //$NON-NLS-1$
 		// add correct SWT implementation to the class-loader
-		jars.add(new URL(libDirectory + String.format("org.eclipse.platform-org.eclipse.swt.%s.%s.jar", os, arch))); //$NON-NLS-1$
+		jars.add(new URL(libDirectory + String.format("org.eclipse.platform-org.eclipse.swt.%s.x86_64.jar", os))); //$NON-NLS-1$
 
 		// instantiate an URL class-loader with the constructed class-path and load the UI
 		URLClassLoader cl = new URLClassLoader(jars.toArray(new URL[jars.size()]), Main.class.getClassLoader());

@@ -1,8 +1,7 @@
 
 apply plugin: 'java'
 
-def addSWTDependency(configuration, osName, osArch) {
-	def arch = osArch.contains('64') ? 'x86_64' : 'x86'
+def addSWTDependency(configuration, osName) {
 	def os = ''
 	if (osName.contains('windows')) {
 		os = 'win32.win32'
@@ -13,13 +12,13 @@ def addSWTDependency(configuration, osName, osArch) {
 	else if (osName.contains('mac')) {
 		os = 'cocoa.macosx'
 	}
-	project.dependencies.add(configuration, "org.eclipse.platform:org.eclipse.swt.${os}.${arch}:${swtVersion}") {
+	project.dependencies.add(configuration, "org.eclipse.platform:org.eclipse.swt.${os}.x86_64:${swtVersion}") {
 		exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt'
 	}
 }
 
 def addLocalSWTVersion(configuration) {
-	return addSWTDependency(configuration, System.properties['os.name'].toLowerCase(), System.properties['os.arch'])
+	return addSWTDependency(configuration, System.properties['os.name'].toLowerCase())
 }
 
 configurations {
@@ -32,11 +31,9 @@ dependencies {
 	dist project(':fullsync-ui')
 }
 
-addSWTDependency "dist", "linux", "x86"
-addSWTDependency "dist", "linux", "x86_64"
-addSWTDependency "dist", "mac", "x86_64"
-addSWTDependency "dist", "windows", "x86"
-addSWTDependency "dist", "windows", "x86_64"
+addSWTDependency "dist", "linux"
+addSWTDependency "dist", "mac"
+addSWTDependency "dist", "windows"
 addLocalSWTVersion "compile"
 
 task run(type: JavaExec) {

@@ -15,13 +15,20 @@
 # Boston, MA 02110-1301, USA.
 #
 
-%define java_version 1.8.0
-%define gtk_version 2.4.1
+%define java_version 11
+%define gtk_version 3.20
+%if 0%{?fedora}%{defined el7}%{defined el8} > 0
+%define java_dep_version 1:%{java_version}
+%define gtk_dep_name gtk3%{_isa}
+%else
+%define java_dep_version %{java_version}
+%define gtk_dep_name libgtk-3-0%{_isa}
+%endif
 # disbale debuginfo subpackage generation - there is nothing here that has debuginfos
 %global debug_package %{nil}
 
 Name:           FullSync
-Version:        0.10.4
+Version:        0.11.0
 Release:        0
 Summary:        Easy file synchronization for everyone
 License:        GPL-2.0+
@@ -30,30 +37,17 @@ URL:            https://fullsync.sourceforge.io/
 Source0:        %{name}-%{version}-src.tar.gz
 AutoReqProv:    no
 
-%ifarch x86_64
-%if 0%{?fedora}%{defined el7} > 0
-Requires:       jre >= %{java_version}
-%else
-Requires:       jre-64 >= %{java_version}
-%endif
-%else
-Requires:       jre >= %{java_version}
-%endif
-
-%if 0%{?fedora}%{defined el7} > 0
-Requires:       gtk2%{_isa} >= %{gtk_version}
-%else
-Requires:       libgtk-2_0-0%{_isa} >= %{gtk_version}
-%endif
+Requires:       java-%{java_version} >= %{java_dep_version}
+Requires:       %{gtk_dep_name} >= %{gtk_version}
 Requires:       xdg-utils
 Requires:       xdg-user-dirs
 Requires:       desktop-file-utils
 BuildRequires:  ant
-BuildRequires:  java-devel >= %{java_version}
+BuildRequires:  java-%{java_version}-devel >= %{java_dep_version}
 BuildRequires:  hicolor-icon-theme
 BuildRequires:  desktop-file-utils
 BuildRequires:  dos2unix
-ExclusiveArch:  x86_64 i386 i486 i586 i686
+ExclusiveArch:  x86_64
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %define fsdir %{_javadir}/%{name}-%{version}
@@ -126,8 +120,8 @@ rm -rf $RPM_BUILD_ROOT
 %{icondir}/%{exename}.svg
 
 %post
-%if 0%{?fedora}%{defined el7} > 0
-/usr/bin/update-desktop-database &> /dev/null || :
+%if 0%{?fedora}%{defined el7}%{defined el8} > 0
+/usr/bin/update-desktop-database &>/dev/null || :
 touch --no-create %{_datadir}/icons/hicolor/ &>/dev/null || :
 %else
 %desktop_database_post
@@ -135,8 +129,8 @@ touch --no-create %{_datadir}/icons/hicolor/ &>/dev/null || :
 exit 0
 
 %postun
-%if 0%{?fedora}%{defined el7} > 0
-/usr/bin/update-desktop-database &> /dev/null || :
+%if 0%{?fedora}%{defined el7}%{defined el8} > 0
+/usr/bin/update-desktop-database &>/dev/null || :
 if [ $1 -eq 0 ]; then
 	touch --no-create %{_datadir}/icons/hicolor/ &>/dev/null || :
 	gtk-update-icon-cache %{_datadir}/icons/hicolor/ &>/dev/null || :
@@ -147,7 +141,7 @@ fi
 exit 0
 
 %posttrans
-%if 0%{?fedora}%{defined el7} > 0
+%if 0%{?fedora}%{defined el7}%{defined el8} > 0
 gtk-update-icon-cache %{_datadir}/icons/hicolor/ &>/dev/null || :
 %endif
 exit 0
