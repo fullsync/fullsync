@@ -20,24 +20,39 @@
 package net.sourceforge.fullsync.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.UUID;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ProfileBuilder;
+import net.sourceforge.fullsync.Util;
+import net.sourceforge.fullsync.event.ProfileChanged;
+import net.sourceforge.fullsync.event.ProfileListChanged;
 import net.sourceforge.fullsync.schedule.IntervalSchedule;
 
 public class ProfileManagerTest {
 	private XmlBackedProfileManager profileManager;
 	private EventBus eventBus;
+	@TempDir
+	public File tmpDir;
 
 	@BeforeEach
 	public void beforeEach() {
@@ -103,5 +118,22 @@ public class ProfileManagerTest {
 		Profile p = profileManager.getProfileById("5ed254fc-ac55-4a50-a0db-ac9c03f071fc");
 		assertNotNull(p, "Loaded profile '5ed254fc-ac55-4a50-a0db-ac9c03f071fc'");
 		assertEquals("Ignore System Volume Information", p.getName(), "Loaded profile by id has correct name");
+	}
+
+	@Test
+	public void testLoadAndSaveProfiles() throws FileNotFoundException, IOException {
+		profileManager.setProfilesFileName("src/test/resources/profile-1_2-filefilter.xml");
+		assertTrue(profileManager.loadProfiles(), "Load v1.2 profile with simplified rule set");
+		assertEquals(1, profileManager.getProfiles().size(), "Loaded one profile");
+		File tmpFile = new File(tmpDir.getAbsolutePath() + UUID.randomUUID().toString() + ".xml");
+		assertFalse(tmpFile.exists(), "tmp file not yet existing");
+		profileManager.setProfilesFileName(tmpFile.getAbsolutePath());
+		profileManager.save();
+		assertTrue(tmpFile.exists(), "Profile manager stored to configured file");
+		try (FileInputStream referenceFile = new FileInputStream("src/test/resources/profile-1_2-filefilter.xml")) {
+			try (FileInputStream savedFile = new FileInputStream(tmpFile)) {
+				assertEquals(Util.getInputStreamAsString(referenceFile), Util.getInputStreamAsString(savedFile));
+			}
+		}
 	}
 }

@@ -237,8 +237,10 @@ class ProfileImpl implements Profile {
 		elem.setAttribute(ATTRIBUTE_DESCRIPTION, description);
 		elem.setAttribute(ATTRIBUTE_TYPE, synchronizationType);
 		elem.setAttribute(ATTRIBUTE_ENABLED, String.valueOf(schedulingEnabled));
-		elem.setAttribute(ATTRIBUTE_LAST_ERROR_LEVEL, String.valueOf(lastErrorLevel));
-		elem.setAttribute(ATTRIBUTE_LAST_ERROR_STRING, lastErrorString);
+		if (0 != lastErrorLevel) {
+			elem.setAttribute(ATTRIBUTE_LAST_ERROR_LEVEL, String.valueOf(lastErrorLevel));
+			elem.setAttribute(ATTRIBUTE_LAST_ERROR_STRING, lastErrorString);
+		}
 		if (null != lastUpdate) {
 			elem.setAttribute(ATTRIBUTE_LAST_UPDATE, String.valueOf(lastUpdate.getTime()));
 		}
