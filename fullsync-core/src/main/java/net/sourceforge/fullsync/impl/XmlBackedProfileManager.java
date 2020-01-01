@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,7 +48,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.google.common.eventbus.EventBus;
@@ -58,6 +58,7 @@ import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileBuilder;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.event.ProfileListChanged;
+import net.sourceforge.fullsync.utils.XmlUtils;
 
 /**
  * A ProfileManager handles persistence of Profiles and provides
@@ -102,19 +103,17 @@ public class XmlBackedProfileManager implements ProfileManager {
 	}
 
 	private void deserializeProfileList(Document doc) {
-		NodeList list = doc.getDocumentElement().getChildNodes();
-		for (int i = 0; i < list.getLength(); i++) {
-			Node n = list.item(i);
-			if (n.getNodeType() == Node.ELEMENT_NODE) {
-				try {
-					deserializeProfile(n);
-				}
-				catch (Exception ex) {
-					String message = String.format("Failed to load Profile %d, ignoring and continuing with the rest", i + 1);
-					ExceptionHandler.reportException(message, ex);
-				}
+		final AtomicInteger profileIndex = new AtomicInteger();
+		XmlUtils.forEachChildElement(doc.getDocumentElement(), profile -> {
+			int index = profileIndex.incrementAndGet();
+			try {
+				deserializeProfile(profile);
 			}
-		}
+			catch (Exception ex) {
+				String message = String.format("Failed to load Profile %d, ignoring and continuing with the rest", index);
+				ExceptionHandler.reportException(message, ex);
+			}
+		});
 	}
 
 	private void deserializeProfile(Node n) throws DataParseException {

@@ -27,7 +27,8 @@ import java.time.format.DateTimeFormatter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+
+import net.sourceforge.fullsync.utils.XmlUtils;
 
 public class ChangeLogEntry {
 	private Node ul;
@@ -60,13 +61,9 @@ public class ChangeLogEntry {
 	public void write(String headerTemplate, String entryTemplate, Writer wr, DateTimeFormatter dateFormat) {
 		PrintWriter pw = new PrintWriter(wr);
 		pw.println(String.format(headerTemplate, version, dateFormat.format(date)));
-		NodeList lis = ul.getChildNodes();
-		for (int i = 0; i < lis.getLength(); ++i) {
-			Node li = lis.item(i);
-			if (Node.ELEMENT_NODE == li.getNodeType()) {
-				pw.println(String.format(entryTemplate, li.getTextContent()));
-			}
-		}
+		XmlUtils.forEachChildElement(ul, li -> {
+			pw.println(String.format(entryTemplate, li.getTextContent()));
+		});
 		pw.println();
 		pw.flush();
 	}

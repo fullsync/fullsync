@@ -31,8 +31,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+
+import net.sourceforge.fullsync.utils.XmlUtils;
 
 public class ConnectionDescription {
 	private static final String ELEMENT_SECRET_PARAM = "SecretParam"; //$NON-NLS-1$
@@ -126,25 +126,20 @@ public class ConnectionDescription {
 		builder.setPassword(Obfuscator.deobfuscate(getAttributeOrNull(element, ATTRIBUTE_PASSWORD)));
 		builder.setBufferStrategy(getAttributeOrNull(element, ATTRIBUTE_BUFFER_STRATEGY));
 
-		NodeList list = element.getChildNodes();
-		for (int i = 0; i < list.getLength(); i++) {
-			Node n = list.item(i);
-			if (n.getNodeType() == Node.ELEMENT_NODE) {
-				Element e = (Element) n;
-				switch (n.getNodeName()) {
-					case ELEMENT_PARAM:
-						if (PARAMETER_PUBLIC_KEY_AUTH.equals(e.getAttribute(ATTRIBUTE_NAME))) {
-							builder.setPublicKeyAuth(PUBLIC_KEY_AUTH_ENABLED.equals(e.getAttribute(ATTRIBUTE_VALUE)));
-						}
-						break;
-					case ELEMENT_SECRET_PARAM:
-						if (PARAMETER_KEY_PASSPHRASE.equals(e.getAttribute(ATTRIBUTE_NAME))) {
-							builder.setKeyPassphrase(Obfuscator.deobfuscate(e.getAttribute(ATTRIBUTE_VALUE)));
-						}
-						break;
-				}
+		XmlUtils.forEachChildElement(element, param -> {
+			switch (param.getNodeName()) {
+				case ELEMENT_PARAM:
+					if (PARAMETER_PUBLIC_KEY_AUTH.equals(param.getAttribute(ATTRIBUTE_NAME))) {
+						builder.setPublicKeyAuth(PUBLIC_KEY_AUTH_ENABLED.equals(param.getAttribute(ATTRIBUTE_VALUE)));
+					}
+					break;
+				case ELEMENT_SECRET_PARAM:
+					if (PARAMETER_KEY_PASSPHRASE.equals(param.getAttribute(ATTRIBUTE_NAME))) {
+						builder.setKeyPassphrase(Obfuscator.deobfuscate(param.getAttribute(ATTRIBUTE_VALUE)));
+					}
+					break;
 			}
-		}
+		});
 		return builder.build();
 	}
 
