@@ -27,7 +27,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -40,7 +39,7 @@ class NiceListViewItem extends Canvas implements Listener {
 	private Label labelIcon;
 	private Label labelCaption;
 	private Label labelStatus;
-	private Composite compositeContent;
+	private NiceListViewProfileListComposite.ContentComposite compositeContent;
 	private ProfileListControlHandler handler;
 	private Profile profile;
 	private boolean mouseOver;
@@ -209,7 +208,7 @@ class NiceListViewItem extends Canvas implements Listener {
 		this.layout();
 	}
 
-	public Composite getContent() {
+	public NiceListViewProfileListComposite.ContentComposite getContent() {
 		return compositeContent;
 	}
 
@@ -221,7 +220,7 @@ class NiceListViewItem extends Canvas implements Listener {
 	 *            mouselisteners are set only on all direct children
 	 *            of this composite
 	 */
-	public void setContent(Composite content) {
+	public void setContent(NiceListViewProfileListComposite.ContentComposite content) {
 		this.compositeContent = content;
 		GridData compositeContentLData = new GridData();
 		compositeContentLData.horizontalSpan = 3;
@@ -257,5 +256,37 @@ class NiceListViewItem extends Canvas implements Listener {
 
 	public void setProfile(Profile profile) {
 		this.profile = profile;
+	}
+
+	void update(NiceListViewProfileListComposite niceListViewProfileListComposite) {
+		boolean isError = profile.getLastErrorLevel() > 0;
+		boolean isScheduled = profile.isSchedulingEnabled() && (null != profile.getSchedule());
+		if (isScheduled) {
+			setImage(isError
+				? niceListViewProfileListComposite.imageProfileErrorScheduled
+				: niceListViewProfileListComposite.imageProfileScheduled);
+		}
+		else {
+			setImage(isError ? niceListViewProfileListComposite.imageProfileError : niceListViewProfileListComposite.imageProfileDefault);
+		}
+
+		setText(profile.getName());
+
+		if (isError) {
+			setStatusText(profile.getLastErrorString());
+		}
+		else {
+			String desc = profile.getDescription();
+			if ((null != desc) && !desc.isEmpty()) {
+				setStatusText(desc);
+			}
+			else if (isScheduled) {
+				setStatusText(profile.getNextUpdateText());
+			}
+			else {
+				setStatusText(""); //$NON-NLS-1$
+			}
+		}
+		compositeContent.updateComponent(profile);
 	}
 }

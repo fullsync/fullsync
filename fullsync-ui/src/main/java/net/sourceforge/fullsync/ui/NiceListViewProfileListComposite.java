@@ -48,17 +48,14 @@ import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.event.ProfileListChanged;
 
 class NiceListViewProfileListComposite extends ProfileListComposite {
-	private static class ContentComposite extends Composite {
-		private NiceListViewProfileListComposite niceListViewProfileListComposite;
-		private Profile profile;
+	public static class ContentComposite extends Composite {
 		private Label lSource;
 		private Label lDestination;
 		private Label lLastUpdate;
 		private Label lNextUpdate;
 
-		ContentComposite(NiceListViewProfileListComposite profileListComposite, Composite parent) {
+		ContentComposite(NiceListViewProfileListComposite niceListViewProfileListComposite, NiceListViewItem parent) {
 			super(parent, SWT.NULL);
-			niceListViewProfileListComposite = profileListComposite;
 			GridLayout layout = new GridLayout(2, false);
 			layout.marginHeight = 1;
 			layout.marginWidth = 1;
@@ -126,22 +123,22 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 
 			ToolItem t = new ToolItem(toolbar, SWT.PUSH);
 			t.setImage(niceListViewProfileListComposite.imageRun);
-			t.addListener(SWT.Selection, e -> handler.runProfile(profile, true));
+			t.addListener(SWT.Selection, e -> handler.runProfile(parent.getProfile(), true));
 
 			t = new ToolItem(toolbar, SWT.PUSH);
 			t.setImage(niceListViewProfileListComposite.imageRunNonInter);
-			t.addListener(SWT.Selection, e -> handler.runProfile(profile, false));
+			t.addListener(SWT.Selection, e -> handler.runProfile(parent.getProfile(), false));
 
 			t = new ToolItem(toolbar, SWT.PUSH);
 			t.setImage(niceListViewProfileListComposite.imageEdit);
-			t.addListener(SWT.Selection, e -> handler.editProfile(profile));
+			t.addListener(SWT.Selection, e -> handler.editProfile(parent.getProfile()));
 
 			t = new ToolItem(toolbar, SWT.PUSH);
 			t.setImage(niceListViewProfileListComposite.imageDelete);
-			t.addListener(SWT.Selection, e -> handler.deleteProfile(profile));
+			t.addListener(SWT.Selection, e -> handler.deleteProfile(parent.getProfile()));
 		}
 
-		public void updateComponent() {
+		public void updateComponent(Profile profile) {
 			ConnectionDescription desc = profile.getSource();
 			lSource.setText(null != desc ? desc.getDisplayPath() : ""); //$NON-NLS-1$
 			desc = profile.getDestination();
@@ -149,15 +146,6 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 			lLastUpdate.setText(profile.getLastUpdateText());
 			lNextUpdate.setText(profile.getNextUpdateText());
 			layout();
-		}
-
-		public void setProfile(Profile profile) {
-			this.profile = profile;
-			updateComponent();
-		}
-
-		public Profile getProfile() {
-			return profile;
 		}
 
 		@Override
@@ -192,10 +180,10 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 	private ScrolledComposite scrollPane;
 	private NiceListView profileList;
 	private Map<Profile, NiceListViewItem> profilesToItems;
-	private Image imageProfileDefault;
-	private Image imageProfileScheduled;
-	private Image imageProfileError;
-	private Image imageProfileErrorScheduled;
+	Image imageProfileDefault;
+	Image imageProfileScheduled;
+	Image imageProfileError;
+	Image imageProfileErrorScheduled;
 	private Image imageRun;
 	private Image imageRunNonInter;
 	private Image imageEdit;
@@ -238,35 +226,6 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 		imageDelete = imageRepository.getImage("Profile_Delete.png"); //$NON-NLS-1$
 	}
 
-	private void updateItem(NiceListViewItem item, Profile profile) {
-		boolean isError = profile.getLastErrorLevel() > 0;
-		boolean isScheduled = profile.isSchedulingEnabled() && (null != profile.getSchedule());
-		if (isScheduled) {
-			item.setImage(isError ? imageProfileErrorScheduled : imageProfileScheduled);
-		}
-		else {
-			item.setImage(isError ? imageProfileError : imageProfileDefault);
-		}
-
-		item.setText(profile.getName());
-
-		if (isError) {
-			item.setStatusText(profile.getLastErrorString());
-		}
-		else {
-			String desc = profile.getDescription();
-			if ((null != desc) && !desc.isEmpty()) {
-				item.setStatusText(desc);
-			}
-			else if (isScheduled) {
-				item.setStatusText(profile.getNextUpdateText());
-			}
-			else {
-				item.setStatusText(""); //$NON-NLS-1$
-			}
-		}
-	}
-
 	private void populateProfileList() {
 		if (!isDisposed()) {
 			profilesToItems = new HashMap<>();
@@ -276,14 +235,12 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 				NiceListViewItem item = null;
 				try {
 					item = new NiceListViewItem(profileList);
+					item.setProfile(p);
 					ContentComposite content = new ContentComposite(this, item);
-					content.setProfile(p);
 					item.setContent(content);
 					item.setMenu(getMenu());
 					item.setHandler(handler);
-					item.setProfile(p);
-					updateItem(item, p);
-
+					item.update(this);
 					profilesToItems.put(p, item);
 				}
 				catch (Exception e) {
@@ -299,9 +256,9 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 
 	@Override
 	public Profile getSelectedProfile() {
-		ContentComposite content = (ContentComposite) profileList.getSelectedContent();
-		if (null != content) {
-			return content.getProfile();
+		NiceListViewItem item = profileList.getSelectedItem();
+		if (null != item) {
+			return item.getProfile();
 		}
 		return null;
 	}
@@ -333,9 +290,7 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 					populateProfileList();
 				}
 				else {
-					ContentComposite content = (ContentComposite) item.getContent();
-					updateItem(item, content.getProfile());
-					content.updateComponent();
+					item.update(this);
 				}
 			}
 		});

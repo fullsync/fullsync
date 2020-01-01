@@ -138,11 +138,8 @@ class NiceListView extends Composite {
 		}
 	}
 
-	public Composite getSelectedContent() {
-		if (null == selected) {
-			return null;
-		}
-		return selected.getContent();
+	public NiceListViewItem getSelectedItem() {
+		return selected;
 	}
 
 	public void setSelected(NiceListViewItem item) {
