@@ -57,6 +57,7 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileBuilder;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.event.ProfileListChanged;
 import net.sourceforge.fullsync.utils.XmlUtils;
 
@@ -125,25 +126,20 @@ public class XmlBackedProfileManager implements ProfileManager {
 		if (!id.equals(p.getId())) {
 			p = getProfileBuilder(p).setId(id).build();
 		}
-		doAddProfile(p, false);
-	}
-
-	private synchronized void doAddProfile(Profile profile, boolean fireChangedEvent) {
-		profiles.put(profile.getId(), profile);
-		if (fireChangedEvent) {
-			eventBus.post(new ProfileListChanged());
-		}
+		profiles.put(p.getId(), p);
 	}
 
 	@Override
 	public void addProfile(Profile profile) {
-		doAddProfile(profile, true);
+		profiles.put(profile.getId(), profile);
+		eventBus.post(new ProfileListChanged());
 	}
 
 	@Override
 	public synchronized void updateProfile(Profile oldProfile, Profile newProfile) {
 		profiles.remove(oldProfile.getId());
-		doAddProfile(newProfile, true);
+		profiles.put(newProfile.getId(), newProfile);
+		eventBus.post(new ProfileChanged(newProfile));
 	}
 
 	@Override

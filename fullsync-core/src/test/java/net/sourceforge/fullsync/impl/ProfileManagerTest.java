@@ -31,6 +31,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -135,5 +137,74 @@ public class ProfileManagerTest {
 				assertEquals(Util.getInputStreamAsString(referenceFile), Util.getInputStreamAsString(savedFile));
 			}
 		}
+	}
+
+	@Test
+	public void testAddProfile() throws InterruptedException {
+		assertEquals(0, profileManager.getProfiles().size(), "No profiles exist");
+		final CountDownLatch latch = new CountDownLatch(1);
+		final Object eventHandler = new Object() {
+			@Subscribe
+			public void handleProfileListChanged(ProfileListChanged plc) {
+				latch.countDown();
+			}
+		};
+		eventBus.register(eventHandler);
+		Profile p = profileManager.getProfileBuilder().setName("Test Profile").build();
+		profileManager.addProfile(p);
+		assertTrue(latch.await(1, TimeUnit.SECONDS), "ProfileListChanged event triggered");
+		assertEquals(1, profileManager.getProfiles().size(), "One Profile added");
+	}
+
+	@Test
+	public void testUpdateProfileErrorLevel() throws InterruptedException {
+		profileManager.setProfilesFileName("src/test/resources/profile-1_2-filefilter.xml");
+		assertTrue(profileManager.loadProfiles(), "Load v1.2 profile with simplified rule set");
+		assertEquals(1, profileManager.getProfiles().size(), "Loaded one profile");
+		Profile p = profileManager.getProfileById("5ed254fc-ac55-4a50-a0db-ac9c03f071fc");
+		assertNotNull(p, "Loaded profile '5ed254fc-ac55-4a50-a0db-ac9c03f071fc'");
+		assertEquals("Ignore System Volume Information", p.getName(), "Loaded profile by id has correct name");
+		assertEquals(0, p.getLastErrorLevel(), "Profile last error level");
+		assertNull(p.getLastErrorString(), "Profile last error message");
+		final CountDownLatch latch = new CountDownLatch(1);
+		final Object eventHandler = new Object() {
+			@Subscribe
+			public void handleProfileChanged(ProfileChanged pc) {
+				assertEquals(42, pc.getProfile().getLastErrorLevel(), "Updated Profile last error level");
+				assertEquals("Test Error Message", pc.getProfile().getLastErrorString(), "Updated Profile last error message");
+				latch.countDown();
+			}
+		};
+		eventBus.register(eventHandler);
+		p.setLastError(42, "Test Error Message");
+		assertTrue(latch.await(1, TimeUnit.SECONDS), "ProfileChanged event triggered");
+		assertEquals(42, p.getLastErrorLevel(), "Updated Profile last error level");
+		assertEquals("Test Error Message", p.getLastErrorString(), "Updated Profile last error message");
+	}
+
+	@Test
+	public void testUpdateProfile() throws InterruptedException {
+		profileManager.setProfilesFileName("src/test/resources/profile-1_2-filefilter.xml");
+		assertTrue(profileManager.loadProfiles(), "Load v1.2 profile with simplified rule set");
+		assertEquals(1, profileManager.getProfiles().size(), "Loaded one profile");
+		Profile p = profileManager.getProfileById("5ed254fc-ac55-4a50-a0db-ac9c03f071fc");
+		assertNotNull(p, "Loaded profile '5ed254fc-ac55-4a50-a0db-ac9c03f071fc'");
+		assertEquals("Ignore System Volume Information", p.getName(), "Loaded profile by id has correct name");
+		ProfileBuilder pb = profileManager.getProfileBuilder(p);
+		pb.setName("Updated Profile Name");
+		final CountDownLatch latch = new CountDownLatch(1);
+		final Object eventHandler = new Object() {
+			@Subscribe
+			public void handleProfileChanged(ProfileChanged pc) {
+				assertEquals(p.getId(), pc.getProfile().getId(), "Existing Profile Changed");
+				assertEquals("Updated Profile Name", pc.getProfile().getName());
+				latch.countDown();
+			}
+		};
+		eventBus.register(eventHandler);
+		profileManager.updateProfile(p, pb.build());
+		assertTrue(latch.await(1, TimeUnit.SECONDS), "ProfileChanged event triggered");
+		Profile p2 = profileManager.getProfileById(p.getId());
+		assertEquals("Updated Profile Name", p2.getName());
 	}
 }

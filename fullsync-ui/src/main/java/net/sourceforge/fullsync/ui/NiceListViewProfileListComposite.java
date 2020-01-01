@@ -175,11 +175,11 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 		}
 	}
 
+	private final Map<String, NiceListViewItem> profilesToItems = new HashMap<>();
 	private final ProfileListControlHandler handler;
 	private final ProfileManager profileManager;
 	private ScrolledComposite scrollPane;
 	private NiceListView profileList;
-	private Map<Profile, NiceListViewItem> profilesToItems;
 	Image imageProfileDefault;
 	Image imageProfileScheduled;
 	Image imageProfileError;
@@ -228,7 +228,7 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 
 	private void populateProfileList() {
 		if (!isDisposed()) {
-			profilesToItems = new HashMap<>();
+			profilesToItems.clear();
 			setItemsMenu(null);
 			profileList.clear();
 			for (Profile p : profileManager.getProfiles()) {
@@ -241,7 +241,7 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 					item.setMenu(getMenu());
 					item.setHandler(handler);
 					item.update(this);
-					profilesToItems.put(p, item);
+					profilesToItems.put(p.getId(), item);
 				}
 				catch (Exception e) {
 					e.printStackTrace();
@@ -282,14 +282,16 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 	}
 
 	@Subscribe
-	private void profileChanged(ProfileChanged p) {
+	private void profileChanged(ProfileChanged pc) {
 		getDisplay().syncExec(() -> {
 			if (!isDisposed()) {
-				NiceListViewItem item = profilesToItems.get(p.getProfile());
+				Profile p = pc.getProfile();
+				NiceListViewItem item = profilesToItems.get(p.getId());
 				if (null == item) {
 					populateProfileList();
 				}
 				else {
+					item.setProfile(p);
 					item.update(this);
 				}
 			}
