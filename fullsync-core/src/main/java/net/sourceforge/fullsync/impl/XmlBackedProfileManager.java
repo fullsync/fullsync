@@ -36,12 +36,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -91,8 +87,7 @@ public class XmlBackedProfileManager implements ProfileManager {
 		File file = new File(profilesFileName);
 		if (file.exists() && (file.length() > 0)) {
 			try {
-				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				deserializeProfileList(builder.parse(file));
+				deserializeProfileList(XmlUtils.newDocumentBuilder().parse(file));
 			}
 			catch (ParserConfigurationException | SAXException | IOException ex) {
 				ExceptionHandler.reportException("Profile loading failed", ex);
@@ -173,25 +168,16 @@ public class XmlBackedProfileManager implements ProfileManager {
 	@Override
 	public synchronized void save() {
 		try {
-			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
-
+			Document doc = XmlUtils.newDocumentBuilder().newDocument();
 			Element e = doc.createElement("Profiles"); //$NON-NLS-1$
 			e.setAttribute("version", "1.2"); //$NON-NLS-1$ //$NON-NLS-2$
 			profiles.values().stream().map(p -> ((ProfileImpl) p).serialize(doc)).forEachOrdered(e::appendChild);
 			doc.appendChild(e);
 
-			TransformerFactory fac = TransformerFactory.newInstance();
-			fac.setAttribute("indent-number", 2); //$NON-NLS-1$
-			Transformer tf = fac.newTransformer();
-			tf.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
-			tf.setOutputProperty(OutputKeys.VERSION, "1.0"); //$NON-NLS-1$
-			tf.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-			tf.setOutputProperty(OutputKeys.STANDALONE, "no"); //$NON-NLS-1$
-			DOMSource source = new DOMSource(doc);
+			Transformer tf = XmlUtils.newTransformer();
 			File newCfgFile = new File(profilesFileName + ".tmp"); //$NON-NLS-1$
 			try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(newCfgFile), StandardCharsets.UTF_8)) {
-				tf.transform(source, new StreamResult(osw));
+				tf.transform(new DOMSource(doc), new StreamResult(osw));
 				osw.flush();
 			}
 			try {

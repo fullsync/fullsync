@@ -21,9 +21,22 @@ package net.sourceforge.fullsync.utils;
 
 import java.util.function.Consumer;
 
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class XmlUtils {
 	private XmlUtils() {
@@ -37,5 +50,32 @@ public class XmlUtils {
 				forEachElement.accept((Element) childNode);
 			}
 		}
+	}
+
+	public static SAXParser newSaxParser() throws ParserConfigurationException, SAXException {
+		SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+		saxParser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+		saxParser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+		return saxParser;
+	}
+
+	public static DocumentBuilder newDocumentBuilder() throws ParserConfigurationException {
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+		documentBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+		return documentBuilderFactory.newDocumentBuilder();
+	}
+
+	public static Transformer newTransformer() throws TransformerFactoryConfigurationError, TransformerConfigurationException {
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+		transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+		transformerFactory.setAttribute("indent-number", 2); //$NON-NLS-1$
+		Transformer transformer = transformerFactory.newTransformer();
+		transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
+		transformer.setOutputProperty(OutputKeys.VERSION, "1.0"); //$NON-NLS-1$
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+		transformer.setOutputProperty(OutputKeys.STANDALONE, "no"); //$NON-NLS-1$
+		return transformer;
 	}
 }
