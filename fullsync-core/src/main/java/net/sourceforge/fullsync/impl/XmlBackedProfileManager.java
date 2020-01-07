@@ -120,7 +120,7 @@ public class XmlBackedProfileManager implements ProfileManager {
 	private void deserializeProfile(Node n) throws DataParseException {
 		Profile p = ProfileImpl.unserialize(eventBus, (Element) n);
 		String id = p.getId();
-		while ((null == id) || "".equals(id) || (null != getProfileById(id))) { //$NON-NLS-1$
+		while ((null == id) || id.trim().isEmpty() || (null != getProfileById(id))) {
 			id = getUnusedProfileId();
 		}
 		if (!id.equals(p.getId())) {
