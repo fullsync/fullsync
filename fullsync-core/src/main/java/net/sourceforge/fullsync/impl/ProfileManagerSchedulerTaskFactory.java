@@ -23,5 +23,5 @@ import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
 
 public interface ProfileManagerSchedulerTaskFactory {
-	ScheduleTask create(Profile profile, long time);
+	ScheduleTask create(Profile profile, long executionTime);
 }
