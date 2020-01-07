@@ -50,7 +50,6 @@ import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerator;
-import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.schedule.Schedule;
 
@@ -190,15 +189,11 @@ public abstract class FilesystemTestBase {
 	@Subscribe
 	public void taskGenerationFinished(final TaskGenerationFinished taskGenerationFinished) {
 		Task task = taskGenerationFinished.getTask();
-		Object ex = expectation.get(task.getSource().getName());
+		Action ex = expectation.get(task.getSource().getName());
 
 		assertNotNull(ex, "Unexpected generated Task for file: " + task.getSource().getName());
-		assertTrue(task.getCurrentAction().equalsExceptExplanation((Action) ex),
+		assertTrue(task.getCurrentAction().equalsExceptExplanation(ex),
 			"Action was " + task.getCurrentAction() + ", expected: " + ex + " for File " + task.getSource().getName());
-	}
-
-	protected TaskTree assertPhaseOneActions(final Map<String, Action> expectation) throws Exception {
-		return taskGenerator.execute(profile, false);
 	}
 
 	private long prepareForTest() {
