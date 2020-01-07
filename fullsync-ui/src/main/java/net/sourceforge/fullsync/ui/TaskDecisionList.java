@@ -390,9 +390,9 @@ class TaskDecisionList extends Composite {
 		// load initial actions of first task
 		Action[] possibleActions = taskList.get(0).getActions().clone();
 
-		for (int iTask = 1; iTask < taskList.size(); iTask++) {
-			// invalidate all possible actions we dont find in this actionlist
-			Action[] actions = taskList.get(iTask).getActions();
+		for (Task task : taskList) {
+			// invalidate all possible actions we don't find in this actionlist
+			Action[] actions = task.getActions();
 
 			for (int iPosAction = 0; iPosAction < possibleActions.length; iPosAction++) {
 				Action action = possibleActions[iPosAction];
