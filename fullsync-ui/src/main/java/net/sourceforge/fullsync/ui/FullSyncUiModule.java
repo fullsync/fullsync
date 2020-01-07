@@ -37,5 +37,6 @@ class FullSyncUiModule extends AbstractModule {
 		profileListCompositeFactory.implement(ProfileListComposite.class, Names.named("list"), ListViewProfileListComposite.class); //$NON-NLS-1$
 		profileListCompositeFactory.implement(ProfileListComposite.class, Names.named("nice"), NiceListViewProfileListComposite.class); //$NON-NLS-1$
 		install(profileListCompositeFactory.build(ProfileListCompositeFactory.class));
+		install(new FactoryModuleBuilder().build(NiceListViewItemFactory.class));
 	}
 }

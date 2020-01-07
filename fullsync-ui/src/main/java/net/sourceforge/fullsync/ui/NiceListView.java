@@ -25,59 +25,19 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 
 import net.sourceforge.fullsync.ExceptionHandler;
 
 class NiceListView extends Composite {
-	private FontRepository fontRepository;
-	private Color colorDefault;
-	private Color colorHover;
-	private Color colorSelected;
-	private Color colorForeground;
-	private Color colorSelectedForegroud;
 	private NiceListViewItem selected;
 
-	NiceListView(Composite parent, FontRepository fontRepository) {
+	NiceListView(Composite parent) {
 		super(parent, SWT.TRANSPARENT);
-		this.fontRepository = fontRepository;
-		Display display = getDisplay();
-		colorDefault = display.getSystemColor(SWT.COLOR_LIST_BACKGROUND);
-		colorHover = display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
-		colorSelected = display.getSystemColor(SWT.COLOR_LIST_SELECTION);
-		colorForeground = display.getSystemColor(SWT.COLOR_LIST_FOREGROUND);
-		colorSelectedForegroud = display.getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT);
-
 		addKeyListener(KeyListener.keyPressedAdapter(this::keyPressed));
 		initGUI();
-	}
-
-	public FontRepository getFontRepository() {
-		return fontRepository;
-	}
-
-	public Color getColorDefault() {
-		return colorDefault;
-	}
-
-	public Color getColorHover() {
-		return colorHover;
-	}
-
-	public Color getColorSelected() {
-		return colorSelected;
-	}
-
-	public Color getColorForeground() {
-		return colorForeground;
-	}
-
-	public Color getColorSelectedForegroud() {
-		return colorSelectedForegroud;
 	}
 
 	protected void keyPressed(KeyEvent event) {
