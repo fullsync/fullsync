@@ -30,8 +30,8 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.fs.FileSystem;
-import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
 public class SmbFileSystem implements FileSystem {
 	private static final Logger logger = LoggerFactory.getLogger(SmbFileSystem.class);
@@ -51,8 +51,8 @@ public class SmbFileSystem implements FileSystem {
 	}
 
 	@Override
-	public final Site createConnection(final FullSync fullsync, final ConnectionDescription description, boolean isInteractive)
-		throws FileSystemException {
+	public final FileSystemConnection createConnection(final FullSync fullsync, final ConnectionDescription description,
+		boolean isInteractive) throws FileSystemException {
 		return new CommonsVfsConnection(description, new SmbAuthProvider());
 	}
 }

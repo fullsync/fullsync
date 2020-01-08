@@ -20,15 +20,15 @@
 package net.sourceforge.fullsync;
 
 import net.sourceforge.fullsync.buffer.BlockBuffer;
-import net.sourceforge.fullsync.fs.Site;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 
 public class TaskTree {
-	private final Site source;
-	private final Site destination;
+	private final FileSystemConnection source;
+	private final FileSystemConnection destination;
 	private final Task root;
 
-	public TaskTree(Site source, Site destination, Task root) {
+	public TaskTree(FileSystemConnection source, FileSystemConnection destination, Task root) {
 		this.source = source;
 		this.destination = destination;
 		this.root = root;
@@ -38,11 +38,11 @@ public class TaskTree {
 		return root;
 	}
 
-	public Site getDestination() {
+	public FileSystemConnection getDestination() {
 		return destination;
 	}
 
-	public Site getSource() {
+	public FileSystemConnection getSource() {
 		return source;
 	}
 

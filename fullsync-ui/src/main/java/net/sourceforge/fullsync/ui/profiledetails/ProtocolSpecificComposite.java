@@ -37,7 +37,7 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ConnectionDescription.Builder;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemManager;
-import net.sourceforge.fullsync.fs.Site;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 import net.sourceforge.fullsync.ui.Messages;
 
 abstract class ProtocolSpecificComposite {
@@ -104,7 +104,7 @@ abstract class ProtocolSpecificComposite {
 		try {
 			ConnectionDescription desc = getConnectionDescription().build();
 			FileSystemManager fsm = fileSystemManagerProvider.get();
-			try (Site conn = fsm.createConnection(desc, true)) {
+			try (FileSystemConnection conn = fsm.createConnection(desc, true)) {
 				FileObject base = conn.getBase();
 				FileObjectChooser foc = fileObjectChooserProvider.get();
 				if (foc.open(m_parent.getShell(), base)) {

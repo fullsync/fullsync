@@ -52,7 +52,7 @@ import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.Site;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
 public class TaskGeneratorImpl implements TaskGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
@@ -178,8 +178,8 @@ public class TaskGeneratorImpl implements TaskGenerator {
 
 		ConnectionDescription srcDesc = profile.getSource();
 		ConnectionDescription dstDesc = profile.getDestination();
-		try (Site d1 = fileSystemManager.createConnection(srcDesc, interactive)) {
-			try (Site d2 = fileSystemManager.createConnection(dstDesc, interactive)) {
+		try (FileSystemConnection d1 = fileSystemManager.createConnection(srcDesc, interactive)) {
+			try (FileSystemConnection d2 = fileSystemManager.createConnection(dstDesc, interactive)) {
 				return execute(d1, d2, actionDecider, rules);
 			}
 		}
@@ -188,7 +188,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		}
 	}
 
-	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules)
+	public TaskTree execute(FileSystemConnection source, FileSystemConnection destination, ActionDecider actionDecider, RuleSet rules)
 		throws DataParseException, FileSystemException, IOException {
 		if (!source.isAvailable()) {
 			throw new FileSystemException("source is unavailable");

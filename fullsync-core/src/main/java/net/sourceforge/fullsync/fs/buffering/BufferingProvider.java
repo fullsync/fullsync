@@ -22,8 +22,8 @@ package net.sourceforge.fullsync.fs.buffering;
 import java.io.IOException;
 
 import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.fs.Site;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
 public interface BufferingProvider {
-	Site createBufferedSite(Site site) throws FileSystemException, IOException;
+	FileSystemConnection createBufferedSite(FileSystemConnection site) throws FileSystemException, IOException;
 }

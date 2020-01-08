@@ -24,8 +24,9 @@ import java.io.IOException;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FullSync;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
 public interface FileSystem {
-	Site createConnection(FullSync fullsync, ConnectionDescription description, boolean isInteractive)
+	FileSystemConnection createConnection(FullSync fullsync, ConnectionDescription description, boolean isInteractive)
 		throws FileSystemException, IOException;
 }
