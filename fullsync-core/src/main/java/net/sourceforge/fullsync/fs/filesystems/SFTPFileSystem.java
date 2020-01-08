@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.fs.filesystems;
 
+import javax.inject.Inject;
+
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FullSync;
@@ -27,9 +29,16 @@ import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
 public class SFTPFileSystem implements FileSystem {
+	private final FullSync fullSync;
+
+	@Inject
+	public SFTPFileSystem(FullSync fullSync) {
+		this.fullSync = fullSync;
+	}
+
 	@Override
-	public final FileSystemConnection createConnection(final FullSync fullsync, final ConnectionDescription description,
-		boolean isInteractive) throws FileSystemException {
-		return new CommonsVfsConnection(description, new SFTPAuthProvider(fullsync, description, isInteractive));
+	public final FileSystemConnection createConnection(final ConnectionDescription connectionDescription, boolean interactive)
+		throws FileSystemException {
+		return new CommonsVfsConnection(connectionDescription, new SFTPAuthProvider(fullSync, connectionDescription, interactive));
 	}
 }

@@ -19,6 +19,8 @@
  */
 package net.sourceforge.fullsync.fs.filesystems;
 
+import javax.inject.Inject;
+
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
@@ -28,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
@@ -50,9 +51,13 @@ public class SmbFileSystem implements FileSystem {
 		}
 	}
 
+	@Inject
+	public SmbFileSystem() {
+	}
+
 	@Override
-	public final FileSystemConnection createConnection(final FullSync fullsync, final ConnectionDescription description,
-		boolean isInteractive) throws FileSystemException {
-		return new CommonsVfsConnection(description, new SmbAuthProvider());
+	public final FileSystemConnection createConnection(final ConnectionDescription connectionDescription, boolean interactive)
+		throws FileSystemException {
+		return new CommonsVfsConnection(connectionDescription, new SmbAuthProvider());
 	}
 }

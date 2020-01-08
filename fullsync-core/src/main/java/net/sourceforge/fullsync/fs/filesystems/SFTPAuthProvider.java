@@ -65,13 +65,13 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		}
 	}
 	private final FullSync fullsync;
-	private final ConnectionDescription desc;
-	private final boolean isInteractive;
+	private final ConnectionDescription connectionDescription;
+	private final boolean interactive;
 
-	SFTPAuthProvider(final FullSync _fullsync, final ConnectionDescription _desc, boolean _isInteractive) {
-		fullsync = _fullsync;
-		desc = _desc;
-		isInteractive = _isInteractive;
+	SFTPAuthProvider(final FullSync fullsync, final ConnectionDescription connectionDescription, boolean interactive) {
+		this.fullsync = fullsync;
+		this.connectionDescription = connectionDescription;
+		this.interactive = interactive;
 	}
 
 	@Override
@@ -81,7 +81,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 		SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
-		cfg.setUserDirIsRoot(options, desc.isUserDirIsRoot());
+		cfg.setUserDirIsRoot(options, connectionDescription.isUserDirIsRoot());
 		if (null != SSH_DIR_NAME) {
 			cfg.setKnownHosts(options, new File(SSH_DIR_NAME, "known_hosts")); //$NON-NLS-1$
 		}
@@ -99,13 +99,13 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 	@Override
 	public final String getPassphrase() {
 		logger.debug("UserInfo::getPassphrase"); //$NON-NLS-1$
-		return desc.getKeyPassphrase().orElse(""); //$NON-NLS-1$
+		return connectionDescription.getKeyPassphrase().orElse(""); //$NON-NLS-1$
 	}
 
 	@Override
 	public final String getPassword() {
 		logger.debug("UserInfo::getPassword"); //$NON-NLS-1$
-		return desc.getPassword().orElse(""); //$NON-NLS-1$
+		return connectionDescription.getPassword().orElse(""); //$NON-NLS-1$
 	}
 
 	@Override
@@ -122,7 +122,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	@Override
 	public final boolean promptYesNo(final String message) {
-		if (isInteractive) {
+		if (interactive) {
 			try {
 				return fullsync.getQuestionHandler().promptYesNo(message).get();
 			}

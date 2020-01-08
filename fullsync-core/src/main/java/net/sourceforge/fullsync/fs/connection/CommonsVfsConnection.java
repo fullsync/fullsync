@@ -42,20 +42,21 @@ import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 public class CommonsVfsConnection implements FileSystemConnection {
 	private final boolean canSetLastModifiedFile;
 	private final boolean canSetLastModifiedFolder;
-	private final ConnectionDescription desc;
+	private final ConnectionDescription connectionDescription;
 	private final FileObject base;
 	private final File root;
 
-	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystemAuthProvider fsAuthProvider) throws FileSystemException {
+	public CommonsVfsConnection(final ConnectionDescription connectionDescription, final FileSystemAuthProvider fsAuthProvider)
+		throws FileSystemException {
 		try {
-			this.desc = desc;
+			this.connectionDescription = connectionDescription;
 			FileSystemOptions options = new FileSystemOptions();
 			if (null != fsAuthProvider) {
-				fsAuthProvider.authSetup(desc, options);
+				fsAuthProvider.authSetup(connectionDescription, options);
 			}
-			int port = desc.getPort().orElse(-1);
-			String host = desc.getHost().orElse(null);
-			URI url = new URI(desc.getScheme(), null, host, port, desc.getPath(), null, null);
+			int port = connectionDescription.getPort().orElse(-1);
+			String host = connectionDescription.getHost().orElse(null);
+			URI url = new URI(connectionDescription.getScheme(), null, host, port, connectionDescription.getPath(), null, null);
 			base = VFS.getManager().resolveFile(url.toString(), options);
 			root = new AbstractFile(this, ".", null, true, base.exists()); //$NON-NLS-1$
 			canSetLastModifiedFile = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FILE);
@@ -178,6 +179,6 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	@Override
 	public ConnectionDescription getConnectionDescription() {
-		return desc;
+		return connectionDescription;
 	}
 }

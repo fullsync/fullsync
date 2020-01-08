@@ -42,6 +42,7 @@ import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Location;
@@ -51,14 +52,35 @@ import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.event.TaskGenerationFinished;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
+import net.sourceforge.fullsync.fs.filesystems.FTPFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 import net.sourceforge.fullsync.schedule.Schedule;
 
-public abstract class FilesystemTestBase {
+public abstract class FilesystemTestBase implements FileSystemManager {
 	protected static final int MILLI_SECONDS_PER_DAY = 86400000;
 	protected Map<String, Action> expectation;
+
+	@Override
+	public FileSystemConnection createConnection(ConnectionDescription connectionDescription, boolean interactive)
+		throws FileSystemException, IOException {
+		switch (connectionDescription.getScheme()) {
+			case "file": //$NON-NLS-1$
+				return new LocalFileSystem().createConnection(connectionDescription, interactive);
+			case "sftp": //$NON-NLS-1$
+				return new SFTPFileSystem(fullSync).createConnection(connectionDescription, interactive);
+			case "ftp": //$NON-NLS-1$
+				return new FTPFileSystem().createConnection(connectionDescription, interactive);
+			case "smb": //$NON-NLS-1$
+				return new SmbFileSystem().createConnection(connectionDescription, interactive);
+		}
+		throw new RuntimeException("Unknown scheme: " + connectionDescription.getScheme());
+	}
+
 	private EventBus eventBus;
 	private FullSync fullSync;
-	private FileSystemManager fileSystemManager;
 	private TaskGenerator taskGenerator;
 	protected Synchronizer synchronizer;
 	protected Profile profile;
@@ -73,8 +95,7 @@ public abstract class FilesystemTestBase {
 		eventBus.register(this);
 		fullSync = new FullSync();
 		fullSync.pushQuestionHandler(question -> Futures.immediateFuture(false));
-		fileSystemManager = new FileSystemManager(fullSync);
-		taskGenerator = new TaskGeneratorImpl(fileSystemManager, eventBus);
+		taskGenerator = new TaskGeneratorImpl(this, eventBus);
 		testingSrc = new File(testingRoot, "src");
 		testingDst = new File(testingRoot, "dst");
 		assertTrue(testingSrc.mkdirs(), "create testingSrc");

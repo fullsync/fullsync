@@ -34,12 +34,19 @@ import com.google.inject.name.Names;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 
+import net.sourceforge.fullsync.FileSystemManager;
+import net.sourceforge.fullsync.FileSystemManagerImpl;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuntimeConfiguration;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.cli.CliRuntimeConfiguration;
+import net.sourceforge.fullsync.fs.FileSystem;
+import net.sourceforge.fullsync.fs.filesystems.FTPFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
 import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
 import net.sourceforge.fullsync.schedule.Scheduler;
@@ -68,6 +75,11 @@ public class FullSyncModule extends AbstractModule {
 		bind(Scheduler.class).to(SchedulerImpl.class);
 		bind(ScheduleTaskSource.class).to(ScheduleTaskSourceImpl.class);
 		bind(ScheduledExecutorService.class).toInstance(scheduledExecutorService);
+		bind(FileSystem.class).annotatedWith(Names.named("file")).to(LocalFileSystem.class);
+		bind(FileSystem.class).annotatedWith(Names.named("sftp")).to(SFTPFileSystem.class);
+		bind(FileSystem.class).annotatedWith(Names.named("ftp")).to(FTPFileSystem.class);
+		bind(FileSystem.class).annotatedWith(Names.named("smb")).to(SmbFileSystem.class);
+		bind(FileSystemManager.class).to(FileSystemManagerImpl.class);
 		bind(EventBus.class).toInstance(eventBus);
 		bindListener(Matchers.any(), this::hear);
 		install(new FactoryModuleBuilder().implement(ScheduleTask.class, ProfileManagerSchedulerTask.class)
