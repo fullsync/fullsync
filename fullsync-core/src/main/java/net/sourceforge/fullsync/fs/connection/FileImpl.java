@@ -28,7 +28,7 @@ import java.util.Map;
 
 import net.sourceforge.fullsync.fs.File;
 
-class AbstractFile implements File {
+class FileImpl implements File {
 	protected final FileSystemConnection fs;
 	protected final String name;
 	protected final File parent;
@@ -38,7 +38,7 @@ class AbstractFile implements File {
 	protected long size;
 	protected long lastModified;
 
-	AbstractFile(FileSystemConnection fs, String name, File parent, boolean directory, boolean exists) {
+	FileImpl(FileSystemConnection fs, String name, File parent, boolean directory, boolean exists) {
 		this.fs = fs;
 		this.name = name;
 		this.parent = parent;
@@ -202,7 +202,7 @@ class AbstractFile implements File {
 			for (File n : children.values()) {
 				if (!newChildren.containsKey(n.getName())) {
 					if (n.exists()) {
-						AbstractFile f = new AbstractFile(getConnection(), n.getName(), n.getParent(), n.isDirectory(), false);
+						FileImpl f = new FileImpl(getConnection(), n.getName(), n.getParent(), n.isDirectory(), false);
 						newChildren.put(n.getName(), f);
 					}
 					else {
