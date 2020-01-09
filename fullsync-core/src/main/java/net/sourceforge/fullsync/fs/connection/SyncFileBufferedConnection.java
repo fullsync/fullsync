@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import javax.inject.Inject;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
@@ -46,13 +47,15 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.google.inject.assistedinject.Assisted;
+
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 import net.sourceforge.fullsync.utils.XmlUtils;
 
-public class SyncFileBufferedConnection implements BufferedConnection {
+public class SyncFileBufferedConnection implements BufferedFileSystemConnection {
 	private static final String BUFFER_FILENAME = ".syncfiles"; //$NON-NLS-1$
 	private static final String ELEMENT_SYNC_FILES = "SyncFiles"; //$NON-NLS-1$
 	private static final String ELEMENT_FILE = "File"; //$NON-NLS-1$
@@ -64,7 +67,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	private static final String ATTRIBUTE_NAME = "Name"; //$NON-NLS-1$
 
 	private static class SyncFileDefaultHandler extends DefaultHandler {
-		private final BufferedConnection bufferedConnection;
+		private final BufferedFileSystemConnection bufferedConnection;
 		private AbstractBufferedFile current;
 
 		SyncFileDefaultHandler(SyncFileBufferedConnection bc) {
@@ -120,8 +123,9 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	private BufferedFile root;
 	private boolean monitoringFileSystem;
 
-	public SyncFileBufferedConnection(final FileSystemConnection fs) throws IOException {
-		this.fileSystemConnection = fs;
+	@Inject
+	public SyncFileBufferedConnection(@Assisted FileSystemConnection fileSystemConnection) throws IOException {
+		this.fileSystemConnection = fileSystemConnection;
 		this.monitoringFileSystem = false;
 		loadFromBuffer();
 	}

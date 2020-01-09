@@ -17,26 +17,20 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.filesystems;
-
-import java.io.IOException;
+package net.sourceforge.fullsync.fs.filesystems.local;
 
 import javax.inject.Inject;
 
+import com.google.inject.assistedinject.Assisted;
+
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
-public class LocalFileSystem implements FileSystem {
+public class LocalFileSystemConnection extends CommonsVfsConnection {
 	@Inject
-	public LocalFileSystem() {
-	}
-
-	@Override
-	public final FileSystemConnection createConnection(final ConnectionDescription connectionDescription, boolean interactive)
-		throws FileSystemException, IOException {
-		return new CommonsVfsConnection(connectionDescription, null);
+	public LocalFileSystemConnection(@Assisted ConnectionDescription connectionDescription, @Assisted boolean interactive)
+		throws FileSystemException {
+		super(connectionDescription, null);
 	}
 }

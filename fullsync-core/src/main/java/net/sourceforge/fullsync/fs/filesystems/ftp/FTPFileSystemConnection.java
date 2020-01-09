@@ -17,22 +17,20 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.filesystems;
+package net.sourceforge.fullsync.fs.filesystems.ftp;
 
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
-import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
+import javax.inject.Inject;
+
+import com.google.inject.assistedinject.Assisted;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
+import net.sourceforge.fullsync.FileSystemException;
+import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 
-class SmbAuthProvider implements FileSystemAuthProvider {
-	@Override
-	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws FileSystemException {
-		String username = description.getUsername().orElse(""); //$NON-NLS-1$
-		String password = description.getPassword().orElse(""); //$NON-NLS-1$
-		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
-		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
+public class FTPFileSystemConnection extends CommonsVfsConnection {
+	@Inject
+	public FTPFileSystemConnection(@Assisted ConnectionDescription connectionDescription, @Assisted boolean interactive)
+		throws FileSystemException {
+		super(connectionDescription, new FTPAuthenticationProvider());
 	}
 }

@@ -53,10 +53,10 @@ import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
-import net.sourceforge.fullsync.fs.filesystems.FTPFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.ftp.FTPFileSystemConnection;
+import net.sourceforge.fullsync.fs.filesystems.local.LocalFileSystemConnection;
+import net.sourceforge.fullsync.fs.filesystems.sftp.SFTPFileSystemConnection;
+import net.sourceforge.fullsync.fs.filesystems.smb.SmbFileSystemConnection;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 public abstract class FilesystemTestBase implements FileSystemManager {
@@ -68,13 +68,13 @@ public abstract class FilesystemTestBase implements FileSystemManager {
 		throws FileSystemException, IOException {
 		switch (connectionDescription.getScheme()) {
 			case "file": //$NON-NLS-1$
-				return new LocalFileSystem().createConnection(connectionDescription, interactive);
+				return new LocalFileSystemConnection(connectionDescription, interactive);
 			case "sftp": //$NON-NLS-1$
-				return new SFTPFileSystem(fullSync).createConnection(connectionDescription, interactive);
+				return new SFTPFileSystemConnection(fullSync, connectionDescription, interactive);
 			case "ftp": //$NON-NLS-1$
-				return new FTPFileSystem().createConnection(connectionDescription, interactive);
+				return new FTPFileSystemConnection(connectionDescription, interactive);
 			case "smb": //$NON-NLS-1$
-				return new SmbFileSystem().createConnection(connectionDescription, interactive);
+				return new SmbFileSystemConnection(connectionDescription, interactive);
 		}
 		throw new RuntimeException("Unknown scheme: " + connectionDescription.getScheme());
 	}

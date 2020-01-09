@@ -17,8 +17,21 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.connection;
+package net.sourceforge.fullsync.fs.filesystems.sftp;
 
-public interface BufferedConnection extends FileSystemConnection {
-	boolean isMonitoringFileSystem();
+import javax.inject.Inject;
+
+import com.google.inject.assistedinject.Assisted;
+
+import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.FileSystemException;
+import net.sourceforge.fullsync.FullSync;
+import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
+
+public class SFTPFileSystemConnection extends CommonsVfsConnection {
+	@Inject
+	public SFTPFileSystemConnection(FullSync fullSync, @Assisted ConnectionDescription connectionDescription, @Assisted boolean interactive)
+		throws FileSystemException {
+		super(connectionDescription, new SFTPAuthProvider(fullSync, connectionDescription, interactive));
+	}
 }

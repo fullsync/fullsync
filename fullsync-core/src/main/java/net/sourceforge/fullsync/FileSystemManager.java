@@ -27,5 +27,6 @@ import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 public interface FileSystemManager {
 	static final String BUFFER_STRATEGY_SYNCFILES = "syncfiles"; //$NON-NLS-1$
 
-	FileSystemConnection createConnection(final ConnectionDescription desc, boolean interactive) throws FileSystemException, IOException;
+	FileSystemConnection createConnection(final ConnectionDescription connectionDescription, boolean interactive)
+		throws FileSystemException, IOException;
 }

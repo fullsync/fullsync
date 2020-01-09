@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.filesystems;
+package net.sourceforge.fullsync.fs.filesystems.smb;
 
 import javax.inject.Inject;
 
@@ -28,14 +28,14 @@ import org.apache.commons.vfs2.provider.smb.SmbFileProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.assistedinject.Assisted;
+
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.fs.FileSystem;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
-public class SmbFileSystem implements FileSystem {
-	private static final Logger logger = LoggerFactory.getLogger(SmbFileSystem.class);
+public class SmbFileSystemConnection extends CommonsVfsConnection {
+	private static final Logger logger = LoggerFactory.getLogger(SmbFileSystemConnection.class);
 	static {
 		// even tough VFS-552 is fixed this si still needed
 		// [VFS-552][sandbox] include vfs-providers.xml in JAR for dynamic registration of mime and smb providers.
@@ -52,12 +52,8 @@ public class SmbFileSystem implements FileSystem {
 	}
 
 	@Inject
-	public SmbFileSystem() {
-	}
-
-	@Override
-	public final FileSystemConnection createConnection(final ConnectionDescription connectionDescription, boolean interactive)
+	public SmbFileSystemConnection(@Assisted ConnectionDescription connectionDescription, @Assisted boolean interactive)
 		throws FileSystemException {
-		return new CommonsVfsConnection(connectionDescription, new SmbAuthProvider());
+		super(connectionDescription, new SmbAuthProvider());
 	}
 }

@@ -28,9 +28,8 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 
-import net.sourceforge.fullsync.fs.FileSystem;
-import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
-import net.sourceforge.fullsync.fs.buffering.syncfiles.SyncFilesBufferingProvider;
+import net.sourceforge.fullsync.fs.FileSystemConnectionFactory;
+import net.sourceforge.fullsync.fs.buffering.BufferingProviderFactory;
 import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
 public class FileSystemManagerImpl implements FileSystemManager {
@@ -41,9 +40,10 @@ public class FileSystemManagerImpl implements FileSystemManager {
 		this.injector = injector;
 	}
 
-	private FileSystem getFilesystem(final String scheme) throws FileSystemException {
+	private FileSystemConnectionFactory getFilesystem(final String scheme) throws FileSystemException {
 		try {
-			return injector.getInstance(Key.get(FileSystem.class, Names.named(scheme)));
+			Key<FileSystemConnectionFactory> key = Key.get(FileSystemConnectionFactory.class, Names.named(scheme));
+			return injector.getInstance(key);
 		}
 		catch (ConfigurationException configurationException) {
 			throw new FileSystemException("Unknown scheme: " + scheme, configurationException); //$NON-NLS-1$
@@ -51,36 +51,31 @@ public class FileSystemManagerImpl implements FileSystemManager {
 	}
 
 	@Override
-	public final FileSystemConnection createConnection(final ConnectionDescription desc, boolean interactive)
+	public final FileSystemConnection createConnection(final ConnectionDescription connectionDescription, boolean interactive)
 		throws FileSystemException, IOException {
-		String scheme = desc.getScheme();
-
-		FileSystem fs = getFilesystem(scheme);
-
-		FileSystemConnection s = null;
+		String scheme = connectionDescription.getScheme();
+		FileSystemConnectionFactory fs = getFilesystem(scheme);
+		FileSystemConnection fileSystemConnection = null;
 		if (null != fs) {
-			s = fs.createConnection(desc, interactive);
+			fileSystemConnection = fs.createConnection(connectionDescription, interactive);
 			/* FIXME: [BUFFERING] uncomment to reenable buffering
-			String bufferStrategy = desc.getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
-			if ((null != bufferStrategy) && !"".equals(bufferStrategy)) {
-				s = resolveBuffering(s, bufferStrategy);
+			if (connectionDescription.getBufferStrategy().isPresent()) {
+				fileSystemConnection = resolveBuffering(fileSystemConnection, connectionDescription.getBufferStrategy().get());
 			}
 			 */
 		}
-		return s;
+		return fileSystemConnection;
 	}
 
-	public FileSystemConnection resolveBuffering(final FileSystemConnection dir, final String bufferStrategy)
+	public FileSystemConnection resolveBuffering(final FileSystemConnection fileSystemConnection, final String bufferStrategy)
 		throws FileSystemException, IOException {
-		BufferingProvider p = null;
-		if (BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy)) {
-			p = new SyncFilesBufferingProvider();
+		try {
+			Key<BufferingProviderFactory> key = Key.get(BufferingProviderFactory.class, Names.named(bufferStrategy));
+			BufferingProviderFactory bufferingProviderFactory = injector.getInstance(key);
+			return bufferingProviderFactory.createBufferedConnection(fileSystemConnection);
 		}
-
-		if (null == p) {
-			throw new FileSystemException("BufferStrategy '" + bufferStrategy + "' not found"); //$NON-NLS-1$ //$NON-NLS-2$
+		catch (ConfigurationException configurationException) {
+			throw new FileSystemException("BufferStrategy '" + bufferStrategy + "' not found", configurationException); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-
-		return p.createBufferedSite(dir);
 	}
 }
