@@ -26,19 +26,19 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
-class FileImpl implements File {
+class FileImpl implements FSFile {
 	protected final FileSystemConnection fs;
 	protected final String name;
-	protected final File parent;
+	protected final FSFile parent;
 	protected boolean exists;
 	protected boolean directory;
-	protected Map<String, File> children;
+	protected Map<String, FSFile> children;
 	protected long size;
 	protected long lastModified;
 
-	FileImpl(FileSystemConnection fs, String name, File parent, boolean directory, boolean exists) {
+	FileImpl(FileSystemConnection fs, String name, FSFile parent, boolean directory, boolean exists) {
 		this.fs = fs;
 		this.name = name;
 		this.parent = parent;
@@ -68,7 +68,7 @@ class FileImpl implements File {
 	}
 
 	@Override
-	public File getParent() {
+	public FSFile getParent() {
 		return parent;
 	}
 
@@ -93,7 +93,7 @@ class FileImpl implements File {
 	}
 
 	@Override
-	public File getUnbuffered() throws IOException {
+	public FSFile getUnbuffered() throws IOException {
 		return this;
 	}
 
@@ -123,14 +123,14 @@ class FileImpl implements File {
 	}
 
 	@Override
-	public File createChild(final String name, final boolean directory) throws IOException {
-		File f = getConnection().createChild(this, name, directory);
+	public FSFile createChild(final String name, final boolean directory) throws IOException {
+		FSFile f = getConnection().createChild(this, name, directory);
 		children.put(name, f);
 		return f;
 	}
 
 	@Override
-	public File getChild(final String name) throws IOException {
+	public FSFile getChild(final String name) throws IOException {
 		if (null == children) {
 			refresh();
 		}
@@ -138,7 +138,7 @@ class FileImpl implements File {
 	}
 
 	@Override
-	public Collection<File> getChildren() throws IOException {
+	public Collection<FSFile> getChildren() throws IOException {
 		if (null == children) {
 			refresh();
 		}
@@ -197,9 +197,9 @@ class FileImpl implements File {
 
 	private void refreshDirectory() throws IOException {
 		// FIXME be aware of deleting entries that may be referenced by overlaying buffer
-		Map<String, File> newChildren = getConnection().getChildren(this);
+		Map<String, FSFile> newChildren = getConnection().getChildren(this);
 		if (null != children) {
-			for (File n : children.values()) {
+			for (FSFile n : children.values()) {
 				if (!newChildren.containsKey(n.getName())) {
 					if (n.exists()) {
 						FileImpl f = new FileImpl(getConnection(), n.getName(), n.getParent(), n.isDirectory(), false);

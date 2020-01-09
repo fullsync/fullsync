@@ -22,28 +22,28 @@ package net.sourceforge.fullsync;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 public class Task {
-	private final File source;
-	private final File destination;
+	private final FSFile source;
+	private final FSFile destination;
 	private final State state;
 	private final Action[] actions;
 	private int currentAction;
 	private List<Task> children;
 
-	public Task(File source, File destination, State state, Action[] actions) {
+	public Task(FSFile source, FSFile destination, State state, Action[] actions) {
 		this.source = source;
 		this.destination = destination;
 		this.state = state;
 		this.actions = actions;
 	}
 
-	public File getDestination() {
+	public FSFile getDestination() {
 		return destination;
 	}
 
-	public File getSource() {
+	public FSFile getSource() {
 		return source;
 	}
 

@@ -26,12 +26,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import net.sourceforge.fullsync.DataParseException;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class FilePathFileFilterRuleTest {
-	private File root = new TestNode("root", null, true, true, 0, 0);
-	private File testNode;
+	private FSFile root = new TestNode("root", null, true, true, 0, 0);
+	private FSFile testNode;
 
 	@BeforeEach
 	public void setUp() {

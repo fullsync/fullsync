@@ -21,7 +21,7 @@ package net.sourceforge.fullsync.impl;
 
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 
@@ -88,7 +88,7 @@ public class SimplifiedSyncRules implements RuleSet {
 	}
 
 	@Override
-	public boolean isNodeIgnored(final File node) {
+	public boolean isNodeIgnored(final FSFile node) {
 		if (useFilter) {
 			FileFilter filterToUse = fileFilter;
 			if (null != fileFilterTree) {
@@ -107,7 +107,7 @@ public class SimplifiedSyncRules implements RuleSet {
 	}
 
 	@Override
-	public State compareFiles(final File src, final File dst) {
+	public State compareFiles(final FSFile src, final FSFile dst) {
 		if (Math.floor(src.getLastModified() / 1000.0) > Math.floor(dst.getLastModified() / 1000.0)) {
 			return State.FILE_CHANGE_SOURCE;
 		}
@@ -121,7 +121,7 @@ public class SimplifiedSyncRules implements RuleSet {
 	}
 
 	@Override
-	public RuleSet createChild(final File src, final File dst) {
+	public RuleSet createChild(final FSFile src, final FSFile dst) {
 		// TODO even simple sync rules should allow override rules
 		return this;
 	}

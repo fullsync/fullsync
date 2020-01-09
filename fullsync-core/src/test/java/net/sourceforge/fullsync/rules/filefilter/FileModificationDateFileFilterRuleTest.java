@@ -30,14 +30,14 @@ import java.text.SimpleDateFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 public class FileModificationDateFileFilterRuleTest {
 	private static final String OLD_DATE_TIME = "01/06/2005 06:00:00";
 	private static final String NEW_DATE_TIME = "02/06/2005 06:00:00";
-	private File root = new TestNode("root", null, true, true, 0, 0);
-	private File testNode;
+	private FSFile root = new TestNode("root", null, true, true, 0, 0);
+	private FSFile testNode;
 	private long oldtime;
 	private long newtime;
 	private SimpleDateFormat dateFormat;

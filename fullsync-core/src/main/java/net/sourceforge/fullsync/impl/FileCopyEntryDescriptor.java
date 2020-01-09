@@ -25,16 +25,16 @@ import java.io.OutputStream;
 
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 public class FileCopyEntryDescriptor implements EntryDescriptor {
 	private final Task reference;
-	private final File src;
-	private final File dst;
+	private final FSFile src;
+	private final FSFile dst;
 	private InputStream inputStream;
 	private OutputStream outputStream;
 
-	public FileCopyEntryDescriptor(Task reference, File src, File dst) {
+	public FileCopyEntryDescriptor(Task reference, FSFile src, FSFile dst) {
 		this.reference = reference;
 		this.src = src;
 		this.dst = dst;

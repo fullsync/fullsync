@@ -19,7 +19,7 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.FilterValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
@@ -52,7 +52,7 @@ public class SubfilterFileFilerRule implements FileFilterRule {
 	}
 
 	@Override
-	public boolean match(File file) throws FilterRuleNotAppliableException {
+	public boolean match(FSFile file) throws FilterRuleNotAppliableException {
 		return fileFilter.match(file);
 	}
 

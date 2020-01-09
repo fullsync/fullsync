@@ -24,13 +24,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class FileNameFileFilterRuleTest {
-	private File root = new TestNode("root", null, true, true, 0, 0);
+	private FSFile root = new TestNode("root", null, true, true, 0, 0);
 
-	private File createTestNode(String name) {
+	private FSFile createTestNode(String name) {
 		return new TestNode(name, root, true, false, 0, 0);
 	}
 

@@ -51,7 +51,7 @@ import com.google.inject.assistedinject.Assisted;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 import net.sourceforge.fullsync.utils.XmlUtils;
 
@@ -136,8 +136,8 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 	}
 
 	@Override
-	public File createChild(File dir, String name, boolean directory) throws IOException {
-		File n = dir.getUnbuffered().getChild(name);
+	public FSFile createChild(FSFile dir, String name, boolean directory) throws IOException {
+		FSFile n = dir.getUnbuffered().getChild(name);
 		if (null == n) {
 			n = dir.getUnbuffered().createChild(name, directory);
 		}
@@ -145,46 +145,46 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 	}
 
 	@Override
-	public boolean delete(File node) throws IOException {
+	public boolean delete(FSFile node) throws IOException {
 		node.getUnbuffered().delete();
 		((BufferedFile) node.getParent()).removeChild(node.getName());
 		return true;
 	}
 
 	@Override
-	public Map<String, File> getChildren(File dir) {
+	public Map<String, FSFile> getChildren(FSFile dir) {
 		return null;
 	}
 
 	@Override
-	public File getRoot() {
+	public FSFile getRoot() {
 		return root;
 	}
 
 	@Override
-	public boolean makeDirectory(File dir) {
+	public boolean makeDirectory(FSFile dir) {
 		return false;
 	}
 
 	@Override
-	public InputStream readFile(File file) {
+	public InputStream readFile(FSFile file) {
 		return null;
 	}
 
 	@Override
-	public OutputStream writeFile(File file) {
+	public OutputStream writeFile(FSFile file) {
 		return null;
 	}
 
 	@Override
-	public boolean writeFileAttributes(File file) {
+	public boolean writeFileAttributes(FSFile file) {
 		return false;
 	}
 
 	protected void updateFromFileSystem(BufferedFile buffered) throws IOException {
 		// load fs entries if wanted
-		Collection<File> fsChildren = buffered.getUnbuffered().getChildren();
-		for (File uf : fsChildren) {
+		Collection<FSFile> fsChildren = buffered.getUnbuffered().getChildren();
+		for (FSFile uf : fsChildren) {
 			BufferedFile bf = (BufferedFile) buffered.getChild(uf.getName());
 			if (null == bf) {
 				bf = new BufferedFileImpl(this, uf, root, uf.isDirectory(), false);
@@ -197,8 +197,8 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 	}
 
 	protected void loadFromBuffer() throws IOException {
-		File fsRoot = fileSystemConnection.getRoot();
-		File f = fsRoot.getChild(BUFFER_FILENAME);
+		FSFile fsRoot = fileSystemConnection.getRoot();
+		FSFile f = fsRoot.getChild(BUFFER_FILENAME);
 
 		root = new BufferedFileImpl(this, fsRoot, null, true, true);
 		if ((null == f) || !f.exists() || f.isDirectory()) {
@@ -239,7 +239,7 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 		Element elem = doc.createElement(file.isDirectory() ? ELEMENT_DIRECTORY : ELEMENT_FILE);
 		elem.setAttribute(ATTRIBUTE_NAME, file.getName());
 		if (file.isDirectory()) {
-			for (File n : file.getChildren()) {
+			for (FSFile n : file.getChildren()) {
 				if (n.exists()) {
 					elem.appendChild(serializeFile((BufferedFile) n, doc));
 				}
@@ -255,8 +255,8 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 	}
 
 	public void saveToBuffer() throws IOException {
-		File fsRoot = fileSystemConnection.getRoot();
-		File node = fsRoot.getChild(BUFFER_FILENAME);
+		FSFile fsRoot = fileSystemConnection.getRoot();
+		FSFile node = fsRoot.getChild(BUFFER_FILENAME);
 		if ((null == node) || !node.exists()) {
 			node = root.createChild(BUFFER_FILENAME, false);
 		}

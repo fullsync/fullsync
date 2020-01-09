@@ -30,14 +30,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import net.sourceforge.fullsync.SystemDate;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 
 public class FileAgeFileFilterRuleTest {
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	private File root = new TestNode("root", null, true, true, 0, 0);
+	private FSFile root = new TestNode("root", null, true, true, 0, 0);
 
-	private File createTestNode(String date) throws ParseException {
+	private FSFile createTestNode(String date) throws ParseException {
 		long lastModified = dateFormat.parse(date).getTime();
 		return new TestNode("foobar.txt", root, true, false, 1024, lastModified);
 	}

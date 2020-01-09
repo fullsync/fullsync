@@ -19,8 +19,8 @@
  */
 package net.sourceforge.fullsync;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 public interface FileComparer {
-	State compareFiles(File src, File dst);
+	State compareFiles(FSFile src, FSFile dst);
 }

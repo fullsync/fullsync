@@ -51,7 +51,7 @@ import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
 public class TaskGeneratorImpl implements TaskGenerator {
@@ -65,7 +65,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		this.eventBus = eventBus;
 	}
 
-	private void recurse(TaskTree taskTree, File src, File dst, Task parent, Deciders deciders) throws DataParseException, IOException {
+	private void recurse(TaskTree taskTree, FSFile src, FSFile dst, Task parent, Deciders deciders) throws DataParseException, IOException {
 		if (src.isDirectory() && dst.isDirectory()) {
 			synchronizeDirectories(taskTree, src, dst, parent, deciders);
 		}
@@ -73,7 +73,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		// handle case where src is dir but dst is file
 	}
 
-	private void synchronizeNodes(TaskTree taskTree, File src, File dst, Task parent, Deciders deciders)
+	private void synchronizeNodes(TaskTree taskTree, FSFile src, FSFile dst, Task parent, Deciders deciders)
 		throws DataParseException, IOException {
 		if (!deciders.getRules().isNodeIgnored(src)) {
 			Task task = deciders.getActionDecider().getTask(src, dst, deciders.getStateDecider(), deciders.getBufferStateDecider());
@@ -117,7 +117,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 			return bufferStateDecider;
 		}
 
-		public Deciders createChild(File src, File dst) throws IOException, DataParseException {
+		public Deciders createChild(FSFile src, FSFile dst) throws IOException, DataParseException {
 			return new Deciders(rules.createChild(src, dst), actionDecider);
 		}
 	}
@@ -126,13 +126,13 @@ public class TaskGeneratorImpl implements TaskGenerator {
 	 * we could updateRules in synchronizeNodes and apply synchronizeDirectories
 	 * to the given src and dst if they are directories
 	 */
-	private void synchronizeDirectories(TaskTree taskTree, File src, File dst, Task parent, Deciders parentDeciders)
+	private void synchronizeDirectories(TaskTree taskTree, FSFile src, FSFile dst, Task parent, Deciders parentDeciders)
 		throws DataParseException, IOException {
 		Deciders deciders = parentDeciders.createChild(src, dst);
-		Collection<File> srcFiles = src.getChildren();
-		Collection<File> dstFiles = new ArrayList<>(dst.getChildren());
-		for (File sfile : srcFiles) {
-			File dfile = dst.getChild(sfile.getName());
+		Collection<FSFile> srcFiles = src.getChildren();
+		Collection<FSFile> dstFiles = new ArrayList<>(dst.getChildren());
+		for (FSFile sfile : srcFiles) {
+			FSFile dfile = dst.getChild(sfile.getName());
 			if (null == dfile) {
 				dfile = dst.createChild(sfile.getName(), sfile.isDirectory());
 			}
@@ -142,8 +142,8 @@ public class TaskGeneratorImpl implements TaskGenerator {
 			synchronizeNodes(taskTree, sfile, dfile, parent, deciders);
 		}
 
-		for (File dfile : dstFiles) {
-			File sfile = src.getChild(dfile.getName());
+		for (FSFile dfile : dstFiles) {
+			FSFile sfile = src.getChild(dfile.getName());
 			if (null == sfile) {
 				sfile = src.createChild(dfile.getName(), dfile.isDirectory());
 			}

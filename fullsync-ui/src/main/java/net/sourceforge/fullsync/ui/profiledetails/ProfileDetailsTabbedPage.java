@@ -62,7 +62,7 @@ import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileBuilder;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 import net.sourceforge.fullsync.impl.SimplifiedRuleSetDescriptor;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -450,7 +450,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				TreeItem[] childrens = item.getItems();
 				for (TreeItem children : childrens) {
 					if (null == children.getData(EXPANDED_KEY)) {
-						File file = (File) children.getData();
+						FSFile file = (FSFile) children.getData();
 						try {
 							addChildren(file, children);
 						}
@@ -496,7 +496,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				if (null != newfilter) {
 					selectedItem.setData(FILTER_KEY, newfilter);
 					treeItemsWithFilter.add(selectedItem);
-					File file = (File) selectedItem.getData();
+					FSFile file = (FSFile) selectedItem.getData();
 					itemsMap.put(file.getPath(), newfilter);
 					markItem(selectedItem);
 					buttonRemoveFilter.setEnabled(true);
@@ -516,7 +516,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			if (selectedItems.length > 0) {
 				TreeItem selectedItem = selectedItems[0];
 				treeItemsWithFilter.remove(selectedItem);
-				File file = (File) selectedItem.getData();
+				FSFile file = (FSFile) selectedItem.getData();
 				itemsMap.remove(file.getPath());
 				unmarkItem(selectedItem);
 			}
@@ -534,7 +534,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		directoryTree.setRedraw(false);
 		directoryTree.removeAll();
 		try {
-			for (File file : getOrderedChildren(sourceConnection.getRoot())) {
+			for (FSFile file : getOrderedChildren(sourceConnection.getRoot())) {
 				if (file.isDirectory()) {
 					TreeItem item = new TreeItem(directoryTree, SWT.NULL);
 					item.setText(file.getName());
@@ -556,8 +556,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		directoryTree.setRedraw(true);
 	}
 
-	private void addChildren(File rootFile, TreeItem item) throws IOException {
-		for (File file : getOrderedChildren(rootFile)) {
+	private void addChildren(FSFile rootFile, TreeItem item) throws IOException {
+		for (FSFile file : getOrderedChildren(rootFile)) {
 			if (file.isDirectory()) {
 				TreeItem childrenItem = new TreeItem(item, SWT.NULL);
 				childrenItem.setText(file.getName());
@@ -572,8 +572,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		}
 	}
 
-	private List<File> getOrderedChildren(File rootFile) throws IOException {
-		List<File> children = new ArrayList<>(rootFile.getChildren());
+	private List<FSFile> getOrderedChildren(FSFile rootFile) throws IOException {
+		List<FSFile> children = new ArrayList<>(rootFile.getChildren());
 		Collections.sort(children, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 		return children;
 	}
@@ -702,7 +702,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		Map<String, FileFilter> filters = new TreeMap<>();
 		for (TreeItem item : treeItemsWithFilter) {
 			FileFilter itemFilter = (FileFilter) item.getData(FILTER_KEY);
-			File itemFile = (File) item.getData();
+			FSFile itemFile = (FSFile) item.getData();
 			filters.put(itemFile.getPath(), itemFilter);
 		}
 		return new FileFilterTree(filters);

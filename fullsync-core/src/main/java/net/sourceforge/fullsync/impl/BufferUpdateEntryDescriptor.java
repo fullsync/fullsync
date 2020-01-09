@@ -26,14 +26,14 @@ import java.io.OutputStream;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 public class BufferUpdateEntryDescriptor implements EntryDescriptor {
 	private final BufferUpdate bufferUpdate;
-	private final File src;
-	private final File dst;
+	private final FSFile src;
+	private final FSFile dst;
 
-	public BufferUpdateEntryDescriptor(File src, File dst, BufferUpdate bufferUpdate) {
+	public BufferUpdateEntryDescriptor(FSFile src, FSFile dst, BufferUpdate bufferUpdate) {
 		this.bufferUpdate = bufferUpdate;
 		this.src = src;
 		this.dst = dst;

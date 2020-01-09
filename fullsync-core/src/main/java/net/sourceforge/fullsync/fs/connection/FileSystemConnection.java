@@ -27,10 +27,10 @@ import java.util.Map;
 import org.apache.commons.vfs2.FileObject;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 public interface FileSystemConnection extends AutoCloseable {
-	File getRoot();
+	FSFile getRoot();
 
 	// open ?
 	void flush() throws IOException;
@@ -43,19 +43,19 @@ public interface FileSystemConnection extends AutoCloseable {
 
 	ConnectionDescription getConnectionDescription();
 
-	File createChild(File parent, String name, boolean directory) throws IOException;
+	FSFile createChild(FSFile parent, String name, boolean directory) throws IOException;
 
-	Map<String, File> getChildren(File dir) throws IOException;
+	Map<String, FSFile> getChildren(FSFile dir) throws IOException;
 
 	// refresh file, refresh directory ?
 
-	boolean makeDirectory(File dir) throws IOException;
+	boolean makeDirectory(FSFile dir) throws IOException;
 
-	boolean writeFileAttributes(File file) throws IOException;
+	boolean writeFileAttributes(FSFile file) throws IOException;
 
-	InputStream readFile(File file) throws IOException;
+	InputStream readFile(FSFile file) throws IOException;
 
-	OutputStream writeFile(File file) throws IOException;
+	OutputStream writeFile(FSFile file) throws IOException;
 
-	boolean delete(File node) throws IOException;
+	boolean delete(FSFile node) throws IOException;
 }

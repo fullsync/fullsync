@@ -19,8 +19,8 @@
  */
 package net.sourceforge.fullsync;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 public interface IgnoreDecider {
-	boolean isNodeIgnored(File node);
+	boolean isNodeIgnored(FSFile node);
 }

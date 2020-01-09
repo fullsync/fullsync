@@ -19,7 +19,7 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
@@ -68,7 +68,7 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 	}
 
 	@Override
-	public boolean match(File file) throws FilterRuleNotAppliableException {
+	public boolean match(FSFile file) throws FilterRuleNotAppliableException {
 		long lastModified = file.getLastModified();
 		if (-1 == lastModified) {
 			throw new FilterRuleNotAppliableException("The file or directory doesn't have any modification date");

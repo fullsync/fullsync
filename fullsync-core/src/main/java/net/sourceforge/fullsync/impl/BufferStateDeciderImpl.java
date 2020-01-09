@@ -25,7 +25,7 @@ import net.sourceforge.fullsync.BufferStateDecider;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileComparer;
 import net.sourceforge.fullsync.State;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
 public class BufferStateDeciderImpl extends StateDeciderImpl implements BufferStateDecider {
@@ -34,12 +34,12 @@ public class BufferStateDeciderImpl extends StateDeciderImpl implements BufferSt
 	}
 
 	@Override
-	public State getState(File buffered) throws DataParseException, IOException {
+	public State getState(FSFile buffered) throws DataParseException, IOException {
 		if (!buffered.isBuffered()) {
 			return State.IN_SYNC;
 		}
 
-		File source = buffered.getUnbuffered();
+		FSFile source = buffered.getUnbuffered();
 		BufferedFile destination = (BufferedFile) buffered;
 
 		if (!source.exists()) {

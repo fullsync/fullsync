@@ -24,15 +24,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
 class BufferedFileImpl extends FileImpl implements BufferedFile {
-	protected File unbuffered;
+	protected FSFile unbuffered;
 	private long fsSize;
 	private long fsLastModified;
 
-	BufferedFileImpl(BufferedFileSystemConnection bc, String name, File parent, boolean directory, boolean exists) {
+	BufferedFileImpl(BufferedFileSystemConnection bc, String name, FSFile parent, boolean directory, boolean exists) {
 		super(bc, name, parent, directory, exists);
 		this.unbuffered = null;
 		children = new HashMap<>();
@@ -40,7 +40,7 @@ class BufferedFileImpl extends FileImpl implements BufferedFile {
 		fsLastModified = -1;
 	}
 
-	BufferedFileImpl(BufferedFileSystemConnection bc, File unbuffered, File parent, boolean directory, boolean exists) {
+	BufferedFileImpl(BufferedFileSystemConnection bc, FSFile unbuffered, FSFile parent, boolean directory, boolean exists) {
 		this(bc, unbuffered.getName(), parent, directory, exists);
 		this.unbuffered = unbuffered;
 	}
@@ -51,7 +51,7 @@ class BufferedFileImpl extends FileImpl implements BufferedFile {
 	}
 
 	@Override
-	public File getUnbuffered() throws IOException {
+	public FSFile getUnbuffered() throws IOException {
 		if (null == unbuffered) {
 			refreshReference();
 		}
@@ -102,7 +102,7 @@ class BufferedFileImpl extends FileImpl implements BufferedFile {
 	}
 
 	@Override
-	public void addChild(final File node) {
+	public void addChild(final FSFile node) {
 		children.put(node.getName(), node);
 	}
 
@@ -120,7 +120,7 @@ class BufferedFileImpl extends FileImpl implements BufferedFile {
 
 	@Override
 	public void refreshBuffer() throws IOException {
-		File unb = getUnbuffered();
+		FSFile unb = getUnbuffered();
 		directory = unb.isDirectory();
 		exists = unb.exists();
 

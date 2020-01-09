@@ -24,12 +24,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 
-public interface File {
+public interface FSFile {
 	String getName();
 
 	String getPath();
 
-	File getParent();
+	FSFile getParent();
 
 	boolean isDirectory();
 
@@ -39,7 +39,7 @@ public interface File {
 
 	boolean isBuffered();
 
-	File getUnbuffered() throws IOException;
+	FSFile getUnbuffered() throws IOException;
 
 	default void refreshBuffer() throws IOException {
 	}
@@ -54,13 +54,13 @@ public interface File {
 
 	void setSize(long size);
 
-	Collection<File> getChildren() throws IOException;
+	Collection<FSFile> getChildren() throws IOException;
 
-	File getChild(String name) throws IOException;
+	FSFile getChild(String name) throws IOException;
 
 	// TODO currently, 'create' isn't the right word
 	// they do not exist before and may not exists after sync
-	File createChild(String name, boolean directory) throws IOException;
+	FSFile createChild(String name, boolean directory) throws IOException;
 
 	void refresh() throws IOException;
 

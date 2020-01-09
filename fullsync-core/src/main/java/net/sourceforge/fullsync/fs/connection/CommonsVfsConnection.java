@@ -36,7 +36,7 @@ import org.apache.commons.vfs2.VFS;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 
 public class CommonsVfsConnection implements FileSystemConnection {
@@ -44,7 +44,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	private final boolean canSetLastModifiedFolder;
 	private final ConnectionDescription connectionDescription;
 	private final FileObject base;
-	private final File root;
+	private final FSFile root;
 
 	public CommonsVfsConnection(final ConnectionDescription connectionDescription, final FileSystemAuthProvider fsAuthProvider)
 		throws FileSystemException {
@@ -68,14 +68,14 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public final File createChild(final File parent, final String name, final boolean directory) throws IOException {
+	public final FSFile createChild(final FSFile parent, final String name, final boolean directory) throws IOException {
 		return new FileImpl(this, name, parent, directory, false);
 	}
 
-	private File buildNode(final File parent, final FileObject file) throws org.apache.commons.vfs2.FileSystemException {
+	private FSFile buildNode(final FSFile parent, final FileObject file) throws org.apache.commons.vfs2.FileSystemException {
 		String name = file.getName().getBaseName();
 
-		File n = new FileImpl(this, name, parent, file.getType() == FileType.FOLDER, true);
+		FSFile n = new FileImpl(this, name, parent, file.getType() == FileType.FOLDER, true);
 		if (file.getType() == FileType.FILE) {
 			FileContent content = file.getContent();
 			n.setLastModified(content.getLastModifiedTime());
@@ -85,9 +85,9 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public final Map<String, File> getChildren(final File dir) throws IOException {
+	public final Map<String, FSFile> getChildren(final FSFile dir) throws IOException {
 		try {
-			Map<String, File> children = new HashMap<>();
+			Map<String, FSFile> children = new HashMap<>();
 
 			FileObject obj = base.resolveFile(dir.getPath());
 			if (obj.exists() && (obj.getType() == FileType.FOLDER)) {
@@ -104,14 +104,14 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public final boolean makeDirectory(final File dir) throws IOException {
+	public final boolean makeDirectory(final FSFile dir) throws IOException {
 		FileObject obj = base.resolveFile(dir.getPath());
 		obj.createFolder();
 		return true;
 	}
 
 	@Override
-	public final boolean writeFileAttributes(final File file) throws IOException {
+	public final boolean writeFileAttributes(final FSFile file) throws IOException {
 		FileObject obj = base.resolveFile(file.getPath());
 		FileContent content = obj.getContent();
 		boolean setLastModified;
@@ -128,25 +128,25 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	@Override
-	public final InputStream readFile(final File file) throws IOException {
+	public final InputStream readFile(final FSFile file) throws IOException {
 		FileObject obj = base.resolveFile(file.getPath());
 		return obj.getContent().getInputStream();
 	}
 
 	@Override
-	public final OutputStream writeFile(final File file) throws IOException {
+	public final OutputStream writeFile(final FSFile file) throws IOException {
 		FileObject obj = base.resolveFile(file.getPath());
 		return obj.getContent().getOutputStream();
 	}
 
 	@Override
-	public final boolean delete(final File node) throws IOException {
+	public final boolean delete(final FSFile node) throws IOException {
 		FileObject obj = base.resolveFile(node.getPath());
 		return obj.delete();
 	}
 
 	@Override
-	public final File getRoot() {
+	public final FSFile getRoot() {
 		return root;
 	}
 

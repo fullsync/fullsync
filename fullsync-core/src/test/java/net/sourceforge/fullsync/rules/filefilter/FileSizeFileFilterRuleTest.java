@@ -26,12 +26,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 public class FileSizeFileFilterRuleTest {
-	private File root = new TestNode("root", null, true, true, 0, 0);
-	private File foobarTxt;
+	private FSFile root = new TestNode("root", null, true, true, 0, 0);
+	private FSFile foobarTxt;
 
 	@BeforeEach
 	public void setUp() {

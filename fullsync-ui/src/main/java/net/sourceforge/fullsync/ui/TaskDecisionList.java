@@ -50,7 +50,7 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 class TaskDecisionList extends Composite {
 	private TableColumn tableColumnExplanation;
@@ -167,7 +167,7 @@ class TaskDecisionList extends Composite {
 	}
 
 	private void drawSide(GC g, Task t, Action a, Location location) {
-		File n;
+		FSFile n;
 		if (null == t) {
 			n = null;
 		}
@@ -234,8 +234,8 @@ class TaskDecisionList extends Composite {
 			hash |= 1;
 		}
 		else {
-			File src = t.getSource();
-			File dst = t.getDestination();
+			FSFile src = t.getSource();
+			FSFile dst = t.getDestination();
 			if (src.exists()) {
 				hash |= 2;
 				if (src.isDirectory()) {

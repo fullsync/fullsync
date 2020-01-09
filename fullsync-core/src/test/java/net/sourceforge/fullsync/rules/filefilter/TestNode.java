@@ -24,17 +24,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
-public class TestNode implements File {
-	private File parent;
+public class TestNode implements FSFile {
+	private FSFile parent;
 	private String name;
 	private boolean directory;
 	private boolean exists;
 	private long lastModified;
 	private long size;
 
-	public TestNode(String name, File parent, boolean exists, boolean directory, long length, long lm) {
+	public TestNode(String name, FSFile parent, boolean exists, boolean directory, long length, long lm) {
 		this.name = name;
 		this.parent = parent;
 		this.exists = exists;
@@ -43,7 +43,7 @@ public class TestNode implements File {
 		this.size = length;
 	}
 
-	public File getDirectory() {
+	public FSFile getDirectory() {
 		return null;
 	}
 
@@ -58,25 +58,25 @@ public class TestNode implements File {
 	}
 
 	@Override
-	public File getParent() {
+	public FSFile getParent() {
 		return parent;
 	}
 
 	@Override
-	public Collection<File> getChildren() {
+	public Collection<FSFile> getChildren() {
 		return null;
 	}
 
 	@Override
-	public File getChild(String name) {
+	public FSFile getChild(String name) {
 		return null;
 	}
 
-	public File createDirectory(String name) {
+	public FSFile createDirectory(String name) {
 		return null;
 	}
 
-	public File createFile(String name) {
+	public FSFile createFile(String name) {
 		return null;
 	}
 
@@ -121,7 +121,7 @@ public class TestNode implements File {
 	}
 
 	@Override
-	public File getUnbuffered() {
+	public FSFile getUnbuffered() {
 		return null;
 	}
 
@@ -140,7 +140,7 @@ public class TestNode implements File {
 	}
 
 	@Override
-	public File createChild(String name, boolean directory) {
+	public FSFile createChild(String name, boolean directory) {
 		return null;
 	}
 

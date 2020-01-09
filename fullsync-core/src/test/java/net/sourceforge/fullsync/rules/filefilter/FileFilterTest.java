@@ -25,14 +25,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class FileFilterTest {
-	private File root;
-	private File testNode;
+	private FSFile root;
+	private FSFile testNode;
 	private FileFilterRule alwaysTrue = new AlwaysTrueFileFilterRule();
 	private FileFilterRule alwaysFalse = new AlwaysFalseFileFilterRule();
 
@@ -157,7 +157,7 @@ public class FileFilterTest {
 
 class AlwaysTrueFileFilterRule implements FileFilterRule {
 	@Override
-	public boolean match(File file) {
+	public boolean match(FSFile file) {
 		return true;
 	}
 
@@ -189,7 +189,7 @@ class AlwaysTrueFileFilterRule implements FileFilterRule {
 
 class AlwaysFalseFileFilterRule implements FileFilterRule {
 	@Override
-	public boolean match(File file) {
+	public boolean match(FSFile file) {
 		return false;
 	}
 

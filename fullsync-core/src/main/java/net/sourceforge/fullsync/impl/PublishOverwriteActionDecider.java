@@ -33,7 +33,7 @@ import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.StateDecider;
 import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 /**
  * An ActionDecider for destination buffered Publish/Update.
@@ -52,7 +52,7 @@ public class PublishOverwriteActionDecider implements ActionDecider {
 	private static final Action ignore = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "Ignore");
 
 	@Override
-	public Task getTask(File src, File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
+	public Task getTask(FSFile src, FSFile dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
 		List<Action> actions = new ArrayList<>(3);
 		State state = sd.getState(src, dst);
 		switch (state) {

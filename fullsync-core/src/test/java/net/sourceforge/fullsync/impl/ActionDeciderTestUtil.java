@@ -28,19 +28,19 @@ import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.FileComparer;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.StateDecider;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.TestNode;
 
 public class ActionDeciderTestUtil {
 	protected FileComparer fileComparer;
 	protected StateDecider stateDecider;
 	protected BufferStateDecider bufferedStateDecider;
-	protected File root;
-	protected File existingTestNode;
-	protected File existingBigTestNode;
-	protected File missingTestNode;
-	protected File largeTestNode;
-	protected File directoryTestNode;
+	protected FSFile root;
+	protected FSFile existingTestNode;
+	protected FSFile existingBigTestNode;
+	protected FSFile missingTestNode;
+	protected FSFile largeTestNode;
+	protected FSFile directoryTestNode;
 
 	protected void setUp() {
 		fileComparer = new SimplifiedSyncRules();

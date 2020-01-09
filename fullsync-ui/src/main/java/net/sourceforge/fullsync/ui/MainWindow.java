@@ -19,6 +19,7 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
@@ -63,7 +64,7 @@ import net.sourceforge.fullsync.event.SchedulerStatusChanged;
 import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
 import net.sourceforge.fullsync.schedule.Scheduler;
 import net.sourceforge.fullsync.ui.profiledetails.ProfileDetailsTabbedPage;
@@ -94,7 +95,7 @@ class MainWindow implements ProfileListControlHandler {
 	private ToolItem toolItemScheduleStop;
 	private Composite profileListContainer;
 	private ProfileListComposite profileList;
-	private GUIUpdateQueue<File> lastFileChecked;
+	private GUIUpdateQueue<FSFile> lastFileChecked;
 	private GUIUpdateQueue<String> statusLineText;
 
 	@Inject
@@ -153,7 +154,7 @@ class MainWindow implements ProfileListControlHandler {
 		});
 
 		lastFileChecked = new GUIUpdateQueue<>(display, files -> {
-			File lastCheckedFile = files.get(files.size() - 1);
+			FSFile lastCheckedFile = files.get(files.size() - 1);
 			statusLineText.add(Messages.getString("MainWindow.Checking_File", lastCheckedFile.getPath())); //$NON-NLS-1$
 		});
 
@@ -368,7 +369,7 @@ class MainWindow implements ProfileListControlHandler {
 		MenuItem menuItemHelpContent = new MenuItem(menuHelp, SWT.PUSH);
 		menuItemHelpContent.setText(Messages.getString("MainWindow.Help_Menu_Item")); //$NON-NLS-1$
 		menuItemHelpContent.addListener(SWT.Selection, e -> {
-			java.io.File helpIndex = new java.io.File(Util.getInstalllocation(), "docs/manual/manual.html").getAbsoluteFile(); //$NON-NLS-1$
+			File helpIndex = new File(Util.getInstalllocation(), "docs/manual/manual.html").getAbsoluteFile(); //$NON-NLS-1$
 			if (helpIndex.exists()) {
 				GuiController.launchProgram(helpIndex.getAbsolutePath());
 			}

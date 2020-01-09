@@ -247,8 +247,7 @@ public class FilesystemTest {
 			}
 
 			@Override
-			public void taskGenerationStarted(final net.sourceforge.fullsync.fs.File source,
-					final net.sourceforge.fullsync.fs.File destination) {
+			public void taskGenerationStarted(final FSFile source, final FSFile destination) {
 			}
 
 			@Override

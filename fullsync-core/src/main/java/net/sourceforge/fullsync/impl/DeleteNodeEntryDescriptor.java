@@ -25,13 +25,13 @@ import java.io.OutputStream;
 
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 public class DeleteNodeEntryDescriptor implements EntryDescriptor {
 	private final Task reference;
-	private final File node;
+	private final FSFile node;
 
-	public DeleteNodeEntryDescriptor(Task reference, File node) {
+	public DeleteNodeEntryDescriptor(Task reference, FSFile node) {
 		this.reference = reference;
 		this.node = node;
 	}
