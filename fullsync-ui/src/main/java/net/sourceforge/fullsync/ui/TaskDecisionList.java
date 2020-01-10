@@ -47,10 +47,10 @@ import org.eclipse.swt.widgets.TableItem;
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.fs.FSFile;
 
 class TaskDecisionList extends Composite {
 	private TableColumn tableColumnExplanation;

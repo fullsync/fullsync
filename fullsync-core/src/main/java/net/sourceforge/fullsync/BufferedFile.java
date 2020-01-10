@@ -17,15 +17,18 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.buffering;
+package net.sourceforge.fullsync;
 
 import java.io.IOException;
 
-import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.fs.connection.BufferedFileSystemConnection;
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
+public interface BufferedFile extends FSFile {
+	long getFsLastModified();
 
-public interface BufferingProviderFactory {
-	BufferedFileSystemConnection createBufferedConnection(FileSystemConnection fileSystemConnection)
-		throws FileSystemException, IOException;
+	long getFsSize();
+
+	void addChild(FSFile node);
+
+	void removeChild(String name);
+
+	void refreshReference() throws IOException;
 }

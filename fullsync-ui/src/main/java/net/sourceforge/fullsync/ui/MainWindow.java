@@ -51,10 +51,13 @@ import org.eclipse.swt.widgets.ToolItem;
 import com.google.common.eventbus.Subscribe;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuntimeConfiguration;
+import net.sourceforge.fullsync.ScheduleTaskSource;
+import net.sourceforge.fullsync.Scheduler;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
@@ -64,9 +67,6 @@ import net.sourceforge.fullsync.event.SchedulerStatusChanged;
 import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
-import net.sourceforge.fullsync.fs.FSFile;
-import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
-import net.sourceforge.fullsync.schedule.Scheduler;
 import net.sourceforge.fullsync.ui.profiledetails.ProfileDetailsTabbedPage;
 
 @Singleton

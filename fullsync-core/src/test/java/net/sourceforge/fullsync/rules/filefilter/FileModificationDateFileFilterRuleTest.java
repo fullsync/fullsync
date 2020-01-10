@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import net.sourceforge.fullsync.fs.FSFile;
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 public class FileModificationDateFileFilterRuleTest {

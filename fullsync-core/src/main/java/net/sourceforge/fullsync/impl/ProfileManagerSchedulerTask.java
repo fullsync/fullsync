@@ -25,8 +25,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.assistedinject.Assisted;
 
 import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ScheduleTask;
 import net.sourceforge.fullsync.event.ScheduledProfileExecution;
-import net.sourceforge.fullsync.schedule.ScheduleTask;
 
 class ProfileManagerSchedulerTask implements ScheduleTask {
 	private final EventBus eventBus;

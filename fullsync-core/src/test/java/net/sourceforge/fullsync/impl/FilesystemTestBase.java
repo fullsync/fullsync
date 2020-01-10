@@ -42,6 +42,7 @@ import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.FileSystemConnection;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.FullSync;
@@ -52,11 +53,10 @@ import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.event.TaskGenerationFinished;
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
-import net.sourceforge.fullsync.fs.filesystems.ftp.FTPFileSystemConnection;
-import net.sourceforge.fullsync.fs.filesystems.local.LocalFileSystemConnection;
-import net.sourceforge.fullsync.fs.filesystems.sftp.SFTPFileSystemConnection;
-import net.sourceforge.fullsync.fs.filesystems.smb.SmbFileSystemConnection;
+import net.sourceforge.fullsync.filesystems.FTPFileSystemConnection;
+import net.sourceforge.fullsync.filesystems.LocalFileSystemConnection;
+import net.sourceforge.fullsync.filesystems.SFTPFileSystemConnection;
+import net.sourceforge.fullsync.filesystems.SmbFileSystemConnection;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 public abstract class FilesystemTestBase implements FileSystemManager {

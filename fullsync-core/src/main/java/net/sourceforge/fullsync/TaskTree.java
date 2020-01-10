@@ -20,7 +20,6 @@
 package net.sourceforge.fullsync;
 
 import net.sourceforge.fullsync.buffer.BlockBuffer;
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 
 public class TaskTree {

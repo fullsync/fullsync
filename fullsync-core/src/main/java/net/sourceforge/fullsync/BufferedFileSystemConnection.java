@@ -17,20 +17,8 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs;
+package net.sourceforge.fullsync;
 
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemOptions;
-
-import net.sourceforge.fullsync.ConnectionDescription;
-
-public interface FileSystemAuthProvider {
-	/**
-	 * authSetup
-	 * Setup the scheme specific authentication options.
-	 * @param description the connection configuration
-	 * @param options the commons.vfs2 options object to configure
-	 * @throws FileSystemException
-	 */
-	void authSetup(ConnectionDescription description, FileSystemOptions options) throws FileSystemException;
+public interface BufferedFileSystemConnection extends FileSystemConnection {
+	boolean isMonitoringFileSystem();
 }

@@ -35,26 +35,26 @@ import com.google.inject.name.Names;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 
+import net.sourceforge.fullsync.BufferedFileSystemConnection;
+import net.sourceforge.fullsync.BufferingProviderFactory;
+import net.sourceforge.fullsync.FileSystemConnection;
+import net.sourceforge.fullsync.FileSystemConnectionFactory;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.FileSystemManagerImpl;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.ProfileManagerSchedulerTaskFactory;
 import net.sourceforge.fullsync.RuntimeConfiguration;
+import net.sourceforge.fullsync.ScheduleTask;
+import net.sourceforge.fullsync.ScheduleTaskSource;
+import net.sourceforge.fullsync.Scheduler;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.cli.CliRuntimeConfiguration;
-import net.sourceforge.fullsync.fs.FileSystemConnectionFactory;
-import net.sourceforge.fullsync.fs.buffering.BufferingProviderFactory;
-import net.sourceforge.fullsync.fs.connection.BufferedFileSystemConnection;
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
-import net.sourceforge.fullsync.fs.connection.SyncFileBufferedConnection;
-import net.sourceforge.fullsync.fs.filesystems.ftp.FTPFileSystemConnection;
-import net.sourceforge.fullsync.fs.filesystems.local.LocalFileSystemConnection;
-import net.sourceforge.fullsync.fs.filesystems.sftp.SFTPFileSystemConnection;
-import net.sourceforge.fullsync.fs.filesystems.smb.SmbFileSystemConnection;
-import net.sourceforge.fullsync.schedule.ScheduleTask;
-import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
-import net.sourceforge.fullsync.schedule.Scheduler;
+import net.sourceforge.fullsync.filesystems.FTPFileSystemConnection;
+import net.sourceforge.fullsync.filesystems.LocalFileSystemConnection;
+import net.sourceforge.fullsync.filesystems.SFTPFileSystemConnection;
+import net.sourceforge.fullsync.filesystems.SmbFileSystemConnection;
 import net.sourceforge.fullsync.schedule.SchedulerImpl;
 
 public class FullSyncModule extends AbstractModule {

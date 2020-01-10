@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.filesystems.smb;
+package net.sourceforge.fullsync.filesystems;
 
 import javax.inject.Inject;
 
@@ -32,7 +32,7 @@ import com.google.inject.assistedinject.Assisted;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
+import net.sourceforge.fullsync.impl.CommonsVfsConnection;
 
 public class SmbFileSystemConnection extends CommonsVfsConnection {
 	private static final Logger logger = LoggerFactory.getLogger(SmbFileSystemConnection.class);

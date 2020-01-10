@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.connection;
+package net.sourceforge.fullsync.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -49,10 +49,12 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.google.inject.assistedinject.Assisted;
 
+import net.sourceforge.fullsync.BufferedFile;
+import net.sourceforge.fullsync.BufferedFileSystemConnection;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.fs.FSFile;
-import net.sourceforge.fullsync.fs.buffering.BufferedFile;
+import net.sourceforge.fullsync.FSFile;
+import net.sourceforge.fullsync.FileSystemConnection;
 import net.sourceforge.fullsync.utils.XmlUtils;
 
 public class SyncFileBufferedConnection implements BufferedFileSystemConnection {

@@ -24,9 +24,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import net.sourceforge.fullsync.BufferUpdate;
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
-import net.sourceforge.fullsync.fs.FSFile;
 
 public class BufferUpdateEntryDescriptor implements EntryDescriptor {
 	private final BufferUpdate bufferUpdate;

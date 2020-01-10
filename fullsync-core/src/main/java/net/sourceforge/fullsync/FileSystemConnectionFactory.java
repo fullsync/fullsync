@@ -17,12 +17,11 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.schedule;
+package net.sourceforge.fullsync;
 
-public interface Scheduler {
-	void start();
+import java.io.IOException;
 
-	void stop();
-
-	boolean isEnabled();
+public interface FileSystemConnectionFactory {
+	FileSystemConnection createConnection(ConnectionDescription connectionDescription, boolean interactive)
+		throws FileSystemException, IOException;
 }

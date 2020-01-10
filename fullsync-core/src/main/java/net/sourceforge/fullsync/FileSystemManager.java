@@ -21,8 +21,6 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
-
 @FunctionalInterface
 public interface FileSystemManager {
 	static final String BUFFER_STRATEGY_SYNCFILES = "syncfiles"; //$NON-NLS-1$

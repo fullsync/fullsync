@@ -30,6 +30,9 @@ import org.slf4j.LoggerFactory;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import net.sourceforge.fullsync.ScheduleTask;
+import net.sourceforge.fullsync.ScheduleTaskSource;
+import net.sourceforge.fullsync.Scheduler;
 import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.event.ProfileListChanged;
 import net.sourceforge.fullsync.event.SchedulerStatusChanged;

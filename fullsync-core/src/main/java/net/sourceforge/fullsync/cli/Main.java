@@ -62,13 +62,13 @@ import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuntimeConfiguration;
+import net.sourceforge.fullsync.Scheduler;
 import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.event.ScheduledProfileExecution;
 import net.sourceforge.fullsync.event.ShutdownEvent;
 import net.sourceforge.fullsync.impl.FullSyncModule;
-import net.sourceforge.fullsync.schedule.Scheduler;
 
 public class Main implements Launcher { // NO_UCD
 	private static final Options options = new Options();

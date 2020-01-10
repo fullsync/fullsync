@@ -29,8 +29,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.SystemDate;
-import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 
 public class FileAgeFileFilterRuleTest {

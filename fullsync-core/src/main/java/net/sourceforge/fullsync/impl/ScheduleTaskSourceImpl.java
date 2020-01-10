@@ -24,9 +24,10 @@ import javax.inject.Singleton;
 
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.ProfileManagerSchedulerTaskFactory;
+import net.sourceforge.fullsync.ScheduleTask;
+import net.sourceforge.fullsync.ScheduleTaskSource;
 import net.sourceforge.fullsync.schedule.Schedule;
-import net.sourceforge.fullsync.schedule.ScheduleTask;
-import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
 
 @Singleton
 public class ScheduleTaskSourceImpl implements ScheduleTaskSource {

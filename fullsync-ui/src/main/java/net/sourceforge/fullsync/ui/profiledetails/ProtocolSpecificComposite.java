@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ConnectionDescription.Builder;
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FileSystemConnection;
 import net.sourceforge.fullsync.FileSystemManager;
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 import net.sourceforge.fullsync.ui.Messages;
 
 abstract class ProtocolSpecificComposite {

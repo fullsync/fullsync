@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.connection;
+package net.sourceforge.fullsync.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,9 +35,10 @@ import org.apache.commons.vfs2.FileType;
 import org.apache.commons.vfs2.VFS;
 
 import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.FSFile;
+import net.sourceforge.fullsync.FileSystemConnection;
 import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.fs.FSFile;
-import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
+import net.sourceforge.fullsync.filesystems.FileSystemAuthProvider;
 
 public class CommonsVfsConnection implements FileSystemConnection {
 	private final boolean canSetLastModifiedFile;

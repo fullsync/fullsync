@@ -23,10 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sourceforge.fullsync.DataParseException;
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.FileComparer;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.StateDecider;
-import net.sourceforge.fullsync.fs.FSFile;
 
 public class StateDeciderImpl implements StateDecider {
 	private static final Logger logger = LoggerFactory.getLogger(StateDeciderImpl.class.getSimpleName());

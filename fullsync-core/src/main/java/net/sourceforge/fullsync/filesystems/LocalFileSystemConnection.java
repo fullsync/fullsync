@@ -17,20 +17,20 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.buffering;
+package net.sourceforge.fullsync.filesystems;
 
-import java.io.IOException;
+import javax.inject.Inject;
 
-import net.sourceforge.fullsync.fs.FSFile;
+import com.google.inject.assistedinject.Assisted;
 
-public interface BufferedFile extends FSFile {
-	long getFsLastModified();
+import net.sourceforge.fullsync.ConnectionDescription;
+import net.sourceforge.fullsync.FileSystemException;
+import net.sourceforge.fullsync.impl.CommonsVfsConnection;
 
-	long getFsSize();
-
-	void addChild(FSFile node);
-
-	void removeChild(String name);
-
-	void refreshReference() throws IOException;
+public class LocalFileSystemConnection extends CommonsVfsConnection {
+	@Inject
+	public LocalFileSystemConnection(@Assisted ConnectionDescription connectionDescription, @Assisted boolean interactive)
+		throws FileSystemException {
+		super(connectionDescription, null);
+	}
 }

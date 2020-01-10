@@ -22,7 +22,7 @@ package net.sourceforge.fullsync.rules.filefilter;
 import java.util.Arrays;
 import java.util.Objects;
 
-import net.sourceforge.fullsync.fs.FSFile;
+import net.sourceforge.fullsync.FSFile;
 
 public class FileFilter {
 	public static final int MATCH_ALL = 0;

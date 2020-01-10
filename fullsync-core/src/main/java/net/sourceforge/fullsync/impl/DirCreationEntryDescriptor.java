@@ -24,9 +24,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Objects;
 
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
-import net.sourceforge.fullsync.fs.FSFile;
 
 public class DirCreationEntryDescriptor implements EntryDescriptor {
 	private final Task reference;

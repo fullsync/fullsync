@@ -17,11 +17,12 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.impl;
+package net.sourceforge.fullsync;
 
-import net.sourceforge.fullsync.Profile;
-import net.sourceforge.fullsync.schedule.ScheduleTask;
+public interface Scheduler {
+	void start();
 
-public interface ProfileManagerSchedulerTaskFactory {
-	ScheduleTask create(Profile profile, long executionTime);
+	void stop();
+
+	boolean isEnabled();
 }

@@ -29,11 +29,11 @@ import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferStateDecider;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.DataParseException;
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.StateDecider;
 import net.sourceforge.fullsync.Task;
-import net.sourceforge.fullsync.fs.FSFile;
 
 /**
  * An ActionDecider for two way sync.

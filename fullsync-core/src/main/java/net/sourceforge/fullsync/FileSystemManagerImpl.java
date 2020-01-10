@@ -28,10 +28,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 
-import net.sourceforge.fullsync.fs.FileSystemConnectionFactory;
-import net.sourceforge.fullsync.fs.buffering.BufferingProviderFactory;
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
-
 public class FileSystemManagerImpl implements FileSystemManager {
 	private final Injector injector;
 

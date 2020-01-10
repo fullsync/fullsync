@@ -25,10 +25,10 @@ import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferStateDecider;
 import net.sourceforge.fullsync.BufferUpdate;
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.FileComparer;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.StateDecider;
-import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.TestNode;
 
 public class ActionDeciderTestUtil {
