@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FileSystemConnection;
 import net.sourceforge.fullsync.Preferences;
 import net.sourceforge.fullsync.ui.ImageRepository;
 import net.sourceforge.fullsync.ui.Messages;
@@ -72,7 +73,7 @@ class FileObjectChooser {
 		this.imageRepository = imageRepository;
 	}
 
-	public boolean open(Shell parent, FileObject base) {
+	public boolean open(Shell parent, FileSystemConnection fileSystemConnection) {
 		dialogShell = new Shell(parent, SWT.BORDER | SWT.TITLE | SWT.RESIZE | SWT.PRIMARY_MODAL);
 		dialogShell.setText(Messages.getString("FileObjectChooser.Title")); //$NON-NLS-1$
 
@@ -186,9 +187,12 @@ class FileObjectChooser {
 		buttonCancel.setText(Messages.getString("FileObjectChooser.Cancel")); //$NON-NLS-1$
 		buttonCancel.addListener(SWT.Selection, this::cancelSelected);
 
-		setBaseFileObject(base);
-
+		activeFileObject = fileSystemConnection.getBase();
 		try {
+			rootFileObject = activeFileObject.resolveFile("/"); //$NON-NLS-1$
+			labelBaseUrl.setText(rootFileObject.getName().toString());
+			setActiveFileObject(activeFileObject);
+
 			result = false;
 			dialogShell.open();
 			ShellStateHandler.apply(preferences, dialogShell, FileObjectChooser.class);
@@ -200,10 +204,13 @@ class FileObjectChooser {
 			}
 			return result;
 		}
+		catch (FileSystemException e) {
+			ExceptionHandler.reportException(e);
+		}
 		catch (Exception e) {
 			e.printStackTrace();
-			return false;
 		}
+		return false;
 	}
 
 	private void okSelected(Event event) {
@@ -320,20 +327,6 @@ class FileObjectChooser {
 		}
 		else {
 			textFilename.setText(""); //$NON-NLS-1$
-		}
-	}
-
-	public void setBaseFileObject(final FileObject base) {
-		if (null == activeFileObject) {
-			activeFileObject = base;
-		}
-		try {
-			rootFileObject = base.resolveFile("/"); //$NON-NLS-1$
-			labelBaseUrl.setText(rootFileObject.getName().toString());
-			setActiveFileObject(activeFileObject);
-		}
-		catch (FileSystemException e) {
-			ExceptionHandler.reportException(e);
 		}
 	}
 
