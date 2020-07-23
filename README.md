@@ -5,6 +5,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fullsync/fullsync/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fullsync/fullsync/?branch=master)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/fullsync/fullsync.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/fullsync/fullsync/alerts/)
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/fullsync/fullsync.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/fullsync/fullsync/context:java)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ffullsync%2Ffullsync.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Ffullsync%2Ffullsync?ref=badge_shield)
 
 FullSync is a powerful tool that helps you keep multiple copies of various data in sync. I.e. it can update your Website using (S)FTP, backup your data or refresh a working copy from a remote server. It offers flexible rules, a scheduler and more.
 
@@ -40,3 +41,6 @@ Boston, MA 02110-1301, USA.
 For information about the authors of this project Have a look
 at the AUTHORS file in the root of this project.
 ```
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ffullsync%2Ffullsync.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Ffullsync%2Ffullsync?ref=badge_large)
