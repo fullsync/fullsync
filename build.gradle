@@ -17,7 +17,7 @@ buildscript {
 			classpath 'gradle.plugin.io.pry.gradle.offline_dependencies:gradle-offline-dependencies-plugin:0.5.0'
 		}
 		classpath "com.github.ben-manes:gradle-versions-plugin:0.27.0"
-		classpath "com.diffplug.spotless:spotless-plugin-gradle:4.5.0"
+		classpath "com.diffplug.spotless:spotless-plugin-gradle:5.1.1"
 		classpath "com.diffplug.spotless:spotless-ext-eclipse-jdt:4.7.2"
 	}
 }
@@ -34,7 +34,7 @@ if (!System.env.'FULLSYNC_OFFLINE_BUILD') {
 }
 
 apply plugin: "com.github.ben-manes.versions"
-apply plugin: "com.diffplug.gradle.spotless"
+apply plugin: "com.diffplug.spotless"
 apply plugin: 'distribution'
 
 if (System.env.'CI') {
@@ -81,7 +81,7 @@ spotless {
 subprojects {
 	group = rootProject.group
 	version = rootProject.version
-	apply plugin: 'com.diffplug.gradle.spotless'
+	apply plugin: 'com.diffplug.spotless'
 	apply plugin: 'jacoco'
 
 	def subproject = delegate
