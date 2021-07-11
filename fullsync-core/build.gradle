@@ -1,22 +1,22 @@
 
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
-	compile project(':fullsync-logger')
-	compile project(':fullsync-utils')
-	compile libraries.apacheCommonsCli
-	compile libraries.apacheCommonsNet
-	compile(libraries.apacheCommonsVfs) {
+	api project(':fullsync-logger')
+	api project(':fullsync-utils')
+	implementation libraries.apacheCommonsCli
+	implementation libraries.apacheCommonsNet
+	api(libraries.apacheCommonsVfs) {
 		exclude group: "commons-logging"
 		exclude group: "org.apache.maven.scm"
 		exclude group: "org.apache.hadoop"
 	}
-	compile libraries.orgSambaJcifs
-	compile libraries.comJcraftJsch
-	compile libraries.orgSlf4jJclOverSlf4j
-	compile libraries.guice
-	compile libraries.guiceAssistedInject
-	compile files("lib/commons-vfs2-sandbox.jar")
+	implementation libraries.orgSambaJcifs
+	implementation libraries.comJcraftJsch
+	implementation libraries.orgSlf4jJclOverSlf4j
+	api libraries.guice
+	api libraries.guiceAssistedInject
+	implementation files("lib/commons-vfs2-sandbox.jar")
 	testImplementation libraries.junitJupiter
 	testImplementation libraries.hamcrest
 	testImplementation libraries.testcontainers

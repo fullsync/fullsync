@@ -282,7 +282,7 @@ def mapArtifactToFilename(a) {
 
 gradle.projectsEvaluated {
 	def buildUltils = project(':fullsync-build-utils')
-	renderChangeLog.classpath = buildUltils.configurations.runtime + buildUltils.jar.outputs.files
+	renderChangeLog.classpath = buildUltils.configurations.runtimeClasspath + buildUltils.jar.outputs.files
 
 	def ui = project(':fullsync-ui')
 	def resolvedUiDist = ui.configurations.dist.resolvedConfiguration
