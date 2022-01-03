@@ -2,7 +2,7 @@ allprojects {
 	apply plugin: 'io.pry.gradle.offline_dependencies'
 	offlineDependencies {
 		repositories {
-			jcenter()
+			mavenCentral()
 			gradlePluginPortal()
 		}
 		includeSources = false

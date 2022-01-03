@@ -1,11 +1,11 @@
-import org.apache.tools.ant.filters.*;
+import org.apache.tools.ant.filters.*
 
 buildscript {
 	repositories {
 		maven {
 			url offlineRepositoryRoot
 		}
-		jcenter()
+		mavenCentral()
 		gradlePluginPortal()
 	}
 	dependencies {
@@ -16,9 +16,8 @@ buildscript {
 		if (!System.env.'FULLSYNC_OFFLINE_BUILD') {
 			classpath 'gradle.plugin.io.pry.gradle.offline_dependencies:gradle-offline-dependencies-plugin:0.5.0'
 		}
-		classpath "com.github.ben-manes:gradle-versions-plugin:0.36.0"
-		classpath "com.diffplug.spotless:spotless-plugin-gradle:5.14.2"
-		classpath "com.diffplug.spotless:spotless-ext-eclipse-jdt:4.7.2"
+		classpath "com.github.ben-manes:gradle-versions-plugin:0.40.0"
+		classpath "com.diffplug.spotless:spotless-plugin-gradle:6.1.0"
 	}
 }
 
@@ -26,7 +25,7 @@ repositories {
 	maven {
 		url offlineRepositoryRoot
 	}
-	jcenter()
+	mavenCentral()
 }
 
 if (!System.env.'FULLSYNC_OFFLINE_BUILD') {
@@ -60,7 +59,7 @@ ext {
 libraries.apacheCommonsCli = "commons-cli:commons-cli:${commonsCliVersion}"
 libraries.apacheCommonsNet = "commons-net:commons-net:${commonsNetVersion}"
 libraries.apacheCommonsVfs = "org.apache.commons:commons-vfs2:${commonsVfsVersion}"
-libraries.orgSambaJcifs = "org.samba.jcifs:jcifs:${jcifsVersion}"
+libraries.orgSambaJcifs = "jcifs:jcifs:${jcifsVersion}"
 libraries.comJcraftJsch = "com.jcraft:jsch:${jschVersion}"
 libraries.orgSlf4jJclOverSlf4j = "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
 libraries.guice = "com.google.inject:guice:${guiceVersion}"
@@ -86,19 +85,22 @@ subprojects {
 
 	def subproject = delegate
 	plugins.withType(JavaPlugin).whenPluginAdded { p ->
-		sourceCompatibility = 1.8
-		targetCompatibility = 1.8
+		java {
+			toolchain {
+				languageVersion = JavaLanguageVersion.of(17)
+			}
+		}
 		jar {
 			manifest {
 				attributes 'License': 'GPLv2+'
 				attributes 'FullSync-Version': rootProject.version
-				attributes 'Copyright': 'Copyright (c) 2020 the FullSync Team'
+				attributes 'Copyright': 'Copyright (c) 2022 the FullSync Team'
 			}
 		}
 		spotless {
 			java {
 				licenseHeaderFile rootProject.file('resources/License-header.txt')
-				eclipse('4.13.0').configFile rootProject.file('resources/eclipse-jdt-formatter.xml')
+				eclipse().configFile rootProject.file('resources/eclipse-jdt-formatter.xml')
 				removeUnusedImports()
 				trimTrailingWhitespace()
 				endWithNewline()
@@ -114,9 +116,9 @@ subprojects {
 
 	repositories {
 		maven {
-			url rootProject.file(offlineRepositoryRoot).toURL().toString()
+			url rootProject.file(offlineRepositoryRoot).toURI().toURL().toString()
 		}
-		jcenter()
+		mavenCentral()
 	}
 }
 
@@ -138,7 +140,7 @@ wrapper {
 
 task renderChangeLog(type: JavaExec) {
 	dependsOn ':fullsync-build-utils:jar'
-	main = 'net.sourceforge.fullsync.build.tools.ChangeLogGenerator'
+	mainClass = 'net.sourceforge.fullsync.build.tools.ChangeLogGenerator'
 	def versionsDir = file("versions")
 	def changelogFile = file("$buildDir/ChangeLog.txt")
 	inputs.files(fileTree(versionsDir) {
@@ -282,7 +284,7 @@ def mapArtifactToFilename(a) {
 
 gradle.projectsEvaluated {
 	def buildUltils = project(':fullsync-build-utils')
-	renderChangeLog.classpath = buildUltils.configurations.runtime + buildUltils.jar.outputs.files
+	renderChangeLog.classpath = buildUltils.configurations.runtimeClasspath + buildUltils.jar.outputs.files
 
 	def ui = project(':fullsync-ui')
 	def resolvedUiDist = ui.configurations.dist.resolvedConfiguration
@@ -401,7 +403,7 @@ task debugLauncher(type: JavaExec) {
 dependencyUpdates {
 	revision = "release"
 	outputFormatter = "text"
-	resolutionStrategy = {
+	resolutionStrategy {
 		componentSelection { rules ->
 			rules.all { ComponentSelection selection ->
 				boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
@@ -409,12 +411,17 @@ dependencyUpdates {
 				}
 				if (rejected) {
 					selection.reject('Release candidate')
+					return
 				}
-				else {
-					rejected = selection.candidate.version.contains('-');
-					if (rejected) {
-						selection.reject('SNAPSHOT version')
-					}
+				rejected = selection.candidate.version.contains('-')
+				if (rejected) {
+					selection.reject('SNAPSHOT version')
+					return
+				}
+				rejected = selection.candidate.version ==~ /^\d{8}\..*/
+				if (rejected) {
+					selection.reject('Strange version... likely snapshot version')
+					return
 				}
 			}
 		}

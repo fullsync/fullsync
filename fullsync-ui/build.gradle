@@ -1,5 +1,5 @@
 
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 def addSWTDependency(configuration, osName) {
 	def os = ''
@@ -26,15 +26,15 @@ configurations {
 }
 
 dependencies {
-	compile project(':fullsync-core')
-	compile project(':fullsync-assets')
+	implementation project(':fullsync-core')
+	implementation project(':fullsync-assets')
 	dist project(':fullsync-ui')
 }
 
 addSWTDependency "dist", "linux"
 addSWTDependency "dist", "mac"
 addSWTDependency "dist", "windows"
-addLocalSWTVersion "compile"
+addLocalSWTVersion "implementation"
 
 task run(type: JavaExec) {
 	main = 'net.sourceforge.fullsync.ui.GuiMain'

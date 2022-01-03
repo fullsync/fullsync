@@ -3,7 +3,7 @@ pluginManagement {
 		maven {
 			url offlineRepositoryRoot
 		}
-		jcenter()
+		mavenCentral()
 		gradlePluginPortal()
 	}
 }
