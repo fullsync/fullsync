@@ -24,7 +24,6 @@ import java.net.URI;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import org.apache.commons.vfs2.FileObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -105,9 +104,8 @@ abstract class ProtocolSpecificComposite {
 			ConnectionDescription desc = getConnectionDescription().build();
 			FileSystemManager fsm = fileSystemManagerProvider.get();
 			try (Site conn = fsm.createConnection(desc, true)) {
-				FileObject base = conn.getBase();
 				FileObjectChooser foc = fileObjectChooserProvider.get();
-				if (foc.open(m_parent.getShell(), base)) {
+				if (foc.open(m_parent.getShell(), conn.getBase())) {
 					setPath(new URI(foc.getActiveFileObject().getName().getURI()).getPath());
 				}
 			}
