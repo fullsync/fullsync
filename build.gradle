@@ -1,4 +1,4 @@
-import org.apache.tools.ant.filters.*
+import org.apache.tools.ant.filters.FixCrLfFilter
 
 buildscript {
 	repositories {
@@ -87,7 +87,8 @@ subprojects {
 	plugins.withType(JavaPlugin).whenPluginAdded { p ->
 		java {
 			toolchain {
-				languageVersion = JavaLanguageVersion.of(17)
+				// Guice doesn't yet support Java > 15
+				languageVersion = JavaLanguageVersion.of(15)
 			}
 		}
 		jar {
