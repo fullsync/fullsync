@@ -20,7 +20,7 @@ There is also a [Trello Board](https://trello.com/b/lPhIU2kZ/fullsync) with task
 
 ```text
 Copyright (C) 2004-2006 Jan Kopcsek <codewright@users.sourceforge.net>
-Copyright (C) 2011-2020 Christoph Obexer <cobexer@users.sourceforge.net>
+Copyright (C) 2011-2022 Christoph Obexer <cobexer@users.sourceforge.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
