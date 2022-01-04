@@ -27,7 +27,16 @@ configurations {
 
 dependencies {
 	implementation project(':fullsync-core')
+	implementation project(':fullsync-utils')
 	implementation project(':fullsync-assets')
+	implementation libraries.guice
+	implementation libraries.guiceAssistedInject
+	implementation libraries.orgSlf4jJclOverSlf4j
+	implementation(libraries.apacheCommonsVfs) {
+		exclude group: "commons-logging"
+		exclude group: "org.apache.maven.scm"
+		exclude group: "org.apache.hadoop"
+	}
 	dist project(':fullsync-ui')
 }
 
