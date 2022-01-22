@@ -20,7 +20,6 @@
 package net.sourceforge.fullsync.impl;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -36,7 +35,6 @@ import net.sourceforge.fullsync.ActionDecider;
 import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferStateDecider;
 import net.sourceforge.fullsync.BufferUpdate;
-import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
@@ -76,7 +74,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 	private void synchronizeNodes(TaskTree taskTree, File src, File dst, Task parent, Deciders deciders)
 		throws DataParseException, IOException {
 		if (!deciders.getRules().isNodeIgnored(src)) {
-			Task task = deciders.getActionDecider().getTask(src, dst, deciders.getStateDecider(), deciders.getBufferStateDecider());
+			var task = deciders.getActionDecider().getTask(src, dst, deciders.getStateDecider(), deciders.getBufferStateDecider());
 			logger.debug("{}: {}", src.getName(), task); //$NON-NLS-1$
 
 			eventBus.post(new TaskGenerationFinished(taskTree, task));
@@ -128,11 +126,11 @@ public class TaskGeneratorImpl implements TaskGenerator {
 	 */
 	private void synchronizeDirectories(TaskTree taskTree, File src, File dst, Task parent, Deciders parentDeciders)
 		throws DataParseException, IOException {
-		Deciders deciders = parentDeciders.createChild(src, dst);
-		Collection<File> srcFiles = src.getChildren();
+		var deciders = parentDeciders.createChild(src, dst);
+		var srcFiles = src.getChildren();
 		Collection<File> dstFiles = new ArrayList<>(dst.getChildren());
 		for (File sfile : srcFiles) {
-			File dfile = dst.getChild(sfile.getName());
+			var dfile = dst.getChild(sfile.getName());
 			if (null == dfile) {
 				dfile = dst.createChild(sfile.getName(), sfile.isDirectory());
 			}
@@ -143,7 +141,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 		}
 
 		for (File dfile : dstFiles) {
-			File sfile = src.getChild(dfile.getName());
+			var sfile = src.getChild(dfile.getName());
 			if (null == sfile) {
 				sfile = src.createChild(dfile.getName(), dfile.isDirectory());
 			}
@@ -153,33 +151,21 @@ public class TaskGeneratorImpl implements TaskGenerator {
 
 	@Override
 	public TaskTree execute(Profile profile, boolean interactive)
-		throws FileSystemException, URISyntaxException, DataParseException, IOException {
-		RuleSet rules = profile.getRuleSet().createRuleSet();
-		ActionDecider actionDecider;
-		switch (profile.getSynchronizationType()) {
-			case "Publish/Update":
-				actionDecider = new PublishActionDecider();
-				break;
-			case "Publish/Update Overwrite":
-				actionDecider = new PublishOverwriteActionDecider();
-				break;
-			case "Backup Copy":
-				actionDecider = new BackupActionDecider();
-				break;
-			case "Exact Copy":
-				actionDecider = new ExactCopyActionDecider();
-				break;
-			case "Two Way Sync":
-				actionDecider = new TwoWaySyncActionDecider();
-				break;
-			default:
-				throw new IllegalArgumentException("Profile has unknown synchronization type."); //$NON-NLS-1$
-		}
+		throws FileSystemException {
+		var rules = profile.getRuleSet().createRuleSet();
+		var actionDecider = switch (profile.getSynchronizationType()) {
+			case "Publish/Update" -> new PublishActionDecider();
+			case "Publish/Update Overwrite" -> new PublishOverwriteActionDecider();
+			case "Backup Copy" -> new BackupActionDecider();
+			case "Exact Copy" -> new ExactCopyActionDecider();
+			case "Two Way Sync" -> new TwoWaySyncActionDecider();
+			default -> throw new IllegalArgumentException("Profile has unknown synchronization type."); //$NON-NLS-1$
+		};
 
-		ConnectionDescription srcDesc = profile.getSource();
-		ConnectionDescription dstDesc = profile.getDestination();
-		try (Site d1 = fileSystemManager.createConnection(srcDesc, interactive)) {
-			try (Site d2 = fileSystemManager.createConnection(dstDesc, interactive)) {
+		var srcDesc = profile.getSource();
+		var dstDesc = profile.getDestination();
+		try (var d1 = fileSystemManager.createConnection(srcDesc, interactive)) {
+			try (var d2 = fileSystemManager.createConnection(dstDesc, interactive)) {
 				return execute(d1, d2, actionDecider, rules);
 			}
 		}
@@ -197,11 +183,11 @@ public class TaskGeneratorImpl implements TaskGenerator {
 			throw new FileSystemException("destination is unavailable");
 		}
 
-		Action rootAction = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "Root"); //$NON-NLS-1$
-		Task root = new Task(null, null, State.IN_SYNC, new Action[] {
+		var rootAction = new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, "Root"); //$NON-NLS-1$
+		var root = new Task(null, null, State.IN_SYNC, new Action[] {
 			rootAction
 		});
-		TaskTree tree = new TaskTree(source, destination, root);
+		var tree = new TaskTree(source, destination, root);
 
 		try {
 			eventBus.post(new TaskTreeStarted(tree));

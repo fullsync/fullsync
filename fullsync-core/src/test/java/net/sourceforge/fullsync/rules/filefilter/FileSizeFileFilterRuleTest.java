@@ -30,7 +30,7 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 
 public class FileSizeFileFilterRuleTest {
-	private File root = new TestNode("root", null, true, true, 0, 0);
+	private final File root = new TestNode("root", null, true, true, 0, 0);
 	private File foobarTxt;
 
 	@BeforeEach
@@ -40,7 +40,7 @@ public class FileSizeFileFilterRuleTest {
 
 	@Test
 	public void testOpIs() throws Exception {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS);
+		var filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS);
 
 		assertTrue(filterRule.match(foobarTxt));
 
@@ -50,7 +50,7 @@ public class FileSizeFileFilterRuleTest {
 
 	@Test
 	public void testOpIsnt() throws Exception {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_ISNT);
+		var filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_ISNT);
 		assertFalse(filterRule.match(foobarTxt));
 
 		foobarTxt.setSize(2000);
@@ -59,7 +59,7 @@ public class FileSizeFileFilterRuleTest {
 
 	@Test
 	public void testOpIsGreaterThan() throws Exception {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"),
+		var filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"),
 			FileSizeFileFilterRule.OP_IS_GREATER_THAN);
 
 		assertFalse(filterRule.match(foobarTxt));
@@ -73,7 +73,7 @@ public class FileSizeFileFilterRuleTest {
 
 	@Test
 	public void testOpIsLessThan() throws Exception {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS_LESS_THAN);
+		var filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS_LESS_THAN);
 
 		assertFalse(filterRule.match(foobarTxt));
 
@@ -86,7 +86,7 @@ public class FileSizeFileFilterRuleTest {
 
 	@Test
 	public void fileSizeNegative() throws Exception {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS);
+		var filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS);
 		foobarTxt.setSize(-1);
 
 		assertThrows(FilterRuleNotAppliableException.class, () -> filterRule.match(foobarTxt));
@@ -94,7 +94,7 @@ public class FileSizeFileFilterRuleTest {
 
 	@Test
 	public void testOpDefault() throws Exception {
-		FileSizeFileFilterRule filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), -1);
+		var filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), -1);
 
 		assertFalse(filterRule.match(foobarTxt));
 	}

@@ -19,7 +19,6 @@
  */
 package net.sourceforge.fullsync.fs.filesystems;
 
-import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs2.provider.smb.SmbFileProvider;
@@ -39,9 +38,9 @@ public class SmbFileSystem implements FileSystem {
 		// even tough VFS-552 is fixed this si still needed
 		// [VFS-552][sandbox] include vfs-providers.xml in JAR for dynamic registration of mime and smb providers.
 		try {
-			FileSystemManager fsm = VFS.getManager();
+			var fsm = VFS.getManager();
 			if (!fsm.hasProvider("smb") && (fsm instanceof DefaultFileSystemManager)) { //$NON-NLS-1$
-				DefaultFileSystemManager dfsm = (DefaultFileSystemManager) fsm;
+				var dfsm = (DefaultFileSystemManager) fsm;
 				dfsm.addProvider("smb", new SmbFileProvider()); //$NON-NLS-1$
 			}
 		}

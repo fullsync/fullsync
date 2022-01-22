@@ -38,7 +38,7 @@ public class SizeValue implements OperandValue {
 	}
 
 	public SizeValue(String size) throws DataParseException {
-		int sep = size.indexOf(' ');
+		var sep = size.indexOf(' ');
 		if (sep > 0) {
 			try {
 				this.value = Double.parseDouble(size.substring(0, sep));
@@ -46,7 +46,7 @@ public class SizeValue implements OperandValue {
 			catch (NumberFormatException ex) {
 				throw new DataParseException(String.format("'%s' is not a valid number", size), ex);
 			}
-			String u = size.substring(sep + 1, size.length());
+			var u = size.substring(sep + 1);
 			this.unit = getUnitFromString(u);
 		}
 		else {
@@ -77,6 +77,6 @@ public class SizeValue implements OperandValue {
 
 	@Override
 	public String toString() {
-		return String.valueOf(value) + " " + unit.toString();
+		return value + " " + unit.toString();
 	}
 }

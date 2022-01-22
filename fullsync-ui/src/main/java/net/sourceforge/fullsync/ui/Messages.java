@@ -44,15 +44,15 @@ public class Messages {
 	}
 
 	public static void setLanguage(String code) { // NO_UCD (use default)
-		Locale langLocale = new Locale(code);
+		var langLocale = new Locale(code);
 		Locale.setDefault(langLocale);
 		getInstance().bundle = ResourceBundle.getBundle(BUNDLE_NAME, langLocale);
 	}
 
 	public static String getString(final String key) {
 		try {
-			String value = getInstance().bundle.getString(key);
-			if ((null != value) && !value.isEmpty()) {
+			var value = getInstance().bundle.getString(key);
+			if (!value.isEmpty()) {
 				return value;
 			}
 			else {
@@ -66,7 +66,7 @@ public class Messages {
 	}
 
 	public static String getString(final String key, Object... arguments) {
-		String msg = getString(key);
+		var msg = getString(key);
 		return MessageFormat.format(msg, arguments);
 	}
 }

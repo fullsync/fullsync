@@ -39,8 +39,8 @@ public class BufferStateDeciderImpl extends StateDeciderImpl implements BufferSt
 			return State.IN_SYNC;
 		}
 
-		File source = buffered.getUnbuffered();
-		BufferedFile destination = (BufferedFile) buffered;
+		var source = buffered.getUnbuffered();
+		var destination = (BufferedFile) buffered;
 
 		if (!source.exists()) {
 			if (!destination.exists()) {

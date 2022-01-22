@@ -30,7 +30,7 @@ public class GuiMain implements Launcher { // NO_UCD (unused code)
 	}
 
 	@Override
-	public void launchGui(Injector injector) throws Exception {
+	public void launchGui(Injector injector) {
 		GuiController.launchUI(injector);
 	}
 }

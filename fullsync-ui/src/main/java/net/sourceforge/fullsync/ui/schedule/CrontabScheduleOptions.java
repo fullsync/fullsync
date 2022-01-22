@@ -26,7 +26,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
@@ -35,7 +35,6 @@ import org.eclipse.swt.widgets.Text;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.schedule.CrontabPart;
-import net.sourceforge.fullsync.schedule.CrontabPart.Instance;
 import net.sourceforge.fullsync.schedule.CrontabSchedule;
 import net.sourceforge.fullsync.schedule.Schedule;
 import net.sourceforge.fullsync.ui.Messages;
@@ -44,24 +43,21 @@ import net.sourceforge.fullsync.ui.UISettings;
 public class CrontabScheduleOptions extends ScheduleOptions {
 	private static class PartContainer {
 		private static final String CRON_ALL = "*"; //$NON-NLS-1$
-		private CrontabPart part;
-		private Button cbAll;
-		private Text text;
-		private Button buttonChoose;
+		private final CrontabPart part;
+		private final Button cbAll;
+		private final Text text;
+		private final Button buttonChoose;
 
 		PartContainer(CrontabScheduleOptions parent, CrontabPart crontabPart, String shellTitle, String partName) {
 			part = crontabPart;
 
-			Label label = new Label(parent, SWT.NULL);
+			var label = new Label(parent, SWT.NULL);
 			label.setText(partName);
 
 			cbAll = new Button(parent, SWT.CHECK);
 			cbAll.setText(Messages.getString("CrontabScheduleOptions.all")); //$NON-NLS-1$
 			cbAll.setSelection(true);
-			cbAll.addListener(SWT.Selection, e -> {
-				text.setEnabled(!cbAll.getSelection());
-				buttonChoose.setEnabled(!cbAll.getSelection());
-			});
+			cbAll.addListener(SWT.Selection, this::cbAllSelected);
 
 			text = new Text(parent, SWT.BORDER);
 			text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -72,14 +68,14 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 			buttonChoose.setText(Messages.getString("CrontabScheduleOptions.Choose")); //$NON-NLS-1$
 			buttonChoose.setEnabled(false);
 			buttonChoose.addListener(SWT.Selection, e -> {
-				final Shell shell = new Shell(parent.getShell(), SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.TOOL);
+				final var shell = new Shell(parent.getShell(), SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.TOOL);
 				shell.setLayout(new GridLayout(2, false));
 				shell.setText(shellTitle);
 
-				final List table = new List(shell, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
-				GridData data = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+				final var table = new List(shell, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
+				var data = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 				table.setLayoutData(data);
-				for (int i = part.low; i <= part.high; ++i) {
+				for (var i = part.low; i <= part.high; ++i) {
 					table.add(String.valueOf(i));
 				}
 				try {
@@ -89,8 +85,8 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 					ExceptionHandler.reportException(dpe);
 				}
 
-				Button buttonOk = new Button(shell, SWT.NULL);
-				GridData buttonOkLData = new GridData();
+				var buttonOk = new Button(shell, SWT.NULL);
+				var buttonOkLData = new GridData();
 				buttonOkLData.grabExcessHorizontalSpace = true;
 				buttonOkLData.horizontalAlignment = SWT.RIGHT;
 				buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
@@ -102,8 +98,8 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 					shell.dispose();
 				});
 
-				Button buttonClose = new Button(shell, SWT.NULL);
-				GridData buttonCloseLData = new GridData();
+				var buttonClose = new Button(shell, SWT.NULL);
+				var buttonCloseLData = new GridData();
 				buttonCloseLData.horizontalAlignment = SWT.FILL;
 				buttonCloseLData.widthHint = UISettings.BUTTON_WIDTH;
 				buttonCloseLData.heightHint = UISettings.BUTTON_HEIGHT;
@@ -115,13 +111,18 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 				shell.setSize(UISettings.BUTTON_WIDTH * 3, 300);
 				shell.layout();
 				shell.open();
-				Display display = parent.getDisplay();
+				var display = parent.getDisplay();
 				while (!shell.isDisposed()) {
 					if (!display.readAndDispatch()) {
 						display.sleep();
 					}
 				}
 			});
+		}
+
+		private void cbAllSelected(Event e) {
+			text.setEnabled(!cbAll.getSelection());
+			buttonChoose.setEnabled(!cbAll.getSelection());
 		}
 
 		public void setInstance(final CrontabPart.Instance instance) {
@@ -137,7 +138,7 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 		}
 
 		public CrontabPart.Instance getInstance() throws DataParseException {
-			String pattern = text.getText();
+			var pattern = text.getText();
 			if (cbAll.getSelection()) {
 				pattern = CRON_ALL;
 			}
@@ -145,17 +146,17 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 		}
 	}
 
-	private java.util.List<PartContainer> parts = new ArrayList<>();
+	private final java.util.List<PartContainer> parts = new ArrayList<>();
 
 	public CrontabScheduleOptions(Composite parent) {
 		super(parent);
 		try {
 			setLayout(new GridLayout(4, false));
-			String minutes = Messages.getString("CrontabPart.minutes"); //$NON-NLS-1$
-			String hours = Messages.getString("CrontabPart.hours"); //$NON-NLS-1$
-			String daysOfMonth = Messages.getString("CrontabPart.daysOfMonth"); //$NON-NLS-1$
-			String months = Messages.getString("CrontabPart.months"); //$NON-NLS-1$
-			String daysOfWeek = Messages.getString("CrontabPart.daysOfWeek"); //$NON-NLS-1$
+			var minutes = Messages.getString("CrontabPart.minutes"); //$NON-NLS-1$
+			var hours = Messages.getString("CrontabPart.hours"); //$NON-NLS-1$
+			var daysOfMonth = Messages.getString("CrontabPart.daysOfMonth"); //$NON-NLS-1$
+			var months = Messages.getString("CrontabPart.months"); //$NON-NLS-1$
+			var daysOfWeek = Messages.getString("CrontabPart.daysOfWeek"); //$NON-NLS-1$
 			parts.add(new PartContainer(this, CrontabPart.MINUTES, Messages.getString("CrontabScheduleOptions.Select", minutes), minutes)); //$NON-NLS-1$
 			parts.add(new PartContainer(this, CrontabPart.HOURS, Messages.getString("CrontabScheduleOptions.Select", hours), hours)); //$NON-NLS-1$
 			parts.add(new PartContainer(this, CrontabPart.DAYSOFMONTH, Messages.getString("CrontabScheduleOptions.Select", daysOfMonth), //$NON-NLS-1$
@@ -183,8 +184,8 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 	@Override
 	public void setSchedule(final Schedule schedule) {
 		if (schedule instanceof CrontabSchedule) {
-			CrontabPart.Instance[] instances = ((CrontabSchedule) schedule).getParts();
-			for (int i = 0; i < instances.length; i++) {
+			var instances = ((CrontabSchedule) schedule).getParts();
+			for (var i = 0; i < instances.length; i++) {
 				parts.get(i).setInstance(instances[i]);
 			}
 		}
@@ -192,11 +193,11 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 
 	@Override
 	public Schedule getSchedule() throws DataParseException {
-		Instance minutes = parts.get(0).getInstance();
-		Instance hours = parts.get(1).getInstance();
-		Instance daysOfMonth = parts.get(2).getInstance();
-		Instance months = parts.get(3).getInstance();
-		Instance daysOfWeek = parts.get(4).getInstance();
+		var minutes = parts.get(0).getInstance();
+		var hours = parts.get(1).getInstance();
+		var daysOfMonth = parts.get(2).getInstance();
+		var months = parts.get(3).getInstance();
+		var daysOfWeek = parts.get(4).getInstance();
 		return new CrontabSchedule(minutes, hours, daysOfMonth, months, daysOfWeek);
 	}
 }

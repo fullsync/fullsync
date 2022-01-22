@@ -87,7 +87,7 @@ class SizeValueRuleComposite extends RuleComposite {
 
 	private void textValueChanged(ModifyEvent e) {
 		try {
-			value = Double.valueOf(textValue.getText());
+			value = Double.parseDouble(textValue.getText());
 		}
 		catch (NumberFormatException ex) {
 			setError("Number Format Invalid");

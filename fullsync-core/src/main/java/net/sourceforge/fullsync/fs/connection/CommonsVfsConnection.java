@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.vfs2.Capability;
-import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.FileType;
@@ -49,13 +48,13 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	public CommonsVfsConnection(final ConnectionDescription desc, final FileSystemAuthProvider fsAuthProvider) throws FileSystemException {
 		try {
 			this.desc = desc;
-			FileSystemOptions options = new FileSystemOptions();
+			var options = new FileSystemOptions();
 			if (null != fsAuthProvider) {
 				fsAuthProvider.authSetup(desc, options);
 			}
 			int port = desc.getPort().orElse(-1);
-			String host = desc.getHost().orElse(null);
-			URI url = new URI(desc.getScheme(), null, host, port, desc.getPath(), null, null);
+			var host = desc.getHost().orElse(null);
+			var url = new URI(desc.getScheme(), null, host, port, desc.getPath(), null, null);
 			base = VFS.getManager().resolveFile(url.toString(), options);
 			root = new AbstractFile(this, ".", null, true, base.exists()); //$NON-NLS-1$
 			canSetLastModifiedFile = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FILE);
@@ -72,11 +71,11 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	}
 
 	private File buildNode(final File parent, final FileObject file) throws org.apache.commons.vfs2.FileSystemException {
-		String name = file.getName().getBaseName();
+		var name = file.getName().getBaseName();
 
 		File n = new AbstractFile(this, name, parent, file.getType() == FileType.FOLDER, true);
 		if (file.getType() == FileType.FILE) {
-			FileContent content = file.getContent();
+			var content = file.getContent();
 			n.setLastModified(content.getLastModifiedTime());
 			n.setSize(content.getSize());
 		}
@@ -88,9 +87,9 @@ public class CommonsVfsConnection implements FileSystemConnection {
 		try {
 			Map<String, File> children = new HashMap<>();
 
-			FileObject obj = base.resolveFile(dir.getPath());
+			var obj = base.resolveFile(dir.getPath());
 			if (obj.exists() && (obj.getType() == FileType.FOLDER)) {
-				FileObject[] list = obj.getChildren();
+				var list = obj.getChildren();
 				for (FileObject element : list) {
 					children.put(element.getName().getBaseName(), buildNode(dir, element));
 				}
@@ -104,15 +103,15 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	@Override
 	public final boolean makeDirectory(final File dir) throws IOException {
-		FileObject obj = base.resolveFile(dir.getPath());
+		var obj = base.resolveFile(dir.getPath());
 		obj.createFolder();
 		return true;
 	}
 
 	@Override
 	public final boolean writeFileAttributes(final File file) throws IOException {
-		FileObject obj = base.resolveFile(file.getPath());
-		FileContent content = obj.getContent();
+		var obj = base.resolveFile(file.getPath());
+		var content = obj.getContent();
 		boolean setLastModified;
 		if (FileType.FOLDER == obj.getType()) {
 			setLastModified = canSetLastModifiedFolder;
@@ -128,19 +127,19 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	@Override
 	public final InputStream readFile(final File file) throws IOException {
-		FileObject obj = base.resolveFile(file.getPath());
+		var obj = base.resolveFile(file.getPath());
 		return obj.getContent().getInputStream();
 	}
 
 	@Override
 	public final OutputStream writeFile(final File file) throws IOException {
-		FileObject obj = base.resolveFile(file.getPath());
+		var obj = base.resolveFile(file.getPath());
 		return obj.getContent().getOutputStream();
 	}
 
 	@Override
 	public final boolean delete(final File node) throws IOException {
-		FileObject obj = base.resolveFile(node.getPath());
+		var obj = base.resolveFile(node.getPath());
 		return obj.delete();
 	}
 

@@ -34,11 +34,11 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 
 public class FileAgeFileFilterRuleTest {
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	private File root = new TestNode("root", null, true, true, 0, 0);
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private final File root = new TestNode("root", null, true, true, 0, 0);
 
 	private File createTestNode(String date) throws ParseException {
-		long lastModified = dateFormat.parse(date).getTime();
+		var lastModified = dateFormat.parse(date).getTime();
 		return new TestNode("foobar.txt", root, true, false, 1024, lastModified);
 	}
 
@@ -55,7 +55,7 @@ public class FileAgeFileFilterRuleTest {
 
 	@Test
 	public void testOpIs() throws FilterRuleNotAppliableException, ParseException {
-		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_IS);
+		var filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_IS);
 		assertTrue(filterRule.match(createTestNode("01/01/2005 09:59:59")));
 		assertFalse(filterRule.match(createTestNode("01/01/2005 10:00:01")));
 		assertFalse(filterRule.match(createTestNode("01/01/2005 09:00:00")));
@@ -64,7 +64,7 @@ public class FileAgeFileFilterRuleTest {
 
 	@Test
 	public void testOpIsnt() throws FilterRuleNotAppliableException, ParseException {
-		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_ISNT);
+		var filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), FileAgeFileFilterRule.OP_ISNT);
 		assertFalse(filterRule.match(createTestNode("01/01/2005 09:59:59")));
 		assertTrue(filterRule.match(createTestNode("01/01/2005 10:00:01")));
 		assertTrue(filterRule.match(createTestNode("01/01/2005 09:00:00")));
@@ -73,7 +73,7 @@ public class FileAgeFileFilterRuleTest {
 
 	@Test
 	public void testOpIsGreaterThan() throws FilterRuleNotAppliableException, ParseException {
-		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS),
+		var filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS),
 			FileAgeFileFilterRule.OP_IS_GREATER_THAN);
 		assertFalse(filterRule.match(createTestNode("01/01/2005 10:00:00")));
 		assertFalse(filterRule.match(createTestNode("01/01/2005 10:00:01")));
@@ -89,7 +89,7 @@ public class FileAgeFileFilterRuleTest {
 
 	@Test
 	public void testOpIsLessThan() throws FilterRuleNotAppliableException, ParseException {
-		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(10, AgeValue.Unit.SECONDS),
+		var filterRule = new FileAgeFileFilterRule(new AgeValue(10, AgeValue.Unit.SECONDS),
 			FileAgeFileFilterRule.OP_IS_LESS_THAN);
 		assertTrue(filterRule.match(createTestNode("01/01/2005 10:00:00")));
 		assertTrue(filterRule.match(createTestNode("01/01/2005 09:59:57")));
@@ -101,7 +101,7 @@ public class FileAgeFileFilterRuleTest {
 
 	@Test
 	public void testOpDefault() throws FilterRuleNotAppliableException, ParseException {
-		FileAgeFileFilterRule filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), -1);
+		var filterRule = new FileAgeFileFilterRule(new AgeValue(1, AgeValue.Unit.SECONDS), -1);
 		assertFalse(filterRule.match(createTestNode("01/01/2005 10:00:00")));
 	}
 }

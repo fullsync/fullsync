@@ -29,17 +29,9 @@ public enum ActionType {
 	DIR_HERE_FILE_THERE_ERROR;
 
 	public boolean isError() {
-		switch (this) {
-			case NOTHING:
-			case ADD:
-			case UPDATE:
-			case DELETE:
-				return false;
-			case NOT_DECIDABLE_ERROR:
-			case UNEXPECTED_CHANGE_ERROR:
-			case DIR_HERE_FILE_THERE_ERROR:
-				return true;
-		}
-		throw new RuntimeException("Implementation bug in ActionType::isError, ordinal: " + ordinal()); //$NON-NLS-1$
+		return switch (this) {
+			case NOTHING, ADD, UPDATE, DELETE -> false;
+			case NOT_DECIDABLE_ERROR, UNEXPECTED_CHANGE_ERROR, DIR_HERE_FILE_THERE_ERROR -> true;
+		};
 	}
 }

@@ -37,7 +37,7 @@ public class WindowState {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		var sb = new StringBuilder();
 		sb.append(getClass().getSimpleName());
 		sb.append('{');
 		if (!maximized) {

@@ -31,20 +31,20 @@ import java.util.zip.ZipFile;
 
 class WindowsLauncher {
 	public static void main(String[] args) throws Exception {
-		URL codeSource = WindowsLauncher.class.getProtectionDomain().getCodeSource().getLocation();
-		File basePath = new File(codeSource.toURI().resolve("../lib"));
-		File coreJar = new File(basePath, "net.sourceforge.fullsync-fullsync-core.jar");
+		var codeSource = WindowsLauncher.class.getProtectionDomain().getCodeSource().getLocation();
+		var basePath = new File(codeSource.toURI().resolve("../lib"));
+		var coreJar = new File(basePath, "net.sourceforge.fullsync-fullsync-core.jar");
 		Method mainMethod;
-		try (JarFile fullsyncCore = new JarFile(coreJar, true, ZipFile.OPEN_READ)) {
-			Attributes manifestAttributes = fullsyncCore.getManifest().getMainAttributes();
-			String classpath = manifestAttributes.getValue(Attributes.Name.CLASS_PATH);
-			String[] entries = classpath.split(" ");
+		try (var fullsyncCore = new JarFile(coreJar, true, ZipFile.OPEN_READ)) {
+			var manifestAttributes = fullsyncCore.getManifest().getMainAttributes();
+			var classpath = manifestAttributes.getValue(Attributes.Name.CLASS_PATH);
+			var entries = classpath.split(" ");
 			List<URL> urls = new ArrayList<>();
 			urls.add(coreJar.toURI().toURL());
 			for (String entry : entries) {
 				urls.add(new File(basePath, entry).toURI().toURL());
 			}
-			URLClassLoader classloader = new URLClassLoader(urls.toArray(new URL[] {}), Thread.currentThread().getContextClassLoader());
+			var classloader = new URLClassLoader(urls.toArray(new URL[] {}), Thread.currentThread().getContextClassLoader());
 			Thread.currentThread().setContextClassLoader(classloader);
 			Class<?> mainClass = Class.forName(manifestAttributes.getValue(Attributes.Name.MAIN_CLASS), true, classloader);
 			mainMethod = mainClass.getDeclaredMethod("main", String[].class);

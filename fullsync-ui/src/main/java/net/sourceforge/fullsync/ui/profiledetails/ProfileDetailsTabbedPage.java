@@ -23,9 +23,8 @@ import static org.eclipse.swt.events.SelectionListener.widgetDefaultSelectedAdap
 import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +58,6 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.Profile;
-import net.sourceforge.fullsync.ProfileBuilder;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.fs.File;
@@ -125,11 +123,11 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 	@Override
 	public String getTitle() {
-		String title = Messages.getString("ProfileDetailsPage.Profile"); //$NON-NLS-1$
+		var title = new StringBuilder().append(Messages.getString("ProfileDetailsPage.Profile")); //$NON-NLS-1$
 		if (null != profile) {
-			title = title + " " + profile.getName(); //$NON-NLS-1$
+			title.append(" ").append(profile.getName()); //$NON-NLS-1$
 		}
-		return title;
+		return title.toString();
 	}
 
 	@Override
@@ -157,22 +155,22 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		m_parent = content;
 		content.addDisposeListener(e -> closeSourceSite());
 		try {
-			TabFolder tabs = new TabFolder(content, SWT.NULL);
-			GridData tabsData = new GridData(SWT.FILL, SWT.FILL, true, true);
+			var tabs = new TabFolder(content, SWT.NULL);
+			var tabsData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			tabs.setLayoutData(tabsData);
-			TabItem tabGeneral = new TabItem(tabs, SWT.NULL);
+			var tabGeneral = new TabItem(tabs, SWT.NULL);
 			tabGeneral.setText(Messages.getString("ProfileDetailsTabbedPage.General")); //$NON-NLS-1$
 			tabGeneral.setControl(initGeneralTab(tabs));
 
-			TabItem tabSource = new TabItem(tabs, SWT.NULL);
+			var tabSource = new TabItem(tabs, SWT.NULL);
 			tabSource.setText(Messages.getString("ProfileDetails.Source.Label")); //$NON-NLS-1$
 			tabSource.setControl(initSourceTab(tabs));
 
-			TabItem tabDestination = new TabItem(tabs, SWT.NULL);
+			var tabDestination = new TabItem(tabs, SWT.NULL);
 			tabDestination.setText(Messages.getString("ProfileDetails.Destination.Label")); //$NON-NLS-1$
 			tabDestination.setControl(initDestinationTab(tabs));
 
-			TabItem tabFilters = new TabItem(tabs, SWT.NULL);
+			var tabFilters = new TabItem(tabs, SWT.NULL);
 			tabFilters.setText(Messages.getString("ProfileDetailsTabbedPage.Filters")); //$NON-NLS-1$
 			tabFilters.setControl(initFiltersTab(tabs));
 
@@ -193,13 +191,13 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 			srcConnectionConfiguration.setConnectionDescription(profile.getSource());
 			if (null != profile.getSource()) {
-				String bufferStrategy = profile.getSource().getBufferStrategy().orElse(""); //$NON-NLS-1$
+				var bufferStrategy = profile.getSource().getBufferStrategy().orElse(""); //$NON-NLS-1$
 				srcConnectionConfiguration.setBuffered(FileSystemManager.BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy));
 			}
 
 			dstConnectionConfiguration.setConnectionDescription(profile.getDestination());
 			if (null != profile.getDestination()) {
-				String bufferStrategy = profile.getDestination().getBufferStrategy().orElse(""); //$NON-NLS-1$
+				var bufferStrategy = profile.getDestination().getBufferStrategy().orElse(""); //$NON-NLS-1$
 				dstConnectionConfiguration.setBuffered(FileSystemManager.BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy));
 			}
 
@@ -210,18 +208,18 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			buttonScheduling.setData(profile.getSchedule());
 			buttonEnabled.setSelection(profile.isSchedulingEnabled());
 
-			RuleSetDescriptor ruleSetDescriptor = profile.getRuleSet();
+			var ruleSetDescriptor = profile.getRuleSet();
 
-			SimplifiedRuleSetDescriptor simpleDesc = (SimplifiedRuleSetDescriptor) ruleSetDescriptor;
+			var simpleDesc = (SimplifiedRuleSetDescriptor) ruleSetDescriptor;
 			syncSubsButton.setSelection(simpleDesc.isSyncSubDirs());
 			filter = simpleDesc.getFileFilter();
 			textFilterDescription.setText(null != filter ? filter.toString() : ""); //$NON-NLS-1$
-			boolean useFilter = simpleDesc.isUseFilter();
+			var useFilter = simpleDesc.isUseFilter();
 			buttonUseFileFilter.setSelection(useFilter);
 			enableFilterControls(useFilter);
-			FileFilterTree fileFilterTree = simpleDesc.getFileFilterTree();
+			var fileFilterTree = simpleDesc.getFileFilterTree();
 			if (null != fileFilterTree) {
-				itemsMap = fileFilterTree.stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+				itemsMap = fileFilterTree.stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 			}
 		}
 		catch (Exception e) {
@@ -237,30 +235,30 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	 * @return composite to be placed inside the general tab
 	 */
 	private Composite initGeneralTab(final Composite parent) {
-		Composite c = new Composite(parent, SWT.NONE);
+		var c = new Composite(parent, SWT.NONE);
 		c.setLayout(new GridLayout(2, false));
 
 		// profile name
-		Label nameLabel = new Label(c, SWT.NONE);
+		var nameLabel = new Label(c, SWT.NONE);
 		nameLabel.setText(Messages.getString("ProfileDetails.Name.Label")); //$NON-NLS-1$
-		GridData textNameData = new GridData();
+		var textNameData = new GridData();
 		textNameData.grabExcessHorizontalSpace = true;
 		textNameData.horizontalAlignment = SWT.FILL;
 		textProfileName = new Text(c, SWT.BORDER);
 		textProfileName.setLayoutData(textNameData);
 		textProfileName.setToolTipText(Messages.getString("ProfileDetails.Name.ToolTip")); //$NON-NLS-1$
 		// profile description
-		Label descriptionLabel = new Label(c, SWT.NONE);
+		var descriptionLabel = new Label(c, SWT.NONE);
 		descriptionLabel.setText(Messages.getString("ProfileDetails.Description.Label")); //$NON-NLS-1$
-		GridData textDescriptionData = new GridData();
+		var textDescriptionData = new GridData();
 		textDescriptionData.horizontalAlignment = SWT.FILL;
 		textProfileDescription = new Text(c, SWT.BORDER);
 		textProfileDescription.setLayoutData(textDescriptionData);
 		// sync type
-		Label typeLabel = new Label(c, SWT.NONE);
+		var typeLabel = new Label(c, SWT.NONE);
 		typeLabel.setText(Messages.getString("ProfileDetails.Type.Label")); //$NON-NLS-1$
 		comboType = new Combo(c, SWT.DROP_DOWN | SWT.READ_ONLY);
-		GridData comboTypeData = new GridData(SWT.FILL);
+		var comboTypeData = new GridData(SWT.FILL);
 		comboTypeData.horizontalAlignment = SWT.FILL;
 		comboType.setLayoutData(comboTypeData);
 		comboType.addModifyListener(evt -> {
@@ -286,12 +284,12 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		comboType.add("Two Way Sync");
 
 		new Label(c, SWT.NONE); // area below the type label should be empty
-		GridData labelTypeDescriptionData = new GridData(SWT.FILL, SWT.TOP, true, false);
+		var labelTypeDescriptionData = new GridData(SWT.FILL, SWT.TOP, true, false);
 		labelTypeDescription = new Label(c, SWT.WRAP);
 		labelTypeDescription.setLayoutData(labelTypeDescriptionData);
 		labelTypeDescription.setText(Messages.getString("ProfileDetails.Description.Label")); //$NON-NLS-1$
 		// automated execution
-		Label labelAutomatedExecution = new Label(c, SWT.NONE);
+		var labelAutomatedExecution = new Label(c, SWT.NONE);
 		labelAutomatedExecution.setText(Messages.getString("ProfileDetailsTabbedPage.AutomatedExecution")); //$NON-NLS-1$
 		buttonEnabled = new Button(c, SWT.CHECK | SWT.RIGHT);
 		buttonEnabled.setText(Messages.getString("ProfileDetails.Enabled")); //$NON-NLS-1$
@@ -299,7 +297,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		buttonScheduling = new Button(c, SWT.PUSH | SWT.CENTER);
 		buttonScheduling.setText(Messages.getString("ProfileDetails.Edit_Scheduling")); //$NON-NLS-1$
 		buttonScheduling.addListener(SWT.Selection, e -> {
-			ScheduleSelectionDialog dialog = scheduleSelectionDialogProvider.get();
+			var dialog = scheduleSelectionDialogProvider.get();
 			dialog.setSchedule((Schedule) buttonScheduling.getData());
 			dialog.open(m_parent.getShell());
 			buttonScheduling.setData(dialog.getSchedule()); // FIXME: if cancelled??
@@ -319,16 +317,16 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	 * @return composite to be placed inside the source tab
 	 */
 	private Composite initSourceTab(final Composite parent) {
-		Composite c = new Composite(parent, SWT.NONE);
+		var c = new Composite(parent, SWT.NONE);
 		c.setLayout(new GridLayout());
-		GridData cData = new GridData();
+		var cData = new GridData();
 		cData.grabExcessHorizontalSpace = true;
 		cData.grabExcessVerticalSpace = false;
 		cData.horizontalAlignment = SWT.FILL;
 		cData.verticalAlignment = SWT.FILL;
 		c.setLayoutData(cData);
 
-		ConnectionDescription src = null != profile ? profile.getSource() : null;
+		var src = null != profile ? profile.getSource() : null;
 		srcConnectionConfiguration = connectionConfigurationProvider.get();
 		srcConnectionConfiguration.render(c, src);
 		srcConnectionConfiguration.setBufferedEnabled(false);
@@ -343,16 +341,16 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	 * @return composite to be placed inside the destination tab
 	 */
 	private Composite initDestinationTab(final Composite parent) {
-		Composite c = new Composite(parent, SWT.NONE);
+		var c = new Composite(parent, SWT.NONE);
 		c.setLayout(new GridLayout());
-		GridData cData = new GridData();
+		var cData = new GridData();
 		cData.grabExcessHorizontalSpace = true;
 		cData.grabExcessVerticalSpace = false;
 		cData.horizontalAlignment = SWT.FILL;
 		cData.verticalAlignment = SWT.FILL;
 		c.setLayoutData(cData);
 
-		ConnectionDescription dst = null != profile ? profile.getDestination() : null;
+		var dst = null != profile ? profile.getDestination() : null;
 		dstConnectionConfiguration = connectionConfigurationProvider.get();
 		dstConnectionConfiguration.render(c, dst);
 		return c;
@@ -366,7 +364,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	 * @return composite to be placed inside the filters tab
 	 */
 	private Composite initFiltersTab(final Composite parent) {
-		Composite c = new Composite(parent, SWT.NONE);
+		var c = new Composite(parent, SWT.NONE);
 		c.setLayout(new GridLayout(2, false));
 
 		// sync subdirectories
@@ -374,12 +372,12 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		syncSubsButton.setText(Messages.getString("ProfileDetails.Sync_SubDirs")); //$NON-NLS-1$
 		syncSubsButton.setToolTipText(Messages.getString("ProfileDetails.Rucurre")); //$NON-NLS-1$
 		syncSubsButton.setSelection(true);
-		GridData syncSubsButtonData = new GridData();
+		var syncSubsButtonData = new GridData();
 		syncSubsButtonData.horizontalSpan = 2;
 		syncSubsButton.setLayoutData(syncSubsButtonData);
 		// use file filter
 		buttonUseFileFilter = new Button(c, SWT.CHECK | SWT.LEFT);
-		GridData buttonUseFileFilterData = new GridData();
+		var buttonUseFileFilterData = new GridData();
 		buttonUseFileFilterData.horizontalSpan = 2;
 		buttonUseFileFilter.setLayoutData(buttonUseFileFilterData);
 		buttonUseFileFilter.setText(Messages.getString("ProfileDetailsTabbedPage.EnableFileFilter")); //$NON-NLS-1$
@@ -390,16 +388,16 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		labelFilesFilter.setText(Messages.getString("ProfileDetailsTabbedPage.FileFilter")); //$NON-NLS-1$
 		buttonFileFilter = new Button(c, SWT.PUSH | SWT.CENTER);
 		buttonFileFilter.setText(Messages.getString("ProfileDetailsTabbedPage.SetFileFilter")); //$NON-NLS-1$
-		GridData buttonFileFilterData = new GridData();
+		var buttonFileFilterData = new GridData();
 		buttonFileFilterData.grabExcessHorizontalSpace = true;
 		buttonFileFilterData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonFileFilter.setLayoutData(buttonFileFilterData);
 		buttonFileFilter.addListener(SWT.Selection, e -> {
 			try {
-				FileFilterPage dialog = fileFilterPageProvider.get();
+				var dialog = fileFilterPageProvider.get();
 				dialog.setFileFilter(filter);
 				dialog.show();
-				FileFilter newfilter = dialog.getFileFilter();
+				var newfilter = dialog.getFileFilter();
 				if (null != newfilter) {
 					filter = newfilter;
 					textFilterDescription.setText(filter.toString());
@@ -411,7 +409,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		});
 
 		textFilterDescription = new Text(c, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		GridData labelFilterDescriptionData = new GridData();
+		var labelFilterDescriptionData = new GridData();
 		labelFilterDescriptionData.horizontalSpan = 2;
 		labelFilterDescriptionData.horizontalAlignment = SWT.FILL;
 		labelFilterDescriptionData.heightHint = 120;
@@ -432,12 +430,12 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	 * @return composite to be placed inside the subdirectories tab
 	 */
 	private Composite initSubDirsTab(final Composite parent) {
-		Composite c = new Composite(parent, SWT.NONE);
+		var c = new Composite(parent, SWT.NONE);
 		c.setLayout(new GridLayout(2, false));
 
 		// tree
 		directoryTree = new Tree(c, SWT.BORDER | SWT.SINGLE);
-		GridData directoryTreeData = new GridData();
+		var directoryTreeData = new GridData();
 		directoryTreeData.grabExcessHorizontalSpace = true;
 		directoryTreeData.grabExcessVerticalSpace = true;
 		directoryTreeData.horizontalAlignment = SWT.FILL;
@@ -446,11 +444,11 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		directoryTree.addTreeListener(new TreeAdapter() {
 			@Override
 			public void treeExpanded(final TreeEvent evt) {
-				TreeItem item = (TreeItem) evt.item;
-				TreeItem[] childrens = item.getItems();
+				var item = (TreeItem) evt.item;
+				var childrens = item.getItems();
 				for (TreeItem children : childrens) {
 					if (null == children.getData(EXPANDED_KEY)) {
-						File file = (File) children.getData();
+						var file = (File) children.getData();
 						try {
 							addChildren(file, children);
 						}
@@ -464,15 +462,15 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		});
 		directoryTree.addListener(SWT.Selection, e -> {
 			buttonSetFilter.setEnabled(true);
-			TreeItem item = (TreeItem) e.item;
-			FileFilter currentItemFilter = (FileFilter) item.getData(FILTER_KEY);
+			var item = (TreeItem) e.item;
+			var currentItemFilter = (FileFilter) item.getData(FILTER_KEY);
 			buttonRemoveFilter.setEnabled(null != currentItemFilter);
 		});
 		// buttons next to the tree
-		Composite compositeButtons = new Composite(c, SWT.NONE);
-		GridLayout compositeButtonsLayout = new GridLayout();
+		var compositeButtons = new Composite(c, SWT.NONE);
+		var compositeButtonsLayout = new GridLayout();
 		compositeButtonsLayout.makeColumnsEqualWidth = true;
-		GridData compositeButtonsData = new GridData();
+		var compositeButtonsData = new GridData();
 		compositeButtonsData.grabExcessVerticalSpace = true;
 		compositeButtonsData.verticalAlignment = SWT.FILL;
 		compositeButtons.setLayoutData(compositeButtonsData);
@@ -480,23 +478,23 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 		// add filter button
 		buttonSetFilter = new Button(compositeButtons, SWT.PUSH | SWT.CENTER);
-		GridData buttonSetFilterData = new GridData();
+		var buttonSetFilterData = new GridData();
 		buttonSetFilterData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonSetFilter.setLayoutData(buttonSetFilterData);
 		buttonSetFilter.setText(Messages.getString("ProfileDetailsTabbedPage.SetFileFilter")); //$NON-NLS-1$
 		buttonSetFilter.addListener(SWT.Selection, e -> {
-			TreeItem[] selectedItems = directoryTree.getSelection();
+			var selectedItems = directoryTree.getSelection();
 			if (selectedItems.length > 0) {
-				TreeItem selectedItem = selectedItems[0];
-				FileFilter currentItemFilter = (FileFilter) selectedItem.getData(FILTER_KEY);
-				FileFilterPage dialog = fileFilterPageProvider.get();
+				var selectedItem = selectedItems[0];
+				var currentItemFilter = (FileFilter) selectedItem.getData(FILTER_KEY);
+				var dialog = fileFilterPageProvider.get();
 				dialog.setFileFilter(currentItemFilter);
 				dialog.show();
-				FileFilter newfilter = dialog.getFileFilter();
+				var newfilter = dialog.getFileFilter();
 				if (null != newfilter) {
 					selectedItem.setData(FILTER_KEY, newfilter);
 					treeItemsWithFilter.add(selectedItem);
-					File file = (File) selectedItem.getData();
+					var file = (File) selectedItem.getData();
 					itemsMap.put(file.getPath(), newfilter);
 					markItem(selectedItem);
 					buttonRemoveFilter.setEnabled(true);
@@ -506,17 +504,17 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 		// remove filter button
 		buttonRemoveFilter = new Button(compositeButtons, SWT.PUSH | SWT.CENTER);
-		GridData buttonRemoveFilterData = new GridData();
+		var buttonRemoveFilterData = new GridData();
 		buttonRemoveFilterData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonRemoveFilter.setLayoutData(buttonRemoveFilterData);
 		buttonRemoveFilter.setText(Messages.getString("ProfileDetailsTabbedPage.RemoveFilter")); //$NON-NLS-1$
 		buttonRemoveFilter.setEnabled(false);
 		buttonRemoveFilter.addListener(SWT.Selection, e -> {
-			TreeItem[] selectedItems = directoryTree.getSelection();
+			var selectedItems = directoryTree.getSelection();
 			if (selectedItems.length > 0) {
-				TreeItem selectedItem = selectedItems[0];
+				var selectedItem = selectedItems[0];
 				treeItemsWithFilter.remove(selectedItem);
-				File file = (File) selectedItem.getData();
+				var file = (File) selectedItem.getData();
 				itemsMap.remove(file.getPath());
 				unmarkItem(selectedItem);
 			}
@@ -536,7 +534,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		try {
 			for (File file : getOrderedChildren(sourceSite.getRoot())) {
 				if (file.isDirectory()) {
-					TreeItem item = new TreeItem(directoryTree, SWT.NULL);
+					var item = new TreeItem(directoryTree, SWT.NULL);
 					item.setText(file.getName());
 					item.setImage(imageRepository.getImage("Node_Directory.png")); //$NON-NLS-1$
 					item.setData(file);
@@ -559,7 +557,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private void addChildren(File rootFile, TreeItem item) throws IOException {
 		for (File file : getOrderedChildren(rootFile)) {
 			if (file.isDirectory()) {
-				TreeItem childrenItem = new TreeItem(item, SWT.NULL);
+				var childrenItem = new TreeItem(item, SWT.NULL);
 				childrenItem.setText(file.getName());
 				childrenItem.setImage(imageRepository.getImage("Node_Directory.png")); //$NON-NLS-1$
 				childrenItem.setData(file);
@@ -574,19 +572,19 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 	private List<File> getOrderedChildren(File rootFile) throws IOException {
 		List<File> children = new ArrayList<>(rootFile.getChildren());
-		Collections.sort(children, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+		children.sort(Comparator.comparing(File::getName));
 		return children;
 	}
 
 	private void markItem(TreeItem item) {
-		String text = item.getText();
+		var text = item.getText();
 		if (text.charAt(0) != '*') {
 			item.setText('*' + text);
 		}
 	}
 
 	private void unmarkItem(TreeItem item) {
-		String text = item.getText();
+		var text = item.getText();
 		if (text.charAt(0) == '*') {
 			item.setText(text.substring(1));
 		}
@@ -596,8 +594,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	public boolean apply() {
 		closeSourceSite();
 
-		ConnectionDescription src = null;
-		ConnectionDescription dst = null;
+		ConnectionDescription src;
+		ConnectionDescription dst;
 		try {
 			src = getConnectionDescription(srcConnectionConfiguration).build();
 			dst = getConnectionDescription(dstConnectionConfiguration).build();
@@ -606,21 +604,21 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			ExceptionHandler.reportException(e);
 			return false;
 		}
-		boolean isNewProfile = null == profile;
+		var isNewProfile = null == profile;
 
 		// TODO: no longer necessary, keep or remove?
 		if (isNewProfile || !textProfileName.getText().equals(profile.getName())) {
-			Profile pr = profileManager.getProfileByName(textProfileName.getText());
+			var pr = profileManager.getProfileByName(textProfileName.getText());
 			if (null != pr) {
-				MessageBox mb = new MessageBox(m_parent.getShell(), SWT.ICON_ERROR);
+				var mb = new MessageBox(m_parent.getShell(), SWT.ICON_ERROR);
 				mb.setText(Messages.getString("ProfileDetails.Duplicate_Entry")); //$NON-NLS-1$
 				mb.setMessage(Messages.getString("ProfileDetails.Profile_already_exists")); //$NON-NLS-1$
 				mb.open();
 				return false;
 			}
 		}
-		Profile oldProfile = profile;
-		ProfileBuilder builder = isNewProfile ? profileManager.getProfileBuilder() : profileManager.getProfileBuilder(profile);
+		var oldProfile = profile;
+		var builder = isNewProfile ? profileManager.getProfileBuilder() : profileManager.getProfileBuilder(profile);
 
 		RuleSetDescriptor ruleSetDescriptor = new SimplifiedRuleSetDescriptor(syncSubsButton.getSelection(), filter,
 			buttonUseFileFilter.getSelection(), getFileFilterTree());
@@ -647,41 +645,35 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	}
 
 	private ConnectionDescription.Builder getConnectionDescription(final ConnectionConfiguration cfg) {
-		ConnectionDescription.Builder builder = null;
-		try {
-			builder = cfg.getConnectionDescription();
-			if (cfg.getBuffered()) {
-				builder.setBufferStrategy(FileSystemManager.BUFFER_STRATEGY_SYNCFILES);
-			}
-		}
-		catch (URISyntaxException e) {
-			e.printStackTrace();
+		var builder = cfg.getConnectionDescription();
+		if (cfg.getBuffered()) {
+			builder.setBufferStrategy(FileSystemManager.BUFFER_STRATEGY_SYNCFILES);
 		}
 		return builder;
 	}
 
 	private void treeTabsWidgetSelected(SelectionEvent evt) {
 		if (evt.item == tabSubDirs) {
-			final ConnectionDescription src = getConnectionDescription(srcConnectionConfiguration).build();
-			if ((null == sourceSite) || (null == src) || (null == lastSourceLoaded) || !lastSourceLoaded.equals(src)) {
+			final var src = getConnectionDescription(srcConnectionConfiguration).build();
+			if ((null == sourceSite) || (null == lastSourceLoaded) || !lastSourceLoaded.equals(src)) {
 				directoryTree.removeAll();
-				TreeItem loadingIem = new TreeItem(directoryTree, SWT.NULL);
+				var loadingIem = new TreeItem(directoryTree, SWT.NULL);
 				loadingIem.setText(Messages.getString("ProfileDetailsTabbedPage.Loading")); //$NON-NLS-1$
 				loadingIem.setImage(imageRepository.getImage("Node_Directory.png")); //$NON-NLS-1$
 
-				Display display = Display.getCurrent();
+				var display = Display.getCurrent();
 				display.asyncExec(() -> {
 					try {
 						if (null != src) {
 							closeSourceSite();
-							ConnectionDescription.Builder builder = new ConnectionDescription.Builder(src);
+							var builder = new ConnectionDescription.Builder(src);
 							builder.setBufferStrategy(null);
 							lastSourceLoaded = builder.build();
 							sourceSite = fileSystemManagerProvider.get().createConnection(lastSourceLoaded, true);
 							drawDirectoryTree();
 						}
 						else {
-							TreeItem loadingIem1 = new TreeItem(directoryTree, SWT.NULL);
+							var loadingIem1 = new TreeItem(directoryTree, SWT.NULL);
 							loadingIem1.setText(Messages.getString("ProfileDetailsTabbedPage.LoadingFailed")); //$NON-NLS-1$
 							loadingIem1.setImage(imageRepository.getImage("Error.png")); //$NON-NLS-1$
 						}
@@ -689,7 +681,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 					catch (IOException | FileSystemException ex) {
 						ExceptionHandler.reportException(ex);
 						directoryTree.removeAll();
-						TreeItem loadingIem2 = new TreeItem(directoryTree, SWT.NULL);
+						var loadingIem2 = new TreeItem(directoryTree, SWT.NULL);
 						loadingIem2.setText(Messages.getString("ProfileDetailsTabbedPage.LoadingFailed")); //$NON-NLS-1$
 						loadingIem2.setImage(imageRepository.getImage("Error.png")); //$NON-NLS-1$
 					}
@@ -701,8 +693,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private FileFilterTree getFileFilterTree() {
 		Map<String, FileFilter> filters = new TreeMap<>();
 		for (TreeItem item : treeItemsWithFilter) {
-			FileFilter itemFilter = (FileFilter) item.getData(FILTER_KEY);
-			File itemFile = (File) item.getData();
+			var itemFilter = (FileFilter) item.getData(FILTER_KEY);
+			var itemFile = (File) item.getData();
 			filters.put(itemFile.getPath(), itemFilter);
 		}
 		return new FileFilterTree(filters);

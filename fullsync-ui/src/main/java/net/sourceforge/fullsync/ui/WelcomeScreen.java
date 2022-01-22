@@ -27,7 +27,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
@@ -48,43 +47,43 @@ class WelcomeScreen extends Dialog {
 	}
 
 	void show() {
-		final Shell dialogShell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
-		String title = Messages.getString("WelcomeScreen.WelcomeMessage", Util.getFullSyncVersion()); //$NON-NLS-1$
+		final var dialogShell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
+		var title = Messages.getString("WelcomeScreen.WelcomeMessage", Util.getFullSyncVersion()); //$NON-NLS-1$
 
-		GridLayout dialogShellLayout = new GridLayout();
+		var dialogShellLayout = new GridLayout();
 		dialogShell.setLayout(dialogShellLayout);
 		dialogShell.setText(title);
 
 		Composite logoComposite = new LogoHeaderComposite(dialogShell, SWT.FILL, imageRepository);
-		GridData logoCompositeLData = new GridData();
+		var logoCompositeLData = new GridData();
 		logoCompositeLData.grabExcessHorizontalSpace = true;
 		logoCompositeLData.horizontalAlignment = GridData.FILL;
 		logoCompositeLData.widthHint = 600;
 		logoComposite.setLayoutData(logoCompositeLData);
 
 		// version label
-		Label labelVersion = new Label(dialogShell, SWT.FILL);
+		var labelVersion = new Label(dialogShell, SWT.FILL);
 		labelVersion.setText(title);
-		GridData lvd = new GridData(SWT.FILL);
+		var lvd = new GridData(SWT.FILL);
 		lvd.grabExcessHorizontalSpace = true;
 		labelVersion.setLayoutData(lvd);
 
 		// releases label
-		Label labelReleases = new Label(dialogShell, SWT.FILL);
+		var labelReleases = new Label(dialogShell, SWT.FILL);
 		labelReleases.setText(Messages.getString("WelcomeScreen.ReadBelow")); //$NON-NLS-1$
-		GridData lrel = new GridData(SWT.FILL);
+		var lrel = new GridData(SWT.FILL);
 		lrel.grabExcessHorizontalSpace = true;
 		labelReleases.setLayoutData(lrel);
 
-		ChangeLogBox changelogText = new ChangeLogBox(dialogShell, preferences.getLastVersion(), backgroundExecutor);
-		GridData changelogTextLData = new GridData(GridData.FILL_BOTH);
+		var changelogText = new ChangeLogBox(dialogShell, preferences.getLastVersion(), backgroundExecutor);
+		var changelogTextLData = new GridData(GridData.FILL_BOTH);
 		changelogTextLData.heightHint = 300;
 		changelogText.setLayoutData(changelogTextLData);
 
 		// ok button
-		Button buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
+		var buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
 		buttonOk.setText(Messages.getString("WelcomeScreen.Ok")); //$NON-NLS-1$
-		GridData buttonOkLData = new GridData();
+		var buttonOkLData = new GridData();
 		buttonOk.addListener(SWT.Selection, e -> dialogShell.close());
 		buttonOkLData.horizontalAlignment = GridData.CENTER;
 		buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
@@ -96,7 +95,7 @@ class WelcomeScreen extends Dialog {
 		dialogShell.pack();
 		dialogShell.layout(true);
 		dialogShell.open();
-		Display display = dialogShell.getDisplay();
+		var display = dialogShell.getDisplay();
 
 		while (!dialogShell.isDisposed()) {
 			if (!display.readAndDispatch()) {

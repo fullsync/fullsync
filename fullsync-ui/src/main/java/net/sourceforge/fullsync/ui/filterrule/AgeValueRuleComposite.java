@@ -69,7 +69,7 @@ class AgeValueRuleComposite extends RuleComposite {
 
 	private void onTextValueChanged(ModifyEvent e) {
 		try {
-			value = Double.valueOf(textValue.getText());
+			value = Double.parseDouble(textValue.getText());
 		}
 		catch (NumberFormatException ex) {
 			setError("Invalid Number Format"); // TODO: is a double needed really?

@@ -67,8 +67,8 @@ public class IntervalSchedule extends Schedule {
 
 	@Override
 	public long getNextOccurrence(long lastOccurence, long now) {
-		long next = 0 == lastOccurence ? creationTime + firstInterval : lastOccurence + interval;
-		return next > now ? next : now;
+		var next = 0 == lastOccurence ? creationTime + firstInterval : lastOccurence + interval;
+		return Math.max(next, now);
 	}
 
 	public long getFirstInterval() {
@@ -91,7 +91,7 @@ public class IntervalSchedule extends Schedule {
 		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
-		IntervalSchedule that = (IntervalSchedule) o;
+		var that = (IntervalSchedule) o;
 		return (firstInterval == that.firstInterval) && (interval == that.interval) && displayUnit.equals(that.displayUnit);
 	}
 

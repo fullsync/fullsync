@@ -19,31 +19,8 @@
  */
 package org.slf4j.impl;
 
-/*
- * Copyright (c) 2004-2011 QOS.ch
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS  IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+import java.io.Serial;
 
-import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
 
@@ -76,12 +53,13 @@ import org.slf4j.helpers.MessageFormatter;
  * @author Ceki G&uuml;lc&uuml;
  */
 public class FullSyncLogger extends MarkerIgnoringBase {
+	@Serial
 	private static final long serialVersionUID = -1504986506259137575L;
 	/**
 	 * Mark the time when this class gets loaded into memory.
 	 */
-	private static long startTime = System.currentTimeMillis();
-	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	private static final long startTime = System.currentTimeMillis();
+	public static final String LINE_SEPARATOR = System.lineSeparator();
 	private static final String TRACE_STR = "TRACE";
 	private static final String DEBUG_STR = "DEBUG";
 	private static final String INFO_STR = "INFO";
@@ -213,9 +191,9 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 	 * @param t
 	 */
 	private void log(final String level, final String message, final Throwable t) {
-		final StringBuilder buf = new StringBuilder();
+		final var buf = new StringBuilder();
 
-		final long millis = System.currentTimeMillis();
+		final var millis = System.currentTimeMillis();
 		buf.append(millis - startTime);
 
 		buf.append(" [");
@@ -232,7 +210,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 
 		buf.append(LINE_SEPARATOR);
 
-		System.err.print(buf.toString());
+		System.err.print(buf);
 		if (null != t) {
 			t.printStackTrace(System.err);
 		}
@@ -247,7 +225,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 	 * @param arg2
 	 */
 	private void formatAndLog(final String level, final String format, final Object arg1, final Object arg2) {
-		final FormattingTuple tp = MessageFormatter.format(format, arg1, arg2);
+		final var tp = MessageFormatter.format(format, arg1, arg2);
 		log(level, tp.getMessage(), tp.getThrowable());
 	}
 
@@ -259,7 +237,7 @@ public class FullSyncLogger extends MarkerIgnoringBase {
 	 * @param argArray
 	 */
 	private void formatAndLog(final String level, final String format, final Object[] argArray) {
-		final FormattingTuple tp = MessageFormatter.arrayFormat(format, argArray);
+		final var tp = MessageFormatter.arrayFormat(format, argArray);
 		log(level, tp.getMessage(), tp.getThrowable());
 	}
 

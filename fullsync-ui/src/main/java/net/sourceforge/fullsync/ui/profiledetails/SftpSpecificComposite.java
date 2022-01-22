@@ -50,7 +50,7 @@ class SftpSpecificComposite extends UserPasswordSpecificComposite {
 		super.onBeforePathHook(parent);
 		buttonKeybased = new Button(m_parent, SWT.CHECK);
 		buttonKeybased.setText(Messages.getString("ProtocolSpecificComposite.Keybased")); //$NON-NLS-1$
-		GridData radioKeybasedData = new GridData();
+		var radioKeybasedData = new GridData();
 		radioKeybasedData.horizontalSpan = 3;
 		buttonKeybased.setLayoutData(radioKeybasedData);
 		buttonKeybased.addSelectionListener(widgetDefaultSelectedAdapter(this::toggleKeybasedAuthentication));
@@ -60,26 +60,26 @@ class SftpSpecificComposite extends UserPasswordSpecificComposite {
 		labelKeyPassphrase.setText(Messages.getString("ProtocolSpecificComposite.KeyPassphrase")); //$NON-NLS-1$
 		textKeyPassphrase = new Text(m_parent, SWT.BORDER);
 		textKeyPassphrase.setEchoChar('*');
-		GridData textKeyPassphraseData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		var textKeyPassphraseData = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		textKeyPassphraseData.horizontalSpan = 2;
 		textKeyPassphrase.setLayoutData(textKeyPassphraseData);
 
 		userDirIsRootCheckbox = new Button(parent, SWT.CHECK | SWT.LEFT);
 		userDirIsRootCheckbox.setText("Restrict to the default directory.");
-		GridData userDirIsRootCheckboxData = new GridData();
+		var userDirIsRootCheckboxData = new GridData();
 		userDirIsRootCheckboxData.horizontalSpan = 3;
 		userDirIsRootCheckbox.setLayoutData(userDirIsRootCheckboxData);
 	}
 
 	private void toggleKeybasedAuthentication(SelectionEvent e) {
-		boolean enabled = buttonKeybased.getSelection();
+		var enabled = buttonKeybased.getSelection();
 		labelKeyPassphrase.setEnabled(enabled);
 		textKeyPassphrase.setEnabled(enabled);
 	}
 
 	@Override
 	public ConnectionDescription.Builder getConnectionDescription() {
-		ConnectionDescription.Builder builder = super.getConnectionDescription();
+		var builder = super.getConnectionDescription();
 		builder.setPublicKeyAuth(buttonKeybased.getSelection());
 		builder.setKeyPassphrase(textKeyPassphrase.getText());
 		builder.setUserDirIsRoot(userDirIsRootCheckbox.getSelection());

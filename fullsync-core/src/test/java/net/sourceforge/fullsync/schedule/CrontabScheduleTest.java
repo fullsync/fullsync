@@ -40,7 +40,7 @@ public class CrontabScheduleTest {
 	private void assertNextOccurence(String pattern) throws Exception {
 		Schedule schedule = new CrontabSchedule(pattern);
 
-		long res = schedule.getNextOccurrence(0, now.getTimeInMillis());
+		var res = schedule.getNextOccurrence(0, now.getTimeInMillis());
 
 		assertEquals(new Date(expectedResult.getTimeInMillis()), new Date(res));
 	}

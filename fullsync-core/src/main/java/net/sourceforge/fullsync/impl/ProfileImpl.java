@@ -61,27 +61,27 @@ class ProfileImpl implements Profile {
 	private long lastScheduleTime;
 
 	public static Profile unserialize(EventBus eventBus, Element element) throws DataParseException {
-		String profileId = element.getAttribute(ATTRIBUTE_ID);
-		String profileName = element.getAttribute(ATTRIBUTE_NAME);
-		ConnectionDescription src = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)); //$NON-NLS-1$
-		ConnectionDescription dst = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)); //$NON-NLS-1$
-		RuleSetDescriptor deserializedRuleset = RuleSetDescriptor
+		var profileId = element.getAttribute(ATTRIBUTE_ID);
+		var profileName = element.getAttribute(ATTRIBUTE_NAME);
+		var src = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)); //$NON-NLS-1$
+		var dst = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)); //$NON-NLS-1$
+		var deserializedRuleset = RuleSetDescriptor
 			.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)); //$NON-NLS-1$
-		RuleSetDescriptor usedRuleset = null != deserializedRuleset
+		var usedRuleset = null != deserializedRuleset
 			? deserializedRuleset
 			: new SimplifiedRuleSetDescriptor(true, null, false, null);
-		String description = element.getAttribute(ATTRIBUTE_DESCRIPTION);
-		String synchronizationType = element.getAttribute(ATTRIBUTE_TYPE);
-		boolean schedulingEnabled = true;
+		var description = element.getAttribute(ATTRIBUTE_DESCRIPTION);
+		var synchronizationType = element.getAttribute(ATTRIBUTE_TYPE);
+		var schedulingEnabled = true;
 		if (element.hasAttribute(ATTRIBUTE_ENABLED)) {
-			schedulingEnabled = Boolean.valueOf(element.getAttribute(ATTRIBUTE_ENABLED));
+			schedulingEnabled = Boolean.parseBoolean(element.getAttribute(ATTRIBUTE_ENABLED));
 		}
-		Schedule schedule = Schedule.unserialize((Element) element.getElementsByTagName(Schedule.ELEMENT_NAME).item(0));
+		var schedule = Schedule.unserialize((Element) element.getElementsByTagName(Schedule.ELEMENT_NAME).item(0));
 
 		Date lastUpdate = null;
-		int lastErrorLevel = 0;
+		var lastErrorLevel = 0;
 		String lastErrorString = null;
-		long lastScheduleTime = 0;
+		var lastScheduleTime = 0L;
 
 		if (element.hasAttribute(ATTRIBUTE_LAST_ERROR_LEVEL)) {
 			lastErrorLevel = Integer.parseInt(element.getAttribute(ATTRIBUTE_LAST_ERROR_LEVEL));
@@ -89,7 +89,7 @@ class ProfileImpl implements Profile {
 		}
 
 		try {
-			Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT")); //$NON-NLS-1$
+			var c = Calendar.getInstance(TimeZone.getTimeZone("GMT")); //$NON-NLS-1$
 			c.setTimeInMillis(Integer.parseInt(element.getAttribute(ATTRIBUTE_LAST_UPDATE)));
 			lastUpdate = c.getTime();
 		}
@@ -231,7 +231,7 @@ class ProfileImpl implements Profile {
 	}
 
 	public Element serialize(final Document doc) {
-		Element elem = doc.createElement("Profile"); //$NON-NLS-1$
+		var elem = doc.createElement("Profile"); //$NON-NLS-1$
 		elem.setAttribute(ATTRIBUTE_ID, id);
 		elem.setAttribute(ATTRIBUTE_NAME, name);
 		elem.setAttribute(ATTRIBUTE_DESCRIPTION, description);

@@ -46,13 +46,13 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	static {
 		JSch.setLogger(new SFTPLogger());
-		String sshDirPath = System.getProperty("vfs.sftp.sshdir"); //$NON-NLS-1$
+		var sshDirPath = System.getProperty("vfs.sftp.sshdir"); //$NON-NLS-1$
 		if (null == sshDirPath) {
 			sshDirPath = System.getProperty("user.home") + File.separator + ".ssh"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		File sshDir = new File(sshDirPath);
+		var sshDir = new File(sshDirPath);
 		if (!sshDir.exists() && !sshDir.mkdirs()) {
-			String path = sshDir.getAbsolutePath();
+			var path = sshDir.getAbsolutePath();
 			logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... tried: {}", path); //$NON-NLS-1$
 			sshDir = null;
 			SSH_DIR_NAME = null;
@@ -76,11 +76,11 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	@Override
 	public final void authSetup(final ConnectionDescription description, final FileSystemOptions options) throws FileSystemException {
-		String username = description.getUsername().orElse(""); //$NON-NLS-1$
-		String password = description.getPassword().orElse(""); //$NON-NLS-1$
-		StaticUserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
+		var username = description.getUsername().orElse(""); //$NON-NLS-1$
+		var password = description.getPassword().orElse(""); //$NON-NLS-1$
+		var auth = new StaticUserAuthenticator(null, username, password);
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
-		SftpFileSystemConfigBuilder cfg = SftpFileSystemConfigBuilder.getInstance();
+		var cfg = SftpFileSystemConfigBuilder.getInstance();
 		cfg.setUserDirIsRoot(options, desc.isUserDirIsRoot());
 		if (null != SSH_DIR_NAME) {
 			cfg.setKnownHosts(options, new File(SSH_DIR_NAME, "known_hosts")); //$NON-NLS-1$

@@ -33,8 +33,8 @@ import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 public class FileFilterTest {
 	private File root;
 	private File testNode;
-	private FileFilterRule alwaysTrue = new AlwaysTrueFileFilterRule();
-	private FileFilterRule alwaysFalse = new AlwaysFalseFileFilterRule();
+	private final FileFilterRule alwaysTrue = new AlwaysTrueFileFilterRule();
+	private final FileFilterRule alwaysFalse = new AlwaysFalseFileFilterRule();
 
 	@BeforeEach
 	public void setUp() {
@@ -44,91 +44,91 @@ public class FileFilterTest {
 
 	@Test
 	public void testEmptyFilterMatchAll() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
+		var filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
 		assertTrue(filter.match(testNode));
 	}
 
 	@Test
 	public void testEmptyFilterMatchAny() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true);
+		var filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true);
 		assertTrue(filter.match(testNode));
 	}
 
 	@Test
 	public void testOneRuleFilterMatchAll() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true, alwaysTrue);
+		var filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true, alwaysTrue);
 		assertTrue(filter.match(testNode));
 	}
 
 	@Test
 	public void testOneRuleFilterMatchAny() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, alwaysTrue);
+		var filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, alwaysTrue);
 		assertTrue(filter.match(testNode));
 	}
 
 	@Test
 	public void testOneRuleFilterMatchAnyNegative() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, alwaysFalse);
+		var filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, alwaysFalse);
 		assertFalse(filter.match(testNode));
 	}
 
 	@Test
 	public void testOneRuleFilterAppliesToDirMatchAll() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, false, alwaysTrue);
+		var filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, false, alwaysTrue);
 		assertTrue(filter.match(root));
 	}
 
 	@Test
 	public void testOneRuleFilterAppliesToDirMatchAny() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, false, alwaysTrue);
+		var filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, false, alwaysTrue);
 		assertTrue(filter.match(root));
 	}
 
 	@Test
 	public void testFilterAllBasicTrueTrue() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true, alwaysTrue, alwaysTrue);
+		var filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true, alwaysTrue, alwaysTrue);
 		assertTrue(filter.match(testNode));
 	}
 
 	@Test
 	public void testFilterAllBasicFalseTrue() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true, alwaysFalse, alwaysTrue);
+		var filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true, alwaysFalse, alwaysTrue);
 		assertFalse(filter.match(testNode));
 	}
 
 	@Test
 	public void testFilterAllBasicTrueFalse() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true, alwaysTrue, alwaysFalse);
+		var filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true, alwaysTrue, alwaysFalse);
 		assertFalse(filter.match(testNode));
 	}
 
 	@Test
 	public void testFilterAllBasicFalseFalse() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true, alwaysFalse, alwaysFalse);
+		var filter = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true, alwaysFalse, alwaysFalse);
 		assertFalse(filter.match(testNode));
 	}
 
 	@Test
 	public void testFilterAnyBasicTrueTrue() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, alwaysTrue, alwaysTrue);
+		var filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, alwaysTrue, alwaysTrue);
 		assertTrue(filter.match(testNode));
 	}
 
 	@Test
 	public void testFilterAnyBasicFalseTrue() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, alwaysFalse, alwaysTrue);
+		var filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, alwaysFalse, alwaysTrue);
 		assertTrue(filter.match(testNode));
 	}
 
 	@Test
 	public void testFilterAnyBasicTrueFalse() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, alwaysTrue, alwaysFalse);
+		var filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, alwaysTrue, alwaysFalse);
 		assertTrue(filter.match(testNode));
 	}
 
 	@Test
 	public void testFilterAnyBasicFalseFalse() {
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, alwaysFalse, alwaysFalse);
+		var filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, alwaysFalse, alwaysFalse);
 		assertFalse(filter.match(testNode));
 	}
 
@@ -136,7 +136,7 @@ public class FileFilterTest {
 	public void testFilterInclude() throws Exception {
 		FileFilterRule nameEndsWithDotTxt = new FileNameFileFilterRule(new TextValue(".txt"), FileNameFileFilterRule.OP_ENDS_WITH);
 		FileFilterRule sizeIsLessThan1k = new FileSizeFileFilterRule(new SizeValue("1024 Bytes"), FileSizeFileFilterRule.OP_IS_LESS_THAN);
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, nameEndsWithDotTxt, sizeIsLessThan1k);
+		var filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.INCLUDE, true, nameEndsWithDotTxt, sizeIsLessThan1k);
 
 		assertTrue(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 		assertTrue(filter.match(new TestNode("foobar.txt.", root, true, false, 0, 0)));
@@ -147,7 +147,7 @@ public class FileFilterTest {
 	public void testFilterExclude() throws Exception {
 		FileFilterRule nameEndsWithDotTxt = new FileNameFileFilterRule(new TextValue(".txt"), FileNameFileFilterRule.OP_ENDS_WITH);
 		FileFilterRule sizeIsLessThan1k = new FileSizeFileFilterRule(new SizeValue("1024 Bytes"), FileSizeFileFilterRule.OP_IS_LESS_THAN);
-		FileFilter filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.EXCLUDE, true, nameEndsWithDotTxt, sizeIsLessThan1k);
+		var filter = new FileFilter(FileFilter.MATCH_ANY, FileFilter.EXCLUDE, true, nameEndsWithDotTxt, sizeIsLessThan1k);
 
 		assertFalse(filter.match(new TestNode("foobar.txt", root, true, false, 0, 0)));
 		assertFalse(filter.match(new TestNode("foobar.txt.", root, true, false, 0, 0)));

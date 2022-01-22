@@ -19,11 +19,13 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
+import java.io.Serial;
+
 public class FilterRuleNotAppliableException extends Exception {
+	@Serial
 	private static final long serialVersionUID = 5684042288571938243L;
 
 	public FilterRuleNotAppliableException() {
-		super();
 	}
 
 	public FilterRuleNotAppliableException(String msg) {

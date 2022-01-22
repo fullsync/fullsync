@@ -32,13 +32,13 @@ public class Obfuscator {
 			return null;
 		}
 
-		int pos = str.length() % OBFUSCATION_KEY.length();
+		var pos = str.length() % OBFUSCATION_KEY.length();
 
-		StringBuilder ret = new StringBuilder();
-		NumberFormat format = NumberFormat.getIntegerInstance();
+		var ret = new StringBuilder();
+		var format = NumberFormat.getIntegerInstance();
 		format.setMinimumIntegerDigits(3);
 		format.setMaximumFractionDigits(0);
-		for (int i = 0; i < str.length(); i++) {
+		for (var i = 0; i < str.length(); i++) {
 			ret.append(format.format(str.charAt(i) ^ OBFUSCATION_KEY.charAt((i + pos) % OBFUSCATION_KEY.length())));
 		}
 		return ret.toString();
@@ -49,12 +49,12 @@ public class Obfuscator {
 			return null;
 		}
 
-		int pos = (str.length() / 3) % OBFUSCATION_KEY.length();
+		var pos = (str.length() / 3) % OBFUSCATION_KEY.length();
 
-		StringBuilder ret = new StringBuilder();
-		for (int i = 0; i < (str.length() / 3); i++) {
+		var ret = new StringBuilder();
+		for (var i = 0; i < (str.length() / 3); i++) {
 			int digit;
-			int number = 0;
+			var number = 0;
 			digit = str.charAt(i * 3);
 			if ((digit < '0') || (digit > '9')) {
 				return ""; //$NON-NLS-1$

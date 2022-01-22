@@ -94,10 +94,8 @@ public class Task {
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Task) {
-			Task t = (Task) o;
-			if (source.getName().equals(t.source.getName())) {
-				return true;
-			}
+			var t = (Task) o;
+			return source.getName().equals(t.source.getName());
 		}
 		return false;
 	}

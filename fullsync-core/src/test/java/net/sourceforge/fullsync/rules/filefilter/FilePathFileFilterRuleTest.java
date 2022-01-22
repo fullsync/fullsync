@@ -30,7 +30,7 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class FilePathFileFilterRuleTest {
-	private File root = new TestNode("root", null, true, true, 0, 0);
+	private final File root = new TestNode("root", null, true, true, 0, 0);
 	private File testNode;
 
 	@BeforeEach
@@ -40,14 +40,14 @@ public class FilePathFileFilterRuleTest {
 
 	@Test
 	public void opMatchesRegexp() throws Exception {
-		FilePathFileFilterRule filterRule = new FilePathFileFilterRule(new TextValue(".*"), FilePathFileFilterRule.OP_MATCHES_REGEXP);
+		var filterRule = new FilePathFileFilterRule(new TextValue(".*"), FilePathFileFilterRule.OP_MATCHES_REGEXP);
 
 		assertTrue(filterRule.match(testNode));
 	}
 
 	@Test
-	public void throwPatternSyntaxException() throws Exception {
-		TextValue t = new TextValue("{");
+	public void throwPatternSyntaxException() {
+		var t = new TextValue("{");
 		assertThrows(DataParseException.class, () -> new FilePathFileFilterRule(t, FilePathFileFilterRule.OP_MATCHES_REGEXP));
 	}
 }

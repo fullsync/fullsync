@@ -28,7 +28,7 @@ public abstract class Schedule {
 	public static final String ELEMENT_NAME = "Schedule"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 
-	public static final Schedule unserialize(final Element element) throws DataParseException {
+	public static Schedule unserialize(final Element element) throws DataParseException {
 		if (null != element) {
 			switch (element.getAttribute(ATTRIBUTE_TYPE)) {
 				case IntervalSchedule.SCHEDULE_TYPE:
@@ -40,7 +40,7 @@ public abstract class Schedule {
 		return null;
 	}
 
-	public static final Element serialize(Schedule sch, Document doc) {
+	public static Element serialize(Schedule sch, Document doc) {
 		return sch.serialize(doc.createElement(ELEMENT_NAME));
 	}
 

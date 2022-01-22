@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 
 public class DateValueTest {
-	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	private long parseDate(String date) throws ParseException {
 		return dateFormat.parse(date).getTime();
@@ -38,7 +38,7 @@ public class DateValueTest {
 
 	@Test
 	public void testEquals() throws Exception {
-		DateValue value = new DateValue("10/08/1994");
+		var value = new DateValue("10/08/1994");
 
 		assertTrue(value.isEqualTo(parseDate("10/08/1994 10:00:00")));
 		assertTrue(value.isEqualTo(parseDate("10/08/1994 23:59:59")));
@@ -49,7 +49,7 @@ public class DateValueTest {
 
 	@Test
 	public void testIsBefore() throws Exception {
-		DateValue value = new DateValue("10/08/1994");
+		var value = new DateValue("10/08/1994");
 
 		assertTrue(value.isBefore(parseDate("11/08/1994 00:00:00")));
 		assertTrue(value.isBefore(parseDate("11/08/1994 23:59:59")));
@@ -60,7 +60,7 @@ public class DateValueTest {
 
 	@Test
 	public void testIsAfter() throws Exception {
-		DateValue value = new DateValue("10/08/1994");
+		var value = new DateValue("10/08/1994");
 
 		assertTrue(value.isAfter(parseDate("09/08/1994 00:00:00")));
 		assertTrue(value.isAfter(parseDate("09/08/1994 23:59:59")));

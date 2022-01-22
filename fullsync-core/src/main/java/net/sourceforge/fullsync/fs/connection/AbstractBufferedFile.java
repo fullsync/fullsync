@@ -74,7 +74,7 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	@Override
 	public long getFsLastModified() {
 		// if the last modified timestamp has not been directly set, use the cached value
-		long lm = super.getLastModified();
+		var lm = super.getLastModified();
 		if (-1 == lm) {
 			lm = this.fsLastModified;
 		}
@@ -84,7 +84,7 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 	@Override
 	public long getFsSize() {
 		// if the size has not been directly set, use the cached value
-		long size = super.getSize();
+		var size = super.getSize();
 		if (-1 == size) {
 			size = this.fsSize;
 		}
@@ -120,7 +120,7 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 
 	@Override
 	public void refreshBuffer() throws IOException {
-		File unb = getUnbuffered();
+		var unb = getUnbuffered();
 		directory = unb.isDirectory();
 		exists = unb.exists();
 

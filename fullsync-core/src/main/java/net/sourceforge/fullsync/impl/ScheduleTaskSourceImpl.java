@@ -24,7 +24,6 @@ import javax.inject.Singleton;
 
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
-import net.sourceforge.fullsync.schedule.Schedule;
 import net.sourceforge.fullsync.schedule.ScheduleTask;
 import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
 
@@ -41,12 +40,12 @@ public class ScheduleTaskSourceImpl implements ScheduleTaskSource {
 
 	@Override
 	public ScheduleTask getNextScheduleTask(long referenceTime) {
-		long nextTime = Long.MAX_VALUE;
+		var nextTime = Long.MAX_VALUE;
 		Profile nextProfile = null;
 		for (Profile profile : profileManager.getProfiles()) {
-			Schedule s = profile.getSchedule();
+			var s = profile.getSchedule();
 			if (profile.isSchedulingEnabled() && (null != s)) {
-				long o = s.getNextOccurrence(profile.getLastScheduleTime(), referenceTime);
+				var o = s.getNextOccurrence(profile.getLastScheduleTime(), referenceTime);
 				if (nextTime > o) {
 					nextTime = o;
 					nextProfile = profile;

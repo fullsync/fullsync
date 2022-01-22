@@ -39,12 +39,12 @@ import net.sourceforge.fullsync.event.ProfileListChanged;
 
 class ListViewProfileListComposite extends ProfileListComposite {
 	private final ProfileManager profileManager;
-	private Table tableProfiles;
-	private TableColumn tableColumnName;
-	private TableColumn tableColumnLastUpdate;
-	private TableColumn tableColumnNextUpdate;
-	private TableColumn tableColumnSource;
-	private TableColumn tableColumnDestination;
+	private final Table tableProfiles;
+	private final TableColumn tableColumnName;
+	private final TableColumn tableColumnLastUpdate;
+	private final TableColumn tableColumnNextUpdate;
+	private final TableColumn tableColumnSource;
+	private final TableColumn tableColumnDestination;
 
 	@Inject
 	public ListViewProfileListComposite(@Assisted Composite parent, @Assisted ProfileListControlHandler handler,
@@ -87,13 +87,13 @@ class ListViewProfileListComposite extends ProfileListComposite {
 			tableProfiles.clearAll();
 			tableProfiles.setItemCount(0);
 			for (Profile p : profileManager.getProfiles()) {
-				String[] cells = new String[5];
+				var cells = new String[5];
 				cells[0] = p.getName();
 				cells[1] = p.getLastUpdateText();
 				cells[2] = p.getNextUpdateText();
 				cells[3] = p.getSource().toString();
 				cells[4] = p.getDestination().toString();
-				TableItem item = new TableItem(tableProfiles, SWT.NULL);
+				var item = new TableItem(tableProfiles, SWT.NULL);
 				item.setText(cells);
 				item.setData(p);
 			}
@@ -108,7 +108,7 @@ class ListViewProfileListComposite extends ProfileListComposite {
 	@Override
 	public Profile getSelectedProfile() {
 		Profile p = null;
-		TableItem[] sel = tableProfiles.getSelection();
+		var sel = tableProfiles.getSelection();
 		if (sel.length > 0) {
 			p = (Profile) sel[0].getData();
 		}

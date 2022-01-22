@@ -32,8 +32,8 @@ import org.eclipse.swt.widgets.Event;
 
 @Singleton
 public class ImageRepository {
-	private Display display;
-	private Map<String, Image> cache = new HashMap<>();
+	private final Display display;
+	private final Map<String, Image> cache = new HashMap<>();
 
 	@Inject
 	public ImageRepository(Display display) {

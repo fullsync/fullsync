@@ -32,16 +32,16 @@ import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 public class FileFilterTreeTest {
 	@Test
 	public void testBasic() {
-		FileFilter filter1 = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
-		FileFilter filter2 = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
-		FileFilter filter3 = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
-		FileFilter filter4 = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
+		var filter1 = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
+		var filter2 = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
+		var filter3 = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
+		var filter4 = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
 		Map<String, FileFilter> filters = new TreeMap<>();
 		filters.put("./a/c", filter1);
 		filters.put("./b/e", filter2);
 		filters.put("./a/c/d", filter3);
 		filters.put("./a/c/d/g", filter4);
-		FileFilterTree tree = new FileFilterTree(filters);
+		var tree = new FileFilterTree(filters);
 
 		assertNull(tree.getFilter("./a"));
 		assertNull(tree.getFilter("./a/f"));

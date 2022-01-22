@@ -113,16 +113,16 @@ public class SchedulerImpl implements Scheduler, Runnable {
 	public void run() {
 		running = true;
 		while (enabled) {
-			long now = System.currentTimeMillis();
+			var now = System.currentTimeMillis();
 			logger.debug("searching for next task after {}", now); //$NON-NLS-1$
-			ScheduleTask task = scheduleSource.getNextScheduleTask(now);
+			var task = scheduleSource.getNextScheduleTask(now);
 			if (null == task) {
 				logger.info("could not find a scheduled task, aborting"); //$NON-NLS-1$
 				break;
 			}
 			logger.debug("found: {} at {}", task, task.getExecutionTime()); //$NON-NLS-1$
 
-			long nextTime = task.getExecutionTime();
+			var nextTime = task.getExecutionTime();
 			try {
 				logger.debug("waiting for {} microseconds", nextTime - now); //$NON-NLS-1$
 				if (nextTime >= now) {

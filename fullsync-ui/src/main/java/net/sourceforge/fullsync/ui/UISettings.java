@@ -35,7 +35,7 @@ public abstract class UISettings {
 	 */
 	public static final int BUTTON_HEIGHT = 25;
 	private static final int K = 1024;
-	private static String[] UNITS = {
+	private static final String[] UNITS = {
 		"B", //$NON-NLS-1$
 		"KiB", //$NON-NLS-1$
 		"MiB", //$NON-NLS-1$
@@ -44,16 +44,16 @@ public abstract class UISettings {
 	};
 
 	public static String formatSize(long size) { // NO_UCD (use default)
-		int i = 1;
+		var i = 1;
 		for (; i < UNITS.length; ++i) {
 			if (size < Math.pow(K, i)) {
 				break;
 			}
 		}
 		--i;
-		String result = ""; //$NON-NLS-1$
+		var result = ""; //$NON-NLS-1$
 		if (-1 != size) {
-			int scaledSize = (int) Math.ceil(size / Math.pow(K, i));
+			var scaledSize = (int) Math.ceil(size / Math.pow(K, i));
 			result = String.format("%d %s", scaledSize, UNITS[i]); //$NON-NLS-1$
 		}
 		return result;

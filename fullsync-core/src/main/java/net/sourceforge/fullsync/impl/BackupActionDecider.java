@@ -59,7 +59,7 @@ public class BackupActionDecider implements ActionDecider {
 		throws DataParseException, IOException {
 
 		List<Action> actions = new ArrayList<>(3);
-		State state = sd.getState(src, dst);
+		var state = sd.getState(src, dst);
 		switch (state) {
 			case ORPHAN_SOURCE:
 				if (!bsd.getState(dst).equals(State.ORPHAN_SOURCE)) {
@@ -75,7 +75,7 @@ public class BackupActionDecider implements ActionDecider {
 				break;
 			case DIR_SOURCE_FILE_DESTINATION:
 			case FILE_SOURCE_DIR_DESTINATION:
-				State buff = bsd.getState(dst);
+				var buff = bsd.getState(dst);
 				if (buff.equals(State.ORPHAN_DESTINATION)) {
 					actions.add(new Action(ActionType.ADD, DESTINATION, BufferUpdate.DESTINATION,
 						"There was a node in buff, but its orphan, so add"));
@@ -91,15 +91,13 @@ public class BackupActionDecider implements ActionDecider {
 						// TODO ^ recompare here
 					}
 				}
+				else if (state.equals(State.DIR_SOURCE_FILE_DESTINATION)) {
+					var explanation = "cant update, dir here file there error occured";
+					actions.add(new Action(ActionType.DIR_HERE_FILE_THERE_ERROR, SOURCE, BufferUpdate.NONE, explanation));
+				}
 				else {
-					if (state.equals(State.DIR_SOURCE_FILE_DESTINATION)) {
-						String explanation = "cant update, dir here file there error occured";
-						actions.add(new Action(ActionType.DIR_HERE_FILE_THERE_ERROR, SOURCE, BufferUpdate.NONE, explanation));
-					}
-					else {
-						String explanation = "cant update, dir here file there error occured";
-						actions.add(new Action(ActionType.DIR_HERE_FILE_THERE_ERROR, DESTINATION, BufferUpdate.NONE, explanation));
-					}
+					var explanation = "cant update, dir here file there error occured";
+					actions.add(new Action(ActionType.DIR_HERE_FILE_THERE_ERROR, DESTINATION, BufferUpdate.NONE, explanation));
 				}
 				break;
 			case FILE_CHANGE_SOURCE:
@@ -123,7 +121,7 @@ public class BackupActionDecider implements ActionDecider {
 
 		actions.add(ignore);
 
-		Action[] as = new Action[actions.size()];
+		var as = new Action[actions.size()];
 		actions.toArray(as);
 		return new Task(src, dst, state, as);
 	}

@@ -26,19 +26,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -80,18 +76,18 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 
 		@Override
 		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-			String name = attributes.getValue(ATTRIBUTE_NAME);
+			var name = attributes.getValue(ATTRIBUTE_NAME);
 
 			if (ELEMENT_DIRECTORY.equals(qName)) {
 				if ("/".equals(name) || ".".equals(name)) { //$NON-NLS-1$ //$NON-NLS-2$
 					return;
 				}
-				AbstractBufferedFile newDir = new AbstractBufferedFile(bufferedConnection, name, current, true, true);
+				var newDir = new AbstractBufferedFile(bufferedConnection, name, current, true, true);
 				current.addChild(newDir);
 				current = newDir;
 			}
 			else if (ELEMENT_FILE.equals(qName)) {
-				AbstractBufferedFile newFile = new AbstractBufferedFile(bufferedConnection, name, current, false, true);
+				var newFile = new AbstractBufferedFile(bufferedConnection, name, current, false, true);
 				newFile.setSize(Long.parseLong(attributes.getValue(ATTRIBUTE_BUFFERED_LENGTH)));
 				newFile.setLastModified(Long.parseLong(attributes.getValue(ATTRIBUTE_BUFFERED_LAST_MODIFIED)));
 
@@ -124,7 +120,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 
 	private final Site fs;
 	private BufferedFile root;
-	private boolean monitoringFileSystem;
+	private final boolean monitoringFileSystem;
 
 	public SyncFileBufferedConnection(final Site fs) throws IOException {
 		this.fs = fs;
@@ -139,7 +135,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 
 	@Override
 	public File createChild(File dir, String name, boolean directory) throws IOException {
-		File n = dir.getUnbuffered().getChild(name);
+		var n = dir.getUnbuffered().getChild(name);
 		if (null == n) {
 			n = dir.getUnbuffered().createChild(name, directory);
 		}
@@ -185,9 +181,9 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 
 	protected void updateFromFileSystem(BufferedFile buffered) throws IOException {
 		// load fs entries if wanted
-		Collection<File> fsChildren = buffered.getUnbuffered().getChildren();
+		var fsChildren = buffered.getUnbuffered().getChildren();
 		for (File uf : fsChildren) {
-			BufferedFile bf = (BufferedFile) buffered.getChild(uf.getName());
+			var bf = (BufferedFile) buffered.getChild(uf.getName());
 			if (null == bf) {
 				bf = new AbstractBufferedFile(this, uf, root, uf.isDirectory(), false);
 				buffered.addChild(bf);
@@ -199,8 +195,8 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	}
 
 	protected void loadFromBuffer() throws IOException {
-		File fsRoot = fs.getRoot();
-		File f = fsRoot.getChild(BUFFER_FILENAME);
+		var fsRoot = fs.getRoot();
+		var f = fsRoot.getChild(BUFFER_FILENAME);
 
 		root = new AbstractBufferedFile(this, fsRoot, null, true, true);
 		if ((null == f) || !f.exists() || f.isDirectory()) {
@@ -209,25 +205,24 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			}
 			return;
 		}
-		ByteArrayOutputStream out = new ByteArrayOutputStream((int) f.getSize());
+		var out = new ByteArrayOutputStream((int) f.getSize());
 		try (InputStream in = new GZIPInputStream(f.getInputStream())) {
 			int i;
-			byte[] block = new byte[4096];
+			var block = new byte[4096];
 			while ((i = in.read(block)) > 0) {
 				out.write(block, 0, i);
 			}
 		}
 		try {
-			SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
+			var sax = SAXParserFactory.newInstance().newSAXParser();
 			sax.parse(new ByteArrayInputStream(out.toByteArray()), new SyncFileDefaultHandler(this));
 		}
 		catch (SAXParseException spe) {
-			StringBuilder sb = new StringBuilder(spe.toString());
-			sb.append("\n Line number: " + spe.getLineNumber()); //$NON-NLS-1$
-			sb.append("\n Column number: " + spe.getColumnNumber()); //$NON-NLS-1$
-			sb.append("\n Public ID: " + spe.getPublicId()); //$NON-NLS-1$
-			sb.append("\n System ID: " + spe.getSystemId() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			System.err.println(sb.toString());
+			var sb = spe.toString() + "\n Line number: " + spe.getLineNumber() + //$NON-NLS-1$
+				"\n Column number: " + spe.getColumnNumber() + //$NON-NLS-1$
+				"\n Public ID: " + spe.getPublicId() + //$NON-NLS-1$
+				"\n System ID: " + spe.getSystemId(); //$NON-NLS-1$
+			System.err.println(sb);
 		}
 		catch (IOException | SAXException | ParserConfigurationException | FactoryConfigurationError e) {
 			ExceptionHandler.reportException(e);
@@ -239,7 +234,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	}
 
 	protected Element serializeFile(BufferedFile file, Document doc) throws IOException {
-		Element elem = doc.createElement(file.isDirectory() ? ELEMENT_DIRECTORY : ELEMENT_FILE);
+		var elem = doc.createElement(file.isDirectory() ? ELEMENT_DIRECTORY : ELEMENT_FILE);
 		elem.setAttribute(ATTRIBUTE_NAME, file.getName());
 		if (file.isDirectory()) {
 			for (File n : file.getChildren()) {
@@ -258,29 +253,29 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	}
 
 	public void saveToBuffer() throws IOException {
-		File fsRoot = fs.getRoot();
-		File node = fsRoot.getChild(BUFFER_FILENAME);
+		var fsRoot = fs.getRoot();
+		var node = fsRoot.getChild(BUFFER_FILENAME);
 		if ((null == node) || !node.exists()) {
 			node = root.createChild(BUFFER_FILENAME, false);
 		}
 
 		try {
-			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
+			var docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			var doc = docBuilder.newDocument();
 
-			Element e = doc.createElement(ELEMENT_SYNC_FILES);
+			var e = doc.createElement(ELEMENT_SYNC_FILES);
 			e.appendChild(serializeFile(root, doc));
 			doc.appendChild(e);
-			TransformerFactory fac = TransformerFactory.newInstance();
+			var fac = TransformerFactory.newInstance();
 			fac.setAttribute("indent-number", 2); //$NON-NLS-1$
-			Transformer tf = fac.newTransformer();
+			var tf = fac.newTransformer();
 			tf.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
 			tf.setOutputProperty(OutputKeys.VERSION, "1.0"); //$NON-NLS-1$
 			tf.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
 			tf.setOutputProperty(OutputKeys.STANDALONE, "no"); //$NON-NLS-1$
-			DOMSource source = new DOMSource(doc);
+			var source = new DOMSource(doc);
 
-			try (OutputStreamWriter osw = new OutputStreamWriter(new GZIPOutputStream(node.getOutputStream()), StandardCharsets.UTF_8)) {
+			try (var osw = new OutputStreamWriter(new GZIPOutputStream(node.getOutputStream()), StandardCharsets.UTF_8)) {
 				tf.transform(source, new StreamResult(osw));
 				osw.flush();
 			}

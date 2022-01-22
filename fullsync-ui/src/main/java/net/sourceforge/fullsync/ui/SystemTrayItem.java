@@ -59,7 +59,7 @@ public class SystemTrayItem { // NO_UCD (use default)
 	}
 
 	public void show() { // NO_UCD (use default)
-		ImageRepository imageRepository = imageRepositoryProvider.get();
+		var imageRepository = imageRepositoryProvider.get();
 		trayItem = new TrayItem(shell.getDisplay().getSystemTray(), SWT.NULL);
 		shell.getDisplay().addListener(SWT.Dispose, this::displayDisposed);
 

@@ -23,13 +23,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -42,15 +40,15 @@ class ExceptionDialog {
 
 	ExceptionDialog(Shell parent, String message, Throwable throwable) {
 		try {
-			Display display = parent.getDisplay();
-			Shell p = display.getActiveShell();
+			var display = parent.getDisplay();
+			var p = display.getActiveShell();
 			p = null == p ? parent : p;
 
 			dialogShell = new Shell(p, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
 			dialogShell.setText(Messages.getString("ExceptionDialog.Exception")); //$NON-NLS-1$
 			dialogShell.addListener(SWT.Close, e -> display.asyncExec(dialogShell::dispose));
 
-			GridLayout dialogShellLayout = new GridLayout();
+			var dialogShellLayout = new GridLayout();
 			dialogShellLayout.marginHeight = 0;
 			dialogShellLayout.marginWidth = 0;
 			dialogShellLayout.horizontalSpacing = 0;
@@ -60,21 +58,21 @@ class ExceptionDialog {
 
 			// base layout
 			compositeBase = new Composite(dialogShell, SWT.NONE);
-			GridLayout compositeBaseLayout = new GridLayout(3, false);
+			var compositeBaseLayout = new GridLayout(3, false);
 			compositeBaseLayout.marginHeight = 10;
 			compositeBaseLayout.marginWidth = 10;
 			compositeBase.setLayout(compositeBaseLayout);
-			GridData compositeBaseLData = new GridData();
+			var compositeBaseLData = new GridData();
 			compositeBaseLData.heightHint = 116;
 			compositeBaseLData.grabExcessHorizontalSpace = true;
 			compositeBaseLData.horizontalAlignment = SWT.FILL;
 			compositeBase.setLayoutData(compositeBaseLData);
 
 			// error icon
-			Image img = display.getSystemImage(SWT.ICON_ERROR);
-			Label labelImage = new Label(compositeBase, SWT.NONE);
-			GridData labelImageLData = new GridData();
-			Rectangle rect = new Rectangle(0, 0, 0, 0);
+			var img = display.getSystemImage(SWT.ICON_ERROR);
+			var labelImage = new Label(compositeBase, SWT.NONE);
+			var labelImageLData = new GridData();
+			var rect = new Rectangle(0, 0, 0, 0);
 			if (null != img) {
 				rect = img.getBounds();
 				labelImage.setImage(img);
@@ -86,18 +84,18 @@ class ExceptionDialog {
 			labelImage.setLayoutData(labelImageLData);
 
 			// message
-			Label labelMessage = new Label(compositeBase, SWT.NONE);
+			var labelMessage = new Label(compositeBase, SWT.NONE);
 			labelMessage.setText(message);
-			GridData labelMessageLData = new GridData();
+			var labelMessageLData = new GridData();
 			labelMessageLData.horizontalAlignment = SWT.FILL;
 			labelMessageLData.verticalAlignment = SWT.FILL;
 			labelMessageLData.horizontalSpan = 2;
 			labelMessage.setLayoutData(labelMessageLData);
 
 			// buttons
-			Button buttonOk = new Button(compositeBase, SWT.PUSH | SWT.CENTER);
+			var buttonOk = new Button(compositeBase, SWT.PUSH | SWT.CENTER);
 			buttonOk.setText(Messages.getString("ExceptionDialog.Ok")); //$NON-NLS-1$
-			GridData buttonOkLData = new GridData();
+			var buttonOkLData = new GridData();
 			buttonOk.addListener(SWT.Selection, e -> dialogShell.close());
 			buttonOkLData.horizontalAlignment = SWT.END;
 			buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
@@ -109,10 +107,10 @@ class ExceptionDialog {
 			// details button
 			buttonDetails = new Button(compositeBase, SWT.PUSH | SWT.CENTER);
 			buttonDetails.setText(Messages.getString("ExceptionDialog.Details")); //$NON-NLS-1$
-			GridData buttonDetailsLData = new GridData();
+			var buttonDetailsLData = new GridData();
 			buttonDetails.addListener(SWT.Selection, e -> {
 				if (expanded) {
-					Rectangle r = dialogShell.computeTrim(0, 0, compositeBase.getSize().x, compositeBase.getSize().y);
+					var r = dialogShell.computeTrim(0, 0, compositeBase.getSize().x, compositeBase.getSize().y);
 					dialogShell.setSize(r.width, r.height);
 				}
 				else {
@@ -129,9 +127,9 @@ class ExceptionDialog {
 			buttonDetails.setLayoutData(buttonDetailsLData);
 
 			// stack trace container
-			Composite compositeExtension = new Composite(dialogShell, SWT.NONE);
-			GridLayout compositeExtensionLayout = new GridLayout();
-			GridData compositeExtensionLData = new GridData();
+			var compositeExtension = new Composite(dialogShell, SWT.NONE);
+			var compositeExtensionLayout = new GridLayout();
+			var compositeExtensionLData = new GridData();
 			compositeExtensionLData.grabExcessHorizontalSpace = true;
 			compositeExtensionLData.horizontalAlignment = SWT.FILL;
 			compositeExtensionLData.grabExcessVerticalSpace = true;
@@ -140,15 +138,15 @@ class ExceptionDialog {
 			compositeExtension.setLayout(compositeExtensionLayout);
 
 			// stack trace
-			Text textLog = new Text(compositeExtension, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-			GridData textLogLData = new GridData();
+			var textLog = new Text(compositeExtension, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+			var textLogLData = new GridData();
 			textLogLData.grabExcessHorizontalSpace = true;
 			textLogLData.grabExcessVerticalSpace = true;
 			textLogLData.horizontalAlignment = SWT.FILL;
 			textLogLData.verticalAlignment = SWT.FILL;
 			textLog.setLayoutData(textLogLData);
 
-			StringWriter writer = new StringWriter();
+			var writer = new StringWriter();
 			throwable.printStackTrace(new PrintWriter(writer));
 			textLog.setText(writer.getBuffer().toString());
 

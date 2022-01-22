@@ -29,7 +29,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -80,47 +79,47 @@ class SystemStatusPage extends WizardDialog {
 		// TODO: add a way to report a bug here?
 		try {
 			content.setLayout(new GridLayout());
-			Group groupMemory = new Group(content, SWT.NONE);
+			var groupMemory = new Group(content, SWT.NONE);
 			groupMemory.setLayout(new GridLayout(2, false));
 			groupMemory.setText(Messages.getString("SystemStatusPage.JVMMemory")); //$NON-NLS-1$
 
 			progressBarMemory = new ProgressBar(groupMemory, SWT.NONE);
-			GridData progressBarMemoryLData = new GridData();
+			var progressBarMemoryLData = new GridData();
 			progressBarMemoryLData.horizontalAlignment = SWT.FILL;
 			progressBarMemoryLData.horizontalSpan = 2;
 			progressBarMemory.setLayoutData(progressBarMemoryLData);
 
 			// max memory
-			Label labelMaxMemory = new Label(groupMemory, SWT.NONE);
+			var labelMaxMemory = new Label(groupMemory, SWT.NONE);
 			labelMaxMemory.setText(Messages.getString("SystemStatusPage.MaxMemory")); //$NON-NLS-1$
 
 			maxMemory = new Label(groupMemory, SWT.RIGHT);
-			GridData maxMemoryLData = new GridData();
+			var maxMemoryLData = new GridData();
 			maxMemoryLData.horizontalAlignment = SWT.FILL;
 			maxMemory.setLayoutData(maxMemoryLData);
 
 			// total memory
-			Label labelTotalMemory = new Label(groupMemory, SWT.NONE);
+			var labelTotalMemory = new Label(groupMemory, SWT.NONE);
 			labelTotalMemory.setText(Messages.getString("SystemStatusPage.TotalMemory")); //$NON-NLS-1$
 			totalMemory = new Label(groupMemory, SWT.RIGHT);
-			GridData totalMemoryLData = new GridData();
+			var totalMemoryLData = new GridData();
 			totalMemoryLData.horizontalAlignment = SWT.FILL;
 			totalMemory.setLayoutData(totalMemoryLData);
 
 			// free memory
-			Label labelFreeMemory = new Label(groupMemory, SWT.NONE);
+			var labelFreeMemory = new Label(groupMemory, SWT.NONE);
 			labelFreeMemory.setText(Messages.getString("SystemStatusPage.FreeMemory")); //$NON-NLS-1$
 
 			freeMemory = new Label(groupMemory, SWT.RIGHT);
 			freeMemory.setText(""); //$NON-NLS-1$
-			GridData freeMemoryLData = new GridData();
+			var freeMemoryLData = new GridData();
 			freeMemoryLData.horizontalAlignment = SWT.FILL;
 			freeMemory.setLayoutData(freeMemoryLData);
 
 			// gc button
-			Button buttonMemoryGc = new Button(groupMemory, SWT.PUSH | SWT.CENTER);
+			var buttonMemoryGc = new Button(groupMemory, SWT.PUSH | SWT.CENTER);
 			buttonMemoryGc.setText(Messages.getString("SystemStatusPage.CleanUp")); //$NON-NLS-1$
-			GridData buttonMemoryGcLData = new GridData();
+			var buttonMemoryGcLData = new GridData();
 			buttonMemoryGc.addListener(SWT.Selection, e -> System.gc());
 			buttonMemoryGcLData.horizontalAlignment = SWT.END;
 			buttonMemoryGcLData.horizontalSpan = 2;
@@ -152,7 +151,7 @@ class SystemStatusPage extends WizardDialog {
 
 	private void timerFired() {
 		if (!content.isDisposed()) {
-			Display display = getDisplay();
+			var display = getDisplay();
 			if ((null == display) || display.isDisposed()) {
 				timer.cancel();
 				return;
@@ -163,10 +162,10 @@ class SystemStatusPage extends WizardDialog {
 
 	private void updateView() {
 		if (!content.isDisposed()) {
-			Runtime rt = Runtime.getRuntime();
-			long ltotalMemory = rt.totalMemory();
-			long lmaxMemory = rt.maxMemory();
-			long lfreeMemory = rt.freeMemory();
+			var rt = Runtime.getRuntime();
+			var ltotalMemory = rt.totalMemory();
+			var lmaxMemory = rt.maxMemory();
+			var lfreeMemory = rt.freeMemory();
 
 			totalMemory.setText(UISettings.formatSize(ltotalMemory));
 			maxMemory.setText(UISettings.formatSize(lmaxMemory));

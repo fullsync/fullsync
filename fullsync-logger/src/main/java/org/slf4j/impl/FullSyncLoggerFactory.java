@@ -57,18 +57,14 @@ import org.slf4j.Logger;
  */
 public class FullSyncLoggerFactory implements ILoggerFactory {
 	static final FullSyncLoggerFactory INSTANCE = new FullSyncLoggerFactory();
-	Map<String, Logger> loggerMap;
-
-	public FullSyncLoggerFactory() {
-		loggerMap = new HashMap<>();
-	}
+	final Map<String, Logger> loggerMap = new HashMap<>();
 
 	/**
 	 * Return an appropriate {@link FullSyncLogger} instance by name.
 	 */
 	@Override
 	public Logger getLogger(final String name) {
-		Logger slogger = null;
+		Logger slogger;
 		// protect against concurrent access of the loggerMap
 		synchronized (this) {
 			slogger = loggerMap.get(name);

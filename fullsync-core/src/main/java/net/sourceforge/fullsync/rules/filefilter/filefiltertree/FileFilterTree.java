@@ -38,11 +38,11 @@ public class FileFilterTree {
 	}
 
 	private void addFileFilter(String key, FileFilter filter) {
-		StringTokenizer tokenizer = new StringTokenizer(key, FILE_SEPARATOR);
-		FileFilterTreeItem item = root;
+		var tokenizer = new StringTokenizer(key, FILE_SEPARATOR);
+		var item = root;
 		while (tokenizer.hasMoreTokens()) {
-			String token = tokenizer.nextToken();
-			FileFilterTreeItem children = item.getChildren(token);
+			var token = tokenizer.nextToken();
+			var children = item.getChildren(token);
 			if (null == children) {
 				children = new FileFilterTreeItem();
 			}
@@ -56,18 +56,18 @@ public class FileFilterTree {
 	public FileFilter getFilter(String key) {
 		FileFilter filter = null;
 		FileFilter parentFilter = null;
-		StringTokenizer tokenizer = new StringTokenizer(key, FILE_SEPARATOR);
-		FileFilterTreeItem item = root;
+		var tokenizer = new StringTokenizer(key, FILE_SEPARATOR);
+		var item = root;
 		while (tokenizer.hasMoreTokens()) {
-			String token = tokenizer.nextToken();
+			var token = tokenizer.nextToken();
 			parentFilter = filter;
 
-			FileFilterTreeItem children = item.getChildren(token);
+			var children = item.getChildren(token);
 			if (null == children) {
 				return parentFilter;
 			}
 
-			FileFilter childFilter = children.getFilter();
+			var childFilter = children.getFilter();
 			if (null != childFilter) {
 				filter = childFilter;
 			}

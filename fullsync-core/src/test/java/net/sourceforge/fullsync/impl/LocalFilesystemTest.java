@@ -40,7 +40,7 @@ public class LocalFilesystemTest extends FilesystemTestBase {
 
 	@Override
 	protected ConnectionDescription getDestinationConnectionDescription() {
-		ConnectionDescription.Builder dstBuilder = new ConnectionDescription.Builder();
+		var dstBuilder = new ConnectionDescription.Builder();
 		dstBuilder.setScheme("file");
 		dstBuilder.setBufferStrategy("");
 		dstBuilder.setPath(testingDst.getAbsolutePath());

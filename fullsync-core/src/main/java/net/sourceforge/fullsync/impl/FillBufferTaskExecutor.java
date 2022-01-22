@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.IoStatistics;
@@ -46,7 +45,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 		this.statisticsOnly = false;
 		this.buffer = buffer;
 		buffer.addEntryFinishedListener((entry, ioe) -> {
-			Task task = entry.getTask();
+			var task = entry.getTask();
 			if (null != task) {
 				if (null != ioe) {
 					fireTaskFinished(new TaskFinishedEvent(task, ioe.getLocalizedMessage()));
@@ -73,7 +72,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 	}
 
 	protected void enqueueTaskChildren(Task task) {
-		task.getChildren().stream().forEachOrdered(this::enqueue);
+		task.getChildren().forEach(this::enqueue);
 	}
 
 	@Override
@@ -122,9 +121,9 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 		try {
 			// TODO lock tasks here
 
-			Action action = task.getCurrentAction();
-			File source = task.getSource();
-			File destination = task.getDestination();
+			var action = task.getCurrentAction();
+			var source = task.getSource();
+			var destination = task.getDestination();
 
 			switch (action.getType()) {
 				case ADD:

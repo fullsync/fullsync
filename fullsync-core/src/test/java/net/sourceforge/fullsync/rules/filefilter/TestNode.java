@@ -27,7 +27,7 @@ import java.util.Collection;
 import net.sourceforge.fullsync.fs.File;
 
 public class TestNode implements File {
-	private File parent;
+	private final File parent;
 	private String name;
 	private boolean directory;
 	private boolean exists;
@@ -92,7 +92,7 @@ public class TestNode implements File {
 
 	@Override
 	public String getPath() {
-		StringBuilder sb = new StringBuilder();
+		var sb = new StringBuilder();
 		if (null != parent) {
 			sb.append(parent.getPath());
 		}

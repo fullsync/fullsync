@@ -33,10 +33,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.ConnectionDescription.Builder;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FileSystemManager;
-import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.ui.Messages;
 
 abstract class ProtocolSpecificComposite {
@@ -52,19 +50,19 @@ abstract class ProtocolSpecificComposite {
 	public void createGUI(final Composite parent) {
 		m_parent = parent;
 		onBeforePathHook(parent);
-		GridData gridData = new GridData();
+		var gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.verticalAlignment = SWT.CENTER;
-		Label labelPath = new Label(parent, SWT.NONE);
+		var labelPath = new Label(parent, SWT.NONE);
 		labelPath.setText(Messages.getString("ProtocolSpecificComposite.Path")); //$NON-NLS-1$
 		textPath = new Text(parent, SWT.BORDER);
 		textPath.setLayoutData(gridData);
-		Button buttonBrowse = new Button(parent, SWT.NONE);
+		var buttonBrowse = new Button(parent, SWT.NONE);
 		buttonBrowse.setText(Messages.getString("ProtocolSpecificComposite.Browse")); //$NON-NLS-1$
 		buttonBrowse.addListener(SWT.Selection, this::onBrowse);
 		buttonBuffered = new Button(parent, SWT.CHECK | SWT.LEFT);
-		GridData buttonDestinationBufferedData = new GridData();
+		var buttonDestinationBufferedData = new GridData();
 		buttonDestinationBufferedData.horizontalSpan = 3;
 		buttonBuffered.setLayoutData(buttonDestinationBufferedData);
 		buttonBuffered.setText(Messages.getString("ProfileDetails.Buffered.Label")); //$NON-NLS-1$
@@ -75,14 +73,14 @@ abstract class ProtocolSpecificComposite {
 	}
 
 	public ConnectionDescription.Builder getConnectionDescription() {
-		Builder builder = new ConnectionDescription.Builder();
+		var builder = new ConnectionDescription.Builder();
 		builder.setScheme(m_scheme);
 		builder.setPath(textPath.getText());
 		return builder;
 	}
 
 	public void setConnectionDescription(final ConnectionDescription connection) {
-		String path = null != connection ? connection.getPath() : ""; //$NON-NLS-1$
+		var path = null != connection ? connection.getPath() : ""; //$NON-NLS-1$
 		textPath.setText(path);
 	}
 
@@ -101,10 +99,10 @@ abstract class ProtocolSpecificComposite {
 
 	public void onBrowse() {
 		try {
-			ConnectionDescription desc = getConnectionDescription().build();
-			FileSystemManager fsm = fileSystemManagerProvider.get();
-			try (Site conn = fsm.createConnection(desc, true)) {
-				FileObjectChooser foc = fileObjectChooserProvider.get();
+			var desc = getConnectionDescription().build();
+			var fsm = fileSystemManagerProvider.get();
+			try (var conn = fsm.createConnection(desc, true)) {
+				var foc = fileObjectChooserProvider.get();
 				if (foc.open(m_parent.getShell(), conn.getBase())) {
 					setPath(new URI(foc.getActiveFileObject().getName().getURI()).getPath());
 				}

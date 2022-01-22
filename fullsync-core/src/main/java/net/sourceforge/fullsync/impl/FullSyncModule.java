@@ -75,6 +75,6 @@ public class FullSyncModule extends AbstractModule {
 	}
 
 	private <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
-		typeEncounter.register((InjectionListener<I>) i -> eventBus.register(i));
+		typeEncounter.register((InjectionListener<I>) eventBus::register);
 	}
 }

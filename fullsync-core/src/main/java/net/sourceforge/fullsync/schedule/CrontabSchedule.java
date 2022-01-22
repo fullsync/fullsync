@@ -38,7 +38,7 @@ public class CrontabSchedule extends Schedule {
 	private final CrontabPart.Instance daysOfWeek;
 
 	private static String getPatternFromElement(Element element) {
-		String pattern = "* * * * *"; //$NON-NLS-1$
+		var pattern = "* * * * *"; //$NON-NLS-1$
 		if (element.hasAttribute(ATTRIBUTE_PATTERN)) {
 			pattern = element.getAttribute(ATTRIBUTE_PATTERN);
 		}
@@ -90,7 +90,7 @@ public class CrontabSchedule extends Schedule {
 	public CrontabSchedule(String pattern) throws DataParseException {
 		origPattern = pattern;
 
-		StringTokenizer tokenizer = new StringTokenizer(pattern);
+		var tokenizer = new StringTokenizer(pattern);
 		minutes = CrontabPart.MINUTES.createInstance(tokenizer.nextToken());
 		hours = CrontabPart.HOURS.createInstance(tokenizer.nextToken());
 		daysOfMonth = CrontabPart.DAYSOFMONTH.createInstance(tokenizer.nextToken());
@@ -114,13 +114,12 @@ public class CrontabSchedule extends Schedule {
 			daysOfWeek.bArray[1] = true;
 		}
 
-		StringBuilder buff = new StringBuilder();
-		buff.append(minutes.pattern).append(' ');
-		buff.append(hours.pattern).append(' ');
-		buff.append(daysOfMonth.pattern).append(' ');
-		buff.append(months.pattern).append(' ');
-		buff.append(daysOfWeek.pattern);
-		origPattern = buff.toString();
+        var buff = minutes.pattern + ' ' +
+                hours.pattern + ' ' +
+                daysOfMonth.pattern + ' ' +
+                months.pattern + ' ' +
+                daysOfWeek.pattern;
+		origPattern = buff;
 	}
 
 	public String getPattern() {
@@ -133,7 +132,7 @@ public class CrontabSchedule extends Schedule {
 		if (now == lastOccurence) {
 			now += 1000;
 		}
-		Calendar cal = Calendar.getInstance();
+		var cal = Calendar.getInstance();
 		cal.setTimeInMillis(now);
 
 		// TODO if we have a trigger at minute 0, and hours changes,
@@ -169,10 +168,10 @@ public class CrontabSchedule extends Schedule {
 		// FIXME we assume that there is a true in the array,
 		// but we should avoid a deadloop anyways.
 
-		int orig = cal.get(field);
-		int now = orig + 1;
-		int max = cal.getActualMaximum(field);
-		int min = cal.getActualMinimum(field);
+		var orig = cal.get(field);
+		var now = orig + 1;
+		var max = cal.getActualMaximum(field);
+		var min = cal.getActualMinimum(field);
 
 		while ((now > max) || !bArray[now]) {
 			now++;
@@ -195,10 +194,9 @@ public class CrontabSchedule extends Schedule {
 						if (months.all && daysOfMonth.all && !daysOfWeek.all) {
 							gotoNext(daysOfWeek.bArray, cal, Calendar.DAY_OF_WEEK);
 						}
-						else if (!daysOfMonth.all) {
-							gotoNext(daysOfMonth.bArray, cal, Calendar.DAY_OF_MONTH);
-						}
 						else {
+							if (!daysOfMonth.all) {
+							}
 							gotoNext(daysOfMonth.bArray, cal, Calendar.DAY_OF_MONTH);
 						}
 						// TODO currently we miss out the doublecase

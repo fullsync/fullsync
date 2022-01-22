@@ -43,10 +43,10 @@ class FtpSpecificComposite extends UserPasswordSpecificComposite {
 	@Override
 	protected void onBeforeUsernameHook(Composite parent) {
 		super.onBeforeUsernameHook(parent);
-		Label labelAuthenticationType = new Label(parent, SWT.NONE);
+		var labelAuthenticationType = new Label(parent, SWT.NONE);
 		labelAuthenticationType.setText(Messages.getString("ProtocolSpecificComposite.FTPAuthType")); //$NON-NLS-1$
 		comboAuthentication = new Combo(parent, SWT.READ_ONLY);
-		GridData comboAuthenticationData = new GridData();
+		var comboAuthenticationData = new GridData();
 		comboAuthenticationData.horizontalSpan = 2;
 		comboAuthenticationData.horizontalAlignment = SWT.FILL;
 		comboAuthentication.setLayoutData(comboAuthenticationData);
@@ -59,7 +59,7 @@ class FtpSpecificComposite extends UserPasswordSpecificComposite {
 		super.onBeforePathHook(parent);
 		userDirIsRootCheckbox = new Button(parent, SWT.CHECK | SWT.LEFT);
 		userDirIsRootCheckbox.setText("Restrict to the default directory.");
-		GridData userDirIsRootCheckboxData = new GridData();
+		var userDirIsRootCheckboxData = new GridData();
 		userDirIsRootCheckboxData.horizontalSpan = 3;
 		userDirIsRootCheckbox.setLayoutData(userDirIsRootCheckboxData);
 	}
@@ -87,7 +87,7 @@ class FtpSpecificComposite extends UserPasswordSpecificComposite {
 
 	@Override
 	public ConnectionDescription.Builder getConnectionDescription() {
-		ConnectionDescription.Builder builder = super.getConnectionDescription();
+		var builder = super.getConnectionDescription();
 		if (comboAuthentication.getSelectionIndex() == 0) {
 			builder.setUsername(FTP_ANONYMOUS_USERNAME);
 			builder.setPassword(""); //$NON-NLS-1$

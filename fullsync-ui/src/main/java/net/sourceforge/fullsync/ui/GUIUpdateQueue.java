@@ -29,10 +29,10 @@ import java.util.function.Consumer;
 import org.eclipse.swt.widgets.Display;
 
 public class GUIUpdateQueue<ITEM> { // NO_UCD (use default)
-	private Display display;
+	private final Display display;
 	private final Queue<ITEM> queue = new ConcurrentLinkedQueue<>();
 	private final AtomicBoolean updateScheduled = new AtomicBoolean(false);
-	private Consumer<List<ITEM>> updateTask;
+	private final Consumer<List<ITEM>> updateTask;
 
 	public GUIUpdateQueue(Display d, Consumer<List<ITEM>> task) { // NO_UCD (use default)
 		display = d;
@@ -44,7 +44,7 @@ public class GUIUpdateQueue<ITEM> { // NO_UCD (use default)
 		if (!updateScheduled.get()) {
 			updateScheduled.set(true);
 			display.asyncExec(() -> {
-				List<ITEM> items = getItems();
+				var items = getItems();
 				if (!items.isEmpty()) {
 					updateTask.accept(items);
 				}

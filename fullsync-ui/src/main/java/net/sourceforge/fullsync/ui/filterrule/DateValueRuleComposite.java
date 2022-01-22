@@ -55,13 +55,13 @@ class DateValueRuleComposite extends RuleComposite {
 			textValue.setText(dateFormat.format(value));
 		}
 
-		Button buttonCalendar = new Button(this, SWT.PUSH | SWT.CENTER);
+		var buttonCalendar = new Button(this, SWT.PUSH | SWT.CENTER);
 		buttonCalendar.setText(Messages.getString("DateValueRuleComposite.ChooseDate")); //$NON-NLS-1$
 		buttonCalendar.addListener(SWT.Selection, this::onChooseDate);
 	}
 
 	private void onChooseDate(Event e) {
-		SWTCalendarDialog swtCalDialog = new SWTCalendarDialog(getDisplay().getActiveShell(), value);
+		var swtCalDialog = new SWTCalendarDialog(getDisplay().getActiveShell(), value);
 		swtCalDialog.open();
 		value = swtCalDialog.getDate();
 		textValue.setText(dateFormat.format(value));

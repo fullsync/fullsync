@@ -29,7 +29,7 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 	public static final int OP_ISNT = 1;
 	public static final int OP_IS_GREATER_THAN = 2;
 	public static final int OP_IS_LESS_THAN = 3;
-	private static final String[] allOperators = new String[] {
+	private static final String[] allOperators = {
 		"is",
 		"isn't",
 		"is greater than",
@@ -69,36 +69,25 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 
 	@Override
 	public boolean match(File file) throws FilterRuleNotAppliableException {
-		long filesize = file.getSize();
+		var filesize = file.getSize();
 		if (-1 == filesize) {
 			throw new FilterRuleNotAppliableException("The file doesn't have any size attribute");
 		}
-		switch (op) {
-			case OP_IS:
-				return filesize == size.getBytes();
-
-			case OP_ISNT:
-				return filesize != size.getBytes();
-
-			case OP_IS_GREATER_THAN:
-				return filesize > size.getBytes();
-
-			case OP_IS_LESS_THAN:
-				return filesize < size.getBytes();
-
-			default:
-				return false;
-		}
+		return switch (op) {
+			case OP_IS -> filesize == size.getBytes();
+			case OP_ISNT -> filesize != size.getBytes();
+			case OP_IS_GREATER_THAN -> filesize > size.getBytes();
+			case OP_IS_LESS_THAN -> filesize < size.getBytes();
+			default -> false;
+		};
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder buff = new StringBuilder(30);
-		buff.append("file size ");
-		buff.append(allOperators[op]);
-		buff.append(" '");
-		buff.append(size.toString());
-		buff.append("'");
-		return buff.toString();
+        return "file size " +
+                allOperators[op] +
+                " '" +
+                size.toString() +
+                "'";
 	}
 }

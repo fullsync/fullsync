@@ -27,7 +27,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,11 +35,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -88,10 +85,10 @@ public class XmlBackedProfileManager implements ProfileManager {
 
 	@Override
 	public boolean loadProfiles(String profilesFileName) {
-		File file = new File(profilesFileName);
+		var file = new File(profilesFileName);
 		if (file.exists() && (file.length() > 0)) {
 			try {
-				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				var builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				deserializeProfileList(builder.parse(file));
 			}
 			catch (ParserConfigurationException | SAXException | IOException ex) {
@@ -104,22 +101,22 @@ public class XmlBackedProfileManager implements ProfileManager {
 	}
 
 	private void deserializeProfileList(Document doc) {
-		final AtomicInteger profileIndex = new AtomicInteger();
+		final var profileIndex = new AtomicInteger();
 		XmlUtils.forEachChildElement(doc.getDocumentElement(), profile -> {
-			int index = profileIndex.incrementAndGet();
+			var index = profileIndex.incrementAndGet();
 			try {
 				deserializeProfile(profile);
 			}
 			catch (Exception ex) {
-				String message = String.format("Failed to load Profile %d, ignoring and continuing with the rest", index);
+				var message = String.format("Failed to load Profile %d, ignoring and continuing with the rest", index);
 				ExceptionHandler.reportException(message, ex);
 			}
 		});
 	}
 
 	private void deserializeProfile(Node n) throws DataParseException {
-		Profile p = ProfileImpl.unserialize(eventBus, (Element) n);
-		String id = p.getId();
+		var p = ProfileImpl.unserialize(eventBus, (Element) n);
+		var id = p.getId();
 		while ((null == id) || id.trim().isEmpty() || (null != getProfileById(id))) {
 			id = getUnusedProfileId();
 		}
@@ -151,7 +148,7 @@ public class XmlBackedProfileManager implements ProfileManager {
 	@Override
 	public synchronized List<Profile> getProfiles() {
 		List<Profile> profileList = new ArrayList<>(profiles.values());
-		Collections.sort(profileList, new Profile.SortByNameAndIdComparator());
+		profileList.sort(new Profile.SortByNameAndIdComparator());
 		return profileList;
 	}
 
@@ -173,24 +170,24 @@ public class XmlBackedProfileManager implements ProfileManager {
 	@Override
 	public synchronized void save() {
 		try {
-			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
+			var docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			var doc = docBuilder.newDocument();
 
-			Element e = doc.createElement("Profiles"); //$NON-NLS-1$
+			var e = doc.createElement("Profiles"); //$NON-NLS-1$
 			e.setAttribute("version", "1.2"); //$NON-NLS-1$ //$NON-NLS-2$
 			profiles.values().stream().map(p -> ((ProfileImpl) p).serialize(doc)).forEachOrdered(e::appendChild);
 			doc.appendChild(e);
 
-			TransformerFactory fac = TransformerFactory.newInstance();
+			var fac = TransformerFactory.newInstance();
 			fac.setAttribute("indent-number", 2); //$NON-NLS-1$
-			Transformer tf = fac.newTransformer();
+			var tf = fac.newTransformer();
 			tf.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
 			tf.setOutputProperty(OutputKeys.VERSION, "1.0"); //$NON-NLS-1$
 			tf.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
 			tf.setOutputProperty(OutputKeys.STANDALONE, "no"); //$NON-NLS-1$
-			DOMSource source = new DOMSource(doc);
-			File newCfgFile = new File(profilesFileName + ".tmp"); //$NON-NLS-1$
-			try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(newCfgFile), StandardCharsets.UTF_8)) {
+			var source = new DOMSource(doc);
+			var newCfgFile = new File(profilesFileName + ".tmp"); //$NON-NLS-1$
+			try (var osw = new OutputStreamWriter(new FileOutputStream(newCfgFile), StandardCharsets.UTF_8)) {
 				tf.transform(source, new StreamResult(osw));
 				osw.flush();
 			}

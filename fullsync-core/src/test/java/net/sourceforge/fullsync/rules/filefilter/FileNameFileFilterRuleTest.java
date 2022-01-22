@@ -28,7 +28,7 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class FileNameFileFilterRuleTest {
-	private File root = new TestNode("root", null, true, true, 0, 0);
+	private final File root = new TestNode("root", null, true, true, 0, 0);
 
 	private File createTestNode(String name) {
 		return new TestNode(name, root, true, false, 0, 0);
@@ -36,7 +36,7 @@ public class FileNameFileFilterRuleTest {
 
 	@Test
 	public void testOpIs() throws Exception {
-		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue("foobar.txt"), FileNameFileFilterRule.OP_IS);
+		var filterRule = new FileNameFileFilterRule(new TextValue("foobar.txt"), FileNameFileFilterRule.OP_IS);
 		assertTrue(filterRule.match(createTestNode("foobar.txt")));
 		assertFalse(filterRule.match(createTestNode("afoobar.txt")));
 		assertFalse(filterRule.match(createTestNode("foobar.txta")));
@@ -46,7 +46,7 @@ public class FileNameFileFilterRuleTest {
 
 	@Test
 	public void testOpIsnt() throws Exception {
-		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue("foobar.txt"), FileNameFileFilterRule.OP_ISNT);
+		var filterRule = new FileNameFileFilterRule(new TextValue("foobar.txt"), FileNameFileFilterRule.OP_ISNT);
 		assertFalse(filterRule.match(createTestNode("foobar.txt")));
 		assertTrue(filterRule.match(createTestNode("afoobar.txt")));
 		assertTrue(filterRule.match(createTestNode("foobar.txta")));
@@ -56,7 +56,7 @@ public class FileNameFileFilterRuleTest {
 
 	@Test
 	public void testOpContains() throws Exception {
-		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue("bar"), FileNameFileFilterRule.OP_CONTAINS);
+		var filterRule = new FileNameFileFilterRule(new TextValue("bar"), FileNameFileFilterRule.OP_CONTAINS);
 		assertTrue(filterRule.match(createTestNode("foobar.txt")));
 		assertTrue(filterRule.match(createTestNode("afoobar.txt")));
 		assertTrue(filterRule.match(createTestNode("foobar.txta")));
@@ -69,7 +69,7 @@ public class FileNameFileFilterRuleTest {
 
 	@Test
 	public void testOpDoesntContains() throws Exception {
-		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue("bar"), FileNameFileFilterRule.OP_DOESNT_CONTAINS);
+		var filterRule = new FileNameFileFilterRule(new TextValue("bar"), FileNameFileFilterRule.OP_DOESNT_CONTAINS);
 		assertFalse(filterRule.match(createTestNode("foobar.txt")));
 		assertFalse(filterRule.match(createTestNode("afoobar.txt")));
 		assertFalse(filterRule.match(createTestNode("foobar.txta")));
@@ -82,7 +82,7 @@ public class FileNameFileFilterRuleTest {
 
 	@Test
 	public void testOpBeginsWith() throws Exception {
-		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue("foo"), FileNameFileFilterRule.OP_BEGINS_WITH);
+		var filterRule = new FileNameFileFilterRule(new TextValue("foo"), FileNameFileFilterRule.OP_BEGINS_WITH);
 		assertTrue(filterRule.match(createTestNode("foobar.txt")));
 		assertFalse(filterRule.match(createTestNode("afoobar.txt")));
 		assertTrue(filterRule.match(createTestNode("foobar.txta")));
@@ -97,7 +97,7 @@ public class FileNameFileFilterRuleTest {
 
 	@Test
 	public void testOpBeginsWith2() throws Exception {
-		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue(".foo"), FileNameFileFilterRule.OP_BEGINS_WITH);
+		var filterRule = new FileNameFileFilterRule(new TextValue(".foo"), FileNameFileFilterRule.OP_BEGINS_WITH);
 		assertTrue(filterRule.match(createTestNode(".foobar.txt")));
 		assertFalse(filterRule.match(createTestNode("a.foobar.txt")));
 		assertTrue(filterRule.match(createTestNode(".foobar.txta")));
@@ -111,7 +111,7 @@ public class FileNameFileFilterRuleTest {
 
 	@Test
 	public void testOpDoesntBeginsWith() throws Exception {
-		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue("foo"), FileNameFileFilterRule.OP_DOESNT_BEGINS_WITH);
+		var filterRule = new FileNameFileFilterRule(new TextValue("foo"), FileNameFileFilterRule.OP_DOESNT_BEGINS_WITH);
 		assertFalse(filterRule.match(createTestNode("foobar.txt")));
 		assertTrue(filterRule.match(createTestNode("afoobar.txt")));
 		assertFalse(filterRule.match(createTestNode("foobar.txta")));
@@ -126,7 +126,7 @@ public class FileNameFileFilterRuleTest {
 
 	@Test
 	public void testOpEndsWith() throws Exception {
-		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue("txt"), FileNameFileFilterRule.OP_ENDS_WITH);
+		var filterRule = new FileNameFileFilterRule(new TextValue("txt"), FileNameFileFilterRule.OP_ENDS_WITH);
 		assertTrue(filterRule.match(createTestNode("foobar.txt")));
 		assertTrue(filterRule.match(createTestNode("afoobar.atxt")));
 		assertFalse(filterRule.match(createTestNode("foobar.txta")));
@@ -142,7 +142,7 @@ public class FileNameFileFilterRuleTest {
 
 	@Test
 	public void testOpEndsWith2() throws Exception {
-		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue(".txt"), FileNameFileFilterRule.OP_ENDS_WITH);
+		var filterRule = new FileNameFileFilterRule(new TextValue(".txt"), FileNameFileFilterRule.OP_ENDS_WITH);
 		assertTrue(filterRule.match(createTestNode("foobar.txt")));
 		assertFalse(filterRule.match(createTestNode("afoobar.atxt")));
 		assertFalse(filterRule.match(createTestNode("foobar.txta")));
@@ -158,7 +158,7 @@ public class FileNameFileFilterRuleTest {
 
 	@Test
 	public void testOpDoesntEndsWith() throws Exception {
-		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue("txt"), FileNameFileFilterRule.OP_DOESNT_ENDS_WITH);
+		var filterRule = new FileNameFileFilterRule(new TextValue("txt"), FileNameFileFilterRule.OP_DOESNT_ENDS_WITH);
 		assertFalse(filterRule.match(createTestNode("foobar.txt")));
 		assertFalse(filterRule.match(createTestNode("afoobar.atxt")));
 		assertTrue(filterRule.match(createTestNode("foobar.txta")));
@@ -174,7 +174,7 @@ public class FileNameFileFilterRuleTest {
 
 	@Test
 	public void testOpRegExp() throws Exception {
-		FileNameFileFilterRule filterRule = new FileNameFileFilterRule(new TextValue(".+\\.gif"), FileNameFileFilterRule.OP_MATCHES_REGEXP);
+		var filterRule = new FileNameFileFilterRule(new TextValue(".+\\.gif"), FileNameFileFilterRule.OP_MATCHES_REGEXP);
 		assertTrue(filterRule.match(createTestNode("foobar.gif")));
 		assertTrue(filterRule.match(createTestNode("foobara.gif")));
 		assertFalse(filterRule.match(createTestNode("gif")));

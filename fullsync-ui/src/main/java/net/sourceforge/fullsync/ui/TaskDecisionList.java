@@ -53,10 +53,6 @@ import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.fs.File;
 
 class TaskDecisionList extends Composite {
-	private TableColumn tableColumnExplanation;
-	private TableColumn tableColumnFilename;
-	private TableColumn tableColumnAction;
-	private TableColumn tableColumnSourceSize;
 	private Table tableLogLines;
 	private int tableLogLinesFillIndex;
 	private int tableLogLinesFillCount;
@@ -79,7 +75,7 @@ class TaskDecisionList extends Composite {
 			this.setSize(550, 500);
 
 			tableLogLines = new Table(this, SWT.FULL_SELECTION | SWT.MULTI | SWT.BORDER);
-			GridData tableLogLinesLData = new GridData();
+			var tableLogLinesLData = new GridData();
 			tableLogLinesLData.verticalAlignment = SWT.FILL;
 			tableLogLinesLData.horizontalAlignment = SWT.FILL;
 			tableLogLinesLData.horizontalIndent = 0;
@@ -90,21 +86,21 @@ class TaskDecisionList extends Composite {
 			tableLogLines.setHeaderVisible(true);
 			tableLogLines.setLinesVisible(true);
 
-			tableColumnFilename = new TableColumn(tableLogLines, SWT.NONE);
+			var tableColumnFilename = new TableColumn(tableLogLines, SWT.NONE);
 			tableColumnFilename.setText(Messages.getString("TaskDecisionList.Filename")); //$NON-NLS-1$
 			tableColumnFilename.setWidth(240);
 
-			tableColumnSourceSize = new TableColumn(tableLogLines, SWT.NONE);
+			var tableColumnSourceSize = new TableColumn(tableLogLines, SWT.NONE);
 			tableColumnSourceSize.setText(Messages.getString("TaskDecisionList.Size")); //$NON-NLS-1$
 			tableColumnSourceSize.setAlignment(SWT.RIGHT);
 			tableColumnSourceSize.setWidth(90);
 
-			tableColumnAction = new TableColumn(tableLogLines, SWT.NONE);
+			var tableColumnAction = new TableColumn(tableLogLines, SWT.NONE);
 			tableColumnAction.setResizable(false);
 			tableColumnAction.setText(Messages.getString("TaskDecisionList.Action")); //$NON-NLS-1$
 			tableColumnAction.setWidth(70);
 
-			tableColumnExplanation = new TableColumn(tableLogLines, SWT.NONE);
+			var tableColumnExplanation = new TableColumn(tableLogLines, SWT.NONE);
 			tableColumnExplanation.setText(Messages.getString("TaskDecisionList.Explanation")); //$NON-NLS-1$
 			tableColumnExplanation.setWidth(170);
 
@@ -115,7 +111,7 @@ class TaskDecisionList extends Composite {
 				}
 			});
 
-			GridLayout thisLayout = new GridLayout();
+			var thisLayout = new GridLayout();
 			this.setLayout(thisLayout);
 			this.layout();
 		}
@@ -178,7 +174,7 @@ class TaskDecisionList extends Composite {
 			n = t.getDestination();
 		}
 
-		int x = location == Location.SOURCE ? 2 : (2 * 16) + 2;
+		var x = location == Location.SOURCE ? 2 : (2 * 16) + 2;
 
 		if (null == n) {
 			g.drawImage(nodeUndefined, x, 0);
@@ -194,7 +190,7 @@ class TaskDecisionList extends Composite {
 		// TODO draw some not-existing image ?
 
 		if ((a.getLocation() == location) || (a.getLocation() == Location.BOTH)) {
-			Image actionImage = actionImages.get(a.getType());
+			var actionImage = actionImages.get(a.getType());
 			if (null != actionImage) {
 				g.drawImage(actionImage, x, 0);
 			}
@@ -220,22 +216,21 @@ class TaskDecisionList extends Composite {
 				g.drawImage(locationBoth, 16 + 2, 0);
 				break;
 			case BUFFER:
-				break;
 			case NONE:
 				break;
 		}
 	}
 
 	private Integer calcTaskImageHash(Task t, Action a) {
-		int hash = 0;
+		var hash = 0;
 
 		// using 5 bits for files
 		if (null == t) {
 			hash |= 1;
 		}
 		else {
-			File src = t.getSource();
-			File dst = t.getDestination();
+			var src = t.getSource();
+			var dst = t.getDestination();
 			if (src.exists()) {
 				hash |= 2;
 				if (src.isDirectory()) {
@@ -258,11 +253,11 @@ class TaskDecisionList extends Composite {
 	}
 
 	private Image buildTaskImage(Task t, Action a) {
-		ImageData data = new ImageData((16 * 3) + 2, 16, 8, new PaletteData(255, 255, 255));
+		var data = new ImageData((16 * 3) + 2, 16, 8, new PaletteData(255, 255, 255));
 		data.transparentPixel = data.palette.getPixel(new RGB(0, 0, 0));
 
-		Image image = new Image(null, data);
-		GC g = new GC(image);
+		var image = new Image(null, data);
+		var g = new GC(image);
 		try {
 			drawSide(g, t, a, Location.SOURCE);
 			drawSide(g, t, a, Location.DESTINATION);
@@ -287,7 +282,7 @@ class TaskDecisionList extends Composite {
 
 	private void addTask(Task t) {
 		if (!onlyChanges || (t.getCurrentAction().getType() != ActionType.NOTHING)) {
-			Image image = getTaskImage(t, t.getCurrentAction());
+			var image = getTaskImage(t, t.getCurrentAction());
 
 			TableItem item;
 			if (tableLogLinesFillIndex < tableLogLinesFillCount) {
@@ -299,7 +294,7 @@ class TaskDecisionList extends Composite {
 			}
 			++tableLogLinesFillIndex;
 			item.setImage(2, image);
-			String[] text = new String[4];
+			var text = new String[4];
 			text[0] = t.getSource().getPath();
 			text[1] = formatSize(t);
 			text[2] = ""; //$NON-NLS-1$
@@ -314,25 +309,21 @@ class TaskDecisionList extends Composite {
 
 	private String formatSize(final Task t) {
 		long size = -1;
-		final Action action = t.getCurrentAction();
+		final var action = t.getCurrentAction();
 		if ((action.getType() == ActionType.ADD) || (action.getType() == ActionType.UPDATE)) {
 			switch (action.getLocation()) {
-				case SOURCE:
-					size = t.getDestination().getSize();
-					break;
-				case DESTINATION:
-					size = t.getSource().getSize();
-					break;
-				default:
-					break;
+				case SOURCE -> size = t.getDestination().getSize();
+				case DESTINATION -> size = t.getSource().getSize();
+				default -> {
+				}
 			}
 		}
 		return UISettings.formatSize(size);
 	}
 
 	private void updateTask(TableItem item) {
-		Task t = (Task) item.getData();
-		Image image = getTaskImage(t, t.getCurrentAction());
+		var t = (Task) item.getData();
+		var image = getTaskImage(t, t.getCurrentAction());
 		item.setImage(2, image);
 		item.setText(3, t.getCurrentAction().getExplanation());
 	}
@@ -353,20 +344,19 @@ class TaskDecisionList extends Composite {
 	}
 
 	private boolean isSameAction(Action a, Action b) {
-		boolean same = a.getType() == b.getType();
+		var same = a.getType() == b.getType();
 		same = same && (a.getLocation() == b.getLocation());
-		same = same && a.getExplanation().equals(b.getExplanation());
-		return same;
+		return same && a.getExplanation().equals(b.getExplanation());
 	}
 
 	private void actionSelected(Event e) {
-		TableItem[] tableItemList = tableLogLines.getSelection();
-		Action targetAction = (Action) e.widget.getData();
+		var tableItemList = tableLogLines.getSelection();
+		var targetAction = (Action) e.widget.getData();
 		for (TableItem item : tableItemList) {
-			Task task = (Task) item.getData();
-			Action[] actions = task.getActions();
+			var task = (Task) item.getData();
+			var actions = task.getActions();
 
-			for (int i = 0; i < actions.length; ++i) {
+			for (var i = 0; i < actions.length; ++i) {
 				if (isSameAction(actions[i], targetAction)) {
 					task.setCurrentAction(i);
 					break;
@@ -378,7 +368,7 @@ class TaskDecisionList extends Composite {
 	}
 
 	private void showPopup(int x, int y) {
-		final TableItem[] tableItemList = tableLogLines.getSelection();
+		final var tableItemList = tableLogLines.getSelection();
 		// TODO impl some kind of ActionList supporting "containsAction"
 		// and "indexOfAction" using own comparison rules
 		if (tableItemList.length == 0) {
@@ -388,15 +378,15 @@ class TaskDecisionList extends Composite {
 		List<Task> taskList = Arrays.stream(tableItemList).map(i -> (Task) i.getData()).collect(Collectors.toList());
 
 		// load initial actions of first task
-		Action[] possibleActions = taskList.get(0).getActions().clone();
+		var possibleActions = taskList.get(0).getActions().clone();
 
 		for (Task task : taskList) {
 			// invalidate all possible actions we don't find in this actionlist
-			Action[] actions = task.getActions();
+			var actions = task.getActions();
 
-			for (int iPosAction = 0; iPosAction < possibleActions.length; iPosAction++) {
-				Action action = possibleActions[iPosAction];
-				boolean found = false;
+			for (var iPosAction = 0; iPosAction < possibleActions.length; iPosAction++) {
+				var action = possibleActions[iPosAction];
+				var found = false;
 
 				if (null != action) {
 					// check whether action is also supported by this task
@@ -416,13 +406,13 @@ class TaskDecisionList extends Composite {
 			}
 		}
 
-		Task referenceTask = taskList.size() == 1 ? taskList.get(0) : null;
+		var referenceTask = taskList.size() == 1 ? taskList.get(0) : null;
 
-		Menu m = new Menu(this);
+		var m = new Menu(this);
 		for (Action action : possibleActions) {
 			if (null != action) {
-				Image image = getTaskImage(referenceTask, action);
-				MenuItem mi = new MenuItem(m, SWT.NULL);
+				var image = getTaskImage(referenceTask, action);
+				var mi = new MenuItem(m, SWT.NULL);
 				mi.setImage(image);
 				mi.setText(action.getType().toString() + " - " + action.getExplanation()); //$NON-NLS-1$
 				mi.setData(action);

@@ -19,39 +19,39 @@
  */
 package net.sourceforge.fullsync.changelog;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
 public class VersionComparatorTest {
 	@Test
 	public void testVersionEquality() {
-		VersionComparator vc = new VersionComparator();
-		assertTrue(0 == vc.compare("0.0.1", "0.0.1"), "0.0.1 == 0.0.1");
-		assertTrue(0 == vc.compare("0.0.1", "0.0.1.0"), "0.0.1 == 0.0.1.0");
-		assertTrue(0 == vc.compare("1", "1.0.0.0.0"), "1 == 1.0.0.0.0");
-		assertTrue(0 == vc.compare("", ""), "- == -");
+		var vc = new VersionComparator();
+		assertEquals(0, vc.compare("0.0.1", "0.0.1"), "0.0.1 == 0.0.1");
+		assertEquals(0, vc.compare("0.0.1", "0.0.1.0"), "0.0.1 == 0.0.1.0");
+		assertEquals(0, vc.compare("1", "1.0.0.0.0"), "1 == 1.0.0.0.0");
+		assertEquals(0, vc.compare("", ""), "- == -");
 	}
 
 	@Test
 	public void testVersionOlder() {
-		VersionComparator vc = new VersionComparator();
-		assertTrue(-1 == vc.compare("0.0.1", "0.0.2"), "0.0.1 < 0.0.2");
-		assertTrue(-1 == vc.compare("0.0.1", "0.1.1"), "0.0.1 < 0.1.1");
-		assertTrue(-1 == vc.compare("0.0.1", "1.1.1"), "0.0.1 < 1.1.1");
-		assertTrue(-1 == vc.compare("0.0.1", "1.1.1"), "0.0.1 < 1.1.1");
-		assertTrue(-1 == vc.compare("0.0.1", "1.1.1"), "0.0.1 < 1.1.1");
-		assertTrue(-1 == vc.compare("", "0.0.1"), "0.0.1 < -");
+		var vc = new VersionComparator();
+		assertEquals(-1, vc.compare("0.0.1", "0.0.2"), "0.0.1 < 0.0.2");
+		assertEquals(-1, vc.compare("0.0.1", "0.1.1"), "0.0.1 < 0.1.1");
+		assertEquals(-1, vc.compare("0.0.1", "1.1.1"), "0.0.1 < 1.1.1");
+		assertEquals(-1, vc.compare("0.0.1", "1.1.1"), "0.0.1 < 1.1.1");
+		assertEquals(-1, vc.compare("0.0.1", "1.1.1"), "0.0.1 < 1.1.1");
+		assertEquals(-1, vc.compare("", "0.0.1"), "0.0.1 < -");
 	}
 
 	@Test
 	public void testVersionNewer() {
-		VersionComparator vc = new VersionComparator();
-		assertTrue(1 == vc.compare("0.1.0", "0.0.1"), "0.1.0 > 0.0.1");
-		assertTrue(1 == vc.compare("0.10.0", "0.1.1"), "0.10.0 > 0.1.1");
-		assertTrue(1 == vc.compare("0.1.1", "0.1.0"), "0.1.1 > 0.1.0");
-		assertTrue(1 == vc.compare("1.0.0", "0.5.9"), "1.0.0 > 0.5.9");
-		assertTrue(1 == vc.compare("1.0.0", "0.5.9"), "1.0.0 > 0.5.9");
-		assertTrue(1 == vc.compare("1.0.0", ""), "1.0.0 > -");
+		var vc = new VersionComparator();
+		assertEquals(1, vc.compare("0.1.0", "0.0.1"), "0.1.0 > 0.0.1");
+		assertEquals(1, vc.compare("0.10.0", "0.1.1"), "0.10.0 > 0.1.1");
+		assertEquals(1, vc.compare("0.1.1", "0.1.0"), "0.1.1 > 0.1.0");
+		assertEquals(1, vc.compare("1.0.0", "0.5.9"), "1.0.0 > 0.5.9");
+		assertEquals(1, vc.compare("1.0.0", "0.5.9"), "1.0.0 > 0.5.9");
+		assertEquals(1, vc.compare("1.0.0", ""), "1.0.0 > -");
 	}
 }

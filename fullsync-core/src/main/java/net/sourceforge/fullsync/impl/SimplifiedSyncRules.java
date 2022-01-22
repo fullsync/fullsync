@@ -90,14 +90,14 @@ public class SimplifiedSyncRules implements RuleSet {
 	@Override
 	public boolean isNodeIgnored(final File node) {
 		if (useFilter) {
-			FileFilter filterToUse = fileFilter;
+			var filterToUse = fileFilter;
 			if (null != fileFilterTree) {
-				FileFilter subFilter = fileFilterTree.getFilter(node.getPath());
+				var subFilter = fileFilterTree.getFilter(node.getPath());
 				if (null != subFilter) {
 					filterToUse = subFilter;
 				}
 			}
-			boolean take = true;
+			var take = true;
 			if (null != filterToUse) {
 				take = filterToUse.match(node);
 			}

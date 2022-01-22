@@ -40,14 +40,14 @@ class FileSpecificComposite extends ProtocolSpecificComposite {
 
 	@Override
 	public void onBrowse() {
-		ConnectionDescription desc = getConnectionDescription().build();
-		DirectoryDialog d = new DirectoryDialog(m_parent.getShell());
+		var desc = getConnectionDescription().build();
+		var d = new DirectoryDialog(m_parent.getShell());
 		if (null != desc) {
 			d.setFilterPath(desc.getPath());
 		}
-		String dir = d.open();
+		var dir = d.open();
 		if (null != dir) {
-			File f = new File(dir);
+			var f = new File(dir);
 			try {
 				setPath(f.getCanonicalPath());
 			}

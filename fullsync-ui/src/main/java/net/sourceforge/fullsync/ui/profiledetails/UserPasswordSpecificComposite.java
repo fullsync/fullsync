@@ -39,16 +39,16 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 
 	@Override
 	public void createGUI(final Composite parent) {
-		Label labelHost = new Label(parent, SWT.NONE);
+		var labelHost = new Label(parent, SWT.NONE);
 		labelHost.setText(Messages.getString("UserPasswordSpecificComposite.Host")); //$NON-NLS-1$
-		GridData gridData = getGridData();
+		var gridData = getGridData();
 		gridData.grabExcessHorizontalSpace = true;
 		textHost = new Text(parent, SWT.BORDER);
 		textHost.setLayoutData(getGridData());
 
-		int port = getDefaultPort();
+		var port = getDefaultPort();
 		if (-1 != port) {
-			Label labelPort = new Label(parent, SWT.NONE);
+			var labelPort = new Label(parent, SWT.NONE);
 			labelPort.setText(Messages.getString("UserPasswordSpecificComposite.Port")); //$NON-NLS-1$
 			spinnerPort = new Spinner(parent, SWT.BORDER);
 			spinnerPort.setMinimum(1);
@@ -85,7 +85,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 	}
 
 	private GridData getGridData() {
-		GridData gridData1 = new GridData();
+		var gridData1 = new GridData();
 		gridData1.horizontalAlignment = SWT.FILL;
 		gridData1.horizontalSpan = 2;
 		gridData1.verticalAlignment = SWT.CENTER;
@@ -94,7 +94,7 @@ abstract class UserPasswordSpecificComposite extends ProtocolSpecificComposite {
 
 	@Override
 	public ConnectionDescription.Builder getConnectionDescription() {
-		ConnectionDescription.Builder builder = super.getConnectionDescription();
+		var builder = super.getConnectionDescription();
 		builder.setHost(textHost.getText());
 		if (null != spinnerPort) {
 			builder.setPort(spinnerPort.getSelection());

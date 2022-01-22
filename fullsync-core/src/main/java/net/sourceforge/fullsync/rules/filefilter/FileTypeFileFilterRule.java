@@ -27,7 +27,7 @@ public class FileTypeFileFilterRule implements FileFilterRule {
 	public static final String TYPE_NAME = "File type";
 	public static final int OP_IS = 0;
 	public static final int OP_ISNT = 1;
-	private static final String[] allOperators = new String[] {
+	private static final String[] allOperators = {
 		"is",
 		"isn't"
 	};
@@ -65,26 +65,19 @@ public class FileTypeFileFilterRule implements FileFilterRule {
 
 	@Override
 	public boolean match(File file) {
-		switch (op) {
-			case OP_IS:
-				return (type.isFile() && file.isFile()) || (type.isDirectory() && file.isDirectory());
-
-			case OP_ISNT:
-				return (!type.isFile() || !file.isFile()) && (!type.isDirectory() || !file.isDirectory());
-
-			default:
-				return false;
-		}
+		return switch (op) {
+			case OP_IS -> (type.isFile() && file.isFile()) || (type.isDirectory() && file.isDirectory());
+			case OP_ISNT -> (!type.isFile() || !file.isFile()) && (!type.isDirectory() || !file.isDirectory());
+			default -> false;
+		};
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder buff = new StringBuilder(30);
-		buff.append("file type ");
-		buff.append(allOperators[op]);
-		buff.append(" '");
-		buff.append(type.toString());
-		buff.append('\'');
-		return buff.toString();
+        return "file type " +
+                allOperators[op] +
+                " '" +
+                type.toString() +
+                '\'';
 	}
 }

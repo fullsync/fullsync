@@ -37,7 +37,7 @@ class PreferencesPage extends WizardDialog {
 	/**
 	 * supported language codes.
 	 */
-	private static String[] languageCodes = {
+	private static final String[] languageCodes = {
 		"en", //$NON-NLS-1$
 		"it", //$NON-NLS-1$
 		"de", //$NON-NLS-1$
@@ -49,7 +49,7 @@ class PreferencesPage extends WizardDialog {
 	/**
 	 * supported language names.
 	 */
-	private static String[] languageNames = {
+	private static final String[] languageNames = {
 		"English", //$NON-NLS-1$
 		"Italiano", //$NON-NLS-1$
 		"Deutsch", //$NON-NLS-1$
@@ -71,7 +71,7 @@ class PreferencesPage extends WizardDialog {
 	 * @return the element in the result array on the same index as the key in the in array
 	 */
 	private static String arraySearch(final String[] in, final String[] result, final String key) {
-		int i = 0;
+		var i = 0;
 		for (String s : in) {
 			if (s.equals(key)) {
 				return result[i];
@@ -146,9 +146,9 @@ class PreferencesPage extends WizardDialog {
 	public void createContent(Composite content) {
 		content.setLayout(new GridLayout());
 
-		Group groupInterface = new Group(content, SWT.FILL);
-		GridLayout generalPreferencesGroupLayout = new GridLayout(2, false);
-		GridData generalPreferencesGroupLData = new GridData();
+		var groupInterface = new Group(content, SWT.FILL);
+		var generalPreferencesGroupLayout = new GridLayout(2, false);
+		var generalPreferencesGroupLData = new GridData();
 		generalPreferencesGroupLData.grabExcessHorizontalSpace = true;
 		generalPreferencesGroupLData.grabExcessVerticalSpace = true;
 		generalPreferencesGroupLData.horizontalAlignment = SWT.FILL;
@@ -160,7 +160,7 @@ class PreferencesPage extends WizardDialog {
 		// confirm exit
 		cbConfirmExit = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
 		cbConfirmExit.setText(Messages.getString("PreferencesComposite.ConfirmExit")); //$NON-NLS-1$
-		GridData askOnClosingCheckBoxLData = new GridData();
+		var askOnClosingCheckBoxLData = new GridData();
 		askOnClosingCheckBoxLData.horizontalAlignment = SWT.FILL;
 		askOnClosingCheckBoxLData.horizontalSpan = 2;
 		askOnClosingCheckBoxLData.grabExcessHorizontalSpace = true;
@@ -169,7 +169,7 @@ class PreferencesPage extends WizardDialog {
 		// close minimizes to systray
 		cbCloseMinimizesToSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
 		cbCloseMinimizesToSystemTray.setText(Messages.getString("PreferencesComposite.CloseMinimizes")); //$NON-NLS-1$
-		GridData closeButtonMinimizesCheckBoxLData = new GridData();
+		var closeButtonMinimizesCheckBoxLData = new GridData();
 		closeButtonMinimizesCheckBoxLData.horizontalAlignment = SWT.FILL;
 		closeButtonMinimizesCheckBoxLData.horizontalSpan = 2;
 		cbCloseMinimizesToSystemTray.setLayoutData(closeButtonMinimizesCheckBoxLData);
@@ -177,7 +177,7 @@ class PreferencesPage extends WizardDialog {
 		// minimize minimizes to systray
 		cbMinimizeMinimizesToSystemTray = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
 		cbMinimizeMinimizesToSystemTray.setText(Messages.getString("PreferencesComposite.MinimizeMinimizes")); //$NON-NLS-1$
-		GridData cbMinimizeMinimizesToSystemTrayLData = new GridData();
+		var cbMinimizeMinimizesToSystemTrayLData = new GridData();
 		cbMinimizeMinimizesToSystemTrayLData.horizontalAlignment = SWT.FILL;
 		cbMinimizeMinimizesToSystemTrayLData.horizontalSpan = 2;
 		cbMinimizeMinimizesToSystemTray.setLayoutData(cbMinimizeMinimizesToSystemTrayLData);
@@ -185,31 +185,31 @@ class PreferencesPage extends WizardDialog {
 		// auto start scheduler
 		cbAutostartScheduler = new Button(groupInterface, SWT.CHECK | SWT.LEFT);
 		cbAutostartScheduler.setText(Messages.getString("PreferencesComposite.AutostartScheduler")); //$NON-NLS-1$
-		GridData cbAutostartSchedulerLData = new GridData();
+		var cbAutostartSchedulerLData = new GridData();
 		cbAutostartSchedulerLData.horizontalAlignment = SWT.FILL;
 		cbAutostartSchedulerLData.horizontalSpan = 2;
 		cbAutostartScheduler.setLayoutData(cbAutostartSchedulerLData);
 
 		// profile list style
-		Label labelProfileListStyle = new Label(groupInterface, SWT.NONE);
+		var labelProfileListStyle = new Label(groupInterface, SWT.NONE);
 		labelProfileListStyle.setText(Messages.getString("PreferencesComposite.ProfileListStyle")); //$NON-NLS-1$
 
 		comboProfileList = new Combo(groupInterface, SWT.DROP_DOWN | SWT.READ_ONLY);
-		GridData comboProfileListLData = new GridData();
+		var comboProfileListLData = new GridData();
 		comboProfileListLData.horizontalAlignment = SWT.FILL;
 		comboProfileList.setLayoutData(comboProfileListLData);
 		comboProfileList.add(Messages.getString("PreferencesComposite.Table")); //$NON-NLS-1$
 		comboProfileList.add(Messages.getString("PreferencesComposite.NiceListView")); //$NON-NLS-1$
 
 		// language
-		Label labelLanguage = new Label(groupInterface, SWT.NONE);
+		var labelLanguage = new Label(groupInterface, SWT.NONE);
 		labelLanguage.setText(Messages.getString("PreferencesComposite.Language")); //$NON-NLS-1$
 
 		comboLanguage = new Combo(groupInterface, SWT.DROP_DOWN | SWT.READ_ONLY);
-		GridData comboLanguageLData = new GridData();
+		var comboLanguageLData = new GridData();
 		comboLanguageLData.horizontalAlignment = SWT.FILL;
 		comboLanguage.setLayoutData(comboLanguageLData);
-		String[] languages = new String[languageNames.length];
+		var languages = new String[languageNames.length];
 		System.arraycopy(languageNames, 0, languages, 0, languageNames.length);
 		Arrays.sort(languages);
 		for (String language : languages) {
@@ -218,9 +218,9 @@ class PreferencesPage extends WizardDialog {
 
 		// line below the language combo telling you that a change needs a restart
 		new Label(groupInterface, SWT.NONE);
-		Label labelNeedsRestart = new Label(groupInterface, SWT.NONE);
+		var labelNeedsRestart = new Label(groupInterface, SWT.NONE);
 		labelNeedsRestart.setText(Messages.getString("PreferencesComposite.NeedsRestart")); //$NON-NLS-1$
-		GridData labelNeedsRestartLData = new GridData();
+		var labelNeedsRestartLData = new GridData();
 		labelNeedsRestartLData.horizontalAlignment = SWT.FILL;
 		labelNeedsRestart.setLayoutData(labelNeedsRestartLData);
 
@@ -245,7 +245,7 @@ class PreferencesPage extends WizardDialog {
 		preferences.setConfirmExit(cbConfirmExit.getSelection());
 		preferences.setCloseMinimizesToSystemTray(cbCloseMinimizesToSystemTray.getSelection());
 		preferences.setMinimizeMinimizesToSystemTray(cbMinimizeMinimizesToSystemTray.getSelection());
-		boolean profileListStyleChanged = !preferences.getProfileListStyle().equals(comboProfileList.getText());
+		var profileListStyleChanged = !preferences.getProfileListStyle().equals(comboProfileList.getText());
 		preferences.setProfileListStyle(comboProfileList.getText());
 		preferences.setLanguageCode(getLanguageCode(comboLanguage.getText()));
 		preferences.setAutostartScheduler(cbAutostartScheduler.getSelection());

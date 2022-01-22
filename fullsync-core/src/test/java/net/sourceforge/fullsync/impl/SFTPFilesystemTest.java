@@ -48,7 +48,7 @@ public class SFTPFilesystemTest extends FilesystemTestBase {
 	@BeforeEach
 	public void setUpEach() throws Exception {
 		super.setUpEach();
-		File sshDir = new File(sshConfigDir, "ssh");
+		var sshDir = new File(sshConfigDir, "ssh");
 		assertTrue(sshDir.mkdirs(), "sshDir.mkdirs");
 		System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath());
 		sftp = new GenericContainer(image).withFileSystemBind(testingDst.getAbsolutePath(), "/home/SampleUser", BindMode.READ_WRITE)
@@ -56,10 +56,10 @@ public class SFTPFilesystemTest extends FilesystemTestBase {
 			.withEnv("SFTP_USER_PASS", "Sample")
 			.withExposedPorts(22);
 		sftp.start();
-		try (FileInputStream fis = new FileInputStream("../containers/openssh-sshd/known_hosts")) {
-			String keyIds = Util.getInputStreamAsString(fis);
-			String host = "[127.0.0.1]:" + sftp.getFirstMappedPort().toString();
-			String knownHosts = keyIds.replaceAll("HOSTNAME_AND_PORT", host);
+		try (var fis = new FileInputStream("../containers/openssh-sshd/known_hosts")) {
+			var keyIds = Util.getInputStreamAsString(fis);
+			var host = "[127.0.0.1]:" + sftp.getFirstMappedPort().toString();
+			var knownHosts = keyIds.replaceAll("HOSTNAME_AND_PORT", host);
 			createNewFileWithContents(sshDir, "known_hosts", -1, knownHosts);
 		}
 	}
@@ -74,7 +74,7 @@ public class SFTPFilesystemTest extends FilesystemTestBase {
 
 	@Override
 	protected ConnectionDescription getDestinationConnectionDescription() {
-		ConnectionDescription.Builder dstBuilder = new ConnectionDescription.Builder();
+		var dstBuilder = new ConnectionDescription.Builder();
 		dstBuilder.setScheme("sftp");
 		dstBuilder.setHost("127.0.0.1");
 		dstBuilder.setPort(sftp.getFirstMappedPort());

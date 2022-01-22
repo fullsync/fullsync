@@ -23,16 +23,15 @@ import java.util.function.Consumer;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class XmlUtils {
 	private XmlUtils() {
 	}
 
 	public static void forEachChildElement(Node parent, Consumer<Element> forEachElement) {
-		NodeList childNodes = parent.getChildNodes();
-		for (int i = 0; i < childNodes.getLength(); ++i) {
-			Node childNode = childNodes.item(i);
+		var childNodes = parent.getChildNodes();
+		for (var i = 0; i < childNodes.getLength(); ++i) {
+			var childNode = childNodes.item(i);
 			if (Node.ELEMENT_NODE == childNode.getNodeType()) {
 				forEachElement.accept((Element) childNode);
 			}

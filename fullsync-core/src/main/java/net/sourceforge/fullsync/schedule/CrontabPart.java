@@ -54,15 +54,15 @@ public class CrontabPart {
 		}
 
 		private void setIntArray(int[] intArray, int intOffset) {
-			for (int i = 0; i < intArray.length; i++) {
-				bArray[(intArray[i] - intOffset) + offset] = true;
+			for (int j : intArray) {
+				bArray[(j - intOffset) + offset] = true;
 			}
 		}
 
 		public int[] getIntArray(int intOffset) {
-			int[] a = new int[high + 1];
-			int aPos = 0;
-			for (int i = low; i <= high; i++) {
+			var a = new int[high + 1];
+			var aPos = 0;
+			for (var i = low; i <= high; i++) {
 				if (bArray[i + offset]) {
 					a[aPos++] = i + intOffset;
 				}
@@ -73,18 +73,16 @@ public class CrontabPart {
 			}
 			else {
 				res = new int[aPos];
-				for (int i = 0; i < aPos; i++) {
-					res[i] = a[i];
-				}
+				System.arraycopy(a, 0, res, 0, aPos);
 			}
 			return res;
 		}
 
 		private String generatePattern() {
-			StringBuilder p = new StringBuilder();
-			for (int i = low; i <= high; i++) {
+			var p = new StringBuilder();
+			for (var i = low; i <= high; i++) {
 				if (this.bArray[i + offset]) {
-					p.append(String.valueOf(i)).append(',');
+					p.append(i).append(',');
 				}
 			}
 			if (p.length() == 0) {
@@ -98,7 +96,7 @@ public class CrontabPart {
 		private boolean parseToken(String token) throws DataParseException {
 			int i;
 			int index;
-			int each = 1;
+			var each = 1;
 
 			try {
 				// Look for step first
@@ -123,7 +121,7 @@ public class CrontabPart {
 
 				index = token.indexOf(',');
 				if (index > 0) {
-					StringTokenizer tokenizer = new StringTokenizer(token, ","); //$NON-NLS-1$
+					var tokenizer = new StringTokenizer(token, ","); //$NON-NLS-1$
 					while (tokenizer.hasMoreElements()) {
 						parseToken(tokenizer.nextToken());
 					}
@@ -132,16 +130,16 @@ public class CrontabPart {
 
 				index = token.indexOf('-');
 				if (index > 0) {
-					int start = Integer.parseInt(token.substring(0, index));
-					int end = Integer.parseInt(token.substring(index + 1));
+					var start = Integer.parseInt(token.substring(0, index));
+					var end = Integer.parseInt(token.substring(index + 1));
 
-					for (int j = start; j <= end; j += each) {
+					for (var j = start; j <= end; j += each) {
 						bArray[j + offset] = true;
 					}
 					return false;
 				}
 
-				int iValue = Integer.parseInt(token);
+				var iValue = Integer.parseInt(token);
 				bArray[iValue + offset] = true;
 				return false;
 			}

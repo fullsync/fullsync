@@ -37,7 +37,7 @@ public class DateValue implements OperandValue {
 
 	public DateValue(String date) throws DataParseException {
 		try {
-			Date d = dateFormat.parse(date);
+			var d = dateFormat.parse(date);
 			millis = d.getTime();
 		}
 		catch (ParseException ex) {
@@ -59,14 +59,14 @@ public class DateValue implements OperandValue {
 	}
 
 	public boolean isEqualTo(long cmp) {
-		Date compDate = new Date(cmp);
-		Date date = new Date(this.millis);
+		var compDate = new Date(cmp);
+		var date = new Date(this.millis);
 		return (date.getYear() == compDate.getYear()) && (date.getMonth() == compDate.getMonth()) && (date.getDay() == compDate.getDay());
 	}
 
 	public boolean isBefore(long cmp) {
-		Date compDate = new Date(cmp);
-		Date date = new Date(this.millis);
+		var compDate = new Date(cmp);
+		var date = new Date(this.millis);
 		if (date.getYear() < compDate.getYear()) {
 			return true;
 		}
@@ -75,17 +75,15 @@ public class DateValue implements OperandValue {
 				return true;
 			}
 			else if (date.getMonth() == compDate.getMonth()) {
-				if (date.getDay() < compDate.getDay()) {
-					return true;
-				}
+				return date.getDay() < compDate.getDay();
 			}
 		}
 		return false;
 	}
 
 	public boolean isAfter(long cmp) {
-		Date compDate = new Date(cmp);
-		Date date = new Date(this.millis);
+		var compDate = new Date(cmp);
+		var date = new Date(this.millis);
 		if (date.getYear() > compDate.getYear()) {
 			return true;
 		}
@@ -94,9 +92,7 @@ public class DateValue implements OperandValue {
 				return true;
 			}
 			else if (date.getMonth() == compDate.getMonth()) {
-				if (date.getDay() > compDate.getDay()) {
-					return true;
-				}
+				return date.getDay() > compDate.getDay();
 			}
 		}
 		return false;

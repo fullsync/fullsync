@@ -26,12 +26,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.slf4j.Logger;
@@ -49,8 +47,8 @@ public abstract class Util {
 	private static final int IOBUFFERSIZE = 0x1000;
 
 	public static String getInputStreamAsString(final InputStream is) throws IOException {
-		StringBuilder out = new StringBuilder();
-		final char[] buffer = new char[IOBUFFERSIZE];
+		var out = new StringBuilder();
+		final var buffer = new char[IOBUFFERSIZE];
 		try (Reader in = new InputStreamReader(is, StandardCharsets.UTF_8)) {
 			int read;
 			do {
@@ -64,8 +62,8 @@ public abstract class Util {
 	}
 
 	public static String getResourceAsString(final String name) {
-		String s = "";
-		try (InputStream is = getContextClassLoader().getResourceAsStream(name)) {
+		var s = "";
+		try (var is = getContextClassLoader().getResourceAsStream(name)) {
 			if (null != is) {
 				s = getInputStreamAsString(is);
 			}
@@ -81,7 +79,7 @@ public abstract class Util {
 	}
 
 	public static File getInstalllocation() {
-		URL codeSource = Util.class.getProtectionDomain().getCodeSource().getLocation();
+		var codeSource = Util.class.getProtectionDomain().getCodeSource().getLocation();
 		try {
 			return new File(codeSource.toURI().resolve("../")); //$NON-NLS-1$
 		}
@@ -92,19 +90,19 @@ public abstract class Util {
 	}
 
 	public static Set<String> loadDirectoryFromClasspath(String path) throws URISyntaxException, IOException {
-		ClassLoader cl = getContextClassLoader();
-		Enumeration<URL> urls = cl.getResources(path);
+		var cl = getContextClassLoader();
+		var urls = cl.getResources(path);
 		Set<String> children = new HashSet<>();
 		while (urls.hasMoreElements()) {
-			URL url = urls.nextElement();
-			URI uri = null;
+			var url = urls.nextElement();
+			URI uri;
 			if ("jar".equals(url.getProtocol())) { //$NON-NLS-1$
 				uri = new URI(url.toString().replaceAll("^jar:(.+)!/.*$", "$1")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			else {
 				uri = url.toURI();
 			}
-			File src = new File(uri);
+			var src = new File(uri);
 			if (src.isDirectory() && src.exists()) {
 				enumerateDirectoryChildren(children, src);
 			}
@@ -116,15 +114,15 @@ public abstract class Util {
 	}
 
 	private static void enumerateJarEntriesWith(String path, Set<String> children, File src) throws IOException {
-		try (JarFile jar = new JarFile(src)) {
-			Enumeration<JarEntry> jarEntries = jar.entries();
-			String prefix = path;
+		try (var jar = new JarFile(src)) {
+			var jarEntries = jar.entries();
+			var prefix = path;
 			if ('/' == prefix.charAt(0)) {
 				prefix = prefix.substring(1);
 			}
 			while (jarEntries.hasMoreElements()) {
-				JarEntry entry = jarEntries.nextElement();
-				String name = entry.getName();
+				var entry = jarEntries.nextElement();
+				var name = entry.getName();
 				if (!entry.isDirectory() && name.startsWith(prefix)) { // filter according to the path
 					name = name.substring(prefix.length());
 					children.add(name);
@@ -134,11 +132,9 @@ public abstract class Util {
 	}
 
 	private static void enumerateDirectoryChildren(Set<String> children, File src) {
-		String[] files = src.list();
+		var files = src.list();
 		if (null != files) {
-			for (String f : files) {
-				children.add(f);
-			}
+			children.addAll(Arrays.asList(files));
 		}
 	}
 

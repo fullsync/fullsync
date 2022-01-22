@@ -124,7 +124,7 @@ class AbstractFile implements File {
 
 	@Override
 	public File createChild(final String name, final boolean directory) throws IOException {
-		File f = getConnection().createChild(this, name, directory);
+		var f = getConnection().createChild(this, name, directory);
 		children.put(name, f);
 		return f;
 	}
@@ -197,12 +197,12 @@ class AbstractFile implements File {
 
 	private void refreshDirectory() throws IOException {
 		// FIXME be aware of deleting entries that may be referenced by overlaying buffer
-		Map<String, File> newChildren = getConnection().getChildren(this);
+		var newChildren = getConnection().getChildren(this);
 		if (null != children) {
 			for (File n : children.values()) {
 				if (!newChildren.containsKey(n.getName())) {
 					if (n.exists()) {
-						AbstractFile f = new AbstractFile(getConnection(), n.getName(), n.getParent(), n.isDirectory(), false);
+						var f = new AbstractFile(getConnection(), n.getName(), n.getParent(), n.isDirectory(), false);
 						newChildren.put(n.getName(), f);
 					}
 					else {
@@ -216,7 +216,7 @@ class AbstractFile implements File {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		var sb = new StringBuilder();
 		sb.append(name);
 		sb.append("; "); //$NON-NLS-1$
 		if ((size >= 0) || (lastModified > 0)) {

@@ -47,7 +47,7 @@ class FileFilterTreeItem {
 
 	@Override
 	public String toString() {
-		StringBuilder buffer = new StringBuilder();
+		var buffer = new StringBuilder();
 		buffer.append("[ ");
 		for (Entry<String, FileFilterTreeItem> entry : children.entrySet()) {
 			buffer.append(entry.getKey());

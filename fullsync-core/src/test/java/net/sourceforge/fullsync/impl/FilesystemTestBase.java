@@ -48,7 +48,6 @@ import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.Synchronizer;
-import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.schedule.Schedule;
@@ -57,8 +56,6 @@ public abstract class FilesystemTestBase {
 	protected static final int MILLI_SECONDS_PER_DAY = 86400000;
 	protected Map<String, Action> expectation;
 	private EventBus eventBus;
-	private FullSync fullSync;
-	private FileSystemManager fileSystemManager;
 	private TaskGenerator taskGenerator;
 	protected Synchronizer synchronizer;
 	protected Profile profile;
@@ -71,9 +68,9 @@ public abstract class FilesystemTestBase {
 		expectation = new HashMap<>();
 		eventBus = new EventBus();
 		eventBus.register(this);
-		fullSync = new FullSync();
+		var fullSync = new FullSync();
 		fullSync.pushQuestionHandler(question -> Futures.immediateFuture(false));
-		fileSystemManager = new FileSystemManager(fullSync);
+		var fileSystemManager = new FileSystemManager(fullSync);
 		taskGenerator = new TaskGeneratorImpl(fileSystemManager, eventBus);
 		testingSrc = new File(testingRoot, "src");
 		testingDst = new File(testingRoot, "dst");
@@ -89,28 +86,27 @@ public abstract class FilesystemTestBase {
 
 	protected abstract ConnectionDescription getDestinationConnectionDescription();
 
-	void prepareProfile(String syncType) throws Exception {
+	void prepareProfile(String syncType) {
 		synchronizer = new Synchronizer(taskGenerator);
-		ConnectionDescription.Builder srcBuilder = new ConnectionDescription.Builder();
+		var srcBuilder = new ConnectionDescription.Builder();
 		srcBuilder.setScheme("file");
 		srcBuilder.setPath(testingSrc.getAbsolutePath());
 		srcBuilder.setBufferStrategy("");
 
-		String id = "0";
-		String name = "TestProfile";
-		String description = "Description";
-		String synchronizationType = syncType;
-		ConnectionDescription src = srcBuilder.build();
-		ConnectionDescription dst = getDestinationConnectionDescription();
+		var id = "0";
+		var name = "TestProfile";
+		var description = "Description";
+		var src = srcBuilder.build();
+		var dst = getDestinationConnectionDescription();
 		RuleSetDescriptor ruleSet = new SimplifiedRuleSetDescriptor(true, null, false, null);
-		boolean schedulingEnabled = false;
+		var schedulingEnabled = false;
 		Schedule schedule = null;
 		Date lastUpdate = null;
-		int lastErrorLevel = 0;
+		var lastErrorLevel = 0;
 		String lastErrorString = null;
-		long lastScheduleTime = 0;
+		var lastScheduleTime = 0L;
 
-		profile = new ProfileImpl(eventBus, id, name, description, synchronizationType, src, dst, ruleSet, schedulingEnabled, schedule,
+		profile = new ProfileImpl(eventBus, id, name, description, syncType, src, dst, ruleSet, schedulingEnabled, schedule,
 			lastUpdate, lastErrorLevel, lastErrorString, lastScheduleTime);
 	}
 
@@ -120,7 +116,7 @@ public abstract class FilesystemTestBase {
 	 * @param dir directory to clear
 	 */
 	protected void clearDirectory(final File dir) {
-		File[] children = dir.listFiles();
+		var children = dir.listFiles();
 		if (null != children) {
 			for (File file : children) {
 				if (file.isDirectory()) {
@@ -137,7 +133,7 @@ public abstract class FilesystemTestBase {
 	}
 
 	protected long getLastModified() {
-		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+		var cal = Calendar.getInstance(TimeZone.getDefault());
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
@@ -155,32 +151,32 @@ public abstract class FilesystemTestBase {
 	}
 
 	protected void fileToDir(File dir, String filename, long lm) {
-		File file = new File(dir, filename);
+		var file = new File(dir, filename);
 		assertTrue(file.delete(), "file.delete(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
 		assertTrue(file.mkdir(), "file.mkdir(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
 		setLastModified(dir, filename, lm);
 	}
 
 	protected void dirToFile(File dir, String filename, long lm) throws IOException {
-		File file = new File(dir, filename);
+		var file = new File(dir, filename);
 		assertTrue(file.delete(), "file.delete(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
 		assertTrue(file.createNewFile(), "file.createNewFile(" + dir.getAbsolutePath() + "/" + filename + ") FAILED");
 		setLastModified(dir, filename, lm);
 	}
 
 	protected PrintStream createNewFile(final File dir, final String filename) throws IOException {
-		File file = new File(dir, filename);
-		File d = file.getParentFile();
+		var file = new File(dir, filename);
+		var d = file.getParentFile();
 		assertTrue(d.mkdirs() || d.exists(), "File.mkdirs failed for: " + d.getAbsolutePath());
 		assertTrue(file.createNewFile(), "File.createNewFile failed for: " + file.getAbsolutePath());
 		return new PrintStream(new FileOutputStream(file));
 	}
 
 	protected void createNewFileWithContents(File dir, String filename, long lm, String content) throws IOException {
-		try (PrintStream out = createNewFile(dir, filename)) {
+		try (var out = createNewFile(dir, filename)) {
 			out.print(content);
 		}
-		File f = new File(dir, filename);
+		var f = new File(dir, filename);
 		if (lm > 0) {
 			assertTrue(f.setLastModified(lm), "File.setLastModified failed for: " + f.getAbsolutePath());
 		}
@@ -188,8 +184,8 @@ public abstract class FilesystemTestBase {
 
 	@Subscribe
 	public void taskGenerationFinished(final TaskGenerationFinished taskGenerationFinished) {
-		Task task = taskGenerationFinished.getTask();
-		Action ex = expectation.get(task.getSource().getName());
+		var task = taskGenerationFinished.getTask();
+		var ex = expectation.get(task.getSource().getName());
 
 		assertNotNull(ex, "Unexpected generated Task for file: " + task.getSource().getName());
 		assertTrue(task.getCurrentAction().equalsExceptExplanation(ex),

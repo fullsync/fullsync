@@ -64,19 +64,23 @@ public class Action {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("[" + type.toString() + "(" + getLocation().toString() + ") BU: "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		sb.append(bufferUpdate.toString() + "; Rec: "); //$NON-NLS-1$
-		sb.append(isBeforeRecursion());
-		sb.append(" - " + explanation + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-		return sb.toString();
+		return "[" + //$NON-NLS-1$
+			type.toString() +
+			"(" + //$NON-NLS-1$
+			getLocation().toString() +
+			") BU: " + //$NON-NLS-1$
+			bufferUpdate.toString() +
+			"; Rec: " + //$NON-NLS-1$
+			isBeforeRecursion() +
+			" - " + //$NON-NLS-1$
+			explanation +
+			"]";
 	}
 
 	public boolean equalsExceptExplanation(Action action) {
-		boolean equal = getType() == action.getType();
+		var equal = getType() == action.getType();
 		equal = equal && (getLocation() == action.getLocation());
 		equal = equal && (getBufferUpdate() == action.getBufferUpdate());
-		equal = equal && (isBeforeRecursion() == action.isBeforeRecursion());
-		return equal;
+		return equal && (isBeforeRecursion() == action.isBeforeRecursion());
 	}
 }

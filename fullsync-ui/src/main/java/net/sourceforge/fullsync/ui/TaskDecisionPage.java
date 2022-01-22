@@ -37,9 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Synchronizer;
-import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.event.TaskFinishedEvent;
 
@@ -94,10 +92,10 @@ class TaskDecisionPage extends WizardDialog {
 
 	@Override
 	public String getDescription() {
-		String source = Messages.getString("TaskDecisionPage.Source"); //$NON-NLS-1$
-		String destination = Messages.getString("TaskDecisionPage.Destination"); //$NON-NLS-1$
-		String sourcePath = taskTree.getSource().getConnectionDescription().getDisplayPath();
-		String destinationPath = taskTree.getDestination().getConnectionDescription().getDisplayPath();
+		var source = Messages.getString("TaskDecisionPage.Source"); //$NON-NLS-1$
+		var destination = Messages.getString("TaskDecisionPage.Destination"); //$NON-NLS-1$
+		var sourcePath = taskTree.getSource().getConnectionDescription().getDisplayPath();
+		var destinationPath = taskTree.getDestination().getConnectionDescription().getDisplayPath();
 		return String.format("%s: %s%n%s: %s", source, sourcePath, destination, destinationPath); //$NON-NLS-1$
 	}
 
@@ -116,7 +114,7 @@ class TaskDecisionPage extends WizardDialog {
 		content.setLayout(new GridLayout(2, false));
 
 		// filter combo
-		Combo comboFilter = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
+		var comboFilter = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboFilter.add(Messages.getString("TaskDecisionPage.Everything")); //$NON-NLS-1$
 		comboFilter.add(Messages.getString("TaskDecisionPage.ChangesOnly")); //$NON-NLS-1$
 		comboFilter.select(1);
@@ -131,19 +129,19 @@ class TaskDecisionPage extends WizardDialog {
 
 		// progress label
 		labelProgress = new Label(content, SWT.NONE);
-		GridData labelProgressLData = new GridData();
+		var labelProgressLData = new GridData();
 		labelProgressLData.horizontalAlignment = SWT.FILL;
 		labelProgressLData.horizontalIndent = 5;
 		labelProgressLData.grabExcessHorizontalSpace = true;
 		labelProgress.setLayoutData(labelProgressLData);
-		IoStatistics stats = taskTree.getIoStatistics();
-		int numberOfActions = stats.getCountActions();
-		String totalBytesTransferred = UISettings.formatSize(stats.getBytesTransferred());
+		var stats = taskTree.getIoStatistics();
+		var numberOfActions = stats.getCountActions();
+		var totalBytesTransferred = UISettings.formatSize(stats.getBytesTransferred());
 		labelProgress.setText(Messages.getString("TaskDecisionPage.TaskSummary", numberOfActions, totalBytesTransferred)); //$NON-NLS-1$
 
 		list = new TaskDecisionList(content, imageRepository);
 		list.setTaskTree(taskTree);
-		GridData listLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		var listLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		listLayoutData.horizontalSpan = 2;
 		list.setLayoutData(listLayoutData);
 
@@ -177,7 +175,7 @@ class TaskDecisionPage extends WizardDialog {
 			}
 			return true;
 		}
-		MessageBox mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
+		var mb = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
 		mb.setText(Messages.getString("TaskDecisionPage.Error")); //$NON-NLS-1$
 		mb.setMessage(Messages.getString("TaskDecisionPage.SyncWindowCantBeClosed")); //$NON-NLS-1$
 		mb.open();
@@ -195,18 +193,18 @@ class TaskDecisionPage extends WizardDialog {
 			processing = true;
 			list.setChangeAllowed(false);
 
-			IoStatistics stats = taskTree.getIoStatistics();
+			var stats = taskTree.getIoStatistics();
 			tasksTotal = stats.getCountActions();
 			tasksFinished = 0;
 			display.syncExec(() -> setOkButtonEnabled(false));
 
-			GUIUpdateQueue<TaskFinishedEvent> updateQueue = new GUIUpdateQueue<>(display, this::updateTaskStatus);
+			var updateQueue = new GUIUpdateQueue<TaskFinishedEvent>(display, this::updateTaskStatus);
 
 			synchronizer.performActions(taskTree, updateQueue::add);
 
 			display.asyncExec(() -> {
 				// Notification Window.
-				MessageBox mb = new MessageBox(getShell(), SWT.ICON_INFORMATION | SWT.OK);
+				var mb = new MessageBox(getShell(), SWT.ICON_INFORMATION | SWT.OK);
 				mb.setText(Messages.getString("TaskDecisionPage.Finished")); //$NON-NLS-1$
 				mb.setMessage(Messages.getString("TaskDecisionPage.ProfileFinished")); //$NON-NLS-1$
 				mb.open();
@@ -227,7 +225,7 @@ class TaskDecisionPage extends WizardDialog {
 		TableItem item = null;
 		tasksFinished += items.size();
 		for (TaskFinishedEvent event : items) {
-			Task task = event.getTask();
+			var task = event.getTask();
 			item = list.getTableItemForTask(task);
 			// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item
 			// the item is colored with the "successful" color.

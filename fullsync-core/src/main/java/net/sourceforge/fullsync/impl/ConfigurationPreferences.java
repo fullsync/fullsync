@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
@@ -73,7 +72,7 @@ public class ConfigurationPreferences implements Preferences {
 		configFileName = configFile;
 		props = new Properties();
 
-		File file = new File(configFileName);
+		var file = new File(configFileName);
 		if (file.exists()) {
 			try (Reader reader = new FileReader(file)) {
 				props.load(reader);
@@ -91,7 +90,7 @@ public class ConfigurationPreferences implements Preferences {
 	}
 
 	private boolean getProperty(String name, boolean defaultValue) {
-		String sValue = props.getProperty(name);
+		var sValue = props.getProperty(name);
 		return null == sValue ? defaultValue : Boolean.parseBoolean(sValue);
 	}
 
@@ -100,7 +99,7 @@ public class ConfigurationPreferences implements Preferences {
 	}
 
 	private int getProperty(String name, int defaultValue) {
-		String sValue = props.getProperty(name);
+		var sValue = props.getProperty(name);
 		return null == sValue ? defaultValue : Integer.parseInt(sValue, 10);
 	}
 
@@ -118,11 +117,11 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public void save() {
-		String currentFullSyncVersion = Util.getFullSyncVersion();
+		var currentFullSyncVersion = Util.getFullSyncVersion();
 		props.setProperty(PREFERENCE_FULLSYNC_VERSION, currentFullSyncVersion);
 		try {
-			Path targetPath = Paths.get(configFileName);
-			File tmpFile = File.createTempFile(FullSync.PREFERENCES_PROPERTIES, ".tmp", targetPath.getParent().toFile()); //$NON-NLS-1$
+			var targetPath = Paths.get(configFileName);
+			var tmpFile = File.createTempFile(FullSync.PREFERENCES_PROPERTIES, ".tmp", targetPath.getParent().toFile()); //$NON-NLS-1$
 			try (Writer writer = new FileWriter(tmpFile)) {
 				props.store(writer, null);
 				writer.flush();
@@ -225,7 +224,7 @@ public class ConfigurationPreferences implements Preferences {
 	}
 
 	private String buildName(String prefix, String instance, String suffix) {
-		StringBuilder sb = new StringBuilder(prefix);
+		var sb = new StringBuilder(prefix);
 		if ((null != instance) && !instance.isEmpty()) {
 			sb.append('.');
 			sb.append(instance);
@@ -237,7 +236,7 @@ public class ConfigurationPreferences implements Preferences {
 
 	@Override
 	public WindowState getWindowState(String name) {
-		WindowState ws = new WindowState();
+		var ws = new WindowState();
 		ws.setMaximized(getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MAXIMIZED), false));
 		ws.setMinimized(getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_MINIMIZED), false));
 		ws.setX(getProperty(buildName(PREFERENCE_WINDOW_STATE_PREFIX, name, PROPERTY_X), 0));

@@ -21,7 +21,6 @@ package net.sourceforge.fullsync.buffer;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,18 +54,18 @@ public class BlockBuffer implements ExecutionBuffer {
 
 	@Override
 	public void flush() throws IOException {
-		for (int i = 0; i < numberEntries; ++i) {
-			Entry e = entries[i];
-			EntryDescriptor desc = e.getDescriptor();
+		for (var i = 0; i < numberEntries; ++i) {
+			var e = entries[i];
+			var desc = e.getDescriptor();
 			IOException ioe = null;
 			try {
-				OutputStream out = desc.getOutputStream();
+				var out = desc.getOutputStream();
 				if (null != out) {
 					out.write(buffer, e.getStart(), e.getLength());
 				}
 				if (e.isLastSegment()) {
 					desc.finishWrite();
-					String opDesc = desc.getOperationDescription();
+					var opDesc = desc.getOperationDescription();
 					if ((null != opDesc) && logger.isPresent()) {
 						logger.get().info(opDesc);
 					}
@@ -74,9 +73,7 @@ public class BlockBuffer implements ExecutionBuffer {
 			}
 			catch (IOException ex) {
 				ioe = ex;
-				if (logger.isPresent()) {
-					logger.get().error("Exception", ex); //$NON-NLS-1$
-				}
+				logger.ifPresent(value -> value.error("Exception", ex)); //$NON-NLS-1$
 			}
 			if (e.isLastSegment()) {
 				for (EntryFinishedListener listener : finishedListeners) {
@@ -91,18 +88,18 @@ public class BlockBuffer implements ExecutionBuffer {
 	}
 
 	private int store(InputStream inStream, long alreadyRead, long lengthLeft, EntryDescriptor descriptor) throws IOException {
-		long length = lengthLeft;
+		var length = lengthLeft;
 		if (length > freeBytes) {
 			length = freeBytes;
 		}
 
-		int start = numberBytes;
-		int read = inStream.read(buffer, start, (int) length);
+		var start = numberBytes;
+		var read = inStream.read(buffer, start, (int) length);
 		// FIXME: read might return -1 which subsequently (in flush) throws an exception
 		numberBytes += read;
 		freeBytes -= read;
 
-		int s = Segment.MIDDLE;
+		var s = Segment.MIDDLE;
 		if (alreadyRead == 0) {
 			s |= Segment.FIRST;
 		}
@@ -115,14 +112,14 @@ public class BlockBuffer implements ExecutionBuffer {
 	}
 
 	private void storeEntry(InputStream data, long size, EntryDescriptor descriptor) throws IOException {
-		long alreadyRead = 0;
-		long lengthLeft = size;
+		var alreadyRead = 0L;
+		var lengthLeft = size;
 
 		do {
 			if ((lengthLeft > freeBytes) || (numberEntries == maxEntries)) {
 				flush();
 			}
-			int read = store(data, alreadyRead, lengthLeft, descriptor);
+			var read = store(data, alreadyRead, lengthLeft, descriptor);
 			alreadyRead += read;
 			lengthLeft -= read;
 		} while (lengthLeft > 0);

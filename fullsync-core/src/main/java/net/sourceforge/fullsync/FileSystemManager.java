@@ -42,24 +42,19 @@ public class FileSystemManager {
 	}
 
 	private FileSystem getFilesystem(final String scheme) throws FileSystemException {
-		switch (scheme) {
-			case "file": //$NON-NLS-1$
-				return new LocalFileSystem();
-			case "ftp": //$NON-NLS-1$
-				return new FTPFileSystem();
-			case "sftp": //$NON-NLS-1$
-				return new SFTPFileSystem();
-			case "smb": //$NON-NLS-1$
-				return new SmbFileSystem();
-			default:
-				throw new FileSystemException("Unknown scheme: " + scheme); //$NON-NLS-1$
-		}
+		return switch (scheme) {
+			case "file" -> new LocalFileSystem(); // $NON-NLS-1$
+			case "ftp" -> new FTPFileSystem(); // $NON-NLS-1$
+			case "sftp" -> new SFTPFileSystem(); // $NON-NLS-1$
+			case "smb" -> new SmbFileSystem(); // $NON-NLS-1$
+			default -> throw new FileSystemException("Unknown scheme: " + scheme); //$NON-NLS-1$
+		};
 	}
 
 	public final Site createConnection(final ConnectionDescription desc, boolean isInteractive) throws FileSystemException, IOException {
-		String scheme = desc.getScheme();
+		var scheme = desc.getScheme();
 
-		FileSystem fs = getFilesystem(scheme);
+		var fs = getFilesystem(scheme);
 
 		Site s = null;
 		if (null != fs) {

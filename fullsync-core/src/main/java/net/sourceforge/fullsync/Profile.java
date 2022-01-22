@@ -25,10 +25,10 @@ import java.util.Date;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 public interface Profile {
-	public static class SortByNameAndIdComparator implements Comparator<Profile> {
+	class SortByNameAndIdComparator implements Comparator<Profile> {
 		@Override
 		public int compare(Profile o1, Profile o2) {
-			int ret = o1.getName().compareTo(o2.getName());
+			var ret = o1.getName().compareTo(o2.getName());
 			if (0 == ret) {
 				ret = o1.getId().compareTo(o2.getId());
 			}

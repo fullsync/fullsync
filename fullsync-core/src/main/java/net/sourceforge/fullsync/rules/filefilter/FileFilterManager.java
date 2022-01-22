@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
@@ -50,7 +49,7 @@ public class FileFilterManager {
 	private static final String ATTRIBUTE_MATCHTYPE = "matchtype"; //$NON-NLS-1$
 
 	public Element serializeFileFilter(FileFilter fileFilter, Document document, String elementName, String ruleElementName) {
-		Element filterElement = document.createElement(elementName);
+		var filterElement = document.createElement(elementName);
 
 		filterElement.setAttribute(ATTRIBUTE_MATCHTYPE, String.valueOf(fileFilter.getMatchType()));
 		filterElement.setAttribute(ATTRIBUTE_FILTERTYPE, String.valueOf(fileFilter.getFilterType()));
@@ -61,9 +60,9 @@ public class FileFilterManager {
 	}
 
 	public Element serializeRule(FileFilterRule fileFilterRule, Document document, String elementName) {
-		Element ruleElement = document.createElement(elementName);
+		var ruleElement = document.createElement(elementName);
 
-		String ruleType = null != fileFilterRule ? fileFilterRule.getRuleType() : null;
+		var ruleType = null != fileFilterRule ? fileFilterRule.getRuleType() : null;
 
 		ruleElement.setAttribute(ATTRIBUTE_RULETYPE, ruleType);
 		serializeRuleAttributes(fileFilterRule, ruleElement);
@@ -72,7 +71,7 @@ public class FileFilterManager {
 	}
 
 	public FileFilter unserializeFileFilter(Element fileFilterElement, String ruleElementName) throws DataParseException {
-		int matchType = FileFilter.MATCH_ALL;
+		var matchType = FileFilter.MATCH_ALL;
 
 		try {
 			matchType = Integer.parseInt(fileFilterElement.getAttribute(ATTRIBUTE_MATCHTYPE));
@@ -81,7 +80,7 @@ public class FileFilterManager {
 			e.printStackTrace();
 		}
 
-		int filterType = FileFilter.INCLUDE;
+		var filterType = FileFilter.INCLUDE;
 		try {
 			filterType = Integer.parseInt(fileFilterElement.getAttribute(ATTRIBUTE_FILTERTYPE));
 		}
@@ -89,13 +88,13 @@ public class FileFilterManager {
 			e.printStackTrace();
 		}
 
-		boolean applies = Boolean.parseBoolean(fileFilterElement.getAttribute(ATTRIBUTE_APPLIESTODIR));
+		var applies = Boolean.parseBoolean(fileFilterElement.getAttribute(ATTRIBUTE_APPLIESTODIR));
 
-		NodeList ruleList = fileFilterElement.getElementsByTagName(ruleElementName);
-		int numOfRules = ruleList.getLength();
-		FileFilterRule[] rules = new FileFilterRule[numOfRules];
+		var ruleList = fileFilterElement.getElementsByTagName(ruleElementName);
+		var numOfRules = ruleList.getLength();
+		var rules = new FileFilterRule[numOfRules];
 
-		for (int i = 0; i < rules.length; i++) {
+		for (var i = 0; i < rules.length; i++) {
 			rules[i] = unserializeFileFilterRule((Element) ruleList.item(i));
 		}
 		return new FileFilter(matchType, filterType, applies, rules);
@@ -103,94 +102,94 @@ public class FileFilterManager {
 
 	private void serializeRuleAttributes(FileFilterRule fileFilterRule, Element ruleElement) {
 		if (fileFilterRule instanceof FileNameFileFilterRule) {
-			FileNameFileFilterRule rule = (FileNameFileFilterRule) fileFilterRule;
+			var rule = (FileNameFileFilterRule) fileFilterRule;
 			ruleElement.setAttribute(ATTRIBUTE_OP, String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute(ATTRIBUTE_PATTERN, rule.getValue().toString());
 		}
 
 		if (fileFilterRule instanceof FilePathFileFilterRule) {
-			FilePathFileFilterRule rule = (FilePathFileFilterRule) fileFilterRule;
+			var rule = (FilePathFileFilterRule) fileFilterRule;
 			ruleElement.setAttribute(ATTRIBUTE_OP, String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute(ATTRIBUTE_PATTERN, rule.getValue().toString());
 		}
 
 		if (fileFilterRule instanceof FileTypeFileFilterRule) {
-			FileTypeFileFilterRule rule = (FileTypeFileFilterRule) fileFilterRule;
+			var rule = (FileTypeFileFilterRule) fileFilterRule;
 			ruleElement.setAttribute(ATTRIBUTE_OP, String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute(ATTRIBUTE_TYPE, rule.getValue().toString());
 		}
 
 		if (fileFilterRule instanceof FileSizeFileFilterRule) {
-			FileSizeFileFilterRule rule = (FileSizeFileFilterRule) fileFilterRule;
+			var rule = (FileSizeFileFilterRule) fileFilterRule;
 			ruleElement.setAttribute(ATTRIBUTE_OP, String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute(ATTRIBUTE_SIZE, rule.getValue().toString());
 		}
 
 		if (fileFilterRule instanceof FileModificationDateFileFilterRule) {
-			FileModificationDateFileFilterRule rule = (FileModificationDateFileFilterRule) fileFilterRule;
+			var rule = (FileModificationDateFileFilterRule) fileFilterRule;
 			ruleElement.setAttribute(ATTRIBUTE_OP, String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute(ATTRIBUTE_MODIFICATIONDATE, rule.getValue().toString());
 		}
 
 		if (fileFilterRule instanceof FileAgeFileFilterRule) {
-			FileAgeFileFilterRule rule = (FileAgeFileFilterRule) fileFilterRule;
+			var rule = (FileAgeFileFilterRule) fileFilterRule;
 			ruleElement.setAttribute(ATTRIBUTE_OP, String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute(ATTRIBUTE_AGE, rule.getValue().toString());
 		}
 
 		if (fileFilterRule instanceof SubfilterFileFilerRule) {
-			SubfilterFileFilerRule rule = (SubfilterFileFilerRule) fileFilterRule;
-			FileFilter subfilter = ((FilterValue) rule.getValue()).getValue();
-			Document doc = ruleElement.getOwnerDocument();
-			Element subfilterElement = serializeFileFilter(subfilter, doc, ELEMENT_NESTED_FILE_FILTER, ELEMENT_NESTED_FILE_FILTER_RULE);
+			var rule = (SubfilterFileFilerRule) fileFilterRule;
+			var subfilter = ((FilterValue) rule.getValue()).getValue();
+			var doc = ruleElement.getOwnerDocument();
+			var subfilterElement = serializeFileFilter(subfilter, doc, ELEMENT_NESTED_FILE_FILTER, ELEMENT_NESTED_FILE_FILTER_RULE);
 			ruleElement.appendChild(subfilterElement);
 		}
 	}
 
 	public FileFilterRule unserializeFileFilterRule(Element fileFilterRuleElement) throws DataParseException {
 		FileFilterRule rule = null;
-		String ruleType = fileFilterRuleElement.getAttribute(ATTRIBUTE_RULETYPE);
+		var ruleType = fileFilterRuleElement.getAttribute(ATTRIBUTE_RULETYPE);
 
 		if (FileNameFileFilterRule.TYPE_NAME.equals(ruleType)) {
-			int op = Integer.parseInt(fileFilterRuleElement.getAttribute(ATTRIBUTE_OP));
-			String pattern = fileFilterRuleElement.getAttribute(ATTRIBUTE_PATTERN);
+			var op = Integer.parseInt(fileFilterRuleElement.getAttribute(ATTRIBUTE_OP));
+			var pattern = fileFilterRuleElement.getAttribute(ATTRIBUTE_PATTERN);
 			rule = new FileNameFileFilterRule(new TextValue(pattern), op);
 		}
 
 		if (FilePathFileFilterRule.TYPE_NAME.equals(ruleType)) {
-			int op = Integer.parseInt(fileFilterRuleElement.getAttribute(ATTRIBUTE_OP));
-			String pattern = fileFilterRuleElement.getAttribute(ATTRIBUTE_PATTERN);
+			var op = Integer.parseInt(fileFilterRuleElement.getAttribute(ATTRIBUTE_OP));
+			var pattern = fileFilterRuleElement.getAttribute(ATTRIBUTE_PATTERN);
 			rule = new FilePathFileFilterRule(new TextValue(pattern), op);
 		}
 
 		if (FileTypeFileFilterRule.TYPE_NAME.equals(ruleType)) {
-			int op = Integer.parseInt(fileFilterRuleElement.getAttribute(ATTRIBUTE_OP));
-			String type = fileFilterRuleElement.getAttribute(ATTRIBUTE_TYPE);
+			var op = Integer.parseInt(fileFilterRuleElement.getAttribute(ATTRIBUTE_OP));
+			var type = fileFilterRuleElement.getAttribute(ATTRIBUTE_TYPE);
 			rule = new FileTypeFileFilterRule(new TypeValue(type), op);
 		}
 
 		if (FileSizeFileFilterRule.TYPE_NAME.equals(ruleType)) {
-			int op = Integer.parseInt(fileFilterRuleElement.getAttribute(ATTRIBUTE_OP));
-			String size = fileFilterRuleElement.getAttribute(ATTRIBUTE_SIZE);
+			var op = Integer.parseInt(fileFilterRuleElement.getAttribute(ATTRIBUTE_OP));
+			var size = fileFilterRuleElement.getAttribute(ATTRIBUTE_SIZE);
 			rule = new FileSizeFileFilterRule(new SizeValue(size), op);
 		}
 
 		if (FileModificationDateFileFilterRule.TYPE_NAME.equals(ruleType)) {
-			int op = Integer.parseInt(fileFilterRuleElement.getAttribute(ATTRIBUTE_OP));
-			String date = fileFilterRuleElement.getAttribute(ATTRIBUTE_MODIFICATIONDATE);
+			var op = Integer.parseInt(fileFilterRuleElement.getAttribute(ATTRIBUTE_OP));
+			var date = fileFilterRuleElement.getAttribute(ATTRIBUTE_MODIFICATIONDATE);
 			rule = new FileModificationDateFileFilterRule(new DateValue(date), op);
 		}
 
 		if (FileAgeFileFilterRule.TYPE_NAME.equals(ruleType)) {
-			int op = Integer.parseInt(fileFilterRuleElement.getAttribute(ATTRIBUTE_OP));
-			String age = fileFilterRuleElement.getAttribute(ATTRIBUTE_AGE);
+			var op = Integer.parseInt(fileFilterRuleElement.getAttribute(ATTRIBUTE_OP));
+			var age = fileFilterRuleElement.getAttribute(ATTRIBUTE_AGE);
 			rule = new FileAgeFileFilterRule(new AgeValue(age), op);
 		}
 
 		if (SubfilterFileFilerRule.TYPE_NAME.equals(ruleType)) {
-			NodeList filterList = fileFilterRuleElement.getElementsByTagName(ELEMENT_NESTED_FILE_FILTER);
-			Element subfileFilerElement = (Element) filterList.item(0);
-			FileFilter fileFiler = unserializeFileFilter(subfileFilerElement, ELEMENT_NESTED_FILE_FILTER_RULE);
+			var filterList = fileFilterRuleElement.getElementsByTagName(ELEMENT_NESTED_FILE_FILTER);
+			var subfileFilerElement = (Element) filterList.item(0);
+			var fileFiler = unserializeFileFilter(subfileFilerElement, ELEMENT_NESTED_FILE_FILTER_RULE);
 			rule = new SubfilterFileFilerRule(fileFiler);
 		}
 
@@ -201,37 +200,37 @@ public class FileFilterManager {
 		FileFilterRule rule = null;
 
 		if (FileNameFileFilterRule.TYPE_NAME.equals(ruleType)) {
-			TextValue textValue = (TextValue) value;
+			var textValue = (TextValue) value;
 			rule = new FileNameFileFilterRule(textValue, op);
 		}
 
 		if (FilePathFileFilterRule.TYPE_NAME.equals(ruleType)) {
-			TextValue textValue = (TextValue) value;
+			var textValue = (TextValue) value;
 			rule = new FilePathFileFilterRule(textValue, op);
 		}
 
 		if (FileTypeFileFilterRule.TYPE_NAME.equals(ruleType)) {
-			TypeValue fileTypeValue = (TypeValue) value;
+			var fileTypeValue = (TypeValue) value;
 			rule = new FileTypeFileFilterRule(fileTypeValue, op);
 		}
 
 		if (FileSizeFileFilterRule.TYPE_NAME.equals(ruleType)) {
-			SizeValue size = (SizeValue) value;
+			var size = (SizeValue) value;
 			rule = new FileSizeFileFilterRule(size, op);
 		}
 
 		if (FileModificationDateFileFilterRule.TYPE_NAME.equals(ruleType)) {
-			DateValue date = (DateValue) value;
+			var date = (DateValue) value;
 			rule = new FileModificationDateFileFilterRule(date, op);
 		}
 
 		if (FileAgeFileFilterRule.TYPE_NAME.equals(ruleType)) {
-			AgeValue age = (AgeValue) value;
+			var age = (AgeValue) value;
 			rule = new FileAgeFileFilterRule(age, op);
 		}
 
 		if (SubfilterFileFilerRule.TYPE_NAME.equals(ruleType)) {
-			FilterValue filterValue = (FilterValue) value;
+			var filterValue = (FilterValue) value;
 			rule = new SubfilterFileFilerRule(filterValue.getValue());
 		}
 

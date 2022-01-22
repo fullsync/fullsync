@@ -19,10 +19,13 @@
  */
 package net.sourceforge.fullsync;
 
+import java.io.Serial;
+
 /**
  * Thrown when an error occured while accessing a file system.
  */
 public class FileSystemException extends Exception {
+	@Serial
 	private static final long serialVersionUID = 9152101631423682164L;
 
 	public FileSystemException(String text) {

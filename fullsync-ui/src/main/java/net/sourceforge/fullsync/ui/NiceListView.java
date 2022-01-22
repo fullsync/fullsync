@@ -41,8 +41,8 @@ class NiceListView extends Composite {
 	}
 
 	protected void keyPressed(KeyEvent event) {
-		Control[] children = getChildren();
-		int index = Arrays.asList(children).indexOf(selected);
+		var children = getChildren();
+		var index = Arrays.asList(children).indexOf(selected);
 		switch (event.keyCode) {
 			case SWT.ARROW_UP:
 				if (index > 0) {
@@ -76,9 +76,9 @@ class NiceListView extends Composite {
 		}
 		if (index > -1) {
 			setSelected((NiceListViewItem) children[index]);
-			Composite parent = this.getParent();
+			var parent = this.getParent();
 			if (parent instanceof ScrolledComposite) {
-				ScrolledComposite sc = (ScrolledComposite) parent;
+				var sc = (ScrolledComposite) parent;
 				sc.showControl(children[index]);
 			}
 		}
@@ -86,7 +86,7 @@ class NiceListView extends Composite {
 
 	private void initGUI() {
 		try {
-			GridLayout thisLayout = new GridLayout();
+			var thisLayout = new GridLayout();
 			thisLayout.horizontalSpacing = 2;
 			thisLayout.verticalSpacing = 0;
 			this.setLayout(thisLayout);
@@ -107,9 +107,9 @@ class NiceListView extends Composite {
 			selected.forceFocus();
 			return;
 		}
-		Control[] children = this.getChildren();
+		var children = this.getChildren();
 		for (Control element : children) {
-			NiceListViewItem a = (NiceListViewItem) element;
+			var a = (NiceListViewItem) element;
 			a.setSelected(false);
 		}
 		item.setSelected(true);
@@ -124,7 +124,7 @@ class NiceListView extends Composite {
 			selected.forceFocus();
 			return true;
 		}
-		Control[] cs = getChildren();
+		var cs = getChildren();
 		if (cs.length > 0) {
 			cs[0].forceFocus();
 			return true;
@@ -133,7 +133,7 @@ class NiceListView extends Composite {
 	}
 
 	void clear() {
-		Control[] children = this.getChildren();
+		var children = this.getChildren();
 		for (Control element : children) {
 			element.dispose();
 		}

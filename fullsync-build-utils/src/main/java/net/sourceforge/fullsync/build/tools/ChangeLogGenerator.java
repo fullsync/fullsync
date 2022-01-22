@@ -22,9 +22,7 @@ package net.sourceforge.fullsync.build.tools;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -41,43 +39,37 @@ public class ChangeLogGenerator {
 		System.out.println("  --changelog ... name of the target file for the changelog");
 	}
 
-	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, ParseException {
-		String srcDir = ".";
-		String pattern = ".+\\.html";
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
+		var srcDir = ".";
+		var pattern = ".+\\.html";
 		String changelog = null;
 
-		for (int i = 0; (i + 1) < args.length; i += 2) {
+		for (var i = 0; (i + 1) < args.length; i += 2) {
 			switch (args[i]) {
-				case "--src-dir":
-					srcDir = args[i + 1];
-					break;
-				case "--pattern":
-					pattern = args[i + 1];
-					break;
-				case "--changelog":
-					changelog = args[i + 1];
-					break;
-				default:
-					System.err.println(String.format("Error: unknown argument '%s'", args[i]));
+				case "--src-dir" -> srcDir = args[i + 1];
+				case "--pattern" -> pattern = args[i + 1];
+				case "--changelog" -> changelog = args[i + 1];
+				default -> {
+					System.err.printf("Error: unknown argument '%s'%n", args[i]);
 					usage();
 					System.exit(1);
-					break;
+				}
 			}
 		}
-		if ((args.length > 0) && ((args.length % 2) > 0)) {
-			System.err.println(String.format("Error: missing parameter for argument '%s'", args[args.length - 1]));
+		if (((args.length % 2) > 0)) {
+			System.err.printf("Error: missing parameter for argument '%s'%n", args[args.length - 1]);
 			usage();
 			System.exit(1);
 		}
 
-		File dir = new File(srcDir);
+		var dir = new File(srcDir);
 		if (!dir.exists()) {
-			System.err.println(String.format("Error: Directory '%s' does not exist.", dir.getAbsolutePath()));
+			System.err.printf("Error: Directory '%s' does not exist.%n", dir.getAbsolutePath());
 			System.exit(1);
 		}
-		ChangeLogLoader c = new ChangeLogLoader();
-		List<ChangeLogEntry> changelogEntries = c.load(dir, pattern);
-		PrintWriter pw = null == changelog ? new PrintWriter(System.out) : new PrintWriter(changelog);
+		var c = new ChangeLogLoader();
+		var changelogEntries = c.load(dir, pattern);
+		var pw = null == changelog ? new PrintWriter(System.out) : new PrintWriter(changelog);
 		for (ChangeLogEntry entry : changelogEntries) {
 			entry.write("FullSync %s %s", " - %s", pw, DateTimeFormatter.ofPattern("MMMM d, uuuu"));
 		}

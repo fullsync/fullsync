@@ -69,7 +69,7 @@ public class GuiController { // NO_UCD (use default)
 		this.welcomeScreenProvider = welcomeScreenProvider;
 		this.preferences = preferences;
 		this.scheduledExecutorService = scheduledExecutorService;
-		String languageCode = preferences.getLanguageCode();
+		var languageCode = preferences.getLanguageCode();
 		try {
 			Messages.setLanguage(languageCode);
 		}
@@ -95,8 +95,8 @@ public class GuiController { // NO_UCD (use default)
 	}
 
 	static void launchUI(Injector injector) {
-		Injector uiInjector = injector.createChildInjector(new FullSyncUiModule());
-		GuiController guiController = uiInjector.getInstance(GuiController.class);
+		var uiInjector = injector.createChildInjector(new FullSyncUiModule());
+		var guiController = uiInjector.getInstance(GuiController.class);
 		guiController.run(uiInjector);
 	}
 
@@ -112,7 +112,7 @@ public class GuiController { // NO_UCD (use default)
 	}
 
 	private boolean doShowQuestion(String question) {
-		MessageBox mb = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+		var mb = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 		mb.setText(Messages.getString("GuiController.YesNoQuestion")); //$NON-NLS-1$
 		mb.setMessage(question);
 		return SWT.YES == mb.open();
@@ -138,10 +138,10 @@ public class GuiController { // NO_UCD (use default)
 	}
 
 	public static void launchProgram(final String uri) { // NO_UCD (use default)
-		if (System.getProperty("os.name").toLowerCase().indexOf("linux") > -1) { //$NON-NLS-1$ //$NON-NLS-2$
-			Thread t = new Thread(() -> {
+		if (System.getProperty("os.name").toLowerCase().contains("linux")) { //$NON-NLS-1$ //$NON-NLS-2$
+			var t = new Thread(() -> {
 				try {
-					String[] args = new String[] {
+					String[] args = {
 						"xdg-open", //$NON-NLS-1$
 						uri
 					};

@@ -33,7 +33,7 @@ public abstract class ExceptionHandler {
 	};
 
 	public static ExceptionHandler registerExceptionHandler(ExceptionHandler handler) {
-		ExceptionHandler temp = singleton;
+		var temp = singleton;
 		singleton = handler;
 		return temp;
 	}

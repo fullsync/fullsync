@@ -43,7 +43,7 @@ if (System.env.'CI') {
 
 ext {
 	libraries = [:]
-	swtVersion = "3.113.0"
+	swtVersion = "3.118.0"
 	slf4jVersion = "1.7.30"
 	guiceVersion = "5.0.1"
 	jUnitVersion = "5.6.2"
@@ -381,24 +381,33 @@ if (System.env.'CI') {
 
 task run(type: JavaExec) {
 	dependsOn installLinuxDist
-	main = '-jar'
+	mainClass = '-jar'
 	args "${buildDir}/install/${project.name}-linux/lib/net.sourceforge.fullsync-fullsync-core.jar", "-v"
+	systemProperties = [
+		"org.eclipse.swt.graphics.Resource.reportNonDisposed": true
+	]
 }
 
 task debug(type: JavaExec) {
 	dependsOn installLinuxDist
-	main = '-jar'
+	mainClass = '-jar'
 	args "${buildDir}/install/${project.name}-linux/lib/net.sourceforge.fullsync-fullsync-core.jar", "-v"
 	debug = true
 	enableAssertions = true
+	systemProperties = [
+		"org.eclipse.swt.graphics.Resource.reportNonDisposed": true
+	]
 }
 
 task debugLauncher(type: JavaExec) {
 	dependsOn installWindowsDist
-	main = '-jar'
+	mainClass = '-jar'
 	args "${buildDir}/install/${project.name}-windows/lib/net.sourceforge.fullsync-fullsync-launcher.jar", "-v"
 	debug = true
 	enableAssertions = true
+	systemProperties = [
+		"org.eclipse.swt.graphics.Resource.reportNonDisposed": true
+	]
 }
 
 dependencyUpdates {

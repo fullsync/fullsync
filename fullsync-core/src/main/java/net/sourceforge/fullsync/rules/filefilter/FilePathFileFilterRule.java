@@ -39,7 +39,7 @@ public class FilePathFileFilterRule implements FileFilterRule {
 	public static final int OP_DOESNT_ENDS_WITH = 7;
 	public static final int OP_MATCHES_REGEXP = 8;
 	public static final int OP_DOESNT_MATCHES_REGEXP = 9;
-	private static final String[] allOperators = new String[] {
+	private static final String[] allOperators = {
 		"is",
 		"isn't",
 		"contains",
@@ -98,52 +98,29 @@ public class FilePathFileFilterRule implements FileFilterRule {
 
 	@Override
 	public boolean match(File file) {
-		String name = file.getPath();
+		var name = file.getPath();
 
-		switch (op) {
-			case OP_IS:
-				return name.equals(pattern.getValue());
-
-			case OP_ISNT:
-				return !name.equals(pattern.getValue());
-
-			case OP_CONTAINS:
-				return name.indexOf(pattern.getValue()) >= 0;
-
-			case OP_DOESNT_CONTAINS:
-				return name.indexOf(pattern.getValue()) < 0;
-
-			case OP_BEGINS_WITH:
-				return name.startsWith(pattern.getValue());
-
-			case OP_DOESNT_BEGINS_WITH:
-				return !name.startsWith(pattern.getValue());
-
-			case OP_ENDS_WITH:
-				return name.endsWith(pattern.getValue());
-
-			case OP_DOESNT_ENDS_WITH:
-				return !name.endsWith(pattern.getValue());
-
-			case OP_MATCHES_REGEXP:
-				return regexppattern.matcher(name).matches();
-
-			case OP_DOESNT_MATCHES_REGEXP:
-				return !regexppattern.matcher(name).matches();
-
-			default:
-				return false;
-		}
+		return switch (op) {
+			case OP_IS -> name.equals(pattern.getValue());
+			case OP_ISNT -> !name.equals(pattern.getValue());
+			case OP_CONTAINS -> name.contains(pattern.getValue());
+			case OP_DOESNT_CONTAINS -> !name.contains(pattern.getValue());
+			case OP_BEGINS_WITH -> name.startsWith(pattern.getValue());
+			case OP_DOESNT_BEGINS_WITH -> !name.startsWith(pattern.getValue());
+			case OP_ENDS_WITH -> name.endsWith(pattern.getValue());
+			case OP_DOESNT_ENDS_WITH -> !name.endsWith(pattern.getValue());
+			case OP_MATCHES_REGEXP -> regexppattern.matcher(name).matches();
+			case OP_DOESNT_MATCHES_REGEXP -> !regexppattern.matcher(name).matches();
+			default -> false;
+		};
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder buff = new StringBuilder(30);
-		buff.append("file path ");
-		buff.append(allOperators[op]);
-		buff.append(" '");
-		buff.append(pattern.toString());
-		buff.append('\'');
-		return buff.toString();
+        return "file path " +
+                allOperators[op] +
+                " '" +
+                pattern.toString() +
+                '\'';
 	}
 }

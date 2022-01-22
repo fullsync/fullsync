@@ -38,7 +38,7 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.ProfileManager;
 
 class ImportProfilesPage extends WizardDialog {
-	private static final String[] PROFILE_EXTENSIONS = new String[] {
+	private static final String[] PROFILE_EXTENSIONS = {
 		"profiles.xml", //$NON-NLS-1$
 		"*.xml", //$NON-NLS-1$
 		"*" //$NON-NLS-1$
@@ -83,23 +83,23 @@ class ImportProfilesPage extends WizardDialog {
 		composite = content;
 		content.setLayout(new GridLayout(2, false));
 		textPath = new Text(content, SWT.BORDER);
-		GridData textData = new GridData();
+		var textData = new GridData();
 		textData.horizontalAlignment = SWT.FILL;
 		textData.grabExcessHorizontalSpace = true;
 		textData.grabExcessVerticalSpace = true;
 		textData.verticalAlignment = SWT.CENTER;
 		textPath.setLayoutData(textData);
-		Button buttonBrowse = new Button(content, SWT.NONE);
+		var buttonBrowse = new Button(content, SWT.NONE);
 		buttonBrowse.setText(Messages.getString("ImportProfilesPage.Browse")); //$NON-NLS-1$
 		buttonBrowse.addListener(SWT.Selection, e -> {
-			FileDialog fd = new FileDialog(content.getShell());
+			var fd = new FileDialog(content.getShell());
 			fd.setFileName("profiles.xml"); //$NON-NLS-1$
 			fd.setFilterExtensions(PROFILE_EXTENSIONS);
 			fd.setFilterIndex(0);
 			fd.setFilterPath(textPath.getText());
-			String file = fd.open();
+			var file = fd.open();
 			if (null != file) {
-				File f = new File(file);
+				var f = new File(file);
 				try {
 					textPath.setText(f.getCanonicalPath());
 				}
@@ -118,7 +118,7 @@ class ImportProfilesPage extends WizardDialog {
 				return true;
 			}
 			else {
-				MessageBox mb = new MessageBox(composite.getShell(), SWT.ICON_WARNING | SWT.OK);
+				var mb = new MessageBox(composite.getShell(), SWT.ICON_WARNING | SWT.OK);
 				mb.setText(Messages.getString("ImportProfilesPage.ProfilesFileNotFoundTitle")); //$NON-NLS-1$
 				mb.setMessage(Messages.getString("ImportProfilesPage.ProfilesFileNotFound")); //$NON-NLS-1$
 				mb.open();

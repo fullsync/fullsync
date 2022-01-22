@@ -54,7 +54,7 @@ public class PublishOverwriteActionDecider implements ActionDecider {
 	@Override
 	public Task getTask(File src, File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
 		List<Action> actions = new ArrayList<>(3);
-		State state = sd.getState(src, dst);
+		var state = sd.getState(src, dst);
 		switch (state) {
 			case ORPHAN_SOURCE:
 				if (!bsd.getState(dst).equals(State.ORPHAN_SOURCE)) {
@@ -68,7 +68,7 @@ public class PublishOverwriteActionDecider implements ActionDecider {
 				actions.add(deleteDestination);
 				break;
 			case DIR_SOURCE_FILE_DESTINATION:
-				State buff = bsd.getState(dst);
+				var buff = bsd.getState(dst);
 				if (buff.equals(State.ORPHAN_SOURCE)) {
 					actions.add(new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION,
 						"There was a node in buff, but its orphan, so add"));
@@ -83,7 +83,7 @@ public class PublishOverwriteActionDecider implements ActionDecider {
 				}
 				break;
 			case FILE_SOURCE_DIR_DESTINATION:
-				State buff1 = bsd.getState(dst);
+				var buff1 = bsd.getState(dst);
 				if (buff1.equals(State.ORPHAN_SOURCE)) {
 					actions.add(new Action(ActionType.ADD, Location.SOURCE, BufferUpdate.DESTINATION,
 						"There was a node in buff, but its orphan, so add"));
@@ -119,7 +119,7 @@ public class PublishOverwriteActionDecider implements ActionDecider {
 
 		actions.add(ignore);
 
-		Action[] as = new Action[actions.size()];
+		var as = new Action[actions.size()];
 		actions.toArray(as);
 		return new Task(src, dst, state, as);
 	}

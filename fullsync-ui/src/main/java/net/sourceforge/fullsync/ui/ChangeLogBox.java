@@ -34,7 +34,7 @@ import net.sourceforge.fullsync.changelog.ChangeLogEntry;
 import net.sourceforge.fullsync.changelog.ChangeLogLoader;
 
 class ChangeLogBox extends StyledText {
-	private String lastFullSyncVersion;
+	private final String lastFullSyncVersion;
 
 	ChangeLogBox(Composite parent, String _lastFullSyncVersion, BackgroundExecutor backgroundExecutor) {
 		super(parent, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
@@ -44,17 +44,17 @@ class ChangeLogBox extends StyledText {
 	}
 
 	private List<ChangeLogEntry> calculateChangeLog() throws Exception {
-		ChangeLogLoader loader = new ChangeLogLoader();
-		File directory = new File(Util.getInstalllocation(), "versions"); //$NON-NLS-1$
+		var loader = new ChangeLogLoader();
+		var directory = new File(Util.getInstalllocation(), "versions"); //$NON-NLS-1$
 		return ChangeLogLoader.filterAfter(loader.load(directory, ".+\\.html"), lastFullSyncVersion); //$NON-NLS-1$
 	}
 
 	private void updateUI(List<ChangeLogEntry> changelog) {
 		if (!isDisposed()) {
-			StringWriter sw = new StringWriter();
-			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(Messages.getString("ChangeLogBox.ReleaseDatePattern")); //$NON-NLS-1$
-			String releaseHeading = Messages.getString("ChangeLogBox.ReleaseHeading"); //$NON-NLS-1$
-			String releaseBulletPoint = Messages.getString("ChangeLogBox.ReleaseBulletPoint"); //$NON-NLS-1$
+			var sw = new StringWriter();
+			var dateFormat = DateTimeFormatter.ofPattern(Messages.getString("ChangeLogBox.ReleaseDatePattern")); //$NON-NLS-1$
+			var releaseHeading = Messages.getString("ChangeLogBox.ReleaseHeading"); //$NON-NLS-1$
+			var releaseBulletPoint = Messages.getString("ChangeLogBox.ReleaseBulletPoint"); //$NON-NLS-1$
 			for (ChangeLogEntry entry : changelog) {
 				entry.write(releaseHeading, releaseBulletPoint, sw, dateFormat);
 			}

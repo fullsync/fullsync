@@ -25,7 +25,6 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileType;
@@ -35,7 +34,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -82,39 +80,39 @@ class FileObjectChooser {
 		dialogShell.setSize(550, 400);
 
 		// top area
-		Composite compositeTop = new Composite(dialogShell, SWT.NONE);
-		GridLayout composite1Layout = new GridLayout(4, false);
-		GridData compositeTopLData = new GridData();
+		var compositeTop = new Composite(dialogShell, SWT.NONE);
+		var composite1Layout = new GridLayout(4, false);
+		var compositeTopLData = new GridData();
 		compositeTopLData.horizontalAlignment = SWT.FILL;
 		compositeTop.setLayoutData(compositeTopLData);
 		compositeTop.setLayout(composite1Layout);
 
-		Label labelUrl = new Label(compositeTop, SWT.NONE);
+		var labelUrl = new Label(compositeTop, SWT.NONE);
 		labelUrl.setText(Messages.getString("FileObjectChooser.URL")); //$NON-NLS-1$
 
 		labelBaseUrl = new Label(compositeTop, SWT.NONE);
 
 		textUrlExtension = new Text(compositeTop, SWT.BORDER);
-		GridData textUrlExtensionLData = new GridData();
+		var textUrlExtensionLData = new GridData();
 		textUrlExtensionLData.grabExcessHorizontalSpace = true;
 		textUrlExtensionLData.horizontalAlignment = SWT.FILL;
 		textUrlExtension.setLayoutData(textUrlExtensionLData);
 
 		// toolbar: folder up, create new folder
-		ToolBar toolBarActions = new ToolBar(compositeTop, SWT.NONE);
+		var toolBarActions = new ToolBar(compositeTop, SWT.NONE);
 		// folder up
-		ToolItem toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
+		var toolItemParent = new ToolItem(toolBarActions, SWT.NONE);
 		toolItemParent.setImage(imageRepository.getImage("FS_LevelUp.gif")); //$NON-NLS-1$
 		toolItemParent.addListener(SWT.Selection, e -> toolItemParentWidgetSelected());
 		// new folder
-		ToolItem toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
+		var toolItemNewFolder = new ToolItem(toolBarActions, SWT.NONE);
 		toolItemNewFolder.setImage(imageRepository.getImage("FS_Folder_New.gif")); //$NON-NLS-1$
 		toolItemNewFolder.setDisabledImage(imageRepository.getImage("FS_Folder_New_disabled.gif")); //$NON-NLS-1$
 		toolItemNewFolder.addListener(SWT.Selection, e -> toolItemNewFolderWidgetSelected());
 		toolItemNewFolder.setEnabled(false);
 
 		// table showing files and folders
-		GridData tableItemsLData = new GridData();
+		var tableItemsLData = new GridData();
 		tableItemsLData.grabExcessHorizontalSpace = true;
 		tableItemsLData.grabExcessVerticalSpace = true;
 		tableItemsLData.horizontalAlignment = SWT.FILL;
@@ -125,42 +123,42 @@ class FileObjectChooser {
 		tableItems.addListener(SWT.MouseDown, this::tableItemSelected);
 		tableItems.addListener(SWT.MouseDoubleClick, this::tableItemDoubleClicked);
 
-		TableColumn tableColumnName = new TableColumn(tableItems, SWT.NONE);
+		var tableColumnName = new TableColumn(tableItems, SWT.NONE);
 		tableColumnName.setText(Messages.getString("FileObjectChooser.TableHeaderFileName")); //$NON-NLS-1$
 		tableColumnName.setWidth(200);
 
-		TableColumn tableColumnSize = new TableColumn(tableItems, SWT.NONE);
+		var tableColumnSize = new TableColumn(tableItems, SWT.NONE);
 		tableColumnSize.setText(Messages.getString("FileObjectChooser.TableHeaderSize")); //$NON-NLS-1$
 		tableColumnSize.setWidth(60);
 
-		TableColumn tableColumnType = new TableColumn(tableItems, SWT.NONE);
+		var tableColumnType = new TableColumn(tableItems, SWT.NONE);
 		tableColumnType.setText(Messages.getString("FileObjectChooser.TableHeaderType")); //$NON-NLS-1$
 		tableColumnType.setWidth(100);
 
-		TableColumn tableColumnDateModified = new TableColumn(tableItems, SWT.NONE);
+		var tableColumnDateModified = new TableColumn(tableItems, SWT.NONE);
 		tableColumnDateModified.setText(Messages.getString("FileObjectChooser.TableHeaderDateModified")); //$NON-NLS-1$
 		tableColumnDateModified.setWidth(145);
 
 		// bottom area
-		Composite compositeBottom = new Composite(dialogShell, SWT.NONE);
-		GridLayout compositeBottomLayout = new GridLayout();
+		var compositeBottom = new Composite(dialogShell, SWT.NONE);
+		var compositeBottomLayout = new GridLayout();
 		compositeBottomLayout.numColumns = 3;
-		GridData compositeBottomLData = new GridData();
+		var compositeBottomLData = new GridData();
 		compositeBottomLData.horizontalAlignment = SWT.FILL;
 		compositeBottom.setLayoutData(compositeBottomLData);
 		compositeBottom.setLayout(compositeBottomLayout);
 
-		Label labelFilename = new Label(compositeBottom, SWT.NONE);
+		var labelFilename = new Label(compositeBottom, SWT.NONE);
 		labelFilename.setText(Messages.getString("FileObjectChooser.SelectedFileName")); //$NON-NLS-1$
 
-		GridData textFilenameLData = new GridData();
+		var textFilenameLData = new GridData();
 		textFilenameLData.horizontalAlignment = SWT.FILL;
 		textFilenameLData.grabExcessHorizontalSpace = true;
 		textFilename = new Text(compositeBottom, SWT.BORDER);
 		textFilename.setLayoutData(textFilenameLData);
 
-		Button buttonOk = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
-		GridData buttonOkLData = new GridData();
+		var buttonOk = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
+		var buttonOkLData = new GridData();
 		buttonOkLData.horizontalAlignment = GridData.CENTER;
 		buttonOkLData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
@@ -168,18 +166,18 @@ class FileObjectChooser {
 		buttonOk.setText(Messages.getString("FileObjectChooser.Open")); //$NON-NLS-1$
 		buttonOk.addListener(SWT.Selection, this::okSelected);
 		// file filter
-		Label labelFileFilter = new Label(compositeBottom, SWT.NONE);
+		var labelFileFilter = new Label(compositeBottom, SWT.NONE);
 		labelFileFilter.setText(Messages.getString("FileObjectChooser.FileTypeFilter")); //$NON-NLS-1$
 
-		Combo comboFileFilter = new Combo(compositeBottom, SWT.NONE);
-		GridData comboFileFilterLData = new GridData();
+		var comboFileFilter = new Combo(compositeBottom, SWT.NONE);
+		var comboFileFilterLData = new GridData();
 		comboFileFilterLData.horizontalAlignment = SWT.FILL;
 		comboFileFilter.setLayoutData(comboFileFilterLData);
 		comboFileFilter.setText(Messages.getString("FileObjectChooser.FileTypeFilter.AllFiles")); //$NON-NLS-1$
 		comboFileFilter.setEnabled(false);
 
-		Button buttonCancel = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
-		GridData buttonCancelLData = new GridData();
+		var buttonCancel = new Button(compositeBottom, SWT.PUSH | SWT.CENTER);
+		var buttonCancelLData = new GridData();
 		buttonCancelLData.widthHint = UISettings.BUTTON_WIDTH;
 		buttonCancelLData.heightHint = UISettings.BUTTON_HEIGHT;
 		buttonCancel.setLayoutData(buttonCancelLData);
@@ -192,7 +190,7 @@ class FileObjectChooser {
 			result = false;
 			dialogShell.open();
 			ShellStateHandler.apply(preferences, dialogShell, FileObjectChooser.class);
-			Display display = dialogShell.getDisplay();
+			var display = dialogShell.getDisplay();
 			while (!dialogShell.isDisposed()) {
 				if (!display.readAndDispatch()) {
 					display.sleep();
@@ -217,11 +215,11 @@ class FileObjectChooser {
 	}
 
 	private void tableItemDoubleClicked(Event event) {
-		TableItem[] items = tableItems.getSelection();
+		var items = tableItems.getSelection();
 		if (items.length > 0) {
 			try {
-				TableItem item = items[0];
-				FileObject file = (FileObject) item.getData();
+				var item = items[0];
+				var file = (FileObject) item.getData();
 				if (file.getType().hasChildren()) {
 					setActiveFileObject(file);
 				}
@@ -233,22 +231,17 @@ class FileObjectChooser {
 	}
 
 	private void tableItemSelected(Event event) {
-		TableItem[] items = tableItems.getSelection();
+		var items = tableItems.getSelection();
 		if (items.length > 0) {
-			try {
-				TableItem item = items[0];
-				FileObject file = (FileObject) item.getData();
-				// FIXME if we are looking for files, just take files, otherwise just take dirs
-				setSelectedFileObject(file);
-			}
-			catch (FileSystemException fse) {
-				fse.printStackTrace();
-			}
+			var item = items[0];
+			var file = (FileObject) item.getData();
+			// FIXME if we are looking for files, just take files, otherwise just take dirs
+			setSelectedFileObject(file);
 		}
 	}
 
 	private void populateList() throws FileSystemException {
-		FileObject[] children = activeFileObject.getChildren();
+		var children = activeFileObject.getChildren();
 		Arrays.sort(children, (o1, o2) -> {
 			try {
 				if ((o1.getType() == FileType.FOLDER) && (o2.getType() == FileType.FILE)) {
@@ -265,10 +258,10 @@ class FileObjectChooser {
 			}
 		});
 
-		DateFormat df = DateFormat.getDateTimeInstance();
+		var df = DateFormat.getDateTimeInstance();
 
-		for (int i = 0; i < children.length; i++) {
-			FileObject data = children[i];
+		for (var i = 0; i < children.length; i++) {
+			var data = children[i];
 
 			TableItem item;
 			if (tableItems.getItemCount() <= i) {
@@ -279,13 +272,13 @@ class FileObjectChooser {
 			}
 
 			item.setText(0, data.getName().getBaseName());
-			String type = data.getType().getName(); // FIXME: translate type name {file,folder}
+			var type = new StringBuilder().append(data.getType().getName()); // FIXME: translate type name {file,folder}
 
 			if (data.getType().hasContent()) {
-				FileContent content = data.getContent();
-				String contentType = content.getContentInfo().getContentType();
+				var content = data.getContent();
+				var contentType = content.getContentInfo().getContentType();
 				if (null != contentType) {
-					type += " (" + contentType + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					type.append(" (").append(contentType).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				item.setText(1, String.valueOf(content.getSize()));
 				item.setText(3, df.format(new Date(content.getLastModifiedTime())));
@@ -294,7 +287,7 @@ class FileObjectChooser {
 				item.setText(1, ""); //$NON-NLS-1$
 				item.setText(3, ""); //$NON-NLS-1$
 			}
-			item.setText(2, type);
+			item.setText(2, type.toString());
 
 			if (data.getType() == FileType.FOLDER) {
 				item.setImage(imageRepository.getImage("FS_Folder_Collapsed.gif")); //$NON-NLS-1$
@@ -348,7 +341,7 @@ class FileObjectChooser {
 		return activeFileObject;
 	}
 
-	public void setSelectedFileObject(final FileObject selected) throws FileSystemException {
+	public void setSelectedFileObject(final FileObject selected) {
 		this.selectedFileObject = selected;
 		if (null != dialogShell) {
 			updateSelectedFileObject();
@@ -357,7 +350,7 @@ class FileObjectChooser {
 
 	private void toolItemParentWidgetSelected() {
 		try {
-			FileObject parent = activeFileObject.getParent();
+			var parent = activeFileObject.getParent();
 			if (null != parent) {
 				setActiveFileObject(parent);
 			}

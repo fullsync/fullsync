@@ -28,23 +28,21 @@ public abstract class RuleSetDescriptor {
 	private static final String ELEMENT_NAME = "RuleSetDescriptor"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 
-	public static final RuleSetDescriptor unserialize(Element element) throws DataParseException {
+	public static RuleSetDescriptor unserialize(Element element) throws DataParseException {
 		RuleSetDescriptor desc = null;
 		if (null != element) {
-			String ruleSetType = element.getAttribute(ATTRIBUTE_TYPE);
-			switch (ruleSetType) {
-				case SimplifiedRuleSetDescriptor.RULESET_TYPE:
-					desc = new SimplifiedRuleSetDescriptor(element);
-					break;
+			var ruleSetType = element.getAttribute(ATTRIBUTE_TYPE);
+			if (SimplifiedRuleSetDescriptor.RULESET_TYPE.equals(ruleSetType)) {
+				desc = new SimplifiedRuleSetDescriptor(element);
 			}
 		}
 		return desc;
 	}
 
-	public static final Element serialize(RuleSetDescriptor desc, Document doc) {
-		Element elem = doc.createElement(ELEMENT_NAME);
+	public static Element serialize(RuleSetDescriptor desc, Document doc) {
+		var elem = doc.createElement(ELEMENT_NAME);
 		elem.setAttribute(ATTRIBUTE_TYPE, desc.getType());
-		Element ruleDescriptorElement = desc.serializeDescriptor(doc);
+		var ruleDescriptorElement = desc.serializeDescriptor(doc);
 		elem.appendChild(ruleDescriptorElement);
 		return elem;
 	}

@@ -23,9 +23,9 @@ import java.util.Comparator;
 
 public class VersionComparator implements Comparator<String> {
 	private int[] parseVersion(String v) {
-		String[] components = v.split("\\."); //$NON-NLS-1$
-		int[] numbers = new int[components.length];
-		for (int i = 0; i < components.length; ++i) {
+		var components = v.split("\\."); //$NON-NLS-1$
+		var numbers = new int[components.length];
+		for (var i = 0; i < components.length; ++i) {
 			if (!components[i].isEmpty()) {
 				numbers[i] = Integer.parseInt(components[i]);
 			}
@@ -35,12 +35,12 @@ public class VersionComparator implements Comparator<String> {
 
 	@Override
 	public int compare(String o1, String o2) {
-		int[] v1components = parseVersion(o1);
-		int[] v2components = parseVersion(o2);
-		int num = Math.max(v1components.length, v2components.length);
-		for (int i = 0; i < num; ++i) {
-			int v1 = i < v1components.length ? v1components[i] : 0;
-			int v2 = i < v2components.length ? v2components[i] : 0;
+		var v1components = parseVersion(o1);
+		var v2components = parseVersion(o2);
+		var num = Math.max(v1components.length, v2components.length);
+		for (var i = 0; i < num; ++i) {
+			var v1 = i < v1components.length ? v1components[i] : 0;
+			var v2 = i < v2components.length ? v2components[i] : 0;
 			if (v1 > v2) {
 				return 1;
 			}

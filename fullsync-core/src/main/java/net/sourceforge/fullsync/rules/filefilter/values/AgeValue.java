@@ -34,7 +34,7 @@ public class AgeValue implements OperandValue {
 	private final Unit unit;
 
 	public AgeValue(String age) throws DataParseException {
-		int sep = age.indexOf(' ');
+		var sep = age.indexOf(' ');
 		if (sep > 0) {
 			try {
 				this.value = Double.parseDouble(age.substring(0, sep));
@@ -42,7 +42,7 @@ public class AgeValue implements OperandValue {
 			catch (NumberFormatException ex) {
 				throw new DataParseException("", ex);
 			}
-			String u = age.substring(sep + 1, age.length());
+			var u = age.substring(sep + 1);
 			this.unit = getUnitFromString(u);
 		}
 		else {
@@ -81,6 +81,6 @@ public class AgeValue implements OperandValue {
 
 	@Override
 	public String toString() {
-		return String.valueOf(value) + " " + unit.toString();
+		return value + " " + unit.toString();
 	}
 }

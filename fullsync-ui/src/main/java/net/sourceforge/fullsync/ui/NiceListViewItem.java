@@ -25,12 +25,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -39,21 +37,20 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import com.google.inject.assistedinject.Assisted;
 
-import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.Profile;
 
 class NiceListViewItem extends Composite implements Listener {
 	private final NiceListView list;
 	private final ImageRepository imageRepository;
-	private Label labelIcon;
-	private Label labelCaption;
-	private Label labelStatus;
-	private Composite compositeContent;
-	private Label labelSource;
-	private Label labelDestination;
-	private Label labelLastUpdate;
-	private Label labelNextUpdate;
-	private ProfileListControlHandler handler;
+	private final Label labelIcon;
+	private final Label labelCaption;
+	private final Label labelStatus;
+	private final Composite compositeContent;
+	private final Label labelSource;
+	private final Label labelDestination;
+	private final Label labelLastUpdate;
+	private final Label labelNextUpdate;
+	private final ProfileListControlHandler handler;
 	private Profile profile;
 	private boolean mouseOver;
 	private boolean selected;
@@ -67,7 +64,7 @@ class NiceListViewItem extends Composite implements Listener {
 		this.handler = handler;
 		this.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
 
-		GridLayout thisLayout = new GridLayout(3, false);
+		var thisLayout = new GridLayout(3, false);
 		this.addListener(SWT.MouseEnter, this);
 		this.addListener(SWT.MouseExit, this);
 		this.addListener(SWT.MouseUp, this);
@@ -83,7 +80,7 @@ class NiceListViewItem extends Composite implements Listener {
 		// icon
 		labelIcon = new Label(this, SWT.TRANSPARENT);
 		labelIcon.setSize(16, 16);
-		GridData labelIconLData = new GridData(GridData.CENTER, GridData.BEGINNING, false, true);
+		var labelIconLData = new GridData(GridData.CENTER, GridData.BEGINNING, false, true);
 		labelIconLData.widthHint = 16;
 		labelIconLData.heightHint = 16;
 		labelIcon.setLayoutData(labelIconLData);
@@ -96,7 +93,7 @@ class NiceListViewItem extends Composite implements Listener {
 		// profile name
 		labelCaption = new Label(this, SWT.TRANSPARENT);
 		labelCaption.setFont(fontRepository.getFont("Tahoma", 9, 1)); //$NON-NLS-1$
-		GridData labelCaptionLData = new GridData();
+		var labelCaptionLData = new GridData();
 		labelCaptionLData.widthHint = -1;
 		labelCaption.setLayoutData(labelCaptionLData);
 		labelCaption.addListener(SWT.MouseEnter, this);
@@ -106,7 +103,7 @@ class NiceListViewItem extends Composite implements Listener {
 		labelCaption.addListener(SWT.MouseDoubleClick, this);
 
 		labelStatus = new Label(this, SWT.TRANSPARENT);
-		GridData labelStatusLData = new GridData(GridData.FILL, GridData.CENTER, true, false);
+		var labelStatusLData = new GridData(GridData.FILL, GridData.CENTER, true, false);
 		labelStatusLData.horizontalIndent = 10;
 		labelStatus.setLayoutData(labelStatusLData);
 		labelStatus.addListener(SWT.MouseEnter, this);
@@ -118,22 +115,18 @@ class NiceListViewItem extends Composite implements Listener {
 		this.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		this.setForeground(parent.getForeground());
 		this.layout();
-		this.compositeContent = new Composite(this, SWT.NULL);
-		createContentComposite(compositeContent);
-	}
+		compositeContent = new Composite(this, SWT.NULL);
+		compositeContent.setBackgroundMode(SWT.INHERIT_FORCE);
 
-	private void createContentComposite(Composite parent) {
-		parent.setBackgroundMode(SWT.INHERIT_FORCE);
-
-		GridLayout layout = new GridLayout(2, false);
+		var layout = new GridLayout(2, false);
 		layout.marginHeight = 1;
 		layout.marginWidth = 1;
 		layout.verticalSpacing = 2;
 		layout.horizontalSpacing = 2;
-		parent.setLayout(layout);
+		compositeContent.setLayout(layout);
 
-		Composite cSourceDestination = new Composite(parent, SWT.FILL);
-		GridLayout sourceDestinationLayout = new GridLayout(2, false);
+		var cSourceDestination = new Composite(compositeContent, SWT.FILL);
+		var sourceDestinationLayout = new GridLayout(2, false);
 		sourceDestinationLayout.marginHeight = 0;
 		sourceDestinationLayout.marginWidth = 0;
 		cSourceDestination.setLayout(sourceDestinationLayout);
@@ -151,8 +144,8 @@ class NiceListViewItem extends Composite implements Listener {
 		labelDestination.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
 
 		// last / next update
-		Composite cUpdate = new Composite(parent, SWT.FILL);
-		GridLayout updateLayout = new GridLayout(2, false);
+		var cUpdate = new Composite(compositeContent, SWT.FILL);
+		var updateLayout = new GridLayout(2, false);
 		updateLayout.marginHeight = 0;
 		updateLayout.marginWidth = 0;
 		cUpdate.setLayout(updateLayout);
@@ -170,34 +163,34 @@ class NiceListViewItem extends Composite implements Listener {
 		labelNextUpdate.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
 
 		// buttons
-		ToolBar toolbar = new ToolBar(parent, SWT.FLAT);
+		var toolbar = new ToolBar(compositeContent, SWT.FLAT);
 		toolbar.setLayoutData(new GridData(GridData.END, GridData.CENTER, true, false, 1, 2));
 
-		ToolItem runProfile = new ToolItem(toolbar, SWT.PUSH);
+		var runProfile = new ToolItem(toolbar, SWT.PUSH);
 		runProfile.setImage(imageRepository.getImage("Profile_Run.png")); //$NON-NLS-1$
 		runProfile.addListener(SWT.Selection, e -> handler.runProfile(getProfile(), true));
 
-		ToolItem runProfileNonInteractive = new ToolItem(toolbar, SWT.PUSH);
+		var runProfileNonInteractive = new ToolItem(toolbar, SWT.PUSH);
 		runProfileNonInteractive.setImage(imageRepository.getImage("Profile_Run_Non_Inter.png")); //$NON-NLS-1$
 		runProfileNonInteractive.addListener(SWT.Selection, e -> handler.runProfile(getProfile(), false));
 
-		ToolItem editProfile = new ToolItem(toolbar, SWT.PUSH);
+		var editProfile = new ToolItem(toolbar, SWT.PUSH);
 		editProfile.setImage(imageRepository.getImage("Profile_Edit.png")); //$NON-NLS-1$
 		editProfile.addListener(SWT.Selection, e -> handler.editProfile(getProfile()));
 
-		ToolItem deleteProfile = new ToolItem(toolbar, SWT.PUSH);
+		var deleteProfile = new ToolItem(toolbar, SWT.PUSH);
 		deleteProfile.setImage(imageRepository.getImage("Profile_Delete.png")); //$NON-NLS-1$
 		deleteProfile.addListener(SWT.Selection, e -> handler.deleteProfile(getProfile()));
-		GridData compositeContentLData = new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1);
+		var compositeContentLData = new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1);
 		compositeContentLData.horizontalIndent = labelIcon.getBounds().width + 4;
 		compositeContentLData.heightHint = 0;
 		compositeContentLData.widthHint = 0;
-		parent.setLayoutData(compositeContentLData);
-		parent.setVisible(false);
-		parent.addListener(SWT.MouseDoubleClick, this);
-		parent.addListener(SWT.MouseUp, this);
-		parent.addListener(SWT.MouseDown, this);
-		Control[] children = parent.getChildren();
+		compositeContent.setLayoutData(compositeContentLData);
+		compositeContent.setVisible(false);
+		compositeContent.addListener(SWT.MouseDoubleClick, this);
+		compositeContent.addListener(SWT.MouseUp, this);
+		compositeContent.addListener(SWT.MouseDown, this);
+		var children = compositeContent.getChildren();
 		for (Control element : children) {
 			element.addListener(SWT.MouseDoubleClick, this);
 			element.addListener(SWT.MouseUp, this);
@@ -254,7 +247,7 @@ class NiceListViewItem extends Composite implements Listener {
 	}
 
 	private void updateBackground() {
-		Display display = getDisplay();
+		var display = getDisplay();
 		if (selected) {
 			setBackground(display.getSystemColor(SWT.COLOR_LIST_SELECTION));
 			setForeground(display.getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT));
@@ -294,7 +287,7 @@ class NiceListViewItem extends Composite implements Listener {
 		if (selected) {
 			forceFocus();
 			compositeContent.setVisible(true);
-			Point size = compositeContent.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+			var size = compositeContent.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			((GridData) compositeContent.getLayoutData()).widthHint = size.x;
 			((GridData) compositeContent.getLayoutData()).heightHint = size.y;
 		}
@@ -314,8 +307,8 @@ class NiceListViewItem extends Composite implements Listener {
 
 	void update(Profile profile) {
 		this.profile = profile;
-		boolean isError = profile.getLastErrorLevel() > 0;
-		boolean isScheduled = profile.isSchedulingEnabled() && (null != profile.getSchedule());
+		var isError = profile.getLastErrorLevel() > 0;
+		var isScheduled = profile.isSchedulingEnabled() && (null != profile.getSchedule());
 		if (isScheduled) {
 			setImage(isError
 				? imageRepository.getImage("Profile_Default_Error_Scheduled.png") //$NON-NLS-1$
@@ -331,7 +324,7 @@ class NiceListViewItem extends Composite implements Listener {
 			setStatusText(profile.getLastErrorString());
 		}
 		else {
-			String desc = profile.getDescription();
+			var desc = profile.getDescription();
 			if ((null != desc) && !desc.isEmpty()) {
 				setStatusText(desc);
 			}
@@ -342,9 +335,9 @@ class NiceListViewItem extends Composite implements Listener {
 				setStatusText(""); //$NON-NLS-1$
 			}
 		}
-		ConnectionDescription src = profile.getSource();
+		var src = profile.getSource();
 		labelSource.setText(null != src ? src.getDisplayPath() : ""); //$NON-NLS-1$
-		ConnectionDescription dst = profile.getDestination();
+		var dst = profile.getDestination();
 		labelDestination.setText(null != dst ? dst.getDisplayPath() : ""); //$NON-NLS-1$
 		labelLastUpdate.setText(profile.getLastUpdateText());
 		labelNextUpdate.setText(profile.getNextUpdateText());

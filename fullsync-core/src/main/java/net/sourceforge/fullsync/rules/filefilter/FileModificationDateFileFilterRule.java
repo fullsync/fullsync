@@ -29,7 +29,7 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 	public static final int OP_ISNT = 1;
 	public static final int OP_IS_BEFORE = 2;
 	public static final int OP_IS_AFTER = 3;
-	private static final String[] allOperators = new String[] {
+	private static final String[] allOperators = {
 		"is",
 		"isn't",
 		"is before",
@@ -69,34 +69,25 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 
 	@Override
 	public boolean match(File file) throws FilterRuleNotAppliableException {
-		long lastModified = file.getLastModified();
+		var lastModified = file.getLastModified();
 		if (-1 == lastModified) {
 			throw new FilterRuleNotAppliableException("The file or directory doesn't have any modification date");
 		}
-		switch (op) {
-			case OP_IS:
-				return date.isEqualTo(lastModified);
-
-			case OP_ISNT:
-				return !date.isEqualTo(lastModified);
-
-			case OP_IS_BEFORE:
-				return date.isBefore(lastModified);
-
-			case OP_IS_AFTER:
-				return date.isAfter(lastModified);
-		}
-		return false;
+		return switch (op) {
+			case OP_IS -> date.isEqualTo(lastModified);
+			case OP_ISNT -> !date.isEqualTo(lastModified);
+			case OP_IS_BEFORE -> date.isBefore(lastModified);
+			case OP_IS_AFTER -> date.isAfter(lastModified);
+			default -> false;
+		};
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder buff = new StringBuilder(30);
-		buff.append("file modification date ");
-		buff.append(allOperators[op]);
-		buff.append(" '");
-		buff.append(date);
-		buff.append("'");
-		return buff.toString();
+        return "file modification date " +
+                allOperators[op] +
+                " '" +
+                date +
+                "'";
 	}
 }

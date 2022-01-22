@@ -34,10 +34,10 @@ import org.eclipse.swt.widgets.Event;
 @Singleton
 public class FontRepository { // NO_UCD (use default)
 	private static class Key {
-		private String name;
-		private int height;
-		private int style;
-		private int hash;
+		private final String name;
+		private final int height;
+		private final int style;
+		private final int hash;
 
 		Key(String _name, int _height, int _style) {
 			name = _name;
@@ -54,7 +54,7 @@ public class FontRepository { // NO_UCD (use default)
 		@Override
 		public boolean equals(Object obj) {
 			if (obj instanceof Key) {
-				Key k = (Key) obj;
+				var k = (Key) obj;
 				return (height == k.height) && (style == k.style) && (0 == name.compareTo(k.name));
 			}
 			return false;
@@ -71,7 +71,7 @@ public class FontRepository { // NO_UCD (use default)
 	}
 
 	public Font getFont(String name, int height, int style) { // NO_UCD (use default)
-		Key key = new Key(name, height, style);
+		var key = new Key(name, height, style);
 		return cache.computeIfAbsent(key, k -> new Font(device, k.name, k.height, k.style));
 	}
 

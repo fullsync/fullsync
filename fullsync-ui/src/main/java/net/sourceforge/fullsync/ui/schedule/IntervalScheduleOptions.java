@@ -42,12 +42,12 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 
 	public IntervalScheduleOptions(Composite parent) {
 		super(parent);
-		final String secondsName = Messages.getString("IntervalScheduleOptions.seconds"); //$NON-NLS-1$
-		final String minutesName = Messages.getString("IntervalScheduleOptions.minutes"); //$NON-NLS-1$
-		final String hoursName = Messages.getString("IntervalScheduleOptions.hours"); //$NON-NLS-1$
-		final SchedulingIntervalItem seconds = new SchedulingIntervalItem("seconds", secondsName, 1000); //$NON-NLS-1$
-		final SchedulingIntervalItem minutes = new SchedulingIntervalItem("minutes", minutesName, 60 * 1000); //$NON-NLS-1$
-		final SchedulingIntervalItem hours = new SchedulingIntervalItem("hours", hoursName, 60 * 60 * 1000); //$NON-NLS-1$
+		final var secondsName = Messages.getString("IntervalScheduleOptions.seconds"); //$NON-NLS-1$
+		final var minutesName = Messages.getString("IntervalScheduleOptions.minutes"); //$NON-NLS-1$
+		final var hoursName = Messages.getString("IntervalScheduleOptions.hours"); //$NON-NLS-1$
+		final var seconds = new SchedulingIntervalItem("seconds", secondsName, 1000); //$NON-NLS-1$
+		final var minutes = new SchedulingIntervalItem("minutes", minutesName, 60 * 1000); //$NON-NLS-1$
+		final var hours = new SchedulingIntervalItem("hours", hoursName, 60 * 60 * 1000); //$NON-NLS-1$
 		schedulingIntervals = new SchedulingIntervalItem[] {
 			seconds,
 			minutes,
@@ -55,17 +55,17 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 		};
 
 		try {
-			GridLayout thisLayout = new GridLayout(3, false);
+			var thisLayout = new GridLayout(3, false);
 			this.setLayout(thisLayout);
 
-			Label labelExecuteQuery = new Label(this, SWT.NONE);
+			var labelExecuteQuery = new Label(this, SWT.NONE);
 			labelExecuteQuery.setText(Messages.getString("IntervalScheduleOptions.ExecuteEvery")); //$NON-NLS-1$
-			GridData labelIntervalData = new GridData();
+			var labelIntervalData = new GridData();
 			labelExecuteQuery.setLayoutData(labelIntervalData);
 
 			textCount = new Text(this, SWT.BORDER | SWT.RIGHT);
 			textCount.setText("1"); //$NON-NLS-1$
-			GridData textCountLData = new GridData();
+			var textCountLData = new GridData();
 			textCountLData.grabExcessHorizontalSpace = true;
 			textCountLData.horizontalAlignment = SWT.FILL;
 			textCount.setLayoutData(textCountLData);
@@ -93,8 +93,8 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 	@Override
 	public void setSchedule(final Schedule sched) {
 		if (sched instanceof IntervalSchedule) {
-			IntervalSchedule is = (IntervalSchedule) sched;
-			int index = 0;
+			var is = (IntervalSchedule) sched;
+			var index = 0;
 			for (SchedulingIntervalItem item : schedulingIntervals) {
 				if (item.unit.equals(is.getIntervalDisplayUnit())) {
 					textCount.setText(String.valueOf(is.getInterval() / item.factor));
@@ -108,15 +108,15 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 
 	@Override
 	public Schedule getSchedule() {
-		SchedulingIntervalItem item = schedulingIntervals[cbUnit.getSelectionIndex()];
-		long interval = Long.parseLong(textCount.getText()) * item.factor;
+		var item = schedulingIntervals[cbUnit.getSelectionIndex()];
+		var interval = Long.parseLong(textCount.getText()) * item.factor;
 		return new IntervalSchedule(interval, interval, item.unit);
 	}
 
 	private static class SchedulingIntervalItem {
-		public String unit;
-		public String text;
-		public long factor;
+		public final String unit;
+		public final String text;
+		public final long factor;
 
 		SchedulingIntervalItem(String unit, String text, long factor) {
 			this.unit = unit;

@@ -38,7 +38,7 @@ import net.sourceforge.fullsync.ui.Messages;
 
 class SubfilterRuleComposite extends RuleComposite {
 	private FileFilter value = new FileFilter(FileFilter.MATCH_ALL, FileFilter.INCLUDE, true);
-	private Provider<FileFilterPage> fileFilterPageProvider;
+	private final Provider<FileFilterPage> fileFilterPageProvider;
 
 	SubfilterRuleComposite(Provider<FileFilterPage> fileFilterPageProvider, Composite parent, final FilterValue initialValue) {
 		super(parent);
@@ -53,7 +53,7 @@ class SubfilterRuleComposite extends RuleComposite {
 		this.setLayout(new GridLayout(3, true));
 
 		textValue = new Text(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		GridData textValueData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		var textValueData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		textValueData.heightHint = textValue.getLineHeight() * 3;
 		textValueData.horizontalSpan = 2;
 		textValue.setLayoutData(textValueData);
@@ -62,7 +62,7 @@ class SubfilterRuleComposite extends RuleComposite {
 		}
 		textValue.setEditable(false);
 
-		Button buttonFilter = new Button(this, SWT.PUSH);
+		var buttonFilter = new Button(this, SWT.PUSH);
 		buttonFilter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		buttonFilter.setText(Messages.getString("SubfilterRuleComposite.SetFilter")); //$NON-NLS-1$
 		buttonFilter.addListener(SWT.Selection, this::onEditSubfilter);
@@ -70,11 +70,11 @@ class SubfilterRuleComposite extends RuleComposite {
 
 	private void onEditSubfilter(Event e) {
 		try {
-			FileFilterPage dialog = fileFilterPageProvider.get();
+			var dialog = fileFilterPageProvider.get();
 			dialog.setParent(getShell());
 			dialog.setFileFilter(value);
 			dialog.show();
-			FileFilter newfilter = dialog.getFileFilter();
+			var newfilter = dialog.getFileFilter();
 			if (null != newfilter) {
 				value = newfilter;
 				textValue.setText(value.toString());

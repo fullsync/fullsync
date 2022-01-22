@@ -25,20 +25,19 @@ import java.util.Date;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.DateTime;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import net.sourceforge.fullsync.ui.Messages;
 
 class SWTCalendarDialog {
-	private Shell shell;
-	private Calendar calendar;
+	private final Shell shell;
+	private final Calendar calendar;
 
 	SWTCalendarDialog(Shell parent, Date date) {
 		shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL | SWT.SHEET);
 		shell.setText(Messages.getString("SWTCalendarDialog.Title")); //$NON-NLS-1$
 		shell.setLayout(new GridLayout());
-		final DateTime dateTime = new DateTime(shell, SWT.CALENDAR | SWT.BORDER);
+		final var dateTime = new DateTime(shell, SWT.CALENDAR | SWT.BORDER);
 		calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		shell.addDisposeListener(e -> calendar.set(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay()));
@@ -46,7 +45,7 @@ class SWTCalendarDialog {
 	}
 
 	public void open() {
-		final Display display = shell.getDisplay();
+		final var display = shell.getDisplay();
 		shell.pack();
 		shell.open();
 		while (!shell.isDisposed()) {

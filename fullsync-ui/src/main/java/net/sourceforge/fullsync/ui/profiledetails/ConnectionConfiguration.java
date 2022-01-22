@@ -19,8 +19,6 @@
  */
 package net.sourceforge.fullsync.ui.profiledetails;
 
-import java.net.URISyntaxException;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -36,7 +34,7 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ui.Messages;
 
 class ConnectionConfiguration {
-	private static String[] schemes = new String[] {
+	private static final String[] schemes = {
 		"file", //$NON-NLS-1$
 		"ftp", //$NON-NLS-1$
 		"sftp", //$NON-NLS-1$
@@ -77,16 +75,16 @@ class ConnectionConfiguration {
 		compositeProtocolSpecific.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		// protocol combo box
-		Label labelProtocol = new Label(compositeProtocolSpecific, SWT.NONE);
+		var labelProtocol = new Label(compositeProtocolSpecific, SWT.NONE);
 		labelProtocol.setText(Messages.getString("ConnectionConfiguration.Protocol")); //$NON-NLS-1$
-		Combo comboProtocol = new Combo(compositeProtocolSpecific, SWT.READ_ONLY);
-		GridData protocolData = new GridData();
+		var comboProtocol = new Combo(compositeProtocolSpecific, SWT.READ_ONLY);
+		var protocolData = new GridData();
 		protocolData.horizontalSpan = 2;
 		protocolData.horizontalAlignment = SWT.FILL;
 		comboProtocol.setLayoutData(protocolData);
 		comboProtocol.removeAll();
-		int selectedIndex = 0;
-		int i = 0;
+		var selectedIndex = 0;
+		var i = 0;
 		for (String scheme : schemes) {
 			comboProtocol.add(scheme);
 			if (scheme.equals(selectedScheme)) {
@@ -116,26 +114,17 @@ class ConnectionConfiguration {
 		compositeSpecific.setConnectionDescription(location);
 	}
 
-	public ConnectionDescription.Builder getConnectionDescription() throws URISyntaxException {
+	public ConnectionDescription.Builder getConnectionDescription() {
 		return compositeSpecific.getConnectionDescription();
 	}
 
 	private void createProtocolSpecificComposite() {
 		switch (selectedScheme) {
-			case "file": //$NON-NLS-1$
-				compositeSpecific = fileSpecificCompositeProvider.get();
-				break;
-			case "ftp": //$NON-NLS-1$
-				compositeSpecific = ftpSpecificCompositeProvider.get();
-				break;
-			case "sftp": //$NON-NLS-1$
-				compositeSpecific = sftpSpecificCompositeProvider.get();
-				break;
-			case "smb": //$NON-NLS-1$
-				compositeSpecific = smbSpecificCompositeProvider.get();
-				break;
-			default:
-				compositeSpecific = null;
+			case "file" -> compositeSpecific = fileSpecificCompositeProvider.get(); //$NON-NLS-1$
+			case "ftp" -> compositeSpecific = ftpSpecificCompositeProvider.get(); // $NON-NLS-1$
+			case "sftp" -> compositeSpecific = sftpSpecificCompositeProvider.get(); // $NON-NLS-1$
+			case "smb" -> compositeSpecific = smbSpecificCompositeProvider.get(); // $NON-NLS-1$
+			default -> compositeSpecific = null;
 		}
 		if (null != compositeSpecific) {
 			compositeSpecific.createGUI(compositeProtocolSpecific);

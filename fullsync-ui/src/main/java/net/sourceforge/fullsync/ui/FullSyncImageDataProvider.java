@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 class FullSyncImageDataProvider implements ImageDataProvider {
 	private static final Logger logger = LoggerFactory.getLogger(FullSyncImageDataProvider.class.getSimpleName());
-	private String name;
+	private final String name;
 
 	public FullSyncImageDataProvider(String imageName) {
 		name = imageName;
@@ -38,7 +38,7 @@ class FullSyncImageDataProvider implements ImageDataProvider {
 	@Override
 	public ImageData getImageData(int zoom) {
 		ImageData data = null;
-		try (InputStream is = getImageStream(zoom)) {
+		try (var is = getImageStream(zoom)) {
 			if (null != is) {
 				data = new ImageData(is);
 			}

@@ -43,8 +43,8 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 	private final Map<String, NiceListViewItem> profilesToItems = new HashMap<>();
 	private final ProfileListControlHandler handler;
 	private final ProfileManager profileManager;
-	private NiceListView profileList;
-	private NiceListViewItemFactory niceListViewItemFactory;
+	private final NiceListView profileList;
+	private final NiceListViewItemFactory niceListViewItemFactory;
 
 	@Inject
 	public NiceListViewProfileListComposite(@Assisted Composite parent, @Assisted ProfileListControlHandler handler,
@@ -53,7 +53,7 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 		this.handler = handler;
 		this.profileManager = profileManager;
 		this.niceListViewItemFactory = niceListViewItemFactory;
-		ScrolledComposite scrollPane = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
+		var scrollPane = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
 		profileList = new NiceListView(scrollPane);
 		scrollPane.setExpandHorizontal(true);
 		scrollPane.setExpandVertical(false);
@@ -93,7 +93,7 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 
 	@Override
 	public Profile getSelectedProfile() {
-		NiceListViewItem item = profileList.getSelectedItem();
+		var item = profileList.getSelectedItem();
 		if (null != item) {
 			return item.getProfile();
 		}
@@ -122,8 +122,8 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 	private void profileChanged(ProfileChanged pc) {
 		getDisplay().syncExec(() -> {
 			if (!isDisposed()) {
-				Profile p = pc.getProfile();
-				NiceListViewItem item = profilesToItems.get(p.getId());
+				var p = pc.getProfile();
+				var item = profilesToItems.get(p.getId());
 				if (null == item) {
 					populateProfileList();
 				}

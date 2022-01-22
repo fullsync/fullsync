@@ -30,7 +30,7 @@ public class FileAgeFileFilterRule implements FileFilterRule {
 	public static final int OP_ISNT = 1;
 	public static final int OP_IS_GREATER_THAN = 2;
 	public static final int OP_IS_LESS_THAN = 3;
-	private static final String[] allOperators = new String[] {
+	private static final String[] allOperators = {
 		"is",
 		"isn't",
 		"is greater than",
@@ -70,38 +70,27 @@ public class FileAgeFileFilterRule implements FileFilterRule {
 
 	@Override
 	public boolean match(File file) throws FilterRuleNotAppliableException {
-		long lastModified = file.getLastModified();
+		var lastModified = file.getLastModified();
 		if (-1 == lastModified) {
 			throw new FilterRuleNotAppliableException("The file or directory doesn't have any modification date");
 		}
-		long now = SystemDate.getInstance().currentTimeMillis();
-		long delta = (long) (Math.floor(now / 1000.0) - Math.floor(lastModified / 1000.0));
-		switch (op) {
-			case OP_IS:
-				return delta == age.getSeconds();
-
-			case OP_ISNT:
-				return delta != age.getSeconds();
-
-			case OP_IS_GREATER_THAN:
-				return delta > age.getSeconds();
-
-			case OP_IS_LESS_THAN:
-				return delta < age.getSeconds();
-
-			default:
-				return false;
-		}
+		var now = SystemDate.getInstance().currentTimeMillis();
+		var delta = (long) (Math.floor(now / 1000.0) - Math.floor(lastModified / 1000.0));
+		return switch (op) {
+			case OP_IS -> delta == age.getSeconds();
+			case OP_ISNT -> delta != age.getSeconds();
+			case OP_IS_GREATER_THAN -> delta > age.getSeconds();
+			case OP_IS_LESS_THAN -> delta < age.getSeconds();
+			default -> false;
+		};
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder buff = new StringBuilder(30);
-		buff.append("file age ");
-		buff.append(allOperators[op]);
-		buff.append(" '");
-		buff.append(age);
-		buff.append("'");
-		return buff.toString();
+        return "file age " +
+                allOperators[op] +
+                " '" +
+                age +
+                "'";
 	}
 }

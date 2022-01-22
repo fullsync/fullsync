@@ -23,15 +23,11 @@ import javax.inject.Inject;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -59,46 +55,45 @@ class ScheduleSelectionDialog {
 
 	void open(Shell parent) {
 		try {
-			Shell dialogShell = new Shell(parent, SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.RESIZE);
+			var dialogShell = new Shell(parent, SWT.PRIMARY_MODAL | SWT.DIALOG_TRIM | SWT.RESIZE);
 			dialogShell.setText(Messages.getString("ScheduleSelectionDialog.EditScheduling")); //$NON-NLS-1$
 			dialogShell.setImage(imageRepository.getImage("Scheduler_Icon.png")); //$NON-NLS-1$
-			GridLayout thisLayout = new GridLayout();
+			var thisLayout = new GridLayout();
 			thisLayout.numColumns = 2;
 			dialogShell.setLayout(thisLayout);
 
 			// schedule type
-			Composite compositeTop = new Composite(dialogShell, SWT.NONE);
-			GridLayout compositeTopLayout = new GridLayout();
-			GridData compositeTopLData = new GridData();
+			var compositeTop = new Composite(dialogShell, SWT.NONE);
+			var compositeTopLayout = new GridLayout();
+			var compositeTopLData = new GridData();
 			compositeTopLData.horizontalSpan = 2;
 			compositeTopLData.horizontalAlignment = SWT.FILL;
 			compositeTop.setLayoutData(compositeTopLData);
 			compositeTopLayout.numColumns = 2;
 			compositeTop.setLayout(compositeTopLayout);
 
-			Label labelScheduleType = new Label(compositeTop, SWT.NONE);
+			var labelScheduleType = new Label(compositeTop, SWT.NONE);
 			labelScheduleType.setText(Messages.getString("ScheduleSelectionDialog.SchedulingType")); //$NON-NLS-1$
-			GridData labelScheduleTypeLData = new GridData();
+			var labelScheduleTypeLData = new GridData();
 			labelScheduleType.setLayoutData(labelScheduleTypeLData);
 
 			cbType = new Combo(compositeTop, SWT.DROP_DOWN | SWT.READ_ONLY);
-			GridData cbTypeLData = new GridData();
+			var cbTypeLData = new GridData();
 			cbTypeLData.horizontalAlignment = SWT.FILL;
 			cbTypeLData.grabExcessHorizontalSpace = true;
 			cbType.setLayoutData(cbTypeLData);
 			cbType.addListener(SWT.Modify, e -> {
-				Control[] children = groupOptions.getChildren();
+				var children = groupOptions.getChildren();
 				if ((cbType.getSelectionIndex() > -1) && (cbType.getSelectionIndex() < children.length)) {
-					Control c = children[cbType.getSelectionIndex()];
-					((StackLayout) groupOptions.getLayout()).topControl = c;
+					((StackLayout) groupOptions.getLayout()).topControl = children[cbType.getSelectionIndex()];
 					groupOptions.layout();
 				}
 			});
 
 			// scheduling options
 			groupOptions = new Group(dialogShell, SWT.FILL);
-			StackLayout groupOptionsLayout = new StackLayout();
-			GridData groupOptionsLData = new GridData();
+			var groupOptionsLayout = new StackLayout();
+			var groupOptionsLData = new GridData();
 			groupOptionsLData.grabExcessVerticalSpace = true;
 			groupOptionsLData.grabExcessHorizontalSpace = true;
 			groupOptionsLData.horizontalAlignment = SWT.FILL;
@@ -109,9 +104,9 @@ class ScheduleSelectionDialog {
 			groupOptions.setText(Messages.getString("ScheduleSelectionDialog.Options")); //$NON-NLS-1$
 
 			// dialog buttons
-			Button buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
+			var buttonOk = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
 			buttonOk.setText(Messages.getString("ScheduleSelectionDialog.Ok")); //$NON-NLS-1$
-			GridData buttonOkLData = new GridData();
+			var buttonOkLData = new GridData();
 			buttonOkLData.horizontalAlignment = SWT.END;
 			buttonOkLData.grabExcessHorizontalSpace = true;
 			buttonOkLData.heightHint = UISettings.BUTTON_HEIGHT;
@@ -128,9 +123,9 @@ class ScheduleSelectionDialog {
 			});
 
 			// cancel button
-			Button buttonCancel = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
+			var buttonCancel = new Button(dialogShell, SWT.PUSH | SWT.CENTER);
 			buttonCancel.setText(Messages.getString("ScheduleSelectionDialog.Cancel")); //$NON-NLS-1$
-			GridData buttonCancelLData = new GridData();
+			var buttonCancelLData = new GridData();
 			buttonCancelLData.heightHint = UISettings.BUTTON_HEIGHT;
 			buttonCancelLData.widthHint = UISettings.BUTTON_WIDTH;
 			buttonCancel.setLayoutData(buttonCancelLData);
@@ -141,13 +136,13 @@ class ScheduleSelectionDialog {
 			addScheduleOptions(new IntervalScheduleOptions(groupOptions));
 			addScheduleOptions(new CrontabScheduleOptions(groupOptions));
 
-			Display display = dialogShell.getDisplay();
+			var display = dialogShell.getDisplay();
 			dialogShell.setSize(350, 350);
 
-			Rectangle rect = parent.getBounds();
-			Point dialogSize = dialogShell.getSize();
-			int x = (rect.x + (rect.width / 2)) - (dialogSize.x / 2);
-			int y = (rect.y + (rect.height / 2)) - (dialogSize.y / 2);
+			var rect = parent.getBounds();
+			var dialogSize = dialogShell.getSize();
+			var x = (rect.x + (rect.width / 2)) - (dialogSize.x / 2);
+			var y = (rect.y + (rect.height / 2)) - (dialogSize.y / 2);
 			dialogShell.setLocation(x, y);
 			dialogShell.layout();
 			dialogShell.open();

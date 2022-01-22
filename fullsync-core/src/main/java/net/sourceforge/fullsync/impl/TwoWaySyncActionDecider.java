@@ -30,7 +30,6 @@ import net.sourceforge.fullsync.BufferStateDecider;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.Location;
-import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.StateDecider;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.fs.File;
@@ -61,7 +60,7 @@ public class TwoWaySyncActionDecider implements ActionDecider {
 	@Override
 	public Task getTask(final File src, final File dst, StateDecider sd, BufferStateDecider bsd) throws DataParseException, IOException {
 		List<Action> actions = new ArrayList<>(3);
-		State state = sd.getState(src, dst);
+		var state = sd.getState(src, dst);
 		switch (state) {
 			case ORPHAN_SOURCE:
 				actions.add(addToDestination);
@@ -100,7 +99,7 @@ public class TwoWaySyncActionDecider implements ActionDecider {
 
 		actions.add(ignore);
 
-		Action[] as = new Action[actions.size()];
+		var as = new Action[actions.size()];
 		actions.toArray(as);
 		return new Task(src, dst, state, as);
 	}

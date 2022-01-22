@@ -23,8 +23,6 @@ import javax.inject.Inject;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -63,7 +61,7 @@ public abstract class WizardDialog { // NO_UCD (use default)
 	}
 
 	public boolean checkAndApply() { // NO_UCD (use private)
-		boolean applied = apply();
+		var applied = apply();
 		if (applied) {
 			closing = true;
 			getDisplay().asyncExec(dialogShell::close);
@@ -72,7 +70,7 @@ public abstract class WizardDialog { // NO_UCD (use default)
 	}
 
 	public boolean checkAndCancel() { // NO_UCD (use private)
-		boolean closed = cancel();
+		var closed = cancel();
 		if (closed) {
 			closing = true;
 			getDisplay().asyncExec(dialogShell::close);
@@ -84,7 +82,7 @@ public abstract class WizardDialog { // NO_UCD (use default)
 		try {
 			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.PRIMARY_MODAL);
 			dialogShell.addDisposeListener(this::onDisposed);
-			final Display display = dialogShell.getDisplay();
+			final var display = dialogShell.getDisplay();
 			dialogShell.addListener(SWT.Close, e -> {
 				if (!closing) {
 					e.doit = !checkAndCancel();
@@ -94,9 +92,9 @@ public abstract class WizardDialog { // NO_UCD (use default)
 				}
 			});
 
-			Color white = display.getSystemColor(SWT.COLOR_WHITE);
+			var white = display.getSystemColor(SWT.COLOR_WHITE);
 
-			GridLayout dialogShellLayout = new GridLayout();
+			var dialogShellLayout = new GridLayout();
 			dialogShellLayout.numColumns = 1;
 			dialogShellLayout.horizontalSpacing = 0;
 			dialogShellLayout.marginHeight = 0;
@@ -105,9 +103,9 @@ public abstract class WizardDialog { // NO_UCD (use default)
 			dialogShell.setLayout(dialogShellLayout);
 
 			// top area
-			Composite compositeTop = new Composite(dialogShell, SWT.NONE);
+			var compositeTop = new Composite(dialogShell, SWT.NONE);
 			compositeTop.setBackground(white);
-			GridData compositeTopLData = new GridData();
+			var compositeTopLData = new GridData();
 			compositeTopLData.grabExcessHorizontalSpace = true;
 			compositeTopLData.horizontalAlignment = SWT.FILL;
 			compositeTopLData.horizontalIndent = 0;
@@ -116,14 +114,14 @@ public abstract class WizardDialog { // NO_UCD (use default)
 			createHeader(compositeTop);
 
 			// line below the header
-			Label labelSeparatorTop = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
-			GridData labelSeparatorTopLData = new GridData();
+			var labelSeparatorTop = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
+			var labelSeparatorTopLData = new GridData();
 			labelSeparatorTopLData.horizontalAlignment = SWT.FILL;
 			labelSeparatorTop.setLayoutData(labelSeparatorTopLData);
 
 			// composite for the wizard content
 			compositeContent = new Composite(dialogShell, SWT.NONE);
-			GridData compositeContentData = new GridData();
+			var compositeContentData = new GridData();
 			compositeContentData.grabExcessHorizontalSpace = true;
 			compositeContentData.horizontalAlignment = SWT.FILL;
 			compositeContentData.verticalAlignment = SWT.FILL;
@@ -132,18 +130,18 @@ public abstract class WizardDialog { // NO_UCD (use default)
 			compositeContent.setLayout(new GridLayout());
 
 			// line below wizard content
-			Label labelSeparatorBottom = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
-			GridData labelSeparatorBottomData = new GridData();
+			var labelSeparatorBottom = new Label(dialogShell, SWT.SEPARATOR | SWT.HORIZONTAL);
+			var labelSeparatorBottomData = new GridData();
 			labelSeparatorBottomData.horizontalAlignment = SWT.FILL;
 			labelSeparatorBottom.setLayoutData(labelSeparatorBottomData);
 
 			// button bar at the bottom
-			Composite compositeBottom = new Composite(dialogShell, SWT.NONE);
-			GridData compositeBottomData = new GridData();
+			var compositeBottom = new Composite(dialogShell, SWT.NONE);
+			var compositeBottomData = new GridData();
 			compositeBottomData.grabExcessHorizontalSpace = true;
 			compositeBottomData.horizontalAlignment = SWT.FILL;
 			compositeBottom.setLayoutData(compositeBottomData);
-			GridLayout compositeBottomLayout = new GridLayout();
+			var compositeBottomLayout = new GridLayout();
 			compositeBottomLayout.makeColumnsEqualWidth = true;
 			compositeBottom.setLayout(compositeBottomLayout);
 
@@ -156,7 +154,7 @@ public abstract class WizardDialog { // NO_UCD (use default)
 			okButton = new Button(compositeBottom, SWT.PUSH);
 			okButton.setText(Messages.getString("ProfileDetailsPage.Ok")); //$NON-NLS-1$
 			okButton.addListener(SWT.Selection, e -> checkAndApply());
-			GridData okButtonLayoutData = new GridData(SWT.END, SWT.CENTER, true, true);
+			var okButtonLayoutData = new GridData(SWT.END, SWT.CENTER, true, true);
 			okButtonLayoutData.widthHint = UISettings.BUTTON_WIDTH;
 			okButtonLayoutData.heightHint = UISettings.BUTTON_HEIGHT;
 			okButton.setLayoutData(okButtonLayoutData);
@@ -164,7 +162,7 @@ public abstract class WizardDialog { // NO_UCD (use default)
 			cancelButton = new Button(compositeBottom, SWT.PUSH);
 			cancelButton.setText(Messages.getString("ProfileDetailsPage.Cancel")); //$NON-NLS-1$
 			cancelButton.addListener(SWT.Selection, e -> checkAndCancel());
-			GridData cancelButtonLayoutData = new GridData(SWT.END, SWT.CENTER, false, true);
+			var cancelButtonLayoutData = new GridData(SWT.END, SWT.CENTER, false, true);
 			cancelButtonLayoutData.widthHint = UISettings.BUTTON_WIDTH;
 			cancelButtonLayoutData.heightHint = UISettings.BUTTON_HEIGHT;
 			cancelButton.setLayoutData(cancelButtonLayoutData);
@@ -173,7 +171,7 @@ public abstract class WizardDialog { // NO_UCD (use default)
 			compositeContent.pack();
 			dialogShell.layout();
 
-			Point size = dialogShell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+			var size = dialogShell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			size.x = Math.max(size.x, 500);
 			size.y = Math.max(size.y, 400);
 
@@ -201,7 +199,7 @@ public abstract class WizardDialog { // NO_UCD (use default)
 	}
 
 	protected void createHeader(Composite parent) { // NO_UCD (use private)
-		GridLayout compositeTopLayout = new GridLayout(2, false);
+		var compositeTopLayout = new GridLayout(2, false);
 		compositeTopLayout.horizontalSpacing = 0;
 		compositeTopLayout.marginRight = 0;
 		compositeTopLayout.marginBottom = 0;
@@ -211,15 +209,15 @@ public abstract class WizardDialog { // NO_UCD (use default)
 		compositeTopLayout.marginWidth = 0;
 		parent.setLayout(compositeTopLayout);
 
-		Color white = parent.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+		var white = parent.getDisplay().getSystemColor(SWT.COLOR_WHITE);
 
-		Composite topTextComposite = new Composite(parent, SWT.NONE);
+		var topTextComposite = new Composite(parent, SWT.NONE);
 		topTextComposite.setBackground(white);
-		GridLayout topTextCompositeLayout = new GridLayout(1, false);
+		var topTextCompositeLayout = new GridLayout(1, false);
 		topTextCompositeLayout.marginHeight = 10;
 		topTextCompositeLayout.marginWidth = 10;
 		topTextComposite.setLayout(topTextCompositeLayout);
-		GridData topTextCompositeData = new GridData();
+		var topTextCompositeData = new GridData();
 		topTextCompositeData.grabExcessHorizontalSpace = true;
 		topTextCompositeData.horizontalAlignment = SWT.FILL;
 		topTextComposite.setLayoutData(topTextCompositeData);
@@ -228,7 +226,7 @@ public abstract class WizardDialog { // NO_UCD (use default)
 		labelImage = new Label(parent, SWT.NONE);
 		labelImage.setBackground(white);
 		labelImage.setSize(64, 64);
-		GridData labelImageLData = new GridData();
+		var labelImageLData = new GridData();
 		labelImageLData.horizontalIndent = 0;
 		labelImageLData.verticalIndent = 0;
 		labelImage.setLayoutData(labelImageLData);
@@ -237,14 +235,14 @@ public abstract class WizardDialog { // NO_UCD (use default)
 		labelCaption = new Label(topTextComposite, SWT.NONE);
 		labelCaption.setBackground(white);
 		labelCaption.setFont(fontRepository.getFont("Tohama", 9, SWT.BOLD)); //$NON-NLS-1$
-		GridData labelCaptionLData = new GridData();
+		var labelCaptionLData = new GridData();
 		labelCaptionLData.grabExcessHorizontalSpace = true;
 		labelCaption.setLayoutData(labelCaptionLData);
 
 		// wizard description
 		labelDescription = new Label(topTextComposite, SWT.NULL);
 		labelDescription.setBackground(white);
-		GridData labelDescriptionLData = new GridData();
+		var labelDescriptionLData = new GridData();
 		labelDescriptionLData.grabExcessHorizontalSpace = true;
 		labelDescription.setLayoutData(labelDescriptionLData);
 	}

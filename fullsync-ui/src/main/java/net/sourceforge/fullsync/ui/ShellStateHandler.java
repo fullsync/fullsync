@@ -20,12 +20,10 @@
 package net.sourceforge.fullsync.ui;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 
 import net.sourceforge.fullsync.Preferences;
-import net.sourceforge.fullsync.WindowState;
 
 public class ShellStateHandler { // NO_UCD (use default)
 	private final Preferences preferences;
@@ -46,9 +44,9 @@ public class ShellStateHandler { // NO_UCD (use default)
 	}
 
 	private void applyPreferences() {
-		WindowState ws = preferences.getWindowState(name);
+		var ws = preferences.getWindowState(name);
 		shell.setVisible(true);
-		Rectangle r = shell.getDisplay().getBounds();
+		var r = shell.getDisplay().getBounds();
 		if (ws.isValid() && ws.isInsideOf(r.x, r.y, r.width, r.height)) {
 			shell.setBounds(ws.getX(), ws.getY(), ws.getWidth(), ws.getHeight());
 		}
@@ -65,11 +63,11 @@ public class ShellStateHandler { // NO_UCD (use default)
 	}
 
 	public void saveWindowState() { // NO_UCD (use default)
-		WindowState ws = preferences.getWindowState(name);
+		var ws = preferences.getWindowState(name);
 		ws.setMaximized(shell.getMaximized());
 		ws.setMinimized(shell.getMinimized());
 		if (!ws.isMaximized()) {
-			Rectangle r = shell.getBounds();
+			var r = shell.getBounds();
 			ws.setX(r.x);
 			ws.setY(r.y);
 			ws.setWidth(r.width);

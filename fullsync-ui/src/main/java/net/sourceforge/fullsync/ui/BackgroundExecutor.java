@@ -42,7 +42,7 @@ public class BackgroundExecutor {
 
 	public <R> void runAsync(ThrowingSupplier<R> supplier, Consumer<R> success, Consumer<Exception> error) { // NO_UCD (use default)
 		CompletableFuture<R> future = CompletableFuture.supplyAsync(unchecked(supplier), scheduledExecutorService);
-		UIUpdateTask<R> task = new UIUpdateTask<>(display, future, success, error);
+		var task = new UIUpdateTask<R>(display, future, success, error);
 		future.thenRun(task);
 	}
 

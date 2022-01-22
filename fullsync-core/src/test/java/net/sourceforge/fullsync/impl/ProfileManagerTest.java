@@ -28,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -43,8 +42,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.Profile;
-import net.sourceforge.fullsync.ProfileBuilder;
 import net.sourceforge.fullsync.Util;
 import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.event.ProfileListChanged;
@@ -85,10 +82,10 @@ public class ProfileManagerTest {
 		profileManager.setProfilesFileName("src/test/resources/profile-1_1-schedule.xml");
 		assertTrue(profileManager.loadProfiles(), "Load v1.1 profile with scheduling");
 		assertEquals(1, profileManager.getProfiles().size(), "Loaded one profile");
-		Profile p = profileManager.getProfileByName("Test Profile with Schedule");
+		var p = profileManager.getProfileByName("Test Profile with Schedule");
 		assertNotNull(p, "Loaded profile 'Test Profile with Schedule'");
 		assertEquals("Profile description", p.getDescription(), "Loaded profile description");
-		ConnectionDescription.Builder dstBuilder = new ConnectionDescription.Builder();
+		var dstBuilder = new ConnectionDescription.Builder();
 		dstBuilder.setScheme("file");
 		dstBuilder.setPath("/b/");
 		dstBuilder.setUserDirIsRoot(true);
@@ -104,7 +101,7 @@ public class ProfileManagerTest {
 		assertNotEquals("not enabled", p.getNextUpdateText(), "Loaded profile has scheduling configured");
 		assertEquals(new SimplifiedRuleSetDescriptor(false, null, true, null), p.getRuleSet(), "Loaded profile ruleset");
 		assertEquals(new IntervalSchedule(3600000, 3600000, "hours"), p.getSchedule(), "Loaded profile schedule");
-		ConnectionDescription.Builder srcBuilder = new ConnectionDescription.Builder();
+		var srcBuilder = new ConnectionDescription.Builder();
 		srcBuilder.setScheme("file");
 		srcBuilder.setPath("/a/");
 		srcBuilder.setUserDirIsRoot(true);
@@ -117,23 +114,23 @@ public class ProfileManagerTest {
 		profileManager.setProfilesFileName("src/test/resources/profile-1_2-filefilter.xml");
 		assertTrue(profileManager.loadProfiles(), "Load v1.2 profile with simplified rule set");
 		assertEquals(1, profileManager.getProfiles().size(), "Loaded one profile");
-		Profile p = profileManager.getProfileById("5ed254fc-ac55-4a50-a0db-ac9c03f071fc");
+		var p = profileManager.getProfileById("5ed254fc-ac55-4a50-a0db-ac9c03f071fc");
 		assertNotNull(p, "Loaded profile '5ed254fc-ac55-4a50-a0db-ac9c03f071fc'");
 		assertEquals("Ignore System Volume Information", p.getName(), "Loaded profile by id has correct name");
 	}
 
 	@Test
-	public void testLoadAndSaveProfiles() throws FileNotFoundException, IOException {
+	public void testLoadAndSaveProfiles() throws IOException {
 		profileManager.setProfilesFileName("src/test/resources/profile-1_2-filefilter.xml");
 		assertTrue(profileManager.loadProfiles(), "Load v1.2 profile with simplified rule set");
 		assertEquals(1, profileManager.getProfiles().size(), "Loaded one profile");
-		File tmpFile = new File(tmpDir.getAbsolutePath() + UUID.randomUUID().toString() + ".xml");
+		var tmpFile = new File(tmpDir.getAbsolutePath() + UUID.randomUUID() + ".xml");
 		assertFalse(tmpFile.exists(), "tmp file not yet existing");
 		profileManager.setProfilesFileName(tmpFile.getAbsolutePath());
 		profileManager.save();
 		assertTrue(tmpFile.exists(), "Profile manager stored to configured file");
-		try (FileInputStream referenceFile = new FileInputStream("src/test/resources/profile-1_2-filefilter.xml")) {
-			try (FileInputStream savedFile = new FileInputStream(tmpFile)) {
+		try (var referenceFile = new FileInputStream("src/test/resources/profile-1_2-filefilter.xml")) {
+			try (var savedFile = new FileInputStream(tmpFile)) {
 				assertEquals(Util.getInputStreamAsString(referenceFile), Util.getInputStreamAsString(savedFile));
 			}
 		}
@@ -142,7 +139,7 @@ public class ProfileManagerTest {
 	@Test
 	public void testAddProfile() throws InterruptedException {
 		assertEquals(0, profileManager.getProfiles().size(), "No profiles exist");
-		final CountDownLatch latch = new CountDownLatch(1);
+		final var latch = new CountDownLatch(1);
 		final Object eventHandler = new Object() {
 			@Subscribe
 			public void handleProfileListChanged(ProfileListChanged plc) {
@@ -150,7 +147,7 @@ public class ProfileManagerTest {
 			}
 		};
 		eventBus.register(eventHandler);
-		Profile p = profileManager.getProfileBuilder().setName("Test Profile").build();
+		var p = profileManager.getProfileBuilder().setName("Test Profile").build();
 		profileManager.addProfile(p);
 		assertTrue(latch.await(1, TimeUnit.SECONDS), "ProfileListChanged event triggered");
 		assertEquals(1, profileManager.getProfiles().size(), "One Profile added");
@@ -161,12 +158,12 @@ public class ProfileManagerTest {
 		profileManager.setProfilesFileName("src/test/resources/profile-1_2-filefilter.xml");
 		assertTrue(profileManager.loadProfiles(), "Load v1.2 profile with simplified rule set");
 		assertEquals(1, profileManager.getProfiles().size(), "Loaded one profile");
-		Profile p = profileManager.getProfileById("5ed254fc-ac55-4a50-a0db-ac9c03f071fc");
+		var p = profileManager.getProfileById("5ed254fc-ac55-4a50-a0db-ac9c03f071fc");
 		assertNotNull(p, "Loaded profile '5ed254fc-ac55-4a50-a0db-ac9c03f071fc'");
 		assertEquals("Ignore System Volume Information", p.getName(), "Loaded profile by id has correct name");
 		assertEquals(0, p.getLastErrorLevel(), "Profile last error level");
 		assertNull(p.getLastErrorString(), "Profile last error message");
-		final CountDownLatch latch = new CountDownLatch(1);
+		final var latch = new CountDownLatch(1);
 		final Object eventHandler = new Object() {
 			@Subscribe
 			public void handleProfileChanged(ProfileChanged pc) {
@@ -187,12 +184,12 @@ public class ProfileManagerTest {
 		profileManager.setProfilesFileName("src/test/resources/profile-1_2-filefilter.xml");
 		assertTrue(profileManager.loadProfiles(), "Load v1.2 profile with simplified rule set");
 		assertEquals(1, profileManager.getProfiles().size(), "Loaded one profile");
-		Profile p = profileManager.getProfileById("5ed254fc-ac55-4a50-a0db-ac9c03f071fc");
+		var p = profileManager.getProfileById("5ed254fc-ac55-4a50-a0db-ac9c03f071fc");
 		assertNotNull(p, "Loaded profile '5ed254fc-ac55-4a50-a0db-ac9c03f071fc'");
 		assertEquals("Ignore System Volume Information", p.getName(), "Loaded profile by id has correct name");
-		ProfileBuilder pb = profileManager.getProfileBuilder(p);
+		var pb = profileManager.getProfileBuilder(p);
 		pb.setName("Updated Profile Name");
-		final CountDownLatch latch = new CountDownLatch(1);
+		final var latch = new CountDownLatch(1);
 		final Object eventHandler = new Object() {
 			@Subscribe
 			public void handleProfileChanged(ProfileChanged pc) {
@@ -204,7 +201,7 @@ public class ProfileManagerTest {
 		eventBus.register(eventHandler);
 		profileManager.updateProfile(p, pb.build());
 		assertTrue(latch.await(1, TimeUnit.SECONDS), "ProfileChanged event triggered");
-		Profile p2 = profileManager.getProfileById(p.getId());
+		var p2 = profileManager.getProfileById(p.getId());
 		assertEquals("Updated Profile Name", p2.getName());
 	}
 }

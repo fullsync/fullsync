@@ -37,24 +37,10 @@ public class SFTPLogger implements com.jcraft.jsch.Logger {
 	@Override
 	public final void log(final int level, final String message) {
 		switch (level) {
-			case DEBUG:
-				logger.debug(message);
-				break;
-			case INFO:
-				logger.info(message);
-				break;
-			case WARN:
-				logger.warn(message);
-				break;
-			case ERROR:
-				logger.error(message);
-				break;
-			case FATAL:
-				logger.error(message);
-				break;
-			default:
-				logger.debug(message);
-				break;
+			case INFO -> logger.info(message);
+			case WARN -> logger.warn(message);
+			case ERROR, FATAL -> logger.error(message);
+			default -> logger.debug(message);
 		}
 	}
 }

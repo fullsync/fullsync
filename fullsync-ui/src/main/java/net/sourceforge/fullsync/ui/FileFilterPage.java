@@ -50,7 +50,7 @@ public class FileFilterPage extends WizardDialog {
 	private Button buttonAppliesToDir;
 	private FileFilter oldFileFilter;
 	private FileFilter newFileFilter;
-	private List<FilterRuleListItem> ruleItems = new ArrayList<>();
+	private final List<FilterRuleListItem> ruleItems = new ArrayList<>();
 
 	@Inject
 	public FileFilterPage(Shell mainShell, Provider<FileFilterPage> fileFilterPageProvider,
@@ -103,27 +103,27 @@ public class FileFilterPage extends WizardDialog {
 			comboFilterType = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
 			comboFilterType.add(Messages.getString("FileFilterPage.Include")); //$NON-NLS-1$
 			comboFilterType.add(Messages.getString("FileFilterPage.Exclude")); //$NON-NLS-1$
-			Label label1 = new Label(content, SWT.NONE);
+			var label1 = new Label(content, SWT.NONE);
 			label1.setText(Messages.getString("FileFilterPage.AnyFileThatMatches")); //$NON-NLS-1$
 
 			// match type combo
 			comboMatchType = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
 			comboMatchType.add(Messages.getString("FileFilterPage.RequireAll")); //$NON-NLS-1$
 			comboMatchType.add(Messages.getString("FileFilterPage.RequireAny")); //$NON-NLS-1$
-			Label label2 = new Label(content, SWT.NONE);
+			var label2 = new Label(content, SWT.NONE);
 			label2.setText(Messages.getString("FileFilterPage.OfTheFollowing")); //$NON-NLS-1$
 
 			// applies to directories
 			buttonAppliesToDir = new Button(content, SWT.CHECK | SWT.LEFT);
 			buttonAppliesToDir.setText(Messages.getString("FileFilterPage.AppliesToDirectories")); //$NON-NLS-1$
-			GridData buttonAppliesToDirLData = new GridData();
+			var buttonAppliesToDirLData = new GridData();
 			buttonAppliesToDirLData.horizontalSpan = 4;
 			buttonAppliesToDir.setLayoutData(buttonAppliesToDirLData);
 
 			// filter list
-			GridData scrolledComposite1LData = new GridData(SWT.FILL, SWT.FILL, true, true);
+			var scrolledComposite1LData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			scrolledComposite1LData.horizontalSpan = 4;
-			ScrolledComposite scrolledComposite1 = new ScrolledComposite(content, SWT.V_SCROLL | SWT.BORDER);
+			var scrolledComposite1 = new ScrolledComposite(content, SWT.V_SCROLL | SWT.BORDER);
 			scrolledComposite1.setLayoutData(scrolledComposite1LData);
 			scrolledComposite1.setAlwaysShowScrollBars(true);
 			scrolledComposite1.setExpandHorizontal(true);
@@ -131,12 +131,12 @@ public class FileFilterPage extends WizardDialog {
 			compositeRuleList.setLayout(new GridLayout(4, false));
 			scrolledComposite1.setContent(compositeRuleList);
 
-			int rowsAdded = 0;
+			var rowsAdded = 0;
 			if (null != oldFileFilter) {
 				comboMatchType.select(oldFileFilter.getMatchType());
 				comboFilterType.select(oldFileFilter.getFilterType());
 				buttonAppliesToDir.setSelection(oldFileFilter.appliesToDirectories());
-				FileFilterRule[] rules = oldFileFilter.getFileFiltersRules();
+				var rules = oldFileFilter.getFileFiltersRules();
 				for (FileFilterRule rule : rules) {
 					addRuleRow(rule.getRuleType(), rule.getOperator(), rule.getValue());
 					++rowsAdded;
@@ -161,13 +161,13 @@ public class FileFilterPage extends WizardDialog {
 
 	@Override
 	public boolean apply() {
-		int matchType = comboMatchType.getSelectionIndex();
-		int filterType = comboFilterType.getSelectionIndex();
-		boolean appliesToDirectories = buttonAppliesToDir.getSelection();
+		var matchType = comboMatchType.getSelectionIndex();
+		var filterType = comboFilterType.getSelectionIndex();
+		var appliesToDirectories = buttonAppliesToDir.getSelection();
 
-		FileFilterRule[] rules = new FileFilterRule[ruleItems.size()];
-		for (int i = 0; i < rules.length; i++) {
-			FilterRuleListItem ruleItem = ruleItems.get(i);
+		var rules = new FileFilterRule[ruleItems.size()];
+		for (var i = 0; i < rules.length; i++) {
+			var ruleItem = ruleItems.get(i);
 			try {
 				rules[i] = ruleItem.getFileFilterRule();
 			}
@@ -197,7 +197,7 @@ public class FileFilterPage extends WizardDialog {
 	}
 
 	private void addRuleRow(String ruleType, int op, OperandValue value) {
-		FilterRuleListItem ruleItem = filterRuleListItemProvider.get();
+		var ruleItem = filterRuleListItemProvider.get();
 		ruleItem.init(this, ruleType, op, value);
 		ruleItem.render(compositeRuleList);
 		ruleItems.add(ruleItem);

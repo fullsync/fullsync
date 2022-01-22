@@ -63,13 +63,13 @@ public class FilterRuleListItem {
 	private static final String[] ruleTypeNames;
 
 	static {
-		final String name = Messages.getString("FilterRuleListItem.FileNameFilter"); //$NON-NLS-1$
-		final String path = Messages.getString("FilterRuleListItem.FilePathFilter"); //$NON-NLS-1$
-		final String type = Messages.getString("FilterRuleListItem.FileTypeFilter"); //$NON-NLS-1$
-		final String size = Messages.getString("FilterRuleListItem.FileSizeFilter"); //$NON-NLS-1$
-		final String modificationDate = Messages.getString("FilterRuleListItem.FileModificationDateFilter"); //$NON-NLS-1$
-		final String age = Messages.getString("FilterRuleListItem.FileAgeFilter"); //$NON-NLS-1$
-		final String nested = Messages.getString("FilterRuleListItem.NestedFilter"); //$NON-NLS-1$
+		final var name = Messages.getString("FilterRuleListItem.FileNameFilter"); //$NON-NLS-1$
+		final var path = Messages.getString("FilterRuleListItem.FilePathFilter"); //$NON-NLS-1$
+		final var type = Messages.getString("FilterRuleListItem.FileTypeFilter"); //$NON-NLS-1$
+		final var size = Messages.getString("FilterRuleListItem.FileSizeFilter"); //$NON-NLS-1$
+		final var modificationDate = Messages.getString("FilterRuleListItem.FileModificationDateFilter"); //$NON-NLS-1$
+		final var age = Messages.getString("FilterRuleListItem.FileAgeFilter"); //$NON-NLS-1$
+		final var nested = Messages.getString("FilterRuleListItem.NestedFilter"); //$NON-NLS-1$
 
 		ruleTypeNames = new String[] {
 			name,
@@ -174,12 +174,12 @@ public class FilterRuleListItem {
 		renderRuleComposite();
 
 		toolBar = new ToolBar(composite, SWT.FLAT);
-		ToolItem toolItemDelete = new ToolItem(toolBar, SWT.PUSH);
+		var toolItemDelete = new ToolItem(toolBar, SWT.PUSH);
 		toolItemDelete.setImage(imageRepository.getImage("Rule_Delete.png")); //$NON-NLS-1$
 		toolItemDelete.setToolTipText(Messages.getString("FilterRuleListItem.Delete")); //$NON-NLS-1$
 		toolItemDelete.addListener(SWT.Selection, this::deleteThisItem);
 
-		ToolItem toolItemAdd = new ToolItem(toolBar, SWT.PUSH);
+		var toolItemAdd = new ToolItem(toolBar, SWT.PUSH);
 		toolItemAdd.setImage(imageRepository.getImage("Rule_Add.png")); //$NON-NLS-1$
 		toolItemAdd.setToolTipText(Messages.getString("FilterRuleListItem.Add")); //$NON-NLS-1$
 		toolItemAdd.addListener(SWT.Selection, this::addNewRule);
@@ -222,7 +222,7 @@ public class FilterRuleListItem {
 
 	private void renderRuleComposite() {
 		Class<? extends FileFilterRule> ruleClass = getRuleClass(ruleType);
-		String[] ops = fileFilterManager.getOperatorsForRuleType(ruleType);
+		var ops = fileFilterManager.getOperatorsForRuleType(ruleType);
 		comboOperators.removeAll();
 		for (String op2 : ops) {
 			comboOperators.add(op2);
@@ -231,8 +231,8 @@ public class FilterRuleListItem {
 			op = 0;
 		}
 		comboOperators.select(op);
-		GridData comboOperatosLD = (GridData) comboOperators.getLayoutData();
-		boolean hasOperators = 0 != ops.length;
+		var comboOperatosLD = (GridData) comboOperators.getLayoutData();
+		var hasOperators = 0 != ops.length;
 		comboOperatosLD.exclude = !hasOperators;
 		comboOperators.setEnabled(hasOperators);
 		comboOperators.setVisible(hasOperators);
@@ -240,7 +240,7 @@ public class FilterRuleListItem {
 			comboOperators.setEnabled(false);
 		}
 
-		GridData compositeWrapperLD = (GridData) ruleCompositeWrapper.getLayoutData();
+		var compositeWrapperLD = (GridData) ruleCompositeWrapper.getLayoutData();
 		compositeWrapperLD.horizontalSpan = 1;
 
 		if (ruleClass.equals(FileNameFileFilterRule.class) || ruleClass.equals(FilePathFileFilterRule.class)) {
@@ -287,7 +287,7 @@ public class FilterRuleListItem {
 		}
 		else {
 			compositeWrapperLD.horizontalSpan = 2;
-			Text textValue = new Text(ruleCompositeWrapper, SWT.BORDER);
+			var textValue = new Text(ruleCompositeWrapper, SWT.BORDER);
 			textValue.setText(Messages.getString("FilterRuleListItem.MissingRuleComposite")); //$NON-NLS-1$
 			textValue.setEditable(false);
 		}

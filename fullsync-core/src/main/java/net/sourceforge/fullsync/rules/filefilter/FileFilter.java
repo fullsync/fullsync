@@ -58,8 +58,8 @@ public class FileFilter {
 	}
 
 	public boolean match(final File file) {
-		boolean result = doMmatch(file);
-		return filterType == INCLUDE ? result : !result;
+		var result = doMmatch(file);
+		return (filterType == INCLUDE) == result;
 	}
 
 	private boolean doMmatch(final File file) {
@@ -67,14 +67,11 @@ public class FileFilter {
 			return true;
 		}
 
-		switch (matchType) {
-			case MATCH_ALL:
-				return doMatchAll(file);
-			case MATCH_ANY:
-				return doMatchAny(file);
-			default:
-				return true;
-		}
+		return switch (matchType) {
+			case MATCH_ALL -> doMatchAll(file);
+			case MATCH_ANY -> doMatchAny(file);
+			default -> true;
+		};
 	}
 
 	private boolean doMatchAll(final File file) {
@@ -83,7 +80,7 @@ public class FileFilter {
 				continue;
 			}
 			try {
-				boolean res = rule.match(file);
+				var res = rule.match(file);
 				if (!res) {
 					return false;
 				}
@@ -96,14 +93,14 @@ public class FileFilter {
 	}
 
 	private boolean doMatchAny(final File file) {
-		int appliedRules = 0;
+		var appliedRules = 0;
 
 		for (FileFilterRule rule : rules) {
 			if (!appliesToDir && file.isDirectory()) {
 				continue;
 			}
 			try {
-				boolean res = rule.match(file);
+				var res = rule.match(file);
 				if (res) {
 					return true;
 				}
@@ -121,28 +118,20 @@ public class FileFilter {
 		if (rules.length == 0) {
 			return "Empty filter";
 		}
-		StringBuilder buff = new StringBuilder(25 + (30 * rules.length));
+		var buff = new StringBuilder(25 + (30 * rules.length));
 
 		switch (filterType) {
-			case INCLUDE:
-				buff.append("Include");
-				break;
-			case EXCLUDE:
-				buff.append("Exclude");
-				break;
+			case INCLUDE -> buff.append("Include");
+			case EXCLUDE -> buff.append("Exclude");
 		}
 
 		buff.append(" any file where ");
 
-		for (int i = 0; i < (rules.length - 1); i++) {
+		for (var i = 0; i < (rules.length - 1); i++) {
 			buff.append(rules[i].toString());
 			switch (matchType) {
-				case MATCH_ALL:
-					buff.append(" and ");
-					break;
-				case MATCH_ANY:
-					buff.append(" or ");
-					break;
+				case MATCH_ALL -> buff.append(" and ");
+				case MATCH_ANY -> buff.append(" or ");
 			}
 		}
 
@@ -161,7 +150,7 @@ public class FileFilter {
 		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
-		FileFilter that = (FileFilter) o;
+		var that = (FileFilter) o;
 		return (matchType == that.matchType)
 			&& (filterType == that.filterType)
 			&& (appliesToDir == that.appliesToDir)
@@ -170,8 +159,7 @@ public class FileFilter {
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(matchType, filterType, appliesToDir);
-		result = (31 * result) + Arrays.hashCode(rules);
-		return result;
+		var result = Objects.hash(matchType, filterType, appliesToDir);
+		return (31 * result) + Arrays.hashCode(rules);
 	}
 }

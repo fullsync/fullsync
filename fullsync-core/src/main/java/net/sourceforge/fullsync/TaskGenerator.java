@@ -19,9 +19,6 @@
  */
 package net.sourceforge.fullsync;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 public interface TaskGenerator {
-	TaskTree execute(Profile profile, boolean interactive) throws FileSystemException, DataParseException, URISyntaxException, IOException;
+	TaskTree execute(Profile profile, boolean interactive) throws FileSystemException;
 }

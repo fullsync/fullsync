@@ -65,7 +65,7 @@ public class ConnectionDescription {
 	private final boolean userDirIsRoot;
 
 	public Element serialize(String name, Document doc) {
-		Element elem = doc.createElement(name);
+		var elem = doc.createElement(name);
 		elem.setAttribute(ATTRIBUTE_SCHEME, scheme);
 		host.ifPresent(s -> elem.setAttribute(ATTRIBUTE_HOST, s));
 		port.ifPresent(integer -> elem.setAttribute(ATTRIBUTE_PORT, integer.toString()));
@@ -74,13 +74,13 @@ public class ConnectionDescription {
 		password.ifPresent(s -> elem.setAttribute(ATTRIBUTE_PASSWORD, Obfuscator.obfuscate(s)));
 		bufferStrategy.ifPresent(s -> elem.setAttribute(ATTRIBUTE_BUFFER_STRATEGY, s));
 		publicKeyAuth.ifPresent(aBoolean -> {
-			Element p = doc.createElement(ELEMENT_PARAM);
+			var p = doc.createElement(ELEMENT_PARAM);
 			p.setAttribute(ATTRIBUTE_NAME, PARAMETER_PUBLIC_KEY_AUTH);
 			p.setAttribute(ATTRIBUTE_VALUE, aBoolean ? PUBLIC_KEY_AUTH_ENABLED : PUBLIC_KEY_AUTH_DISABLED);
 			elem.appendChild(p);
 		});
 		keyPassphrase.ifPresent(s -> {
-			Element p = doc.createElement(ELEMENT_SECRET_PARAM);
+			var p = doc.createElement(ELEMENT_SECRET_PARAM);
 			p.setAttribute(ATTRIBUTE_NAME, PARAMETER_KEY_PASSPHRASE);
 			p.setAttribute(ATTRIBUTE_VALUE, Obfuscator.obfuscate(s));
 			elem.appendChild(p);
@@ -98,11 +98,11 @@ public class ConnectionDescription {
 	}
 
 	public static ConnectionDescription unserialize(Element element) {
-		Builder builder = new Builder();
+		var builder = new Builder();
 		if (element.hasAttribute(ATTRIBUTE_URI)) {
-			String uriAttribute = element.getAttribute(ATTRIBUTE_URI);
+			var uriAttribute = element.getAttribute(ATTRIBUTE_URI);
 			try {
-				URI uri = new URI(uriAttribute);
+				var uri = new URI(uriAttribute);
 				builder.setScheme(uri.getScheme());
 				builder.setHost(uri.getHost());
 				builder.setPort(uri.getPort());
@@ -117,10 +117,10 @@ public class ConnectionDescription {
 			builder.setScheme(element.getAttribute(ATTRIBUTE_SCHEME));
 			builder.setHost(getAttributeOrNull(element, ATTRIBUTE_HOST));
 			if (element.hasAttribute(ATTRIBUTE_PORT)) {
-				builder.setPort(Integer.valueOf(element.getAttribute(ATTRIBUTE_PORT)));
+				builder.setPort(Integer.parseInt(element.getAttribute(ATTRIBUTE_PORT)));
 			}
 			builder.setPath(element.getAttribute(ATTRIBUTE_PATH));
-			builder.setUserDirIsRoot(Boolean.valueOf(element.getAttribute(ATTRIBUTE_USER_DIR_IS_ROOT)));
+			builder.setUserDirIsRoot(Boolean.parseBoolean(element.getAttribute(ATTRIBUTE_USER_DIR_IS_ROOT)));
 		}
 		builder.setUsername(getAttributeOrNull(element, ATTRIBUTE_USERNAME));
 		builder.setPassword(Obfuscator.deobfuscate(getAttributeOrNull(element, ATTRIBUTE_PASSWORD)));
@@ -168,7 +168,7 @@ public class ConnectionDescription {
 		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
-		ConnectionDescription that = (ConnectionDescription) o;
+		var that = (ConnectionDescription) o;
 		return (userDirIsRoot == that.userDirIsRoot)
 			&& Objects.equals(scheme, that.scheme)
 			&& Objects.equals(host, that.host)
@@ -228,7 +228,7 @@ public class ConnectionDescription {
 
 	public String getDisplayPath() {
 		if ("file".equals(getScheme())) { //$NON-NLS-1$
-			File f = new File(getPath());
+			var f = new File(getPath());
 			try {
 				return f.getCanonicalPath();
 			}
@@ -237,10 +237,10 @@ public class ConnectionDescription {
 			}
 		}
 		try {
-			String portSuffix = port.map(integer -> ":" + integer).orElse(""); //$NON-NLS-1$ //$NON-NLS-2$
+			var portSuffix = port.map(integer -> ":" + integer).orElse(""); //$NON-NLS-1$ //$NON-NLS-2$
 			if ("sftp".equals(scheme) && (22 == port.orElse(-1))) { //$NON-NLS-1$
-				String userPrefix = username.map(s -> s + "@").orElse(""); //$NON-NLS-1$ //$NON-NLS-2$
-				String displayPath = userDirIsRoot ? path : '/' + path;
+				var userPrefix = username.map(s -> s + "@").orElse(""); //$NON-NLS-1$ //$NON-NLS-2$
+				var displayPath = userDirIsRoot ? path : '/' + path;
 				return String.format("%s%s:%s", userPrefix, host.get(), displayPath); //$NON-NLS-1$
 			}
 			else {

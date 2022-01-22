@@ -21,20 +21,18 @@ package net.sourceforge.fullsync.changelog;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
 public class ChangeLogLoader {
-	private DocumentBuilderFactory parserFactory = DocumentBuilderFactory.newInstance();
+	private final DocumentBuilderFactory parserFactory = DocumentBuilderFactory.newInstance();
 
 	public ChangeLogLoader() {
 		parserFactory.setValidating(false);
@@ -45,26 +43,26 @@ public class ChangeLogLoader {
 	}
 
 	public List<ChangeLogEntry> load(File srcDir, String pattern) throws ParserConfigurationException, SAXException, IOException {
-		Pattern p = Pattern.compile(pattern);
+		var p = Pattern.compile(pattern);
 		List<ChangeLogEntry> changelogEntries = new LinkedList<>();
-		String[] children = srcDir.list();
+		var children = srcDir.list();
 		if (null != children) {
 			for (String file : children) {
-				Matcher m = p.matcher(file);
+				var m = p.matcher(file);
 				if (m.matches()) {
 					changelogEntries.add(loadChangeLogFile(new File(srcDir, file)));
 				}
 			}
 		}
-		Collections.sort(changelogEntries, (a, b) -> b.getDate().compareTo(a.getDate()));
+		changelogEntries.sort(Comparator.comparing(ChangeLogEntry::getDate, Comparator.reverseOrder()));
 		return changelogEntries;
 	}
 
 	public static List<ChangeLogEntry> filterAfter(List<ChangeLogEntry> changelogEntries, String version) {
 		List<ChangeLogEntry> newerVersions = new LinkedList<>();
-		VersionComparator vc = new VersionComparator();
+		var vc = new VersionComparator();
 		for (ChangeLogEntry entry : changelogEntries) {
-			if (1 != vc.compare(entry.getVersion(), version)) {
+			if (vc.compare(entry.getVersion(), version) < 1) {
 				break;
 			}
 			newerVersions.add(entry);
@@ -73,7 +71,7 @@ public class ChangeLogLoader {
 	}
 
 	private ChangeLogEntry loadChangeLogFile(File f) throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilder parser = parserFactory.newDocumentBuilder();
+		var parser = parserFactory.newDocumentBuilder();
 		return new ChangeLogEntry(parser.parse(f));
 	}
 }
