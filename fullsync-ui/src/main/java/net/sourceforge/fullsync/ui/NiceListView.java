@@ -77,8 +77,7 @@ class NiceListView extends Composite {
 		if (index > -1) {
 			setSelected((NiceListViewItem) children[index]);
 			var parent = this.getParent();
-			if (parent instanceof ScrolledComposite) {
-				var sc = (ScrolledComposite) parent;
+			if (parent instanceof ScrolledComposite sc) {
 				sc.showControl(children[index]);
 			}
 		}

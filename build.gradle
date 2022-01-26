@@ -45,7 +45,7 @@ ext {
 	libraries = [:]
 	swtVersion = "3.118.0"
 	slf4jVersion = "1.7.30"
-	guiceVersion = "5.0.1"
+	guiceVersion = "5.1.0"
 	jUnitVersion = "5.6.2"
 	commonsCliVersion = "1.4"
 	commonsNetVersion = "3.6"
@@ -87,8 +87,7 @@ subprojects {
 	plugins.withType(JavaPlugin).whenPluginAdded { p ->
 		java {
 			toolchain {
-				// Guice doesn't yet support Java > 15
-				languageVersion = JavaLanguageVersion.of(15)
+				languageVersion = JavaLanguageVersion.of(17)
 			}
 		}
 		jar {

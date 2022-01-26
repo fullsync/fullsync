@@ -101,44 +101,37 @@ public class FileFilterManager {
 	}
 
 	private void serializeRuleAttributes(FileFilterRule fileFilterRule, Element ruleElement) {
-		if (fileFilterRule instanceof FileNameFileFilterRule) {
-			var rule = (FileNameFileFilterRule) fileFilterRule;
+		if (fileFilterRule instanceof FileNameFileFilterRule rule) {
 			ruleElement.setAttribute(ATTRIBUTE_OP, String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute(ATTRIBUTE_PATTERN, rule.getValue().toString());
 		}
 
-		if (fileFilterRule instanceof FilePathFileFilterRule) {
-			var rule = (FilePathFileFilterRule) fileFilterRule;
+		if (fileFilterRule instanceof FilePathFileFilterRule rule) {
 			ruleElement.setAttribute(ATTRIBUTE_OP, String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute(ATTRIBUTE_PATTERN, rule.getValue().toString());
 		}
 
-		if (fileFilterRule instanceof FileTypeFileFilterRule) {
-			var rule = (FileTypeFileFilterRule) fileFilterRule;
+		if (fileFilterRule instanceof FileTypeFileFilterRule rule) {
 			ruleElement.setAttribute(ATTRIBUTE_OP, String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute(ATTRIBUTE_TYPE, rule.getValue().toString());
 		}
 
-		if (fileFilterRule instanceof FileSizeFileFilterRule) {
-			var rule = (FileSizeFileFilterRule) fileFilterRule;
+		if (fileFilterRule instanceof FileSizeFileFilterRule rule) {
 			ruleElement.setAttribute(ATTRIBUTE_OP, String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute(ATTRIBUTE_SIZE, rule.getValue().toString());
 		}
 
-		if (fileFilterRule instanceof FileModificationDateFileFilterRule) {
-			var rule = (FileModificationDateFileFilterRule) fileFilterRule;
+		if (fileFilterRule instanceof FileModificationDateFileFilterRule rule) {
 			ruleElement.setAttribute(ATTRIBUTE_OP, String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute(ATTRIBUTE_MODIFICATIONDATE, rule.getValue().toString());
 		}
 
-		if (fileFilterRule instanceof FileAgeFileFilterRule) {
-			var rule = (FileAgeFileFilterRule) fileFilterRule;
+		if (fileFilterRule instanceof FileAgeFileFilterRule rule) {
 			ruleElement.setAttribute(ATTRIBUTE_OP, String.valueOf(rule.getOperator()));
 			ruleElement.setAttribute(ATTRIBUTE_AGE, rule.getValue().toString());
 		}
 
-		if (fileFilterRule instanceof SubfilterFileFilerRule) {
-			var rule = (SubfilterFileFilerRule) fileFilterRule;
+		if (fileFilterRule instanceof SubfilterFileFilerRule rule) {
 			var subfilter = ((FilterValue) rule.getValue()).getValue();
 			var doc = ruleElement.getOwnerDocument();
 			var subfilterElement = serializeFileFilter(subfilter, doc, ELEMENT_NESTED_FILE_FILTER, ELEMENT_NESTED_FILE_FILTER_RULE);

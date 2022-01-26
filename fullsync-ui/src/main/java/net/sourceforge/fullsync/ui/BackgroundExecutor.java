@@ -42,7 +42,7 @@ public class BackgroundExecutor {
 
 	public <R> void runAsync(ThrowingSupplier<R> supplier, Consumer<R> success, Consumer<Exception> error) { // NO_UCD (use default)
 		CompletableFuture<R> future = CompletableFuture.supplyAsync(unchecked(supplier), scheduledExecutorService);
-		future.thenRun(new UIUpdateTask<R>(display, future, success, error));
+		future.thenRun(new UIUpdateTask<>(display, future, success, error));
 	}
 
 	// from http://4comprehension.com/sneakily-throwing-exceptions-in-lambda-expressions-in-java/

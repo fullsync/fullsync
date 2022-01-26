@@ -145,7 +145,7 @@ public class GuiController { // NO_UCD (use default)
 						"xdg-open", //$NON-NLS-1$
 						uri
 					};
-					Process p = Runtime.getRuntime().exec(args);
+					var p = Runtime.getRuntime().exec(args);
 					p.waitFor();
 				}
 				catch (IOException | InterruptedException e) {

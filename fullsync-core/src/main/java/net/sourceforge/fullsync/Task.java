@@ -93,8 +93,7 @@ public class Task {
 	// HACK equals and hashCode should use more fields!!! Moreover some of the fields can be null.
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Task) {
-			var t = (Task) o;
+		if (o instanceof Task t) {
 			return source.getName().equals(t.source.getName());
 		}
 		return false;

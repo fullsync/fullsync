@@ -53,8 +53,7 @@ public class FontRepository { // NO_UCD (use default)
 
 		@Override
 		public boolean equals(Object obj) {
-			if (obj instanceof Key) {
-				var k = (Key) obj;
+			if (obj instanceof Key k) {
 				return (height == k.height) && (style == k.style) && (0 == name.compareTo(k.name));
 			}
 			return false;

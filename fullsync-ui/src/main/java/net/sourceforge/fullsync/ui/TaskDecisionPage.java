@@ -198,7 +198,7 @@ class TaskDecisionPage extends WizardDialog {
 			tasksFinished = 0;
 			display.syncExec(() -> setOkButtonEnabled(false));
 
-			var updateQueue = new GUIUpdateQueue<TaskFinishedEvent>(display, this::updateTaskStatus);
+			var updateQueue = new GUIUpdateQueue<>(display, this::updateTaskStatus);
 
 			synchronizer.performActions(taskTree, updateQueue::add);
 

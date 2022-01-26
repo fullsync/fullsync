@@ -39,8 +39,7 @@ public class SmbFileSystem implements FileSystem {
 		// [VFS-552][sandbox] include vfs-providers.xml in JAR for dynamic registration of mime and smb providers.
 		try {
 			var fsm = VFS.getManager();
-			if (!fsm.hasProvider("smb") && (fsm instanceof DefaultFileSystemManager)) { //$NON-NLS-1$
-				var dfsm = (DefaultFileSystemManager) fsm;
+			if (!fsm.hasProvider("smb") && (fsm instanceof DefaultFileSystemManager dfsm)) { //$NON-NLS-1$
 				dfsm.addProvider("smb", new SmbFileProvider()); //$NON-NLS-1$
 			}
 		}

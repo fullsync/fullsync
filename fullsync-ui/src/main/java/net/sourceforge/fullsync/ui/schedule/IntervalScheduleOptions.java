@@ -92,8 +92,7 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 
 	@Override
 	public void setSchedule(final Schedule sched) {
-		if (sched instanceof IntervalSchedule) {
-			var is = (IntervalSchedule) sched;
+		if (sched instanceof IntervalSchedule is) {
 			var index = 0;
 			for (SchedulingIntervalItem item : schedulingIntervals) {
 				if (item.unit.equals(is.getIntervalDisplayUnit())) {
