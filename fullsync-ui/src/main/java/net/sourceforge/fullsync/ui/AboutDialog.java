@@ -54,7 +54,7 @@ class AboutDialog {
 	private final Preferences preferences;
 	private final ImageRepository imageRepository;
 	private final BackgroundExecutor backgroundExecutor;
-	private List<LicenseEntry> licenses = Collections.emptyList();
+	private final List<LicenseEntry> licenses = Collections.emptyList();
 	private int stIndex;
 	private Combo componentCombo;
 	private StyledText licenseText;
@@ -322,8 +322,9 @@ class AboutDialog {
 	private void updateLicenses(List<LicenseEntry> licenseList) {
 		var idx = 0;
 		var fsIdx = 0;
-		licenses = licenseList;
-		for (LicenseEntry license : licenses) {
+		licenses.clear();
+		licenses.addAll(licenseList);
+		for (var license : licenses) {
 			componentCombo.add(license.name);
 			if ("FullSync".equals(license.name)) { //$NON-NLS-1$
 				fsIdx = idx;
