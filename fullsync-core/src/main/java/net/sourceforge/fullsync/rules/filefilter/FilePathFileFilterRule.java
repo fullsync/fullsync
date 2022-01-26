@@ -117,10 +117,6 @@ public class FilePathFileFilterRule implements FileFilterRule {
 
 	@Override
 	public String toString() {
-        return "file path " +
-                allOperators[op] +
-                " '" +
-                pattern.toString() +
-                '\'';
+		return "file path " + allOperators[op] + " '" + pattern.toString() + '\'';
 	}
 }

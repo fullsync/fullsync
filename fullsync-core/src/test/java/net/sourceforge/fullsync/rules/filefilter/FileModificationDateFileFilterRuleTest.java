@@ -52,8 +52,7 @@ public class FileModificationDateFileFilterRuleTest {
 
 	@Test
 	public void testOpIs() throws Exception {
-		var filterRule = new FileModificationDateFileFilterRule(new DateValue(OLD_DATE_TIME),
-			FileModificationDateFileFilterRule.OP_IS);
+		var filterRule = new FileModificationDateFileFilterRule(new DateValue(OLD_DATE_TIME), FileModificationDateFileFilterRule.OP_IS);
 
 		assertTrue(filterRule.match(testNode));
 		testNode.setLastModified(newtime);
@@ -63,8 +62,7 @@ public class FileModificationDateFileFilterRuleTest {
 
 	@Test
 	public void testOpIsnt() throws Exception {
-		var filterRule = new FileModificationDateFileFilterRule(new DateValue(OLD_DATE_TIME),
-			FileModificationDateFileFilterRule.OP_ISNT);
+		var filterRule = new FileModificationDateFileFilterRule(new DateValue(OLD_DATE_TIME), FileModificationDateFileFilterRule.OP_ISNT);
 
 		testNode.setLastModified(newtime);
 		assertTrue(filterRule.match(testNode));
@@ -100,8 +98,7 @@ public class FileModificationDateFileFilterRuleTest {
 
 	@Test
 	public void throwFilterRuleNotAppliableExceptionAll() throws Exception {
-		var filterRule = new FileModificationDateFileFilterRule(new DateValue(NEW_DATE_TIME),
-			FileModificationDateFileFilterRule.OP_IS);
+		var filterRule = new FileModificationDateFileFilterRule(new DateValue(NEW_DATE_TIME), FileModificationDateFileFilterRule.OP_IS);
 
 		testNode.setLastModified(-1);
 

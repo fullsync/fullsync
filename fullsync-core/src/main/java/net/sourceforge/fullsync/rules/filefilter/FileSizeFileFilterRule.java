@@ -84,10 +84,6 @@ public class FileSizeFileFilterRule implements FileFilterRule {
 
 	@Override
 	public String toString() {
-        return "file size " +
-                allOperators[op] +
-                " '" +
-                size.toString() +
-                "'";
+		return "file size " + allOperators[op] + " '" + size.toString() + "'";
 	}
 }

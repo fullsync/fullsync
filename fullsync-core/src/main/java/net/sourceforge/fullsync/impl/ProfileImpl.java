@@ -65,11 +65,8 @@ class ProfileImpl implements Profile {
 		var profileName = element.getAttribute(ATTRIBUTE_NAME);
 		var src = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Source").item(0)); //$NON-NLS-1$
 		var dst = ConnectionDescription.unserialize((Element) element.getElementsByTagName("Destination").item(0)); //$NON-NLS-1$
-		var deserializedRuleset = RuleSetDescriptor
-			.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)); //$NON-NLS-1$
-		var usedRuleset = null != deserializedRuleset
-			? deserializedRuleset
-			: new SimplifiedRuleSetDescriptor(true, null, false, null);
+		var deserializedRuleset = RuleSetDescriptor.unserialize((Element) element.getElementsByTagName("RuleSetDescriptor").item(0)); //$NON-NLS-1$
+		var usedRuleset = null != deserializedRuleset ? deserializedRuleset : new SimplifiedRuleSetDescriptor(true, null, false, null);
 		var description = element.getAttribute(ATTRIBUTE_DESCRIPTION);
 		var synchronizationType = element.getAttribute(ATTRIBUTE_TYPE);
 		var schedulingEnabled = true;

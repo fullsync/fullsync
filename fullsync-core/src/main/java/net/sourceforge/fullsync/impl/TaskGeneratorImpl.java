@@ -150,8 +150,7 @@ public class TaskGeneratorImpl implements TaskGenerator {
 	}
 
 	@Override
-	public TaskTree execute(Profile profile, boolean interactive)
-		throws FileSystemException {
+	public TaskTree execute(Profile profile, boolean interactive) throws FileSystemException {
 		var rules = profile.getRuleSet().createRuleSet();
 		var actionDecider = switch (profile.getSynchronizationType()) {
 			case "Publish/Update" -> new PublishActionDecider();

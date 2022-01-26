@@ -106,8 +106,8 @@ public abstract class FilesystemTestBase {
 		String lastErrorString = null;
 		var lastScheduleTime = 0L;
 
-		profile = new ProfileImpl(eventBus, id, name, description, syncType, src, dst, ruleSet, schedulingEnabled, schedule,
-			lastUpdate, lastErrorLevel, lastErrorString, lastScheduleTime);
+		profile = new ProfileImpl(eventBus, id, name, description, syncType, src, dst, ruleSet, schedulingEnabled, schedule, lastUpdate,
+			lastErrorLevel, lastErrorString, lastScheduleTime);
 	}
 
 	/**

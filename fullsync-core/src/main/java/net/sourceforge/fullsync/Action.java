@@ -65,16 +65,11 @@ public class Action {
 	@Override
 	public String toString() {
 		return "[" + //$NON-NLS-1$
-			type.toString() +
-			"(" + //$NON-NLS-1$
-			getLocation().toString() +
-			") BU: " + //$NON-NLS-1$
-			bufferUpdate.toString() +
-			"; Rec: " + //$NON-NLS-1$
-			isBeforeRecursion() +
-			" - " + //$NON-NLS-1$
-			explanation +
-			"]";
+			type.toString() + "(" + //$NON-NLS-1$
+			getLocation().toString() + ") BU: " + //$NON-NLS-1$
+			bufferUpdate.toString() + "; Rec: " + //$NON-NLS-1$
+			isBeforeRecursion() + " - " + //$NON-NLS-1$
+			explanation + "]";
 	}
 
 	public boolean equalsExceptExplanation(Action action) {

@@ -114,12 +114,7 @@ public class CrontabSchedule extends Schedule {
 			daysOfWeek.bArray[1] = true;
 		}
 
-        var buff = minutes.pattern + ' ' +
-                hours.pattern + ' ' +
-                daysOfMonth.pattern + ' ' +
-                months.pattern + ' ' +
-                daysOfWeek.pattern;
-		origPattern = buff;
+		origPattern = minutes.pattern + ' ' + hours.pattern + ' ' + daysOfMonth.pattern + ' ' + months.pattern + ' ' + daysOfWeek.pattern;
 	}
 
 	public String getPattern() {

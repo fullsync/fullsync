@@ -87,10 +87,6 @@ public class FileAgeFileFilterRule implements FileFilterRule {
 
 	@Override
 	public String toString() {
-        return "file age " +
-                allOperators[op] +
-                " '" +
-                age +
-                "'";
+		return "file age " + allOperators[op] + " '" + age + "'";
 	}
 }

@@ -84,10 +84,6 @@ public class FileModificationDateFileFilterRule implements FileFilterRule {
 
 	@Override
 	public String toString() {
-        return "file modification date " +
-                allOperators[op] +
-                " '" +
-                date +
-                "'";
+		return "file modification date " + allOperators[op] + " '" + date + "'";
 	}
 }

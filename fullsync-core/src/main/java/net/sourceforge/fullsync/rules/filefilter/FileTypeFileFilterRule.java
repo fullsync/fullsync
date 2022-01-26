@@ -74,10 +74,6 @@ public class FileTypeFileFilterRule implements FileFilterRule {
 
 	@Override
 	public String toString() {
-        return "file type " +
-                allOperators[op] +
-                " '" +
-                type.toString() +
-                '\'';
+		return "file type " + allOperators[op] + " '" + type.toString() + '\'';
 	}
 }

@@ -59,8 +59,7 @@ public class FileSizeFileFilterRuleTest {
 
 	@Test
 	public void testOpIsGreaterThan() throws Exception {
-		var filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"),
-			FileSizeFileFilterRule.OP_IS_GREATER_THAN);
+		var filterRule = new FileSizeFileFilterRule(new SizeValue("1000 Bytes"), FileSizeFileFilterRule.OP_IS_GREATER_THAN);
 
 		assertFalse(filterRule.match(foobarTxt));
 

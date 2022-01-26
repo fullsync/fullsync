@@ -117,10 +117,6 @@ public class FileNameFileFilterRule implements FileFilterRule {
 
 	@Override
 	public String toString() {
-        return "file name " +
-                allOperators[op] +
-                " '" +
-                pattern.toString() +
-                "'";
+		return "file name " + allOperators[op] + " '" + pattern.toString() + "'";
 	}
 }

@@ -134,8 +134,7 @@ public class SimplifiedRuleSetDescriptor extends RuleSetDescriptor {
 					fileFilterNodeList = subDirElement.getElementsByTagName(ELEMENT_FILE_FILTER);
 					if (fileFilterNodeList.getLength() > 0) {
 						var subDirFileFilterElement = (Element) fileFilterNodeList.item(0);
-						var subDirFileFilter = filterManager.unserializeFileFilter(subDirFileFilterElement,
-							ELEMENT_FILE_FILTER_RULE);
+						var subDirFileFilter = filterManager.unserializeFileFilter(subDirFileFilterElement, ELEMENT_FILE_FILTER_RULE);
 						filters.put(path, subDirFileFilter);
 					}
 				}

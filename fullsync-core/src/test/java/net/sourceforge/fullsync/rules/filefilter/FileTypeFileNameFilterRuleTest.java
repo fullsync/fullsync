@@ -58,8 +58,7 @@ public class FileTypeFileNameFilterRuleTest {
 
 	@Test
 	public void testIsDirectory() {
-		var filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY),
-			FileTypeFileFilterRule.OP_IS);
+		var filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY), FileTypeFileFilterRule.OP_IS);
 		assertFalse(filterRule.match(createTestNode(false)));
 		assertTrue(filterRule.match(createTestNode(true)));
 
@@ -70,8 +69,7 @@ public class FileTypeFileNameFilterRuleTest {
 
 	@Test
 	public void testIsntDirectory() {
-		var filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY),
-			FileTypeFileFilterRule.OP_ISNT);
+		var filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY), FileTypeFileFilterRule.OP_ISNT);
 		assertTrue(filterRule.match(createTestNode(false)));
 		assertFalse(filterRule.match(createTestNode(true)));
 
