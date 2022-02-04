@@ -112,7 +112,7 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 				shell.layout();
 				shell.open();
 				var display = parent.getDisplay();
-				while (!shell.isDisposed()) {
+				while (!shell.isDisposed()) { // TODO: remove nested event loop
 					if (!display.readAndDispatch()) {
 						display.sleep();
 					}

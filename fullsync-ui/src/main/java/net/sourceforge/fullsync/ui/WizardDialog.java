@@ -187,7 +187,7 @@ public abstract class WizardDialog { // NO_UCD (use default)
 			ShellStateHandler.apply(preferences, dialogShell, getClass());
 			dialogOpened();
 
-			while (!dialogShell.isDisposed()) {
+			while (!dialogShell.isDisposed()) { // TODO: remove nested event loop
 				if (!display.readAndDispatch()) {
 					display.sleep();
 				}

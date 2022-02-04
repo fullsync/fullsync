@@ -97,7 +97,7 @@ class WelcomeScreen extends Dialog {
 		dialogShell.open();
 		var display = dialogShell.getDisplay();
 
-		while (!dialogShell.isDisposed()) {
+		while (!dialogShell.isDisposed()) { // TODO: remove nested event loop
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}

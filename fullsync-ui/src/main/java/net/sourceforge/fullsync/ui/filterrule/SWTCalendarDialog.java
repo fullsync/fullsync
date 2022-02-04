@@ -48,13 +48,14 @@ class SWTCalendarDialog {
 		final var display = shell.getDisplay();
 		shell.pack();
 		shell.open();
-		while (!shell.isDisposed()) {
+		while (!shell.isDisposed()) { // TODO: remove nested event loop
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
 		}
 	}
 
+	// TODO: change to be event based
 	public Date getDate() {
 		return calendar.getTime();
 	}

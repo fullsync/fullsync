@@ -191,7 +191,7 @@ class FileObjectChooser {
 			dialogShell.open();
 			ShellStateHandler.apply(preferences, dialogShell, FileObjectChooser.class);
 			var display = dialogShell.getDisplay();
-			while (!dialogShell.isDisposed()) {
+			while (!dialogShell.isDisposed()) { // TODO: remove nested event loop
 				if (!display.readAndDispatch()) {
 					display.sleep();
 				}

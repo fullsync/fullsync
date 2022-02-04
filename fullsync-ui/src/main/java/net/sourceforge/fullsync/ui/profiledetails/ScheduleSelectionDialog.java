@@ -146,7 +146,7 @@ class ScheduleSelectionDialog {
 			dialogShell.setLocation(x, y);
 			dialogShell.layout();
 			dialogShell.open();
-			while (!dialogShell.isDisposed()) {
+			while (!dialogShell.isDisposed()) { // TODO: remove nested event loop
 				if (!display.readAndDispatch()) {
 					display.sleep();
 				}

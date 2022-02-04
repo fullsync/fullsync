@@ -154,7 +154,7 @@ class ExceptionDialog {
 			expanded = true;
 			buttonDetails.notifyListeners(SWT.Selection, null);
 			dialogShell.open();
-			while (!dialogShell.isDisposed()) {
+			while (!dialogShell.isDisposed()) { // TODO: remove nested event loop
 				if (!display.readAndDispatch()) {
 					display.sleep();
 				}
