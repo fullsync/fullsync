@@ -19,41 +19,13 @@
  */
 package net.sourceforge.fullsync.buffer;
 
-public class Entry {
-	private final int start;
-	private final int length;
-	private final int internalSegment;
-	private final EntryDescriptor descriptor;
-
-	public Entry(int start, int length, int segment, EntryDescriptor descriptor) {
-		this.start = start;
-		this.length = length;
-		this.internalSegment = segment;
-		this.descriptor = descriptor;
-	}
-
+public record Entry(int start, int length, int segment, EntryDescriptor descriptor) {
 	public boolean isLastSegment() {
-		return (internalSegment & Segment.LAST) > 0;
+		return (segment & Segment.LAST) > 0;
 	}
 
 	@Override
 	public String toString() {
 		return String.format("%10d-%10d: %s", start, (start + length) - 1, descriptor.toString()); //$NON-NLS-1$
-	}
-
-	public int getStart() {
-		return start;
-	}
-
-	public int getLength() {
-		return length;
-	}
-
-	public int getInternalSegment() {
-		return internalSegment;
-	}
-
-	public EntryDescriptor getDescriptor() {
-		return descriptor;
 	}
 }

@@ -32,13 +32,11 @@ import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 
-public class FileSystemManager {
+public record FileSystemManager(FullSync fullSync) {
 	public static final String BUFFER_STRATEGY_SYNCFILES = "syncfiles"; //$NON-NLS-1$
-	private final FullSync fullSync;
 
 	@Inject
-	public FileSystemManager(FullSync fullSync) {
-		this.fullSync = fullSync;
+	public FileSystemManager {
 	}
 
 	private FileSystem getFilesystem(final String scheme) throws FileSystemException {

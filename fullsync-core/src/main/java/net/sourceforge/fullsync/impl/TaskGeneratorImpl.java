@@ -69,50 +69,26 @@ public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus ev
 
 	private void synchronizeNodes(TaskTree taskTree, File src, File dst, Task parent, Deciders deciders)
 		throws DataParseException, IOException {
-		if (!deciders.getRules().isNodeIgnored(src)) {
-			var task = deciders.getActionDecider().getTask(src, dst, deciders.getStateDecider(), deciders.getBufferStateDecider());
+		if (!deciders.rules().isNodeIgnored(src)) {
+			var task = deciders.actionDecider().getTask(src, dst, deciders.stateDecider(), deciders.bufferStateDecider());
 			logger.debug("{}: {}", src.getName(), task); //$NON-NLS-1$
 
 			eventBus.post(new TaskGenerationFinished(taskTree, task));
 
-			if (deciders.getRules().isUsingRecursion()) {
+			if (deciders.rules().isUsingRecursion()) {
 				recurse(taskTree, src, dst, task, deciders);
 			}
 			parent.addChild(task);
 		}
 	}
 
-	private static class Deciders {
-		private final RuleSet rules;
-		private final ActionDecider actionDecider;
-		private final StateDecider stateDecider;
-		private final BufferStateDecider bufferStateDecider;
-
-		public Deciders(RuleSet rules, ActionDecider actionDecider) {
-			this.rules = rules;
-			this.actionDecider = actionDecider;
-			this.stateDecider = new StateDeciderImpl(rules);
-			this.bufferStateDecider = new BufferStateDeciderImpl(rules);
-		}
-
-		public RuleSet getRules() {
-			return rules;
-		}
-
-		public ActionDecider getActionDecider() {
-			return actionDecider;
-		}
-
-		public StateDecider getStateDecider() {
-			return stateDecider;
-		}
-
-		public BufferStateDecider getBufferStateDecider() {
-			return bufferStateDecider;
+	private record Deciders(RuleSet rules, ActionDecider actionDecider, StateDecider stateDecider, BufferStateDecider bufferStateDecider) {
+		public static Deciders create(RuleSet rules, ActionDecider actionDecider) {
+			return new Deciders(rules, actionDecider, new StateDeciderImpl(rules), new BufferStateDeciderImpl(rules));
 		}
 
 		public Deciders createChild(File src, File dst) throws IOException, DataParseException {
-			return new Deciders(rules.createChild(src, dst), actionDecider);
+			return create(rules.createChild(src, dst), actionDecider);
 		}
 	}
 
@@ -189,7 +165,7 @@ public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus ev
 
 			// TODO use syncnodes here [?]
 			// TODO get traversal type and start correct traversal action
-			synchronizeDirectories(tree, source.getRoot(), destination.getRoot(), root, new Deciders(rules, actionDecider));
+			synchronizeDirectories(tree, source.getRoot(), destination.getRoot(), root, Deciders.create(rules, actionDecider));
 		}
 		finally {
 			eventBus.post(new TaskTreeFinished(tree));

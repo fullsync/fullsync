@@ -28,34 +28,24 @@ import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
-public class BufferUpdateEntryDescriptor implements EntryDescriptor {
-	private final BufferUpdate bufferUpdate;
-	private final File src;
-	private final File dst;
-
-	public BufferUpdateEntryDescriptor(File src, File dst, BufferUpdate bufferUpdate) {
-		this.bufferUpdate = bufferUpdate;
-		this.src = src;
-		this.dst = dst;
-	}
-
+public record BufferUpdateEntryDescriptor(File src, File dst, BufferUpdate bufferUpdate) implements EntryDescriptor {
 	@Override
-	public Task getTask() {
+	public Task task() {
 		return null;
 	}
 
 	@Override
-	public long getSize() {
+	public long size() {
 		return 0;
 	}
 
 	@Override
-	public InputStream getInputStream() throws IOException {
+	public InputStream inputStream() throws IOException {
 		return null;
 	}
 
 	@Override
-	public OutputStream getOutputStream() throws IOException {
+	public OutputStream outputStream() throws IOException {
 		return null;
 	}
 
@@ -75,7 +65,7 @@ public class BufferUpdateEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public String getOperationDescription() {
+	public String operationDescription() {
 		return null;
 	}
 }

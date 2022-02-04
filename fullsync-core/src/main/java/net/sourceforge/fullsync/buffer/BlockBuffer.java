@@ -56,16 +56,16 @@ public class BlockBuffer implements ExecutionBuffer {
 	public void flush() throws IOException {
 		for (var i = 0; i < numberEntries; ++i) {
 			var e = entries[i];
-			var desc = e.getDescriptor();
+			var desc = e.descriptor();
 			IOException ioe = null;
 			try {
-				var out = desc.getOutputStream();
+				var out = desc.outputStream();
 				if (null != out) {
-					out.write(buffer, e.getStart(), e.getLength());
+					out.write(buffer, e.start(), e.length());
 				}
 				if (e.isLastSegment()) {
 					desc.finishWrite();
-					var opDesc = desc.getOperationDescription();
+					var opDesc = desc.operationDescription();
 					if ((null != opDesc) && logger.isPresent()) {
 						logger.get().info(opDesc);
 					}
@@ -127,7 +127,7 @@ public class BlockBuffer implements ExecutionBuffer {
 
 	@Override
 	public void storeEntry(final EntryDescriptor descriptor) throws IOException {
-		if (descriptor.getSize() == 0) {
+		if (descriptor.size() == 0) {
 			if (numberEntries == maxEntries) {
 				flush();
 			}
@@ -135,7 +135,7 @@ public class BlockBuffer implements ExecutionBuffer {
 			numberEntries++;
 		}
 		else {
-			storeEntry(descriptor.getInputStream(), descriptor.getSize(), descriptor);
+			storeEntry(descriptor.inputStream(), descriptor.size(), descriptor);
 		}
 		descriptor.finishStore();
 	}

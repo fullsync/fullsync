@@ -45,7 +45,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 		this.statisticsOnly = false;
 		this.buffer = buffer;
 		buffer.addEntryFinishedListener((entry, ioe) -> {
-			var task = entry.getTask();
+			var task = entry.task();
 			if (null != task) {
 				if (null != ioe) {
 					fireTaskFinished(new TaskFinishedEvent(task, 0, false, ioe.getLocalizedMessage()));

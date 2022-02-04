@@ -30,14 +30,9 @@ import org.eclipse.swt.widgets.Display;
 
 import net.sourceforge.fullsync.ThrowingSupplier;
 
-public class BackgroundExecutor {
-	private final ScheduledExecutorService scheduledExecutorService;
-	private final Display display;
-
+public record BackgroundExecutor(ScheduledExecutorService scheduledExecutorService, Display display) {
 	@Inject
-	public BackgroundExecutor(ScheduledExecutorService scheduledExecutorService, Display display) {
-		this.scheduledExecutorService = scheduledExecutorService;
-		this.display = display;
+	public BackgroundExecutor {
 	}
 
 	public <R> void runAsync(ThrowingSupplier<R> supplier, Consumer<R> success, Consumer<Exception> error) { // NO_UCD (use default)

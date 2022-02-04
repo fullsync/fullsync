@@ -29,22 +29,17 @@ import net.sourceforge.fullsync.fs.File;
 
 public record DirCreationEntryDescriptor(Task task, File dst) implements EntryDescriptor {
 	@Override
-	public Task getTask() {
-		return task;
-	}
-
-	@Override
-	public long getSize() {
+	public long size() {
 		return 0;
 	}
 
 	@Override
-	public InputStream getInputStream() throws IOException {
+	public InputStream inputStream() throws IOException {
 		return null;
 	}
 
 	@Override
-	public OutputStream getOutputStream() throws IOException {
+	public OutputStream outputStream() throws IOException {
 		return null;
 	}
 
@@ -60,7 +55,7 @@ public record DirCreationEntryDescriptor(Task task, File dst) implements EntryDe
 	}
 
 	@Override
-	public String getOperationDescription() {
+	public String operationDescription() {
 		return "Making Directory " + dst.getPath();
 	}
 }

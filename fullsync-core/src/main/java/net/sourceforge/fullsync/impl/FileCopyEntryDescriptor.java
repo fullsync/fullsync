@@ -28,30 +28,30 @@ import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
 public class FileCopyEntryDescriptor implements EntryDescriptor {
-	private final Task reference;
+	private final Task task;
 	private final File src;
 	private final File dst;
 	private InputStream inputStream;
 	private OutputStream outputStream;
 
-	public FileCopyEntryDescriptor(Task reference, File src, File dst) {
-		this.reference = reference;
+	public FileCopyEntryDescriptor(Task task, File src, File dst) {
+		this.task = task;
 		this.src = src;
 		this.dst = dst;
 	}
 
 	@Override
-	public Task getTask() {
-		return reference;
+	public Task task() {
+		return task;
 	}
 
 	@Override
-	public long getSize() {
+	public long size() {
 		return src.getSize();
 	}
 
 	@Override
-	public InputStream getInputStream() throws IOException {
+	public InputStream inputStream() throws IOException {
 		if (null == inputStream) {
 			inputStream = src.getInputStream();
 		}
@@ -59,7 +59,7 @@ public class FileCopyEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public OutputStream getOutputStream() throws IOException {
+	public OutputStream outputStream() throws IOException {
 		if (null == outputStream) {
 			outputStream = dst.getOutputStream();
 		}
@@ -84,7 +84,7 @@ public class FileCopyEntryDescriptor implements EntryDescriptor {
 	}
 
 	@Override
-	public String getOperationDescription() {
+	public String operationDescription() {
 		return "Copied " + src.getPath() + " to " + dst.getPath();
 	}
 }

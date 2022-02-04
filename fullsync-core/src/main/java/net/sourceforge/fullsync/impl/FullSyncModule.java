@@ -46,18 +46,18 @@ public class FullSyncModule extends AbstractModule {
 	// 10 threads per core for a Quad Core + HT CPU?
 	private static final int MAX_THREAD_POOL_SIZE = 80;
 	private final CommandLine line;
-	private final String prefrencesFile;
+	private final String preferencesFile;
 	private final ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(MAX_THREAD_POOL_SIZE);
 	private final EventBus eventBus = new AsyncEventBus(scheduledExecutorService);
 
-	public FullSyncModule(CommandLine line, String prefrencesFile) {
+	public FullSyncModule(CommandLine line, String preferencesFile) {
 		this.line = line;
-		this.prefrencesFile = prefrencesFile;
+		this.preferencesFile = preferencesFile;
 	}
 
 	@Override
 	protected void configure() {
-		bind(String.class).annotatedWith(Names.named(FullSync.PREFERENCES_PROPERTIES)).toInstance(prefrencesFile);
+		bind(String.class).annotatedWith(Names.named(FullSync.PREFERENCES_PROPERTIES)).toInstance(preferencesFile);
 		bind(TaskGenerator.class).to(TaskGeneratorImpl.class);
 		bind(Preferences.class).to(ConfigurationPreferences.class);
 		bind(RuntimeConfiguration.class).toInstance(new CliRuntimeConfiguration(line));
