@@ -28,7 +28,6 @@ import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.spi.InjectionListener;
@@ -40,8 +39,6 @@ import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuntimeConfiguration;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.cli.CliRuntimeConfiguration;
-import net.sourceforge.fullsync.schedule.ScheduleTask;
-import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
 import net.sourceforge.fullsync.schedule.Scheduler;
 import net.sourceforge.fullsync.schedule.SchedulerImpl;
 
@@ -66,12 +63,9 @@ public class FullSyncModule extends AbstractModule {
 		bind(RuntimeConfiguration.class).toInstance(new CliRuntimeConfiguration(line));
 		bind(ProfileManager.class).to(XmlBackedProfileManager.class);
 		bind(Scheduler.class).to(SchedulerImpl.class);
-		bind(ScheduleTaskSource.class).to(ScheduleTaskSourceImpl.class);
 		bind(ScheduledExecutorService.class).toInstance(scheduledExecutorService);
 		bind(EventBus.class).toInstance(eventBus);
 		bindListener(Matchers.any(), this::hear);
-		install(new FactoryModuleBuilder().implement(ScheduleTask.class, ProfileManagerSchedulerTask.class)
-			.build(ProfileManagerSchedulerTaskFactory.class));
 	}
 
 	private <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {

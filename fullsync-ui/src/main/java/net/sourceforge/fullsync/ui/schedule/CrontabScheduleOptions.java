@@ -75,11 +75,11 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 				final var table = new List(shell, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 				var data = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 				table.setLayoutData(data);
-				for (var i = part.low; i <= part.high; ++i) {
+				for (var i = part.low(); i <= part.high(); ++i) {
 					table.add(String.valueOf(i));
 				}
 				try {
-					table.select(part.createInstance(text.getText()).getIntArray(-part.low));
+					table.select(part.createInstance(text.getText()).getIntArray(-part.low()));
 				}
 				catch (DataParseException dpe) {
 					ExceptionHandler.reportException(dpe);
@@ -94,7 +94,7 @@ public class CrontabScheduleOptions extends ScheduleOptions {
 				buttonOk.setLayoutData(buttonOkLData);
 				buttonOk.setText(Messages.getString("CrontabScheduleOptions.Ok")); //$NON-NLS-1$
 				buttonOk.addListener(SWT.Selection, evt -> {
-					text.setText(part.createInstance(table.getSelectionIndices(), -part.low).pattern);
+					text.setText(part.createInstance(table.getSelectionIndices(), -part.low()).pattern);
 					shell.dispose();
 				});
 

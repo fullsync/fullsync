@@ -24,39 +24,12 @@ import java.util.Objects;
 
 import net.sourceforge.fullsync.fs.File;
 
-public class FileFilter {
+public record FileFilter(int matchType, int filterType, boolean appliesToDirectories, FileFilterRule... rules) {
+
 	public static final int MATCH_ALL = 0;
 	public static final int MATCH_ANY = 1;
 	public static final int INCLUDE = 0;
 	public static final int EXCLUDE = 1;
-	private final int matchType;
-	private final int filterType;
-	private final boolean appliesToDir;
-	private final FileFilterRule[] rules;
-
-	public FileFilter(int matchType, int filterType, boolean appliesToDir, FileFilterRule... rules) {
-		this.matchType = matchType;
-		this.filterType = filterType;
-		this.appliesToDir = appliesToDir;
-		this.rules = rules;
-	}
-
-	public int getMatchType() {
-		return matchType;
-	}
-
-	public int getFilterType() {
-		return this.filterType;
-	}
-
-	public boolean appliesToDirectories() {
-		return appliesToDir;
-	}
-
-	public FileFilterRule[] getFileFiltersRules() {
-		return this.rules;
-	}
-
 	public boolean match(final File file) {
 		var result = doMmatch(file);
 		return (filterType == INCLUDE) == result;
@@ -76,7 +49,7 @@ public class FileFilter {
 
 	private boolean doMatchAll(final File file) {
 		for (FileFilterRule rule : rules) {
-			if (!appliesToDir && file.isDirectory()) {
+			if (!appliesToDirectories && file.isDirectory()) {
 				continue;
 			}
 			try {
@@ -96,7 +69,7 @@ public class FileFilter {
 		var appliedRules = 0;
 
 		for (FileFilterRule rule : rules) {
-			if (!appliesToDir && file.isDirectory()) {
+			if (!appliesToDirectories && file.isDirectory()) {
 				continue;
 			}
 			try {
@@ -135,10 +108,7 @@ public class FileFilter {
 			}
 		}
 
-		if (rules.length > 0) {
-			buff.append(rules[rules.length - 1].toString());
-		}
-
+		buff.append(rules[rules.length - 1].toString());
 		return buff.toString();
 	}
 
@@ -153,13 +123,13 @@ public class FileFilter {
 		var that = (FileFilter) o;
 		return (matchType == that.matchType)
 			&& (filterType == that.filterType)
-			&& (appliesToDir == that.appliesToDir)
+			&& (appliesToDirectories == that.appliesToDirectories)
 			&& Arrays.equals(rules, that.rules);
 	}
 
 	@Override
 	public int hashCode() {
-		var result = Objects.hash(matchType, filterType, appliesToDir);
+		var result = Objects.hash(matchType, filterType, appliesToDirectories);
 		return (31 * result) + Arrays.hashCode(rules);
 	}
 }

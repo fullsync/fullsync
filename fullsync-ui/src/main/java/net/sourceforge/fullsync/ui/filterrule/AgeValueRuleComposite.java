@@ -46,10 +46,6 @@ class AgeValueRuleComposite extends RuleComposite {
 			unit = initialValue.getUnit();
 			value = initialValue.getValue();
 		}
-		render();
-	}
-
-	private void render() {
 		this.setLayout(new FillLayout());
 
 		textValue = new Text(this, SWT.BORDER);

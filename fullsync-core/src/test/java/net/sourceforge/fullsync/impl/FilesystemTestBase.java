@@ -184,7 +184,7 @@ public abstract class FilesystemTestBase {
 
 	@Subscribe
 	public void taskGenerationFinished(final TaskGenerationFinished taskGenerationFinished) {
-		var task = taskGenerationFinished.getTask();
+		var task = taskGenerationFinished.task();
 		var ex = expectation.get(task.getSource().getName());
 
 		assertNotNull(ex, "Unexpected generated Task for file: " + task.getSource().getName());

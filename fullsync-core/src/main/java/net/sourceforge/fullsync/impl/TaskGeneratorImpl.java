@@ -52,15 +52,11 @@ import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
 
-public class TaskGeneratorImpl implements TaskGenerator {
-	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
-	private final FileSystemManager fileSystemManager;
-	private final EventBus eventBus;
+public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus eventBus) implements TaskGenerator {
 
+	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
 	@Inject
-	public TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus eventBus) {
-		this.fileSystemManager = fileSystemManager;
-		this.eventBus = eventBus;
+	public TaskGeneratorImpl {
 	}
 
 	private void recurse(TaskTree taskTree, File src, File dst, Task parent, Deciders deciders) throws DataParseException, IOException {

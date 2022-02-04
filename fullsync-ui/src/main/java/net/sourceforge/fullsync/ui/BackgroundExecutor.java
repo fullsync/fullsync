@@ -63,19 +63,8 @@ public class BackgroundExecutor {
 		throw (T) t; // ( ͡° ͜ʖ ͡°)
 	}
 
-	private static class UIUpdateTask<T> implements Runnable {
-		private final Display display;
-		private final CompletableFuture<T> future;
-		private final Consumer<T> success;
-		private final Consumer<Exception> error;
-
-		public UIUpdateTask(Display display, CompletableFuture<T> future, Consumer<T> success, Consumer<Exception> error) {
-			this.display = display;
-			this.future = future;
-			this.success = success;
-			this.error = error;
-		}
-
+	private record UIUpdateTask<T> (Display display, CompletableFuture<T> future, Consumer<T> success,
+		Consumer<Exception> error) implements Runnable {
 		@Override
 		public void run() {
 			display.asyncExec(this::notifyOnUiThread);

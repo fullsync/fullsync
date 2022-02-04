@@ -22,20 +22,5 @@ package net.sourceforge.fullsync.event;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskTree;
 
-public class TaskGenerationFinished {
-	private final TaskTree taskTree;
-	private final Task task;
-
-	public TaskGenerationFinished(TaskTree taskTree, Task task) {
-		this.taskTree = taskTree;
-		this.task = task;
-	}
-
-	public TaskTree getTaskTree() {
-		return taskTree;
-	}
-
-	public Task getTask() {
-		return task;
-	}
+public record TaskGenerationFinished(TaskTree taskTree, Task task) {
 }

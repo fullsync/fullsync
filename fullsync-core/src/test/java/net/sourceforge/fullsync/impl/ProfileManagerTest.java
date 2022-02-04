@@ -167,8 +167,8 @@ public class ProfileManagerTest {
 		final Object eventHandler = new Object() {
 			@Subscribe
 			public void handleProfileChanged(ProfileChanged pc) {
-				assertEquals(42, pc.getProfile().getLastErrorLevel(), "Updated Profile last error level");
-				assertEquals("Test Error Message", pc.getProfile().getLastErrorString(), "Updated Profile last error message");
+				assertEquals(42, pc.profile().getLastErrorLevel(), "Updated Profile last error level");
+				assertEquals("Test Error Message", pc.profile().getLastErrorString(), "Updated Profile last error message");
 				latch.countDown();
 			}
 		};
@@ -193,8 +193,8 @@ public class ProfileManagerTest {
 		final Object eventHandler = new Object() {
 			@Subscribe
 			public void handleProfileChanged(ProfileChanged pc) {
-				assertEquals(p.getId(), pc.getProfile().getId(), "Existing Profile Changed");
-				assertEquals("Updated Profile Name", pc.getProfile().getName());
+				assertEquals(p.getId(), pc.profile().getId(), "Existing Profile Changed");
+				assertEquals("Updated Profile Name", pc.profile().getName());
 				latch.countDown();
 			}
 		};

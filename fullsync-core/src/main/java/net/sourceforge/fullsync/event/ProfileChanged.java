@@ -21,14 +21,5 @@ package net.sourceforge.fullsync.event;
 
 import net.sourceforge.fullsync.Profile;
 
-public class ProfileChanged {
-	private final Profile profile;
-
-	public ProfileChanged(Profile profile) {
-		this.profile = profile;
-	}
-
-	public Profile getProfile() {
-		return profile;
-	}
+public record ProfileChanged(Profile profile) {
 }

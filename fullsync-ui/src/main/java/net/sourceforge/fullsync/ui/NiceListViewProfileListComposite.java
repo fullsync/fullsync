@@ -122,13 +122,12 @@ class NiceListViewProfileListComposite extends ProfileListComposite {
 	private void profileChanged(ProfileChanged pc) {
 		getDisplay().syncExec(() -> {
 			if (!isDisposed()) {
-				var p = pc.getProfile();
-				var item = profilesToItems.get(p.getId());
+				var item = profilesToItems.get(pc.profile().getId());
 				if (null == item) {
 					populateProfileList();
 				}
 				else {
-					item.update(p);
+					item.update(pc.profile());
 				}
 			}
 		});

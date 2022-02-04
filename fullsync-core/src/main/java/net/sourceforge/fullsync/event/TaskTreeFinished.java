@@ -21,14 +21,5 @@ package net.sourceforge.fullsync.event;
 
 import net.sourceforge.fullsync.TaskTree;
 
-public class TaskTreeFinished {
-	private final TaskTree taskTree;
-
-	public TaskTreeFinished(TaskTree taskTree) {
-		this.taskTree = taskTree;
-	}
-
-	public TaskTree getTaskTree() {
-		return taskTree;
-	}
+public record TaskTreeFinished(TaskTree taskTree) {
 }

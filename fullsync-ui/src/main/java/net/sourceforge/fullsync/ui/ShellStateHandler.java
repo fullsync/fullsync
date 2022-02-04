@@ -25,15 +25,8 @@ import org.eclipse.swt.widgets.Shell;
 
 import net.sourceforge.fullsync.Preferences;
 
-public class ShellStateHandler { // NO_UCD (use default)
-	private final Preferences preferences;
-	private final String name;
-	private final Shell shell;
-
-	private ShellStateHandler(Preferences preferences, String name, Shell shell) {
-		this.preferences = preferences;
-		this.name = name;
-		this.shell = shell;
+public record ShellStateHandler(Preferences preferences, String name, Shell shell) { // NO_UCD (use default)
+	public ShellStateHandler {
 		shell.addListener(SWT.Close, this::shellClosed);
 		shell.setVisible(false);
 		shell.getDisplay().asyncExec(this::applyPreferences);

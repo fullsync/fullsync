@@ -40,10 +40,6 @@ class TypeValueRuleComposite extends RuleComposite {
 		if (null != initialValue) {
 			value = initialValue.getType();
 		}
-		render();
-	}
-
-	private void render() {
 		this.setLayout(new FillLayout());
 		comboTypes = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
 		for (TypeValue.Type type : TypeValue.Type.values()) {

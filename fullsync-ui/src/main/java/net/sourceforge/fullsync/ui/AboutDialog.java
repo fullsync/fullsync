@@ -296,14 +296,7 @@ class AboutDialog {
 		return tab;
 	}
 
-	private static class LicenseEntry {
-		public final String name;
-		public final String license;
-
-		public LicenseEntry(String name, String license) {
-			this.name = name;
-			this.license = license;
-		}
+	private record LicenseEntry(String name, String license) {
 	}
 
 	private List<LicenseEntry> loadLicenses() throws Exception {

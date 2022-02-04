@@ -23,13 +23,8 @@ import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.rules.filefilter.values.FilterValue;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
-public class SubfilterFileFilerRule implements FileFilterRule {
+public record SubfilterFileFilerRule(FileFilter fileFilter) implements FileFilterRule {
 	public static final String TYPE_NAME = "Nested Filter";
-	private final FileFilter fileFilter;
-
-	public SubfilterFileFilerRule(FileFilter fileFilter) {
-		this.fileFilter = fileFilter;
-	}
 
 	@Override
 	public String getRuleType() {

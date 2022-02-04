@@ -282,17 +282,14 @@ public class Main implements Launcher { // NO_UCD
 		System.exit(errorlevel);
 	}
 
-	private static class DaemonSchedulerListener {
-		private final Synchronizer synchronizer;
-
+	private record DaemonSchedulerListener(Synchronizer synchronizer) {
 		@Inject
-		public DaemonSchedulerListener(Synchronizer synchronizer) {
-			this.synchronizer = synchronizer;
+		private DaemonSchedulerListener {
 		}
 
 		@Subscribe
 		private void profileExecutionScheduled(ScheduledProfileExecution scheduledProfileExecution) {
-			var profile = scheduledProfileExecution.getProfile();
+			var profile = scheduledProfileExecution.profile();
 			var tree = synchronizer.executeProfile(profile, false);
 			if (null == tree) {
 				profile.setLastError(1, "An error occured while comparing filesystems.");

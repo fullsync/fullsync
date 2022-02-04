@@ -112,15 +112,6 @@ public class IntervalScheduleOptions extends ScheduleOptions {
 		return new IntervalSchedule(interval, interval, item.unit);
 	}
 
-	private static class SchedulingIntervalItem {
-		public final String unit;
-		public final String text;
-		public final long factor;
-
-		SchedulingIntervalItem(String unit, String text, long factor) {
-			this.unit = unit;
-			this.text = text;
-			this.factor = factor;
-		}
+	private record SchedulingIntervalItem(String unit, String text, long factor) {
 	}
 }

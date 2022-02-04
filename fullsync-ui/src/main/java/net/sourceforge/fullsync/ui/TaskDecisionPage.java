@@ -94,8 +94,8 @@ class TaskDecisionPage extends WizardDialog {
 	public String getDescription() {
 		var source = Messages.getString("TaskDecisionPage.Source"); //$NON-NLS-1$
 		var destination = Messages.getString("TaskDecisionPage.Destination"); //$NON-NLS-1$
-		var sourcePath = taskTree.getSource().getConnectionDescription().getDisplayPath();
-		var destinationPath = taskTree.getDestination().getConnectionDescription().getDisplayPath();
+		var sourcePath = taskTree.source().getConnectionDescription().getDisplayPath();
+		var destinationPath = taskTree.destination().getConnectionDescription().getDisplayPath();
 		return String.format("%s: %s%n%s: %s", source, sourcePath, destination, destinationPath); //$NON-NLS-1$
 	}
 
@@ -162,13 +162,13 @@ class TaskDecisionPage extends WizardDialog {
 	public boolean cancel() {
 		if (!processing) {
 			try {
-				taskTree.getSource().close();
+				taskTree.source().close();
 			}
 			catch (Exception ex) {
 				ExceptionHandler.reportException(ex);
 			}
 			try {
-				taskTree.getDestination().close();
+				taskTree.destination().close();
 			}
 			catch (Exception ex) {
 				ExceptionHandler.reportException(ex);
@@ -225,12 +225,11 @@ class TaskDecisionPage extends WizardDialog {
 		TableItem item = null;
 		tasksFinished += items.size();
 		for (TaskFinishedEvent event : items) {
-			var task = event.getTask();
-			item = list.getTableItemForTask(task);
+			item = list.getTableItemForTask(event.task());
 			// FIXME This doesn't seams to work. Even if there is an exception in the sync of one item
 			// the item is colored with the "successful" color.
 			if (null != item) {
-				if (event.isSuccessful()) {
+				if (event.successful()) {
 					item.setBackground(colorFinishedSuccessful);
 				}
 				else {

@@ -333,7 +333,7 @@ class TaskDecisionList extends Composite {
 		tableLogLinesFillCount = tableLogLines.getItemCount();
 
 		setRedraw(false);
-		addTaskChildren(taskTree.getRoot());
+		addTaskChildren(taskTree.root());
 		setRedraw(true);
 
 		// index is always pointing at the next free slot

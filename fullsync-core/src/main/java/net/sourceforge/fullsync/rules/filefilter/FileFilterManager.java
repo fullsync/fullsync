@@ -51,10 +51,10 @@ public class FileFilterManager {
 	public Element serializeFileFilter(FileFilter fileFilter, Document document, String elementName, String ruleElementName) {
 		var filterElement = document.createElement(elementName);
 
-		filterElement.setAttribute(ATTRIBUTE_MATCHTYPE, String.valueOf(fileFilter.getMatchType()));
-		filterElement.setAttribute(ATTRIBUTE_FILTERTYPE, String.valueOf(fileFilter.getFilterType()));
+		filterElement.setAttribute(ATTRIBUTE_MATCHTYPE, String.valueOf(fileFilter.matchType()));
+		filterElement.setAttribute(ATTRIBUTE_FILTERTYPE, String.valueOf(fileFilter.filterType()));
 		filterElement.setAttribute(ATTRIBUTE_APPLIESTODIR, String.valueOf(fileFilter.appliesToDirectories()));
-		Stream<FileFilterRule> fileFilterStream = Arrays.stream(fileFilter.getFileFiltersRules());
+		Stream<FileFilterRule> fileFilterStream = Arrays.stream(fileFilter.rules());
 		fileFilterStream.map(rule -> serializeRule(rule, document, ruleElementName)).forEachOrdered(filterElement::appendChild);
 		return filterElement;
 	}
@@ -132,7 +132,7 @@ public class FileFilterManager {
 		}
 
 		if (fileFilterRule instanceof SubfilterFileFilerRule rule) {
-			var subfilter = ((FilterValue) rule.getValue()).getValue();
+			var subfilter = ((FilterValue) rule.getValue()).value();
 			var doc = ruleElement.getOwnerDocument();
 			var subfilterElement = serializeFileFilter(subfilter, doc, ELEMENT_NESTED_FILE_FILTER, ELEMENT_NESTED_FILE_FILTER_RULE);
 			ruleElement.appendChild(subfilterElement);
@@ -224,7 +224,7 @@ public class FileFilterManager {
 
 		if (SubfilterFileFilerRule.TYPE_NAME.equals(ruleType)) {
 			var filterValue = (FilterValue) value;
-			rule = new SubfilterFileFilerRule(filterValue.getValue());
+			rule = new SubfilterFileFilerRule(filterValue.value());
 		}
 
 		return rule;

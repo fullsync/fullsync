@@ -19,14 +19,5 @@
  */
 package net.sourceforge.fullsync.event;
 
-public class SchedulerStatusChanged {
-	private final boolean enabled;
-
-	public SchedulerStatusChanged(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
+public record SchedulerStatusChanged(boolean enabled) {
 }

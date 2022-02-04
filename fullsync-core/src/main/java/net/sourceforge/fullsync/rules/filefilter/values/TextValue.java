@@ -19,17 +19,7 @@
  */
 package net.sourceforge.fullsync.rules.filefilter.values;
 
-public class TextValue implements OperandValue {
-	private final String value;
-
-	public TextValue(String value) {
-		this.value = value;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
+public record TextValue(String value) implements OperandValue {
 	@Override
 	public String toString() {
 		return value;

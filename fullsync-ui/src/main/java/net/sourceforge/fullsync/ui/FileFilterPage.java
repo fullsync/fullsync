@@ -133,11 +133,10 @@ public class FileFilterPage extends WizardDialog {
 
 			var rowsAdded = 0;
 			if (null != oldFileFilter) {
-				comboMatchType.select(oldFileFilter.getMatchType());
-				comboFilterType.select(oldFileFilter.getFilterType());
+				comboMatchType.select(oldFileFilter.matchType());
+				comboFilterType.select(oldFileFilter.filterType());
 				buttonAppliesToDir.setSelection(oldFileFilter.appliesToDirectories());
-				var rules = oldFileFilter.getFileFiltersRules();
-				for (FileFilterRule rule : rules) {
+				for (FileFilterRule rule : oldFileFilter.rules()) {
 					addRuleRow(rule.getRuleType(), rule.getOperator(), rule.getValue());
 					++rowsAdded;
 				}

@@ -70,7 +70,7 @@ public class FileNameFileFilterRule implements FileFilterRule {
 
 		if ((operator == OP_MATCHES_REGEXP) || (operator == OP_DOESNT_MATCHES_REGEXP)) {
 			try {
-				this.regexppattern = Pattern.compile(this.pattern.getValue());
+				this.regexppattern = Pattern.compile(this.pattern.value());
 			}
 			catch (PatternSyntaxException e) {
 				throw new DataParseException(e);
@@ -101,14 +101,14 @@ public class FileNameFileFilterRule implements FileFilterRule {
 		var name = file.getName();
 
 		return switch (op) {
-			case OP_IS -> name.equals(pattern.getValue());
-			case OP_ISNT -> !name.equals(pattern.getValue());
-			case OP_CONTAINS -> name.contains(pattern.getValue());
-			case OP_DOESNT_CONTAINS -> !name.contains(pattern.getValue());
-			case OP_BEGINS_WITH -> name.startsWith(pattern.getValue());
-			case OP_DOESNT_BEGINS_WITH -> !name.startsWith(pattern.getValue());
-			case OP_ENDS_WITH -> name.endsWith(pattern.getValue());
-			case OP_DOESNT_ENDS_WITH -> !name.endsWith(pattern.getValue());
+			case OP_IS -> name.equals(pattern.value());
+			case OP_ISNT -> !name.equals(pattern.value());
+			case OP_CONTAINS -> name.contains(pattern.value());
+			case OP_DOESNT_CONTAINS -> !name.contains(pattern.value());
+			case OP_BEGINS_WITH -> name.startsWith(pattern.value());
+			case OP_DOESNT_BEGINS_WITH -> !name.startsWith(pattern.value());
+			case OP_ENDS_WITH -> name.endsWith(pattern.value());
+			case OP_DOESNT_ENDS_WITH -> !name.endsWith(pattern.value());
 			case OP_MATCHES_REGEXP -> regexppattern.matcher(name).matches();
 			case OP_DOESNT_MATCHES_REGEXP -> !regexppattern.matcher(name).matches();
 			default -> false;

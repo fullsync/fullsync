@@ -21,14 +21,5 @@ package net.sourceforge.fullsync.event;
 
 import net.sourceforge.fullsync.Profile;
 
-public class ScheduledProfileExecution {
-	private final Profile profile;
-
-	public ScheduledProfileExecution(Profile profile) {
-		this.profile = profile;
-	}
-
-	public Profile getProfile() {
-		return profile;
-	}
+public record ScheduledProfileExecution(Profile profile) {
 }

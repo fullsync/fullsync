@@ -44,12 +44,8 @@ class SubfilterRuleComposite extends RuleComposite {
 		super(parent);
 		this.fileFilterPageProvider = fileFilterPageProvider;
 		if (null != initialValue) {
-			value = initialValue.getValue();
+			value = initialValue.value();
 		}
-		render();
-	}
-
-	private void render() {
 		this.setLayout(new GridLayout(3, true));
 
 		textValue = new Text(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);

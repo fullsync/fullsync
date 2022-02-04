@@ -29,13 +29,11 @@ import net.sourceforge.fullsync.buffer.BlockBuffer;
 import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 
 @Singleton
-public class Synchronizer {
+public record Synchronizer(TaskGenerator taskGenerator) {
 	private static final Logger logger = LoggerFactory.getLogger(Synchronizer.class);
-	private final TaskGenerator taskGenerator;
 
 	@Inject
-	public Synchronizer(TaskGenerator taskGenerator) {
-		this.taskGenerator = taskGenerator;
+	public Synchronizer {
 	}
 
 	public synchronized TaskTree executeProfile(Profile profile, boolean interactive) {
@@ -55,18 +53,18 @@ public class Synchronizer {
 	public int performActions(TaskTree taskTree, TaskFinishedListener listener) {
 		try {
 			logger.info("Synchronization started");
-			logger.info("  source:      " + taskTree.getSource().getConnectionDescription().getDisplayPath());
-			logger.info("  destination: " + taskTree.getDestination().getConnectionDescription().getDisplayPath());
+			logger.info("  source:      " + taskTree.source().getConnectionDescription().getDisplayPath());
+			logger.info("  destination: " + taskTree.destination().getConnectionDescription().getDisplayPath());
 			TaskExecutor queue = new FillBufferTaskExecutor(new BlockBuffer(logger));
 			if (null != listener) {
 				queue.addTaskFinishedListener(listener);
 			}
 			queue.enqueue(taskTree);
 			queue.flush();
-			taskTree.getSource().flush();
-			taskTree.getDestination().flush();
-			taskTree.getSource().close();
-			taskTree.getDestination().close();
+			taskTree.source().flush();
+			taskTree.destination().flush();
+			taskTree.source().close();
+			taskTree.destination().close();
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);

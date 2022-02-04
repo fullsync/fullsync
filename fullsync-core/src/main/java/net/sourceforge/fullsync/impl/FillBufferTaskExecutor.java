@@ -48,10 +48,10 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 			var task = entry.getTask();
 			if (null != task) {
 				if (null != ioe) {
-					fireTaskFinished(new TaskFinishedEvent(task, ioe.getLocalizedMessage()));
+					fireTaskFinished(new TaskFinishedEvent(task, 0, false, ioe.getLocalizedMessage()));
 				}
 				else {
-					fireTaskFinished(new TaskFinishedEvent(task, 0));
+					fireTaskFinished(new TaskFinishedEvent(task, 0, true, null));
 				}
 			}
 		});
@@ -68,7 +68,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 	@Override
 	public void enqueue(TaskTree tree) {
 		stats = new IoStatisticsImpl();
-		enqueue(tree.getRoot());
+		enqueue(tree.root());
 	}
 
 	protected void enqueueTaskChildren(Task task) {
@@ -106,7 +106,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 		catch (IOException ioe) {
 			// FIXME that's not right, the task does not neccessarily be the one
 			// that throws this exception as there are flushs involved
-			fireTaskFinished(new TaskFinishedEvent(task, ioe.getMessage()));
+			fireTaskFinished(new TaskFinishedEvent(task, 0, false, ioe.getMessage()));
 		}
 	}
 

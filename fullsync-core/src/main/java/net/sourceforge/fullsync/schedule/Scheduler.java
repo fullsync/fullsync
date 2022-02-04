@@ -25,4 +25,6 @@ public interface Scheduler {
 	void stop();
 
 	boolean isEnabled();
+
+	boolean hasNextScheduledTask(long referenceTime);
 }

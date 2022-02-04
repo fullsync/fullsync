@@ -19,5 +19,5 @@
  */
 package net.sourceforge.fullsync.event;
 
-public class ProfileListChanged {
+public record ProfileListChanged() {
 }

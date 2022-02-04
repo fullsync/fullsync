@@ -24,12 +24,15 @@ import java.util.concurrent.ScheduledExecutorService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import net.sourceforge.fullsync.event.ScheduledProfileExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import net.sourceforge.fullsync.Profile;
+import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.event.ProfileListChanged;
 import net.sourceforge.fullsync.event.SchedulerStatusChanged;
@@ -37,7 +40,7 @@ import net.sourceforge.fullsync.event.SchedulerStatusChanged;
 @Singleton
 public class SchedulerImpl implements Scheduler, Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerImpl.class);
-	private final ScheduleTaskSource scheduleSource;
+	private final ProfileManager profileManager;
 	private final ScheduledExecutorService scheduledExecutorService;
 	private final EventBus eventBus;
 	private Thread worker;
@@ -45,8 +48,8 @@ public class SchedulerImpl implements Scheduler, Runnable {
 	private boolean enabled;
 
 	@Inject
-	public SchedulerImpl(ScheduleTaskSource source, ScheduledExecutorService scheduledExecutorService, EventBus eventBus) {
-		scheduleSource = source;
+	public SchedulerImpl(ProfileManager profileManager, ScheduledExecutorService scheduledExecutorService, EventBus eventBus) {
+		this.profileManager = profileManager;
 		this.scheduledExecutorService = scheduledExecutorService;
 		this.eventBus = eventBus;
 	}
@@ -110,19 +113,44 @@ public class SchedulerImpl implements Scheduler, Runnable {
 	}
 
 	@Override
+	public boolean hasNextScheduledTask(long referenceTime) {
+		return null != getNextScheduledTask(referenceTime);
+	}
+
+	private SchedulerTask getNextScheduledTask(long referenceTime) {
+		var nextTime = Long.MAX_VALUE;
+		Profile nextProfile = null;
+		for (Profile profile : profileManager.getProfiles()) {
+			var s = profile.getSchedule();
+			if (profile.isSchedulingEnabled() && (null != s)) {
+				var o = s.getNextOccurrence(profile.getLastScheduleTime(), referenceTime);
+				if (nextTime > o) {
+					nextTime = o;
+					nextProfile = profile;
+				}
+			}
+		}
+
+		if (null != nextProfile) {
+			return new SchedulerTask(nextProfile, nextTime);
+		}
+		return null;
+	}
+
+	@Override
 	public void run() {
 		running = true;
 		while (enabled) {
 			var now = System.currentTimeMillis();
 			logger.debug("searching for next task after {}", now); //$NON-NLS-1$
-			var task = scheduleSource.getNextScheduleTask(now);
+			var task = getNextScheduledTask(now);
 			if (null == task) {
 				logger.info("could not find a scheduled task, aborting"); //$NON-NLS-1$
 				break;
 			}
-			logger.debug("found: {} at {}", task, task.getExecutionTime()); //$NON-NLS-1$
+			logger.debug("found: {} at {}", task, task.executionTime()); //$NON-NLS-1$
 
-			var nextTime = task.getExecutionTime();
+			var nextTime = task.executionTime();
 			try {
 				logger.debug("waiting for {} microseconds", nextTime - now); //$NON-NLS-1$
 				if (nextTime >= now) {
@@ -130,7 +158,7 @@ public class SchedulerImpl implements Scheduler, Runnable {
 				}
 				logger.debug("Running task {}", task); //$NON-NLS-1$
 				task.onBeforeExecution();
-				scheduledExecutorService.submit(task);
+				scheduledExecutorService.submit(() -> eventBus.post(new ScheduledProfileExecution(task.profile())));
 			}
 			catch (InterruptedException ex) {
 				// expected during shutdown

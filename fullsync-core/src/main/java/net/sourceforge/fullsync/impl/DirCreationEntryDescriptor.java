@@ -22,24 +22,15 @@ package net.sourceforge.fullsync.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Objects;
 
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
 import net.sourceforge.fullsync.fs.File;
 
-public class DirCreationEntryDescriptor implements EntryDescriptor {
-	private final Task reference;
-	private final File dst;
-
-	public DirCreationEntryDescriptor(Task reference, File dst) {
-		this.reference = reference;
-		this.dst = Objects.requireNonNull(dst);
-	}
-
+public record DirCreationEntryDescriptor(Task task, File dst) implements EntryDescriptor {
 	@Override
 	public Task getTask() {
-		return reference;
+		return task;
 	}
 
 	@Override

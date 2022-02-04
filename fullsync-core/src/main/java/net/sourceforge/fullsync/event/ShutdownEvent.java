@@ -19,5 +19,5 @@
  */
 package net.sourceforge.fullsync.event;
 
-public class ShutdownEvent {
+public record ShutdownEvent() {
 }

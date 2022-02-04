@@ -21,39 +21,5 @@ package net.sourceforge.fullsync.event;
 
 import net.sourceforge.fullsync.Task;
 
-public class TaskFinishedEvent {
-	private final Task task;
-	private final boolean successful;
-	private final String errorMsg;
-	private final int bytesTransferred;
-
-	public TaskFinishedEvent(Task task, int bytesTransferred) {
-		this.task = task;
-		this.successful = true;
-		this.errorMsg = null;
-		this.bytesTransferred = bytesTransferred;
-	}
-
-	public TaskFinishedEvent(Task task, String errorMsg) {
-		this.task = task;
-		this.successful = false;
-		this.errorMsg = errorMsg;
-		this.bytesTransferred = 0;
-	}
-
-	public int getBytesTransferred() {
-		return bytesTransferred;
-	}
-
-	public String getErrorMessage() {
-		return errorMsg;
-	}
-
-	public boolean isSuccessful() {
-		return successful;
-	}
-
-	public Task getTask() {
-		return task;
-	}
+public record TaskFinishedEvent(Task task, int bytesTransferred, boolean successful, String errorMessage) {
 }

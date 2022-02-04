@@ -45,10 +45,6 @@ class SizeValueRuleComposite extends RuleComposite {
 			value = initialValue.getValue();
 			unit = initialValue.getUnit();
 		}
-		render();
-	}
-
-	private void render() {
 		this.setLayout(new FillLayout());
 
 		textValue = new Text(this, SWT.BORDER);

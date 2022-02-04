@@ -23,29 +23,7 @@ import net.sourceforge.fullsync.buffer.BlockBuffer;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 
-public class TaskTree {
-	private final Site source;
-	private final Site destination;
-	private final Task root;
-
-	public TaskTree(Site source, Site destination, Task root) {
-		this.source = source;
-		this.destination = destination;
-		this.root = root;
-	}
-
-	public Task getRoot() {
-		return root;
-	}
-
-	public Site getDestination() {
-		return destination;
-	}
-
-	public Site getSource() {
-		return source;
-	}
-
+public record TaskTree(Site source, Site destination, Task root) {
 	public int getTaskCount() {
 		return root.getTaskCount();
 	}

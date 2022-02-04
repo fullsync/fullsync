@@ -21,17 +21,7 @@ package net.sourceforge.fullsync.rules.filefilter.values;
 
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 
-public class FilterValue implements OperandValue {
-	private final FileFilter value;
-
-	public FilterValue(FileFilter value) {
-		this.value = value;
-	}
-
-	public FileFilter getValue() {
-		return value;
-	}
-
+public record FilterValue(FileFilter value) implements OperandValue {
 	@Override
 	public String toString() {
 		return value.toString();

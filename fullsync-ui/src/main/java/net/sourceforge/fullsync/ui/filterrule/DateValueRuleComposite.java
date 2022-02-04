@@ -43,10 +43,6 @@ class DateValueRuleComposite extends RuleComposite {
 		if (null != initialValue) {
 			value = initialValue.getDate();
 		}
-		render();
-	}
-
-	private void render() {
 		this.setLayout(new FillLayout());
 
 		textValue = new Text(this, SWT.BORDER);

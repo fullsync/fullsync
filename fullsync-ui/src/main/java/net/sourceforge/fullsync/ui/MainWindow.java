@@ -60,7 +60,6 @@ import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.schedule.ScheduleTaskSource;
 import net.sourceforge.fullsync.schedule.Scheduler;
 import net.sourceforge.fullsync.ui.profiledetails.ProfileDetailsTabbedPage;
 
@@ -71,7 +70,6 @@ class MainWindow implements ProfileListControlHandler {
 	private final ImageRepository imageRepository;
 	private final ProfileManager profileManager;
 	private final Scheduler scheduler;
-	private final ScheduleTaskSource scheduleTaskSource;
 	private final Preferences preferences;
 	private final ScheduledExecutorService scheduledExecutorService;
 	private final Provider<PreferencesPage> preferencesPageProvider;
@@ -95,17 +93,15 @@ class MainWindow implements ProfileListControlHandler {
 
 	@Inject
 	MainWindow(Display display, ImageRepository imageRepository, Shell shell, ProfileManager profileManager, Scheduler scheduler,
-		ScheduleTaskSource scheduleTaskSource, RuntimeConfiguration runtimeConfiguration, Preferences preferences,
-		ScheduledExecutorService scheduledExecutorService, Provider<PreferencesPage> preferencesPageProvider,
-		Provider<Synchronizer> synchronizerProvider, Provider<ImportProfilesPage> importProfilesPageProvider,
-		Provider<SystemStatusPage> systemStatusPageProvider, Provider<AboutDialog> aboutDialogProvider,
-		Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider, Provider<TaskDecisionPage> taskDecisionPageProvider,
-		ProfileListCompositeFactory profileListCompositeFactory) {
+		RuntimeConfiguration runtimeConfiguration, Preferences preferences, ScheduledExecutorService scheduledExecutorService,
+		Provider<PreferencesPage> preferencesPageProvider, Provider<Synchronizer> synchronizerProvider,
+		Provider<ImportProfilesPage> importProfilesPageProvider, Provider<SystemStatusPage> systemStatusPageProvider,
+		Provider<AboutDialog> aboutDialogProvider, Provider<ProfileDetailsTabbedPage> profileDetailsTabbedPageProvider,
+		Provider<TaskDecisionPage> taskDecisionPageProvider, ProfileListCompositeFactory profileListCompositeFactory) {
 		this.display = display;
 		this.imageRepository = imageRepository;
 		this.profileManager = profileManager;
 		this.scheduler = scheduler;
-		this.scheduleTaskSource = scheduleTaskSource;
 		this.preferences = preferences;
 		this.scheduledExecutorService = scheduledExecutorService;
 		this.preferencesPageProvider = preferencesPageProvider;
@@ -170,15 +166,15 @@ class MainWindow implements ProfileListControlHandler {
 	private void schedulerStatusChanged(SchedulerStatusChanged schedulerStatusChanged) {
 		display.syncExec(() -> {
 			if (!mainComposite.isDisposed()) {
-				toolItemScheduleStart.setEnabled(!schedulerStatusChanged.isEnabled());
-				toolItemScheduleStop.setEnabled(schedulerStatusChanged.isEnabled());
+				toolItemScheduleStart.setEnabled(!schedulerStatusChanged.enabled());
+				toolItemScheduleStop.setEnabled(schedulerStatusChanged.enabled());
 			}
 		});
 	}
 
 	@Subscribe
 	private void executeScheduledProfile(ScheduledProfileExecution scheduledProfileExecution) {
-		var profile = scheduledProfileExecution.getProfile();
+		var profile = scheduledProfileExecution.profile();
 		var synchronizer = synchronizerProvider.get();
 		var tree = synchronizer.executeProfile(profile, false);
 		if (null == tree) {
@@ -442,19 +438,19 @@ class MainWindow implements ProfileListControlHandler {
 
 	@Subscribe
 	private void taskTreeStarted(TaskTreeStarted taskTreeStarted) {
-		runningTaskTrees.add(taskTreeStarted.getTaskTree());
+		runningTaskTrees.add(taskTreeStarted.taskTree());
 	}
 
 	@Subscribe
 	private void taskGenerationFinished(TaskGenerationFinished taskGenerationFinished) {
-		if (runningTaskTrees.contains(taskGenerationFinished.getTaskTree())) {
-			lastFileChecked.add(taskGenerationFinished.getTask().getSource());
+		if (runningTaskTrees.contains(taskGenerationFinished.taskTree())) {
+			lastFileChecked.add(taskGenerationFinished.task().getSource());
 		}
 	}
 
 	@Subscribe
 	private void taskTreeFinished(TaskTreeFinished taskTreeFinished) {
-		runningTaskTrees.remove(taskTreeFinished.getTaskTree());
+		runningTaskTrees.remove(taskTreeFinished.taskTree());
 		statusLineText.add(Messages.getString("MainWindow.Sync_Finished")); //$NON-NLS-1$
 	}
 
@@ -575,7 +571,7 @@ class MainWindow implements ProfileListControlHandler {
 		// Close the application, but give him a chance to
 		// confirm his action first
 		var now = System.currentTimeMillis();
-		if (scheduler.isEnabled() && (null != scheduleTaskSource.getNextScheduleTask(now)) && preferences.confirmExit()) {
+		if (scheduler.isEnabled() && scheduler.hasNextScheduledTask(now) && preferences.confirmExit()) {
 			var mb = new MessageBox(mainComposite.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
 			mb.setText(Messages.getString("GuiController.Confirmation")); //$NON-NLS-1$
 			var doYouWantToQuit = Messages.getString("GuiController.Do_You_Want_To_Quit"); //$NON-NLS-1$

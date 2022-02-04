@@ -28,13 +28,13 @@ import net.sourceforge.fullsync.DataParseException;
  * if( daysOfWeek.bArray[8] )
  * daysOfWeek.bArray[1] = true;
  */
-public class CrontabPart {
+public record CrontabPart(int low, int high, int offset) {
+
 	public static final CrontabPart MINUTES = new CrontabPart(0, 59, 0);
 	public static final CrontabPart HOURS = new CrontabPart(0, 23, 0);
 	public static final CrontabPart DAYSOFMONTH = new CrontabPart(1, 31, 0);
 	public static final CrontabPart MONTHS = new CrontabPart(1, 12, -1);
 	public static final CrontabPart DAYSOFWEEK = new CrontabPart(0, 7, +1);
-
 	public class Instance {
 		public final String pattern;
 		public final boolean[] bArray;
@@ -148,16 +148,6 @@ public class CrontabPart {
 				throw new DataParseException("CrontabPart.SomethingWasWrong" + token, e);
 			}
 		}
-	}
-
-	public final int low;
-	public final int offset;
-	public final int high;
-
-	public CrontabPart(int low, int high, int offset) {
-		this.low = low;
-		this.high = high;
-		this.offset = offset;
 	}
 
 	public Instance createInstance(String pattern) throws DataParseException {
