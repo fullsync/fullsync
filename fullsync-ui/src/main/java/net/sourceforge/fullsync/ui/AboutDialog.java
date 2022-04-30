@@ -19,6 +19,7 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
@@ -54,7 +55,7 @@ class AboutDialog {
 	private final Preferences preferences;
 	private final ImageRepository imageRepository;
 	private final BackgroundExecutor backgroundExecutor;
-	private final List<LicenseEntry> licenses = Collections.emptyList();
+	private final List<LicenseEntry> licenses = new ArrayList<>();
 	private int stIndex;
 	private Combo componentCombo;
 	private StyledText licenseText;
