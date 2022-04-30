@@ -49,7 +49,7 @@ public record FileSystemManager(FullSync fullSync) {
 		};
 	}
 
-	public final Site createConnection(final ConnectionDescription desc, boolean isInteractive) throws FileSystemException, IOException {
+	public Site createConnection(final ConnectionDescription desc, boolean isInteractive) throws FileSystemException, IOException {
 		var scheme = desc.getScheme();
 
 		var fs = getFilesystem(scheme);

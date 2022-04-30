@@ -33,7 +33,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 class TypeValueRuleComposite extends RuleComposite {
 	private TypeValue.Type value = TypeValue.Type.FILE;
-	private Combo comboTypes;
+	private final Combo comboTypes;
 
 	TypeValueRuleComposite(Composite parent, final TypeValue initialValue) {
 		super(parent);

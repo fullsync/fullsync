@@ -38,7 +38,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 class AgeValueRuleComposite extends RuleComposite {
 	private AgeValue.Unit unit = AgeValue.Unit.SECONDS;
 	private double value = 0.0;
-	private Combo comboUnits;
+	private final Combo comboUnits;
 
 	AgeValueRuleComposite(Composite parent, final AgeValue initialValue) {
 		super(parent);

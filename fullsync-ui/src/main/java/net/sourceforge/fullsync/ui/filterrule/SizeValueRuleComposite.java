@@ -37,7 +37,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.SizeValue;
 class SizeValueRuleComposite extends RuleComposite {
 	private SizeValue.Unit unit = SizeValue.Unit.BYTES;
 	private double value = 0.0;
-	private Combo comboUnits;
+	private final Combo comboUnits;
 
 	SizeValueRuleComposite(Composite parent, final SizeValue initialValue) {
 		super(parent);

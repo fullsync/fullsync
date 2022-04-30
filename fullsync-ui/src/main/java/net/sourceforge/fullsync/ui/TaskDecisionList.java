@@ -375,7 +375,7 @@ class TaskDecisionList extends Composite {
 			return;
 		}
 
-		List<Task> taskList = Arrays.stream(tableItemList).map(i -> (Task) i.getData()).collect(Collectors.toList());
+		List<Task> taskList = Arrays.stream(tableItemList).map(i -> (Task) i.getData()).toList();
 
 		// load initial actions of first task
 		var possibleActions = taskList.get(0).getActions().clone();
