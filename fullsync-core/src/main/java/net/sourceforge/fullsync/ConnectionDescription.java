@@ -225,6 +225,13 @@ public class ConnectionDescription {
 	public boolean isUserDirIsRoot() {
 		return userDirIsRoot;
 	}
+	
+	public URI getURI() throws URISyntaxException {
+		if ("file".equals(scheme)) { //$NON-NLS-1$
+			return new File(path).toURI();
+		}
+		return new URI(scheme, null, host.orElse(null), port.orElse(-1), path, null, null);
+	}
 
 	public String getDisplayPath() {
 		if ("file".equals(getScheme())) { //$NON-NLS-1$
