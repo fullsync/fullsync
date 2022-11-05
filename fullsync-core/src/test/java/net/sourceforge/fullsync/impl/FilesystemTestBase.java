@@ -52,10 +52,10 @@ import net.sourceforge.fullsync.Synchronizer;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
-import net.sourceforge.fullsync.fs.filesystems.FTPFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
+import net.sourceforge.fullsync.fs.filesystems.ftp.FTPFileSystemConnection;
+import net.sourceforge.fullsync.fs.filesystems.local.LocalFileSystemConnection;
+import net.sourceforge.fullsync.fs.filesystems.sftp.SFTPFileSystemConnection;
+import net.sourceforge.fullsync.fs.filesystems.smb.SmbFileSystemConnection;
 import net.sourceforge.fullsync.schedule.Schedule;
 
 public abstract class FilesystemTestBase implements FileSystemManager {
@@ -66,10 +66,10 @@ public abstract class FilesystemTestBase implements FileSystemManager {
 	public FileSystemConnection createConnection(ConnectionDescription connectionDescription, boolean interactive)
 		throws FileSystemException, IOException {
 		return switch (connectionDescription.getScheme()) {
-			case "file" -> new LocalFileSystem().createConnection(connectionDescription, interactive); //$NON-NLS-1$
-			case "sftp" -> new SFTPFileSystem(fullSync).createConnection(connectionDescription, interactive); //$NON-NLS-1$
-			case "ftp" -> new FTPFileSystem().createConnection(connectionDescription, interactive); //$NON-NLS-1$
-			case "smb" -> new SmbFileSystem().createConnection(connectionDescription, interactive); //$NON-NLS-1$
+			case "file" -> new LocalFileSystemConnection(connectionDescription, interactive); //$NON-NLS-1$
+			case "sftp" -> new SFTPFileSystemConnection(fullSync, connectionDescription, interactive); //$NON-NLS-1$
+			case "ftp" -> new FTPFileSystemConnection(connectionDescription, interactive); //$NON-NLS-1$
+			case "smb" -> new SmbFileSystemConnection(connectionDescription, interactive); //$NON-NLS-1$
 			default -> throw new RuntimeException("Unknown scheme: " + connectionDescription.getScheme()); //$NON-NLS-1$
 		};
 	}

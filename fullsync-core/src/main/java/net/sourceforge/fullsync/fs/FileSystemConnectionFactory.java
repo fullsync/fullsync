@@ -17,28 +17,15 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.filesystems;
+package net.sourceforge.fullsync.fs;
 
-import javax.inject.Inject;
+import java.io.IOException;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.FullSync;
-import net.sourceforge.fullsync.fs.FileSystem;
-import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
 import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
-public class SFTPFileSystem implements FileSystem {
-	private final FullSync fullSync;
-
-	@Inject
-	public SFTPFileSystem(FullSync fullSync) {
-		this.fullSync = fullSync;
-	}
-
-	@Override
-	public final FileSystemConnection createConnection(final ConnectionDescription connectionDescription, boolean interactive)
-		throws FileSystemException {
-		return new CommonsVfsConnection(connectionDescription, new SFTPAuthProvider(fullSync, connectionDescription, interactive));
-	}
+public interface FileSystemConnectionFactory {
+	FileSystemConnection createConnection(ConnectionDescription connectionDescription, boolean interactive)
+		throws FileSystemException, IOException;
 }

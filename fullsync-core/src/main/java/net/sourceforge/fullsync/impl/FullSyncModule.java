@@ -27,6 +27,7 @@ import org.apache.commons.cli.CommandLine;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
+import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
@@ -41,11 +42,15 @@ import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuntimeConfiguration;
 import net.sourceforge.fullsync.TaskGenerator;
 import net.sourceforge.fullsync.cli.CliRuntimeConfiguration;
-import net.sourceforge.fullsync.fs.FileSystem;
-import net.sourceforge.fullsync.fs.filesystems.FTPFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
+import net.sourceforge.fullsync.fs.FileSystemConnectionFactory;
+import net.sourceforge.fullsync.fs.buffering.BufferingProviderFactory;
+import net.sourceforge.fullsync.fs.connection.BufferedFileSystemConnection;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
+import net.sourceforge.fullsync.fs.connection.SyncFileBufferedConnection;
+import net.sourceforge.fullsync.fs.filesystems.ftp.FTPFileSystemConnection;
+import net.sourceforge.fullsync.fs.filesystems.local.LocalFileSystemConnection;
+import net.sourceforge.fullsync.fs.filesystems.sftp.SFTPFileSystemConnection;
+import net.sourceforge.fullsync.fs.filesystems.smb.SmbFileSystemConnection;
 import net.sourceforge.fullsync.schedule.Scheduler;
 import net.sourceforge.fullsync.schedule.SchedulerImpl;
 
@@ -71,13 +76,19 @@ public class FullSyncModule extends AbstractModule {
 		bind(ProfileManager.class).to(XmlBackedProfileManager.class);
 		bind(Scheduler.class).to(SchedulerImpl.class);
 		bind(ScheduledExecutorService.class).toInstance(scheduledExecutorService);
-		bind(FileSystem.class).annotatedWith(Names.named("file")).to(LocalFileSystem.class);
-		bind(FileSystem.class).annotatedWith(Names.named("sftp")).to(SFTPFileSystem.class);
-		bind(FileSystem.class).annotatedWith(Names.named("ftp")).to(FTPFileSystem.class);
-		bind(FileSystem.class).annotatedWith(Names.named("smb")).to(SmbFileSystem.class);
 		bind(FileSystemManager.class).to(FileSystemManagerImpl.class);
 		bind(EventBus.class).toInstance(eventBus);
 		bindListener(Matchers.any(), this::hear);
+		install(new FactoryModuleBuilder().implement(BufferedFileSystemConnection.class, SyncFileBufferedConnection.class)
+			.build(Key.get(BufferingProviderFactory.class, Names.named(FileSystemManager.BUFFER_STRATEGY_SYNCFILES))));
+		install(new FactoryModuleBuilder().implement(FileSystemConnection.class, FTPFileSystemConnection.class)
+			.build(Key.get(FileSystemConnectionFactory.class, Names.named("ftp"))));
+		install(new FactoryModuleBuilder().implement(FileSystemConnection.class, SFTPFileSystemConnection.class)
+			.build(Key.get(FileSystemConnectionFactory.class, Names.named("sftp"))));
+		install(new FactoryModuleBuilder().implement(FileSystemConnection.class, SmbFileSystemConnection.class)
+			.build(Key.get(FileSystemConnectionFactory.class, Names.named("smb"))));
+		install(new FactoryModuleBuilder().implement(FileSystemConnection.class, LocalFileSystemConnection.class)
+			.build(Key.get(FileSystemConnectionFactory.class, Names.named("file"))));
 	}
 
 	private <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {

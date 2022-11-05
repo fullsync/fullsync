@@ -17,17 +17,8 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.buffering.syncfiles;
+package net.sourceforge.fullsync.fs.connection;
 
-import java.io.IOException;
-
-import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
-import net.sourceforge.fullsync.fs.connection.SyncFileBufferedConnection;
-
-public class SyncFilesBufferingProvider implements BufferingProvider {
-	@Override
-	public final FileSystemConnection createBufferedSite(final FileSystemConnection dir) throws IOException {
-		return new SyncFileBufferedConnection(dir);
-	}
+public interface BufferedFileSystemConnection extends FileSystemConnection {
+	boolean isMonitoringFileSystem();
 }
