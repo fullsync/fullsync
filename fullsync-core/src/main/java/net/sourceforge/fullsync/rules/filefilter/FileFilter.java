@@ -22,7 +22,7 @@ package net.sourceforge.fullsync.rules.filefilter;
 import java.util.Arrays;
 import java.util.Objects;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 public record FileFilter(int matchType, int filterType, boolean appliesToDirectories, FileFilterRule... rules) {
 
@@ -30,12 +30,12 @@ public record FileFilter(int matchType, int filterType, boolean appliesToDirecto
 	public static final int MATCH_ANY = 1;
 	public static final int INCLUDE = 0;
 	public static final int EXCLUDE = 1;
-	public boolean match(final File file) {
+	public boolean match(final FSFile file) {
 		var result = doMmatch(file);
 		return (filterType == INCLUDE) == result;
 	}
 
-	private boolean doMmatch(final File file) {
+	private boolean doMmatch(final FSFile file) {
 		if (rules.length == 0) {
 			return true;
 		}
@@ -47,7 +47,7 @@ public record FileFilter(int matchType, int filterType, boolean appliesToDirecto
 		};
 	}
 
-	private boolean doMatchAll(final File file) {
+	private boolean doMatchAll(final FSFile file) {
 		for (FileFilterRule rule : rules) {
 			if (!appliesToDirectories && file.isDirectory()) {
 				continue;
@@ -65,7 +65,7 @@ public record FileFilter(int matchType, int filterType, boolean appliesToDirecto
 		return true;
 	}
 
-	private boolean doMatchAny(final File file) {
+	private boolean doMatchAny(final FSFile file) {
 		var appliedRules = 0;
 
 		for (FileFilterRule rule : rules) {

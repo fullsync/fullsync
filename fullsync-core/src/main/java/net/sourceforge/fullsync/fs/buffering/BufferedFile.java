@@ -21,14 +21,14 @@ package net.sourceforge.fullsync.fs.buffering;
 
 import java.io.IOException;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
-public interface BufferedFile extends File {
+public interface BufferedFile extends FSFile {
 	long getFsLastModified();
 
 	long getFsSize();
 
-	void addChild(File node);
+	void addChild(FSFile node);
 
 	void removeChild(String name);
 

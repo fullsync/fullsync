@@ -19,7 +19,7 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
@@ -64,7 +64,7 @@ public class FileTypeFileFilterRule implements FileFilterRule {
 	}
 
 	@Override
-	public boolean match(File file) {
+	public boolean match(FSFile file) {
 		return switch (op) {
 			case OP_IS -> (type.isFile() && file.isFile()) || (type.isDirectory() && file.isDirectory());
 			case OP_ISNT -> (!type.isFile() || !file.isFile()) && (!type.isDirectory() || !file.isDirectory());

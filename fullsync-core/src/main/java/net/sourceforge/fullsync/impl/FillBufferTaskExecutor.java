@@ -33,7 +33,7 @@ import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.buffer.ExecutionBuffer;
 import net.sourceforge.fullsync.event.TaskFinishedEvent;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 public class FillBufferTaskExecutor implements TaskExecutor {
 	private final List<TaskFinishedListener> listeners = new ArrayList<>();
@@ -88,14 +88,14 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 		}
 	}
 
-	protected void storeDirCreation(Task task, File subject) throws IOException {
+	protected void storeDirCreation(Task task, FSFile subject) throws IOException {
 		if (!statisticsOnly) {
 			buffer.storeEntry(new DirCreationEntryDescriptor(task, subject));
 		}
 		stats.setDirsCreated(stats.getDirsCreated() + 1);
 	}
 
-	protected void storeFileCopy(Task task, File source, File destination) throws IOException {
+	protected void storeFileCopy(Task task, FSFile source, FSFile destination) throws IOException {
 		try {
 			if (!statisticsOnly) {
 				buffer.storeEntry(new FileCopyEntryDescriptor(task, source, destination));
@@ -110,7 +110,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 		}
 	}
 
-	protected void storeDeleteNode(Task task, File subject) throws IOException {
+	protected void storeDeleteNode(Task task, FSFile subject) throws IOException {
 		if (!statisticsOnly) {
 			buffer.storeEntry(new DeleteNodeEntryDescriptor(task, subject));
 		}

@@ -25,9 +25,9 @@ import java.io.OutputStream;
 
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
-public record DirCreationEntryDescriptor(Task task, File dst) implements EntryDescriptor {
+public record DirCreationEntryDescriptor(Task task, FSFile dst) implements EntryDescriptor {
 	@Override
 	public long size() {
 		return 0;

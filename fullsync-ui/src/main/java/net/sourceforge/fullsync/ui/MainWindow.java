@@ -19,6 +19,7 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -59,7 +60,7 @@ import net.sourceforge.fullsync.event.SchedulerStatusChanged;
 import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.schedule.Scheduler;
 import net.sourceforge.fullsync.ui.profiledetails.ProfileDetailsTabbedPage;
 
@@ -360,7 +361,7 @@ class MainWindow implements ProfileListControlHandler {
 		var menuItemHelpContent = new MenuItem(menuHelp, SWT.PUSH);
 		menuItemHelpContent.setText(Messages.getString("MainWindow.Help_Menu_Item")); //$NON-NLS-1$
 		menuItemHelpContent.addListener(SWT.Selection, e -> {
-			var helpIndex = new java.io.File(Util.getInstalllocation(), "docs/manual/manual.html").getAbsoluteFile(); //$NON-NLS-1$
+			var helpIndex = new File(Util.getInstalllocation(), "docs/manual/manual.html").getAbsoluteFile(); //$NON-NLS-1$
 			if (helpIndex.exists()) {
 				GuiController.launchProgram(helpIndex.getAbsolutePath());
 			}

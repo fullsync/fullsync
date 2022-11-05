@@ -49,7 +49,7 @@ import com.google.inject.assistedinject.Assisted;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 import net.sourceforge.fullsync.utils.XmlUtils;
 
@@ -134,7 +134,7 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 	}
 
 	@Override
-	public File createChild(File dir, String name, boolean directory) throws IOException {
+	public FSFile createChild(FSFile dir, String name, boolean directory) throws IOException {
 		var n = dir.getUnbuffered().getChild(name);
 		if (null == n) {
 			n = dir.getUnbuffered().createChild(name, directory);
@@ -143,46 +143,46 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 	}
 
 	@Override
-	public boolean delete(File node) throws IOException {
+	public boolean delete(FSFile node) throws IOException {
 		node.getUnbuffered().delete();
 		((BufferedFile) node.getParent()).removeChild(node.getName());
 		return true;
 	}
 
 	@Override
-	public Map<String, File> getChildren(File dir) {
+	public Map<String, FSFile> getChildren(FSFile dir) {
 		return null;
 	}
 
 	@Override
-	public File getRoot() {
+	public FSFile getRoot() {
 		return root;
 	}
 
 	@Override
-	public boolean makeDirectory(File dir) {
+	public boolean makeDirectory(FSFile dir) {
 		return false;
 	}
 
 	@Override
-	public InputStream readFile(File file) {
+	public InputStream readFile(FSFile file) {
 		return null;
 	}
 
 	@Override
-	public OutputStream writeFile(File file) {
+	public OutputStream writeFile(FSFile file) {
 		return null;
 	}
 
 	@Override
-	public boolean writeFileAttributes(File file) {
+	public boolean writeFileAttributes(FSFile file) {
 		return false;
 	}
 
 	protected void updateFromFileSystem(BufferedFile buffered) throws IOException {
 		// load fs entries if wanted
 		var fsChildren = buffered.getUnbuffered().getChildren();
-		for (File uf : fsChildren) {
+		for (FSFile uf : fsChildren) {
 			var bf = (BufferedFile) buffered.getChild(uf.getName());
 			if (null == bf) {
 				bf = new BufferedFileImpl(this, uf, root, uf.isDirectory(), false);
@@ -236,7 +236,7 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 		var elem = doc.createElement(file.isDirectory() ? ELEMENT_DIRECTORY : ELEMENT_FILE);
 		elem.setAttribute(ATTRIBUTE_NAME, file.getName());
 		if (file.isDirectory()) {
-			for (File n : file.getChildren()) {
+			for (FSFile n : file.getChildren()) {
 				if (n.exists()) {
 					elem.appendChild(serializeFile((BufferedFile) n, doc));
 				}

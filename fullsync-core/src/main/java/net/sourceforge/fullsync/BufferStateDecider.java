@@ -21,8 +21,8 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 public interface BufferStateDecider {
-	State getState(File buffered) throws DataParseException, IOException;
+	State getState(FSFile buffered) throws DataParseException, IOException;
 }

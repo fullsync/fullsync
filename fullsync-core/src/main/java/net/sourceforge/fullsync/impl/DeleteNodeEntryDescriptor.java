@@ -25,9 +25,9 @@ import java.io.OutputStream;
 
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
-public record DeleteNodeEntryDescriptor(Task task, File node) implements EntryDescriptor {
+public record DeleteNodeEntryDescriptor(Task task, FSFile node) implements EntryDescriptor {
 	@Override
 	public long size() {
 		return 0;

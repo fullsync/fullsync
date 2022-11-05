@@ -49,7 +49,7 @@ import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
 public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus eventBus) implements TaskGenerator {
@@ -59,7 +59,7 @@ public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus ev
 	public TaskGeneratorImpl {
 	}
 
-	private void recurse(TaskTree taskTree, File src, File dst, Task parent, Deciders deciders) throws DataParseException, IOException {
+	private void recurse(TaskTree taskTree, FSFile src, FSFile dst, Task parent, Deciders deciders) throws DataParseException, IOException {
 		if (src.isDirectory() && dst.isDirectory()) {
 			synchronizeDirectories(taskTree, src, dst, parent, deciders);
 		}
@@ -67,7 +67,7 @@ public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus ev
 		// handle case where src is dir but dst is file
 	}
 
-	private void synchronizeNodes(TaskTree taskTree, File src, File dst, Task parent, Deciders deciders)
+	private void synchronizeNodes(TaskTree taskTree, FSFile src, FSFile dst, Task parent, Deciders deciders)
 		throws DataParseException, IOException {
 		if (!deciders.rules().isNodeIgnored(src)) {
 			var task = deciders.actionDecider().getTask(src, dst, deciders.stateDecider(), deciders.bufferStateDecider());
@@ -87,7 +87,7 @@ public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus ev
 			return new Deciders(rules, actionDecider, new StateDeciderImpl(rules), new BufferStateDeciderImpl(rules));
 		}
 
-		public Deciders createChild(File src, File dst) throws IOException, DataParseException {
+		public Deciders createChild(FSFile src, FSFile dst) throws IOException, DataParseException {
 			return create(rules.createChild(src, dst), actionDecider);
 		}
 	}
@@ -96,12 +96,12 @@ public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus ev
 	 * we could updateRules in synchronizeNodes and apply synchronizeDirectories
 	 * to the given src and dst if they are directories
 	 */
-	private void synchronizeDirectories(TaskTree taskTree, File src, File dst, Task parent, Deciders parentDeciders)
+	private void synchronizeDirectories(TaskTree taskTree, FSFile src, FSFile dst, Task parent, Deciders parentDeciders)
 		throws DataParseException, IOException {
 		var deciders = parentDeciders.createChild(src, dst);
 		var srcFiles = src.getChildren();
-		Collection<File> dstFiles = new ArrayList<>(dst.getChildren());
-		for (File sfile : srcFiles) {
+		Collection<FSFile> dstFiles = new ArrayList<>(dst.getChildren());
+		for (FSFile sfile : srcFiles) {
 			var dfile = dst.getChild(sfile.getName());
 			if (null == dfile) {
 				dfile = dst.createChild(sfile.getName(), sfile.isDirectory());
@@ -112,7 +112,7 @@ public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus ev
 			synchronizeNodes(taskTree, sfile, dfile, parent, deciders);
 		}
 
-		for (File dfile : dstFiles) {
+		for (FSFile dfile : dstFiles) {
 			var sfile = src.getChild(dfile.getName());
 			if (null == sfile) {
 				sfile = src.createChild(dfile.getName(), dfile.isDirectory());

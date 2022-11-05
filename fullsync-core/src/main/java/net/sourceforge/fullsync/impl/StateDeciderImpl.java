@@ -26,7 +26,7 @@ import net.sourceforge.fullsync.DataParseException;
 import net.sourceforge.fullsync.FileComparer;
 import net.sourceforge.fullsync.State;
 import net.sourceforge.fullsync.StateDecider;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 public class StateDeciderImpl implements StateDecider {
 	private static final Logger logger = LoggerFactory.getLogger(StateDeciderImpl.class.getSimpleName());
@@ -37,7 +37,7 @@ public class StateDeciderImpl implements StateDecider {
 	}
 
 	@Override
-	public State getState(final File source, final File destination) throws DataParseException {
+	public State getState(final FSFile source, final FSFile destination) throws DataParseException {
 		logger.debug("{} vs. {}", source, destination); //$NON-NLS-1$
 		if (!source.exists()) {
 			if (!destination.exists()) {

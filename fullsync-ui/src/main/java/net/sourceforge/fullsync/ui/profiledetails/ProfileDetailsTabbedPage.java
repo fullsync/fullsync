@@ -60,7 +60,7 @@ import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 import net.sourceforge.fullsync.impl.SimplifiedRuleSetDescriptor;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
@@ -532,7 +532,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		directoryTree.setRedraw(false);
 		directoryTree.removeAll();
 		try {
-			for (File file : getOrderedChildren(sourceConnection.getRoot())) {
+			for (FSFile file : getOrderedChildren(sourceConnection.getRoot())) {
 				if (file.isDirectory()) {
 					var item = new TreeItem(directoryTree, SWT.NULL);
 					item.setText(file.getName());
@@ -554,8 +554,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		directoryTree.setRedraw(true);
 	}
 
-	private void addChildren(File rootFile, TreeItem item) throws IOException {
-		for (File file : getOrderedChildren(rootFile)) {
+	private void addChildren(FSFile rootFile, TreeItem item) throws IOException {
+		for (FSFile file : getOrderedChildren(rootFile)) {
 			if (file.isDirectory()) {
 				var childrenItem = new TreeItem(item, SWT.NULL);
 				childrenItem.setText(file.getName());
@@ -570,8 +570,8 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		}
 	}
 
-	private List<File> getOrderedChildren(File rootFile) throws IOException {
-		List<File> children = new ArrayList<>(rootFile.getChildren());
+	private List<FSFile> getOrderedChildren(FSFile rootFile) throws IOException {
+		List<FSFile> children = new ArrayList<>(rootFile.getChildren());
 		children.sort(Comparator.comparing(File::getName));
 		return children;
 	}

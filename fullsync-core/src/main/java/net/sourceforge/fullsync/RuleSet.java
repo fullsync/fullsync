@@ -21,10 +21,10 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
 public interface RuleSet extends IgnoreDecider, FileComparer {
 	boolean isUsingRecursion();
 
-	RuleSet createChild(File src, File dst) throws IOException, DataParseException;
+	RuleSet createChild(FSFile src, FSFile dst) throws IOException, DataParseException;
 }

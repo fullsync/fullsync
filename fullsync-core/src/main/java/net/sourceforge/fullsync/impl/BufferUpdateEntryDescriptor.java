@@ -26,9 +26,9 @@ import java.io.OutputStream;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.buffer.EntryDescriptor;
-import net.sourceforge.fullsync.fs.File;
+import net.sourceforge.fullsync.fs.FSFile;
 
-public record BufferUpdateEntryDescriptor(File src, File dst, BufferUpdate bufferUpdate) implements EntryDescriptor {
+public record BufferUpdateEntryDescriptor(FSFile src, FSFile dst, BufferUpdate bufferUpdate) implements EntryDescriptor {
 	@Override
 	public Task task() {
 		return null;
