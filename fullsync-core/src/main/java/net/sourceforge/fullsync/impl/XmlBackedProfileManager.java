@@ -35,10 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -88,8 +85,7 @@ public class XmlBackedProfileManager implements ProfileManager {
 		var file = new File(profilesFileName);
 		if (file.exists() && (file.length() > 0)) {
 			try {
-				var builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				deserializeProfileList(builder.parse(file));
+				deserializeProfileList(XmlUtils.newDocumentBuilder().parse(file));
 			}
 			catch (ParserConfigurationException | SAXException | IOException ex) {
 				ExceptionHandler.reportException("Profile loading failed", ex);
@@ -170,25 +166,16 @@ public class XmlBackedProfileManager implements ProfileManager {
 	@Override
 	public synchronized void save() {
 		try {
-			var docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			var doc = docBuilder.newDocument();
-
+			Document doc = XmlUtils.newDocumentBuilder().newDocument();
 			var e = doc.createElement("Profiles"); //$NON-NLS-1$
 			e.setAttribute("version", "1.2"); //$NON-NLS-1$ //$NON-NLS-2$
 			profiles.values().stream().map(p -> ((ProfileImpl) p).serialize(doc)).forEachOrdered(e::appendChild);
 			doc.appendChild(e);
 
-			var fac = TransformerFactory.newInstance();
-			fac.setAttribute("indent-number", 2); //$NON-NLS-1$
-			var tf = fac.newTransformer();
-			tf.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
-			tf.setOutputProperty(OutputKeys.VERSION, "1.0"); //$NON-NLS-1$
-			tf.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-			tf.setOutputProperty(OutputKeys.STANDALONE, "no"); //$NON-NLS-1$
-			var source = new DOMSource(doc);
+			var tf = XmlUtils.newTransformer();
 			var newCfgFile = new File(profilesFileName + ".tmp"); //$NON-NLS-1$
 			try (var osw = new OutputStreamWriter(new FileOutputStream(newCfgFile), StandardCharsets.UTF_8)) {
-				tf.transform(source, new StreamResult(osw));
+				tf.transform(new DOMSource(doc), new StreamResult(osw));
 				osw.flush();
 			}
 			try {

@@ -30,13 +30,9 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -53,6 +49,7 @@ import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
+import net.sourceforge.fullsync.utils.XmlUtils;
 
 public class SyncFileBufferedConnection implements BufferedConnection {
 	private static final String BUFFER_FILENAME = ".syncfiles"; //$NON-NLS-1$
@@ -214,8 +211,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 			}
 		}
 		try {
-			var sax = SAXParserFactory.newInstance().newSAXParser();
-			sax.parse(new ByteArrayInputStream(out.toByteArray()), new SyncFileDefaultHandler(this));
+			XmlUtils.newSaxParser().parse(new ByteArrayInputStream(out.toByteArray()), new SyncFileDefaultHandler(this));
 		}
 		catch (SAXParseException spe) {
 			var sb = spe.toString() + "\n Line number: " + spe.getLineNumber() + //$NON-NLS-1$
@@ -258,25 +254,14 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		if ((null == node) || !node.exists()) {
 			node = root.createChild(BUFFER_FILENAME, false);
 		}
-
 		try {
-			var docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			var doc = docBuilder.newDocument();
-
+			Document doc = XmlUtils.newDocumentBuilder().newDocument();
 			var e = doc.createElement(ELEMENT_SYNC_FILES);
 			e.appendChild(serializeFile(root, doc));
 			doc.appendChild(e);
-			var fac = TransformerFactory.newInstance();
-			fac.setAttribute("indent-number", 2); //$NON-NLS-1$
-			var tf = fac.newTransformer();
-			tf.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
-			tf.setOutputProperty(OutputKeys.VERSION, "1.0"); //$NON-NLS-1$
-			tf.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-			tf.setOutputProperty(OutputKeys.STANDALONE, "no"); //$NON-NLS-1$
-			var source = new DOMSource(doc);
-
+			var tf = XmlUtils.newTransformer();
 			try (var osw = new OutputStreamWriter(new GZIPOutputStream(node.getOutputStream()), StandardCharsets.UTF_8)) {
-				tf.transform(source, new StreamResult(osw));
+				tf.transform(new DOMSource(doc), new StreamResult(osw));
 				osw.flush();
 			}
 		}
