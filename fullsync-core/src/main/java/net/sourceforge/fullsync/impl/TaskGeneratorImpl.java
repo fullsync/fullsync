@@ -50,7 +50,7 @@ import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.Site;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
 public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus eventBus) implements TaskGenerator {
 
@@ -145,7 +145,7 @@ public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus ev
 		}
 	}
 
-	public TaskTree execute(Site source, Site destination, ActionDecider actionDecider, RuleSet rules)
+	public TaskTree execute(FileSystemConnection source, FileSystemConnection destination, ActionDecider actionDecider, RuleSet rules)
 		throws DataParseException, FileSystemException, IOException {
 		if (!source.isAvailable()) {
 			throw new FileSystemException("source is unavailable");

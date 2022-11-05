@@ -21,13 +21,13 @@ package net.sourceforge.fullsync.fs.buffering.syncfiles;
 
 import java.io.IOException;
 
-import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 import net.sourceforge.fullsync.fs.connection.SyncFileBufferedConnection;
 
 public class SyncFilesBufferingProvider implements BufferingProvider {
 	@Override
-	public final Site createBufferedSite(final Site dir) throws IOException {
+	public final FileSystemConnection createBufferedSite(final FileSystemConnection dir) throws IOException {
 		return new SyncFileBufferedConnection(dir);
 	}
 }

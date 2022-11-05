@@ -47,7 +47,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 import net.sourceforge.fullsync.utils.XmlUtils;
 
@@ -115,19 +114,19 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 		}
 	}
 
-	private final Site fs;
+	private final FileSystemConnection fileSystemConnection;
 	private BufferedFile root;
 	private final boolean monitoringFileSystem;
 
-	public SyncFileBufferedConnection(final Site fs) throws IOException {
-		this.fs = fs;
+	public SyncFileBufferedConnection(final FileSystemConnection fs) throws IOException {
+		this.fileSystemConnection = fs;
 		this.monitoringFileSystem = false;
 		loadFromBuffer();
 	}
 
 	@Override
 	public boolean isAvailable() {
-		return fs.isAvailable();
+		return fileSystemConnection.isAvailable();
 	}
 
 	@Override
@@ -192,7 +191,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	}
 
 	protected void loadFromBuffer() throws IOException {
-		var fsRoot = fs.getRoot();
+		var fsRoot = fileSystemConnection.getRoot();
 		var f = fsRoot.getChild(BUFFER_FILENAME);
 
 		root = new AbstractBufferedFile(this, fsRoot, null, true, true);
@@ -249,7 +248,7 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	}
 
 	public void saveToBuffer() throws IOException {
-		var fsRoot = fs.getRoot();
+		var fsRoot = fileSystemConnection.getRoot();
 		var node = fsRoot.getChild(BUFFER_FILENAME);
 		if ((null == node) || !node.exists()) {
 			node = root.createChild(BUFFER_FILENAME, false);
@@ -278,26 +277,26 @@ public class SyncFileBufferedConnection implements BufferedConnection {
 	@Override
 	public void flush() throws IOException {
 		saveToBuffer();
-		fs.flush();
+		fileSystemConnection.flush();
 	}
 
 	@Override
 	public void close() throws Exception {
-		fs.close();
+		fileSystemConnection.close();
 	}
 
 	@Override
 	public boolean isCaseSensitive() {
-		return fs.isCaseSensitive();
+		return fileSystemConnection.isCaseSensitive();
 	}
 
 	@Override
 	public FileObject getBase() {
-		return fs.getBase();
+		return fileSystemConnection.getBase();
 	}
 
 	@Override
 	public ConnectionDescription getConnectionDescription() {
-		return fs.getConnectionDescription();
+		return fileSystemConnection.getConnectionDescription();
 	}
 }

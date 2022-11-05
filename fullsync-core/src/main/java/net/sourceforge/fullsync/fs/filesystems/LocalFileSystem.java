@@ -25,13 +25,13 @@ import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.fs.FileSystem;
-import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.connection.CommonsVfsConnection;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
 public class LocalFileSystem implements FileSystem {
 	@Override
-	public final Site createConnection(final FullSync fullsync, final ConnectionDescription description, boolean isInteractive)
-		throws FileSystemException, IOException {
+	public final FileSystemConnection createConnection(final FullSync fullsync, final ConnectionDescription description,
+		boolean isInteractive) throws FileSystemException, IOException {
 		return new CommonsVfsConnection(description, null);
 	}
 }

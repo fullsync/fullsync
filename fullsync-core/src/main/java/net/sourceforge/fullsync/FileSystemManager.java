@@ -24,9 +24,9 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import net.sourceforge.fullsync.fs.FileSystem;
-import net.sourceforge.fullsync.fs.Site;
 import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
 import net.sourceforge.fullsync.fs.buffering.syncfiles.SyncFilesBufferingProvider;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 import net.sourceforge.fullsync.fs.filesystems.FTPFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
 import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
@@ -49,12 +49,13 @@ public record FileSystemManager(FullSync fullSync) {
 		};
 	}
 
-	public Site createConnection(final ConnectionDescription desc, boolean isInteractive) throws FileSystemException, IOException {
+	public final FileSystemConnection createConnection(final ConnectionDescription desc, boolean isInteractive)
+		throws FileSystemException, IOException {
 		var scheme = desc.getScheme();
 
 		var fs = getFilesystem(scheme);
 
-		Site s = null;
+		FileSystemConnection s = null;
 		if (null != fs) {
 			s = fs.createConnection(fullSync, desc, isInteractive);
 			/* FIXME: [BUFFERING] uncomment to reenable buffering
@@ -67,7 +68,8 @@ public record FileSystemManager(FullSync fullSync) {
 		return s;
 	}
 
-	public Site resolveBuffering(final Site dir, final String bufferStrategy) throws FileSystemException, IOException {
+	public FileSystemConnection resolveBuffering(final FileSystemConnection dir, final String bufferStrategy)
+		throws FileSystemException, IOException {
 		BufferingProvider p = null;
 		if (BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy)) {
 			p = new SyncFilesBufferingProvider();

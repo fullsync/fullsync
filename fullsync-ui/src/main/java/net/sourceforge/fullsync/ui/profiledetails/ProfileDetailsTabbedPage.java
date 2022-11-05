@@ -61,7 +61,7 @@ import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
 import net.sourceforge.fullsync.fs.File;
-import net.sourceforge.fullsync.fs.Site;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 import net.sourceforge.fullsync.impl.SimplifiedRuleSetDescriptor;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
@@ -99,7 +99,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private Tree directoryTree;
 	private final List<TreeItem> treeItemsWithFilter = new ArrayList<>();
 	private Map<String, FileFilter> itemsMap = new HashMap<>();
-	private Site sourceSite;
+	private FileSystemConnection sourceConnection;
 	private Profile profile;
 	private FileFilter filter;
 	private Composite m_parent;
@@ -532,7 +532,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		directoryTree.setRedraw(false);
 		directoryTree.removeAll();
 		try {
-			for (File file : getOrderedChildren(sourceSite.getRoot())) {
+			for (File file : getOrderedChildren(sourceConnection.getRoot())) {
 				if (file.isDirectory()) {
 					var item = new TreeItem(directoryTree, SWT.NULL);
 					item.setText(file.getName());
@@ -655,7 +655,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	private void treeTabsWidgetSelected(SelectionEvent evt) {
 		if (evt.item == tabSubDirs) {
 			final var src = getConnectionDescription(srcConnectionConfiguration).build();
-			if ((null == sourceSite) || (null == lastSourceLoaded) || !lastSourceLoaded.equals(src)) {
+			if ((null == sourceConnection) || (null == lastSourceLoaded) || !lastSourceLoaded.equals(src)) {
 				directoryTree.removeAll();
 				var loadingIem = new TreeItem(directoryTree, SWT.NULL);
 				loadingIem.setText(Messages.getString("ProfileDetailsTabbedPage.Loading")); //$NON-NLS-1$
@@ -669,7 +669,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 							var builder = new ConnectionDescription.Builder(src);
 							builder.setBufferStrategy(null);
 							lastSourceLoaded = builder.build();
-							sourceSite = fileSystemManagerProvider.get().createConnection(lastSourceLoaded, true);
+							sourceConnection = fileSystemManagerProvider.get().createConnection(lastSourceLoaded, true);
 							drawDirectoryTree();
 						}
 						else {
@@ -701,10 +701,10 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 	}
 
 	private void closeSourceSite() {
-		if (null != sourceSite) {
+		if (null != sourceConnection) {
 			try {
-				sourceSite.close();
-				sourceSite = null;
+				sourceConnection.close();
+				sourceConnection = null;
 			}
 			catch (Exception e) {
 				e.printStackTrace();

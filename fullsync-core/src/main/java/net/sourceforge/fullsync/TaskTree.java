@@ -20,10 +20,10 @@
 package net.sourceforge.fullsync;
 
 import net.sourceforge.fullsync.buffer.BlockBuffer;
-import net.sourceforge.fullsync.fs.Site;
+import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 import net.sourceforge.fullsync.impl.FillBufferTaskExecutor;
 
-public record TaskTree(Site source, Site destination, Task root) {
+public record TaskTree(FileSystemConnection source, FileSystemConnection destination, Task root) {
 	public int getTaskCount() {
 		return root.getTaskCount();
 	}
