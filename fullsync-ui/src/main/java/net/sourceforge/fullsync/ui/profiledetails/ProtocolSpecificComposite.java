@@ -99,11 +99,11 @@ abstract class ProtocolSpecificComposite {
 
 	public void onBrowse() {
 		try {
-			var desc = getConnectionDescription().build();
+			var connectionDescription = getConnectionDescription().build();
 			var fsm = fileSystemManagerProvider.get();
-			try (var conn = fsm.createConnection(desc, true)) {
+			try (var fileSystemConnection = fsm.createConnection(connectionDescription, true)) {
 				var foc = fileObjectChooserProvider.get();
-				if (foc.open(m_parent.getShell(), conn.getBase())) {
+				if (foc.open(m_parent.getShell(), fileSystemConnection)) {
 					setPath(new URI(foc.getActiveFileObject().getName().getURI()).getPath());
 				}
 			}
