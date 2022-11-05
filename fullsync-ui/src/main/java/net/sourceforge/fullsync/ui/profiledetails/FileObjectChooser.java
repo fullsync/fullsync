@@ -27,7 +27,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -251,10 +250,10 @@ class FileObjectChooser {
 		var children = activeFileObject.getChildren();
 		Arrays.sort(children, (o1, o2) -> {
 			try {
-				if ((o1.getType() == FileType.FOLDER) && (o2.getType() == FileType.FILE)) {
+				if (o1.isFolder() && !o2.isFolder()) {
 					return -1;
 				}
-				else if ((o1.getType() == FileType.FILE) && (o2.getType() == FileType.FOLDER)) {
+				else if (!o1.isFolder() && o2.isFolder()) {
 					return 1;
 				}
 				return o1.getName().getBaseName().compareTo(o2.getName().getBaseName());
@@ -296,7 +295,7 @@ class FileObjectChooser {
 			}
 			item.setText(2, type.toString());
 
-			if (data.getType() == FileType.FOLDER) {
+			if (data.isFolder()) {
 				item.setImage(imageRepository.getImage("FS_Folder_Collapsed.gif")); //$NON-NLS-1$
 			}
 			else {

@@ -29,7 +29,6 @@ import java.util.Map;
 import org.apache.commons.vfs2.Capability;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.FileType;
 import org.apache.commons.vfs2.VFS;
 
 import net.sourceforge.fullsync.ConnectionDescription;
@@ -71,8 +70,8 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	private FSFile buildNode(final FSFile parent, final FileObject file) throws org.apache.commons.vfs2.FileSystemException {
 		var name = file.getName().getBaseName();
 
-		FSFile n = new FileImpl(this, name, parent, file.getType() == FileType.FOLDER, true);
-		if (file.getType() == FileType.FILE) {
+		FSFile n = new FileImpl(this, name, parent, file.isFolder(), true);
+		if (!file.isFolder()) {
 			var content = file.getContent();
 			n.setLastModified(content.getLastModifiedTime());
 			n.setSize(content.getSize());
@@ -86,7 +85,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 			Map<String, FSFile> children = new HashMap<>();
 
 			var obj = base.resolveFile(dir.getPath());
-			if (obj.exists() && (obj.getType() == FileType.FOLDER)) {
+			if (obj.exists() && obj.isFolder()) {
 				var list = obj.getChildren();
 				for (FileObject element : list) {
 					children.put(element.getName().getBaseName(), buildNode(dir, element));
@@ -111,7 +110,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 		var obj = base.resolveFile(file.getPath());
 		var content = obj.getContent();
 		boolean setLastModified;
-		if (FileType.FOLDER == obj.getType()) {
+		if (obj.isFolder()) {
 			setLastModified = canSetLastModifiedFolder;
 		}
 		else {
