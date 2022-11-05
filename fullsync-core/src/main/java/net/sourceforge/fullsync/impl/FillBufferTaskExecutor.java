@@ -25,6 +25,7 @@ import java.util.List;
 
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.IoStatistics;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
@@ -33,7 +34,6 @@ import net.sourceforge.fullsync.TaskFinishedListener;
 import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.buffer.ExecutionBuffer;
 import net.sourceforge.fullsync.event.TaskFinishedEvent;
-import net.sourceforge.fullsync.fs.FSFile;
 
 public class FillBufferTaskExecutor implements TaskExecutor {
 	private final List<TaskFinishedListener> listeners = new ArrayList<>();

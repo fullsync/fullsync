@@ -24,7 +24,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import net.sourceforge.fullsync.event.ScheduledProfileExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +32,10 @@ import com.google.common.eventbus.Subscribe;
 
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
+import net.sourceforge.fullsync.Scheduler;
 import net.sourceforge.fullsync.event.ProfileChanged;
 import net.sourceforge.fullsync.event.ProfileListChanged;
+import net.sourceforge.fullsync.event.ScheduledProfileExecution;
 import net.sourceforge.fullsync.event.SchedulerStatusChanged;
 
 @Singleton

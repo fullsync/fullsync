@@ -24,7 +24,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -47,10 +46,10 @@ import org.eclipse.swt.widgets.TableItem;
 import net.sourceforge.fullsync.Action;
 import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.Location;
 import net.sourceforge.fullsync.Task;
 import net.sourceforge.fullsync.TaskTree;
-import net.sourceforge.fullsync.fs.FSFile;
 
 class TaskDecisionList extends Composite {
 	private Table tableLogLines;

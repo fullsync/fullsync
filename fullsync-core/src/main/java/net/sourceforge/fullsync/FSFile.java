@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs;
+package net.sourceforge.fullsync;
 
 import java.io.IOException;
 import java.io.InputStream;

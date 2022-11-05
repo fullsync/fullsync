@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.filesystems.smb;
+package net.sourceforge.fullsync.filesystems;
 
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
@@ -25,7 +25,6 @@ import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 
 import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 
 class SmbAuthProvider implements FileSystemAuthProvider {
 	@Override

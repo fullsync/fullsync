@@ -17,15 +17,11 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs;
+package net.sourceforge.fullsync;
 
 import java.io.IOException;
 
-import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.FileSystemException;
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
-
-public interface FileSystemConnectionFactory {
-	FileSystemConnection createConnection(ConnectionDescription connectionDescription, boolean interactive)
+public interface BufferingProviderFactory {
+	BufferedFileSystemConnection createBufferedConnection(FileSystemConnection fileSystemConnection)
 		throws FileSystemException, IOException;
 }

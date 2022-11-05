@@ -22,6 +22,7 @@ package net.sourceforge.fullsync.ui.profiledetails;
 import static org.eclipse.swt.events.SelectionListener.widgetDefaultSelectedAdapter;
 import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -55,13 +56,13 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ExceptionHandler;
+import net.sourceforge.fullsync.FSFile;
+import net.sourceforge.fullsync.FileSystemConnection;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.Profile;
 import net.sourceforge.fullsync.ProfileManager;
 import net.sourceforge.fullsync.RuleSetDescriptor;
-import net.sourceforge.fullsync.fs.FSFile;
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 import net.sourceforge.fullsync.impl.SimplifiedRuleSetDescriptor;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
@@ -448,7 +449,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				var childrens = item.getItems();
 				for (TreeItem children : childrens) {
 					if (null == children.getData(EXPANDED_KEY)) {
-						var file = (File) children.getData();
+						var file = (FSFile) children.getData();
 						try {
 							addChildren(file, children);
 						}
@@ -572,7 +573,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 
 	private List<FSFile> getOrderedChildren(FSFile rootFile) throws IOException {
 		List<FSFile> children = new ArrayList<>(rootFile.getChildren());
-		children.sort(Comparator.comparing(File::getName));
+		children.sort(Comparator.comparing(FSFile::getName));
 		return children;
 	}
 

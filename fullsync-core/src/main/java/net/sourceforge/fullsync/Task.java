@@ -22,8 +22,6 @@ package net.sourceforge.fullsync;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.fullsync.fs.FSFile;
-
 public class Task {
 	private final FSFile source;
 	private final FSFile destination;

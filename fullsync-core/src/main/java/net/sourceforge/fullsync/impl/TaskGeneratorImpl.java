@@ -36,6 +36,8 @@ import net.sourceforge.fullsync.ActionType;
 import net.sourceforge.fullsync.BufferStateDecider;
 import net.sourceforge.fullsync.BufferUpdate;
 import net.sourceforge.fullsync.DataParseException;
+import net.sourceforge.fullsync.FSFile;
+import net.sourceforge.fullsync.FileSystemConnection;
 import net.sourceforge.fullsync.FileSystemException;
 import net.sourceforge.fullsync.FileSystemManager;
 import net.sourceforge.fullsync.Location;
@@ -49,8 +51,6 @@ import net.sourceforge.fullsync.TaskTree;
 import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
-import net.sourceforge.fullsync.fs.FSFile;
-import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
 
 public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus eventBus) implements TaskGenerator {
 

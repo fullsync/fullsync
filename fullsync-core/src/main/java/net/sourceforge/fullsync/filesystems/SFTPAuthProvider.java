@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.filesystems.sftp;
+package net.sourceforge.fullsync.filesystems;
 
 import java.io.File;
 import java.util.Arrays;
@@ -37,7 +37,6 @@ import com.jcraft.jsch.UserInfo;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.FullSync;
-import net.sourceforge.fullsync.fs.FileSystemAuthProvider;
 import net.sourceforge.fullsync.impl.SFTPLogger;
 
 class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive, UserInfo {

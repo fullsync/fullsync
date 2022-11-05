@@ -21,8 +21,6 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 
-import net.sourceforge.fullsync.fs.FSFile;
-
 public interface RuleSet extends IgnoreDecider, FileComparer {
 	boolean isUsingRecursion();
 

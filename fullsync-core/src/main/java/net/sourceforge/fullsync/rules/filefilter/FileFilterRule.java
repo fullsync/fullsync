@@ -19,7 +19,7 @@
  */
 package net.sourceforge.fullsync.rules.filefilter;
 
-import net.sourceforge.fullsync.fs.FSFile;
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 
 public interface FileFilterRule {

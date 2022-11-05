@@ -22,11 +22,11 @@ package net.sourceforge.fullsync.impl;
 import java.io.IOException;
 
 import net.sourceforge.fullsync.BufferStateDecider;
+import net.sourceforge.fullsync.BufferedFile;
 import net.sourceforge.fullsync.DataParseException;
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.FileComparer;
 import net.sourceforge.fullsync.State;
-import net.sourceforge.fullsync.fs.FSFile;
-import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
 public class BufferStateDeciderImpl extends StateDeciderImpl implements BufferStateDecider {
 	public BufferStateDeciderImpl(FileComparer comparer) {

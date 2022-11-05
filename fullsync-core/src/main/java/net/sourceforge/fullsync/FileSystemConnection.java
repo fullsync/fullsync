@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.connection;
+package net.sourceforge.fullsync;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,9 +25,6 @@ import java.io.OutputStream;
 import java.util.Map;
 
 import org.apache.commons.vfs2.FileObject;
-
-import net.sourceforge.fullsync.ConnectionDescription;
-import net.sourceforge.fullsync.fs.FSFile;
 
 public interface FileSystemConnection extends AutoCloseable {
 	FSFile getRoot();

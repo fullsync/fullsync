@@ -19,9 +19,9 @@
  */
 package net.sourceforge.fullsync.impl;
 
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.RuleSet;
 import net.sourceforge.fullsync.State;
-import net.sourceforge.fullsync.fs.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.FileFilter;
 import net.sourceforge.fullsync.rules.filefilter.filefiltertree.FileFilterTree;
 

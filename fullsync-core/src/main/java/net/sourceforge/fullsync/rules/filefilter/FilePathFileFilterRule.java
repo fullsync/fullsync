@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import net.sourceforge.fullsync.DataParseException;
-import net.sourceforge.fullsync.fs.FSFile;
+import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.OperandValue;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 

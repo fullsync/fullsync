@@ -17,7 +17,7 @@
  * For information about the authors of this project Have a look
  * at the AUTHORS file in the root of this project.
  */
-package net.sourceforge.fullsync.fs.connection;
+package net.sourceforge.fullsync;
 
 public interface BufferedFileSystemConnection extends FileSystemConnection {
 	boolean isMonitoringFileSystem();
