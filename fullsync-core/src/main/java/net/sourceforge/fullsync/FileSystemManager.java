@@ -21,64 +21,11 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
-import net.sourceforge.fullsync.fs.FileSystem;
-import net.sourceforge.fullsync.fs.buffering.BufferingProvider;
-import net.sourceforge.fullsync.fs.buffering.syncfiles.SyncFilesBufferingProvider;
 import net.sourceforge.fullsync.fs.connection.FileSystemConnection;
-import net.sourceforge.fullsync.fs.filesystems.FTPFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.LocalFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.SFTPFileSystem;
-import net.sourceforge.fullsync.fs.filesystems.SmbFileSystem;
 
-public record FileSystemManager(FullSync fullSync) {
-	public static final String BUFFER_STRATEGY_SYNCFILES = "syncfiles"; //$NON-NLS-1$
+@FunctionalInterface
+public interface FileSystemManager {
+	String BUFFER_STRATEGY_SYNCFILES = "syncfiles"; //$NON-NLS-1$
 
-	@Inject
-	public FileSystemManager {
-	}
-
-	private FileSystem getFilesystem(final String scheme) throws FileSystemException {
-		return switch (scheme) {
-			case "file" -> new LocalFileSystem(); // $NON-NLS-1$
-			case "ftp" -> new FTPFileSystem(); // $NON-NLS-1$
-			case "sftp" -> new SFTPFileSystem(); // $NON-NLS-1$
-			case "smb" -> new SmbFileSystem(); // $NON-NLS-1$
-			default -> throw new FileSystemException("Unknown scheme: " + scheme); //$NON-NLS-1$
-		};
-	}
-
-	public final FileSystemConnection createConnection(final ConnectionDescription desc, boolean isInteractive)
-		throws FileSystemException, IOException {
-		var scheme = desc.getScheme();
-
-		var fs = getFilesystem(scheme);
-
-		FileSystemConnection s = null;
-		if (null != fs) {
-			s = fs.createConnection(fullSync, desc, isInteractive);
-			/* FIXME: [BUFFERING] uncomment to reenable buffering
-			String bufferStrategy = desc.getParameter(ConnectionDescription.PARAMETER_BUFFER_STRATEGY);
-			if ((null != bufferStrategy) && !"".equals(bufferStrategy)) {
-				s = resolveBuffering(s, bufferStrategy);
-			}
-			 */
-		}
-		return s;
-	}
-
-	public FileSystemConnection resolveBuffering(final FileSystemConnection dir, final String bufferStrategy)
-		throws FileSystemException, IOException {
-		BufferingProvider p = null;
-		if (BUFFER_STRATEGY_SYNCFILES.equals(bufferStrategy)) {
-			p = new SyncFilesBufferingProvider();
-		}
-
-		if (null == p) {
-			throw new FileSystemException("BufferStrategy '" + bufferStrategy + "' not found"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-
-		return p.createBufferedSite(dir);
-	}
+	FileSystemConnection createConnection(final ConnectionDescription desc, boolean interactive) throws FileSystemException, IOException;
 }

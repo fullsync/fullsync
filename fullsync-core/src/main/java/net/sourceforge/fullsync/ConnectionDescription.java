@@ -225,7 +225,7 @@ public class ConnectionDescription {
 	public boolean isUserDirIsRoot() {
 		return userDirIsRoot;
 	}
-	
+
 	public URI getURI() throws URISyntaxException {
 		if ("file".equals(scheme)) { //$NON-NLS-1$
 			return new File(path).toURI();
