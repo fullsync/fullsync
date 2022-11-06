@@ -40,7 +40,6 @@ import net.sourceforge.fullsync.FullSync;
 import net.sourceforge.fullsync.impl.SFTPLogger;
 
 class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive, UserInfo {
-	private static final String SSH_DIR_NAME;
 	private static final Logger logger = LoggerFactory.getLogger(SFTPAuthProvider.class.getSimpleName());
 
 	static {
@@ -51,13 +50,8 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		}
 		var sshDir = new File(sshDirPath);
 		if (!sshDir.exists() && !sshDir.mkdirs()) {
-			var path = sshDir.getAbsolutePath();
-			logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... tried: {}", path); //$NON-NLS-1$
+			logger.warn("failed to create the .ssh directory, remembering SSH keys likely won't work... tried: {}", sshDir.getAbsolutePath()); //$NON-NLS-1$
 			sshDir = null;
-			SSH_DIR_NAME = null;
-		}
-		else {
-			SSH_DIR_NAME = sshDirPath;
 		}
 		if (null != sshDir) {
 			System.setProperty("vfs.sftp.sshdir", sshDir.getAbsolutePath()); //$NON-NLS-1$
@@ -81,9 +75,6 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 		var cfg = SftpFileSystemConfigBuilder.getInstance();
 		cfg.setUserDirIsRoot(options, connectionDescription.isUserDirIsRoot());
-		if (null != SSH_DIR_NAME) {
-			cfg.setKnownHosts(options, new File(SSH_DIR_NAME, "known_hosts")); //$NON-NLS-1$
-		}
 		logger.debug("using knownHosts: {0}", cfg.getKnownHosts(options)); //$NON-NLS-1$
 		cfg.setUserInfo(options, this);
 		cfg.setStrictHostKeyChecking(options, "ask"); //$NON-NLS-1$
