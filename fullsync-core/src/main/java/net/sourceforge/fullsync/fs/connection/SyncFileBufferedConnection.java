@@ -66,11 +66,11 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 
 	private static class SyncFileDefaultHandler extends DefaultHandler {
 		private final BufferedFileSystemConnection bufferedConnection;
-		private AbstractBufferedFile current;
+		private BufferedFileImpl current;
 
 		SyncFileDefaultHandler(SyncFileBufferedConnection bc) {
 			bufferedConnection = bc;
-			current = (AbstractBufferedFile) bc.getRoot();
+			current = (BufferedFileImpl) bc.getRoot();
 		}
 
 		@Override
@@ -81,12 +81,12 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 				if ("/".equals(name) || ".".equals(name)) { //$NON-NLS-1$ //$NON-NLS-2$
 					return;
 				}
-				var newDir = new AbstractBufferedFile(bufferedConnection, name, current, true, true);
+				var newDir = new BufferedFileImpl(bufferedConnection, name, current, true, true);
 				current.addChild(newDir);
 				current = newDir;
 			}
 			else if (ELEMENT_FILE.equals(qName)) {
-				var newFile = new AbstractBufferedFile(bufferedConnection, name, current, false, true);
+				var newFile = new BufferedFileImpl(bufferedConnection, name, current, false, true);
 				newFile.setSize(Long.parseLong(attributes.getValue(ATTRIBUTE_BUFFERED_LENGTH)));
 				newFile.setLastModified(Long.parseLong(attributes.getValue(ATTRIBUTE_BUFFERED_LAST_MODIFIED)));
 
@@ -111,7 +111,7 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 				 * }
 				 * /*
 				 */
-				current = (AbstractBufferedFile) current.getParent();
+				current = (BufferedFileImpl) current.getParent();
 			}
 			super.endElement(uri, localName, qName);
 		}
@@ -139,7 +139,7 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 		if (null == n) {
 			n = dir.getUnbuffered().createChild(name, directory);
 		}
-		return new AbstractBufferedFile(this, n, dir, directory, false);
+		return new BufferedFileImpl(this, n, dir, directory, false);
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 		for (File uf : fsChildren) {
 			var bf = (BufferedFile) buffered.getChild(uf.getName());
 			if (null == bf) {
-				bf = new AbstractBufferedFile(this, uf, root, uf.isDirectory(), false);
+				bf = new BufferedFileImpl(this, uf, root, uf.isDirectory(), false);
 				buffered.addChild(bf);
 			}
 			if (bf.isDirectory()) {
@@ -198,7 +198,7 @@ public class SyncFileBufferedConnection implements BufferedFileSystemConnection 
 		var fsRoot = fileSystemConnection.getRoot();
 		var f = fsRoot.getChild(BUFFER_FILENAME);
 
-		root = new AbstractBufferedFile(this, fsRoot, null, true, true);
+		root = new BufferedFileImpl(this, fsRoot, null, true, true);
 		if ((null == f) || !f.exists() || f.isDirectory()) {
 			if (isMonitoringFileSystem()) {
 				updateFromFileSystem(root);

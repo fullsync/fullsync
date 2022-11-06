@@ -53,7 +53,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 				fsAuthProvider.authSetup(connectionDescription, options);
 			}
 			base = VFS.getManager().resolveFile(connectionDescription.getURI().toString(), options);
-			root = new AbstractFile(this, ".", null, true, base.exists()); //$NON-NLS-1$
+			root = new FileImpl(this, ".", null, true, base.exists()); //$NON-NLS-1$
 			canSetLastModifiedFile = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FILE);
 			canSetLastModifiedFolder = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FOLDER);
 		}
@@ -64,13 +64,13 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	@Override
 	public final File createChild(final File parent, final String name, final boolean directory) throws IOException {
-		return new AbstractFile(this, name, parent, directory, false);
+		return new FileImpl(this, name, parent, directory, false);
 	}
 
 	private File buildNode(final File parent, final FileObject file) throws org.apache.commons.vfs2.FileSystemException {
 		var name = file.getName().getBaseName();
 
-		File n = new AbstractFile(this, name, parent, file.getType() == FileType.FOLDER, true);
+		File n = new FileImpl(this, name, parent, file.getType() == FileType.FOLDER, true);
 		if (file.getType() == FileType.FILE) {
 			var content = file.getContent();
 			n.setLastModified(content.getLastModifiedTime());

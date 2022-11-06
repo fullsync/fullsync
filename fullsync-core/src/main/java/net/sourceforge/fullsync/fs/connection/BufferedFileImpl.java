@@ -27,12 +27,12 @@ import java.util.HashMap;
 import net.sourceforge.fullsync.fs.File;
 import net.sourceforge.fullsync.fs.buffering.BufferedFile;
 
-class AbstractBufferedFile extends AbstractFile implements BufferedFile {
+class BufferedFileImpl extends FileImpl implements BufferedFile {
 	protected File unbuffered;
 	private long fsSize;
 	private long fsLastModified;
 
-	AbstractBufferedFile(BufferedFileSystemConnection bc, String name, File parent, boolean directory, boolean exists) {
+	BufferedFileImpl(BufferedFileSystemConnection bc, String name, File parent, boolean directory, boolean exists) {
 		super(bc, name, parent, directory, exists);
 		this.unbuffered = null;
 		children = new HashMap<>();
@@ -40,7 +40,7 @@ class AbstractBufferedFile extends AbstractFile implements BufferedFile {
 		fsLastModified = -1;
 	}
 
-	AbstractBufferedFile(BufferedFileSystemConnection bc, File unbuffered, File parent, boolean directory, boolean exists) {
+	BufferedFileImpl(BufferedFileSystemConnection bc, File unbuffered, File parent, boolean directory, boolean exists) {
 		this(bc, unbuffered.getName(), parent, directory, exists);
 		this.unbuffered = unbuffered;
 	}
