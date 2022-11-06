@@ -496,7 +496,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 					selectedItem.setData(FILTER_KEY, newfilter);
 					treeItemsWithFilter.add(selectedItem);
 					var file = (File) selectedItem.getData();
-					itemsMap.put(file.getPath(), newfilter);
+					itemsMap.put(file.getDisplayPath(), newfilter);
 					markItem(selectedItem);
 					buttonRemoveFilter.setEnabled(true);
 				}
@@ -516,7 +516,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				var selectedItem = selectedItems[0];
 				treeItemsWithFilter.remove(selectedItem);
 				var file = (File) selectedItem.getData();
-				itemsMap.remove(file.getPath());
+				itemsMap.remove(file.getDisplayPath());
 				unmarkItem(selectedItem);
 			}
 		});
@@ -539,10 +539,10 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 					item.setText(file.getName());
 					item.setImage(imageRepository.getImage("Node_Directory.png")); //$NON-NLS-1$
 					item.setData(file);
-					if (itemsMap.containsKey(file.getPath())) {
+					if (itemsMap.containsKey(file.getDisplayPath())) {
 						markItem(item);
 						treeItemsWithFilter.add(item);
-						item.setData(FILTER_KEY, itemsMap.get(file.getPath()));
+						item.setData(FILTER_KEY, itemsMap.get(file.getDisplayPath()));
 					}
 					addChildren(file, item);
 					item.setData(EXPANDED_KEY, new Object());
@@ -562,10 +562,10 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				childrenItem.setText(file.getName());
 				childrenItem.setImage(imageRepository.getImage("Node_Directory.png")); //$NON-NLS-1$
 				childrenItem.setData(file);
-				if (itemsMap.containsKey(file.getPath())) {
+				if (itemsMap.containsKey(file.getDisplayPath())) {
 					markItem(childrenItem);
 					treeItemsWithFilter.add(childrenItem);
-					childrenItem.setData(FILTER_KEY, itemsMap.get(file.getPath()));
+					childrenItem.setData(FILTER_KEY, itemsMap.get(file.getDisplayPath()));
 				}
 			}
 		}
@@ -696,7 +696,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		for (TreeItem item : treeItemsWithFilter) {
 			var itemFilter = (FileFilter) item.getData(FILTER_KEY);
 			var itemFile = (File) item.getData();
-			filters.put(itemFile.getPath(), itemFilter);
+			filters.put(itemFile.getDisplayPath(), itemFilter);
 		}
 		return new FileFilterTree(filters);
 	}

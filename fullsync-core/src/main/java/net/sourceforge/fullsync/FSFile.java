@@ -27,7 +27,9 @@ import java.util.Collection;
 public interface FSFile {
 	String getName();
 
-	String getPath();
+	String getFsAbsolutePath();
+
+	String getDisplayPath();
 
 	FSFile getParent();
 

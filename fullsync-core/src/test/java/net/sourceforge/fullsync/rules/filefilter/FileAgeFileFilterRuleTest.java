@@ -35,11 +35,11 @@ import net.sourceforge.fullsync.rules.filefilter.values.AgeValue;
 
 public class FileAgeFileFilterRuleTest {
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	private final FSFile root = new TestNode("root", null, true, true, 0, 0);
+	private final TestNode root = TestNode.root();
 
 	private FSFile createTestNode(String date) throws ParseException {
 		var lastModified = dateFormat.parse(date).getTime();
-		return new TestNode("foobar.txt", root, true, false, 1024, lastModified);
+		return root.createChildNode("foobar.txt", true, false, 1024, lastModified);
 	}
 
 	@BeforeEach

@@ -53,7 +53,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 				fsAuthProvider.authSetup(connectionDescription, options);
 			}
 			base = VFS.getManager().resolveFile(connectionDescription.getURI().toString(), options);
-			root = new FileImpl(this, ".", null, true, base.exists()); //$NON-NLS-1$
+			root = FileImpl.root(this, true, base.exists());
 			canSetLastModifiedFile = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FILE);
 			canSetLastModifiedFolder = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FOLDER);
 		}
@@ -69,7 +69,6 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	private FSFile buildNode(final FSFile parent, final FileObject file) throws org.apache.commons.vfs2.FileSystemException {
 		var name = file.getName().getBaseName();
-
 		FSFile n = new FileImpl(this, name, parent, file.isFolder(), true);
 		if (!file.isFolder()) {
 			var content = file.getContent();
@@ -83,8 +82,7 @@ public class CommonsVfsConnection implements FileSystemConnection {
 	public final Map<String, FSFile> getChildren(final FSFile dir) throws IOException {
 		try {
 			Map<String, FSFile> children = new HashMap<>();
-
-			var obj = base.resolveFile(dir.getPath());
+			var obj = base.resolveFile(dir.getFsAbsolutePath());
 			if (obj.exists() && obj.isFolder()) {
 				var list = obj.getChildren();
 				for (FileObject element : list) {
@@ -100,14 +98,14 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	@Override
 	public final boolean makeDirectory(final FSFile dir) throws IOException {
-		var obj = base.resolveFile(dir.getPath());
+		var obj = base.resolveFile(dir.getFsAbsolutePath());
 		obj.createFolder();
 		return true;
 	}
 
 	@Override
 	public final boolean writeFileAttributes(final FSFile file) throws IOException {
-		var obj = base.resolveFile(file.getPath());
+		var obj = base.resolveFile(file.getFsAbsolutePath());
 		var content = obj.getContent();
 		boolean setLastModified;
 		if (obj.isFolder()) {
@@ -124,19 +122,19 @@ public class CommonsVfsConnection implements FileSystemConnection {
 
 	@Override
 	public final InputStream readFile(final FSFile file) throws IOException {
-		var obj = base.resolveFile(file.getPath());
+		var obj = base.resolveFile(file.getFsAbsolutePath());
 		return obj.getContent().getInputStream();
 	}
 
 	@Override
 	public final OutputStream writeFile(final FSFile file) throws IOException {
-		var obj = base.resolveFile(file.getPath());
+		var obj = base.resolveFile(file.getFsAbsolutePath());
 		return obj.getContent().getOutputStream();
 	}
 
 	@Override
 	public final boolean delete(final FSFile node) throws IOException {
-		var obj = base.resolveFile(node.getPath());
+		var obj = base.resolveFile(node.getFsAbsolutePath());
 		return obj.delete();
 	}
 

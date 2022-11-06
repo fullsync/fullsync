@@ -147,7 +147,7 @@ class MainWindow implements ProfileListControlHandler {
 
 		lastFileChecked = new GUIUpdateQueue<>(display, files -> {
 			var lastCheckedFile = files.get(files.size() - 1);
-			statusLineText.add(Messages.getString("MainWindow.Checking_File", lastCheckedFile.getPath())); //$NON-NLS-1$
+			statusLineText.add(Messages.getString("MainWindow.Checking_File", lastCheckedFile.getDisplayPath())); //$NON-NLS-1$
 		});
 
 		var enabled = scheduler.isEnabled();

@@ -55,6 +55,6 @@ public record DeleteNodeEntryDescriptor(Task task, FSFile node) implements Entry
 
 	@Override
 	public String operationDescription() {
-		return "Deleted File " + node.getPath();
+		return "Deleted File " + node.getDisplayPath();
 	}
 }

@@ -30,18 +30,17 @@ import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class FilePathFileFilterRuleTest {
-	private final FSFile root = new TestNode("root", null, true, true, 0, 0);
+	private final TestNode root = TestNode.root();
 	private FSFile testNode;
 
 	@BeforeEach
 	public void setUp() {
-		testNode = new TestNode("foobar.txt", root, true, false, 1000, 0);
+		testNode = root.createChildNode("foobar.txt", true, false, 1000, 0);
 	}
 
 	@Test
 	public void opMatchesRegexp() throws Exception {
 		var filterRule = new FilePathFileFilterRule(new TextValue(".*"), FilePathFileFilterRule.OP_MATCHES_REGEXP);
-
 		assertTrue(filterRule.match(testNode));
 	}
 

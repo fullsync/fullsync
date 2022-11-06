@@ -85,6 +85,6 @@ public class FileCopyEntryDescriptor implements EntryDescriptor {
 
 	@Override
 	public String operationDescription() {
-		return "Copied " + src.getPath() + " to " + dst.getPath();
+		return "Copied " + src.getDisplayPath() + " to " + dst.getDisplayPath(); // FIXME: src and dst always name the same path
 	}
 }

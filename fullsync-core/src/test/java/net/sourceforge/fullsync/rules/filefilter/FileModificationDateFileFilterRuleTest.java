@@ -36,7 +36,7 @@ import net.sourceforge.fullsync.rules.filefilter.values.DateValue;
 public class FileModificationDateFileFilterRuleTest {
 	private static final String OLD_DATE_TIME = "01/06/2005 06:00:00";
 	private static final String NEW_DATE_TIME = "02/06/2005 06:00:00";
-	private final FSFile root = new TestNode("root", null, true, true, 0, 0);
+	private final TestNode root = TestNode.root();
 	private FSFile testNode;
 	private long oldtime;
 	private long newtime;
@@ -46,24 +46,20 @@ public class FileModificationDateFileFilterRuleTest {
 		var dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		oldtime = dateFormat.parse(OLD_DATE_TIME).getTime();
 		newtime = dateFormat.parse(NEW_DATE_TIME).getTime();
-
-		testNode = new TestNode("foobar.txt", root, true, false, 1000, oldtime);
+		testNode = root.createChildNode("foobar.txt", true, false, 1000, oldtime);
 	}
 
 	@Test
 	public void testOpIs() throws Exception {
 		var filterRule = new FileModificationDateFileFilterRule(new DateValue(OLD_DATE_TIME), FileModificationDateFileFilterRule.OP_IS);
-
 		assertTrue(filterRule.match(testNode));
 		testNode.setLastModified(newtime);
-
 		assertFalse(filterRule.match(testNode));
 	}
 
 	@Test
 	public void testOpIsnt() throws Exception {
 		var filterRule = new FileModificationDateFileFilterRule(new DateValue(OLD_DATE_TIME), FileModificationDateFileFilterRule.OP_ISNT);
-
 		testNode.setLastModified(newtime);
 		assertTrue(filterRule.match(testNode));
 	}
@@ -72,9 +68,7 @@ public class FileModificationDateFileFilterRuleTest {
 	public void testOpIsAfter() throws Exception {
 		var filterRule = new FileModificationDateFileFilterRule(new DateValue(NEW_DATE_TIME),
 			FileModificationDateFileFilterRule.OP_IS_AFTER);
-
 		testNode.setLastModified(oldtime);
-
 		assertNotEquals(oldtime, newtime);
 		assertTrue(filterRule.match(testNode));
 	}
@@ -83,7 +77,6 @@ public class FileModificationDateFileFilterRuleTest {
 	public void testOpIsBefore() throws Exception {
 		var filterRule = new FileModificationDateFileFilterRule(new DateValue(OLD_DATE_TIME),
 			FileModificationDateFileFilterRule.OP_IS_BEFORE);
-
 		testNode.setLastModified(newtime);
 		assertNotEquals(oldtime, newtime);
 		assertTrue(filterRule.match(testNode));
@@ -92,16 +85,13 @@ public class FileModificationDateFileFilterRuleTest {
 	@Test
 	public void testOpDefault() throws Exception {
 		var filterRule = new FileModificationDateFileFilterRule(new DateValue(NEW_DATE_TIME), -1);
-
 		assertFalse(filterRule.match(testNode));
 	}
 
 	@Test
 	public void throwFilterRuleNotAppliableExceptionAll() throws Exception {
 		var filterRule = new FileModificationDateFileFilterRule(new DateValue(NEW_DATE_TIME), FileModificationDateFileFilterRule.OP_IS);
-
 		testNode.setLastModified(-1);
-
 		assertThrows(FilterRuleNotAppliableException.class, () -> filterRule.match(testNode));
 	}
 }

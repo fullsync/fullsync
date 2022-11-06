@@ -28,10 +28,10 @@ import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.TypeValue;
 
 public class FileTypeFileNameFilterRuleTest {
-	private final FSFile root = new TestNode("root", null, true, true, 0, 0);
+	private final TestNode root = TestNode.root();
 
 	private FSFile createTestNode(boolean isDirectory) {
-		return new TestNode("foobar.txt", root, true, isDirectory, 1024, System.currentTimeMillis());
+		return root.createChildNode("foobar.txt", true, isDirectory, 1024, System.currentTimeMillis());
 	}
 
 	@Test
@@ -39,7 +39,6 @@ public class FileTypeFileNameFilterRuleTest {
 		var filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.FILE), FileTypeFileFilterRule.OP_IS);
 		assertTrue(filterRule.match(createTestNode(false)));
 		assertFalse(filterRule.match(createTestNode(true)));
-
 		filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.FILE), FileTypeFileFilterRule.OP_IS);
 		assertTrue(filterRule.match(createTestNode(false)));
 		assertFalse(filterRule.match(createTestNode(true)));
@@ -50,7 +49,6 @@ public class FileTypeFileNameFilterRuleTest {
 		var filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.FILE), FileTypeFileFilterRule.OP_ISNT);
 		assertFalse(filterRule.match(createTestNode(false)));
 		assertTrue(filterRule.match(createTestNode(true)));
-
 		filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.FILE), FileTypeFileFilterRule.OP_ISNT);
 		assertFalse(filterRule.match(createTestNode(false)));
 		assertTrue(filterRule.match(createTestNode(true)));
@@ -61,7 +59,6 @@ public class FileTypeFileNameFilterRuleTest {
 		var filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY), FileTypeFileFilterRule.OP_IS);
 		assertFalse(filterRule.match(createTestNode(false)));
 		assertTrue(filterRule.match(createTestNode(true)));
-
 		filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY), FileTypeFileFilterRule.OP_IS);
 		assertFalse(filterRule.match(createTestNode(false)));
 		assertTrue(filterRule.match(createTestNode(true)));
@@ -72,7 +69,6 @@ public class FileTypeFileNameFilterRuleTest {
 		var filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY), FileTypeFileFilterRule.OP_ISNT);
 		assertTrue(filterRule.match(createTestNode(false)));
 		assertFalse(filterRule.match(createTestNode(true)));
-
 		filterRule = new FileTypeFileFilterRule(new TypeValue(TypeValue.Type.DIRECTORY), FileTypeFileFilterRule.OP_ISNT);
 		assertTrue(filterRule.match(createTestNode(false)));
 		assertFalse(filterRule.match(createTestNode(true)));

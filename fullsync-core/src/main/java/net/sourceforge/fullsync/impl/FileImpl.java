@@ -50,6 +50,10 @@ class FileImpl implements FSFile {
 		this.lastModified = -1;
 	}
 
+	public static FileImpl root(FileSystemConnection fs, boolean directory, boolean exists) {
+		return new FileImpl(fs, "", null, directory, exists);
+	}
+
 	public FileSystemConnection getConnection() {
 		return fs;
 	}
@@ -60,12 +64,38 @@ class FileImpl implements FSFile {
 	}
 
 	@Override
-	public String getPath() {
-		String parentPath = null;
-		if (null != parent) {
-			parentPath = parent.getPath();
+	public String getFsAbsolutePath() {
+		StringBuilder sb = new StringBuilder();
+		if (null == parent) {
+			sb.append(fs.getConnectionDescription().getPath());
 		}
-		return null != parentPath ? parentPath + "/" + name : name; //$NON-NLS-1$
+		else {
+			sb.append(parent.getFsAbsolutePath());
+		}
+		if (sb.length() > 0) {
+			if ('/' != sb.charAt(sb.length() - 1)) {
+				sb.append('/');
+			}
+		}
+		if (!name.isEmpty()) {
+			sb.append(name);
+		}
+		return sb.toString();
+	}
+
+	@Override
+	public String getDisplayPath() {
+		StringBuilder sb = new StringBuilder();
+		if (null != parent) {
+			sb.append(parent.getDisplayPath());
+		}
+		// root has parent = null, name = "" and path = ""
+		// this check avoids all paths starting with //
+		if (sb.length() > 0) {
+			sb.append('/');
+		}
+		sb.append(name);
+		return sb.toString();
 	}
 
 	@Override

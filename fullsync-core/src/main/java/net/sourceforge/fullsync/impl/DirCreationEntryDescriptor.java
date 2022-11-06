@@ -56,6 +56,6 @@ public record DirCreationEntryDescriptor(Task task, FSFile dst) implements Entry
 
 	@Override
 	public String operationDescription() {
-		return "Making Directory " + dst.getPath();
+		return "Making Directory " + dst.getDisplayPath();
 	}
 }

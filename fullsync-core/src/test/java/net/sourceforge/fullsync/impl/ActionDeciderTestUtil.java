@@ -35,7 +35,7 @@ public class ActionDeciderTestUtil {
 	protected FileComparer fileComparer;
 	protected StateDecider stateDecider;
 	protected BufferStateDecider bufferedStateDecider;
-	protected FSFile root;
+	protected TestNode root;
 	protected FSFile existingTestNode;
 	protected FSFile existingBigTestNode;
 	protected FSFile missingTestNode;
@@ -46,12 +46,12 @@ public class ActionDeciderTestUtil {
 		fileComparer = new SimplifiedSyncRules();
 		bufferedStateDecider = new BufferStateDeciderImpl(fileComparer);
 		stateDecider = new StateDeciderImpl(fileComparer);
-		root = new TestNode("root", null, true, true, 0, 0);
-		existingTestNode = new TestNode("test", root, true, false, 1, 1000);
-		existingBigTestNode = new TestNode("test", root, true, false, 2, 1000);
-		missingTestNode = new TestNode("test", root, false, false, 0, 1000);
-		largeTestNode = new TestNode("test", root, true, false, 6000, 2000);
-		directoryTestNode = new TestNode("test", root, true, true, 1, 1000);
+		root = TestNode.root();
+		existingTestNode = root.createChildNode("test", true, false, 1, 1000);
+		existingBigTestNode = root.createChildNode("test", true, false, 2, 1000);
+		missingTestNode = root.createChildNode("test", false, false, 0, 1000);
+		largeTestNode = root.createChildNode("test", true, false, 6000, 2000);
+		directoryTestNode = root.createChildNode("test", true, true, 1, 1000);
 	}
 
 	protected void checkAction(Action action, ActionType type, Location location, BufferUpdate bufferUpdate) {

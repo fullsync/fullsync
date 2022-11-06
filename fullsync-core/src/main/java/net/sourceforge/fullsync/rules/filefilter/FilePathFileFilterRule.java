@@ -98,7 +98,7 @@ public class FilePathFileFilterRule implements FileFilterRule {
 
 	@Override
 	public boolean match(FSFile file) {
-		var name = file.getPath();
+		var name = file.getDisplayPath();
 
 		return switch (op) {
 			case OP_IS -> name.equals(pattern.value());

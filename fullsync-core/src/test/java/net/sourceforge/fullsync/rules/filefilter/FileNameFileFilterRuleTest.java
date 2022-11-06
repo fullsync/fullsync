@@ -28,10 +28,10 @@ import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.rules.filefilter.values.TextValue;
 
 public class FileNameFileFilterRuleTest {
-	private final FSFile root = new TestNode("root", null, true, true, 0, 0);
+	private final TestNode root = TestNode.root();
 
 	private FSFile createTestNode(String name) {
-		return new TestNode(name, root, true, false, 0, 0);
+		return root.createChildNode(name, true, false, 0, 0);
 	}
 
 	@Test

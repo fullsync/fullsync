@@ -92,7 +92,7 @@ public class SimplifiedSyncRules implements RuleSet {
 		if (useFilter) {
 			var filterToUse = fileFilter;
 			if (null != fileFilterTree) {
-				var subFilter = fileFilterTree.getFilter(node.getPath());
+				var subFilter = fileFilterTree.getFilter(node.getDisplayPath());
 				if (null != subFilter) {
 					filterToUse = subFilter;
 				}

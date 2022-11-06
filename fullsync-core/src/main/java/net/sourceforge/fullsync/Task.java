@@ -99,6 +99,6 @@ public class Task {
 
 	@Override
 	public int hashCode() {
-		return source.getPath().hashCode();
+		return source.getDisplayPath().hashCode();
 	}
 }

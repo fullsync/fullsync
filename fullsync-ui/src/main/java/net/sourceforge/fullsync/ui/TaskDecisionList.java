@@ -294,7 +294,7 @@ class TaskDecisionList extends Composite {
 			++tableLogLinesFillIndex;
 			item.setImage(2, image);
 			var text = new String[4];
-			text[0] = t.getSource().getPath();
+			text[0] = t.getSource().getDisplayPath();
 			text[1] = formatSize(t);
 			text[2] = ""; //$NON-NLS-1$
 			text[3] = t.getCurrentAction().getExplanation();

@@ -23,24 +23,34 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.Objects;
 
 import net.sourceforge.fullsync.FSFile;
 
 public class TestNode implements FSFile {
-	private final FSFile parent;
+	private final TestNode parent;
 	private String name;
 	private boolean directory;
 	private boolean exists;
 	private long lastModified;
 	private long size;
 
-	public TestNode(String name, FSFile parent, boolean exists, boolean directory, long length, long lm) {
+	private TestNode(String name, TestNode parent, boolean exists, boolean directory, long length, long lm) {
 		this.name = name;
 		this.parent = parent;
 		this.exists = exists;
 		this.directory = directory;
 		this.lastModified = lm;
 		this.size = length;
+	}
+
+	public static TestNode root() {
+		return new TestNode("", null, true, true, 0, 0);
+	}
+
+	public TestNode createChildNode(String name, boolean exists, boolean directory, long length, long lm) {
+		Objects.requireNonNull(name, "name must be set");
+		return new TestNode(name, this, exists, directory, length, lm);
 	}
 
 	public FSFile getDirectory() {
@@ -90,19 +100,26 @@ public class TestNode implements FSFile {
 		return name;
 	}
 
-	@Override
-	public String getPath() {
+	private String getPath() {
 		var sb = new StringBuilder();
 		if (null != parent) {
 			sb.append(parent.getPath());
 		}
-		// root has parent = null, name = "" and path = /
-		// this check avoids all paths starting with //
-		if (sb.length() != 1) {
+		if (sb.length() > 0) {
 			sb.append('/');
 		}
 		sb.append(name);
 		return sb.toString();
+	}
+
+	@Override
+	public String getDisplayPath() {
+		return getPath();
+	}
+
+	@Override
+	public String getFsAbsolutePath() {
+		return getPath();
 	}
 
 	@Override
