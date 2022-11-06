@@ -1,3 +1,8 @@
+Todo:
+	[ ] Check VFS-699: Add setting for FTP encoding auto-detection #58. Thanks to Boris Petrov.
+	[ ] Check VFS-721: Add support for symbolic links for the local file system and add FileObject#isSymbolicLink(). Thanks to Gary Gregory.
+	[ ] Check VFS-398: FtpFileObject.getChildren() fails when a folder contains a file with a colon in the name. Thanks to Otto Fowler
+
 Roadmap:
 	[ ] get some communication going, motivate others to join
 	[ ] extend automated testsuite
