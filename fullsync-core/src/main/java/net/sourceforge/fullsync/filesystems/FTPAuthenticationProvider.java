@@ -36,6 +36,7 @@ class FTPAuthenticationProvider implements FileSystemAuthProvider {
 		var cfg = FtpFileSystemConfigBuilder.getInstance();
 		cfg.setPassiveMode(options, true);
 		cfg.setUserDirIsRoot(options, description.isUserDirIsRoot());
+		cfg.setServerTimeZoneId(options, "Europe/Vienna");
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 	}
 }

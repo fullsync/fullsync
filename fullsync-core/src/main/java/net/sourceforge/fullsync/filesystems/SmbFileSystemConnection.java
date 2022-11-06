@@ -41,7 +41,7 @@ public class SmbFileSystemConnection extends CommonsVfsConnection {
 		try {
 			var fsm = VFS.getManager();
 			if (!fsm.hasProvider("smb") && (fsm instanceof DefaultFileSystemManager dfsm)) { //$NON-NLS-1$
-				dfsm.addProvider("smb", new SmbFileProvider()); //$NON-NLS-1$
+                dfsm.addProvider("smb", new SmbFileProvider()); //$NON-NLS-1$
 			}
 		}
 		catch (org.apache.commons.vfs2.FileSystemException ex) {

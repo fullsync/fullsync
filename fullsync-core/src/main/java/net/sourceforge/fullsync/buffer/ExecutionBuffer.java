@@ -24,7 +24,7 @@ import java.io.IOException;
 public interface ExecutionBuffer {
 	void flush() throws IOException;
 
-	void storeEntry(EntryDescriptor descriptor) throws IOException;
+	void storeEntry(EntryDescriptor descriptor) throws IOException; // FIXME: add a method for every EntryDescriptor subtype
 
 	void addEntryFinishedListener(EntryFinishedListener listener);
 

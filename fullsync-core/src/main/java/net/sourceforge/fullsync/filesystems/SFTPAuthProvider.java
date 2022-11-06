@@ -121,9 +121,11 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 
 	@Override
 	public final boolean promptYesNo(final String message) {
+		boolean result = false;
 		if (interactive) {
 			try {
-				return fullsync.getQuestionHandler().promptYesNo(message).get();
+				result = fullsync.getQuestionHandler().promptYesNo(message).get();
+				logger.warn("UserInfo::promptYesNo: {}; decision: {}", message, result ? "Yes" : "No"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			catch (InterruptedException | ExecutionException ex) {
 				logger.error("UserInfo::promptYesNo failed, user may not have received a prompt", ex); //$NON-NLS-1$
@@ -132,7 +134,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		else {
 			logger.warn("UserInfo::promptYesNo: {}; automatic decision: No", message); //$NON-NLS-1$
 		}
-		return false;
+		return result;
 	}
 
 	@Override

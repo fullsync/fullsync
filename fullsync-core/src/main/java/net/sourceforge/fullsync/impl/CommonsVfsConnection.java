@@ -48,12 +48,12 @@ public class CommonsVfsConnection implements FileSystemConnection {
 		throws FileSystemException {
 		try {
 			this.connectionDescription = connectionDescription;
-			var options = new FileSystemOptions();
+			var fileSystemOptions = new FileSystemOptions();
 			if (null != fsAuthProvider) {
-				fsAuthProvider.authSetup(connectionDescription, options);
+				fsAuthProvider.authSetup(connectionDescription, fileSystemOptions);
 			}
-			base = VFS.getManager().resolveFile(connectionDescription.getURI().toString(), options);
-			root = FileImpl.root(this, true, base.exists());
+			base = VFS.getManager().resolveFile(connectionDescription.getURI().toString(), fileSystemOptions);
+			root = FileImpl.root(this, base.isFolder(), base.exists());
 			canSetLastModifiedFile = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FILE);
 			canSetLastModifiedFolder = base.getFileSystem().hasCapability(Capability.SET_LAST_MODIFIED_FOLDER);
 		}

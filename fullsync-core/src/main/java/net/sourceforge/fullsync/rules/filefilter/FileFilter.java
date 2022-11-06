@@ -31,11 +31,11 @@ public record FileFilter(int matchType, int filterType, boolean appliesToDirecto
 	public static final int INCLUDE = 0;
 	public static final int EXCLUDE = 1;
 	public boolean match(final FSFile file) {
-		var result = doMmatch(file);
+		var result = doMatch(file);
 		return (filterType == INCLUDE) == result;
 	}
 
-	private boolean doMmatch(final FSFile file) {
+	private boolean doMatch(final FSFile file) {
 		if (rules.length == 0) {
 			return true;
 		}

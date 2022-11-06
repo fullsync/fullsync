@@ -87,7 +87,25 @@ public class SFTPFilesystemTest extends FilesystemTestBase {
 
 	@Override
 	@Test
-	public void testPublishUpdate() throws Exception {
-		super.testPublishUpdate();
+	public void testPublishUpdateNewFile() throws Exception {
+		super.testPublishUpdateNewFile();
+	}
+
+	@Override
+	@Test
+	public void testPublishUpdateFolderStartingWithDash() throws Exception {
+		super.testPublishUpdateFolderStartingWithDash();
+	}
+
+	@Override
+	@Test
+	public void testPublishUpdateIgnoresExistingFile() throws Exception {
+		super.testPublishUpdateIgnoresExistingFile();
+	}
+
+	@Override
+	@Test
+	public void testPublishUpdateUpdatesModifiedFile() throws Exception {
+		super.testPublishUpdateUpdatesModifiedFile();
 	}
 }

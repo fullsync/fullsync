@@ -58,7 +58,7 @@ public class FillBufferTaskExecutor implements TaskExecutor {
 	}
 
 	@Override
-	public IoStatistics createStatistics(TaskTree tree) {
+	public IoStatistics createStatistics(TaskTree tree) { // FIXME: reimplement this using a statistics calculating ExecutionBuffer?
 		statisticsOnly = true;
 		enqueue(tree);
 		statisticsOnly = false;

@@ -22,7 +22,6 @@ package net.sourceforge.fullsync.ui.profiledetails;
 import static org.eclipse.swt.events.SelectionListener.widgetDefaultSelectedAdapter;
 import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -495,7 +494,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 				if (null != newfilter) {
 					selectedItem.setData(FILTER_KEY, newfilter);
 					treeItemsWithFilter.add(selectedItem);
-					var file = (File) selectedItem.getData();
+					var file = (FSFile) selectedItem.getData();
 					itemsMap.put(file.getDisplayPath(), newfilter);
 					markItem(selectedItem);
 					buttonRemoveFilter.setEnabled(true);
@@ -515,7 +514,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 			if (selectedItems.length > 0) {
 				var selectedItem = selectedItems[0];
 				treeItemsWithFilter.remove(selectedItem);
-				var file = (File) selectedItem.getData();
+				var file = (FSFile) selectedItem.getData();
 				itemsMap.remove(file.getDisplayPath());
 				unmarkItem(selectedItem);
 			}
@@ -695,7 +694,7 @@ public class ProfileDetailsTabbedPage extends WizardDialog {
 		Map<String, FileFilter> filters = new TreeMap<>();
 		for (TreeItem item : treeItemsWithFilter) {
 			var itemFilter = (FileFilter) item.getData(FILTER_KEY);
-			var itemFile = (File) item.getData();
+			var itemFile = (FSFile) item.getData();
 			filters.put(itemFile.getDisplayPath(), itemFilter);
 		}
 		return new FileFilterTree(filters);

@@ -19,31 +19,62 @@
  */
 package net.sourceforge.fullsync.impl;
 
+import java.nio.file.Paths;
+import java.util.TimeZone;
+
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.BindMode;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.images.builder.ImageFromDockerfile;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import net.sourceforge.fullsync.ConnectionDescription;
 
-public class LocalFilesystemTest extends FilesystemTestBase {
+@Testcontainers(disabledWithoutDocker = true)
+public class FTPFilesystemTest extends FilesystemTestBase {
+	private static ImageFromDockerfile image;
+	private GenericContainer ftp;
+
+	@BeforeAll
+	public static void setUpAll() {
+		image = new ImageFromDockerfile().withFileFromPath(".", Paths.get("../containers/pure-ftpd"))
+			.withBuildArg("TIMEZONE", TimeZone.getDefault().getID());
+	}
+
 	@Override
 	@BeforeEach
 	public void setUpEach() throws Exception {
 		super.setUpEach();
+		ftp = new GenericContainer(image).withFileSystemBind(testingDst.getAbsolutePath(), "/home/SampleUser", BindMode.READ_WRITE)
+			.withEnv("FTP_USER_NAME", "SampleUser")
+			.withEnv("FTP_USER_PASS", "Sample")
+			.withEnv("FTP_USER_HOME", "/home/SampleUser")
+			// .withEnv("PUBLICHOST", InetAddress.getLocalHost().getHostName())
+			.withNetworkMode("host");
+		ftp.start();
 	}
 
 	@Override
 	@AfterEach
 	public void tearDownEach() {
 		super.tearDownEach();
+		ftp.stop();
 	}
 
 	@Override
 	protected ConnectionDescription getDestinationConnectionDescription() {
-		var dstBuilder = new ConnectionDescription.Builder();
-		dstBuilder.setScheme("file");
+		ConnectionDescription.Builder dstBuilder = new ConnectionDescription.Builder();
+		dstBuilder.setScheme("ftp");
 		dstBuilder.setBufferStrategy("");
-		dstBuilder.setPath(testingDst.getAbsolutePath());
+		dstBuilder.setHost("127.0.0.1");
+		dstBuilder.setPort(21);
+		dstBuilder.setPath("/");
+		dstBuilder.setUsername("SampleUser");
+		dstBuilder.setPassword("Sample");
 		return dstBuilder.build();
 	}
 
@@ -55,6 +86,7 @@ public class LocalFilesystemTest extends FilesystemTestBase {
 
 	@Override
 	@Test
+	@Disabled("FTP in VFS2 won't play nice with 'LIST -something' and there is no way currently to get around this...")
 	public void testPublishUpdateFolderStartingWithDash() throws Exception {
 		super.testPublishUpdateFolderStartingWithDash();
 	}

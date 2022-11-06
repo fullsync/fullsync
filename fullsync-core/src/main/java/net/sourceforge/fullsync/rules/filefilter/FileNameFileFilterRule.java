@@ -99,7 +99,6 @@ public class FileNameFileFilterRule implements FileFilterRule {
 	@Override
 	public boolean match(FSFile file) {
 		var name = file.getName();
-
 		return switch (op) {
 			case OP_IS -> name.equals(pattern.value());
 			case OP_ISNT -> !name.equals(pattern.value());

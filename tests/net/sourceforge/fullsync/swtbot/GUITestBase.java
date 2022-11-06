@@ -56,7 +56,7 @@ public abstract class GUITestBase {
 		bot = new SWTBot();
 	}
 
-	@After
+	@AfterEach
 	public void tearDownAfter() throws Exception {
 		final Display d = Display.findDisplay(applicationThread);
 		if ((null != d) && !d.isDisposed()) {

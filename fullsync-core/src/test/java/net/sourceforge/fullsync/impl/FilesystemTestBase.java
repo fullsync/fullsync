@@ -217,52 +217,59 @@ public abstract class FilesystemTestBase implements FileSystemManager {
 		return getLastModified();
 	}
 
-	public void testPublishUpdate() throws Exception {
+	public void testPublishUpdateNewFile() throws Exception {
 		prepareProfile("Publish/Update");
-		long lm;
-
-		lm = prepareForTest();
+		long lm = prepareForTest();
 		createNewFileWithContents(testingSrc, "sourceFile1.txt", lm, "this is a test\ncontent1");
 		createNewFileWithContents(testingSrc, "sourceFile2.txt", lm, "this is a test\ncontent2");
 		createNewFileWithContents(testingDst, "sourceFile1.txt", lm, "this is a test\ncontent1");
 
+		expectation.put("sourceFile1.txt", new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, ""));
+		expectation.put("sourceFile2.txt", new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION, ""));
+		expectation.put("sub folder", new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, ""));
+		synchronizer.performActions(taskGenerator.execute(profile, false));
+	}
+
+
+	public void testPublishUpdateFolderStartingWithDash() throws Exception {
+		prepareProfile("Publish/Update");
+		long lm = prepareForTest();
 		createNewFileWithContents(testingSrc, "-strangeFolder/sub folder/sourceFile3.txt", lm, "this is a test\ncontent3");
 		createNewFileWithContents(testingDst, "-strangeFolder/sub folder/sourceFile3.txt", lm, "this is a test\ncontent3");
 
-		expectation.clear();
-		expectation.put("sourceFile1.txt", new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, ""));
-		expectation.put("sourceFile2.txt", new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION, ""));
 		expectation.put("sourceFile3.txt", new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, ""));
 		expectation.put("-strangeFolder", new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, ""));
 		expectation.put("sub folder", new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, ""));
 		synchronizer.performActions(taskGenerator.execute(profile, false));
+	}
 
-		lm = prepareForTest();
+
+
+	public void testPublishUpdateIgnoresExistingFile() throws Exception {
+		prepareProfile("Publish/Update");
+		long lm = prepareForTest();
 		createNewFileWithContents(testingSrc, "sub - folder/sub2 - folder/sourceFile1.txt", lm, "this is a test\ncontent1");
 		createNewFileWithContents(testingSrc, "sub - folder/sourceFile2.txt", lm, "this is a test\ncontent2");
-		createNewFileWithContents(testingSrc, "-strangeFolder/sub folder/sourceFile3.txt", lm, "this is a test\ncontent3");
-		createNewFileWithContents(testingDst, "-strangeFolder2/sub2 folder/sourceFile4.txt", lm, "this is a test\ncontent4");
+		createNewFileWithContents(testingDst, "existing-dst-folder/sub2 folder/sourceFile4.txt", lm, "this is a test\ncontent4");
 
-		expectation.clear();
 		expectation.put("sub - folder", new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION, ""));
 		expectation.put("sub2 - folder", new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION, ""));
 		expectation.put("sourceFile1.txt", new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION, ""));
 		expectation.put("sourceFile2.txt", new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION, ""));
-		expectation.put("-strangeFolder", new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION, ""));
-		expectation.put("sub folder", new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION, ""));
-		expectation.put("sourceFile3.txt", new Action(ActionType.ADD, Location.DESTINATION, BufferUpdate.DESTINATION, ""));
-		expectation.put("-strangeFolder2", new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, ""));
+		expectation.put("existing-dst-folder", new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, ""));
 		expectation.put("sub2 folder", new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, ""));
 		expectation.put("sourceFile4.txt", new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, ""));
 		synchronizer.performActions(taskGenerator.execute(profile, false));
+	}
 
-		lm = prepareForTest();
+	public void testPublishUpdateUpdatesModifiedFile() throws Exception {
+		prepareProfile("Publish/Update");
+		long lm = prepareForTest();
 		createNewFileWithContents(testingSrc, "sourceFile1.txt", lm, "this is a test\ncontent2");
 		createNewFileWithContents(testingDst, "sourceFile1.txt", lm, "this is a test\ncontent2 bla");
 		createNewFileWithContents(testingSrc, "sourceFile2.txt", lm + MILLI_SECONDS_PER_DAY, "this is a test\ncontent2");
 		createNewFileWithContents(testingDst, "sourceFile2.txt", lm, "this is a test\ncontent2");
 
-		expectation.clear();
 		expectation.put("sourceFile1.txt", new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, ""));
 		expectation.put("sourceFile2.txt", new Action(ActionType.UPDATE, Location.DESTINATION, BufferUpdate.DESTINATION, ""));
 		synchronizer.performActions(taskGenerator.execute(profile, false));
