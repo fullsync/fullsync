@@ -230,7 +230,6 @@ public abstract class FilesystemTestBase implements FileSystemManager {
 		synchronizer.performActions(taskGenerator.execute(profile, false));
 	}
 
-
 	public void testPublishUpdateFolderStartingWithDash() throws Exception {
 		prepareProfile("Publish/Update");
 		long lm = prepareForTest();
@@ -242,8 +241,6 @@ public abstract class FilesystemTestBase implements FileSystemManager {
 		expectation.put("sub folder", new Action(ActionType.NOTHING, Location.NONE, BufferUpdate.NONE, ""));
 		synchronizer.performActions(taskGenerator.execute(profile, false));
 	}
-
-
 
 	public void testPublishUpdateIgnoresExistingFile() throws Exception {
 		prepareProfile("Publish/Update");
