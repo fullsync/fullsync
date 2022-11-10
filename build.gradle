@@ -16,7 +16,7 @@ buildscript {
 		if (!System.env.'FULLSYNC_OFFLINE_BUILD') {
 			classpath 'gradle.plugin.io.pry.gradle.offline_dependencies:gradle-offline-dependencies-plugin:0.5.0'
 		}
-		classpath "com.github.ben-manes:gradle-versions-plugin:0.40.0"
+		classpath "com.github.ben-manes:gradle-versions-plugin:0.43.0"
 		classpath "com.diffplug.spotless:spotless-plugin-gradle:6.11.0"
 		classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:5.0.6"
 	}
