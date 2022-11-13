@@ -1,6 +1,5 @@
 # FullSync
 
-[![Build Status](https://travis-ci.org/fullsync/fullsync.svg?branch=master)](https://travis-ci.org/fullsync/fullsync)
 [![Coverage Status](https://coveralls.io/repos/github/fullsync/fullsync/badge.svg?branch=master)](https://coveralls.io/github/fullsync/fullsync?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fullsync/fullsync/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fullsync/fullsync/?branch=master)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/fullsync/fullsync.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/fullsync/fullsync/alerts/)

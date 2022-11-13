@@ -16,9 +16,9 @@ buildscript {
 		if (!System.env.'FULLSYNC_OFFLINE_BUILD') {
 			classpath 'gradle.plugin.io.pry.gradle.offline_dependencies:gradle-offline-dependencies-plugin:0.5.0'
 		}
-		classpath "com.github.ben-manes:gradle-versions-plugin:0.40.0"
+		classpath "com.github.ben-manes:gradle-versions-plugin:0.44.0"
 		classpath "com.diffplug.spotless:spotless-plugin-gradle:6.11.0"
-		classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:5.0.6"
+		classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:5.0.13"
 	}
 }
 
@@ -42,8 +42,10 @@ if (System.env.'CI') {
 	apply plugin: 'org.sonarqube'
 }
 
+apply plugin: "com.github.spotbugs"
+
 dependencies {
-	spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
+	spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0'
 }
 
 ext {
@@ -378,7 +380,7 @@ if (System.env.'CI') {
 
 	tasks.sonarqube {
 		onlyIf {
-			(System.properties.'sonar.organization' && System.env.TRAVIS_PULL_REQUEST == 'false') || System.env.SCRUTINIZER
+			System.properties.'sonar.organization' || System.env.SCRUTINIZER
 		}
 	}
 }

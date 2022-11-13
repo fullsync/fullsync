@@ -17,5 +17,6 @@
 # files that need specific EOL settings
 *.spec     eol=lf
 *.sh       eol=lf
+gradlew    eol=lf
 *.bat      eol=crlf
 *.cmd      eol=crlf

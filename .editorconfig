@@ -12,5 +12,8 @@ indent_size = 4
 [*.{sh,spec}]
 end_of_line = lf
 
+[gradlew]
+end_of_line = lf
+
 [*.{bat,cmd,ini,warsetup}]
 end_of_line = crlf
