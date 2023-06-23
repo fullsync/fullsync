@@ -1,9 +1,18 @@
+Roadmap 0.11.0:
+	[ ] Windows: 64-bit Windows installer (based on WiX?)
+	[ ] Windows: bundled JRE/JDK (Eclipse Temurin)
+	[ ] Linux: bundled JRE/JDK (Eclipse Temurin)
+	[ ] Portable package with (~/fullsync.sh)
+
 Todo:
 	[ ] Check VFS-699: Add setting for FTP encoding auto-detection #58. Thanks to Boris Petrov.
 	[ ] Check VFS-721: Add support for symbolic links for the local file system and add FileObject#isSymbolicLink(). Thanks to Gary Gregory.
 	[ ] Check VFS-398: FtpFileObject.getChildren() fails when a folder contains a file with a colon in the name. Thanks to Otto Fowler
 
 Roadmap:
+	[ ] restore handling of buffering = syncfiles (search for [BUFFERING])
+	[ ] make sure everything is translatable
+	[ ] make shortcuts configurable
 	[ ] get some communication going, motivate others to join
 	[ ] extend automated testsuite
 	[ ] add embedded servers for:
@@ -25,11 +34,6 @@ Roadmap:
 	[ ] exception handling: look up ways to minimize exception handling code, should also allow to specify that we don't want to handle them and just rethrow them (debugging)
 		[ ] move most Exceptions to RuntimeExceptions?
 	[ ] review & improve documentation of the commandline arguments
-
-Roadmap 0.11.0:
-	[ ] restore handling of buffering = syncfiles (search for [BUFFERING])
-	[ ] make sure everything is translatable
-	[ ] make shortcuts configurable
 
 Bugs:
 	[ ] Exception if starting sync on a readonly FS

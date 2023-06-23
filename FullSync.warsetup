@@ -42,7 +42,7 @@
       <addToCreateFolder>false</addToCreateFolder>
     </components>
     <defaultInstallMode>3</defaultInstallMode>
-    <directories dirId="ID1017" srcPath="build\lib" dstPath="lib" patterns=".*" excludePatterns=".*(macosx|linux|x86_64).*" recurse="false" preventEmptyDirectories="false" addToPath="false" ideHeaderFiles="false" ideExecutables="false" ideLibrary="false" ideMicrosoftVisualStudio2003="false" ideMicrosoftVisualStudio2005="false">
+    <directories dirId="ID1017" srcPath="build\lib" dstPath="lib" patterns=".*" excludePatterns=".*(macosx|linux).*" recurse="false" preventEmptyDirectories="false" addToPath="false" ideHeaderFiles="false" ideExecutables="false" ideLibrary="false" ideMicrosoftVisualStudio2003="false" ideMicrosoftVisualStudio2005="false">
       <pathComponent componentId="ID1016" componentGuid="064d35d5-3bf8-4270-a90c-a94d51e3a4b0">
         <addToCreateFolder>false</addToCreateFolder>
       </pathComponent>
