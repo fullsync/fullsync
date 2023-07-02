@@ -80,6 +80,7 @@ public class FTPFilesystemTest extends FilesystemTestBase {
 
 	@Override
 	@Test
+	@Disabled("Docker problems om Mac / GitHub")
 	public void testPublishUpdateNewFile() throws Exception {
 		super.testPublishUpdateNewFile();
 	}
@@ -93,12 +94,14 @@ public class FTPFilesystemTest extends FilesystemTestBase {
 
 	@Override
 	@Test
+	@Disabled("Docker problems om Mac / GitHub")
 	public void testPublishUpdateIgnoresExistingFile() throws Exception {
 		super.testPublishUpdateIgnoresExistingFile();
 	}
 
 	@Override
 	@Test
+	@Disabled("Docker problems om Mac / GitHub")
 	public void testPublishUpdateUpdatesModifiedFile() throws Exception {
 		super.testPublishUpdateUpdatesModifiedFile();
 	}
