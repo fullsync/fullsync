@@ -1,6 +1,0 @@
-
-apply plugin: 'java-library'
-
-dependencies {
-	implementation libraries.slf4jApi
-}
