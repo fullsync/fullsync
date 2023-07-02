@@ -259,14 +259,17 @@ tasks.withType(Tar) {
 	compression = Compression.GZIP
 }
 
-installLinuxDist.dependsOn ':fullsync-ui:jar'
-linuxDistTar.dependsOn ':fullsync-ui:jar'
+[':fullsync-ui:jar', ':fullsync-logger:jar', ':fullsync-core:jar', ':fullsync-assets:jar'].each { taskName ->
+	installLinuxDist.dependsOn taskName
+	linuxDistTar.dependsOn taskName
 
-installMacDist.dependsOn ':fullsync-ui:jar'
-macDistTar.dependsOn ':fullsync-ui:jar'
+	installMacDist.dependsOn taskName
+	macDistTar.dependsOn taskName
 
-installWindowsDist.dependsOn ':fullsync-ui:jar'
-windowsDistZip.dependsOn ':fullsync-ui:jar'
+	installWindowsDist.dependsOn taskName
+	windowsDistZip.dependsOn taskName
+}
+
 installWindowsDist.dependsOn ':fullsync-launcher:jar'
 windowsDistZip.dependsOn ':fullsync-launcher:jar'
 
@@ -349,14 +352,20 @@ gradle.projectsEvaluated {
 apply plugin: 'jacoco'
 
 jacoco {
-	reportsDir = file("${project.reporting.baseDir}/jacoco")
+	reportsDirectory = file("${project.reporting.baseDir}/jacoco")
 }
 
 task jacocoRootReport(type: JacocoReport) {
 	reports {
-		html.enabled = true
-		xml.enabled = true
-		csv.enabled = false
+		html {
+			enabled true
+		}
+		xml {
+			enabled true
+		}
+		csv {
+			enabled false
+		}
 	}
 }
 
