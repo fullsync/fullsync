@@ -1,4 +1,7 @@
 build:
+  environment:
+    sdkman:
+      - java@17.0.8-tem
   nodes:
     analysis:
       tests:
@@ -6,8 +9,7 @@ build:
           - java-scrutinizer-run
   tests:
     override:
-      -
-        command: ./gradlew --console=plain test jacocoRootReport
+      - command: ./gradlew --console=plain test jacocoRootReport
         coverage:
           file: 'build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml'
           format: 'jacoco'
