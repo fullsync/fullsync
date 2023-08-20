@@ -2,8 +2,6 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/fullsync/fullsync/badge.svg?branch=master)](https://coveralls.io/github/fullsync/fullsync?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fullsync/fullsync/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fullsync/fullsync/?branch=master)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/fullsync/fullsync.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/fullsync/fullsync/alerts/)
-[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/fullsync/fullsync.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/fullsync/fullsync/context:java)
 
 FullSync is a powerful tool that helps you keep multiple copies of various data in sync. I.e. it can update your Website using (S)FTP, backup your data or refresh a working copy from a remote server. It offers flexible rules, a scheduler and more.
 
@@ -19,7 +17,7 @@ There is also a [Trello Board](https://trello.com/b/lPhIU2kZ/fullsync) with task
 
 ```text
 Copyright (C) 2004-2006 Jan Kopcsek <codewright@users.sourceforge.net>
-Copyright (C) 2011-2022 Christoph Obexer <cobexer@users.sourceforge.net>
+Copyright (C) 2011-2023 Christoph Obexer <cobexer@users.sourceforge.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
