@@ -50,7 +50,7 @@ dependencies {
 
 ext {
 	libraries = [:]
-	swtVersion = "3.118.0"
+	swtVersion = "3.124.100"
 	slf4jVersion = "1.7.30"
 	guiceVersion = "5.1.0"
 	jUnitVersion = "5.10.0"
