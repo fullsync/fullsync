@@ -1,26 +1,27 @@
-
-apply plugin: 'java-library'
+plugins {
+	id "java-library"
+}
 
 dependencies {
 	implementation project(':fullsync-logger')
 	implementation project(':fullsync-utils')
-	implementation libraries.apacheCommonsCli
-	implementation libraries.apacheCommonsNet
-	implementation(libraries.apacheCommonsVfs) {
+	implementation(libs.commons.cli)
+	implementation(libs.commons.net)
+	implementation(libs.commons.vfs) {
 		exclude group: "commons-logging"
 		exclude group: "org.apache.maven.scm"
 		exclude group: "org.apache.hadoop"
 	}
-	implementation libraries.orgSambaJcifs
-	implementation libraries.comJcraftJsch
-	implementation libraries.orgSlf4jJclOverSlf4j
-	implementation libraries.guice
-	implementation libraries.guiceAssistedInject
+	implementation(libs.jcifs)
+	implementation(libs.jsch)
+	implementation(libs.jcl.over.slf4j)
+	implementation(libs.guice)
+	implementation(libs.guice.assistedInject)
 	implementation files("lib/commons-vfs2-sandbox.jar")
-	testImplementation libraries.junitJupiter
-	testImplementation libraries.hamcrest
-	testImplementation libraries.testcontainers
-	testImplementation libraries.testcontainersJUnit
+	testImplementation(libs.junit.jupiter)
+	testImplementation(libs.hamcrest)
+	testImplementation(libs.testcontainers)
+	testImplementation(libs.testcontainers.JUnit)
 }
 
 test {

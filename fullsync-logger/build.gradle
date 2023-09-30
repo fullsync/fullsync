@@ -1,6 +1,7 @@
-
-apply plugin: 'java-library'
+plugins {
+	id "java-library"
+}
 
 dependencies {
-	implementation libraries.slf4jApi
+	implementation(libs.slf4j.api)
 }

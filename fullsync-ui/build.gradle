@@ -1,5 +1,6 @@
-
-apply plugin: 'java-library'
+plugins {
+	id "java-library"
+}
 
 def addSWTDependency(configuration, osName) {
 	def os = ''
@@ -12,7 +13,7 @@ def addSWTDependency(configuration, osName) {
 	else if (osName.contains('mac')) {
 		os = 'cocoa.macosx'
 	}
-	project.dependencies.add(configuration, "org.eclipse.platform:org.eclipse.swt.${os}.x86_64:${swtVersion}") {
+	project.dependencies.add(configuration, "org.eclipse.platform:org.eclipse.swt.${os}.x86_64:${libs.versions.swt.get()}") {
 		exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt'
 	}
 }
@@ -29,10 +30,10 @@ dependencies {
 	implementation project(':fullsync-core')
 	implementation project(':fullsync-utils')
 	implementation project(':fullsync-assets')
-	implementation libraries.guice
-	implementation libraries.guiceAssistedInject
-	implementation libraries.orgSlf4jJclOverSlf4j
-	implementation(libraries.apacheCommonsVfs) {
+	implementation(libs.guice)
+	implementation(libs.guice.assistedInject)
+	implementation(libs.jcl.over.slf4j)
+	implementation(libs.commons.vfs) {
 		exclude group: "commons-logging"
 		exclude group: "org.apache.maven.scm"
 		exclude group: "org.apache.hadoop"

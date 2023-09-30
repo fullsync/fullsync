@@ -1,25 +1,13 @@
 import org.apache.tools.ant.filters.FixCrLfFilter
 
-buildscript {
-	repositories {
-		maven {
-			url offlineRepositoryRoot
-		}
-		mavenCentral()
-		gradlePluginPortal()
-	}
-	dependencies {
-		if (System.env.'CI') {
-			classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.3"
-			classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:4.3.0.3225"
-		}
-		if (!System.env.'FULLSYNC_OFFLINE_BUILD') {
-			classpath 'gradle.plugin.io.pry.gradle.offline_dependencies:gradle-offline-dependencies-plugin:0.5.0'
-		}
-		classpath "com.github.ben-manes:gradle-versions-plugin:0.47.0"
-		classpath "com.diffplug.spotless:spotless-plugin-gradle:6.11.0"
-		classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:5.1.3"
-	}
+plugins {
+	id "distribution"
+	alias(libs.plugins.offlineDependencies)
+	alias(libs.plugins.versions)
+	alias(libs.plugins.spotless)
+	alias(libs.plugins.coveralls)
+	alias(libs.plugins.sonarqube)
+	alias(libs.plugins.spotbugs)
 }
 
 repositories {
@@ -29,53 +17,9 @@ repositories {
 	mavenCentral()
 }
 
-if (!System.env.'FULLSYNC_OFFLINE_BUILD') {
-	apply plugin: 'io.pry.gradle.offline_dependencies'
-}
-
-apply plugin: "com.github.ben-manes.versions"
-apply plugin: "com.diffplug.spotless"
-apply plugin: 'distribution'
-
-if (System.env.'CI') {
-	apply plugin: 'com.github.kt3k.coveralls'
-	apply plugin: 'org.sonarqube'
-}
-
-apply plugin: "com.github.spotbugs"
-
 dependencies {
-	spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0'
+	spotbugsPlugins "${libs.plugins.findsecbugsPlugin.get().pluginId}:${libs.plugins.findsecbugsPlugin.get().version}"
 }
-
-ext {
-	libraries = [:]
-	swtVersion = "3.118.0"
-	slf4jVersion = "1.7.30"
-	guiceVersion = "5.1.0"
-	jUnitVersion = "5.10.0"
-	commonsCliVersion = "1.4"
-	commonsNetVersion = "3.8.0"
-	commonsVfsVersion = "2.8.0"
-	jcifsVersion = "1.3.17"
-	jschVersion = "0.1.55"
-	hamcrestVersion = "2.2"
-	testcontainersVersion = "1.18.3"
-}
-
-libraries.apacheCommonsCli = "commons-cli:commons-cli:${commonsCliVersion}"
-libraries.apacheCommonsNet = "commons-net:commons-net:${commonsNetVersion}"
-libraries.apacheCommonsVfs = "org.apache.commons:commons-vfs2:${commonsVfsVersion}"
-libraries.orgSambaJcifs = "jcifs:jcifs:${jcifsVersion}"
-libraries.comJcraftJsch = "com.jcraft:jsch:${jschVersion}"
-libraries.orgSlf4jJclOverSlf4j = "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
-libraries.guice = "com.google.inject:guice:${guiceVersion}"
-libraries.guiceAssistedInject = "com.google.inject.extensions:guice-assistedinject:${guiceVersion}"
-libraries.junitJupiter = "org.junit.jupiter:junit-jupiter:${jUnitVersion}"
-libraries.hamcrest = "org.hamcrest:hamcrest:${hamcrestVersion}"
-libraries.slf4jApi = "org.slf4j:slf4j-api:${slf4jVersion}"
-libraries.testcontainers = "org.testcontainers:testcontainers:${testcontainersVersion}"
-libraries.testcontainersJUnit = "org.testcontainers:junit-jupiter:${testcontainersVersion}"
 
 group = "net.sourceforge.fullsync"
 version = '0.11.0'

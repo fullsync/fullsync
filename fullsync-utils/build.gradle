@@ -1,9 +1,10 @@
-
-apply plugin: 'java-library'
+plugins {
+	id "java-library"
+}
 
 dependencies {
-	testImplementation libraries.junitJupiter
-	testImplementation libraries.hamcrest
+	testImplementation(libs.junit.jupiter)
+	testImplementation(libs.hamcrest)
 }
 
 test {
