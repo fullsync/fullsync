@@ -2,7 +2,7 @@
 swt = "3.118.0"
 slf4j = "1.7.36"
 guice = "5.1.0"
-junit = "5.10.1"
+junit = "5.10.2"
 commons-cli = "1.4"
 commons-net = "3.8.0"
 commons-vfs = "2.8.0"
