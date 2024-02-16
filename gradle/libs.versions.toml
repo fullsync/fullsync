@@ -9,7 +9,7 @@ commons-vfs = "2.8.0"
 jcifs = "1.3.17"
 jsch = "0.1.55"
 hamcrest = "2.2"
-testcontainers = "1.19.4"
+testcontainers = "1.19.5"
 
 [libraries]
 commons-cli = { module = "commons-cli:commons-cli", version.ref = "commons-cli" }
