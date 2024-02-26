@@ -35,4 +35,4 @@ versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }
 spotbugs = { id = "com.github.spotbugs", version = "6.0.7" }
 offlineDependencies = { id = "io.pry.gradle.offline_dependencies", version = "0.5.0" }
 coveralls = { id = "com.github.kt3k.coveralls", version = "2.12.2" }
-findsecbugsPlugin = { id = "com.h3xstream.findsecbugs:findsecbugs-plugin", version = "1.12.0" }
+findsecbugsPlugin = { id = "com.h3xstream.findsecbugs:findsecbugs-plugin", version = "1.13.0" }
