@@ -85,10 +85,6 @@ gradle.projectsEvaluated {
 	}
 }
 
-wrapper {
-	distributionType = Wrapper.DistributionType.ALL
-}
-
 task renderChangeLog(type: JavaExec) {
 	dependsOn ':fullsync-build-utils:jar'
 	mainClass = 'net.sourceforge.fullsync.build.tools.ChangeLogGenerator'
