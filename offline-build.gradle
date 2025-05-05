@@ -13,10 +13,10 @@ allprojects {
 	}
 }
 
-task copyLocalGradleWrapper(type: Copy) {
+tasks.register('copyLocalGradleWrapper', Copy) {
 	description = 'Copy the currently referenced Gradle version from the Gradle home for offline usage to save bandwidth'
 	def gradleName = "gradle-${tasks.wrapper.gradleVersion}-" + "${tasks.wrapper.distributionType}".toLowerCase()
-	into project.buildDir
+	into layout.buildDirectory
 	from("${gradle.gradleUserHomeDir}/wrapper/dists/${gradleName}/") {
 		include "*/${gradleName}.zip"
 	}
@@ -29,31 +29,31 @@ task copyLocalGradleWrapper(type: Copy) {
 	}
 }
 
-task downloadGradleVersion(type: DownloadFileTask) {
+tasks.register('downloadGradleVersion', DownloadFileTask) {
 	description = 'Download the currently referenced Gradle version for offline usage'
 	dependsOn copyLocalGradleWrapper
 	url = tasks.wrapper.distributionUrl
 	def gradleName = "gradle-${tasks.wrapper.gradleVersion}-" + "${tasks.wrapper.distributionType}".toLowerCase()
-	destinationFile = file("${project.buildDir}/${gradleName}.zip")
+	destinationFile = layout.buildDirectory.file("${gradleName}.zip").get().asFile
 	onlyIf {
 		!destinationFile.exists()
 	}
 }
 
-task createGitArchive(type: Exec) {
+tasks.register('createGitArchive', Exec) {
 	description = 'Create a source archive suitable for https://build.opensuse.org/'
-	commandLine "git", "archive", "--output=${project.buildDir}/${project.name}-${version}-src.tar.gz", "--prefix=${project.name}-${project.version}/", "HEAD"
+	commandLine "git", "archive", "--output=${layout.buildDirectory.get().asFile.path}/${project.name}-${version}-src.tar.gz", "--prefix=${project.name}-${project.version}/", "HEAD"
 	doFirst {
-		project.buildDir.mkdirs()
+		layout.buildDirectory.get().asFile.mkdirs()
 	}
 }
 
-task createOfflineRepositoryArchive(type: Tar) {
+tasks.register('createOfflineRepositoryArchive', Tar) {
 	description = 'Create an archive of the offline repository for use in https://build.opensuse.org/'
 	dependsOn updateOfflineRepository
 	archiveFileName = "offline-repository.tar.gz"
-	into("/build/offline-repository") {
-		from "${project.buildDir}/offline-repository"
+	into("offline-repository") {
+		from "offline-repository"
 		include "**/*"
 	}
 	destinationDirectory = project.buildDir
@@ -66,7 +66,7 @@ gradle.projectsEvaluated {
 	}
 }
 
-task prepareObsBuild(type: DefaultTask) {
+tasks.register('prepareObsBuild', DefaultTask) {
 	description = 'Prepare stuff for building FullSync releases on https://build.opensuse.org/'
 	dependsOn createOfflineRepositoryArchive
 	dependsOn createGitArchive

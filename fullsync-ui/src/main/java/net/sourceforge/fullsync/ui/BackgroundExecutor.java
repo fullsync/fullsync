@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Display;
 import net.sourceforge.fullsync.ThrowingSupplier;
 
 public record BackgroundExecutor(ScheduledExecutorService scheduledExecutorService, Display display) {
+
 	@Inject
 	public BackgroundExecutor {
 	}
@@ -57,8 +58,7 @@ public record BackgroundExecutor(ScheduledExecutorService scheduledExecutorServi
 	static <T extends Exception, R> R sneakyThrow(Exception t) throws T { // NO_UCD (use private)
 		throw (T) t; // ( ͡° ͜ʖ ͡°)
 	}
-
-	private record UIUpdateTask<T> (Display display, CompletableFuture<T> future, Consumer<T> success,
+	private record UIUpdateTask<T>(Display display, CompletableFuture<T> future, Consumer<T> success,
 		Consumer<Exception> error) implements Runnable {
 		@Override
 		public void run() {

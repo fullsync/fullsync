@@ -1,6 +1,6 @@
 #!/bin/sh
 
-REAL_FULLSYNC_LOC=`readlink -n "$0"`
+REAL_FULLSYNC_LOC=`readlink -f "$0"`
 
 REAL_FULLSYNC_DIR=`dirname "${REAL_FULLSYNC_LOC}"`
 FULLSYNC="${REAL_FULLSYNC_DIR}/lib/net.sourceforge.fullsync-fullsync-core.jar"

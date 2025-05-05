@@ -140,25 +140,15 @@ class TaskDecisionList extends Composite {
 	}
 
 	private String getActionTypeImage(ActionType actionType) {
-		switch (actionType) {
-			case NOTHING:
-				return "Action_Nothing.png"; //$NON-NLS-1$
-			case ADD:
-				return "Action_Add.png"; //$NON-NLS-1$
-			case UPDATE:
-				return "Action_Update.png"; //$NON-NLS-1$
-			case DELETE:
-				return "Action_Delete.png"; //$NON-NLS-1$
-			case NOT_DECIDABLE_ERROR:
-				return "Action_NotDecidableError.png"; //$NON-NLS-1$
-			case UNEXPECTED_CHANGE_ERROR:
-				return "Action_UnexpectedChangeError.png"; //$NON-NLS-1$
-			case DIR_HERE_FILE_THERE_ERROR:
-				return "Action_DirHereFileThereError.png"; //$NON-NLS-1$
-			default:
-				assert false;
-				return ""; //$NON-NLS-1$
-		}
+		return switch (actionType) {
+			case NOTHING -> "Action_Nothing.png"; //$NON-NLS-1$
+			case ADD -> "Action_Add.png"; //$NON-NLS-1$
+			case UPDATE -> "Action_Update.png"; //$NON-NLS-1$
+			case DELETE -> "Action_Delete.png"; //$NON-NLS-1$
+			case NOT_DECIDABLE_ERROR -> "Action_NotDecidableError.png"; //$NON-NLS-1$
+			case UNEXPECTED_CHANGE_ERROR -> "Action_UnexpectedChangeError.png"; //$NON-NLS-1$
+			case DIR_HERE_FILE_THERE_ERROR -> "Action_DirHereFileThereError.png"; //$NON-NLS-1$
+		};
 	}
 
 	private void drawSide(GC g, Task t, Action a, Location location) {
@@ -377,7 +367,7 @@ class TaskDecisionList extends Composite {
 		List<Task> taskList = Arrays.stream(tableItemList).map(i -> (Task) i.getData()).toList();
 
 		// load initial actions of first task
-		var possibleActions = taskList.get(0).getActions().clone();
+		var possibleActions = taskList.getFirst().getActions().clone();
 
 		for (Task task : taskList) {
 			// invalidate all possible actions we don't find in this actionlist
@@ -405,7 +395,7 @@ class TaskDecisionList extends Composite {
 			}
 		}
 
-		var referenceTask = taskList.size() == 1 ? taskList.get(0) : null;
+		var referenceTask = taskList.size() == 1 ? taskList.getFirst() : null;
 
 		var m = new Menu(this);
 		for (Action action : possibleActions) {

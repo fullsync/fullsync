@@ -76,7 +76,7 @@ class SFTPAuthProvider implements FileSystemAuthProvider, UIKeyboardInteractive,
 		DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
 		var cfg = SftpFileSystemConfigBuilder.getInstance();
 		cfg.setUserDirIsRoot(options, connectionDescription.isUserDirIsRoot());
-		logger.debug("using knownHosts: {0}", cfg.getKnownHosts(options)); //$NON-NLS-1$
+		logger.debug("using knownHosts: {1}", cfg.getKnownHosts(options)); //$NON-NLS-1$
 		cfg.setUserInfo(options, this);
 		cfg.setStrictHostKeyChecking(options, "ask"); //$NON-NLS-1$
 		if (description.getPublicKeyAuth().orElse(false)) {

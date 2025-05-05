@@ -121,14 +121,20 @@ public class GuiController { // NO_UCD (use default)
 	private void run(Injector uiInjector) {
 		startGui();
 		scheduledExecutorService.submit(() -> Main.finishStartup(uiInjector));
-		while (!display.isDisposed()) {
-			try {
-				if (!display.readAndDispatch()) {
-					display.sleep();
+		try {
+			while (!display.isDisposed()) {
+				try {
+					if (!display.readAndDispatch()) {
+						display.sleep();
+					}
+				} catch (SWTException ex) {
+					ex.printStackTrace();
 				}
+				//TODO: other exceptions can escape here and crash the application, log somewhere?
 			}
-			catch (SWTException ex) {
-				ex.printStackTrace();
+		} finally {
+			if (!display.isDisposed()) {
+				display.dispose();
 			}
 		}
 	}

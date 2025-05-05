@@ -26,7 +26,15 @@ import net.sourceforge.fullsync.cli.Main;
 
 public class GuiMain implements Launcher { // NO_UCD (unused code)
 	public static void main(String[] args) throws Exception {
-		Main.startup(args, new GuiMain());
+		try {
+			Main.startup(args, new GuiMain());
+		}
+		// removing this seemingly unnecessary catch block would cause a hang on macOS if an exception occurs
+		catch (Throwable t) {
+			t.printStackTrace(); // I mean, we are kind of out of options here on macOS...
+			System.exit(1);
+		}
+		System.exit(0);
 	}
 
 	@Override
