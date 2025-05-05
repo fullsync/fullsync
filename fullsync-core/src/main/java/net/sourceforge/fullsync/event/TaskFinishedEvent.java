@@ -21,5 +21,4 @@ package net.sourceforge.fullsync.event;
 
 import net.sourceforge.fullsync.Task;
 
-public record TaskFinishedEvent(Task task, int bytesTransferred, boolean successful, String errorMessage) {
-}
+public record TaskFinishedEvent(Task task, int bytesTransferred, boolean successful, String errorMessage) {}

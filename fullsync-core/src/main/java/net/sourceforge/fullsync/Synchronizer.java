@@ -33,8 +33,7 @@ public record Synchronizer(TaskGenerator taskGenerator) {
 	private static final Logger logger = LoggerFactory.getLogger(Synchronizer.class);
 
 	@Inject
-	public Synchronizer {
-	}
+	public Synchronizer {}
 
 	public synchronized TaskTree executeProfile(Profile profile, boolean interactive) {
 		try {

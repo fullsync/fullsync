@@ -286,8 +286,7 @@ public class Main implements Launcher { // NO_UCD
 
 	private record DaemonSchedulerListener(Synchronizer synchronizer) {
 		@Inject
-		private DaemonSchedulerListener {
-		}
+		private DaemonSchedulerListener {}
 
 		@Subscribe
 		private void profileExecutionScheduled(ScheduledProfileExecution scheduledProfileExecution) {
