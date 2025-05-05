@@ -97,7 +97,12 @@ class AboutDialog {
 			final var stTimer = new Timer(false);
 			dialogShell.addDisposeListener(e -> stTimer.cancel());
 			tabGeneral.setControl(initAboutTab(tabs, stTimer));
+			// TODO: add a helper that schedules something on the display thread for a specific control
+			// and gracefully handles disposal
 			dialogShell.getDisplay().asyncExec(() -> {
+				if (dialogShell.isDisposed()) {
+					return; // the dialog was closed before we could set the size
+				}
 				// fix the size of the General tab to show all child elements
 				var generalTabSize = tabGeneral.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT);
 				var tabsClientSize = tabs.getClientArea();
@@ -137,12 +142,6 @@ class AboutDialog {
 			dialogShell.open();
 			ShellStateHandler.apply(preferences, dialogShell, AboutDialog.class);
 			buttonOk.setFocus();
-			var display = dialogShell.getDisplay();
-			while (!dialogShell.isDisposed()) { // TODO: remove nested event loop
-				if (!display.readAndDispatch()) {
-					display.sleep();
-				}
-			}
 		}
 		catch (Exception e) {
 			ExceptionHandler.reportException(e);
@@ -195,18 +194,7 @@ class AboutDialog {
 		labelThanks.setAlignment(SWT.CENTER);
 		final String[] specialThanks;
 		var sp = Util.getResourceAsString("net/sourceforge/fullsync/special-thanks.txt"); //$NON-NLS-1$
-		var res = sp.split("\n"); //$NON-NLS-1$
-		if (null != res) {
-			specialThanks = res;
-		}
-		else {
-			sp = ""; //$NON-NLS-1$
-			specialThanks = new String[] {
-				sp,
-				sp,
-				sp
-			};
-		}
+		specialThanks = sp.split("\n"); //$NON-NLS-1$
 		stTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {

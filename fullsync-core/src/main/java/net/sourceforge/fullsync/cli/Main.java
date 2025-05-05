@@ -24,6 +24,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Paths;
@@ -310,6 +312,7 @@ public class Main implements Launcher { // NO_UCD
 	public void launchGui(Injector injector) throws Exception {
 		var osName = System.getProperty("os.name").toLowerCase(); //$NON-NLS-1$
 		var os = "unknown"; //$NON-NLS-1$
+		var arch = "x86_64"; //$NON-NLS-1$
 		if (!System.getProperty("os.arch").contains("64")) { //$NON-NLS-1$ //$NON-NLS-2$
 			throw new Exception("32 bit Operating Systems are not supported anymore!");
 		}
@@ -321,7 +324,19 @@ public class Main implements Launcher { // NO_UCD
 		}
 		else if (osName.contains("mac")) { //$NON-NLS-1$
 			os = "cocoa.macosx"; //$NON-NLS-1$
+			arch = "aarch64"; //$NON-NLS-1$
 		}
+		List<URL> jars = getJars(os, arch);
+
+		// instantiate a URL class-loader with the constructed class-path and load the UI
+		var cl = new URLClassLoader(jars.toArray(new URL[0]), Main.class.getClassLoader());
+		Thread.currentThread().setContextClassLoader(cl);
+		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.ui.GuiMain"); //$NON-NLS-1$
+		var guiMain = (Launcher) cls.getDeclaredConstructor().newInstance();
+		guiMain.launchGui(injector);
+	}
+
+	private List<URL> getJars(String os, String arch) throws URISyntaxException, MalformedURLException {
 		var cs = getClass().getProtectionDomain().getCodeSource();
 		var libDirectory = cs.getLocation().toURI().toString().replaceAll("^(.*)/[^/]+\\.jar$", "$1/"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -329,13 +344,7 @@ public class Main implements Launcher { // NO_UCD
 		jars.add(new URL(libDirectory + "net.sourceforge.fullsync-fullsync-assets.jar")); //$NON-NLS-1$
 		jars.add(new URL(libDirectory + "net.sourceforge.fullsync-fullsync-ui.jar")); //$NON-NLS-1$
 		// add correct SWT implementation to the class-loader
-		jars.add(new URL(libDirectory + String.format("org.eclipse.platform-org.eclipse.swt.%s.x86_64.jar", os))); //$NON-NLS-1$
-
-		// instantiate an URL class-loader with the constructed class-path and load the UI
-		var cl = new URLClassLoader(jars.toArray(new URL[0]), Main.class.getClassLoader());
-		Thread.currentThread().setContextClassLoader(cl);
-		Class<?> cls = cl.loadClass("net.sourceforge.fullsync.ui.GuiMain"); //$NON-NLS-1$
-		var guiMain = (Launcher) cls.getDeclaredConstructor().newInstance();
-		guiMain.launchGui(injector);
+		jars.add(new URL(libDirectory + String.format("org.eclipse.platform-org.eclipse.swt.%s.%s.jar", os, arch))); //$NON-NLS-1$
+		return jars;
 	}
 }

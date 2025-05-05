@@ -65,7 +65,7 @@ import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.ui.profiledetails.ProfileDetailsTabbedPage;
 
 @Singleton
-class MainWindow implements ProfileListControlHandler {
+public class MainWindow implements ProfileListControlHandler {
 	private final Set<TaskTree> runningTaskTrees = new HashSet<>();
 	private final Display display;
 	private final ImageRepository imageRepository;
@@ -137,7 +137,7 @@ class MainWindow implements ProfileListControlHandler {
 		initGUI();
 
 		statusLineText = new GUIUpdateQueue<>(display, texts -> {
-			var statusMessage = texts.get(texts.size() - 1);
+			var statusMessage = texts.getLast();
 			statusLine.setText(statusMessage);
 			Control[] changed = {
 				statusLine
@@ -146,7 +146,7 @@ class MainWindow implements ProfileListControlHandler {
 		});
 
 		lastFileChecked = new GUIUpdateQueue<>(display, files -> {
-			var lastCheckedFile = files.get(files.size() - 1);
+			var lastCheckedFile = files.getLast();
 			statusLineText.add(Messages.getString("MainWindow.Checking_File", lastCheckedFile.getDisplayPath())); //$NON-NLS-1$
 		});
 

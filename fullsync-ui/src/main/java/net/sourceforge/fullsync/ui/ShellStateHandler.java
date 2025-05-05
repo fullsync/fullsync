@@ -37,6 +37,11 @@ public record ShellStateHandler(Preferences preferences, String name, Shell shel
 	}
 
 	private void applyPreferences() {
+		if (shell.isDisposed()) {
+			// The shell is already disposed, likely because it crashed as it should have been invisible until now...
+			return;
+		}
+
 		var ws = preferences.getWindowState(name);
 		shell.setVisible(true);
 		var r = shell.getDisplay().getBounds();

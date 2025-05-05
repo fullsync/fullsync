@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Label;
 import net.sourceforge.fullsync.ConnectionDescription;
 import net.sourceforge.fullsync.ui.Messages;
 
-class ConnectionConfiguration {
+public class ConnectionConfiguration {
 	private static final String[] schemes = {
 		"file", //$NON-NLS-1$
 		"ftp", //$NON-NLS-1$

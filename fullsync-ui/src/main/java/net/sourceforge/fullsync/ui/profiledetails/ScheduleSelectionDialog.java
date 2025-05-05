@@ -42,7 +42,7 @@ import net.sourceforge.fullsync.ui.schedule.IntervalScheduleOptions;
 import net.sourceforge.fullsync.ui.schedule.NullScheduleOptions;
 import net.sourceforge.fullsync.ui.schedule.ScheduleOptions;
 
-class ScheduleSelectionDialog {
+public class ScheduleSelectionDialog {
 	private final ImageRepository imageRepository;
 	private Group groupOptions;
 	private Combo cbType;

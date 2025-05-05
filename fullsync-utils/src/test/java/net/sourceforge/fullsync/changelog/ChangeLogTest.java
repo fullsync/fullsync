@@ -47,7 +47,7 @@ public class ChangeLogTest {
 	}
 
 	@Test
-	public void testLoadPaternMatchesNothing() throws Exception {
+	public void testLoadPatternMatchesNothing() throws Exception {
 		var loader = new ChangeLogLoader();
 		var changelog = loader.load(versionsDirectory, ".*\\.txt");
 		assertEquals(0, changelog.size());
@@ -65,7 +65,7 @@ public class ChangeLogTest {
 	}
 
 	@Test
-	public void testLoadMathingPattern() throws Exception {
+	public void testLoadMatchingPattern() throws Exception {
 		var loader = new ChangeLogLoader();
 		var changelog = loader.load(versionsDirectory, "^0\\.9.*\\.html$");
 		assertEquals(2, changelog.size());
@@ -78,9 +78,9 @@ public class ChangeLogTest {
 		var loader = new ChangeLogLoader();
 		var changelog = loader.load(versionsDirectory, "^0\\.9\\.1\\.html$");
 		assertEquals(1, changelog.size());
-		assertEquals("0.9.1", changelog.get(0).getVersion());
-		assertEquals(LocalDate.parse("2005-03-08"), changelog.get(0).getDate());
-		assertEquals("index.html", changelog.get(0).getManual());
+		assertEquals("0.9.1", changelog.getFirst().getVersion());
+		assertEquals(LocalDate.parse("2005-03-08"), changelog.getFirst().getDate());
+		assertEquals("index.html", changelog.getFirst().getManual());
 	}
 
 	@Test
@@ -90,12 +90,12 @@ public class ChangeLogTest {
 		assertEquals(2, changelog.size());
 		var filtered = ChangeLogLoader.filterAfter(changelog, "0.9");
 		assertEquals(1, filtered.size(), "only 0.9.1 came after 0.9");
-		assertEquals("0.9.1", filtered.get(0).getVersion(), "remaining version is 0.9.1");
+		assertEquals("0.9.1", filtered.getFirst().getVersion(), "remaining version is 0.9.1");
 	}
 
 	@Test
 	public void testChangeLogEntryFormatting() throws Exception {
-		var changelog = new ChangeLogLoader().load(versionsDirectory, "^0\\.9\\.1\\.html$").get(0);
+		var changelog = new ChangeLogLoader().load(versionsDirectory, "^0\\.9\\.1\\.html$").getFirst();
 		var sw = new StringWriter();
 		var entryPattern = "### ENTRY ### ";
 		changelog.write("### HEADER ### %s %s", entryPattern + "%s", sw, DateTimeFormatter.BASIC_ISO_DATE);
@@ -113,6 +113,6 @@ public class ChangeLogTest {
 		var loader = new ChangeLogLoader();
 		var changelog = loader.load(versionsDirectory, "^0\\.10\\.0\\.html$");
 		assertEquals(1, changelog.size());
-		assertEquals(changelog.get(0).getDate(), LocalDate.now());
+		assertEquals(changelog.getFirst().getDate(), LocalDate.now());
 	}
 }

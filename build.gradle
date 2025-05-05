@@ -8,13 +8,7 @@ plugins {
 	alias(libs.plugins.coveralls)
 	alias(libs.plugins.sonarqube)
 	alias(libs.plugins.spotbugs)
-}
-
-repositories {
-	maven {
-		url offlineRepositoryRoot
-	}
-	mavenCentral()
+	id("jacoco")
 }
 
 dependencies {
@@ -36,40 +30,7 @@ subprojects {
 
 	def subproject = delegate
 	plugins.withType(JavaPlugin).whenPluginAdded { p ->
-		java {
-			toolchain {
-				languageVersion = JavaLanguageVersion.of(17)
-			}
-		}
-		jar {
-			manifest {
-				attributes 'License': 'GPLv2+'
-				attributes 'FullSync-Version': rootProject.version
-				attributes 'Copyright': 'Copyright (c) 2022 the FullSync Team'
-			}
-		}
-		spotless {
-			java {
-				licenseHeaderFile rootProject.file('resources/License-header.txt')
-				eclipse().configFile rootProject.file('resources/eclipse-jdt-formatter.xml')
-				removeUnusedImports()
-				trimTrailingWhitespace()
-				endWithNewline()
-			}
-		}
-		test {
-			maxParallelForks 8
-		}
 		jacocoRootReport.dependsOn subproject.tasks.jacocoTestReport
-		tasks.compileJava.options.encoding = 'UTF-8'
-		tasks.compileTestJava.options.encoding = 'UTF-8'
-	}
-
-	repositories {
-		maven {
-			url rootProject.file(offlineRepositoryRoot).toURI().toURL().toString()
-		}
-		mavenCentral()
 	}
 }
 
@@ -85,22 +46,22 @@ gradle.projectsEvaluated {
 	}
 }
 
-task renderChangeLog(type: JavaExec) {
+tasks.register('renderChangeLog', JavaExec) {
 	dependsOn ':fullsync-build-utils:jar'
 	mainClass = 'net.sourceforge.fullsync.build.tools.ChangeLogGenerator'
-	def versionsDir = file("versions")
-	def changelogFile = file("$buildDir/ChangeLog.txt")
+	def versionsDir = layout.projectDirectory.dir("versions")
+	def changelogFile = layout.buildDirectory.file("ChangeLog.txt")
 	inputs.files(fileTree(versionsDir) {
 		include "*.html"
 	})
 	outputs.files changelogFile
-	args "--src-dir", versionsDir, "--pattern", ".*\\.html", "--changelog", changelogFile
+	args "--src-dir", versionsDir.asFile.path, "--pattern", ".*\\.html", "--changelog", changelogFile.get().asFile.path
 	doFirst {
-		buildDir.mkdirs()
+		layout.buildDirectory.get().asFile.mkdirs()
 	}
 }
 
-def eolFilter(context, eol) {
+static def eolFilter(context, eol) {
 	context.filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance(eol))
 }
 
@@ -127,9 +88,23 @@ def versionsCopySpec = copySpec {
 distributions {
 	linux {
 		contents {
-			eachFile { file ->
+			eachFile { FileCopyDetails file ->
 				if (file.name.endsWith(".sh")) {
-					file.mode = 0755
+					file.permissions {
+						user {
+							read = true
+							write = true
+							execute = true
+						}
+						group {
+							read = true
+							execute = true
+						}
+						other {
+							read = true
+							execute = true
+						}
+					}
 				}
 				if ("fullsync.sh" == file.name) {
 					file.name = "fullsync"
@@ -151,9 +126,23 @@ distributions {
 	}
 	mac {
 		contents {
-			eachFile { file ->
+			eachFile { FileCopyDetails file ->
 				if (file.name.endsWith(".sh")) {
-					file.mode = 0755
+					file.permissions {
+						user {
+							read = true
+							write = true
+							execute = true
+						}
+						group {
+							read = true
+							execute = true
+						}
+						other {
+							read = true
+							execute = true
+						}
+					}
 				}
 				if ("fullsync.sh" == file.name) {
 					file.name = "fullsync"
@@ -195,7 +184,7 @@ linuxDistZip.enabled = false
 macDistZip.enabled = false
 windowsDistTar.enabled = false
 
-tasks.withType(Tar) {
+tasks.withType(Tar).configureEach {
 	compression = Compression.GZIP
 }
 
@@ -225,7 +214,7 @@ installDist {
 	dependsOn installWindowsDist
 }
 
-def mapArtifactToFilename(a) {
+static def mapArtifactToFilename(a) {
 	def group = a.moduleVersion.id.group
 	def classifier = a.classifier ?: ""
 	classifier = classifier ? "-${classifier}" : ""
@@ -292,30 +281,24 @@ gradle.projectsEvaluated {
 apply plugin: 'jacoco'
 
 jacoco {
-	reportsDirectory = file("${project.reporting.baseDir}/jacoco")
+	reportsDirectory = reporting.baseDirectory.dir("jacoco")
 }
 
-task jacocoRootReport(type: JacocoReport) {
+tasks.register('jacocoRootReport', JacocoReport) {
 	reports {
-		html {
-			enabled true
-		}
-		xml {
-			enabled true
-		}
-		csv {
-			enabled false
-		}
+		xml.required = true
+		html.required = true
+		csv.required = false
 	}
 }
 
-task testReport(type: TestReport) {
-	destinationDir = file("$buildDir/reports/allTests")
+tasks.register('testReport', TestReport) {
+	destinationDirectory = layout.buildDirectory.dir("reports/allTests")
 }
 
 if (System.env.'CI') {
 	coveralls {
-		jacocoReportPath = "${project.reporting.baseDir}/jacoco/jacocoRootReport/jacocoRootReport.xml"
+		jacocoReportPath = project.reporting.baseDirectory.file("jacoco/jacocoRootReport/jacocoRootReport.xml").get().asFile
 	}
 	tasks.coveralls {
 		group = 'Coverage reports'
@@ -334,19 +317,22 @@ if (System.env.'CI') {
 	}
 }
 
-task run(type: JavaExec) {
-	dependsOn installLinuxDist
+def fullsyncCoreJar = layout.buildDirectory.file("install/${project.name}-mac/lib/net.sourceforge.fullsync-fullsync-core.jar")
+
+tasks.register('run', JavaExec) {
+	dependsOn installMacDist
 	mainClass = '-jar'
-	args "${buildDir}/install/${project.name}-linux/lib/net.sourceforge.fullsync-fullsync-core.jar", "-v"
+	jvmArgs = ["-XstartOnFirstThread"]
+	args fullsyncCoreJar.get().asFile.path, "-v"
 	systemProperties = [
 		"org.eclipse.swt.graphics.Resource.reportNonDisposed": true
 	]
 }
 
-task debug(type: JavaExec) {
+tasks.register('debug', JavaExec) {
 	dependsOn installLinuxDist
 	mainClass = '-jar'
-	args "${buildDir}/install/${project.name}-linux/lib/net.sourceforge.fullsync-fullsync-core.jar", "-v"
+	args fullsyncCoreJar.get().asFile.path, "-v"
 	debug = true
 	enableAssertions = true
 	systemProperties = [
@@ -354,10 +340,11 @@ task debug(type: JavaExec) {
 	]
 }
 
-task debugLauncher(type: JavaExec) {
+tasks.register('debugLauncher', JavaExec) {
 	dependsOn installWindowsDist
 	mainClass = '-jar'
-	args "${buildDir}/install/${project.name}-windows/lib/net.sourceforge.fullsync-fullsync-launcher.jar", "-v"
+
+	args layout.buildDirectory.file("install/${project.name}-windows/lib/net.sourceforge.fullsync-fullsync-launcher.jar").get().asFile.path, "-v"
 	debug = true
 	enableAssertions = true
 	systemProperties = [
