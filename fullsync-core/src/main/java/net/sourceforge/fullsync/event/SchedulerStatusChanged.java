@@ -19,5 +19,4 @@
  */
 package net.sourceforge.fullsync.event;
 
-public record SchedulerStatusChanged(boolean enabled) {
-}
+public record SchedulerStatusChanged(boolean enabled) {}

@@ -19,5 +19,4 @@
  */
 package net.sourceforge.fullsync.event;
 
-public record ProfileListChanged() {
-}
+public record ProfileListChanged() {}

@@ -53,12 +53,10 @@ import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
 
 public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus eventBus) implements TaskGenerator {
-
 	private static final Logger logger = LoggerFactory.getLogger(TaskGeneratorImpl.class.getSimpleName());
 
 	@Inject
-	public TaskGeneratorImpl {
-	}
+	public TaskGeneratorImpl {}
 
 	private void recurse(TaskTree taskTree, FSFile src, FSFile dst, Task parent, Deciders deciders) throws DataParseException, IOException {
 		if (src.isDirectory() && dst.isDirectory()) {
@@ -82,6 +80,7 @@ public record TaskGeneratorImpl(FileSystemManager fileSystemManager, EventBus ev
 			parent.addChild(task);
 		}
 	}
+
 	private record Deciders(RuleSet rules, ActionDecider actionDecider, StateDecider stateDecider, BufferStateDecider bufferStateDecider) {
 		public static Deciders create(RuleSet rules, ActionDecider actionDecider) {
 			return new Deciders(rules, actionDecider, new StateDeciderImpl(rules), new BufferStateDeciderImpl(rules));

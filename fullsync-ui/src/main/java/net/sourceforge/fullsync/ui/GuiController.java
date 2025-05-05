@@ -127,12 +127,14 @@ public class GuiController { // NO_UCD (use default)
 					if (!display.readAndDispatch()) {
 						display.sleep();
 					}
-				} catch (SWTException ex) {
+				}
+				catch (SWTException ex) {
 					ex.printStackTrace();
 				}
-				//TODO: other exceptions can escape here and crash the application, log somewhere?
+				// TODO: other exceptions can escape here and crash the application, log somewhere?
 			}
-		} finally {
+		}
+		finally {
 			if (!display.isDisposed()) {
 				display.dispose();
 			}

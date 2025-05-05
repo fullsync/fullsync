@@ -21,5 +21,4 @@ package net.sourceforge.fullsync.event;
 
 import net.sourceforge.fullsync.TaskTree;
 
-public record TaskTreeFinished(TaskTree taskTree) {
-}
+public record TaskTreeFinished(TaskTree taskTree) {}

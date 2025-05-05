@@ -284,8 +284,7 @@ class AboutDialog {
 		return tab;
 	}
 
-	private record LicenseEntry(String name, String license) {
-	}
+	private record LicenseEntry(String name, String license) {}
 
 	private List<LicenseEntry> loadLicenses() throws Exception {
 		return Util.loadDirectoryFromClasspath(FULLSYNC_LICENSES_DIRECTORY)
