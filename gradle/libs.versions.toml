@@ -33,7 +33,7 @@ testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.re
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 sonarqube = { id = "org.sonarqube", version = "6.1.0.5360" }
-versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }
+versions = { id = "com.github.ben-manes.versions", version = "0.52.0" }
 spotbugs = { id = "com.github.spotbugs", version = "6.1.10" }
 offlineDependencies = { id = "io.pry.gradle.offline_dependencies", version = "0.5.0" }
 coveralls = { id = "com.github.kt3k.coveralls", version = "2.12.2" }
