@@ -269,8 +269,8 @@ gradle.projectsEvaluated {
 			jacocoRootReport.executionData.from(subproject.jacocoTestReport.executionData)
 		}
 		testReport.reportOn subproject.test
-		if (System.env.'CI') {
-			coveralls.sourceDirs += subproject.sourceSets.main.allSource.srcDirs.flatten()
+		coverallsJacoco {
+			reportSourceSets += subproject.sourceSets.main.allSource
 		}
 	}
 	task test {
@@ -296,24 +296,23 @@ tasks.register('testReport', TestReport) {
 	destinationDirectory = layout.buildDirectory.dir("reports/allTests")
 }
 
-if (System.env.'CI') {
-	coveralls {
-		jacocoReportPath = project.reporting.baseDirectory.file("jacoco/jacocoRootReport/jacocoRootReport.xml").get().asFile
-	}
-	tasks.coveralls {
-		group = 'Coverage reports'
-		description = 'Uploads the aggregated coverage report to Coveralls'
+coverallsJacoco {
+	reportPath = project.reporting.baseDirectory.file("jacoco/jacocoRootReport/jacocoRootReport.xml").get().asFile
+}
 
-		dependsOn jacocoRootReport
-		onlyIf {
-			System.env.'CI'
-		}
-	}
+tasks.register("coveralls") {
+	group = 'Coverage reports'
+	description = 'Uploads the aggregated coverage report to Coveralls'
 
-	tasks.sonarqube {
-		onlyIf {
-			System.properties.'sonar.organization' || System.env.SCRUTINIZER
-		}
+	dependsOn jacocoRootReport
+	onlyIf {
+		System.env.'CI'
+	}
+}
+
+tasks.sonarqube {
+	onlyIf {
+		System.properties.'sonar.organization' || System.env.SCRUTINIZER
 	}
 }
 
