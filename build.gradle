@@ -5,7 +5,6 @@ plugins {
 	alias(libs.plugins.offlineDependencies)
 	alias(libs.plugins.versions)
 	alias(libs.plugins.spotless)
-	alias(libs.plugins.coveralls)
 	alias(libs.plugins.sonarqube)
 	alias(libs.plugins.spotbugs)
 	id("jacoco")
@@ -269,9 +268,6 @@ gradle.projectsEvaluated {
 			jacocoRootReport.executionData.from(subproject.jacocoTestReport.executionData)
 		}
 		testReport.reportOn subproject.test
-		coverallsJacoco {
-			reportSourceSets += subproject.sourceSets.main.allSource
-		}
 	}
 	task test {
 		dependsOn ':spotlessCheck'
@@ -294,20 +290,6 @@ tasks.register('jacocoRootReport', JacocoReport) {
 
 tasks.register('testReport', TestReport) {
 	destinationDirectory = layout.buildDirectory.dir("reports/allTests")
-}
-
-coverallsJacoco {
-	reportPath = project.reporting.baseDirectory.file("jacoco/jacocoRootReport/jacocoRootReport.xml").get().asFile
-}
-
-tasks.register("coveralls") {
-	group = 'Coverage reports'
-	description = 'Uploads the aggregated coverage report to Coveralls'
-
-	dependsOn jacocoRootReport
-	onlyIf {
-		System.env.'CI'
-	}
 }
 
 tasks.sonarqube {
