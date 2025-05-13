@@ -1,16 +1,17 @@
-name: Dependency Submission
+name: Generate and save dependency graph
 
 on:
   push:
     branches:
       - master
+  pull_request:
 
 permissions: {}
 
 jobs:
   dependency-submission:
     permissions:
-      contents: write
+      contents: read
 
     runs-on: ubuntu-latest
     steps:
@@ -20,5 +21,10 @@ jobs:
         distribution: temurin
         java-version: 21
 
-    - name: Generate and submit dependency graph
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+
+    - name: Generate and save dependency graph
       uses: gradle/actions/dependency-submission@v4
+      with:
+        dependency-graph: generate-and-upload
