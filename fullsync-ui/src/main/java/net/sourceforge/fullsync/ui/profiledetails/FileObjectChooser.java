@@ -23,7 +23,7 @@ import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;

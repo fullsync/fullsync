@@ -1,7 +1,7 @@
 [versions]
 swt = "3.129.0"
 slf4j = "1.7.36"
-guice = "5.1.0"
+guice = "7.0.0"
 junit = "5.12.2"
 commons-cli = "1.9.0"
 commons-net = "3.11.1"

@@ -21,7 +21,7 @@ package net.sourceforge.fullsync;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;

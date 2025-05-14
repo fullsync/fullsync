@@ -23,7 +23,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.ExecutionException;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import com.google.common.util.concurrent.Futures;
 
