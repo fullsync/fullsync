@@ -19,7 +19,7 @@
  */
 package net.sourceforge.fullsync.filesystems;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.impl.DefaultFileSystemManager;

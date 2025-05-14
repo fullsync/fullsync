@@ -25,7 +25,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;

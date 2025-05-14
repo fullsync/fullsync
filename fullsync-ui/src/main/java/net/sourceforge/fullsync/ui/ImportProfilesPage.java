@@ -22,7 +22,7 @@ package net.sourceforge.fullsync.ui;
 import java.io.File;
 import java.io.IOException;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

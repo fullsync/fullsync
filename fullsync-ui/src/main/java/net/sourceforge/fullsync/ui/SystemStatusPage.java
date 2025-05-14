@@ -22,7 +22,7 @@ package net.sourceforge.fullsync.ui;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

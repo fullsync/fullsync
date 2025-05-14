@@ -19,7 +19,7 @@
  */
 package net.sourceforge.fullsync.ui.filterrule;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

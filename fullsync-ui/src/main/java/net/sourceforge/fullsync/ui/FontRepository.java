@@ -22,8 +22,8 @@ package net.sourceforge.fullsync.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;

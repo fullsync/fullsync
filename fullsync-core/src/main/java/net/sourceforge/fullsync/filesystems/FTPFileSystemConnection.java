@@ -19,7 +19,7 @@
  */
 package net.sourceforge.fullsync.filesystems;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.google.inject.assistedinject.Assisted;
 

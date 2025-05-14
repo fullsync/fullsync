@@ -19,7 +19,7 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.eclipse.swt.widgets.Composite;
 
