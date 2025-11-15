@@ -37,9 +37,14 @@ tasks.jar {
 		attributes(
 			"Main-Class" to "net.sourceforge.fullsync.cli.Main",
 			"Class-Path" to providers.provider {
-				val runtimeConfiguration = configurations.runtimeClasspath.get()
-				val resolvedRuntime = runtimeConfiguration.resolvedConfiguration
-				val jarFiles = resolvedRuntime.resolvedArtifacts.map { a -> a.mapArtifactToFilename() }
+				val resolvedRuntime = configurations.runtimeClasspath.get().resolvedConfiguration
+				val jarFiles = resolvedRuntime.resolvedArtifacts.map { a ->
+					a.mapArtifactToFilename()
+				} + (resolvedRuntime.files - resolvedRuntime.resolvedArtifacts.map { // files in lib
+					it.file
+				}.toSet()).map {
+					it.name
+				}
 				return@provider jarFiles.joinToString(" ")
 			},
 		)
