@@ -19,21 +19,82 @@
  */
 package net.sourceforge.fullsync.ui;
 
+import net.sourceforge.fullsync.Preferences;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.LoggerFactory;
 
-import net.sourceforge.fullsync.Preferences;
+import java.util.Objects;
 
-public record ShellStateHandler(Preferences preferences, String name, Shell shell) { // NO_UCD (use default)
-	public ShellStateHandler {
+public class ShellStateHandler {
+	private final ShellStateHandlerSWTListeners shellStateHandlerSWTListeners = new ShellStateHandlerSWTListeners();
+	private final Preferences preferences;
+	private final String name;
+	private final Shell shell;
+
+	private class ShellStateHandlerSWTListeners implements ShellListener, ControlListener {
+		@Override
+		public void shellActivated(ShellEvent e) {
+			// not relevant
+		}
+
+		@Override
+		public void shellClosed(ShellEvent e) {
+			// TODO: save
+		}
+
+		@Override
+		public void shellDeactivated(ShellEvent e) {
+			// not relevant
+		}
+
+		@Override
+		public void shellDeiconified(ShellEvent e) {
+
+		}
+
+		@Override
+		public void shellIconified(ShellEvent e) {
+
+		}
+
+		@Override
+		public void controlMoved(ControlEvent e) {
+
+		}
+
+		@Override
+		public void controlResized(ControlEvent e) {
+
+		}
+	}
+
+	// NO_UCD (use default)
+	public ShellStateHandler(Preferences preferences, String name, Shell shell) {
+		this.preferences = preferences;
+		this.name = name;
+		this.shell = shell;
+
+		shell.addListener(SWT.Show, this::shellShow);
 		shell.addListener(SWT.Close, this::shellClosed);
+		shell.addShellListener(shellStateHandlerSWTListeners);
+		shell.addControlListener(shellStateHandlerSWTListeners);
 		shell.setVisible(false);
-		shell.getDisplay().asyncExec(this::applyPreferences);
 	}
 
 	public static ShellStateHandler apply(Preferences preferences, Shell shell, Class<?> clazz) { // NO_UCD (use default)
 		return new ShellStateHandler(preferences, clazz.getSimpleName(), shell);
+	}
+
+	private void shellShow(Event event) {
+		LoggerFactory.getLogger(ShellStateHandler.class).atDebug().log("shellShow {}", name);
+		shell.removeListener(SWT.Show, this::shellShow);
+		applyPreferences();
 	}
 
 	private void applyPreferences() {
@@ -73,4 +134,40 @@ public record ShellStateHandler(Preferences preferences, String name, Shell shel
 		}
 		preferences.setWindowState(name, ws);
 	}
+
+	public Preferences preferences() {
+		return preferences;
+	}
+
+	public String name() {
+		return name;
+	}
+
+	public Shell shell() {
+		return shell;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (obj == null || obj.getClass() != this.getClass()) return false;
+		var that = (ShellStateHandler) obj;
+		return Objects.equals(this.preferences, that.preferences) &&
+			Objects.equals(this.name, that.name) &&
+			Objects.equals(this.shell, that.shell);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(preferences, name, shell);
+	}
+
+	@Override
+	public String toString() {
+		return "ShellStateHandler[" +
+			"preferences=" + preferences + ", " +
+			"name=" + name + ", " +
+			"shell=" + shell + ']';
+	}
+
 }

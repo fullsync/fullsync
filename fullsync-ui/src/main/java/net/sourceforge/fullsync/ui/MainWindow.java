@@ -19,33 +19,10 @@
  */
 package net.sourceforge.fullsync.ui;
 
-import java.io.File;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ScheduledExecutorService;
-
+import com.google.common.eventbus.Subscribe;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
-
-import com.google.common.eventbus.Subscribe;
-
 import net.sourceforge.fullsync.ExceptionHandler;
 import net.sourceforge.fullsync.FSFile;
 import net.sourceforge.fullsync.Preferences;
@@ -63,6 +40,26 @@ import net.sourceforge.fullsync.event.TaskGenerationFinished;
 import net.sourceforge.fullsync.event.TaskTreeFinished;
 import net.sourceforge.fullsync.event.TaskTreeStarted;
 import net.sourceforge.fullsync.ui.profiledetails.ProfileDetailsTabbedPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+
+import java.io.File;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
 
 @Singleton
 public class MainWindow implements ProfileListControlHandler {
@@ -82,7 +79,6 @@ public class MainWindow implements ProfileListControlHandler {
 	private final Provider<TaskDecisionPage> taskDecisionPageProvider;
 	private final ProfileListCompositeFactory profileListCompositeFactory;
 	private final Composite mainComposite;
-	private final ShellStateHandler shellStateHandler;
 	private Menu menuBarMainWindow;
 	private Label statusLine;
 	private ToolItem toolItemScheduleStart;
@@ -156,10 +152,15 @@ public class MainWindow implements ProfileListControlHandler {
 		var size = mainComposite.getSize();
 		var shellBounds = shell.computeTrim(0, 0, size.x, size.y);
 		shell.setSize(shellBounds.width, shellBounds.height);
-		shellStateHandler = ShellStateHandler.apply(preferences, shell, MainWindow.class);
+		ShellStateHandler.apply(preferences, shell, MainWindow.class);
 		var minimized = runtimeConfiguration.isStartMinimized();
 		if (minimized.orElse(false)) {
 			shell.setVisible(false);
+			shell.getDisplay().asyncExec(() -> {
+				if (!shell.isDisposed()) {
+					shell.setVisible(false);
+				}
+			});
 		}
 	}
 
@@ -584,7 +585,6 @@ public class MainWindow implements ProfileListControlHandler {
 				return;
 			}
 		}
-		shellStateHandler.saveWindowState();
-		display.dispose();
+		display.asyncExec(display::dispose);
 	}
 }
