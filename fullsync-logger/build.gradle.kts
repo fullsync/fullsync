@@ -3,5 +3,8 @@ plugins {
 }
 
 dependencies {
-	implementation(libs.slf4j.api)
+	api(libs.slf4j.api)
+	api(libs.jcl.over.slf4j)
+
+	runtimeOnly(libs.slf4j.simple)
 }

@@ -87,6 +87,7 @@ def versionsCopySpec = copySpec {
 distributions {
 	linux {
 		contents {
+			duplicatesStrategy = DuplicatesStrategy.WARN
 			eachFile { FileCopyDetails file ->
 				if (file.name.endsWith(".sh")) {
 					file.permissions {
@@ -125,6 +126,7 @@ distributions {
 	}
 	mac {
 		contents {
+			duplicatesStrategy = DuplicatesStrategy.WARN
 			eachFile { FileCopyDetails file ->
 				if (file.name.endsWith(".sh")) {
 					file.permissions {
@@ -160,6 +162,7 @@ distributions {
 	}
 	windows {
 		contents {
+			duplicatesStrategy = DuplicatesStrategy.WARN
 			from('resources') {
 				include 'fullsync*.exe'
 				include 'fullsync*.ini'

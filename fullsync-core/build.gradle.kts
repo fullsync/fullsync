@@ -14,7 +14,6 @@ dependencies {
 	}
 	implementation(libs.jcifs)
 	implementation(libs.jsch)
-	implementation(libs.jcl.over.slf4j)
 	implementation(libs.guice)
 	implementation(libs.guice.assistedInject)
 	implementation(files("lib/commons-vfs2-sandbox.jar"))
