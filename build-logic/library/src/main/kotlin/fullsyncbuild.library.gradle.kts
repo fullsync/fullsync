@@ -16,6 +16,12 @@ java {
 	}
 }
 
+dependencies {
+	if (name != "fullsync-logger") {
+		implementation(project(":fullsync-logger"))
+	}
+}
+
 tasks.withType<Jar>().configureEach {
 	val thisYear = LocalDate.now().year
 	manifest {
