@@ -295,7 +295,14 @@ tasks.register('testReport', TestReport) {
 	destinationDirectory = layout.buildDirectory.dir("reports/allTests")
 }
 
+sonarqube {
+	properties {
+		property "sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/jacoco/jacocoRootReport/jacocoRootReport.xml").get().asFile.path
+	}
+}
+
 tasks.sonarqube {
+	dependsOn jacocoRootReport
 	onlyIf {
 		System.properties.'sonar.organization' || System.env.SCRUTINIZER
 	}
