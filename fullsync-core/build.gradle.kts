@@ -19,6 +19,7 @@ dependencies {
 	implementation(files("lib/commons-vfs2-sandbox.jar"))
 	testImplementation(libs.junit.jupiter)
 	testImplementation(libs.hamcrest)
+	testImplementation(libs.mockito.core)
 	testImplementation(libs.testcontainers)
 	testImplementation(libs.testcontainers.junit)
 }
