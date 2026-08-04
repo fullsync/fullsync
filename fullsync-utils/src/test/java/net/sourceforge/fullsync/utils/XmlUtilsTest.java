@@ -72,8 +72,7 @@ public class XmlUtilsTest {
 		var sw = new StringWriter();
 		transformer.transform(new StreamSource(new ByteArrayInputStream(SIMPLE_XML.getBytes(StandardCharsets.UTF_8))),
 			new StreamResult(sw));
-		var doc = XmlUtils.newDocumentBuilder()
-			.parse(new ByteArrayInputStream(sw.toString().getBytes(StandardCharsets.UTF_8)));
+		var doc = XmlUtils.newDocumentBuilder().parse(new ByteArrayInputStream(sw.toString().getBytes(StandardCharsets.UTF_8)));
 		assertEquals("root", doc.getDocumentElement().getTagName());
 	}
 
