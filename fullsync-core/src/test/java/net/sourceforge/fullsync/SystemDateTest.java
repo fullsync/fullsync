@@ -44,9 +44,11 @@ public class SystemDateTest {
 
 	@Test
 	public void setCurrentFixesTime() {
-		var fixedTime = 1_000_000_000L;
+		var fixedTime = System.currentTimeMillis() + 60_000L;
 		SystemDate.getInstance().setCurrent(fixedTime);
-		assertTrue(SystemDate.getInstance().currentTimeMillis() >= fixedTime);
+		var reported = SystemDate.getInstance().currentTimeMillis();
+		assertTrue(reported >= fixedTime && reported < fixedTime + 1_000L,
+			"reported " + reported + " should be within [" + fixedTime + ", " + (fixedTime + 1_000L) + ")");
 	}
 
 	@Test
