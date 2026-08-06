@@ -1,7 +1,6 @@
 # FullSync
 
 [![Coverage Status](https://coveralls.io/repos/github/fullsync/fullsync/badge.svg?branch=master)](https://coveralls.io/github/fullsync/fullsync?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fullsync/fullsync/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fullsync/fullsync/?branch=master)
 
 FullSync is a powerful tool that helps you keep multiple copies of various data in sync. I.e. it can update your Website using (S)FTP, backup your data or refresh a working copy from a remote server. It offers flexible rules, a scheduler and more.
 
