@@ -304,7 +304,7 @@ sonarqube {
 tasks.sonarqube {
 	dependsOn jacocoRootReport
 	onlyIf {
-		System.properties.'sonar.organization' || System.env.SCRUTINIZER
+		System.properties.'sonar.organization'
 	}
 }
 
