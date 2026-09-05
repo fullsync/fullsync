@@ -29,12 +29,12 @@ import net.sourceforge.fullsync.DataParseException;
  * daysOfWeek.bArray[1] = true;
  */
 public record CrontabPart(int low, int high, int offset) {
-
 	public static final CrontabPart MINUTES = new CrontabPart(0, 59, 0);
 	public static final CrontabPart HOURS = new CrontabPart(0, 23, 0);
 	public static final CrontabPart DAYSOFMONTH = new CrontabPart(1, 31, 0);
 	public static final CrontabPart MONTHS = new CrontabPart(1, 12, -1);
 	public static final CrontabPart DAYSOFWEEK = new CrontabPart(0, 7, +1);
+
 	public class Instance {
 		public final String pattern;
 		public final boolean[] bArray;

@@ -11,7 +11,7 @@ jsch = "0.1.55"
 hamcrest = "3.0"
 mockito = "5.23.0"
 testcontainers = "1.21.4"
-spotless = "8.4.0"
+spotless = "8.10.2"
 
 [libraries]
 commons-cli = { module = "commons-cli:commons-cli", version.ref = "commons-cli" }

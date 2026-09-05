@@ -25,11 +25,11 @@ import java.util.Objects;
 import net.sourceforge.fullsync.FSFile;
 
 public record FileFilter(int matchType, int filterType, boolean appliesToDirectories, FileFilterRule... rules) {
-
 	public static final int MATCH_ALL = 0;
 	public static final int MATCH_ANY = 1;
 	public static final int INCLUDE = 0;
 	public static final int EXCLUDE = 1;
+
 	public boolean match(final FSFile file) {
 		var result = doMatch(file);
 		return (filterType == INCLUDE) == result;
